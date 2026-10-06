@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4回 積分路の変更・不定積分・コーシーの積分表示・グルサの公式</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:520px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第4回　積分路の変更・不定積分・コーシーの積分表示・グルサの公式</h1>
+<p class="lead">教科書 p.156, 159, 161, 164, 167 ／ 全体地図では「コーシーの定理 → <strong>不定積分・積分表示</strong> → テイラー展開」へ進む、複素関数論で最も実りの多い回です。</p>
+
+<div class="navi">
+この回は<span class="star">試験の最重要回</span>です。とくに <strong>4.2 不定積分の存在証明</strong> は先生が「試験に出す」と明言した部分。何度も自力で再現できるようにしてください。
+</div>
+
+<h2>4.0　この回の流れ</h2>
+<p>第3回のコーシーの定理「正則なら閉曲線一周積分は 0」から、強力な結果が次々に導かれます。</p>
+<div class="box">
+コーシーの定理 ⟶ <strong>① 積分が経路によらない（積分路の変更）</strong> ⟶ <strong>② 不定積分（原始関数）の存在</strong> ⟶ <strong>③ コーシーの積分表示</strong>（境界の値で内部が決まる）⟶ <strong>④ グルサの公式</strong>（何回でも微分できる）
+</div>
+
+<h2>4.1　積分路の変更</h2>
+<h3>4.1.1　経路によらないこと</h3>
+<div class="thm">
+<span class="label">定理 4.1（積分路の独立性）</span><br>
+$f$ が単連結領域 $D$ で正則なら、$D$ 内で始点・終点を共有する任意の2つの経路 $C_1, C_2$ について
+$$ \int_{C_1} f(z)\,dz=\int_{C_2} f(z)\,dz. $$
+</div>
+<div class="proof">
+<span class="label">証明</span>　$C_1$ を順に進み、$C_2$ を逆向き（$\overline{C_2}$）に戻ると、ひとつの閉曲線 $C_1+\overline{C_2}$ になる。$f$ は正則だからコーシーの定理より
+$$ \oint_{C_1+\overline{C_2}} f\,dz=\int_{C_1}f\,dz-\int_{C_2}f\,dz=0. $$
+よって両者は等しい。<span class="qed">∎</span>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 360 190" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs>
+   <marker id="m41" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#1b4f72"/></marker>
+   <marker id="m41b" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#7d3c98"/></marker>
+  </defs>
+  <path d="M55 130 Q165 40 300 75" fill="none" stroke="#1b4f72" stroke-width="2" marker-end="url(#m41)"/>
+  <path d="M55 130 Q175 185 300 75" fill="none" stroke="#7d3c98" stroke-width="2" marker-end="url(#m41b)"/>
+  <circle cx="55" cy="130" r="3.5" fill="#c0392b"/><text x="32" y="140" fill="#c0392b">z₀</text>
+  <circle cx="300" cy="75" r="3.5" fill="#c0392b"/><text x="306" y="72" fill="#c0392b">z₁</text>
+  <text x="150" y="58" fill="#1b4f72">C₁</text>
+  <text x="160" y="172" fill="#7d3c98">C₂</text>
+</svg>
+<figcaption>図4-1　正則なら、始点 $z_0$・終点 $z_1$ を共有する2経路 $C_1,C_2$ の積分値は等しい（$C_1+\overline{C_2}$ が閉曲線でコーシーの定理）。</figcaption>
+</figure>
+
+<h3>4.1.2　特異点があるとき（多重連結領域）</h3>
+<p>領域内に特異点があると、その点を避けるように経路を変形できる。下図のように、外側の経路 $C$ を、各特異点を囲む小さな閉曲線 $C_1, C_2, C_3$ に「分配」できる。</p>
+<div class="thm">
+<span class="label">定理 4.2（積分路の変更）</span><br>
+$C$ の内部にある特異点を、それぞれ囲む閉曲線 $C_1,\dots,C_m$（同じ向き）に置き換えると
+$$ \oint_C f(z)\,dz=\sum_{k=1}^{m}\oint_{C_k} f(z)\,dz. $$
+</div>
+<div class="proof">
+<span class="label">考え方</span>　$C$ と各 $C_k$ を細い「橋」でつなぐと、特異点を含まない単連結領域ができる。そこではコーシーの定理が使え、橋の往復は打ち消し合うので、$C$ 上の積分が各 $C_k$ 上の積分の和に等しくなる。<span class="qed">∎</span>
+</div>
+<figure class="fig">
+<svg viewBox="0 0 320 250" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <path d="M160 25 C70 30 35 110 60 175 C85 235 235 235 262 170 C290 105 250 22 160 25 Z" fill="#f4f7fa" stroke="#1b4f72" stroke-width="2"/>
+  <text x="58" y="48" fill="#1b4f72">C</text>
+  <g>
+   <circle cx="115" cy="105" r="22" fill="#fff" stroke="#7d3c98" stroke-width="1.6"/>
+   <g stroke="#c0392b" stroke-width="2"><line x1="109" y1="99" x2="121" y2="111"/><line x1="121" y1="99" x2="109" y2="111"/></g>
+   <text x="106" y="90" fill="#7d3c98" font-size="11">C₁</text>
+  </g>
+  <g>
+   <circle cx="200" cy="130" r="22" fill="#fff" stroke="#7d3c98" stroke-width="1.6"/>
+   <g stroke="#c0392b" stroke-width="2"><line x1="194" y1="124" x2="206" y2="136"/><line x1="206" y1="124" x2="194" y2="136"/></g>
+   <text x="191" y="115" fill="#7d3c98" font-size="11">C₂</text>
+  </g>
+  <g>
+   <circle cx="150" cy="185" r="22" fill="#fff" stroke="#7d3c98" stroke-width="1.6"/>
+   <g stroke="#c0392b" stroke-width="2"><line x1="144" y1="179" x2="156" y2="191"/><line x1="156" y1="179" x2="144" y2="191"/></g>
+   <text x="141" y="170" fill="#7d3c98" font-size="11">C₃</text>
+  </g>
+</svg>
+<figcaption>図4-2　外側の経路 $C$ 上の積分は、各特異点（×）を囲む小円 $C_1,C_2,C_3$ 上の積分の和に等しい（積分路の変更）。</figcaption>
+</figure>
+
+<div class="warn">
+この「<strong>特異点を囲む小円に積分を分ける</strong>」考え方が、コーシーの積分表示（4.3）と留数定理（第6回）の核心。$\dfrac{1}{z-a}$ の一周積分が $2\pi i$（第3回 基本公式）であることと組み合わせて使う。
+</div>
+
+<h2>4.2　不定積分（原始関数）の存在 <span class="star">★試験必出</span></h2>
+<p>実数の微積分では「連続関数には原始関数がある（微積分の基本定理）」のでした。複素では「<strong>正則なら原始関数がある</strong>」が成り立ちます。先生はこの<strong>証明そのもの</strong>を重視します。</p>
+
+<div class="def">
+<span class="label">定義 4.3（不定積分）</span>　$G'(z)=f(z)$ を満たす正則関数 $G(z)$ を $f$ の<strong>不定積分（原始関数）</strong>という。
+</div>
+
+<div class="thm">
+<span class="label">定理 4.3（不定積分の存在と基本定理）</span><br>
+$f$ が単連結領域 $D$ で正則なら、$D$ 内の固定点 $z_0$ を用いて
+$$ F(z)=\int_{z_0}^{z} f(\zeta)\,d\zeta $$
+で定義される関数 $F$ は<strong>正則で、$F'(z)=f(z)$</strong> を満たす。さらに任意の原始関数 $G$ について
+$$ \int_{z_0}^{z_1} f(z)\,dz=G(z_1)-G(z_0). $$
+</div>
+
+<div class="proof">
+<span class="label">証明（この流れを再現できるように）</span>
+<p><strong>(1) $F(z)$ が well-defined（経路によらず定まる）。</strong><br>
+$f$ は正則だから、定理 4.1 より $\displaystyle\int_{z_0}^{z}f(\zeta)d\zeta$ の値は経路によらず、終点 $z$ だけで決まる。よって $F(z)$ は $z$ の関数として意味をもつ。</p>
+<p><strong>(2) $F'(z)=f(z)$ を示す。</strong><br>
+差分を作る。経路によらないので、$z$ から $z+\Delta z$ へはまっすぐ結んでよい：
+$$ F(z+\Delta z)-F(z)=\int_{z}^{z+\Delta z} f(\zeta)\,d\zeta. $$
+ここで定数 $f(z)$ について $\displaystyle\int_z^{z+\Delta z} f(z)\,d\zeta=f(z)\,\Delta z$ だから、
+$$ \frac{F(z+\Delta z)-F(z)}{\Delta z}-f(z)=\frac{1}{\Delta z}\int_{z}^{z+\Delta z}\big[f(\zeta)-f(z)\big]\,d\zeta. $$
+$f$ は正則すなわち連続なので、任意の $\varepsilon>0$ に対し $|\Delta z|$ が十分小さければ、線分上のすべての $\zeta$ で $|f(\zeta)-f(z)|<\varepsilon$。積分の評価（$\big|\int g\,d\zeta\big|\le(\max|g|)\times(\text{経路長})$）より
+$$ \left|\frac{1}{\Delta z}\int_{z}^{z+\Delta z}\big[f(\zeta)-f(z)\big]d\zeta\right|\le\frac{1}{|\Delta z|}\cdot\varepsilon\cdot|\Delta z|=\varepsilon. $$
+$\varepsilon$ は任意だから $\Delta z\to0$ で右辺 $\to0$。よって
+$$ F'(z)=\lim_{\Delta z\to0}\frac{F(z+\Delta z)-F(z)}{\Delta z}=f(z). $$
+したがって $F$ は正則で原始関数である。</p>
+<p><strong>(3) 差で値が求まる。</strong><br>
+他の原始関数 $G$ があれば $(F-G)'=0$ ゆえ $F-G=$ 定数。よって
+$\displaystyle\int_{z_0}^{z_1}f\,dz=F(z_1)=F(z_1)-F(z_0)=G(z_1)-G(z_0)$（$F(z_0)=0$）。<span class="qed">∎</span></p>
+</div>
+
+<div class="box">
+<strong>要するに</strong>：正則でさえあれば、実数のときと同じく<strong>「原始関数の差」で定積分が計算できる</strong>。$\displaystyle\int_{z_0}^{z_1}f\,dz=[G(z)]_{z_0}^{z_1}$。一般の複素積分の定義式（区分求積）を使わなくてよい。
+</div>
+
+<div class="ex">
+<span class="label">例 4.1（中間過去問 問1 と直結）</span>　ある正則関数で $f'(z)=\dfrac{i}{z}$ と分かったとき、$f(z)$ を求める。<br>
+$\dfrac1z$ の原始関数は $\log z$ だから $\displaystyle f(z)=\int\frac{i}{z}\,dz=i\log z+C$（$C$ は複素定数）。<br>
+<span class="meta">過去問 問1 は、C-R方程式で $f'(z)=i/z$ を作り、この不定積分で $f(z)=i\log z+C$ を得る流れ。第1回の C-R と本節の不定積分が一つの問題に同居する。</span>
+</div>
+
+<div class="ex">
+<span class="label">例 4.2（中間過去問 問3(2) 型）</span>　$f(z)=\dfrac{2}{z}+\sin z$ について $\displaystyle\int_{\pi}^{i} f(z)\,dz$。<br>
+原始関数は $2\log z-\cos z$。よって
+$$ \int_\pi^i f\,dz=\big[2\log z-\cos z\big]_\pi^i=2\log i-\cos i-2\log\pi+\cos\pi. $$
+$\log i=\ln1+i\frac\pi2=i\frac\pi2$, $\log\pi=\ln\pi$, $\cos i=\cosh1$, $\cos\pi=-1$ より
+$$ =2\Big(i\tfrac\pi2\Big)-\cosh1-2\ln\pi-1=2\ln\tfrac1\pi-\cosh1-1+i\pi. $$
+（$-2\ln\pi=2\ln\frac1\pi$。虚部は $\pi$。）
+</div>
+
+<h2>4.3　コーシーの積分表示</h2>
+<div class="thm">
+<span class="label">定理 4.4（コーシーの積分表示）</span><br>
+$f$ が閉曲線 $C$ とその内部を含む領域で正則、$a$ が $C$ の内部の点なら
+$$ f(a)=\frac{1}{2\pi i}\oint_C \frac{f(z)}{z-a}\,dz. $$
+<span class="meta">＝境界 $C$ 上の値だけで、内部の点 $a$ での値が完全に決まる。</span>
+</div>
+<div class="proof">
+<span class="label">証明（導出）</span>　$\dfrac{f(z)}{z-a}$ は $z=a$ 以外で正則。積分路の変更（4.1.2）により、$C$ を $a$ 中心・半径 $r$ の小円 $C':z=a+re^{i\theta}$ に置き換えてよい：
+$$ \oint_C\frac{f(z)}{z-a}dz=\oint_{C'}\frac{f(z)}{z-a}dz=\int_0^{2\pi}\frac{f(a+re^{i\theta})}{re^{i\theta}}\,ire^{i\theta}\,d\theta=i\int_0^{2\pi} f(a+re^{i\theta})\,d\theta. $$
+$r\to0$ とすると $f(a+re^{i\theta})\to f(a)$（$f$ は連続）だから
+$$ \oint_C\frac{f(z)}{z-a}dz=i\,f(a)\int_0^{2\pi}d\theta=2\pi i\,f(a). $$
+両辺を $2\pi i$ で割れば結論を得る。<span class="qed">∎</span>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 330 230" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <path d="M165 25 C75 28 38 110 64 175 C92 238 240 235 268 168 C295 100 255 22 165 25 Z" fill="#f4f7fa" stroke="#1b4f72" stroke-width="2"/>
+  <text x="66" y="46" fill="#1b4f72">C</text>
+  <circle cx="165" cy="120" r="34" fill="#fff" stroke="#7d3c98" stroke-width="1.8" stroke-dasharray="5 3"/>
+  <polygon points="199,109 194,121 204,121" fill="#7d3c98"/>
+  <text x="172" y="86" fill="#7d3c98">C′</text>
+  <circle cx="165" cy="120" r="3.5" fill="#c0392b"/><text x="170" y="135" fill="#c0392b">a</text>
+</svg>
+<figcaption>図4-3　$\dfrac{f(z)}{z-a}$ は $a$ 以外で正則。$C$ を $a$ 中心の小円 $C'$ に変形し、$r\to0$ で $f(a)=\dfrac{1}{2\pi i}\oint_C\dfrac{f(z)}{z-a}\,dz$ を得る。</figcaption>
+</figure>
+
+<h2>4.4　グルサの公式（高階導関数の積分表示）</h2>
+<div class="thm">
+<span class="label">定理 4.5（グルサの公式）</span><br>
+同じ仮定のもとで、$f$ は内部で何回でも微分可能で
+$$ f^{(n)}(a)=\frac{n!}{2\pi i}\oint_C \frac{f(z)}{(z-a)^{n+1}}\,dz \qquad(n=0,1,2,\dots,\ 0!=1). $$
+</div>
+<div class="proof">
+<span class="label">導出（$n=1$ の場合）</span>　積分表示を $a$（記号は $z$）で微分する。$f(z)=\dfrac{1}{2\pi i}\oint_C\dfrac{f(\zeta)}{\zeta-z}d\zeta$ より
+$$ f'(z)=\lim_{\Delta z\to0}\frac{1}{\Delta z}\cdot\frac{1}{2\pi i}\oint_C f(\zeta)\Big[\frac{1}{\zeta-z-\Delta z}-\frac{1}{\zeta-z}\Big]d\zeta
+=\frac{1}{2\pi i}\lim_{\Delta z\to0}\oint_C\frac{f(\zeta)}{(\zeta-z-\Delta z)(\zeta-z)}d\zeta. $$
+$\Delta z\to0$ で
+$$ f'(z)=\frac{1}{2\pi i}\oint_C\frac{f(\zeta)}{(\zeta-z)^2}d\zeta. $$
+同様に繰り返すと $f^{(n)}$ の式になる。<span class="qed">∎</span>
+</div>
+<div class="warn">
+重要な帰結：<span class="key">正則関数は何回でも微分でき、微分しても新たな特異点は現れない</span>。この「無限回微分可能」が、第5回のテイラー展開を保証する。
+</div>
+
+<div class="ex">
+<span class="label">例 4.3</span>　$\displaystyle\oint_{|z|=2}\frac{e^z}{z-1}\,dz$。<br>
+$f(z)=e^z$ は正則、$a=1$ は内部。積分表示より $\displaystyle\oint=2\pi i\,f(1)=2\pi i\,e$。
+</div>
+<div class="ex">
+<span class="label">例 4.4（グルサ）</span>　$\displaystyle\oint_{|z|=1}\frac{\cos z}{z^3}\,dz$。<br>
+$f(z)=\cos z$, $a=0$, $n+1=3$ なので $n=2$。$f''(z)=-\cos z$, $f''(0)=-1$。
+$$ \oint=\frac{2\pi i}{2!}f''(0)=\frac{2\pi i}{2}(-1)=-\pi i. $$
+</div>
+
+<hr>
+<h2>4.5　章末例題</h2>
+<div class="ex">
+<span class="label">例題 4.A</span>　$\displaystyle\oint_{|z|=3}\frac{z}{(z-1)(z-2)}\,dz$ をコーシーの積分表示で求めよ。
+<details><summary>解答を見る</summary>
+<div class="proof">
+内部に特異点 $z=1,2$。積分路の変更で各点を囲む小円に分ける。$z=1$ では $g_1(z)=\dfrac{z}{z-2}$ が正則で $g_1(1)=\dfrac{1}{-1}=-1$、$z=2$ では $g_2(z)=\dfrac{z}{z-1}$ が正則で $g_2(2)=2$。積分表示より
+$$ \oint=2\pi i\,g_1(1)+2\pi i\,g_2(2)=2\pi i(-1+2)=2\pi i. $$
+</div>
+</details>
+</div>
+<div class="ex">
+<span class="label">例題 4.B（中間過去問 問3(2)）</span>　$f(z)=\dfrac2z+\sin z$ について $\displaystyle\Im\!\left[\int_\pi^i f(z)\,dz\right]$ を求めよ。
+<details><summary>解答を見る</summary>
+<div class="proof">
+例 4.2 より $\displaystyle\int_\pi^i f\,dz=2\ln\frac1\pi-\cosh1-1+i\pi$。実部は実数、虚部は $\pi$。よって $\Im[\cdots]=\pi$。
+</div>
+</details>
+</div>
+
+<h2>4.6　演習問題</h2>
+<ol>
+  <li>$\displaystyle\oint_{|z|=2}\frac{dz}{z-1}$ を積分表示で求めよ。</li>
+  <li>$\displaystyle\oint_{|z|=1}\frac{\sin z}{z}\,dz$ を求めよ。</li>
+  <li>$\displaystyle\oint_{|z|=1}\frac{e^{z}}{z^{2}}\,dz$ を求めよ（グルサ）。</li>
+  <li>$f'(z)=\dfrac1{z^2}+\cos z$ となる正則関数 $f(z)$ を不定積分で求めよ。</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong> $f=1$, $a=1$（内部）→ $2\pi i\cdot1=2\pi i$。<br>
+<strong>2.</strong> $f=\sin z$, $a=0$ → $2\pi i\sin0=0$。<br>
+<strong>3.</strong> $f=e^z$, $n=1$ → $\dfrac{2\pi i}{1!}f'(0)=2\pi i\,e^0=2\pi i$。<br>
+<strong>4.</strong> $\displaystyle f(z)=-\frac1z+\sin z+C$。
+</div>
+</details>
+
+<h2>4.7　レポート・試験に向けて</h2>
+<ul>
+  <li><span class="star">不定積分の存在証明（定理 4.3）は「(1)経路独立 →(2)差分評価で $F'=f$ →(3)差で計算」の三段</span>を、何も見ずに書けるまで練習する。</li>
+  <li>該当レポート：<span class="meta">reference/レポートの問題/no2〜no3.pdf</span>。積分表示・グルサの計算は「特異点が内部か」「$n$ は何か」を明記。</li>
+</ul>
+
+<div class="navi" style="margin-top:18px">
+<strong>次回（第5回）への橋渡し</strong>：グルサの公式で「何回でも微分できる」が分かった。これにより正則関数は<strong>テイラー展開</strong>でき、特異点のまわりでは<strong>ローラン展開</strong>に一般化される。さらに<strong>モレラの定理</strong>（コーシーの定理の逆）と<strong>特異点の分類</strong>を学ぶ。
+</div>
+
+</body>
+</html>

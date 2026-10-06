@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5回 モレラの定理・テイラー展開・特異点の分類</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  table{ border-collapse:collapse; width:100%; margin:10px 0; font-size:14.5px; } th,td{ border:1px solid var(--line); padding:6px 9px; vertical-align:top; } th{ background:var(--box); text-align:left; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:520px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第5回　モレラの定理・テイラー展開・特異点の分類</h1>
+<p class="lead">教科書 p.164, 167 ／ 全体地図では「積分表示・グルサ → <strong>べき級数展開・特異点</strong> → ローラン展開・留数」へ進む回です。</p>
+
+<div class="navi">
+グルサの公式（第4回）から「正則関数は何回でも微分できる」と分かりました。今回はその帰結として <strong>正則関数がべき級数（テイラー展開）に書ける</strong>ことを示し、<strong>特異点を分類</strong>します。<span class="star">「正則点ではローラン展開＝テイラー展開」</span>は中間過去問 問4 の証明テーマです。
+</div>
+
+<h2>5.1　モレラの定理（コーシーの定理の逆）</h2>
+<div class="thm">
+<span class="label">定理 5.1（モレラの定理）</span><br>
+$f(z)$ が領域内で連続で、その領域内の<strong>任意の閉曲線 $C$</strong> に対して
+$$ \oint_C f(z)\,dz=0 $$
+を満たすならば、$f(z)$ はその領域で<strong>正則</strong>である。
+</div>
+<p>コーシーの定理「正則 ⇒ 一周積分0」の<strong>逆</strong>にあたり、「一周積分0 ⇒ 正則」を主張します。つまり上式は正則であるための<strong>十分条件</strong>です。</p>
+<div class="proof">
+<span class="label">考え方</span>　任意の閉曲線で積分が 0 なら、積分は経路によらない。よって $F(z)=\int_{z_0}^z f\,d\zeta$ が定義でき、第4回 定理 4.3 と同じ議論で $F'(z)=f(z)$。$F$ は正則で、グルサの公式より $F$ は何回でも微分でき、その導関数 $f=F'$ もまた正則。<span class="qed">∎</span>
+</div>
+<div class="box">
+<strong>まとめ</strong>：&nbsp;正則 $\Longleftrightarrow$ 領域内の任意の閉曲線で $\oint f\,dz=0$。コーシーの定理（→）とモレラの定理（←）で同値になる。
+</div>
+
+<h2>5.2　テイラー展開</h2>
+<div class="thm">
+<span class="label">定理 5.2（テイラー展開）</span><br>
+$f$ が点 $a$ で正則なら、$a$ のまわりで<strong>べき級数</strong>に展開できる：
+$$ f(z)=\sum_{n=0}^{\infty} c_n (z-a)^n,\qquad c_n=\frac{f^{(n)}(a)}{n!}=\frac{1}{2\pi i}\oint_{C}\frac{f(\zeta)}{(\zeta-a)^{n+1}}\,d\zeta. $$
+収束半径は $|b-a|$（$b$ は $a$ に<strong>最も近い特異点</strong>）。
+</div>
+<div class="proof">
+<span class="label">導出の要点</span>　コーシーの積分表示 $f(z)=\dfrac{1}{2\pi i}\oint_C\dfrac{f(\zeta)}{\zeta-z}d\zeta$ の核を、$a$ のまわりで等比級数に展開する：
+$$ \frac{1}{\zeta-z}=\frac{1}{(\zeta-a)-(z-a)}=\frac{1}{\zeta-a}\cdot\frac{1}{1-\frac{z-a}{\zeta-a}}=\sum_{n=0}^{\infty}\frac{(z-a)^n}{(\zeta-a)^{n+1}}. $$
+（$\left|\frac{z-a}{\zeta-a}\right|<1$ で収束。）これを積分表示に代入し項別に積分すると、$c_n=\dfrac{1}{2\pi i}\oint_C\dfrac{f(\zeta)}{(\zeta-a)^{n+1}}d\zeta=\dfrac{f^{(n)}(a)}{n!}$（グルサの公式）。<span class="qed">∎</span>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 360 230" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <circle cx="150" cy="120" r="95" fill="#f4f7fa" stroke="#1b4f72" stroke-width="2"/>
+  <line x1="150" y1="120" x2="245" y2="120" stroke="#1b4f72" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <circle cx="150" cy="120" r="3.5" fill="#1b4f72"/><text x="138" y="138" fill="#1b4f72">a</text>
+  <g stroke="#c0392b" stroke-width="2"><line x1="239" y1="114" x2="251" y2="126"/><line x1="251" y1="114" x2="239" y2="126"/></g>
+  <text x="252" y="112" fill="#c0392b">b（最近接特異点）</text>
+  <text x="168" y="113" fill="#1b4f72">R=|b−a|</text>
+  <g stroke="#bbb" stroke-width="2"><line x1="300" y1="40" x2="312" y2="52"/><line x1="312" y1="40" x2="300" y2="52"/></g>
+  <text x="284" y="34" fill="#999">別の特異点</text>
+</svg>
+<figcaption>図5-1　テイラー展開の収束円は、中心 $a$ から<strong>最も近い特異点</strong> $b$ までの距離 $R=|b-a|$ を半径とする。</figcaption>
+</figure>
+
+<div class="ex">
+<span class="label">例 5.1（中間過去問 問4(1)）</span>　$f(z)=\dfrac{1}{z^2}$ を $z=i$ のまわりでテイラー展開する。<br>
+$z=i$ は正則点（$z=0$ のみ特異点）。微分すると $f'=-2z^{-3},\ f''=6z^{-4},\ f'''=-24z^{-5}$。$z=i$ で値は
+$f(i)=\frac1{i^2}=-1$, $f'(i)=-2i^{-3}=-2\cdot i=-2i$（$i^{-3}=i$）, $\frac{f''(i)}{2!}=\frac{6i^{-4}}{2}=3$（$i^{-4}=1$）, $\frac{f'''(i)}{3!}=\frac{-24i^{-5}}{6}=-4i^{-5}=-4\cdot i^{-1}=4i$。
+$$ \frac1{z^2}=-1-2i(z-i)+3(z-i)^2+4i(z-i)^3+\cdots=-\sum_{n=0}^{\infty}(n+1)i^{n}(z-i)^n. $$
+収束は $0<|z-i|<1$（最近接特異点 $z=0$ までの距離 $1$）。
+</div>
+
+<div class="ex">
+<span class="label">例 5.2（基本展開）</span>　原点まわり：$\displaystyle e^z=\sum_{n=0}^\infty\frac{z^n}{n!},\quad \frac{1}{1-z}=\sum_{n=0}^\infty z^n\ (|z|<1),\quad \sin z=\sum_{n=0}^\infty\frac{(-1)^n z^{2n+1}}{(2n+1)!}$。
+</div>
+
+<h2>5.3　特異点の分類</h2>
+<h3>5.3.1　孤立特異点</h3>
+<div class="def">
+<span class="label">定義 5.3</span>
+<ul style="margin:4px 0">
+  <li><strong>孤立特異点</strong>：$z=a$ のみで正則でなく、その近傍の他の点では正則。</li>
+  <li><strong>集積特異点</strong>：$z=a$ のどんな近傍にも特異点があるもの（孤立していない）。</li>
+</ul>
+本講義で主に扱うのは孤立特異点。
+</div>
+
+<h3>5.3.2　ローラン展開の主部による分類（第6回への導入）</h3>
+<p>孤立特異点 $a$ のまわりでは、負べきを含む級数（ローラン展開、第6回で詳説）に展開できる。その<strong>主部</strong>（負べきの部分）
+$$ \varphi(z)=C_{-1}(z-a)^{-1}+C_{-2}(z-a)^{-2}+\cdots $$
+の形で特異点を分類する。</p>
+<table>
+<tr><th>主部の形</th><th>分類</th><th>特徴</th></tr>
+<tr><td>主部がゼロ（負べき無し）</td><td>除去可能特異点</td><td>実は正則点と同じ扱いにできる</td></tr>
+<tr><td>主部が有限項（$(z-a)^{-n}$ まで）</td><td><span class="key">$n$ 位の極</span></td><td>$\displaystyle\lim_{z\to a}f(z)=\infty$</td></tr>
+<tr><td>主部が無限級数</td><td>真性特異点</td><td>近づき方で値が一定しない</td></tr>
+</table>
+<figure class="fig">
+<svg viewBox="0 0 470 205" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <line x1="250" y1="28" x2="250" y2="190" stroke="#bbb" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="232" y="22" fill="#555">n=0</text>
+  <g fill="#999" font-size="10" text-anchor="middle">
+    <text x="166" y="44">-3</text><text x="194" y="44">-2</text><text x="222" y="44">-1</text><text x="250" y="44">0</text><text x="278" y="44">1</text><text x="306" y="44">2</text><text x="334" y="44">3</text>
+  </g>
+  <text x="8" y="84" fill="#2e7d32">除去可能</text>
+  <line x1="120" y1="80" x2="378" y2="80" stroke="#ddd"/>
+  <g fill="#1b4f72"><circle cx="250" cy="80" r="4"/><circle cx="278" cy="80" r="4"/><circle cx="306" cy="80" r="4"/><circle cx="334" cy="80" r="4"/><circle cx="362" cy="80" r="4"/></g>
+  <text x="8" y="129" fill="#7d3c98">2位の極</text>
+  <line x1="120" y1="125" x2="378" y2="125" stroke="#ddd"/>
+  <g fill="#c0392b"><circle cx="194" cy="125" r="4"/><circle cx="222" cy="125" r="4"/></g>
+  <g fill="#1b4f72"><circle cx="250" cy="125" r="4"/><circle cx="278" cy="125" r="4"/><circle cx="306" cy="125" r="4"/><circle cx="334" cy="125" r="4"/><circle cx="362" cy="125" r="4"/></g>
+  <text x="8" y="174" fill="#c0392b">真性特異点</text>
+  <line x1="120" y1="170" x2="378" y2="170" stroke="#ddd"/>
+  <text x="116" y="174" fill="#c0392b" text-anchor="end">…</text>
+  <g fill="#c0392b"><circle cx="138" cy="170" r="4"/><circle cx="166" cy="170" r="4"/><circle cx="194" cy="170" r="4"/><circle cx="222" cy="170" r="4"/></g>
+  <g fill="#1b4f72"><circle cx="250" cy="170" r="4"/><circle cx="278" cy="170" r="4"/><circle cx="306" cy="170" r="4"/><circle cx="334" cy="170" r="4"/></g>
+  <text x="392" y="58" fill="#1b4f72" font-size="10">青＝正べき</text>
+  <text x="392" y="72" fill="#c0392b" font-size="10">赤＝負べき(主部)</text>
+</svg>
+<figcaption>図5-2　ローラン係数 $c_n$ のうち<span style="color:#c0392b">負べき（主部）</span>がどこまであるかで分類する。負べき無→除去可能、有限項→（その最小次数の）極、無限→真性特異点。</figcaption>
+</figure>
+
+<div class="def">
+<span class="label">定義 5.4（極）</span>　孤立特異点 $a$ で $\displaystyle\lim_{z\to a}f(z)=\infty$ となるとき、$a$ を<strong>極</strong>という。主部が $(z-a)^{-n}$ までで止まるとき $n$ 位の極。
+</div>
+
+<h2>5.4　★ 正則点まわりではローラン展開＝テイラー展開（過去問 問4(2)）</h2>
+<div class="thm">
+<span class="label">主張</span>　特異点 $a$ まわりのローラン展開 $\displaystyle f(z)=\sum_{n=-\infty}^{\infty}c_n(z-a)^n,\ c_n=\dfrac{1}{2\pi i}\oint_C\dfrac{f(\zeta)}{(\zeta-a)^{n+1}}d\zeta$ について、<strong>$a$ が正則点なら負べきの係数が消え、テイラー展開に一致する</strong>。
+</div>
+<div class="proof">
+<span class="label">証明</span>　$a$ が正則点なら、$f$ は $a$ を含む円板で正則。負べきの係数（$n\le-1$）は
+$$ c_n=\frac{1}{2\pi i}\oint_C f(\zeta)\,(\zeta-a)^{-n-1}\,d\zeta. $$
+$n\le-1$ のとき $-n-1\ge0$ なので、被積分関数 $f(\zeta)(\zeta-a)^{-n-1}$ は<strong>正則</strong>（正べき×正則）。よってコーシーの定理より、この積分は $0$。すなわち $c_n=0\ (n\le-1)$。<br>
+残るのは $n\ge0$ の項のみで、$c_n=\dfrac{f^{(n)}(a)}{n!}$（グルサ）。これはまさにテイラー展開である。<span class="qed">∎</span>
+</div>
+<div class="warn">
+この証明は中間過去問 問4(2) そのもの。<strong>「負べきの係数の積分が、正則だからコーシーの定理で 0 になる」</strong>——この一点が核心。書けるようにしておくこと。
+</div>
+
+<hr>
+<h2>5.5　章末例題</h2>
+<div class="ex">
+<span class="label">例題 5.A</span>　$\dfrac{1}{1-z}$ を $z=2$ のまわりでテイラー展開し、収束半径を述べよ。
+<details><summary>解答を見る</summary>
+<div class="proof">
+$\dfrac{1}{1-z}=\dfrac{1}{-(z-2)-1}\cdot(-1)$… 整理すると $\dfrac{1}{1-z}=\dfrac{-1}{(z-2)+1}=-\dfrac{1}{1+(z-2)}=-\sum_{n=0}^\infty(-1)^n(z-2)^n$。
+最近接特異点は $z=1$、距離 $|2-1|=1$ ゆえ収束半径 $1$。
+</div>
+</details>
+</div>
+<div class="ex">
+<span class="label">例題 5.B</span>　次の関数の $z=0$ における特異点を分類せよ：(1) $\dfrac{\sin z}{z}$　(2) $\dfrac{1}{z^3}$　(3) $e^{1/z}$。
+<details><summary>解答を見る</summary>
+<div class="proof">
+(1) $\dfrac{\sin z}{z}=1-\dfrac{z^2}{3!}+\cdots$ 負べき無し → <strong>除去可能特異点</strong>。<br>
+(2) 主部が $z^{-3}$ のみ → <strong>3位の極</strong>。<br>
+(3) $e^{1/z}=\sum_{n\ge0}\dfrac{1}{n!}z^{-n}$ 主部が無限級数 → <strong>真性特異点</strong>。
+</div>
+</details>
+</div>
+
+<h2>5.6　演習問題</h2>
+<ol>
+  <li>$e^z$ を $z=1$ のまわりでテイラー展開せよ。</li>
+  <li>$\dfrac{1}{z}$ を $z=1$ のまわりでテイラー展開し、収束半径を述べよ。</li>
+  <li>$\dfrac{\cos z-1}{z^2}$ の $z=0$ の特異点を分類せよ。</li>
+  <li>$\dfrac{e^z}{z^2}$ の $z=0$ の特異点を分類せよ。</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong> $e^z=e\cdot e^{z-1}=e\sum_{n\ge0}\dfrac{(z-1)^n}{n!}$。<br>
+<strong>2.</strong> $\dfrac1z=\dfrac1{1+(z-1)}=\sum_{n\ge0}(-1)^n(z-1)^n$、収束半径 $1$（特異点 $z=0$ まで距離1）。<br>
+<strong>3.</strong> $\dfrac{\cos z-1}{z^2}=-\dfrac1{2!}+\dfrac{z^2}{4!}-\cdots$ 負べき無し → 除去可能特異点。<br>
+<strong>4.</strong> $\dfrac{e^z}{z^2}=z^{-2}+z^{-1}+\dfrac12+\cdots$ 主部 $z^{-2}$ まで → 2位の極。
+</div>
+</details>
+
+<div class="navi" style="margin-top:18px">
+<strong>次回（第6回）への橋渡し</strong>：特異点まわりの展開（<strong>ローラン展開</strong>）を正面から扱い、主部の係数 $C_{-1}$ を<strong>留数</strong>と呼ぶ。留数の計算法（1位・$n$位の極）と<strong>留数定理</strong>へ進む。
+</div>
+
+</body>
+</html>

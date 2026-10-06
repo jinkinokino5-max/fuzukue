@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>応用数学Ⅱ 自習カリキュラム（複素関数 第1〜7回）</title>
+<script>
+  MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa; --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink);
+        line-height:1.7; margin:0; padding:24px 28px; max-width:960px; margin:0 auto; font-size:15.5px; }
+  h1{ font-size:24px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:20px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:30px 0 10px; }
+  h3{ font-size:17px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15.5px; color:var(--accent2); margin:14px 0 4px; }
+  .lead{ color:var(--sub); margin:4px 0 16px; }
+  table{ border-collapse:collapse; width:100%; margin:10px 0; font-size:14.5px; }
+  th,td{ border:1px solid var(--line); padding:6px 9px; vertical-align:top; }
+  th{ background:var(--box); text-align:left; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:10px 14px; margin:10px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-radius:6px; padding:10px 14px; margin:10px 0; }
+  .pill{ display:inline-block; background:var(--accent2); color:#fff; font-size:12px; padding:1px 8px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+  .key{ font-weight:bold; color:var(--accent2); }
+  ul,ol{ margin:6px 0 6px 0; padding-left:22px; }
+  li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); }
+  .roadmap td:first-child{ white-space:nowrap; font-weight:bold; color:var(--accent); }
+  .star{ color:#c0392b; font-weight:bold; }
+  hr{ border:none; border-top:1px dashed var(--line); margin:24px 0; }
+  .toc a{ color:var(--accent); text-decoration:none; }
+  .toc a:hover{ text-decoration:underline; }
+  code{ background:#eee; padding:1px 5px; border-radius:3px; font-size:13.5px; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
+</style>
+</head>
+<body>
+
+<h1>応用数学Ⅱ 自習カリキュラム</h1>
+<p class="lead">複素関数論（第1〜7回／中間試験範囲）を、基礎からひとつずつ積み上げて理解するための学習設計書です。<br>
+「公式を使えること」ではなく「<strong>なぜその公式が成り立つのかを自分で再現できること</strong>」をゴールにしています。</p>
+
+<div class="box">
+<strong>この授業の先生の方針（最重要）</strong>
+<ul>
+  <li>数学を「道具」としてではなく、<span class="key">公式の裏にある論理を自分で再構成できること</span>を重視します。</li>
+  <li>スライドは要点のみ。実際の講義は<span class="key">板書による証明と具体例</span>が主役です。本カリキュラムでも証明の流れを必ず追います。</li>
+  <li>とくに <span class="star">複素関数の不定積分の証明</span> は重要で、試験に出ると明言されています（最優先で習得）。</li>
+  <li>2回に1回レポート提出があります。</li>
+</ul>
+</div>
+
+<h2>0. 全体マップと使い方</h2>
+
+<h3>0-1. 中間試験までの全体像（複素関数論の地図）</h3>
+<p>複素関数論は、次の一本の論理の流れでつながっています。最初にこの地図を頭に入れておくと、各回が「全体のどこか」を見失いません。</p>
+<div class="box">
+<strong>正則性（微分可能）</strong>
+&nbsp;⟶&nbsp; <strong>コーシー・リーマンの方程式</strong>
+&nbsp;⟶&nbsp; <strong>複素積分・コーシーの定理</strong>（正則なら一周積分は0）
+&nbsp;⟶&nbsp; <strong>不定積分・コーシーの積分表示・グルサの公式</strong>
+&nbsp;⟶&nbsp; <strong>テイラー展開／ローラン展開</strong>
+&nbsp;⟶&nbsp; <strong>特異点・極・留数</strong>
+&nbsp;⟶&nbsp; <strong>留数定理</strong>
+&nbsp;⟶&nbsp; <strong>実積分への応用</strong>
+</div>
+<p class="meta">キーワードは「正則」です。<span class="key">正則であること＝微分可能であること</span>が、積分が経路によらないこと・無限回微分できること・べき級数に展開できること、すべての出発点になります。</p>
+
+<h3>0-2. 学習の進め方（1回あたりの推奨手順）</h3>
+<ol>
+  <li><strong>地図で位置を確認</strong>：その回が全体のどこか（上の流れ図）を見る。</li>
+  <li><strong>定義と主張を読む</strong>：何を「定義」し、何を「証明」しようとしているのかを分ける。</li>
+  <li><strong>証明を一度自分の手で追う</strong>：行間を埋めながらノートに写経する。先生の流儀の核心。</li>
+  <li><strong>具体例で計算</strong>：定義・定理を具体的な関数に当てはめて手を動かす。</li>
+  <li><strong>例題・過去レポートを解く</strong>：手が止まったら定義・定理に戻る。</li>
+</ol>
+
+<h3>0-3. 前提知識のチェック（ここが怪しいと第1回でつまずきます）</h3>
+<table>
+<tr><th>分野</th><th>必要な事項</th><th>復習の要否</th></tr>
+<tr><td>複素数</td><td>$z=x+iy$、共役 $\bar z$、絶対値 $|z|$、極形式 $z=r e^{i\theta}=r(\cos\theta+i\sin\theta)$、偏角 $\arg z$</td><td>第1回前に必須</td></tr>
+<tr><td>微分積分</td><td>偏微分、合成関数の微分、テイラー展開（実数）、部分分数分解</td><td>第1・5・7回で使用</td></tr>
+<tr><td>線積分</td><td>媒介変数表示による線積分 $\int f\,ds$ の考え方</td><td>第3回前に確認</td></tr>
+<tr><td>実関数</td><td>$e^x$, $\sin x$, $\cos x$, $\log x$, $\tan^{-1}x$ の性質と微分</td><td>第2回で使用</td></tr>
+</table>
+<p class="meta">→ これらは別冊テキストの「第0章 準備」で要点を復習できるようにします。</p>
+
+<h2>1. 全7回 ロードマップ（中間試験範囲）</h2>
+<table class="roadmap">
+<tr><th>回</th><th>日付</th><th>主題</th><th>到達目標（できるようになること）</th><th>教科書</th></tr>
+<tr><td>第1回</td><td>6/10</td><td>複素関数・正則性・C-R方程式</td><td>正則の定義を述べ、C-R方程式を導出・適用できる</td><td>p.118-138</td></tr>
+<tr><td>第2回</td><td>6/11</td><td>指数・三角・対数関数</td><td>複素の初等関数を定義し、正則性・多価性を説明できる</td><td>p.136-150</td></tr>
+<tr><td>第3回</td><td>6/17</td><td>等角写像・複素積分・コーシーの定理</td><td>複素積分を定義し計算でき、コーシーの定理を述べられる</td><td>p.147,185,153</td></tr>
+<tr><td>第4回</td><td>6/18</td><td>積分路変更・<span class="star">不定積分</span>・コーシーの積分表示・グルサ</td><td><span class="star">不定積分の存在を証明</span>でき、積分表示で値を求められる</td><td>p.156-161</td></tr>
+<tr><td>第5回</td><td>6/24</td><td>モレラの定理・テイラー展開・特異点分類</td><td>正則関数のテイラー展開を導出し、特異点を分類できる</td><td>p.164,167</td></tr>
+<tr><td>第6回</td><td>6/25</td><td>ローラン展開・極・留数・留数定理</td><td>ローラン展開を求め、留数を計算し留数定理を使える</td><td>p.172-179</td></tr>
+<tr><td>第7回</td><td>7/1</td><td>留数定理の実積分への応用</td><td>実定積分を複素積分に帰着して計算できる</td><td>p.181</td></tr>
+<tr><td>第8回</td><td>7/2</td><td colspan="3"><strong>中間試験（複素関数）</strong></td></tr>
+</table>
+
+<hr>
+<h2>2. 各回の詳細カリキュラム</h2>
+
+<!-- 第1回 -->
+<h3>第1回　複素関数・極限・正則性・コーシー・リーマンの方程式</h3>
+<h4>学習目標</h4>
+<ul>
+  <li>複素関数 $w=f(z)$ を、実2変数の組 $u(x,y),\,v(x,y)$ として捉えられる。</li>
+  <li>複素微分（導関数）の定義を述べ、「経路によらず極限が存在する」意味を説明できる。</li>
+  <li>正則・正則関数・特異点を定義できる。</li>
+  <li>コーシー・リーマンの方程式 $u_x=v_y,\ u_y=-v_x$ を<strong>自分で導出</strong>できる。</li>
+</ul>
+<h4>重要概念</h4>
+<ul>
+  <li>$w=g(z)=u(x,y)+i\,v(x,y)$（点→点だけでなく、線→線・面→面の写像）。例：$w=z^2=(x^2-y^2)+2xyi$。</li>
+  <li>導関数：$\displaystyle f'(a)=\lim_{z\to a}\frac{f(z)-f(a)}{z-a}$ が<span class="key">$z\to a$ の近づき方（経路）によらず</span>一意に定まること。</li>
+  <li>領域 $D$ の各点で微分可能 ⇒ $f$ は $D$ で<span class="key">正則</span>。正則でない点が<span class="key">特異点</span>。</li>
+</ul>
+<h4>再現すべき証明・導出 <span class="pill">手を動かす</span></h4>
+<ul>
+  <li><strong>C-R方程式の導出</strong>：$\Delta z$ を実軸方向（$\Delta z=\Delta x$）と虚軸方向（$\Delta z=i\Delta y$）から近づけ、両者の極限が一致する条件として導く。</li>
+  <li>導関数の表式 $f'(z)=u_x+i v_x=v_y-i u_y$ を確認する。</li>
+</ul>
+<h4>つまずきポイント</h4>
+<ul>
+  <li>「経路によらず」が腑に落ちない → 実関数の左右極限の一致の2次元版だと理解する。</li>
+  <li>C-R方程式は「正則 ⇒ 成立（必要条件）」。逆（十分）には偏導関数の連続性が要る点に注意。</li>
+</ul>
+<h4>代表例題</h4>
+<ul>
+  <li>$f(z)=z^2$ が正則であることを C-R で確認し、$f'(z)=2z$ を導く。</li>
+  <li>$f(z)=\bar z$（$u=x,v=-y$）が C-R を満たさず正則でないことを示す。</li>
+  <li><span class="star">中間過去問 問1型</span>：$u_x,u_y$ が与えられたとき、C-R で $v$ を求め、$f'(z)$ を作り、<strong>不定積分で $f(z)$ を $z$ の式で復元</strong>する（第4回と接続）。</li>
+</ul>
+<p class="meta">学習時間の目安：3〜4時間</p>
+
+<!-- 第2回 -->
+<h3>第2回　指数関数・三角関数・対数関数</h3>
+<h4>学習目標</h4>
+<ul>
+  <li>複素指数関数 $e^z=e^x(\cos y+i\sin y)$ を定義し、オイラーの公式と整合することを示せる。</li>
+  <li>複素三角関数 $\cos z,\sin z$ を指数で定義し、実数版を拡張したものと理解できる。</li>
+  <li>複素対数 $\log z=\ln|z|+i\arg z$ を定義し、<span class="key">多価性</span>（$\arg$ の $2\pi$ 不定性）を説明できる。</li>
+</ul>
+<h4>重要概念・公式</h4>
+<ul>
+  <li>$e^z$ は周期 $2\pi i$ の周期関数。$|e^z|=e^x$、$\arg e^z=y$。</li>
+  <li>$\displaystyle\cos z=\frac{e^{iz}+e^{-iz}}{2},\quad \sin z=\frac{e^{iz}-e^{-iz}}{2i}$。$\cosh,\sinh$ との関係（$\cos(iy)=\cosh y$ など）。</li>
+  <li>$\log z=\ln|z|+i\arg z$。主値 $\mathrm{Log}\,z$ と分枝。$z^a=e^{a\log z}$。</li>
+</ul>
+<h4>再現すべき証明・導出</h4>
+<ul>
+  <li>$e^z$ が C-R を満たし正則で、$\dfrac{d}{dz}e^z=e^z$ となることを確認する。</li>
+  <li>$\log z$ が $e^w=z$ の逆関数であることと、その多価性の出どころを説明する。</li>
+</ul>
+<h4>つまずきポイント</h4>
+<ul>
+  <li>$\cos z,\sin z$ は実数と違い<strong>有界でない</strong>（$|\cos z|$ はいくらでも大きくなる）。</li>
+  <li>$\log$ の多価性：$\arg z$ をどの区間に取るかで値が変わる。中間過去問でも $\log$ の扱いが頻出。</li>
+</ul>
+<h4>代表例題</h4>
+<ul>
+  <li>$\log i,\ \log(-1)$ を求める。$i^i$ を計算する。</li>
+  <li>$\Im[2\ln\frac1\pi-\cosh 1-1+i\pi]=\pi$ のように、$\log$ を含む式の実部・虚部を取り出す（過去問 問3）。</li>
+</ul>
+<p class="meta">学習時間の目安：3時間</p>
+
+<!-- 第3回 -->
+<h3>第3回　等角写像・複素積分・コーシーの定理 <span class="star">（理解が止まりやすい回）</span></h3>
+<h4>学習目標</h4>
+<ul>
+  <li>等角写像（正則写像が角度を保つこと）の意味を直感的に説明できる。</li>
+  <li>複素積分 $\displaystyle\int_C f(z)\,dz$ を媒介変数で定義し、実際に計算できる。</li>
+  <li>コーシーの定理「正則関数の閉曲線一周積分は0」を述べ、意味を理解できる。</li>
+</ul>
+<h4>重要概念・公式</h4>
+<ul>
+  <li><strong>複素積分の定義</strong>：$z=z(t)\ (a\le t\le b)$ とおき、$\displaystyle\int_C f(z)\,dz=\int_a^b f(z(t))\,z'(t)\,dt$。</li>
+  <li>基本例：円 $|z-a|=r$ 上で $\displaystyle\oint \frac{dz}{z-a}=2\pi i$、$\displaystyle\oint (z-a)^n dz=0\ (n\ne -1)$。<span class="key">この2式は留数論の土台</span>。</li>
+  <li><strong>コーシーの定理</strong>：$f$ が単連結領域 $D$ で正則 ⇒ $D$ 内の任意の閉曲線 $C$ で $\displaystyle\oint_C f(z)\,dz=0$。</li>
+</ul>
+<h4>再現すべき証明・導出 <span class="pill">最重要</span></h4>
+<ul>
+  <li>$\displaystyle\oint_{|z-a|=r}\frac{dz}{z-a}=2\pi i$ を $z=a+re^{i\theta}$ の代入で直接計算する（留数 $2\pi i$ の原型）。</li>
+  <li>コーシーの定理：グリーンの定理＋C-R方程式から導く流れを追う（教科書 p.153）。</li>
+</ul>
+<h4>つまずきポイント</h4>
+<ul>
+  <li>$\oint dz/(z-a)=2\pi i$ だけ「0でない」のはなぜか → $1/(z-a)$ は $z=a$ で正則でない（特異点を内部に含む）から。コーシーの定理の前提が崩れる例として理解。</li>
+  <li>「積分が経路によらない」＝「閉路で0」＝「正則」が同値で結びつく感覚を持つ。</li>
+</ul>
+<h4>代表例題</h4>
+<ul>
+  <li>$\displaystyle\oint_{|z|=1} \bar z\,dz$（正則でない例、$\ne0$）と $\displaystyle\oint_{|z|=1} z\,dz=0$（正則）を比較。</li>
+  <li>過去問 問3(3)：$\displaystyle\oint_{|z+1|=1/2} f(z)\,dz$ で、積分路内に特異点が無ければコーシーの定理で 0。</li>
+</ul>
+<p class="meta">学習時間の目安：4〜5時間（ここを丁寧に。後半すべての土台）</p>
+
+<!-- 第4回 -->
+<h3>第4回　積分路の変更・不定積分・コーシーの積分表示・グルサの公式 <span class="star">（試験最重要）</span></h3>
+<h4>学習目標</h4>
+<ul>
+  <li>積分路の変更（特異点を避けて経路を変形してよい理由）を説明できる。</li>
+  <li><span class="star">正則関数は不定積分（原始関数）をもつことを証明</span>でき、$\int f\,dz=F(z)+C$ を使える。</li>
+  <li>コーシーの積分表示 $\displaystyle f(a)=\frac{1}{2\pi i}\oint_C \frac{f(z)}{z-a}dz$ を述べ、値を求められる。</li>
+  <li>グルサの公式（高階導関数の積分表示）$\displaystyle f^{(n)}(a)=\frac{n!}{2\pi i}\oint_C \frac{f(z)}{(z-a)^{n+1}}dz$ を使える。</li>
+</ul>
+<h4>再現すべき証明・導出 <span class="pill">試験に出る</span></h4>
+<ul>
+  <li><span class="star">不定積分の存在証明</span>：$f$ が正則ならコーシーの定理から積分が経路によらず、$\displaystyle F(z)=\int_{z_0}^{z} f(\zeta)\,d\zeta$ が well-defined で $F'(z)=f(z)$ となることを示す。<strong>先生が「試験に出す」と明言した部分。最優先で何度も再現する。</strong></li>
+  <li>コーシーの積分表示の導出：積分路を $a$ まわりの小円に変更し、$\oint dz/(z-a)=2\pi i$ を使う。</li>
+  <li>グルサの公式：積分表示を $a$ で繰り返し微分して得る流れ。</li>
+</ul>
+<h4>つまずきポイント</h4>
+<ul>
+  <li>不定積分の証明は「経路によらない（第3回）」が前提。第3回が曖昧だとここで詰まる。</li>
+  <li>積分表示は「内部の1点での値が、境界上の積分だけで決まる」という強力さを味わう。</li>
+</ul>
+<h4>代表例題</h4>
+<ul>
+  <li>過去問 問1：$f'(z)=i/z$ を不定積分して $f(z)=i\log z+C$ を得る。</li>
+  <li>過去問 問3(2)：$\displaystyle\int_\pi^{i} f(z)\,dz$ を不定積分 $[2\log z-\cos z]$ で評価する。</li>
+  <li>$\displaystyle\oint_{|z|=2}\frac{e^z}{z-1}dz=2\pi i\,e$ を積分表示で求める。</li>
+</ul>
+<p class="meta">学習時間の目安：5〜6時間（不定積分の証明に最大の時間を）</p>
+
+<!-- 第5回 -->
+<h3>第5回　モレラの定理・テイラー展開・特異点の分類</h3>
+<h4>学習目標</h4>
+<ul>
+  <li>モレラの定理（コーシーの定理の逆）を述べられる。</li>
+  <li>正則関数が<span class="key">べき級数（テイラー展開）</span>に展開できることを理解し、係数 $c_n=f^{(n)}(a)/n!$ を求められる。</li>
+  <li>特異点を「除去可能・極・真性特異点」に分類できる。</li>
+</ul>
+<h4>重要概念・公式</h4>
+<ul>
+  <li>テイラー展開：$f$ が $a$ で正則なら $\displaystyle f(z)=\sum_{n=0}^{\infty} c_n (z-a)^n,\ c_n=\frac{f^{(n)}(a)}{n!}$（収束円は最近接特異点まで）。</li>
+  <li>グルサの公式を使うと $c_n=\dfrac{1}{2\pi i}\oint \dfrac{f(z)}{(z-a)^{n+1}}dz$ とも書ける。</li>
+</ul>
+<h4>再現すべき証明・導出</h4>
+<ul>
+  <li>テイラー展開の導出：コーシーの積分表示の核 $\dfrac{1}{z-a}$ を等比級数展開して項別積分する流れ。</li>
+  <li>過去問 問4(2)型：「$z=a$ が正則点なら、ローラン展開はテイラー展開に一致する」ことを、負べきの係数が 0 になる（コーシーの定理）ことから示す。</li>
+</ul>
+<h4>代表例題</h4>
+<ul>
+  <li>$\dfrac1{z^2}$ を $z=i$ のまわりでテイラー展開（過去問 問4(1)）。</li>
+  <li>$e^z,\ \dfrac{1}{1-z}$ の原点まわり展開と収束半径。</li>
+</ul>
+<p class="meta">学習時間の目安：4時間</p>
+
+<!-- 第6回 -->
+<h3>第6回　ローラン展開・極・留数・留数定理</h3>
+<h4>学習目標</h4>
+<ul>
+  <li>特異点のまわりでの<span class="key">ローラン展開</span>（負べきを含む級数）を求められる。</li>
+  <li>$n$ 位の極を判定し、留数 $\mathrm{Res}(f,a)=c_{-1}$ を計算できる。</li>
+  <li>留数定理 $\displaystyle\oint_C f\,dz=2\pi i\sum \mathrm{Res}(f,a_k)$ を使える。</li>
+</ul>
+<h4>重要概念・公式</h4>
+<ul>
+  <li>ローラン展開：$\displaystyle f(z)=\sum_{n=-\infty}^{\infty} c_n(z-a)^n$（環状領域で収束）。留数＝$c_{-1}$。</li>
+  <li>$n$ 位の極の留数：$\displaystyle \mathrm{Res}(f,a)=\lim_{z\to a}\frac{1}{(n-1)!}\frac{d^{n-1}}{dz^{n-1}}\big[(z-a)^n f(z)\big]$。</li>
+  <li>1位の極（簡単形）：$\mathrm{Res}(f,a)=\lim_{z\to a}(z-a)f(z)$、$f=g/h$ なら $g(a)/h'(a)$。</li>
+</ul>
+<h4>再現すべき証明・導出</h4>
+<ul>
+  <li>留数定理：留数定理を「各特異点まわりの小円に分け＋ローラン展開＋$\oint(z-a)^n dz$」で導く。</li>
+  <li>$n$ 位の極の留数公式を、ローラン展開から微分で $c_{-1}$ を取り出して導出。</li>
+</ul>
+<h4>代表例題</h4>
+<ul>
+  <li>$\dfrac{1}{z(z-1)}$ のローラン展開（領域で形が変わることを確認）。</li>
+  <li>$\dfrac{z^2}{(z^2+1)(z^2+4)}$ の各極での留数（過去問 問5に直結）。</li>
+</ul>
+<p class="meta">学習時間の目安：4〜5時間</p>
+
+<!-- 第7回 -->
+<h3>第7回　留数定理の実積分への応用</h3>
+<h4>学習目標</h4>
+<ul>
+  <li>実定積分 $\displaystyle\int_{-\infty}^{\infty} R(x)\,dx$ を、上半平面の半円積分（複素積分）に帰着できる。</li>
+  <li>大半円上の積分が消えること（ジョルダンの補題的評価）を確認できる。</li>
+  <li>偶関数性・積分範囲の扱いに注意して値を出せる。</li>
+</ul>
+<h4>典型手順（テンプレート）</h4>
+<ol>
+  <li>偶関数なら $\int_0^\infty=\frac12\int_{-\infty}^\infty$ に直す。</li>
+  <li>$f(z)$ を作り、上半平面内の極を特定する。</li>
+  <li>大半円 $R\to\infty$ で積分が 0 になることを次数評価で確認。</li>
+  <li>留数定理 $\oint=2\pi i\sum\mathrm{Res}$ で値を求め、実部/必要成分を取る。</li>
+</ol>
+<h4>代表例題</h4>
+<ul>
+  <li><span class="star">過去問 問5</span>：$\displaystyle\int_0^\infty\frac{x^2}{x^4+5x^2+4}dx=\frac{\pi}{6}$。極 $z=i,2i$ の留数 $i/6,\,-i/3$ から導く。</li>
+  <li>$\displaystyle\int_{-\infty}^{\infty}\frac{dx}{x^2+1}=\pi$（最も基本の型）。</li>
+</ul>
+<p class="meta">学習時間の目安：4時間</p>
+
+<hr>
+<h2>3. レポート・中間試験対策</h2>
+<h4>レポート（2回に1回）</h4>
+<ul>
+  <li>参照：<code>reference/レポートの問題/no1〜no3.pdf</code>。各テキストの章末に、対応するレポート問題の考え方を載せます。</li>
+  <li>先生の方針上、答えだけでなく<strong>導出過程・根拠</strong>を必ず書くこと（「途中計算・説明を省略しない」）。</li>
+</ul>
+<h4>中間試験（複素関数）で問われる型（昨年問題より）</h4>
+<table>
+<tr><th>問</th><th>内容</th><th>対応回</th></tr>
+<tr><td>問1</td><td>C-Rで $v$ を求め、$f'$ を作り<span class="star">不定積分で $f(z)$ を復元</span></td><td>第1・4回</td></tr>
+<tr><td>問2</td><td>$|z-i+1|=2$ 等の式が表す図形の図示</td><td>第1回（複素平面）</td></tr>
+<tr><td>問3</td><td>$\arg(df/dz)$、$\Im[\int f dz]$、$\oint f dz$ の計算</td><td>第3・4回</td></tr>
+<tr><td>問4</td><td>テイラー展開／「正則点ならローラン＝テイラー」の証明</td><td>第5回</td></tr>
+<tr><td>問5</td><td>留数定理による実定積分</td><td>第6・7回</td></tr>
+</table>
+<div class="warn">
+<strong>試験で落とさないための重点</strong>
+<ul>
+  <li><span class="star">不定積分の存在証明</span>（先生が出題明言）。</li>
+  <li>「正則点まわりではローラン展開＝テイラー展開」になる理由。</li>
+  <li>$\log z=\ln|z|+i\arg z$ を使った計算と、実部・虚部の取り出し。</li>
+  <li>留数計算（特に $n$ 位の極の公式）と積分範囲（偶関数・上半平面）の扱い。</li>
+</ul>
+</div>
+
+<h2>4. 後半（第9〜15回）の概要</h2>
+<p class="meta">中間範囲を優先するため詳細は中間後に作成します。全体像のみ示します。</p>
+<table>
+<tr><th>回</th><th>日付</th><th>主題</th></tr>
+<tr><td>9</td><td>7/8</td><td>フーリエ級数展開、相関、実応用例</td></tr>
+<tr><td>10</td><td>7/9</td><td>フーリエ積分とフーリエ変換</td></tr>
+<tr><td>11</td><td>7/15</td><td>デルタ関数、たたみ込み積分、微分方程式への応用</td></tr>
+<tr><td>12</td><td>7/16</td><td>偏微分方程式の分類と解法</td></tr>
+<tr><td>13</td><td>7/22</td><td>ラプラス変換・逆変換（留数定理を使用）</td></tr>
+<tr><td>14</td><td>7/23</td><td>微分方程式・偏微分方程式への応用、たたみ込み</td></tr>
+<tr><td>15</td><td>7/29</td><td>ステップ関数・デルタ関数、インピーダンスと応答（試験範囲外）、質問</td></tr>
+</table>
+
+<hr>
+<p class="meta">作成：自習支援用カリキュラム。数式は MathJax（CDN）で表示します。ブラウザで開くとレイアウトが整い、そのまま印刷（PDF化）も可能です。次は本カリキュラムに沿って各回のテキスト（HTML）を作成します。</p>
+
+</body>
+</html>

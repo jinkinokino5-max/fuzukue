@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電磁気学 自習教材 目次</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 目次：教材ページと同じ書籍風デザイン。各回は「教材｜読み物」を対で載せる */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.85; margin:0 auto; padding:56px 28px 60px; max-width:860px; font-size:15px; letter-spacing:.02em; }
+  a{ color:inherit; }
+  .mast{ border-bottom:1px solid var(--ink); padding-bottom:18px; margin-bottom:18px; }
+  .mast .en{ font-family:var(--num); font-weight:300; font-size:20px; letter-spacing:.3em; color:var(--shu); margin:0; }
+  .mast h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(30px,5vw,44px); letter-spacing:.1em; margin:2px 0 6px; line-height:1.3; }
+  .mast .lead{ color:var(--sub); margin:0; font-size:14.5px; }
+  .spine{ font-size:14px; color:var(--sub); border-left:3px solid var(--line); padding:4px 0 4px 14px; margin:20px 0 8px; }
+  .spine strong{ color:var(--ink); }
+  h2{ font-family:var(--mincho); font-weight:700; font-size:17px; letter-spacing:.08em; margin:48px 0 4px; display:flex; align-items:baseline; gap:12px; }
+  h2 small{ font-family:inherit; font-weight:500; font-size:13px; color:var(--sub); letter-spacing:.04em; }
+
+  /* 1回分の行：番号｜題｜教材・読み物 */
+  .row{ display:grid; grid-template-columns:72px 1fr auto; gap:6px 18px; align-items:center; padding:16px 0; border-bottom:1px solid var(--line); }
+  .row .no{ font-family:var(--num); font-weight:300; font-size:46px; line-height:1; color:var(--shu); text-align:center;
+            font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  .row .tt{ font-family:var(--mincho); font-weight:700; font-size:18px; letter-spacing:.05em; margin:0; line-height:1.5; }
+  .row .tt a{ text-decoration:none; } .row .tt a:hover{ color:var(--accent); }
+  .row .dt{ font-size:12px; color:var(--sub); letter-spacing:.1em; margin:0; }
+  .row .ds{ font-size:13px; color:var(--sub); margin:2px 0 0; }
+  .row .go{ display:flex; flex-direction:column; gap:6px; min-width:200px; }
+  .go a,.go span{ display:block; font-size:12.5px; padding:6px 12px; text-decoration:none; border:1px solid var(--ink); line-height:1.4; }
+  .go a small,.go span small{ display:block; font-size:10px; letter-spacing:.2em; color:var(--sub); }
+  .go a.les{ background:var(--ink); color:var(--paper); } .go a.les small{ color:#c9c2b4; }
+  .go a.col{ border-color:var(--shu); color:var(--shu); font-family:var(--mincho); }
+  .go a:hover{ opacity:.85; }
+  .go span{ border-style:dashed; border-color:var(--line); color:#a59d90; }
+  .row.todo .no{ color:#cfc6b6; } .row.todo .tt{ color:#a59d90; }
+  .row.test .no{ font-size:15px; letter-spacing:.1em; font-family:var(--mincho); font-weight:700; color:#a06a32; }
+  .other{ margin-top:48px; font-size:14px; }
+  .meta{ font-size:12.5px; color:var(--sub); margin-top:36px; border-top:1px solid var(--line); padding-top:12px; }
+  @media (max-width:640px){
+    body{ padding:36px 16px 40px; }
+    .row{ grid-template-columns:52px 1fr; }
+    .row .no{ font-size:36px; }
+    .row .go{ grid-column:1 / -1; flex-direction:row; min-width:0; }
+    .go a,.go span{ flex:1; }
+  }
+</style>
+</head>
+<body>
+<!--fzk-back--><p style="margin:0 0 18px;font-size:12px;letter-spacing:.2em;line-height:1.6"><a href="../index.html" style="color:#a8322a;text-decoration:none">← 文机 FUZUKUE</a></p>
+
+<header class="mast">
+<p class="en">ELECTROMAGNETISM</p>
+<h1>電磁気学</h1>
+<p class="lead">R8年度・秋（10/1〜11/30）自習教材。各回は、導出の筋道を省かずに説明し直した<strong>教材</strong>と、そこから遠くまで連れていく<strong>読み物</strong>の二冊で一組。</p>
+</header>
+
+<p class="spine"><strong>全体の骨格</strong>：静電場（01〜04）→ 物質と電場（05〜07）→ 静磁場（08〜09）→ 電磁誘導（10）→ Maxwell方程式（11）→ 電磁波（12）。「場」の性質を一つずつ調べ、最後に4本の式へ集約する一本道。</p>
+
+<h2>確認テスト1まで <small>10/22</small></h2>
+
+<div class="row">
+  <div class="no">1</div>
+  <div><p class="dt">第1回・10/1</p><p class="tt"><a href="01_第1回_クーロンの法則と電場.html">クーロンの法則と電場</a></p>
+  <p class="ds">逆2乗則／ε₀ と光速／電場の定義／重ね合わせ／分布電荷の積分</p></div>
+  <div class="go"><a class="les" href="01_第1回_クーロンの法則と電場.html"><small>LESSON</small>教材を読む</a>
+  <a class="col" href="column/C01_門を閉じても月は入る.html"><small>READING</small>門を閉じても月は入る</a></div>
+</div>
+<div class="row test">
+  <div class="no">小テスト</div>
+  <div><p class="dt">第1回・小テスト</p><p class="tt"><a href="01Q_第1回_小テスト解説.html">小テスト：ヒントと解説</a></p>
+  <p class="ds">帯電した円周の中心軸上の電場（指数で答える形式）</p></div>
+  <div class="go"><a class="les" href="01Q_第1回_小テスト解説.html"><small>QUIZ</small>解説を読む</a></div>
+</div>
+<div class="row">
+  <div class="no">2</div>
+  <div><p class="dt">第2回・10/5</p><p class="tt"><a href="02_第2回_ガウスの法則の導出とその応用.html">ガウスの法則の導出とその応用</a></p>
+  <p class="ds">電気力線／立体角による導出／直線・球・平面の電場</p></div>
+  <div class="go"><a class="les" href="02_第2回_ガウスの法則の導出とその応用.html"><small>LESSON</small>教材を読む</a>
+  <a class="col" href="column/C02_前立は似ていなくていい.html"><small>READING</small>前立は似ていなくていい</a></div>
+</div>
+<div class="row test">
+  <div class="no">小テスト</div>
+  <div><p class="dt">第2回・小テスト</p><p class="tt"><a href="02Q_第2回_小テスト解説.html">小テスト：ヒントと解説</a></p>
+  <p class="ds">無限に長い直線電荷：円筒を貫く本数と電場（指数で答える形式）</p></div>
+  <div class="go"><a class="les" href="02Q_第2回_小テスト解説.html"><small>QUIZ</small>解説を読む</a></div>
+</div>
+<div class="row todo"><div class="no">3</div><div><p class="dt">第3回・10/15</p><p class="tt">電位</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">4</div><div><p class="dt">第4回・10/19</p><p class="tt">電場のエネルギー</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo test"><div class="no">T1</div><div><p class="dt">10/22</p><p class="tt">確認テスト1：範囲まとめ＋予想問題</p><p class="ds">第4回の後に作成</p></div><div class="go"></div></div>
+
+<h2>確認テスト2まで <small>11/5</small></h2>
+<div class="row todo"><div class="no">5</div><div><p class="dt">第5回・10/26</p><p class="tt">導体の性質</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">6</div><div><p class="dt">第6回・10/29</p><p class="tt">静電場中の絶縁体</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">7</div><div><p class="dt">第7回・11/2</p><p class="tt">定常電流とオームの法則</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo test"><div class="no">T2</div><div><p class="dt">11/5</p><p class="tt">確認テスト2：範囲まとめ＋予想問題</p><p class="ds">第7回の後に作成</p></div><div class="go"></div></div>
+
+<h2>確認テスト3まで <small>11/30</small></h2>
+<div class="row todo"><div class="no">8</div><div><p class="dt">第8回・11/9</p><p class="tt">ビオ・サバールの法則、アンペールの法則</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">9</div><div><p class="dt">第9回・11/12</p><p class="tt">ローレンツ力</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">10</div><div><p class="dt">第10回・11/16</p><p class="tt">電磁誘導の法則</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">11</div><div><p class="dt">第11回・11/19</p><p class="tt">Maxwell方程式の導出</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">12</div><div><p class="dt">第12回・11/26</p><p class="tt">電磁波</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo test"><div class="no">T3</div><div><p class="dt">11/30</p><p class="tt">確認テスト3：範囲まとめ＋予想問題</p><p class="ds">第12回の後に作成</p></div><div class="go"></div></div>
+
+<p class="other"><a href="はじめに_使い方ガイド.html">はじめに：このフォルダの使い方</a> ― 分からないところは質問すれば教材に追記される（ティーチングモード）。</p>
+
+<p class="meta">日程は9/25時点の日程表による。確認テストの範囲は日程の区切りからの推定。例題・演習・予想問題・読み物は自作であり、実際の出題を保証するものではない。</p>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前立は似ていなくていい</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+<style>
+  /* C02 固有：扉の題字を写真右上の空に置く／図の大きさ */
+  .hero .ttl{ writing-mode:horizontal-tb; top:4%; right:4%; text-align:right; font-size:clamp(20px,4vw,40px); letter-spacing:.12em; line-height:1.35; }
+  .hero .ttl small{ margin:.5em 0 0; }
+  .map text{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; }
+  .pair img{ max-height:460px; width:auto; max-width:100%; margin:0 auto; }
+</style>
+</head>
+<body>
+
+<div class="backlink">電磁気学 自習教材 ｜ 第2回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../02_第2回_ガウスの法則の導出とその応用.html">第2回 ガウスの法則の導出とその応用</a>（§4 ガウスの法則・§5 対称性）</div>
+
+<figure class="hero">
+  <img src="img/c02_hero_ekobashira.jpg" alt="御開帳中の善光寺本堂。手前左に「奉開龕前立本尊」と墨書された高い回向柱が立ち、柱の頭から一本の白い綱が斜めに本堂の軒の奥へのびている。柱の根もとに手を当てる参詣者がいる。">
+  <div class="ttl">前立は<br>似ていなくていい<small>秘仏・太鼓・ガウス面</small></div>
+  <figcaption>善光寺 御開帳の回向柱と本堂（2015年）　撮影：アルトクール　CC BY-SA 4.0</figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第二回</div>
+  <p class="lede">長野の善光寺の本尊は、誰も見たことがない。七年に一度の御開帳で開かれるのも、本尊の前に立つ身代わり、前立本尊である。見えないものの代わりに立つものは、どこまで本物に似ていなければならないのか。</p>
+  <div class="keys"><span>善の綱</span><span>前立本尊</span><span>お戒壇巡り</span><span>清凉寺の五臓</span><span>太鼓の形</span><span>空に見える厨子</span><span>似せない前立</span></div>
+</header>
+
+<article>
+
+<h2><span class="no">序</span>綱は内陣まで届いている</h2>
+<p>御開帳の春、善光寺の本堂の前には、見上げるほどの角柱が一本立つ。回向柱という。柱の頭から白い綱が斜めに張られ、本堂の軒をくぐって奥へ消えていく。綱は金糸と五色の糸に継がれて、内陣に安置された前立本尊の右手に結ばれている。参詣者は列をつくって柱に手を当てる。柱に触れることが、仏の手に触れることとみなされるからだ。</p>
+<p>綱は堂の壁を貫いて奥まで届く。だが結ばれている先は、本尊ではなく、その代理である。本尊の一光三尊阿弥陀如来は絶対秘仏で、厨子は御開帳でも開かれない。参詣者が本尊にいちばん近づくのは、むしろ足もとの闇のなかだ。瑠璃壇の床下を手探りで巡るお戒壇巡りでは、目を閉じても開けても同じ暗さのなかで、本尊の真下にあるという錠前を探す。</p>
+<p>では、前立が本尊と同じ姿だと、なぜ言えるのか。</p>
+<p>第2回の講義も、閉じたものの外で綱を数えることから始まった。電荷を閉じた面で囲み、面を貫いて出ていく電気力線の本数を数える。資料はこの力線を「そもそも架空のもの」と書いていた。架空の綱を数えて、見えない中身を当てるのである。</p>
+<h2><span class="no">一</span>写しは中身まで似せようとする</h2>
+<p>善光寺の前立本尊は鎌倉時代の作で、重要文化財に指定されている。本尊と同じ姿に作られたとされ、数百年にわたって本尊の代わりに拝まれてきた。</p>
+<p>写しを本物に近づけようとする力は、ときに姿を越えて内側にまで及ぶ。京都・嵯峨の清凉寺の釈迦如来立像は、東大寺の僧・奝然が985年、宋の台州で仏師の兄弟に刻ませ、翌年日本へ持ち帰ったものだ。インドの優填王が釈迦の在世中に作らせたという栴檀の像の、写しの写しとされる。1953年、この像の胎内から、絹でかたちづくられた五臓六腑が見つかった。腸は布を縫い合わせた長い帯で、ほかの臓器も布の袋になっている。像は外から見えない内臓まで備えて、生きた釈迦として拝まれてきた。</p>
+<figure class="pair"><img src="img/c02_seiryoji_shaka.jpg" alt="清凉寺の釈迦如来立像の古写真。右手を上げて立つ木像で、衣のひだが細い縄を重ねたように体を覆う。" loading="lazy"><img src="img/c02_seiryoji_gozo.jpg" alt="像の胎内から見つかった絹製の五臓六腑。長い帯を折りたたんだ腸と、黄や緑の布の袋が並ぶ。" loading="lazy">
+<figcaption style="grid-column:1/-1"><b>左：清凉寺の釈迦如来立像</b>（小川一真撮影の古写真）。<b>右：その胎内から見つかった絹の五臓六腑</b>（1956年撮影）。外からは衣のひだしか見えない像に、布で縫った腸が折りたたまれて納められていた。いずれも Public domain, via Wikimedia Commons。</figcaption></figure>
+<p>写しは姿を似せ、それで足りなければ中身まで似せる。本物との距離を縮めることが、写しの誠実さだ。だが善光寺でも嵯峨でも、その距離を測った者はいない。前立が本尊と同じだと保証しているのは、比べた結果ではなく、信仰である。</p>
+<h2><span class="no">二</span>太鼓の形は聞こえない</h2>
+<p>1966年、数学者マーク・カッツは「太鼓の形は聞こえるか」という題の論文を書いた。枠に膜を張った太鼓は、枠の形に応じて決まった高さの音の並びを出す。では逆に、音の並びをすべて聞けば、枠の形を言い当てられるか。</p>
+<p>半分は聞こえる。高い音ほど並びは密になる。その密になり方から、ヘルマン・ワイルは1911年、太鼓の面積が分かることを示した。周の長さも、のちに聞き取れることが分かった。面積と周という、形を一つの数に畳んだ量は、外へ漏れ出てくる音のなかに正確に刻まれている。</p>
+<p>残りの半分は聞こえなかった。1992年、ゴードン、ウェッブ、ウォルパートの三人は、形が違うのに音の並びがすべて一致する二枚の太鼓を作ってみせた。どちらも同じ形の小さな三角形をつないだ多角形で、つなぎ方だけが違う。下の図では、二つの形の振動の様子がまるで違うのに、添えられた数は左右で同じに並ぶ。10.2、14.6、20.7……。耳は面積を知っているが、形を知らない。</p>
+<figure><img src="img/c02_gww_drums.png" alt="形の違う二つの多角形の太鼓それぞれについて、30個の振動の様子を色で描いた図。左右で模様はまったく違うが、各図に添えられた固有値は左右で同じ数が並ぶ。" loading="lazy">
+<figcaption><b>同じ音を出す、形の違う二枚の太鼓</b>（ゴードン、ウェッブ、ウォルパートの例）。左右それぞれ、低い音から30番目までの振動の様子を描き、固有値 λ を添えている。模様は違うのに、λ≈10.2、14.6、20.7…… の列は左右で一致する（数値はこの図の大きさの取り方での値）。Rotem Shalev, CC BY 4.0, via Wikimedia Commons（改変なし）。</figcaption></figure>
+<p>閉じた面を貫く電気力線も、同じ種類の情報である。ガウスの法則が告げるのは、面の中にある電荷の合計、それも正味の合計だけだ。中の電荷が一点に集まっていようと、雲のように広がっていようと、本数は変わらない。正と負の電荷が対になって入っていれば、たとえば電気双極子なら、本数はゼロになる。中には確かに電荷があり、面の上には電場もあるのに、差し引きで出ていく綱は一本もない。空に見える厨子。</p>
+<p>境界は量に忠実で、姿に無関心だ。欠陥に見えるこの性質が、じつは計算の鍵になる。</p>
+<h2><span class="no">三</span>似せない前立</h2>
+<p>一様に帯電した半径 $R$ の球を、外から眺める。ガウスの法則を同心の球面に当てはめると、外側の電場は
+$$E=\frac{Q}{4\pi\varepsilon_0 r^2}$$
+となる。球の中心に全電荷 $Q$ を一点に集めたときの電場と、まったく同じ式だ。講義の図5.2では、一様な球と球殻の二本のグラフが、外側でぴたりと重なっている。中身の詰まった球も、表面だけの殻も、中心の一点も、外からは区別できない。</p>
+<figure class="map"><svg viewBox="0 0 660 250" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="c02-arw" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a8322a"/></marker>
+<radialGradient id="c02-ball"><stop offset="0" stop-color="#e8b7a8"/><stop offset="1" stop-color="#c46a58"/></radialGradient></defs>
+<line x1="166.0" y1="130.0" x2="202.7" y2="139.8" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="151.0" y1="156.0" x2="177.9" y2="182.9" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="125.0" y1="171.0" x2="134.8" y2="207.7" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="95.0" y1="171.0" x2="85.2" y2="207.7" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="69.0" y1="156.0" x2="42.1" y2="182.9" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="54.0" y1="130.0" x2="17.3" y2="139.8" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="54.0" y1="100.0" x2="17.3" y2="90.2" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="69.0" y1="74.0" x2="42.1" y2="47.1" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="95.0" y1="59.0" x2="85.2" y2="22.3" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="125.0" y1="59.0" x2="134.8" y2="22.3" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="151.0" y1="74.0" x2="177.9" y2="47.1" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="166.0" y1="100.0" x2="202.7" y2="90.2" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<circle cx="110" cy="115" r="72" fill="none" stroke="#2b3a67" stroke-width="1.2" stroke-dasharray="5,4"/>
+<circle cx="110" cy="115" r="40" fill="url(#c02-ball)"/>
+<text x="110" y="238" text-anchor="middle" font-size="14" fill="#1c1c22">一様に帯電した球</text>
+<line x1="386.0" y1="130.0" x2="422.7" y2="139.8" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="371.0" y1="156.0" x2="397.9" y2="182.9" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="345.0" y1="171.0" x2="354.8" y2="207.7" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="315.0" y1="171.0" x2="305.2" y2="207.7" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="289.0" y1="156.0" x2="262.1" y2="182.9" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="274.0" y1="130.0" x2="237.3" y2="139.8" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="274.0" y1="100.0" x2="237.3" y2="90.2" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="289.0" y1="74.0" x2="262.1" y2="47.1" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="315.0" y1="59.0" x2="305.2" y2="22.3" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="345.0" y1="59.0" x2="354.8" y2="22.3" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="371.0" y1="74.0" x2="397.9" y2="47.1" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="386.0" y1="100.0" x2="422.7" y2="90.2" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<circle cx="330" cy="115" r="72" fill="none" stroke="#2b3a67" stroke-width="1.2" stroke-dasharray="5,4"/>
+<circle cx="330" cy="115" r="40" fill="#fbfaf7" stroke="#c46a58" stroke-width="5"/>
+<text x="330" y="238" text-anchor="middle" font-size="14" fill="#1c1c22">球殻（表面だけ）</text>
+<line x1="606.0" y1="130.0" x2="642.7" y2="139.8" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="591.0" y1="156.0" x2="617.9" y2="182.9" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="565.0" y1="171.0" x2="574.8" y2="207.7" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="535.0" y1="171.0" x2="525.2" y2="207.7" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="509.0" y1="156.0" x2="482.1" y2="182.9" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="494.0" y1="130.0" x2="457.3" y2="139.8" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="494.0" y1="100.0" x2="457.3" y2="90.2" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="509.0" y1="74.0" x2="482.1" y2="47.1" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="535.0" y1="59.0" x2="525.2" y2="22.3" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="565.0" y1="59.0" x2="574.8" y2="22.3" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="591.0" y1="74.0" x2="617.9" y2="47.1" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<line x1="606.0" y1="100.0" x2="642.7" y2="90.2" stroke="#a8322a" stroke-width="1.6" marker-end="url(#c02-arw)"/>
+<circle cx="550" cy="115" r="72" fill="none" stroke="#2b3a67" stroke-width="1.2" stroke-dasharray="5,4"/>
+<circle cx="550" cy="115" r="4" fill="#a8322a"/>
+<text x="550" y="238" text-anchor="middle" font-size="14" fill="#1c1c22">中心の一点（前立）</text>
+</svg><figcaption><b>外から見れば三つは同じ</b>。全電荷 $Q$ が等しければ、破線の球面（ガウス面）を貫く本数はどれも $Q/\varepsilon_0$ で、外側の電場はどれも $Q/(4\pi\varepsilon_0r^2)$ になる。違いは破線の内側にしかない。本コラムの模式図（講義 図5.2 の内容を絵にしたもの）。</figcaption></figure>
+<p>中心の点電荷もまた前立である。ただし向きが逆だ。点は球に少しも似ていない。大きさはゼロで、内臓どころか体積すらない。寺の写しが姿を似せ、中身まで似せることで本物に近づこうとしたのに対し、物理の前立は似ることを一切放棄している。それでいて、外への効き目は寸分違わない。写しているのは姿ではなく、効き目である。</p>
+<p>そして、寺の前立を支えたのが信仰なら、こちらを支えるのは証明である。本尊を誰ひとり覗かなくても、球対称だという誓いさえあれば、似ていない身代わりが外からは区別できないと言い切れる。</p>
+<p>前立が立つには、堂の側に二つの備えがいる。まず対称性。ガウスの法則は面全体の合計についての一本の式にすぎず、一本の式で決められる未知数は一つしかない（講義 §5.1）。分布が球対称なら、球面のどこでも電場の大きさが等しくなり、未知数が $E$ 一つに減る。対称性は、本尊の姿についての誓いである。どの向きから見ても同じだと誓われたとき、はじめて一点の前立が立つ。</p>
+<p>もう一つは、力が距離の2乗で弱まること。場の弱まり $1/r^2$ と球面の広がり $4\pi r^2$ がちょうど打ち消し合い、どの半径の球で数えても本数は変わらない。こちらは誰の誓いでもない。この宇宙がそうなっている。</p>
+<p>似せない前立は、似ていないからこそ使える。第1回では、分布を細かく刻んで一つずつ足し合わせた。その積分が一行で済むのは、外からは中身を忘れてよいと保証されているからだ。</p>
+<h2><span class="no">結</span>前立を立てる</h2>
+<p>講義の例題14では、電荷が立方体の一つの頂点に置かれていた。電荷は立方体の隅にあり、そのままでは対称性がない。そこで同じ立方体を八つ組み、電荷が大きな立方体の真ん中に来るようにする。大きな立方体の六つの面は電荷から見て同じなので、本数は六等分でき、それをさらに四つに分ければ元の面の分が出る。</p>
+<p>本尊は動かさず、本尊が真ん中に来るまで堂を建て増す手である。ガウス面は与えられるものではない。自分で建てる堂だ。どこに壁を立てれば、中身を忘れても困らないか。</p>
+<p>第2回の小テストでは、直線電荷を囲む円筒から出る本数 $N=\sigma h/\varepsilon_0$ に、円筒の太さ $r$ が入っていなかった。ところが電場 $E=\sigma/(2\pi\varepsilon_0 r)$ には $r$ が戻ってくる。太さを忘れたまま数えた本数を、側面の面積 $2\pi rh$ で割ったとき、場所が戻ってくる。数えるために忘れ、割ることで思い出す。</p>
+
+<p class="coda">本尊は見えない。前立は似ていない。<br>それでも、本数は合う。</p>
+
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+<h3>参照した資料 ── 本文が依拠したもの</h3>
+<ul>
+  <li><span class="bk">本教材 第2回「ガウスの法則の導出とその応用」</span> <span class="pub">§2 本数の約束、§4 ガウスの法則、§5.1 なぜ対称性が要るか、図5.2、例題14</span><span class="why">三・結で、物理の側の根拠にした。</span></li>
+  <li><span class="bk">M. Kac, "Can One Hear the Shape of a Drum?"</span> <span class="pub">American Mathematical Monthly 73 (1966)</span><span class="why">二の出発点。問いの題そのもの。</span></li>
+  <li><span class="bk">C. Gordon, D. Webb, S. Wolpert, "One cannot hear the shape of a drum"</span> <span class="pub">Bulletin of the AMS 27 (1992)</span><span class="why">同じ音を出す、形の違う太鼓。二で使った。</span></li>
+</ul>
+<p class="note">※二本の論文は通読していない。内容は下の「事実確認に用いた資料」の解説で確かめた。</p>
+<h3>参考図書 ── さらに読むために</h3>
+<ul>
+  <li><span class="bk">ファインマン、レイトン、サンズ『ファインマン物理学 Ⅲ 電磁気学』（宮島龍興訳）</span> <span class="pub">岩波書店、1969年（原書 <i>The Feynman Lectures on Physics</i>, Vol. II はカリフォルニア工科大学が無料公開）</span><span class="why">ガウスの法則を「中から出ていく流れ」として語る章（原書 第4・5章）がある。前立の電荷を、図と言葉でもう一度確かめられる。</span></li>
+  <li><span class="bk">D. J. Griffiths, <i>Introduction to Electrodynamics</i></span> <span class="pub">Cambridge University Press、第4版 2017年</span><span class="why">ガウスの法則の節で、対称性がなければ法則は正しくても電場を求める道具にならない、とはっきり書いている。§5.1 の話を英語で読める。</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。善光寺の前立本尊・清凉寺の釈迦像と、ガウスの法則の点電荷を「前立」として結ぶ見立ては筆者の解釈であり、学説や寺院の見解ではありません。前立本尊が本尊と「同じ姿」であるというのは寺伝・解説による説明です。</div>
+  <h3>図版の出典</h3>
+  <ul>
+    <li>扉：<a href="https://commons.wikimedia.org/wiki/File:Zenk%C5%8D-ji_Gokaicho_2015.JPG">File:Zenkō-ji Gokaicho 2015.JPG</a>（アルトクール、<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。縮小のみ）</li>
+    <li>清凉寺釈迦如来立像：<a href="https://commons.wikimedia.org/wiki/File:Seiryoji_Buddha.jpg">File:Seiryoji Buddha.jpg</a>（小川一真撮影、Public domain）</li>
+    <li>胎内の五臓：<a href="https://commons.wikimedia.org/wiki/File:%E6%B8%85%E6%B6%BC%E5%AF%BA%E9%87%8B%E8%BF%A6%E5%83%8F%E8%83%8E%E5%86%85%E4%BA%94%E8%97%8F.jpg">File:清涼寺釋迦像胎内五藏.jpg</a>（1956年撮影、Public domain）</li>
+    <li>二枚の太鼓：<a href="https://commons.wikimedia.org/wiki/File:Eigenmodes_of_GWW_Isospectral_Domains.png">File:Eigenmodes of GWW Isospectral Domains.png</a>（Rotem Shalev、<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>、改変なし）</li>
+    <li>三つの球の図：本コラムで作図。</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://www.zenkoji.jp/about/">善光寺公式「善光寺について」</a>：本尊（一光三尊阿弥陀如来）、前立本尊が鎌倉時代の作であること。</li>
+    <li><a href="https://www.nact.jp/artcommons/user/detail/26545">国立アートリサーチセンターの解説</a>、観光案内（<a href="https://rurubu.jp/andmore/spot/80018991">るるぶ「お戒壇巡り」</a>、<a href="https://www.nta.co.jp/akafu/east/theme/train/nagano/">日本旅行「善光寺御開帳号」</a>）：重要文化財、絶対秘仏、数え年で七年に一度の御開帳、回向柱と善の綱が前立本尊の右手に結ばれること、お戒壇巡りと極楽の錠前。</li>
+    <li><a href="https://discoverjapan-web.com/article/135934">Discover Japan「清凉寺」</a>、<a href="https://projects.mcah.columbia.edu/jaanus/node/4375">JAANUS "gozō roppu"</a>：985年台州での模刻、986年の請来、1953年の胎内納入品の発見、生身の思想。</li>
+    <li><a href="https://en.wikipedia.org/wiki/Hearing_the_shape_of_a_drum">Wikipedia "Hearing the shape of a drum"</a>：カッツ（1966）、ワイル（1911、面積）、周の長さは後年の結果、ゴードン・ウェッブ・ウォルパート（1992）。</li>
+  </ul>
+</div>
+
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../02_第2回_ガウスの法則の導出とその応用.html"><small>LESSON 2</small>← 教材：第2回 ガウスの法則の導出とその応用</a></nav>
+</body>
+</html>

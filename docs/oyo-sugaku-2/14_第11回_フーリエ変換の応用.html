@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第11回 フーリエ変換の応用（デルタ関数・たたみ込み・微分方程式）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .why{ background:#fffdf0; border:1px solid #e8d48b; border-left:6px solid #e8c14b; border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; } .why .label{ color:#9a7d1a; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:560px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  table.tb{ border-collapse:collapse; margin:12px 0; font-size:14.5px; width:100%; }
+  table.tb th,table.tb td{ border:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ background:#eef2f7; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+  .prob-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); background:#fff; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:0 6px; cursor:pointer; vertical-align:middle; user-select:none; }
+  .prob-chk input{ margin:0; cursor:pointer; }
+  @media print{ .prob-chk{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第11回　フーリエ変換の応用（デルタ関数・たたみ込み・微分方程式）</h1>
+<p class="lead">周期性の制限を外したフーリエ変換には、関数を波（$\sin,\cos$）の集合で表すこと以外に、<strong>実関数を変換して複素平面（周波数の世界）で表す</strong>という意味合いがあります。今回はその性質——スライド曰く「<strong>信号処理や制御工学でよく使う考えなので、しっかり理解しておくこと</strong>」——を3本柱で学びます。</p>
+
+<div class="navi">
+今回の3本柱：<strong>① デルタ関数</strong>（パルス状の関数はどう表されるか）→ <strong>② たたみ込み積分</strong>（変換すると積になる）→ <strong>③ 微分方程式への応用</strong>（微分が掛け算になる）。3つとも「フーリエ積分表示（第10回）」から芋づる式に導けます。土台は
+$$ f(x)=\frac{1}{2\pi}\int_{-\infty}^{\infty}dp\int_{-\infty}^{\infty}dx'\,f(x')\,e^{ip(x-x')} \qquad\text{（フーリエ積分表示）} $$
+です。
+</div>
+
+<h2>11.0　なぜデルタ関数が要るのか（動機）</h2>
+<p>第10回で「フーリエ変換できる条件」として<strong>絶対可積分</strong> $\displaystyle\int_{-\infty}^{\infty}|f|\,dx &lt; \infty$ を学びました。すると演習3で見たように、定数関数 $f=1$ や $\sin x$ のような「減衰しない関数」は変換できません。また逆に、<strong>一瞬だけ大きな値を持つパルス</strong>（打撃・衝撃・スイッチON）はどう表されるのかも気になります。</p>
+<div class="why">
+<span class="label">直感（先にゴールを言う）</span>　答えはどちらも<strong>デルタ関数 $\delta(x)$</strong> に行き着きます。$\delta(x)$ は「幅ゼロ・高さ無限大・面積1」の理想化されたパルスで、
+<ul>
+  <li>時間側で $\delta(x)$（一瞬のパルス）→ 周波数側では<strong>すべての周波数が均等</strong>に入っている。</li>
+  <li>時間側で定数 $1$（永遠に一定）→ 周波数側では $\delta(p)$（周波数 $0$ の成分だけ）。</li>
+</ul>
+つまりデルタ関数は「変換できない関数たち」を扱うための<strong>拡張パーツ</strong>です。以下、天下りではなく<strong>フーリエ積分表示から $\delta$ が自然に現れる過程</strong>を導きます。
+</div>
+
+<h2>11.1　デルタ関数の導出——局在した関数の積分表示から</h2>
+<p>スライドの筋書き通り、「有限区間 $[a,b]$ にだけ値を持つ（局在する）関数」のフーリエ積分表示を計算してみます。すると積分の芯に「$\delta$ 関数」と呼ぶべきものが浮かび上がります。</p>
+
+<div class="def">
+<span class="label">設定（局在する関数）</span>　区間 $[a,b]$ の上でだけ値を持つ関数
+$$ F(x)=\begin{cases} f(x) &amp; (a\le x\le b)\\[2px] 0 &amp; (x &lt; a,\ x &gt; b)\end{cases} $$
+を考える（$f$ は滑らかとする）。$F$ は絶対可積分なので、フーリエ積分表示が使える。
+</div>
+
+<div class="proof">
+<strong>① フーリエ積分表示から出発</strong>　第10回で導いた積分表示に $F$ を入れる：
+$$ F(x)=\frac{1}{2\pi}\int_{-\infty}^{\infty}dp\int_{-\infty}^{\infty}dx'\,F(x')\,e^{ip(x-x')}. $$
+<strong>② 積分範囲を有限に書き直す</strong>　$F(x')$ は $[a,b]$ の外で $0$ だから、$x'$ 積分は $\displaystyle\int_a^b dx'\,f(x')$ に縮む。$p$ 積分は $\pm\infty$ のままでは順序交換の議論がしにくいので、<strong>いったん有限の $[-L,L]$ で切って最後に $L\to\infty$ とする</strong>（極限で元の式に戻る書き方）：
+$$ F(x)=\lim_{L\to\infty}\frac{1}{2\pi}\int_{-L}^{L}dp\int_{a}^{b}dx'\,f(x')\,e^{ip(x-x')}. $$
+<strong>③ 積分の順序を交換する</strong>　いまや $p$ も $x'$ も<strong>有限区間の積分同士</strong>なので、順序を交換できる（順序交換が危ないのは無限区間や発散を含むとき。有限区間×連続関数なら安全）：
+$$ F(x)=\lim_{L\to\infty}\frac{1}{2\pi}\int_{a}^{b}dx'\,f(x')\int_{-L}^{L}e^{ip(x-x')}\,dp. $$
+狙いはこの<strong>内側の $p$ 積分を先に実行してしまう</strong>こと。$x-x'$ は $p$ から見ればただの定数なので、指数関数の積分として計算できるからです。
+</div>
+
+<h3>内側の積分 $\displaystyle\int_{-L}^{L}e^{ip(x-x')}dp$ を計算する</h3>
+<div class="proof">
+記号を軽くするため $X=x-x'$ と置く（$p$ 積分の間、$X$ は定数）。$X\ne0$ とする。<br>
+<strong>① 原始関数を作る</strong>　$e^{ipX}$ を $p$ で微分すると $iX\,e^{ipX}$ が出るので、割り戻して原始関数は $\dfrac{e^{ipX}}{iX}$：
+$$ \int_{-L}^{L}e^{ipX}\,dp=\Big[\frac{e^{ipX}}{iX}\Big]_{-L}^{L}=\frac{e^{iLX}-e^{-iLX}}{iX}. $$
+<strong>② オイラーの式で三角関数に直す</strong>　ここで使う道具はオイラーの式 $e^{i\theta}=\cos\theta+i\sin\theta$（$e^{i\theta}$ の定義級数を実部・虚部に分けたもの）。$\theta=-LX$ では $\cos$ が偶関数・$\sin$ が奇関数なので $e^{-iLX}=\cos LX-i\sin LX$。差を取ると $\cos$ が消えて $\sin$ が倍になる：
+$$ e^{iLX}-e^{-iLX}=(\cos LX+i\sin LX)-(\cos LX-i\sin LX)=2i\sin LX. $$
+<strong>③ 代入して整理</strong>
+$$ \int_{-L}^{L}e^{ipX}\,dp=\frac{2i\sin LX}{iX}=\frac{2\sin LX}{X}=\frac{2\sin L(x-x')}{x-x'}. $$
+<span class="meta">（スライドでは $\frac{1}{i}=-i$ を先に掛けて $[-i\cos+\sin]$ の形を経由していますが、結果は同じです。）</span>
+</div>
+
+<div class="proof">
+<strong>④ もとの式に戻す</strong>　③の結果を代入すると
+$$ F(x)=\lim_{L\to\infty}\frac{1}{2\pi}\int_{a}^{b}dx'\,f(x')\,\frac{2\sin L(x-x')}{x-x'}
+=\lim_{L\to\infty}\int_{a}^{b}dx'\,f(x')\,\frac{\sin L(x-x')}{\pi(x-x')}. $$
+（$\frac{2}{2\pi}=\frac{1}{\pi}$ を分母に入れただけ。）左辺は $a\le x\le b$ なら $f(x)$、外なら $0$。つまり右辺の
+$$ \frac{\sin L(x-x')}{\pi(x-x')} $$
+という関数は、$L\to\infty$ の極限で「<strong>積分の中から $x'=x$ での値 $f(x)$ だけを抜き出す</strong>」働きをしている。この極限を記号 $\delta$ で名付ける。
+</div>
+
+<div class="def">
+<span class="label">（ディラックの）デルタ関数</span>
+$$ \delta(x-x')=\lim_{L\to\infty}\frac{\sin L(x-x')}{\pi(x-x')},\qquad \delta(x-x')=\delta(x'-x)\ \text{（偶関数：}\sin\text{ も }x-x'\text{ も符号が同時に反転して打ち消す）} $$
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 480 210" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="md1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="15" y1="160" x2="465" y2="160" stroke="#999" stroke-width="1.1" marker-end="url(#md1)"/>
+  <line x1="240" y1="195" x2="240" y2="18" stroke="#999" stroke-width="1.1" marker-end="url(#md1)"/>
+  <text x="452" y="178" fill="#999">x−x′</text>
+  <text x="248" y="28" fill="#999">δ(x−x′)</text>
+  <!-- L small : wide low hump -->
+  <path d="M30 158 Q80 150 130 128 Q185 104 240 96 Q295 104 350 128 Q400 150 450 158" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <!-- L large : tall narrow with oscillation -->
+  <path d="M30 160 Q45 152 55 162 Q68 170 80 158 Q95 146 105 163 Q118 174 130 156 Q145 140 155 165 Q165 178 178 150 Q195 120 205 168 Q215 195 225 120 Q233 55 240 40 Q247 55 255 120 Q265 195 275 168 Q285 120 302 150 Q315 178 325 165 Q335 140 350 156 Q362 174 375 163 Q385 146 400 158 Q412 170 425 162 Q435 152 450 160" fill="none" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="4 2"/>
+  <text x="256" y="52" fill="#c0392b">L：大</text>
+  <text x="300" y="100" fill="#1b4f72">L：小</text>
+  <text x="30" y="195" fill="#666">L→∞ で「幅0・高さ∞・面積1」の針になる</text>
+</svg>
+<figcaption>図11-1　$\dfrac{\sin L(x-x')}{\pi(x-x')}$ のグラフ。$L$ が小さいとなだらかな山（実線）、$L$ が大きいと中央の山が高く細くなり、まわりは速く振動する（破線）。$L\to\infty$ で $x'=x$ に立つ「針」＝デルタ関数になる。</figcaption>
+</figure>
+
+<div class="why">
+<span class="label">この関数が「針」になる理由（3点セット）</span>
+<ul>
+  <li><strong>高さ</strong>：中央 $X\to0$ では $\sin LX\approx LX$（$\sin$ のテイラー展開の1次）なので $\dfrac{\sin LX}{\pi X}\approx\dfrac{LX}{\pi X}=\dfrac{L}{\pi}$。$L\to\infty$ で高さは<strong>無限大</strong>。</li>
+  <li><strong>幅</strong>：最初にゼロになるのは $LX=\pi$、つまり $X=\pi/L$。$L\to\infty$ で幅は<strong>ゼロ</strong>。</li>
+  <li><strong>面積</strong>：$u=LX$ と置換すると（$du=L\,dX$、$L$ が消える！）$\displaystyle\int_{-\infty}^{\infty}\frac{\sin LX}{\pi X}dX=\frac{1}{\pi}\int_{-\infty}^{\infty}\frac{\sin u}{u}\,du=\frac{1}{\pi}\cdot\pi=1$。ここで $\displaystyle\int_{-\infty}^{\infty}\frac{\sin u}{u}du=\pi$ は<strong>第7回（留数定理の実積分への応用）で計算したディリクレ積分</strong>です。$L$ によらず面積は常に <strong>1</strong>。</li>
+</ul>
+「高さ∞・幅0、でも面積はきっちり1」——これがデルタ関数の正体です。厳密には関数ではなく「積分の中でだけ意味を持つ記号」（超関数）ですが、工学では上の3点セットで扱えば十分です。
+</div>
+
+<div class="thm">
+<span class="label">デルタ関数の基本性質（ふるい落とし性質・sifting property）</span>
+$$ \int_{a}^{b}dx'\,f(x')\,\delta(x-x')=\begin{cases} f(x) &amp; (a\le x\le b)\\[2px] 0 &amp; (x &lt; a,\ x &gt; b)\end{cases} $$
+特に積分範囲が全域なら $\displaystyle\int_{-\infty}^{\infty}f(x')\,\delta(x-x')\,dx'=f(x)$、また $f=1$ として $\displaystyle\int_{-\infty}^{\infty}\delta(x)\,dx=1$。
+</div>
+<div class="proof">
+<strong>なぜ成り立つか</strong>　これは §11.1 の導出の結論そのものです。④の式の右辺
+$$ \lim_{L\to\infty}\int_{a}^{b}dx'\,f(x')\,\frac{\sin L(x-x')}{\pi(x-x')} $$
+が左辺 $F(x)$（＝範囲内なら $f(x)$、外なら $0$）に等しいことを、フーリエ積分表示を経由して示したのでした。直感的には：$\delta(x-x')$ は $x'=x$ 以外では（激しい振動が打ち消し合って）実質ゼロ、$x'=x$ の針の部分だけが生き残り、そこでの値 $f(x)$ × 面積 $1$ が出てくる——「<strong>関数 $f$ から1点の値をふるい落とす</strong>」働きです。
+</div>
+
+<h2>11.2　デルタ関数のフーリエ変換——「全周波数が均等」</h2>
+<p>導出の副産物として、次の重要な積分公式が手に入っています。§11.1 ③の計算で $L\to\infty$ とすれば
+$$ \int_{-\infty}^{\infty}e^{ip(x-x')}\,dp=\lim_{L\to\infty}\frac{2\sin L(x-x')}{x-x'}=2\pi\cdot\lim_{L\to\infty}\frac{\sin L(x-x')}{\pi(x-x')}=2\pi\,\delta(x-x'). $$
+この式を<strong>フーリエ逆変換の式と比較</strong>すると、$\delta$ のフーリエ変換が読み取れます。</p>
+
+<div class="proof">
+<strong>逆変換の式と見比べる</strong>　$X=x-x'$ と書き、上の公式を $\frac{1}{2\pi}=\frac{1}{\sqrt{2\pi}}\cdot\frac{1}{\sqrt{2\pi}}$ を使って整形する：
+$$ \delta(X)=\frac{1}{2\pi}\int_{-\infty}^{\infty}e^{ipX}\,dp
+=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\underbrace{\frac{1}{\sqrt{2\pi}}}_{=\hat\delta(p)}\,e^{ipX}\,dp. $$
+一方、フーリエ逆変換の定義（第10回）は
+$$ f(X)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat f(p)\,e^{ipX}\,dp. $$
+2つの式は「$f=\delta$、$\hat f(p)=\dfrac{1}{\sqrt{2\pi}}$（定数）」と読めばぴったり一致する。よって
+</div>
+<div class="thm">
+<span class="label">デルタ関数のフーリエ変換</span>
+$$ \int_{-\infty}^{\infty}e^{ip(x-x')}dp=2\pi\,\delta(x-x'),\qquad\therefore\ \mathcal{F}[\delta(x-x')]=\frac{1}{\sqrt{2\pi}}\quad\text{（$p$ によらない定数）} $$
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 480 190" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="md2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <!-- left: spike in x -->
+  <line x1="20" y1="140" x2="215" y2="140" stroke="#999" stroke-width="1.1" marker-end="url(#md2)"/>
+  <line x1="115" y1="165" x2="115" y2="20" stroke="#999" stroke-width="1.1" marker-end="url(#md2)"/>
+  <line x1="115" y1="140" x2="115" y2="35" stroke="#e0b800" stroke-width="4"/>
+  <circle cx="115" cy="35" r="3.5" fill="#e0b800"/>
+  <text x="205" y="158" fill="#999">x</text><text x="95" y="30" fill="#999">f(x)</text>
+  <text x="28" y="182" fill="#666">瞬間的に大きな値を持つ</text>
+  <!-- right: flat in p -->
+  <line x1="265" y1="140" x2="465" y2="140" stroke="#999" stroke-width="1.1" marker-end="url(#md2)"/>
+  <line x1="365" y1="165" x2="365" y2="20" stroke="#999" stroke-width="1.1" marker-end="url(#md2)"/>
+  <line x1="270" y1="70" x2="460" y2="70" stroke="#e0b800" stroke-width="3"/>
+  <text x="455" y="158" fill="#999">p</text><text x="373" y="30" fill="#999">f̂(p)</text>
+  <text x="272" y="182" fill="#666">フーリエ成分の寄与度が均等</text>
+</svg>
+<figcaption>図11-2　左：$x$ の世界のデルタ関数（一瞬のパルス）。右：その周波数分布 $\hat f(p)=1/\sqrt{2\pi}$ は<strong>完全に平ら</strong>。「鋭いパルスを作るには、低い音から高い音まで<strong>全部の周波数を同じ割合で</strong>重ねる必要がある」——第10回の時間幅⇔周波数幅トレードオフの極限形。</figcaption>
+</figure>
+
+<div class="ex">
+<span class="label">例 11.1（第10回の宿題回収：定数 $1$ の変換）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex11-1">完了</label>　第10回演習3で「$f=1$ は絶対可積分でないので変換できない」と言いました。デルタ関数を使えば書けることを示せ。
+<div class="proof">
+公式 $\displaystyle\int_{-\infty}^{\infty}e^{ipX}dp=2\pi\delta(X)$ で、積分変数を $p\to x$、パラメータを $X\to -p$ と<strong>役割を入れ替えて</strong>使う（式の形は変数の名前によらない）：
+$$ \int_{-\infty}^{\infty}e^{-ipx}\,dx=2\pi\,\delta(-p)=2\pi\,\delta(p)\quad\text{（}\delta\text{ は偶関数）}. $$
+これを変換の定義に入れると
+$$ \mathcal{F}[1]=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}1\cdot e^{-ipx}\,dx=\frac{1}{\sqrt{2\pi}}\cdot2\pi\,\delta(p)=\sqrt{2\pi}\,\delta(p). $$
+<span class="meta">意味：ずっと一定の信号は「周波数 $0$ の成分<strong>だけ</strong>」でできている。図11-2 のちょうど逆向き（$x$ で平ら ⇔ $p$ で針）。</span>
+</div>
+</div>
+
+<h2>11.3　たたみ込み（積分）（合成積）</h2>
+
+<div class="def">
+<span class="label">たたみ込み（convolution・合成積）</span>　2つの関数 $f_1,f_2$ に対して
+$$ f_1*f_2=\int_{-\infty}^{\infty}f_1(x-y)\,f_2(y)\,dy $$
+を<strong>たたみ込み</strong>という（結果は $x$ の関数）。
+</div>
+<div class="why">
+<span class="label">直感（何をしている演算か）</span>　$f_1*f_2$ は「<strong>$f_2$ の各点 $y$ にある量 $f_2(y)$ を、$f_1$ の形に広げて（$x-y$ だけずらして）全部重ねる</strong>」演算です。身近な例：
+<ul>
+  <li><strong>ぼかし</strong>：写真 $f_2$ に「にじみの形 $f_1$」をたたみ込むとピンぼけ写真になる。</li>
+  <li><strong>移動平均</strong>：$f_1$ を幅 $2a$ の箱型にすると、$f_1*f_2$ は $f_2$ の「前後 $a$ の平均」。</li>
+  <li><strong>システムの応答</strong>：入力 $f_2$ に装置の「インパルス応答 $f_1$」をたたみ込むと出力になる（§11.4 で登場）。</li>
+</ul>
+</div>
+
+<div class="thm">
+<span class="label">性質1：交換法則</span>
+$$ f_1*f_2=f_2*f_1 $$
+</div>
+<div class="proof">
+<strong>置換積分で示す</strong>　定義の積分で $z=x-y$ と置換する（$x$ は定数扱い）。すると $y=x-z$、$dy=-dz$。積分の端は $y:-\infty\to\infty$ のとき $z:\infty\to-\infty$ と<strong>逆向き</strong>になる：
+$$ f_1*f_2=\int_{-\infty}^{\infty}f_1(x-y)f_2(y)\,dy=\int_{\infty}^{-\infty}f_1(z)\,f_2(x-z)\,(-dz). $$
+端の逆向き（$\int_{\infty}^{-\infty}=-\int_{-\infty}^{\infty}$）とマイナス符号 $(-dz)$ が打ち消し合って
+$$ =\int_{-\infty}^{\infty}f_1(z)\,f_2(x-z)\,dz=\int_{-\infty}^{\infty}f_2(x-z)\,f_1(z)\,dz=f_2*f_1. \qquad\blacksquare $$
+（最後の式は定義で $f_1\leftrightarrow f_2$ を入れ替えた形そのもの。「ずらす側」と「ずらされる側」はどちらでもよい。）
+</div>
+
+<div class="thm">
+<span class="label">性質2：たたみ込み定理（★今回の主定理）</span>　たたみ込みのフーリエ変換は、それぞれのフーリエ変換の<strong>積</strong>に等しい：
+$$ \mathcal{F}[f_1*f_2]=\sqrt{2\pi}\;\mathcal{F}[f_1]\,\mathcal{F}[f_2] $$
+（係数 $\sqrt{2\pi}$ は、変換の定義で $1/\sqrt{2\pi}$ を対称に配る流儀を採ったことによる。）
+</div>
+<div class="proof">
+<strong>① 定義を並べる</strong>　変換の定義に、たたみ込みの定義を入れる（二重積分になる）：
+$$ \mathcal{F}[f_1*f_2]=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}dx\,e^{-ipx}\int_{-\infty}^{\infty}dy\,f_1(x-y)\,f_2(y). $$
+<strong>② 積分の順序を交換</strong>　$x$ 積分と $y$ 積分を入れ替え、$x$ に関係する因子（$e^{-ipx}$ と $f_1(x-y)$）を内側に集める：
+$$ =\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}dy\,f_2(y)\int_{-\infty}^{\infty}dx\,f_1(x-y)\,e^{-ipx}. $$
+狙い：内側を「$f_1$ のフーリエ変換」の形に持ち込むこと。ただし引数が $x-y$ とずれているので、次で直す。<br>
+<strong>③ 内側の積分を置換</strong>　$z=x-y$（$y$ は定数扱い、$dz=dx$、端は $\pm\infty$ のまま）。指数は $x=z+y$ を代入して<strong>指数法則で分解</strong>する：$e^{-ipx}=e^{-ip(z+y)}=e^{-ipz}\,e^{-ipy}$。$e^{-ipy}$ は $z$ 積分の定数なので外に出せる：
+$$ \int_{-\infty}^{\infty}dx\,f_1(x-y)\,e^{-ipx}=e^{-ipy}\int_{-\infty}^{\infty}dz\,f_1(z)\,e^{-ipz}=e^{-ipy}\cdot\sqrt{2\pi}\,\hat f_1(p). $$
+（最後は変換の定義 $\hat f_1(p)=\frac{1}{\sqrt{2\pi}}\int f_1(z)e^{-ipz}dz$ を逆に使い、$\int=\sqrt{2\pi}\hat f_1$ とした。）<br>
+<strong>④ 外側に戻す</strong>　③を②に代入すると、残った $y$ 積分がちょうど $f_2$ の変換になる：
+$$ \mathcal{F}[f_1*f_2]=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}dy\,f_2(y)\,e^{-ipy}\cdot\sqrt{2\pi}\,\hat f_1(p)
+=\sqrt{2\pi}\,\hat f_1(p)\cdot\underbrace{\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}f_2(y)e^{-ipy}dy}_{=\hat f_2(p)}\cdot\frac{\sqrt{2\pi}}{\sqrt{2\pi}} $$
+係数を整理して（$\frac{1}{\sqrt{2\pi}}\cdot\sqrt{2\pi}=1$ が1組でき、$\hat f_2$ の定義用に $\frac{1}{\sqrt{2\pi}}$ を1つ使う）
+$$ \mathcal{F}[f_1*f_2]=\sqrt{2\pi}\,\hat f_1(p)\,\hat f_2(p). \qquad\blacksquare $$
+</div>
+<div class="why">
+<span class="label">ここが効く</span>　たたみ込みは二重積分を含む「重い」演算ですが、フーリエの世界へ持っていくと<strong>ただの掛け算</strong>になります。逆に「周波数側の掛け算＝時間側のたたみ込み」。フィルタ（周波数で不要成分に $0$ を掛ける）が時間側ではたたみ込みになる、という信号処理の基本原理です。
+</div>
+
+<div class="box">
+<strong>デルタ関数はたたみ込みの「単位元」</strong>　ふるい落とし性質 $\displaystyle f(x)=\int_{-\infty}^{\infty}f(x')\,\delta(x-x')\,dx'$ は、たたみ込みの記法で書くと
+$$ f*\delta=\int_{-\infty}^{\infty}f(x-y)\,\delta(y)\,dy=f(x)\qquad\text{つまり}\qquad f*\delta=f. $$
+数の掛け算での「$1$」に相当します（何とたたみ込んでも相手を変えない）。たたみ込み定理で検算すると $\mathcal F[f*\delta]=\sqrt{2\pi}\,\hat f\cdot\frac{1}{\sqrt{2\pi}}=\hat f=\mathcal F[f]$ ✓——両辺の変換が一致し、つじつまが合っています。
+</div>
+
+<h2>11.4　フーリエ変換の微分方程式への応用</h2>
+<p>最後の柱です。キャッチコピーはスライドの通り：<strong>「フーリエ変換を行うことで、微分操作が $p$ のかけ算になる。難解な微分方程式が、単なる代数方程式になる。」</strong>　まずその根拠となる公式を導きます。</p>
+
+<div class="thm">
+<span class="label">微分のフーリエ変換</span>　$y(x)$ がフーリエ変換可能（遠方で $y\to0$）なら
+$$ \mathcal{F}\Big[\frac{dy}{dx}\Big]=ip\,\mathcal{F}[y(x)],\qquad
+\mathcal{F}\Big[\frac{d^ny}{dx^n}\Big]=(ip)^n\,\mathcal{F}[y(x)] $$
+</div>
+<div class="proof">
+<strong>① 1階の場合——部分積分1回</strong>　変換の定義に $y'$ を入れ、部分積分する（微分を $y$ から $e^{-ipx}$ へ移すのが狙い）：
+$$ \mathcal{F}[y']=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\frac{dy}{dx}\,e^{-ipx}\,dx
+=\frac{1}{\sqrt{2\pi}}\Big[\,y(x)\,e^{-ipx}\,\Big]_{-\infty}^{\infty}-\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}y(x)\,\frac{d}{dx}\big(e^{-ipx}\big)\,dx. $$
+<strong>② 境界項が消える理由</strong>　$y$ はフーリエ変換可能＝絶対可積分なので遠方で $y\to0$。一方 $|e^{-ipx}|=1$（大きさ1で回転するだけ）。よって $[\,y\,e^{-ipx}\,]_{-\infty}^{\infty}=0$。<br>
+<strong>③ 残りを計算</strong>　$\dfrac{d}{dx}e^{-ipx}=-ip\,e^{-ipx}$（合成関数の微分）だから
+$$ \mathcal{F}[y']=-\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}y\,(-ip)\,e^{-ipx}dx
+=ip\cdot\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}y\,e^{-ipx}dx=ip\,\mathcal{F}[y]. $$
+<strong>④ $n$ 階へ</strong>　$y'$ に対してもう一度同じ操作をすれば $\mathcal F[y'']=ip\,\mathcal F[y']=(ip)^2\mathcal F[y]$。以下同様に1階ずつ繰り返して（数学的帰納法）
+$$ \mathcal{F}\Big[\frac{d^ny}{dx^n}\Big]=(ip)^n\,\mathcal{F}[y]. \qquad\blacksquare $$
+</div>
+
+<h3>解法の手順（変換 → 代数 → 逆変換）</h3>
+<p>定数係数の微分方程式 $\;a\,y''+b\,y'+c\,y=f(x)\;$（$y,f$ はフーリエ変換可能）を解く流れ：</p>
+<div class="proof">
+<strong>① 両辺をフーリエ変換する</strong>　変換は線形（積分だから和と定数倍を保つ）なので項ごとに変換でき、微分公式で
+$$ a\,(ip)^2\hat y+b\,(ip)\,\hat y+c\,\hat y=\hat f(p)
+\qquad\Longrightarrow\qquad \big(-a p^2+ibp+c\big)\,\hat y(p)=\hat f(p). $$
+<strong>② 代数方程式を解く</strong>　微分が消えて<strong>ただの1次方程式</strong>になったので、割り算するだけ：
+$$ \hat y(p)=\frac{\hat f(p)}{-a p^2+ibp+c}\;\equiv\;\hat g(p). $$
+<strong>③ フーリエ逆変換で戻す</strong>　$y(x)=\mathcal F^{-1}[\hat g(p)]$。この逆変換は<strong>変換表（第10回で作った対応表）と見比べれば比較的簡単にできる</strong>。
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="md3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#7d3c98"/></marker></defs>
+  <rect x="25" y="30" width="200" height="44" rx="6" fill="#eef5ff" stroke="#5a87c4"/>
+  <text x="45" y="57" fill="#274e80">微分方程式（x の世界）</text>
+  <rect x="25" y="130" width="200" height="44" rx="6" fill="#fbf6ff" stroke="#a779c4"/>
+  <text x="38" y="157" fill="#6a3a8c">解 y(x) が求まる（x の世界）</text>
+  <rect x="280" y="30" width="180" height="44" rx="6" fill="#f0f9f0" stroke="#5fae5f"/>
+  <text x="295" y="57" fill="#2e7d32">代数方程式（p の世界）</text>
+  <rect x="280" y="130" width="180" height="44" rx="6" fill="#f0f9f0" stroke="#5fae5f"/>
+  <text x="299" y="157" fill="#2e7d32">ŷ(p) = ĝ(p) を得る</text>
+  <path d="M228 52 L275 52" stroke="#7d3c98" stroke-width="2" marker-end="url(#md3)"/>
+  <text x="232" y="44" fill="#7d3c98">Ｆ（変換）</text>
+  <path d="M370 78 L370 125" stroke="#7d3c98" stroke-width="2" marker-end="url(#md3)"/>
+  <text x="378" y="105" fill="#7d3c98">割り算で解く</text>
+  <path d="M275 152 L228 152" stroke="#7d3c98" stroke-width="2" marker-end="url(#md3)"/>
+  <text x="230" y="144" fill="#7d3c98">Ｆ⁻¹（逆変換・変換表）</text>
+  <text x="35" y="192" fill="#666">遠回りに見えて、微分を解かずに済む分だけ速い</text>
+</svg>
+<figcaption>図11-3　解法サイクル。$x$ の世界で直接解く代わりに、$\mathcal F$ で $p$ の世界へ → 微分が $(ip)$ 倍になり<strong>代数方程式</strong> → 割り算で $\hat y$ を求め → $\mathcal F^{-1}$（変換表）で $x$ の世界へ戻す。ラプラス変換（今後）も同じ発想。</figcaption>
+</figure>
+
+<div class="ex">
+<span class="label">例 11.2（パルス入力への応答＝3本柱の総まとめ）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex11-2">完了</label>　$a &gt; 0$ として
+$$ y''-a^2y=-\delta(x) $$
+をフーリエ変換で解け（遠方で $y\to0$ とする）。
+<div class="proof">
+<strong>① 両辺を変換</strong>　左辺は微分公式で $\mathcal F[y'']=(ip)^2\hat y=-p^2\hat y$。右辺は §11.2 の $\mathcal F[\delta]=\dfrac{1}{\sqrt{2\pi}}$。よって
+$$ -p^2\hat y-a^2\hat y=-\frac{1}{\sqrt{2\pi}}\qquad\Longrightarrow\qquad -(p^2+a^2)\,\hat y=-\frac{1}{\sqrt{2\pi}}. $$
+<strong>② 代数方程式を解く</strong>　両辺を $-(p^2+a^2)$ で割って
+$$ \hat y(p)=\frac{1}{\sqrt{2\pi}}\cdot\frac{1}{p^2+a^2}. $$
+<strong>③ 変換表と見比べて逆変換</strong>　第10回演習1で作った対応
+$$ \mathcal F\big[e^{-a|x|}\big]=\sqrt{\frac{2}{\pi}}\,\frac{a}{p^2+a^2} $$
+を使う。目当ての $\hat y$ をこの形に寄せるため、$\dfrac{1}{p^2+a^2}$ の前に $\sqrt{\frac2\pi}\,a$ を作って割り戻す：
+$$ \hat y=\frac{1}{\sqrt{2\pi}}\cdot\frac{1}{p^2+a^2}
+=\frac{1}{\sqrt{2\pi}}\cdot\frac{1}{\sqrt{\frac2\pi}\,a}\cdot\underbrace{\sqrt{\frac2\pi}\,\frac{a}{p^2+a^2}}_{=\mathcal F[e^{-a|x|}]}. $$
+前の係数を計算する：$\dfrac{1}{\sqrt{2\pi}}\cdot\dfrac{1}{\sqrt{2/\pi}\,a}=\dfrac{1}{a}\cdot\dfrac{1}{\sqrt{2\pi}\cdot\sqrt{2/\pi}}=\dfrac{1}{a}\cdot\dfrac{1}{\sqrt{4}}=\dfrac{1}{2a}$（根号の中どうしを掛けた：$2\pi\cdot\frac2\pi=4$）。よって
+$$ \hat y=\frac{1}{2a}\,\mathcal F\big[e^{-a|x|}\big]\qquad\Longrightarrow\qquad y(x)=\frac{1}{2a}\,e^{-a|x|}. $$
+<strong>検算</strong>　$x\ne0$ では $y=\frac{1}{2a}e^{\mp ax}$ で $y''=a^2y$ ✓（右辺の $\delta$ は $x\ne0$ で $0$）。$x=0$ の折れ点で $y'$ が $-\frac12-(+\frac12)=-1$ だけ飛び、$y''$ が $-\delta(x)$ を作る ✓。遠方で $y\to0$ ✓。
+</div>
+</div>
+<div class="why">
+<span class="label">この解の意味（グリーン関数・インパルス応答）</span>　例 11.2 の $G(x)=\frac{1}{2a}e^{-a|x|}$ は「<strong>1点をトンと叩いたとき（$\delta$ 入力）の応答</strong>」で、<strong>グリーン関数</strong>（工学では<strong>インパルス応答</strong>）と呼ばれます。一般の入力 $f$ に対する解は、たたみ込み定理から
+$$ y''-a^2y=-f(x)\ \Longrightarrow\ \hat y=\frac{\hat f}{p^2+a^2}=\sqrt{2\pi}\,\hat f\cdot\hat G=\mathcal F[f*G]
+\ \Longrightarrow\ y=f*G=\int_{-\infty}^{\infty}f(y)\,\frac{e^{-a|x-y|}}{2a}\,dy. $$
+「<strong>どんな入力も $\delta$ の重ね合わせ（$f=f*\delta$）だから、応答も $G$ の重ね合わせ</strong>」——デルタ関数・たたみ込み・微分方程式の3本柱がここで1つにつながります。制御工学・振動工学の基本語彙です。
+</div>
+
+<hr>
+<h2>11.5　章末例題</h2>
+
+<div class="ex">
+<span class="label">例 11.3（ずらしたデルタ関数の変換）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex11-3">完了</label>　$c$ を定数として $\mathcal F[\delta(x-c)]$ を求めよ。
+<div class="proof">
+変換の定義に入れて、ふるい落とし性質（$x=c$ の値だけ抜き出す）を使うだけ：
+$$ \mathcal F[\delta(x-c)]=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\delta(x-c)\,e^{-ipx}\,dx
+=\frac{1}{\sqrt{2\pi}}\,e^{-ipc}. $$
+<span class="meta">大きさは $|\hat f(p)|=\frac{1}{\sqrt{2\pi}}$ で全周波数均等のまま（$c=0$ と同じ）。ずらしの情報は位相 $e^{-ipc}$（回転の角度）に入る。「時間シフト ⇔ 位相回転」という信号処理の基本公式です。</span>
+</div>
+</div>
+
+<div class="ex">
+<span class="label">例 11.4（箱型どうしのたたみ込み＝三角形）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex11-4">完了</label>　幅 $2a$ の箱型関数 $ f(x)=\begin{cases}1 &amp; (|x| &lt; a)\\ 0 &amp; (|x|\ge a)\end{cases}$ について、$g=f*f$ を求め、たたみ込み定理を確認せよ。
+<div class="proof">
+<strong>① 直接計算</strong>　$g(x)=\displaystyle\int_{-\infty}^{\infty}f(x-y)f(y)\,dy$。被積分関数が $1$ になるのは「$|y| &lt; a$ かつ $|x-y| &lt; a$」のとき、すなわち $y$ が区間 $(-a,\,a)$ と $(x-a,\,x+a)$ の<strong>両方に入る</strong>とき。$g(x)$ はこの2区間の<strong>重なりの長さ</strong>である。<br>
+・$0\le x &lt; 2a$ のとき：重なりは $(x-a,\,a)$ で長さ $a-(x-a)=2a-x$。<br>
+・$-2a &lt; x &lt; 0$ のとき：対称性（両方の区間が $x\to-x$ で入れ替わるだけ）で長さ $2a+x=2a-|x|$。<br>
+・$|x|\ge2a$ のとき：重なりなしで $0$。まとめて
+$$ g(x)=\begin{cases}2a-|x| &amp; (|x| &lt; 2a)\\ 0 &amp; (|x|\ge 2a)\end{cases}\qquad\text{（底辺 }4a\text{・高さ }2a\text{ の三角形）}. $$
+<strong>② たたみ込み定理で確認</strong>　第10回 例10.2 より $\hat f(p)=\sqrt{\frac2\pi}\,\frac{\sin pa}{p}$。定理より
+$$ \hat g(p)=\sqrt{2\pi}\,\hat f(p)^2=\sqrt{2\pi}\cdot\frac{2}{\pi}\,\frac{\sin^2 pa}{p^2}=\frac{2\sqrt{2}}{\sqrt{\pi}}\,\frac{\sin^2pa}{p^2}. $$
+角張った箱（不連続）をたたみ込むと角が取れて連続な三角形になり、周波数側では $\hat f\propto\frac{\sin pa}{p}$（減衰 $1/p$）が $\hat g\propto\frac{\sin^2pa}{p^2}$（減衰 $1/p^2$）へと<strong>高周波がより速く減る</strong>——「たたみ込み＝なめらか化」が周波数側でも確認できる。
+</div>
+</div>
+
+<h2>11.6　演習問題</h2>
+<p>1・2 はふるい落とし性質の練習、3 は例 11.2 と同じ型（数値を変えただけ）です。</p>
+<ol>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill11-1">完了</label> $\displaystyle\int_{-\infty}^{\infty}f(x)\,\delta(x-c)\,dx=f(c)$ を使って、$\displaystyle\int_{-\infty}^{\infty}(x^2+1)\,\delta(x-2)\,dx$ を求めよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill11-2">完了</label> 交換法則を認めた上で、$\delta*f=f$ を定義の積分から示せ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill11-3">完了</label> $y''-4y=-\delta(x)$ を解け（遠方で $y\to0$）。</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong>　$\delta(x-2)$ は $x=2$ の値だけをふるい落とすので $\displaystyle\int_{-\infty}^{\infty}(x^2+1)\,\delta(x-2)\,dx=2^2+1=5$。<br><br>
+<strong>2.</strong>　定義より $\displaystyle(\delta*f)(x)=\int_{-\infty}^{\infty}\delta(x-y)\,f(y)\,dy$。ふるい落とし性質（針は $y=x$ に立つ）でこの積分は $f(x)$。よって $\delta*f=f$。交換法則と合わせると $f*\delta=\delta*f=f$ で、$\delta$ が単位元であることが両向きで確認できる。<br><br>
+<strong>3.</strong>　例 11.2 で $a=2$ とするだけ。変換して $-(p^2+4)\hat y=-\frac{1}{\sqrt{2\pi}}$、$\hat y=\frac{1}{\sqrt{2\pi}(p^2+4)}$。変換表 $\mathcal F[e^{-2|x|}]=\sqrt{\frac2\pi}\frac{2}{p^2+4}$ と見比べ、係数 $\frac{1}{\sqrt{2\pi}}\cdot\frac{1}{\sqrt{2/\pi}\cdot2}=\frac{1}{4}$ を掛けて
+$$ y(x)=\frac{1}{4}\,e^{-2|x|}. $$
+（検算：$x\ne0$ で $y''=4y$ ✓、$x=0$ で $y'$ の飛び $=-1$ ✓。）
+</div>
+</details>
+
+<hr>
+<h2>11.7　まとめ・チェックリスト</h2>
+<div class="box">
+<ul>
+  <li>□ 局在した関数のフーリエ積分表示から、$\delta(x-x')=\lim_{L\to\infty}\dfrac{\sin L(x-x')}{\pi(x-x')}$ を導ける。</li>
+  <li>□ 内側の積分 $\displaystyle\int_{-L}^{L}e^{ip(x-x')}dp=\dfrac{2\sin L(x-x')}{x-x'}$ をオイラーの式を使って計算できる。</li>
+  <li>□ デルタ関数の3点セット（高さ $L/\pi$・幅 $\pi/L$・面積 $1$）とふるい落とし性質 $\int f(x')\delta(x-x')dx'=f(x)$ を説明できる。</li>
+  <li>□ $\displaystyle\int_{-\infty}^{\infty}e^{ip(x-x')}dp=2\pi\delta(x-x')$、$\mathcal F[\delta]=\dfrac{1}{\sqrt{2\pi}}$（全周波数が均等）を導ける。</li>
+  <li>□ たたみ込みの定義・交換法則・意味（ぼかし／移動平均／応答）を言える。</li>
+  <li>□ たたみ込み定理 $\mathcal F[f_1*f_2]=\sqrt{2\pi}\,\mathcal F[f_1]\mathcal F[f_2]$ を置換積分で証明できる。</li>
+  <li>□ 部分積分で $\mathcal F[y']=ip\,\hat y$、繰り返して $\mathcal F[y^{(n)}]=(ip)^n\hat y$ を導ける。</li>
+  <li>□ 定数係数の微分方程式を「変換 → 代数方程式 → 変換表で逆変換」の3手順で解ける（例 11.2）。</li>
+  <li>□ $f*\delta=f$ と「解＝入力とグリーン関数のたたみ込み」のつながりを説明できる。</li>
+</ul>
+</div>
+
+<div class="navi" style="margin-top:18px">
+次回（第12回）は<strong>偏微分方程式の分類と解法</strong>。波動・熱伝導・静電場など力学の主要な方程式を判別式で3タイプに分類し、<strong>ダランベールの解</strong>と<strong>変数分離法</strong>で実際に解きます。変数分離では第9回のフーリエ級数が主役として帰ってきます。
+</div>
+
+<script>
+(function(){
+  var KEY = 'amII_prob_14';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  document.querySelectorAll('.prob-check').forEach(function(cb){
+    var id = cb.getAttribute('data-pid');
+    cb.checked = !!state[id];
+    cb.addEventListener('change', function(){
+      state[id] = cb.checked;
+      save();
+    });
+  });
+})();
+</script>
+</body>
+</html>

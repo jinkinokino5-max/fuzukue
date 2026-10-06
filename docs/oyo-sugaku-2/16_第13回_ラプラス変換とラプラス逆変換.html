@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第13回 ラプラス変換とラプラス逆変換（留数定理による導出）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .why{ background:#fffdf0; border:1px solid #e8d48b; border-left:6px solid #e8c14b; border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; } .why .label{ color:#9a7d1a; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; background:#fafafa; border:1px solid var(--line); border-radius:6px; padding:4px 12px; }
+  summary{ cursor:pointer; color:var(--accent); font-weight:bold; padding:5px 0; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:480px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  table.tb{ border-collapse:collapse; margin:12px 0; font-size:14.5px; width:100%; }
+  table.tb th,table.tb td{ border:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ background:#eef2f7; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+  .prob-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); background:#fff; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:0 6px; cursor:pointer; vertical-align:middle; user-select:none; }
+  .prob-chk input{ margin:0; cursor:pointer; }
+  @media print{ .prob-chk{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第13回　ラプラス変換とラプラス逆変換</h1>
+<p class="lead">今回は、<strong>フーリエ変換の親戚</strong>である<strong>ラプラス変換</strong>を学びます。フーリエ変換は「絶対可積分」という強い条件を課す道具でしたが、微分方程式の初期値問題でよく出てくる関数（$t&gt;0$ でしか意味を持たない、指数的に増加してもよい関数）にはこの条件が厳しすぎます。ラプラス変換は、その条件を緩めるために「変換の相棒」として作られた道具です。そして逆変換の場面で、<strong>留数定理（第6回）</strong>が再び主役として登場します。</p>
+
+<div class="navi">
+今回の流れ：<strong>① 定義</strong>（フーリエ変換の条件を緩めるとどうなるか）→ <strong>② 複素関数としての性質</strong>（収束域と正則性——モレラの定理の再登場）→ <strong>③ 逆変換の公式</strong>（フーリエ逆変換からの導出）→ <strong>④ 留数定理による逆変換</strong>（第7回の実積分計算と同じ発想）→ <strong>⑤ 微分のラプラス変換と変換表の導出</strong>。次回（第14回）はこれらの道具で微分方程式・偏微分方程式を解きます。
+</div>
+
+<h2>13.0　なぜラプラス変換が必要か（動機）</h2>
+<p>第10回のフーリエ変換は
+$$ \mathcal F[f(x)]=\hat f(p)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}f(x)\,e^{-ipx}\,dx $$
+として定義されました。この積分がきちんと収束するには、$f(x)$ が<strong>絶対可積分</strong>（$\int_{-\infty}^{\infty}|f(x)|dx&lt;\infty$）である必要があります。ところが、微分方程式の初期値問題でよく現れる関数——たとえば $t&lt;0$ では意味を持たず $t\ge0$ でしか定義されない応答関数や、$e^{2x}$ のように増加する関数——は、この条件を満たしません。</p>
+<div class="why">
+<span class="label">アイデア：減衰させてから変換する</span>　$f(x)$ 自体は絶対可積分でなくても、うまく大きな $\sigma$ を選んで $e^{-\sigma x}f(x)$ を掛ければ、指数的な減衰がもとの関数の増加を打ち消して絶対可積分になるはずです。この「$e^{-\sigma x}$ を掛けてからフーリエ変換する」という発想を1つの変換にまとめたものが<strong>ラプラス変換</strong>です。
+</div>
+
+<h2>13.1　ラプラス変換の定義</h2>
+<div class="def">
+<span class="label">ラプラス変換</span>　関数 $f(x)$ に対して
+$$ \mathcal L[f(x)]=\hat f(s)=\int_0^{\infty}e^{-sx}f(x)\,dx,\qquad s=s_r+is_i\ (\text{複素数}) $$
+を $f(x)$ の<strong>ラプラス変換</strong>という。積分区間が $0$ から始まる（$x&lt;0$ の部分を見ない）ことに注意。
+</div>
+<div class="def">
+<span class="label">適用できる関数の条件</span>　$f(x)$ が次の3条件を満たすとき、ラプラス変換可能という。
+<ol>
+  <li>$x&lt;0$ で $f(x)=0$（<strong>原因は $x\ge0$ でしか働かない</strong>——因果的な関数）。</li>
+  <li>区分的に滑らか（有限個の折れ目・跳びはあってよい）。</li>
+  <li>適当な実数 $\sigma$ に対して $\displaystyle\int_0^{\infty}\big|e^{-\sigma x}f(x)\big|\,dx&lt;\infty$（$e^{-\sigma x}f(x)$ が絶対可積分）。</li>
+</ol>
+</div>
+<div class="why">
+<span class="label">条件3の意味：「$f(x)$ は $e^{\sigma x}$ 程度にしか発散しない」</span>　条件3は、大きな $x$ で $f(x)$ がどれだけ速く発散してもよいかの上限を定めています。$f$ が指数関数程度の増加ならクリアできますが、$e^{x^2}$ のように指数よりずっと速く発散する関数はどんな $\sigma$ を選んでも打ち消せません。
+</div>
+
+<div class="ex">
+<span class="label">例 13.1（対象となる関数・対象外の関数）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex13-1">完了</label>　条件3を満たす $\sigma$ の範囲を具体的に確認する。
+<div class="proof">
+<strong>$f(x)=e^{-x^2}$</strong>　$e^{-\sigma x}e^{-x^2}=e^{-x^2-\sigma x}$ は、$\sigma$ をどう選んでも $x\to\infty$ で $e^{-x^2}$ の超指数的な減衰が勝つので、任意の実数 $\sigma$ で絶対可積分。<br>
+<strong>$f(x)=\sin x$</strong>　$|\sin x|\le1$ なので $e^{-\sigma x}|\sin x|\le e^{-\sigma x}$。$\int_0^\infty e^{-\sigma x}dx$ が収束するのは $\sigma&gt;0$ のときだけ（$\sigma\le0$ だと $e^{-\sigma x}$ が減衰しない）。よって<strong>$\sigma&gt;0$ が必要</strong>。<br>
+<strong>$f(x)=e^{x}$</strong>　$e^{-\sigma x}e^{x}=e^{(1-\sigma)x}$ が $x\to\infty$ で減衰するのは指数 $1-\sigma&lt;0$、すなわち<strong>$\sigma&gt;1$ が必要</strong>。<br>
+<strong>対象外の例：$f(x)=e^{x^2}$</strong>　$e^{-\sigma x}e^{x^2}=e^{x^2-\sigma x}$ は、$\sigma$ をどれだけ大きくとっても $x$ が十分大きければ $x^2$ 項が $\sigma x$ 項に必ず勝つ（2次は1次よりいずれ大きくなる）ので、どんな $\sigma$ でも発散する。<strong>ラプラス変換の対象外。</strong>
+</div>
+</div>
+
+<table class="tb">
+<tr><th>関数 $f(x)$</th><th>条件3を満たす $\sigma$</th><th>下限 $a$</th></tr>
+<tr><td>$e^{-x^2}$</td><td>任意（すべての実数）</td><td>$a=-\infty$</td></tr>
+<tr><td>$\sin x$</td><td>$\sigma&gt;0$</td><td>$a=0$</td></tr>
+<tr><td>$e^x$</td><td>$\sigma&gt;1$</td><td>$a=1$</td></tr>
+</table>
+<p class="meta">この「下限 $a$」——「$\sigma$ がこれより大きければ条件3が成り立つ」という境界値——が、次節の収束域の話にそのまま直結します。</p>
+
+<h2>13.2　複素関数としてのラプラス変換</h2>
+<p>$s=s_r+is_i$ は複素数でした。ラプラス変換 $\hat f(s)$ を $s$ の複素関数として眺めると、2つの重要な性質が見えてきます。</p>
+
+<div class="proof">
+<strong>性質①：収束は $s_r=\mathrm{Re}(s)$ だけで決まる</strong>　$|e^{-is_ix}|=1$（純虚数乗は絶対値1）なので、
+$$ \big|e^{-sx}f(x)\big|=\big|e^{-s_rx}e^{-is_ix}f(x)\big|=\big|e^{-s_rx}f(x)\big|. $$
+つまり積分の収束・発散は $s$ の<strong>虚部 $s_i$ には一切関係なく</strong>、実部 $s_r$ だけで決まる。前節の「条件3を満たす $\sigma$」を $s_r$ に読み替えれば、
+$$ s_r&gt;a\quad\Longrightarrow\quad \hat f(s)=\int_0^\infty e^{-sx}f(x)\,dx\ \text{は絶対収束する。} $$
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="mL1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <rect x="150" y="15" width="135" height="195" fill="#f4e9a8" opacity="0.65"/>
+  <line x1="15" y1="115" x2="290" y2="115" stroke="#999" stroke-width="1.1" marker-end="url(#mL1)"/>
+  <line x1="80" y1="215" x2="80" y2="15" stroke="#999" stroke-width="1.1" marker-end="url(#mL1)"/>
+  <text x="280" y="130" fill="#999">sr</text>
+  <text x="88" y="25" fill="#999">si</text>
+  <line x1="150" y1="20" x2="150" y2="210" stroke="#555" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <text x="132" y="222" fill="#555">a</text>
+  <line x1="200" y1="20" x2="200" y2="210" stroke="#1b4f72" stroke-width="2"/>
+  <text x="203" y="30" fill="#1b4f72">C（sr = σ）</text>
+  <ellipse cx="220" cy="115" rx="60" ry="60" fill="none" stroke="#7d3c98" stroke-width="1.6"/>
+  <text x="200" y="118" fill="#333">σ &gt; a</text>
+</svg>
+<figcaption>図13-1　複素 $s$ 平面での収束域。黄色に塗った半平面 $s_r&gt;a$ の内部でのみ $\hat f(s)$ の定義積分が収束する。境界を $s_r=\sigma$（$\sigma&gt;a$）にとった鉛直線や、その内部に描いた任意の閉曲線 $C$ の中で、$\hat f(s)$ は正則になる（性質②）。</figcaption>
+</figure>
+
+<div class="proof">
+<strong>性質②：$\hat f(s)$ は $s_r&gt;a$ で正則</strong>　半平面 $s_r&gt;a$ 内の<strong>任意の閉曲線</strong> $C$ をとり、$\hat f(s)$ をその上で1周積分してみる。
+$$ \oint_C \hat f(s)\,ds=\oint_C\Big[\int_0^\infty e^{-sx}f(x)\,dx\Big]ds. $$
+<strong>① 積分の順序を交換する</strong>　被積分関数は $C$ 上（有界な閉曲線）かつ $x\in[0,\infty)$ で絶対収束しているので、フビニの定理により $s$ についての積分と $x$ についての積分の順序を交換してよい：
+$$ =\int_0^\infty\Big[\oint_C e^{-sx}\,ds\Big]f(x)\,dx. $$
+<strong>② 内側の積分はコーシーの定理で $0$</strong>　$x$ を固定するたびに、$e^{-sx}$ は $s$ の関数として全平面で正則（<strong>整関数</strong>）。よって<strong>コーシーの定理（第3回）</strong>より、閉曲線 $C$ 上の積分は
+$$ \oint_C e^{-sx}\,ds=0\qquad(\text{任意の}x\text{ で}). $$
+<strong>③ 結論</strong>　したがって
+$$ \oint_C\hat f(s)\,ds=\int_0^\infty 0\cdot f(x)\,dx=0 $$
+が、半平面 $s_r&gt;a$ 内の<strong>すべての</strong>閉曲線 $C$ について成り立つ。<strong>モレラの定理（第5回：コーシーの定理の逆）</strong>「連続関数の1周積分がすべての閉曲線で $0$ ならば正則」により、
+$$ \hat f(s)\ \text{は}\ s_r&gt;a\ \text{で正則。} $$
+</div>
+<div class="why">
+<span class="label">複素関数論の道具が生きる瞬間</span>　ラプラス変換 $\hat f(s)$ が「複素変数 $s$ の正則関数」であることは天下りではなく、コーシーの定理とモレラの定理という<strong>前半（複素関数論）の道具そのもの</strong>から証明できます。この正則性のおかげで、次節以降ではローラン展開・留数定理といった前半の道具をそのまま逆変換に流用できます。
+</div>
+
+<h2>13.3　ラプラス逆変換——フーリエ逆変換からの導出</h2>
+<p>ラプラス変換を定義から逆に解く（逆変換の公式を作る）には、<strong>フーリエ変換・逆変換（第10回）の結果をそのまま流用</strong>します。ラプラス変換の式を「フーリエ変換の形」に無理やり書き換えるのがコツです。</p>
+
+<div class="box">
+<strong>復習：フーリエ変換・逆変換（第10回）</strong>
+$$ \mathcal F[g(x)]=\hat g(p)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}g(x)e^{-ipx}dx,\qquad
+\mathcal F^{-1}[\hat g(p)]=g(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat g(p)e^{ipx}dp $$
+</div>
+
+<div class="proof">
+<strong>① ラプラス変換をフーリエ変換の形に書き換える</strong>　$f(x)=0\,(x&lt;0)$ なので積分区間を $(-\infty,\infty)$ に広げても値は変わらない。$s=s_r+is_i$ を代入して指数を分解する：
+$$ \hat f(s)=\int_0^\infty e^{-sx}f(x)\,dx=\int_{-\infty}^{\infty}e^{-s_rx}f(x)\,e^{-is_ix}\,dx. $$
+<strong>② 「$e^{-s_rx}f(x)$」を1つの関数とみなす</strong>　$s_r$（$=\sigma$ とおく）を固定した定数とみて、
+$$ g(x):=\sqrt{2\pi}\,e^{-\sigma x}f(x) $$
+と置く。すると
+$$ \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}g(x)e^{-is_ix}dx=\int_{-\infty}^{\infty}e^{-\sigma x}f(x)e^{-is_ix}dx=\hat f(s). $$
+これはまさに $g(x)$ の<strong>フーリエ変換</strong> $\hat g(s_i)$ に等しい（$s_i$ を「周波数」とみなす）：
+$$ \hat f(s)=\hat g(s_i)\qquad(\sigma=s_r\ \text{固定}). $$
+<strong>③ フーリエ逆変換を適用する</strong>　第10回の逆変換公式を $g,\hat g$ に使うと
+$$ g(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat g(s_i)\,e^{is_ix}\,ds_i=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat f(s)\,e^{is_ix}\,ds_i. $$
+<strong>④ $g(x)$ を元に戻す</strong>　②の定義 $g(x)=\sqrt{2\pi}e^{-\sigma x}f(x)$ を左辺に代入して整理すると
+$$ \sqrt{2\pi}\,e^{-\sigma x}f(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat f(s)\,e^{is_ix}\,ds_i
+\quad\Longrightarrow\quad
+f(x)=\frac{1}{2\pi}e^{\sigma x}\int_{-\infty}^{\infty}\hat f(s)\,e^{is_ix}\,ds_i. $$
+<strong>⑤ 指数を合体する</strong>　$e^{\sigma x}e^{is_ix}=e^{(\sigma+is_i)x}=e^{sx}$ なので
+$$ f(x)=\frac{1}{2\pi}\int_{-\infty}^{\infty}e^{(s_r+is_i)x}\,\hat f(s)\,ds_i\qquad(x&gt;0). $$
+</div>
+
+<div class="thm">
+<span class="label">ラプラス逆変換の定義式</span>
+$$ \frac{1}{2\pi}\int_{-\infty}^{\infty}e^{sx}\hat f(s)\,ds_i=
+\begin{cases} f(x) & x&gt;0\\[2pt] 0 & x&lt;0\\[2pt] \tfrac12 f(x=+0) & x=0 \end{cases} $$
+（$s_r=\sigma$ は $\sigma&gt;a$ を満たす任意の固定値。$x&lt;0,\,x=0$ の場合はフーリエ逆変換が不連続点で「左右の平均」を返す性質からそのまま従う。）
+</div>
+<div class="why">
+<span class="label">積分変数が $s_i$（虚部）だけなのはなぜか</span>　④の式をよく見ると、積分変数は $s_i$ のみで、$s_r=\sigma$ は固定した定数でした。つまりこの積分は、複素 $s$ 平面の中で<strong>実部 $\sigma$ を固定した「鉛直線」に沿った積分</strong>にほかなりません。次はこれを複素積分の記法で書き直します。
+</div>
+
+<div class="proof">
+<strong>鉛直線積分を複素積分の記法に直す</strong>　$s=\sigma+is_i$（$\sigma$ 固定）なので $ds=i\,ds_i$、すなわち $ds_i=ds/i$。積分区間 $s_i:-\infty\to\infty$ は、$s$ が複素平面上を $\sigma-i\infty$ から $\sigma+i\infty$ まで鉛直に動くことに対応する。よって
+$$ f(x)=\frac{1}{2\pi}\int_{-\infty}^{\infty}e^{sx}\hat f(s)\,ds_i=\frac{1}{2\pi}\int_{\sigma-i\infty}^{\sigma+i\infty}e^{sx}\hat f(s)\,\frac{ds}{i}=\frac{1}{2\pi i}\int_{\sigma-i\infty}^{\sigma+i\infty}e^{sx}\hat f(s)\,ds. $$
+</div>
+
+<div class="thm">
+<span class="label">ラプラス逆変換（複素積分の形）</span>
+$$ \mathcal L^{-1}[\hat f(s)]=\frac{1}{2\pi i}\int_{\sigma-i\infty}^{\sigma+i\infty}e^{sx}\hat f(s)\,ds=
+\begin{cases} f(x) & x&gt;0\\ 0 & x&lt;0 \end{cases}\qquad(\sigma&gt;a) $$
+この鉛直線に沿った積分路を<strong>ブロムウィッチ積分路</strong>と呼ぶ。
+</div>
+
+<h2>13.4　留数定理によるラプラス逆変換</h2>
+<p>鉛直線に沿った積分をそのまま計算するのは大変です。そこで<strong>第7回で実積分を複素積分に帰着させたときと同じ発想</strong>——積分路を閉じて留数定理を使う——を再利用します。</p>
+
+<div class="proof">
+<strong>① 積分路を閉じる</strong>　鉛直線 $C_1:\ s_r=\sigma$（$\sigma&gt;a$、下から上へ）に、左側に張り出す大きな半円 $C_R$（半径 $R\to\infty$）を付け足して、1つの閉曲線 $C=C_1+C_R$ を作る。$\hat f(s)$ の特異点はすべて $s_r\le a&lt;\sigma$ の範囲（半平面 $s_r&gt;a$ で正則だったことを思い出す）にあるので、<strong>半円を左に張り出せば内部にすべての特異点を囲い込める</strong>。<br>
+<strong>② 半円部分の寄与は消える（$x&gt;0$ のとき）</strong>　半円上では $s_r\to-\infty$ となるので、$x&gt;0$ のとき $|e^{sx}|=e^{s_rx}\to0$ が指数的に効き、半円部分の積分は $R\to\infty$ で $0$ に収束する（第7回のジョルダンの補題型の評価と同じ仕組み。<strong>$x&gt;0$ が本質的</strong>：$x&lt;0$ だと逆に右に半円を張らないと消えない）。<br>
+<strong>③ 留数定理を適用</strong>　閉曲線 $C$ の内部にすべての特異点があるので、留数定理（第6回）より
+$$ \oint_C e^{sx}\hat f(s)\,ds=2\pi i\sum_k \mathrm{Res}\big(e^{sx}\hat f(s),\,s_k\big). $$
+半円の寄与が $0$ なので、$C_1$ 上の積分（＝ブロムウィッチ積分）がこれと一致する。
+</div>
+
+<div class="thm">
+<span class="label">留数定理によるラプラス逆変換</span>　$x&gt;0$ のとき
+$$ f(x)=\frac{1}{2\pi i}\oint_C e^{sx}\hat f(s)\,ds=\sum_k \mathrm{Res}\big(e^{sx}\hat f(s),\,s_k\big) $$
+（和は $\hat f(s)$ のすべての特異点 $s_k$ にわたる）。
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="mL2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="15" y1="115" x2="290" y2="115" stroke="#999" stroke-width="1.1" marker-end="url(#mL2)"/>
+  <line x1="80" y1="215" x2="80" y2="15" stroke="#999" stroke-width="1.1" marker-end="url(#mL2)"/>
+  <text x="280" y="130" fill="#999">sr</text>
+  <text x="88" y="25" fill="#999">si</text>
+  <path d="M200 25 A160 90 0 0 0 200 205" fill="none" stroke="#7d3c98" stroke-width="2.2" marker-end="url(#mL2)"/>
+  <line x1="200" y1="205" x2="200" y2="25" stroke="#1b4f72" stroke-width="2.2" marker-end="url(#mL2)"/>
+  <text x="205" y="18" fill="#1b4f72">C₁（sr = σ）</text>
+  <text x="5" y="38" fill="#7d3c98">C_R（半径R→∞）</text>
+  <text x="120" y="105" fill="#c0392b">×</text><text x="140" y="90" fill="#c0392b">×</text>
+  <text x="105" y="140" fill="#c0392b">×</text><text x="140" y="150" fill="#c0392b">×</text>
+  <text x="95" y="120" fill="#333" font-size="11">特異点</text>
+</svg>
+<figcaption>図13-2　ブロムウィッチ積分路。鉛直線 $C_1$ と左に張り出す大きな半円 $C_R$ を合わせて閉曲線にする。$\hat f(s)$ の特異点（×印）はすべて内側に入る。半円部分は $x&gt;0$ のとき積分への寄与がゼロになる。</figcaption>
+</figure>
+
+<div class="ex">
+<span class="label">例 13.2（留数法と変換表の一致を確認する）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex13-2">完了</label>　$\hat f(s)=\dfrac{1}{s-\alpha}$（$\alpha$ は実数）の逆変換を、留数定理で求めよ。
+<div class="proof">
+<strong>① 特異点を求める</strong>　$e^{sx}\hat f(s)=\dfrac{e^{sx}}{s-\alpha}$ は $s=\alpha$ に1位の極を持つ（他に特異点なし）。<br>
+<strong>② 留数を計算する</strong>　1位の極の留数公式 $\mathrm{Res}=\lim_{s\to\alpha}(s-\alpha)\cdot\dfrac{e^{sx}}{s-\alpha}=e^{\alpha x}$。<br>
+<strong>③ 結論</strong>　特異点は1つだけなので
+$$ f(x)=\mathrm{Res}\Big(\frac{e^{sx}}{s-\alpha},\,\alpha\Big)=e^{\alpha x}. $$
+これは次節で変換表として導く $\mathcal L[e^{\alpha x}]=\dfrac{1}{s-\alpha}$ の逆変換と完全に一致する。<strong>留数法・変換表という別々の道筋が同じ答えにたどり着く</strong>——これは偶然ではなく、両方とも同じ逆変換公式（定理13.3）の異なる計算手段だから。
+</div>
+</div>
+
+<h2>13.5　導関数・積分のラプラス変換</h2>
+<p>微分方程式を解くには「微分」をラプラス変換したときにどうなるかが要になります。部分積分で直接計算します。</p>
+<div class="proof">
+<strong>$\mathcal L[f'(x)]$ を求める</strong>　定義に従って部分積分（$u=e^{-sx},\,dv=f'(x)dx$、$du=-se^{-sx}dx,\,v=f(x)$）：
+$$ \mathcal L[f'(x)]=\int_0^\infty e^{-sx}f'(x)\,dx=\Big[e^{-sx}f(x)\Big]_0^\infty-\int_0^\infty(-s)e^{-sx}f(x)\,dx. $$
+境界項は、$s_r&gt;a$（ラプラス変換可能の条件3）のおかげで $x\to\infty$ で $e^{-sx}f(x)\to0$ となるので $0-f(0)=-f(0)$ のみ残る。積分項は $s\hat f(s)$ になるので
+$$ \mathcal L\Big[\frac{dy}{dx}\Big]=-y(0)+s\,\hat y(s). $$
+<strong>2階微分にも同じ手順を適用</strong>　$y'$ を1つの関数とみて上式をもう一度使う：
+$$ \mathcal L[y'']=-y'(0)+s\,\mathcal L[y']=-y'(0)+s\big(-y(0)+s\hat y(s)\big)=-y'(0)-s\,y(0)+s^2\hat y(s). $$
+</div>
+<div class="thm">
+<span class="label">導関数のラプラス変換</span>
+$$ \mathcal L\Big[\frac{dy}{dx}\Big]=-y(0)+s\hat y(s),\qquad
+\mathcal L\Big[\frac{d^2y}{dx^2}\Big]=-y'(0)-s\,y(0)+s^2\hat y(s) $$
+</div>
+<div class="why">
+<span class="label">これが微分方程式を解ける理由</span>　微分が「$s$ を掛ける」という<strong>代数の演算</strong>に置き換わります（ただし初期値 $y(0),y'(0)$ という定数が付加的に出てくる点がフーリエ変換の微分則と違うところ——フーリエ変換は $(-\infty,\infty)$ 全体なので境界項が両側とも消え、単に $(ip)^n\hat f$ となりました。ラプラス変換は片側 $[0,\infty)$ なので $x=0$ の境界項が残り、それがそのまま<strong>初期条件を取り込む役割</strong>を果たします）。$y$ の微分方程式が、$\hat y(s)$ についての<strong>代数方程式</strong>になる——これが第14回で使う中心アイデアです。
+</div>
+
+<h3>13.5.1　積分のラプラス変換——微分則を「逆向きに」読む</h3>
+<p>微分が「$s$ を掛ける」なら、その逆演算である積分は「$s$ で割る」はずです。実際そうなることを、いま導いた微分則から<strong>新しい積分計算を一切せずに</strong>示せます。</p>
+<div class="proof">
+<strong>$\displaystyle\mathcal L\Big[\int_0^x f(t)\,dt\Big]$ を求める</strong><br>
+<strong>① 積分した関数に名前をつける</strong>　求めたいのは「$f$ を $0$ から $x$ まで積分した関数」のラプラス変換。そこで
+$$ g(x)=\int_0^x f(t)\,dt $$
+とおく。<span class="meta">（なぜ名前をつけるか：こう置くと $g$ 自身は「ふつうの関数」なので、すでに証明済みの微分則をそのまま適用できる形に持ち込める。）</span><br>
+<strong>② $g$ が満たす2つの性質を書き出す</strong>　微積分学の基本定理（上端 $x$ で微分すると被積分関数が戻る）より
+$$ g'(x)=f(x). $$
+また、積分の上端と下端が一致すれば積分値は $0$ だから
+$$ g(0)=\int_0^0 f(t)\,dt=0. $$
+<strong>③ 微分則（13.5 の定理）を $g$ に適用する</strong>　$\mathcal L[g'(x)]=-g(0)+s\,\hat g(s)$ に、②の $g(0)=0$ を代入すると境界項が消えて
+$$ \mathcal L[g'(x)]=-0+s\,\hat g(s)=s\,\hat g(s). $$
+<strong>④ 左辺を $f$ に書き換える</strong>　②より $g'(x)=f(x)$ なので、左辺はそのまま $\mathcal L[f(x)]=\hat f(s)$。つまり
+$$ \hat f(s)=s\,\hat g(s). $$
+<strong>⑤ $\hat g$ について解く</strong>　両辺を $s$ で割って（$s_r&gt;0$ の領域を考えているので $s\ne0$）
+$$ \hat g(s)=\frac{1}{s}\hat f(s),\qquad\text{すなわち}\qquad
+\mathcal L\Big[\int_0^x f(t)\,dt\Big]=\frac{1}{s}\hat f(s). \qquad\blacksquare $$
+<span class="meta">補足（条件）：$f$ が $|f(x)|\le Me^{ax}$（$a&gt;0$）を満たせば $|g(x)|\le\int_0^x Me^{at}dt\le\frac{M}{a}e^{ax}$ なので $g$ も同じ半平面でラプラス変換可能。だから③で $\mathcal L[g]$ を使ってよい。</span>
+</div>
+<div class="thm">
+<span class="label">積分のラプラス変換</span>
+$$ \mathcal L\Big[\int_0^x f(t)\,dt\Big]=\frac{1}{s}\,\hat f(s) $$
+</div>
+<div class="why">
+<span class="label">直感：$s$ 倍と $1/s$ 倍が対になっている</span>　微分則は「$\mathcal L[y']=s\hat y-y(0)$」、積分則は「$\mathcal L[\int_0^x y]=\hat y/s$」。$x$ の世界での<strong>微分・積分という解析の操作</strong>が、$s$ の世界では<strong>$s$ を掛ける・$s$ で割るという四則演算</strong>に化けます。初期値の項が積分則に出てこないのは、$\int_0^x$ が「$x=0$ でちょうど $0$ から始まる原始関数」だけを選んでいるから（積分定数がゼロに固定されている）。<br>
+<strong>使い道</strong>：逆変換のとき、分母に $s$ が1つ余分にある形 $\dfrac{\hat f(s)}{s}$ を見たら「$f$ を $0$ から $x$ まで積分すればよい」と読めます。例えば $\hat f(s)=\dfrac{a}{s^2+a^2}$（$f=\sin ax$）に対して
+$$ \mathcal L^{-1}\Big[\frac{1}{s}\cdot\frac{a}{s^2+a^2}\Big]=\int_0^x\sin at\,dt=\Big[-\frac{\cos at}{a}\Big]_0^x=\frac{1-\cos ax}{a}. $$
+両辺を $a$ で割れば $\mathcal L^{-1}\Big[\dfrac{1}{s(s^2+a^2)}\Big]=\dfrac{1-\cos ax}{a^2}$。<span class="meta">検算：$\mathcal L\big[\frac{1-\cos ax}{a^2}\big]=\frac{1}{a^2}\Big(\frac1s-\frac{s}{s^2+a^2}\Big)=\frac{1}{a^2}\cdot\frac{(s^2+a^2)-s^2}{s(s^2+a^2)}=\frac{1}{s(s^2+a^2)}$ ✓</span>
+</div>
+
+<h2>13.6　基本のラプラス変換を導出する（変換表）</h2>
+<p>定義に戻って、頻出する関数のラプラス変換を1つずつ導出します。丸暗記ではなく「積分を実際に計算すれば出てくる」ことを確認します。</p>
+
+<div class="proof">
+<strong>$\mathcal L[1]$</strong>　$\displaystyle\int_0^\infty e^{-sx}\,dx=\Big[-\frac{e^{-sx}}{s}\Big]_0^\infty=0-\Big(-\frac1s\Big)=\frac1s$（$s_r&gt;0$ で境界項の $x\to\infty$ が消える）。
+</div>
+<div class="proof">
+<strong>$\mathcal L[x^n]$（$n=0,1,2,\dots$）</strong>　$I_n=\int_0^\infty x^ne^{-sx}dx$ とおく。部分積分（$u=x^n,\,dv=e^{-sx}dx$）で
+$$ I_n=\Big[-\frac{x^ne^{-sx}}{s}\Big]_0^\infty+\frac ns\int_0^\infty x^{n-1}e^{-sx}dx=\frac ns\,I_{n-1} $$
+（境界項は $s_r&gt;0$ でゼロ）。$I_0=1/s$（上で計算済み）だから、この漸化式を繰り返し使うと
+$$ I_n=\frac ns\cdot\frac{n-1}{s}\cdots\frac1s\cdot\frac1s=\frac{n!}{s^{n+1}}. $$
+</div>
+<div class="proof">
+<strong>$\mathcal L[e^{ax}]$</strong>　$\displaystyle\int_0^\infty e^{ax}e^{-sx}dx=\int_0^\infty e^{-(s-a)x}dx=\frac{1}{s-a}$（$\mathcal L[1]$ の計算で $s\to s-a$ としただけ。$s_r&gt;a$ で収束）。
+</div>
+<div class="proof">
+<strong>$\mathcal L[\cos ax],\ \mathcal L[\sin ax]$——複素数の力を借りる</strong>　$e^{iax}=\cos ax+i\sin ax$（オイラーの公式・第2回）に着目し、$\mathcal L[e^{iax}]$ を上の公式で $a\to ia$ として計算する：
+$$ \mathcal L[e^{iax}]=\frac{1}{s-ia}. $$
+分母を実数化するため、共役 $s+ia$ を分母分子に掛ける（$z\bar z=|z|^2$ の要領、第1回）：
+$$ \frac{1}{s-ia}=\frac{s+ia}{(s-ia)(s+ia)}=\frac{s+ia}{s^2+a^2}=\frac{s}{s^2+a^2}+i\,\frac{a}{s^2+a^2}. $$
+一方、線形性から $\mathcal L[e^{iax}]=\mathcal L[\cos ax]+i\,\mathcal L[\sin ax]$。両辺の実部・虚部を比較すると
+$$ \mathcal L[\cos ax]=\frac{s}{s^2+a^2},\qquad \mathcal L[\sin ax]=\frac{a}{s^2+a^2}. $$
+</div>
+
+<div class="proof">
+<strong>移動則（シフト則）：$\mathcal L[e^{ax}f(x)]$</strong>　定義に直接代入するだけ：
+$$ \mathcal L[e^{ax}f(x)]=\int_0^\infty e^{-sx}e^{ax}f(x)\,dx=\int_0^\infty e^{-(s-a)x}f(x)\,dx=\hat f(s-a). $$
+（「$x$ 側で $e^{ax}$ を掛ける」＝「$s$ 側で $s\to s-a$ だけずらす」）
+</div>
+
+<div class="proof">
+<strong>相似則：$\mathcal L[f(ax)]$（$a&gt;0$）</strong>　置換 $u=ax$（$du=a\,dx$）を使う：
+$$ \mathcal L[f(ax)]=\int_0^\infty e^{-sx}f(ax)\,dx=\int_0^\infty e^{-\frac{s}{a}u}f(u)\,\frac{du}{a}=\frac1a\hat f\Big(\frac sa\Big). $$
+</div>
+
+<div class="proof">
+<strong>微分則の逆：$\mathcal L[x^nf(x)]$——積分記号下の微分</strong>　$\hat f(s)=\int_0^\infty e^{-sx}f(x)dx$ を $s$ で微分すると、$\partial_s\,e^{-sx}=-xe^{-sx}$ なので
+$$ \frac{d\hat f}{ds}=\int_0^\infty(-x)e^{-sx}f(x)\,dx=-\mathcal L[xf(x)]\quad\Longrightarrow\quad \mathcal L[xf(x)]=-\hat f'(s). $$
+<span class="meta">（なぜ微分を積分の中に入れてよいか：$s_r&gt;a$ の内部では $e^{-sx}f(x)$ とその $s$ 偏微分が一様に絶対可積分になるため。13.2 で $\hat f$ が正則＝何回でも微分可能と示したことの具体的な現れ。）</span><br>
+<strong>もう一度微分すれば $x^2$ が出る</strong>　いま得た式をさらに $s$ で微分する。左辺は $\hat f''(s)$、右辺は $\displaystyle-\frac{d}{ds}\int_0^\infty e^{-sx}\,xf(x)\,dx=-\int_0^\infty(-x)e^{-sx}\,xf(x)\,dx=+\mathcal L[x^2f(x)]$。すなわち
+$$ \mathcal L[x^2f(x)]=\hat f''(s). $$
+微分するたびに $-x$ が1つずつ降りてくるので、これを $n$ 回くり返せば符号は $(-1)^n$ となり
+$$ \mathcal L[x^nf(x)]=(-1)^n\frac{d^n\hat f(s)}{ds^n}. $$
+これを $\sin ax,\cos ax$ に適用すると（$n=1$、商の微分）
+$$ \mathcal L[x\sin ax]=-\frac{d}{ds}\Big[\frac{a}{s^2+a^2}\Big]=\frac{2as}{(s^2+a^2)^2},\qquad
+\mathcal L[x\cos ax]=-\frac{d}{ds}\Big[\frac{s}{s^2+a^2}\Big]=\frac{s^2-a^2}{(s^2+a^2)^2}. $$
+</div>
+
+<div class="thm">
+<span class="label">ラプラス変換表（今回導いたものをまとめる）</span>
+<table class="tb">
+<tr><th>$f(x)$</th><th>$\hat f(s)$</th><th>$f(x)$</th><th>$\hat f(s)$</th></tr>
+<tr><td>$1$</td><td>$1/s$</td><td>$x\sin ax$</td><td>$2as/(s^2+a^2)^2$</td></tr>
+<tr><td>$x^n$</td><td>$n!/s^{n+1}$</td><td>$x\cos ax$</td><td>$(s^2-a^2)/(s^2+a^2)^2$</td></tr>
+<tr><td>$e^{ax}$</td><td>$1/(s-a)$</td><td>$y'(x)$</td><td>$-y(0)+s\hat y(s)$</td></tr>
+<tr><td>$\sin ax$</td><td>$a/(s^2+a^2)$</td><td>$y''(x)$</td><td>$-y'(0)-sy(0)+s^2\hat y(s)$</td></tr>
+<tr><td>$\cos ax$</td><td>$s/(s^2+a^2)$</td><td>$x^nf(x)$</td><td>$(-1)^n\dfrac{d^n}{ds^n}\hat f(s)$</td></tr>
+<tr><td>$\sinh ax$</td><td>$a/(s^2-a^2)$</td><td>$e^{ax}f(x)$</td><td>$\hat f(s-a)$</td></tr>
+<tr><td>$\cosh ax$</td><td>$s/(s^2-a^2)$</td><td>$f(ax)$</td><td>$\hat f(s/a)/a$</td></tr>
+<tr><td colspan="2" class="meta">（微分は $s$ 倍、積分は $1/s$ 倍）</td><td>$\displaystyle\int_0^x f(t)dt$</td><td>$\hat f(s)/s$</td></tr>
+</table>
+<p class="meta">$\sinh ax=\dfrac{e^{ax}-e^{-ax}}2,\ \cosh ax=\dfrac{e^{ax}+e^{-ax}}2$ に $\mathcal L[e^{\pm ax}]=1/(s\mp a)$ を代入すれば同様に導ける（各自確認：第2回の $\cosh,\sinh$ の定義を思い出すこと）。</p>
+</div>
+
+<hr>
+<h2>13.7　章末例題</h2>
+<div class="ex">
+<span class="label">例 13.3（部分分数分解と変換表の組み合わせ）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex13-3">完了</label>　$\hat f(s)=\dfrac{3s+5}{(s+1)(s+2)}$ の逆変換 $f(x)$ を求めよ。
+<div class="proof">
+<strong>① 部分分数に分解する</strong>　$\dfrac{3s+5}{(s+1)(s+2)}=\dfrac{A}{s+1}+\dfrac{B}{s+2}$ とおき、両辺に $(s+1)(s+2)$ を掛けると $3s+5=A(s+2)+B(s+1)$。<br>
+<strong>② 係数を決める</strong>　$s=-1$ を代入：$3(-1)+5=A(1)\Rightarrow A=2$。$s=-2$ を代入：$3(-2)+5=B(-1)\Rightarrow -1=-B\Rightarrow B=1$。<br>
+検算：$s^0$ の係数を比較すると $5=2A+B=4+1=5$ ✓。<br>
+<strong>③ 変換表を引く</strong>　$\dfrac2{s+1}+\dfrac1{s+2}$。$\mathcal L[e^{ax}]=1/(s-a)$ より $\mathcal L^{-1}[1/(s+1)]=e^{-x}$、$\mathcal L^{-1}[1/(s+2)]=e^{-2x}$。よって
+$$ f(x)=2e^{-x}+e^{-2x}. $$
+<strong>④ 検算（留数定理でも確かめる）</strong>　$e^{sx}\hat f(s)$ の極は $s=-1,-2$（ともに1位）。$\mathrm{Res}_{s=-1}=\lim_{s\to-1}(s+1)\dfrac{(3s+5)e^{sx}}{(s+1)(s+2)}=\dfrac{2e^{-x}}{1}=2e^{-x}$、$\mathrm{Res}_{s=-2}=\dfrac{(-1)e^{-2x}}{-1}=e^{-2x}$。和は $2e^{-x}+e^{-2x}$ で一致 ✓。
+</div>
+</div>
+
+<h2>13.8　演習問題</h2>
+<p>1・2 は定義に戻る基本練習、3 は変換表を使った逆変換、4 は留数法との整合性確認です。</p>
+<ol>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill13-1">完了</label> 定義に戻って $\mathcal L[x^2]$ を直接計算し、変換表の公式 $n!/s^{n+1}$（$n=2$）と一致することを確かめよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill13-2">完了</label> $f(x)=\cosh 2x$ のラプラス変換を、指数関数の変換公式から導け。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill13-3">完了</label> $\hat f(s)=\dfrac{1}{(s-1)(s+3)}$ の逆変換 $f(x)$ を部分分数分解を用いて求めよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill13-4">完了</label> 3で求めた $\hat f(s)$ を、留数定理（定理13.3）を使って逆変換し、3の答えと一致することを確認せよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill13-5">完了</label> 積分則 $\mathcal L\big[\int_0^x f(t)dt\big]=\hat f(s)/s$ を使って $\mathcal L^{-1}\Big[\dfrac{1}{s^2(s+1)}\Big]$ を求めよ。<br>
+  <details><summary>解答</summary>
+  まず $\dfrac{1}{s(s+1)}$ の逆変換を出す。$\dfrac{1}{s(s+1)}=\dfrac1s-\dfrac{1}{s+1}$（部分分数分解）より $\mathcal L^{-1}\Big[\dfrac{1}{s(s+1)}\Big]=1-e^{-x}$。<br>
+  次に、求める式はこれをさらに $s$ で割った形 $\dfrac{1}{s}\cdot\dfrac{1}{s(s+1)}$ なので、積分則より $0$ から $x$ まで積分すればよい：
+  $$ \mathcal L^{-1}\Big[\frac{1}{s^2(s+1)}\Big]=\int_0^x\big(1-e^{-t}\big)dt=\Big[t+e^{-t}\Big]_0^x=x+e^{-x}-1. $$
+  検算：$\mathcal L[x+e^{-x}-1]=\dfrac{1}{s^2}+\dfrac{1}{s+1}-\dfrac1s=\dfrac{(s+1)+s^2-s(s+1)}{s^2(s+1)}=\dfrac{s+1+s^2-s^2-s}{s^2(s+1)}=\dfrac{1}{s^2(s+1)}$ ✓
+  </details></li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong>　$I_2=\int_0^\infty x^2e^{-sx}dx$。部分積分を2回：$I_2=\frac2s I_1=\frac2s\cdot\frac1s I_0=\frac2s\cdot\frac1s\cdot\frac1s=\frac{2}{s^3}$。公式 $n!/s^{n+1}=2!/s^3=2/s^3$ と一致 ✓。<br><br>
+<strong>2.</strong>　$\cosh2x=\dfrac{e^{2x}+e^{-2x}}2$。$\mathcal L[e^{2x}]=\dfrac1{s-2}$、$\mathcal L[e^{-2x}]=\dfrac1{s+2}$（線形性より和を $1/2$ 倍）：
+$$ \mathcal L[\cosh2x]=\frac12\Big(\frac1{s-2}+\frac1{s+2}\Big)=\frac12\cdot\frac{2s}{s^2-4}=\frac{s}{s^2-4}. $$
+表の $\cosh ax\to s/(s^2-a^2)$（$a=2$）と一致 ✓。<br><br>
+<strong>3.</strong>　$\dfrac1{(s-1)(s+3)}=\dfrac{A}{s-1}+\dfrac{B}{s+3}$。$1=A(s+3)+B(s-1)$。$s=1$：$1=4A\Rightarrow A=\frac14$。$s=-3$：$1=-4B\Rightarrow B=-\frac14$。
+$$ f(x)=\frac14e^{x}-\frac14e^{-3x}=\frac14\big(e^x-e^{-3x}\big). $$
+<strong>4.</strong>　$e^{sx}\hat f(s)$ の極 $s=1,-3$（1位）。$\mathrm{Res}_{s=1}=\lim_{s\to1}(s-1)\dfrac{e^{sx}}{(s-1)(s+3)}=\dfrac{e^x}4$。$\mathrm{Res}_{s=-3}=\dfrac{e^{-3x}}{-4}=-\dfrac{e^{-3x}}4$。和 $=\dfrac14(e^x-e^{-3x})$ で3と一致 ✓。
+</div>
+</details>
+
+<hr>
+<h2>13.9　まとめ・チェックリスト</h2>
+<div class="box">
+<ul>
+  <li>□ フーリエ変換の絶対可積分条件が厳しい理由と、ラプラス変換が $e^{-\sigma x}$ を掛けて条件を緩める仕組みを説明できる。</li>
+  <li>□ ラプラス変換の定義 $\hat f(s)=\int_0^\infty e^{-sx}f(x)dx$ と、適用条件（因果性・区分的滑らかさ・絶対可積分の下限 $\sigma$）を言える。</li>
+  <li>□ 収束が $s$ の実部だけで決まること、半平面 $s_r&gt;a$ で $\hat f(s)$ が<strong>正則</strong>であることを、コーシーの定理＋モレラの定理で証明できる。</li>
+  <li>□ ラプラス変換をフーリエ変換の形に書き換え、フーリエ逆変換から逆変換公式（ブロムウィッチ積分）を導出できる。</li>
+  <li>□ ブロムウィッチ積分路を左に閉じて留数定理を適用し、$f(x)=\sum\mathrm{Res}(e^{sx}\hat f(s))$ を導ける。</li>
+  <li>□ 部分積分から $\mathcal L[y'],\mathcal L[y'']$（初期値付き）を導出できる。</li>
+  <li>□ $g(x)=\int_0^x f(t)dt$ と置き、$g'=f,\ g(0)=0$ を微分則に入れて $\mathcal L\big[\int_0^x f\big]=\hat f(s)/s$ を導ける（微分＝$s$ 倍、積分＝$1/s$ 倍の対応）。</li>
+  <li>□ 積分記号下の微分から $\mathcal L[x^nf(x)]=(-1)^n\hat f^{(n)}(s)$ を導き、$\mathcal L[x\sin ax]$ 等を計算できる。</li>
+  <li>□ $\mathcal L[1],\mathcal L[x^n],\mathcal L[e^{ax}],\mathcal L[\sin ax],\mathcal L[\cos ax]$ を定義から自分で導出できる（丸暗記ではなく）。</li>
+  <li>□ 部分分数分解と留数定理、2通りの方法で同じ逆変換の答えが出ることを確認できる。</li>
+</ul>
+</div>
+
+<div class="navi" style="margin-top:18px">
+次回（第14回）は、今回作った道具一式——<strong>変換⇄逆変換・微分則・変換表・留数法・（次回導入する）たたみ込み</strong>——を使って、実際に<strong>常微分方程式・偏微分方程式</strong>を解きます。「微分方程式 → ラプラス変換で代数方程式 → 解いて逆変換」という一連の流れを体験しましょう。
+</div>
+
+<script>
+(function(){
+  var KEY = 'amII_prob_16';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  document.querySelectorAll('.prob-check').forEach(function(cb){
+    var id = cb.getAttribute('data-pid');
+    cb.checked = !!state[id];
+    cb.addEventListener('change', function(){
+      state[id] = cb.checked;
+      save();
+    });
+  });
+})();
+</script>
+</body>
+</html>

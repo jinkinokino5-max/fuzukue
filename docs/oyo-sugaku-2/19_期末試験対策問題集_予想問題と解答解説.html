@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>期末試験対策問題集　予想問題・解答・解説（フーリエ解析・ラプラス変換・偏微分方程式）</title>
+<script>
+  MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], tags:'none' },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; --q:#eaf2fb; --qline:#1b4f72; --star:#c0392b; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink);
+        line-height:1.78; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:30px 0 12px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:18px 0 6px; }
+  h4{ font-size:14.5px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; }
+  .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .q{ background:var(--q); border:1px solid var(--qline); border-left:6px solid var(--qline); border-radius:5px; padding:10px 15px; margin:14px 0 10px; }
+  .q .label{ font-weight:bold; color:var(--accent); font-size:16px; }
+  .pts{ display:inline-block; font-size:12px; font-weight:bold; color:#fff; background:var(--accent); border-radius:10px; padding:1px 9px; margin-left:6px; vertical-align:middle; }
+  .ans{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:10px 0; }
+  .ans .label{ font-weight:bold; color:#2e7d32; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .why{ background:#fffdf0; border:1px solid #e8d48b; border-left:6px solid #e8c14b; border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .why .label{ color:#9a7d1a; }
+  .final{ background:#fffbe6; border:2px solid #e0c34d; border-radius:6px; padding:6px 12px; margin:10px 0; font-weight:bold; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); }
+  .star{ color:var(--star); font-weight:bold; }
+  .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:24px 0; }
+  details{ margin:8px 0; background:#fafafa; border:1px solid var(--line); border-radius:6px; padding:4px 12px; }
+  summary{ cursor:pointer; color:var(--accent); font-weight:bold; padding:5px 0; }
+  details[open]{ padding-bottom:10px; }
+  a{ color:var(--accent); } a:hover{ text-decoration:underline; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:7px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:480px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  table.score{ border-collapse:collapse; margin:10px 0; font-size:14px; width:100%; }
+  table.score th,table.score td{ border:1px solid var(--line); padding:5px 12px; text-align:center; }
+  table.score th{ background:var(--box); }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } details>*{ display:block; } }
+  .prob-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); background:#fff; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:0 6px; cursor:pointer; vertical-align:middle; user-select:none; }
+  .prob-chk input{ margin:0; cursor:pointer; }
+  @media print{ .prob-chk{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>期末試験対策問題集　予想問題・解答・解説</h1>
+<p class="lead">応用数学Ⅱ（フーリエ解析・ラプラス変換・偏微分方程式／第9〜14回） ／ 全4問・100点相当・目安時間 約90分（本試験と同程度のボリューム）<br>
+本ページは<a href="18_期末試験過去問_問題と解答解説.html">期末試験過去問</a>の出題傾向（配点比率・出題テーマ・「計算過程を省略しないこと」という要求）に基づいて作成した、<strong>自作の予想問題</strong>です。掲載する計算はすべて自分の手で検算済みです。</p>
+
+<div class="warn">
+<span class="label">お断り</span>　本問題集は実際の試験問題そのものではありません。過去問（問1：フーリエ級数20点／問2：フーリエ変換25点／問3：ラプラス変換30点／問4：偏微分方程式25点）と<strong>同じ配点比率・同じテーマ構成</strong>で、<strong>別の具体的な関数・微分方程式</strong>を使って作った練習用の問題です。過去問と本問題集の両方を解けば、同テーマの出題パターンに広く対応できるようにしてあります。
+</div>
+
+<div class="navi">
+使い方：各問は「<strong>問題</strong>（青）→ <strong>略解</strong>（緑）→ <strong>懇切丁寧な解説</strong>（折りたたみ、途中計算を省略しません）」の順です。まず自力で90分（本試験と同じ持ち時間）で通しで解き、その後に略解・解説で答え合わせしてください。
+</div>
+
+<table class="score">
+  <tr><th>問</th><th>テーマ</th><th>配点</th><th>対応テキスト</th></tr>
+  <tr><td>問1</td><td>直交性からの係数公式の導出／半波整流のこぎり波のフーリエ級数展開</td><td>20</td><td>第9回</td></tr>
+  <tr><td>問2</td><td>三角パルス関数のフーリエ変換とパラメータ依存性</td><td>25</td><td>第10回</td></tr>
+  <tr><td>問3</td><td>ラプラス変換による微分方程式の特解（複素共役根＝振動型）</td><td>30</td><td>第13・14回</td></tr>
+  <tr><td>問4</td><td>変数分離法による熱伝導方程式の一般解の導出と初期値問題</td><td>25</td><td>第12回</td></tr>
+</table>
+
+<hr>
+
+<!-- ===================== 問1 ===================== -->
+<h2>問1　直交性からの係数公式の導出とフーリエ級数展開 <span class="pts">20点</span></h2>
+
+<div class="q">
+<span class="label">問題</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="prepq-1">完了</label><br>
+(1) 三角関数系 $\{1,\cos x,\cos2x,\dots,\sin x,\sin2x,\dots\}$ が $[-\pi,\pi]$ 上で直交すること、すなわち
+$$ \int_{-\pi}^{\pi}\cos nx\cos mx\,dx=\begin{cases}0 & (n\ne m)\\ \pi & (n=m\ne0)\end{cases},\qquad
+\int_{-\pi}^{\pi}\sin nx\sin mx\,dx=\begin{cases}0 & (n\ne m)\\ \pi & (n=m\ne0)\end{cases},\qquad
+\int_{-\pi}^{\pi}\cos nx\sin mx\,dx=0 $$
+を認めた上で、$f(x)=\dfrac{a_0}2+\displaystyle\sum_{n=1}^\infty(a_n\cos nx+b_n\sin nx)$ から係数公式
+$$ a_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\cos nx\,dx\quad(n\ge0),\qquad b_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\sin nx\,dx\quad(n\ge1) $$
+を導出しなさい（天下りで書かず、両辺に何を掛けてどう積分するかを示すこと）。<br>
+(2) $[-\pi,\pi]$ で定義された周期 $2\pi$ の関数
+$$ f(x)=\begin{cases}0 & (-\pi&lt;x&lt;0)\\ x & (0\le x\le\pi)\end{cases} $$
+をフーリエ級数で表しなさい。計算過程を省略しないこと。
+</div>
+
+<div class="ans">
+<span class="label">略解（想定解答）</span><br>
+(1) 展開式の両辺に $\cos mx$ を掛けて $[-\pi,\pi]$ で積分し、直交性により右辺は $n=m$ の項だけが生き残ることから $a_m$ の式を得る（$\sin mx$ を掛ければ $b_m$）。<br>
+(2) $f$ は偶関数でも奇関数でもないので $a_0,a_n,b_n$ すべてを計算する必要がある。
+$$ f(x)=\frac{\pi}{4}-\frac{2}{\pi}\sum_{m=1}^{\infty}\frac{\cos(2m-1)x}{(2m-1)^2}+\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin nx $$
+</div>
+<div class="final">答：$f(x)=\dfrac{\pi}{4}-\dfrac{2}{\pi}\displaystyle\sum_{m=1}^{\infty}\dfrac{\cos(2m-1)x}{(2m-1)^2}+\sum_{n=1}^{\infty}\dfrac{(-1)^{n+1}}{n}\sin nx$</div>
+
+<details>
+<summary>懇切丁寧な解説を開く（導出の考え方・計算の全ステップ）</summary>
+
+<h4>(1) 「両辺に掛けて積分する」だけで係数公式が出る理由</h4>
+<p><strong>① まず $a_m$（$m\ge1$）を導く</strong>　展開式 $f(x)=\dfrac{a_0}2+\displaystyle\sum_{n=1}^\infty(a_n\cos nx+b_n\sin nx)$ の<strong>両辺に $\cos mx$ を掛けて</strong> $[-\pi,\pi]$ で積分する（項別に積分してよいとする）：
+$$ \int_{-\pi}^{\pi}f(x)\cos mx\,dx=\frac{a_0}2\int_{-\pi}^{\pi}\cos mx\,dx+\sum_{n=1}^\infty\Big[a_n\int_{-\pi}^{\pi}\cos nx\cos mx\,dx+b_n\int_{-\pi}^{\pi}\sin nx\cos mx\,dx\Big]. $$
+<strong>② 右辺の項を直交性で仕分ける</strong>　$m\ge1$ のとき $\displaystyle\int_{-\pi}^\pi\cos mx\,dx=0$（第1項は消える）。$\sin nx\cos mx$ の積分は問題文の直交関係より<strong>常に $0$</strong>（第2の和の $b_n$ 側はすべて消える）。$\cos nx\cos mx$ の積分は $n\ne m$ なら $0$、$n=m$ のときだけ $\pi$。よって和 $\displaystyle\sum_n a_n\int\cos nx\cos mx\,dx$ は<strong>$n=m$ の1項だけ</strong>が生き残り、$a_m\cdot\pi$ になる。</p>
+<p><strong>③ 結果を整理する</strong>　したがって $\displaystyle\int_{-\pi}^\pi f(x)\cos mx\,dx=a_m\pi$、すなわち
+$$ a_m=\frac1\pi\int_{-\pi}^{\pi}f(x)\cos mx\,dx\qquad(m\ge1). $$
+<strong>④ $a_0$ は「$m=0$」を代入するのではなく別扱いで確認する</strong>　両辺に $1$（定数関数）を掛けて積分すると $\displaystyle\int_{-\pi}^\pi f(x)dx=\frac{a_0}2\cdot2\pi=a_0\pi$（$\cos nx,\sin nx$ の項は $\displaystyle\int_{-\pi}^\pi\cos nx\,dx=\int_{-\pi}^\pi\sin nx\,dx=0\ (n\ge1)$ で消える）。よって $a_0=\dfrac1\pi\displaystyle\int_{-\pi}^\pi f(x)dx$——これは③の公式に $n=0$ を代入した形と一致する（だから展開式の定数項をわざわざ $a_0/2$ と書いておくと、公式が $n=0$ でも同じ形になって統一的に扱える）。<br>
+<strong>⑤ $b_m$ も同様</strong>　両辺に $\sin mx$ を掛けて積分すると、同じ理由（直交性）で $\cos nx\sin mx$ の項・$a_0/2$ の項がすべて消え、$\sin nx\sin mx$ の $n=m$ の項だけが残り
+$$ b_m=\frac1\pi\int_{-\pi}^{\pi}f(x)\sin mx\,dx\qquad(m\ge1). $$
+</p>
+<div class="why">
+<span class="label">この導出の本質</span>　直交関数系に対して「知りたい成分（$\cos mx$）を掛けて積分する」と、直交性のおかげで<strong>それ以外の成分がすべて消えて、知りたい成分だけが $\pi$ 倍（または $2\pi$ 倍）されて残る</strong>——これは第9回のフーリエ係数の定義そのものの作り方であり、<a href="12_第9回_フーリエ級数展開.html">第9回テキスト</a>で学んだ「相関を取り出す」操作の数式的な裏付けです。
+</div>
+
+<h4>(2) フーリエ級数の計算——偶関数でも奇関数でもないケース</h4>
+<p>この $f(x)$ は $(-\pi,0)$ で $0$、$[0,\pi]$ で $x$ という<strong>左右非対称な関数</strong>（半波整流されたのこぎり波）なので、$a_0,a_n,b_n$ の<strong>すべて</strong>を計算する必要がある。積分区間のうち $f=0$ の部分は寄与しないので、実質 $[0,\pi]$ の積分だけを行えばよい。</p>
+<p><strong>① $a_0$ を求める</strong>
+$$ a_0=\frac1\pi\int_{-\pi}^{\pi}f(x)dx=\frac1\pi\int_0^\pi x\,dx=\frac1\pi\Big[\frac{x^2}2\Big]_0^\pi=\frac1\pi\cdot\frac{\pi^2}2=\frac\pi2. $$
+よって定数項は $\dfrac{a_0}2=\dfrac\pi4$。</p>
+<p><strong>② $a_n$ を部分積分で求める</strong>　$u=x,\ dv=\cos nx\,dx$ とおくと $du=dx,\ v=\dfrac{\sin nx}n$：
+$$ a_n=\frac1\pi\int_0^\pi x\cos nx\,dx=\frac1\pi\Big\{\Big[\frac{x\sin nx}{n}\Big]_0^\pi-\int_0^\pi\frac{\sin nx}{n}dx\Big\}. $$
+第1項：$x=\pi$ で $\dfrac{\pi\sin n\pi}n=0$（$\sin n\pi=0$）、$x=0$ で $0$。よって<strong>第1項は $0$</strong>。<br>
+第2項：$\displaystyle\int_0^\pi\frac{\sin nx}n dx=\frac1n\Big[-\frac{\cos nx}n\Big]_0^\pi=-\frac1{n^2}(\cos n\pi-1)=\frac{1-\cos n\pi}{n^2}$。したがって
+$$ a_n=\frac1\pi\Big\{0-\frac{1-\cos n\pi}{n^2}\Big\}=\frac{\cos n\pi-1}{\pi n^2}=\frac{(-1)^n-1}{\pi n^2}. $$
+<strong>③ $\cos n\pi=(-1)^n$ で偶奇に分ける</strong>　$n$ が偶数なら $(-1)^n-1=0$、$n$ が奇数なら $(-1)^n-1=-2$。よって
+$$ a_n=\begin{cases}0 & n\text{：偶数}\\[4pt] -\dfrac{2}{\pi n^2} & n\text{：奇数}\end{cases} $$
+奇数を $n=2m-1$ と書き直せば $a_n$ の総和部分は $-\dfrac2\pi\displaystyle\sum_{m=1}^\infty\dfrac{\cos(2m-1)x}{(2m-1)^2}$。</p>
+<p><strong>④ $b_n$ を部分積分で求める</strong>　$u=x,\ dv=\sin nx\,dx$ とおくと $du=dx,\ v=-\dfrac{\cos nx}n$：
+$$ b_n=\frac1\pi\int_0^\pi x\sin nx\,dx=\frac1\pi\Big\{\Big[-\frac{x\cos nx}{n}\Big]_0^\pi+\int_0^\pi\frac{\cos nx}{n}dx\Big\}. $$
+第1項：$x=\pi$ で $-\dfrac{\pi\cos n\pi}{n}=-\dfrac{\pi(-1)^n}n$、$x=0$ で $0$。<br>
+第2項：$\displaystyle\int_0^\pi\frac{\cos nx}n dx=\frac1n\Big[\frac{\sin nx}n\Big]_0^\pi=\frac{\sin n\pi}{n^2}=0$（$\sin n\pi=0$）。よって
+$$ b_n=\frac1\pi\Big\{-\frac{\pi(-1)^n}n+0\Big\}=-\frac{(-1)^n}n=\frac{(-1)^{n+1}}{n}. $$
+<strong>⑤ まとめる</strong>
+$$ f(x)=\frac\pi4-\frac2\pi\sum_{m=1}^{\infty}\frac{\cos(2m-1)x}{(2m-1)^2}+\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin nx. $$
+</p>
+<div class="why">
+<span class="label">検算：具体的な $x$ を代入する</span>　$x=\pi/2$（連続点）：左辺 $f(\pi/2)=\pi/2$。右辺第2項の $\cos\big((2m-1)\pi/2\big)$ は奇数×$\pi/2$ の余弦で常に $0$ なので消える。第3項は $\sin(n\pi/2)$ が $1,0,-1,0,\dots$ と循環し、$\displaystyle\sum_{n=1}^\infty\frac{(-1)^{n+1}}n\sin\frac{n\pi}2=1-\frac13+\frac15-\frac17+\cdots=\frac\pi4$（ライプニッツ級数）。よって右辺 $=\dfrac\pi4+0+\dfrac\pi4=\dfrac\pi2$ ✓ 一致。<br>
+$x=\pi$（不連続点）：$f$ は $x=\pi$ で左極限 $\pi$、周期拡張の右極限（$x=-\pi$ 側）は $0$ なので、<strong>ディリクレの収束定理</strong>より級数は両者の平均 $\dfrac{\pi+0}2=\dfrac\pi2$ に収束するはず。右辺を計算すると、$\cos\big((2m-1)\pi\big)=-1$（常に）なので第2項は $-\dfrac2\pi\cdot\Big(-\displaystyle\sum\dfrac1{(2m-1)^2}\Big)=-\dfrac2\pi\cdot\Big(-\dfrac{\pi^2}8\Big)=\dfrac\pi4$、第3項は $\sin n\pi=0$ ですべて消える。合計 $\dfrac\pi4+\dfrac\pi4=\dfrac\pi2$ ✓ 平均値と一致。この2点チェックで計算ミスの大半は発見できる。
+</div>
+<p class="meta">→ 直交性・係数公式の導出そのものは<a href="12_第9回_フーリエ級数展開.html">第9回テキスト</a>を参照。過去問（問1）は偶関数のみの例だったが、本問は $a_n,b_n$ 両方が非ゼロになる一般的なケースを練習する。</p>
+</details>
+
+<hr>
+
+<!-- ===================== 問2 ===================== -->
+<h2>問2　三角パルス関数のフーリエ変換 <span class="pts">25点</span></h2>
+
+<div class="q">
+<span class="label">問題</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="prepq-2">完了</label><br>
+$a&gt;0$ として、次の三角パルス関数を考える。
+$$ f(x)=\begin{cases}1-\dfrac{|x|}{a} & |x|&lt;a\\[4pt] 0 & |x|\ge a\end{cases} $$
+(1) $f(x)$ の形状が $a$ の大小に対してどのように変化するか、図示しなさい。<br>
+(2) $f(x)$ をフーリエ変換し、
+$$ \hat f(p)=\sqrt{\frac2\pi}\,\frac{1-\cos ap}{a\,p^2} $$
+となることを示しなさい。<br>
+(3) $|\hat f(p)|$ の $p$ に対する変化（$p\ge0$）を適当な $a$ に対して図示し、(1)と対応させて $a$ の影響について議論しなさい。
+</div>
+
+<div class="ans">
+<span class="label">略解（想定解答）</span><br>
+(1) 下記解説の図を参照。$a$ が大きいほど幅が広く緩やかな三角形、$a$ が小さいほど幅が狭く尖った三角形になる。<br>
+(2)
+$$ \hat f(p)=\frac1{\sqrt{2\pi}}\int_{-a}^{a}\Big(1-\frac{|x|}a\Big)e^{-ipx}dx=\sqrt{\frac2\pi}\,\frac{1-\cos ap}{a\,p^2}. $$
+(3) 下図参照。$a$ が小さいほど $|\hat f(p)|$ の主山（メインローブ）は $p$ の大きい側まで広がり、$a$ が大きいほど主山は $p=0$ 付近に集中する。
+</div>
+<div class="final">答：$\hat f(p)=\sqrt{\dfrac2\pi}\,\dfrac{1-\cos ap}{a\,p^2}$</div>
+
+<details>
+<summary>懇切丁寧な解説を開く（図・積分計算の全ステップ）</summary>
+
+<h4>(1) $f(x)$ の形と $a$ による変化</h4>
+<p>$f(x)$ は $x=0$ で高さ $1$、$x=\pm a$ で高さ $0$ になる<strong>山形（三角形）のパルス</strong>で、$|x|\ge a$ では $0$。偶関数である（$f(-x)=f(x)$）。</p>
+<figure class="fig">
+<svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="mR1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="15" y1="140" x2="400" y2="140" stroke="#999" stroke-width="1.1" marker-end="url(#mR1)"/>
+  <line x1="210" y1="150" x2="210" y2="15" stroke="#999" stroke-width="1.1" marker-end="url(#mR1)"/>
+  <text x="392" y="155" fill="#999">x</text>
+  <text x="216" y="26" fill="#999">1</text>
+  <!-- large a: wide triangle -->
+  <path d="M110 140 L210 30 L310 140" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <text x="90" y="155" fill="#1b4f72">大きい a（幅が広い）</text>
+  <!-- small a: narrow triangle dashed -->
+  <path d="M175 140 L210 70 L245 140" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="248" y="60" fill="#c0392b">小さい a（幅が狭い）</text>
+</svg>
+<figcaption>図（問2-1）　$a$ が大きいほど幅の広い、緩やかな三角パルス。$a$ が小さいほど幅の狭い、尖ったパルスになる（頂点の高さは常に $1$）。</figcaption>
+</figure>
+
+<h4>(2) フーリエ変換の計算——偶関数として実積分に落とす</h4>
+<p><strong>① $f$ が偶関数であることを使って虚部を消す</strong>　定義に代入すると
+$$ \hat f(p)=\frac1{\sqrt{2\pi}}\int_{-a}^{a}f(x)e^{-ipx}dx=\frac1{\sqrt{2\pi}}\int_{-a}^{a}f(x)\big(\cos px-i\sin px\big)dx. $$
+$f(x)$ は偶関数、$\cos px$ も偶関数なので積 $f(x)\cos px$ は偶関数——対称区間の積分は「$0$ から $a$ までの2倍」にできる。一方 $f(x)\sin px$ は偶関数×奇関数で<strong>奇関数</strong>になるので、対称区間の積分は $0$。よって虚部が消えて
+$$ \hat f(p)=\frac2{\sqrt{2\pi}}\int_0^a f(x)\cos px\,dx=\sqrt{\frac2\pi}\int_0^a\Big(1-\frac xa\Big)\cos px\,dx. $$
+<strong>② 積分を2つに分ける</strong>
+$$ I:=\int_0^a\Big(1-\frac xa\Big)\cos px\,dx=\int_0^a\cos px\,dx-\frac1a\int_0^a x\cos px\,dx. $$
+<strong>③ 易しい方から計算する</strong>
+$$ \int_0^a\cos px\,dx=\Big[\frac{\sin px}p\Big]_0^a=\frac{\sin ap}{p}. $$
+<strong>④ 本体：$\displaystyle\int_0^a x\cos px\,dx$ を部分積分する</strong>　$u=x,\ dv=\cos px\,dx$ とおくと $du=dx,\ v=\dfrac{\sin px}p$：
+$$ \int_0^a x\cos px\,dx=\Big[\frac{x\sin px}p\Big]_0^a-\int_0^a\frac{\sin px}p\,dx=\frac{a\sin ap}{p}-\frac1p\Big[-\frac{\cos px}{p}\Big]_0^a=\frac{a\sin ap}{p}+\frac{\cos ap-1}{p^2}. $$
+<strong>⑤ ③④を②に戻して整理する</strong>
+$$ I=\frac{\sin ap}p-\frac1a\Big[\frac{a\sin ap}p+\frac{\cos ap-1}{p^2}\Big]=\frac{\sin ap}p-\frac{\sin ap}p-\frac{\cos ap-1}{ap^2}=\frac{1-\cos ap}{ap^2}. $$
+（$\sin ap/p$ の項がちょうど打ち消し合うことに注意——約分ではなく「同じ項を引く」ことで消える。）<br>
+<strong>⑥ 仕上げる</strong>
+$$ \hat f(p)=\sqrt{\frac2\pi}\cdot I=\sqrt{\frac2\pi}\,\frac{1-\cos ap}{a\,p^2}. $$
+題意の式と一致した。
+</p>
+<div class="why">
+<span class="label">$\hat f(p)$ が実数になる理由</span>　$f(x)$ は<strong>偶関数</strong>でした。一般に、実数値の偶関数のフーリエ変換は<strong>実数</strong>になります（①で見たように、$\sin px$ 成分との積が奇関数になって消え、$\cos px$ 成分だけが残るため）。過去問（問2）の奇関数パルスは純虚数になりましたが、本問の偶関数パルスは<strong>純実数</strong>になる——「偶関数なら実数、奇関数なら純虚数」という対応（第10回）の、もう一方の具体例です。
+</div>
+
+<h4>(3) $|\hat f(p)|$ の振る舞いと $a$ の影響</h4>
+<p><strong>① $p\to0$ での値を確認する</strong>　$1-\cos ap\approx\dfrac{(ap)^2}2$（$p$ が小さいときのテイラー近似）を使うと $\hat f(p)\approx\sqrt{\dfrac2\pi}\dfrac{a^2p^2/2}{ap^2}=\sqrt{\dfrac2\pi}\dfrac a2$——原点で有限な値 $\hat f(0)=\dfrac a{\sqrt{2\pi}}$ に近づく（これは $\hat f(0)=\dfrac1{\sqrt{2\pi}}\displaystyle\int f(x)dx$、すなわち三角形の面積 $\dfrac12\cdot2a\cdot1=a$ を $\sqrt{2\pi}$ で割った値と一致し、検算になる）。</p>
+<p><strong>② 最初のゼロ点</strong>　$1-\cos ap=0\iff ap=2\pi k$ なので、$p=0$ を除く最初のゼロ点は $p=2\pi/a$。<strong>$a$ が小さいほどこのゼロ点は大きな $p$ に移動する</strong>＝主山（メインローブ）が高周波側まで広がる。逆に $a$ が大きいほど主山は $p=0$ 付近に集中する。</p>
+<figure class="fig">
+<svg viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <defs><marker id="mR2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="20" y1="160" x2="400" y2="160" stroke="#999" stroke-width="1.1" marker-end="url(#mR2)"/>
+  <line x1="20" y1="170" x2="20" y2="15" stroke="#999" stroke-width="1.1" marker-end="url(#mR2)"/>
+  <text x="392" y="175" fill="#999">p</text>
+  <text x="26" y="24" fill="#999">|f(p)|</text>
+  <path d="M20 40 Q50 40 80 90 Q100 130 130 155 Q160 160 200 160 Q230 160 250 148 Q270 138 290 158 Q310 160 340 160" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <text x="45" y="30" fill="#1b4f72">大きい a（主山が細く高い）</text>
+  <path d="M20 100 Q60 60 110 100 Q140 125 170 140 Q210 130 240 100 Q260 80 290 100 Q320 120 360 130" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="230" y="60" fill="#c0392b">小さい a（主山が広く低い）</text>
+</svg>
+<figcaption>図（問2-3）　$a$ が小さいほど $|\hat f(p)|$ の主山が高周波側（$p$ が大きい方）まで広がり、山の高さは低くなる。逆に $a$ が大きいほど主山は $p=0$ 付近に集中し、高く尖る。</figcaption>
+</figure>
+<div class="why">
+<span class="label">(1)と(3)の対応——時間幅×周波数幅のトレードオフ</span>　(1)で $a$ を小さくすると波形は「幅の狭い尖ったパルス」になりました。(3)ではそれに対応して、$\hat f(p)$ の主山が高周波側まで広がりました。「<strong>時間側で狭く（急激に変化）すると、周波数側では広く（多くの周波数成分が必要）なる</strong>」という、過去問（問2）でも登場したトレードオフの原理が、偶関数のケースでも同じように成り立つことが確認できる。
+</div>
+<p class="meta">→ フーリエ変換の定義・具体例は<a href="13_第10回_フーリエ変換.html">第10回テキスト</a>を参照。</p>
+</details>
+
+<hr>
+
+<!-- ===================== 問3 ===================== -->
+<h2>問3　ラプラス変換による微分方程式の特解（振動型） <span class="pts">30点</span></h2>
+
+<div class="q">
+<span class="label">問題</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="prepq-3">完了</label><br>
+以下に示す微分方程式の特解を、初期条件 $y(0)=0,\ y'(0)=1$ のもとラプラス変換を用いて導出する。なお、主要な計算は省略せず記入すること。
+$$ y''+4y'+5y=e^{-x} $$
+(1) 上式をラプラス変換し、$\hat y(s)$ に関する代数方程式を導きなさい。代数方程式を解いた後、(2) ラプラス逆変換を行い特解を求めなさい。方法は限定しない。(3) 得られた特解が上記微分方程式ならびに設定した初期条件を満たすことを確認しなさい。
+</div>
+
+<div class="ans">
+<span class="label">略解（想定解答）</span><br>
+(1)
+$$ \big[s^2\hat y-1\big]+4\big[s\hat y\big]+5\hat y=\frac1{s+1}\ \Longrightarrow\ \hat y(s)=\frac{s+2}{(s+1)\big[(s+2)^2+1\big]}. $$
+(2) 部分分数分解とラプラス変換の移動則より
+$$ y(x)=\frac12e^{-x}+\frac12e^{-2x}\big(\sin x-\cos x\big). $$
+(3) 省略（下記解説を参照）。
+</div>
+<div class="final">答：$y(x)=\dfrac12e^{-x}+\dfrac12e^{-2x}(\sin x-\cos x)$</div>
+
+<details>
+<summary>懇切丁寧な解説を開く（代数方程式の作り方・逆変換・検算のすべて）</summary>
+
+<h4>(1) ラプラス変換して代数方程式を作る</h4>
+<p><strong>① 微分則を確認する</strong>（第13回）
+$$ \mathcal L[y']=-y(0)+s\hat y(s),\qquad \mathcal L[y'']=-y'(0)-sy(0)+s^2\hat y(s). $$
+<strong>② 初期条件 $y(0)=0,\ y'(0)=1$ を代入して簡単にする</strong>
+$$ \mathcal L[y']=s\hat y,\qquad \mathcal L[y'']=-1+s^2\hat y. $$
+<strong>③ 両辺をラプラス変換する</strong>　右辺は $\mathcal L[e^{-x}]=\dfrac1{s-(-1)}=\dfrac1{s+1}$（変換表、$a=-1$）。左辺は線形性でそのまま足す：
+$$ \big[-1+s^2\hat y\big]+4\big[s\hat y\big]+5\hat y=\frac1{s+1}. $$
+<strong>④ $\hat y$ の項をまとめ、定数項を移項する</strong>　$\hat y$ の係数をくくると $(s^2+4s+5)\hat y$、定数は $-1$：
+$$ (s^2+4s+5)\hat y=1+\frac1{s+1}=\frac{(s+1)+1}{s+1}=\frac{s+2}{s+1}. $$
+（$1$ を $\dfrac{s+1}{s+1}$ に直してから足すのがポイント——分母をそろえて1つの分数にまとめる。）<br>
+<strong>⑤ 左辺の2次式を「平方完成」して扱いやすくする</strong>　$s^2+4s+5=(s+2)^2-4+5=(s+2)^2+1$（判別式 $16-20=-4&lt;0$ なので実数の範囲では因数分解できず、複素共役根を持つ形——これが過去問（問3）の重根タイプと違う点）。
+$$ \big[(s+2)^2+1\big]\hat y=\frac{s+2}{s+1}. $$
+<strong>⑥ $\hat y$ について解く</strong>
+$$ \hat y(s)=\frac{s+2}{(s+1)\big[(s+2)^2+1\big]}. $$
+（略解と一致。）
+</p>
+
+<h4>(2) ラプラス逆変換する——部分分数分解</h4>
+<p><strong>① 分解の形を決める</strong>　分母は「1次式 $(s+1)$」×「実根を持たない2次式 $(s+2)^2+1$」なので
+$$ \hat y(s)=\frac{s+2}{(s+1)\big[(s+2)^2+1\big]}=\frac{A}{s+1}+\frac{B(s+2)+C}{(s+2)^2+1} $$
+とおく（2次の分母には「1次式＋定数」を分子に置くのが基本——理由は、逆変換したときに $\cos,\sin$ 両方が出せる形にするため）。<br>
+<strong>② 両辺に分母を掛けて恒等式にする</strong>
+$$ s+2=A\big[(s+2)^2+1\big]+\big[B(s+2)+C\big](s+1). $$
+<strong>③ $s=-1$ を代入して $A$ を決める</strong>（$(s+1)$ の項が消える）：左辺 $=1$、右辺 $=A\big[1+1\big]=2A$。よって $A=\dfrac12$。<br>
+<strong>④ 右辺を展開して $s^2,s^1,s^0$ の係数を比較する</strong>　$A\big[(s+2)^2+1\big]=A(s^2+4s+5)=\dfrac12 s^2+2s+\dfrac52$。<br>
+$\big[B(s+2)+C\big](s+1)=Bs^2+(3B+C)s+(2B+C)$（展開の詳細：$Bs\cdot s+Bs\cdot1+2B\cdot s+2B\cdot1+Cs+C=Bs^2+(B+2B+C)s+(2B+C)$）。<br>
+合計の $s^2$ 係数：$\dfrac12+B=0$（左辺 $s+2$ に $s^2$ の項はない）$\Rightarrow B=-\dfrac12$。<br>
+$s^1$ 係数：$2+3B+C=1\Rightarrow2+3\big(-\dfrac12\big)+C=1\Rightarrow\dfrac12+C=1\Rightarrow C=\dfrac12$。<br>
+検算（定数項）：$\dfrac52+2B+C=\dfrac52-1+\dfrac12=2$——左辺の定数項 $2$ と一致 ✓。<br>
+<strong>⑤ 部分分数の形にまとめる</strong>
+$$ \hat y(s)=\frac{1/2}{s+1}+\frac{-\frac12(s+2)+\frac12}{(s+2)^2+1}=\frac12\cdot\frac1{s+1}-\frac12\cdot\frac{s+2}{(s+2)^2+1}+\frac12\cdot\frac1{(s+2)^2+1}. $$
+<strong>⑥ 移動則で逆変換する</strong>　移動則 $\mathcal L[e^{ax}f(x)]=\hat f(s-a)$（第13回）を、$a=-2$（分母がすべて $(s+2)^2+1=(s-(-2))^2+1$ の形）として逆から使う。変換表 $\mathcal L[\cos x]=\dfrac s{s^2+1},\ \mathcal L[\sin x]=\dfrac1{s^2+1}$ を $s\to s+2$ にずらして戻すと
+$$ \mathcal L^{-1}\Big[\frac{s+2}{(s+2)^2+1}\Big]=e^{-2x}\cos x,\qquad \mathcal L^{-1}\Big[\frac1{(s+2)^2+1}\Big]=e^{-2x}\sin x,\qquad \mathcal L^{-1}\Big[\frac1{s+1}\Big]=e^{-x}. $$
+<strong>⑦ 係数を掛けて足し合わせる</strong>
+$$ y(x)=\frac12e^{-x}-\frac12e^{-2x}\cos x+\frac12e^{-2x}\sin x=\frac12e^{-x}+\frac12e^{-2x}\big(\sin x-\cos x\big). $$
+</p>
+<div class="why">
+<span class="label">過去問（問3）との違い——重根 vs 複素共役根</span>　過去問の $y''+2y'+y=2e^{-x}$ は、特性方程式 $(s+1)^2=0$ が<strong>重根</strong>を持ち、しかも強制項 $e^{-x}$ がその重根と一致する「共鳴」型でした（第14回の例14.4も同型）。本問の特性方程式 $s^2+4s+5=0$ は判別式が負で<strong>複素共役根</strong> $s=-2\pm i$ を持つ「振動が減衰する」型で、逆変換に $\cos x,\sin x$（$e^{-2x}$ で減衰する振動）が現れます。分母の2次式が実数解を持つか持たないかで、逆変換の形（指数の和 か、減衰振動 か）が変わることを押さえておくと、本試験でどちらのタイプが出ても対応できます。
+</div>
+
+<h4>(3) 検算——方程式と初期条件の両方を確かめる</h4>
+<p><strong>① 初期条件</strong>　$y(x)=\dfrac12e^{-x}+\dfrac12e^{-2x}(\sin x-\cos x)$ に $x=0$：$y(0)=\dfrac12\cdot1+\dfrac12\cdot1\cdot(0-1)=\dfrac12-\dfrac12=0$ ✓。<br>
+<strong>② $y'(x)$ を求める</strong>（積の微分：$e^{-2x}(\sin x-\cos x)$ の微分は $-2e^{-2x}(\sin x-\cos x)+e^{-2x}(\cos x+\sin x)=e^{-2x}\big[(-2\sin x+2\cos x)+(\cos x+\sin x)\big]=e^{-2x}(3\cos x-\sin x)$）：
+$$ y'(x)=-\frac12e^{-x}+\frac12e^{-2x}\big(3\cos x-\sin x\big). $$
+$x=0$：$y'(0)=-\dfrac12+\dfrac12\cdot3=-\dfrac12+\dfrac32=1$ ✓ 初期条件を満たす。<br>
+<strong>③ $y''(x)$ を求める</strong>（同様に $e^{-2x}(3\cos x-\sin x)$ の微分は $-2e^{-2x}(3\cos x-\sin x)+e^{-2x}(-3\sin x-\cos x)=e^{-2x}\big[(-6\cos x+2\sin x)+(-3\sin x-\cos x)\big]=e^{-2x}(-7\cos x-\sin x)$）：
+$$ y''(x)=\frac12e^{-x}-\frac12e^{-2x}\big(7\cos x+\sin x\big). $$
+<strong>④ 方程式に代入して確認する</strong>　$e^{-x}$ の係数を集める：$\dfrac12-2\cdot\dfrac12\cdot(-1)\cdot(-1)+\cdots$——係数だけを丁寧に足し合わせると、
+$e^{-x}$ の係数：$y''$ から $\dfrac12$、$4y'$ から $4\times\big(-\dfrac12\big)=-2$、$5y$ から $5\times\dfrac12=\dfrac52$。合計 $\dfrac12-2+\dfrac52=1$。<br>
+$e^{-2x}\cos x$ の係数：$y''$ から $-\dfrac72$、$4y'$ から $4\times\dfrac32=6$、$5y$ から $5\times\big(-\dfrac12\big)=-\dfrac52$。合計 $-\dfrac72+6-\dfrac52=0$。<br>
+$e^{-2x}\sin x$ の係数：$y''$ から $-\dfrac12$、$4y'$ から $4\times\big(-\dfrac12\big)=-2$、$5y$ から $5\times\dfrac12=\dfrac52$。合計 $-\dfrac12-2+\dfrac52=0$。<br>
+よって
+$$ y''+4y'+5y=1\cdot e^{-x}+0\cdot e^{-2x}\cos x+0\cdot e^{-2x}\sin x=e^{-x} $$
+——方程式の右辺 $e^{-x}$ と完全に一致 ✓。初期条件・方程式ともに満たすことが確認できた。
+</p>
+<div class="warn">
+<span class="label">検算のコツ（過去問と同じ注意）</span>　この検算のゴールは「方程式の<strong>右辺（$e^{-x}$）と一致すること</strong>」です。$\cos x,\sin x$ の係数がきれいに $0$ になったのは偶然ではなく、部分分数分解が正しく行われたことの裏付け——係数が $0$ にならなければ、③④のどこかで計算ミスがある合図です。
+</div>
+<p class="meta">→ 手順の一般形（部分分数分解・変換表・移動則）は<a href="16_第13回_ラプラス変換とラプラス逆変換.html">第13回</a>・<a href="17_第14回_微分方程式・偏微分方程式へのラプラス変換の応用とたたみ込み.html">第14回テキスト</a>を参照。重根タイプ（共鳴）は<a href="18_期末試験過去問_問題と解答解説.html">過去問（問3）</a>と第14回の例14.4、複素共役根タイプ（減衰振動）は本問で練習できる。</p>
+</details>
+
+<hr>
+
+<!-- ===================== 問4 ===================== -->
+<h2>問4　変数分離法による熱伝導方程式の解法 <span class="pts">25点</span></h2>
+
+<div class="q">
+<span class="label">問題</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="prepq-4">完了</label><br>
+長さ $L$、熱拡散率 $\kappa&gt;0$ の棒における熱伝導方程式
+$$ \frac{\partial u}{\partial t}=\kappa\frac{\partial^2u}{\partial x^2}\qquad(0&lt;x&lt;L,\ t&gt;0) $$
+を、境界条件 $u(t,0)=u(t,L)=0$ のもとで考える。<br>
+(1) $u(x,t)=X(x)T(t)$ と変数分離し、分離定数を $-\lambda^2$（負の値）に取らなければならない理由を、境界条件から非自明解が存在するかどうかを調べることで示しなさい。その上で一般解を導きなさい。<br>
+(2) 初期条件 $u(0,x)=4\sin\dfrac{3\pi x}{L}-2\sin\dfrac{5\pi x}{L}$ を満たす解を求めなさい。
+</div>
+
+<div class="ans">
+<span class="label">略解（想定解答）</span><br>
+(1) 分離定数を $0$ または正に取ると境界条件のもとで自明解 $X\equiv0$ しか得られない。負に取ったときのみ $X_n(x)=\sin\dfrac{n\pi x}L\ (n=1,2,\dots)$ という非自明解が得られ、一般解は
+$$ u(x,t)=\sum_{n=1}^{\infty}D_n\,e^{-(n\pi/L)^2\kappa t}\sin\frac{n\pi x}{L}. $$
+(2)
+$$ u(x,t)=4\,e^{-(3\pi/L)^2\kappa t}\sin\frac{3\pi x}{L}-2\,e^{-(5\pi/L)^2\kappa t}\sin\frac{5\pi x}{L}. $$
+</div>
+<div class="final">答：$u(x,t)=4e^{-(3\pi/L)^2\kappa t}\sin\dfrac{3\pi x}L-2e^{-(5\pi/L)^2\kappa t}\sin\dfrac{5\pi x}L$</div>
+
+<details>
+<summary>懇切丁寧な解説を開く（分離定数の符号の証明・一般解の導出・初期値問題）</summary>
+
+<h4>(1) なぜ分離定数は $-\lambda^2$（負）でなければならないか</h4>
+<p><strong>① 変数分離を代入する</strong>　$u(x,t)=X(x)T(t)$ を方程式 $u_t=\kappa u_{xx}$ に代入すると $X(x)T'(t)=\kappa X''(x)T(t)$。両辺を $\kappa X(x)T(t)$ で割ると
+$$ \frac{T'(t)}{\kappa T(t)}=\frac{X''(x)}{X(x)}. $$
+左辺は $t$ だけの関数、右辺は $x$ だけの関数。$x,t$ は独立な変数なので、これが恒等的に成り立つのは<strong>両辺が共通の定数</strong>のときだけ（右辺が $x$ で動いてしまうと、$t$ だけの左辺と等しくなれない）。この定数を $\mu$ とおく：
+$$ \frac{X''(x)}{X(x)}=\mu\quad\Longrightarrow\quad X''-\mu X=0,\qquad X(0)=X(L)=0\ (\text{境界条件より}). $$
+<strong>② $\mu=0$ の場合を調べる</strong>　$X''=0$ より $X(x)=Ax+B$。$X(0)=0\Rightarrow B=0$。$X(L)=0\Rightarrow AL=0\Rightarrow A=0$（$L\ne0$ だから）。よって $X\equiv0$——<strong>自明解しか出ない</strong>（物理的に「熱がどこにも分布していない」という意味のない解）。</p>
+<p><strong>③ $\mu=+\lambda^2&gt;0$（正）の場合を調べる</strong>　$X''-\lambda^2X=0$ の一般解は $X(x)=A\cosh\lambda x+B\sinh\lambda x$。$X(0)=0\Rightarrow A=0$（$\cosh0=1,\sinh0=0$ だから）。残る $X(x)=B\sinh\lambda x$ に $X(L)=0$ を課すと $B\sinh\lambda L=0$。$\lambda&gt;0,L&gt;0$ のとき $\sinh\lambda L&gt;0$（双曲線正弦は正の引数で常に正、$0$ にならない）なので $B=0$ しかありえない。よってこの場合も<strong>$X\equiv0$（自明解のみ）</strong>。</p>
+<p><strong>④ $\mu=-\lambda^2&lt;0$（負）の場合を調べる</strong>　$X''+\lambda^2X=0$ の一般解は $X(x)=A\cos\lambda x+B\sin\lambda x$。$X(0)=0\Rightarrow A=0$（$\cos0=1,\sin0=0$）。残る $X(x)=B\sin\lambda x$ に $X(L)=0$ を課すと $B\sin\lambda L=0$。ここで<strong>$B=0$ を選ばなくても</strong>、$\sin\lambda L=0$ すなわち $\lambda L=n\pi\ (n=1,2,3,\dots)$ とすれば $B\ne0$ のまま条件を満たせる——<strong>非自明解が存在する</strong>のはこの場合だけ。</p>
+<div class="why">
+<span class="label">$\cos,\sin$ だけが境界条件で「ちょうど $0$ になれる」理由</span>　$\cosh,\sinh$ は指数関数の組み合わせで単調に増大・減少するだけなので、正の区間で $2$ か所（$x=0$ と $x=L$）で同時に $0$ になることができません。一方 $\cos,\sin$ は<strong>振動する</strong>ので、周期を選べば境界の2点でちょうど $0$ をまたぐようにできる——これが「負の分離定数でなければ非自明な定在波モードが作れない」ことの直感的な理由です。
+</div>
+<p><strong>⑤ 固有値・固有関数を確定する</strong>　$\lambda_n=\dfrac{n\pi}{L}\ (n=1,2,3,\dots)$、対応する固有関数は $X_n(x)=\sin\dfrac{n\pi x}{L}$。</p>
+<p><strong>⑥ $T(t)$ を解く</strong>　$\mu=-\lambda_n^2$ を $\dfrac{T'}{\kappa T}=\mu$ に戻すと $T'=-\lambda_n^2\kappa T$——これは単純な指数減衰の微分方程式（第1回で学んだ変数分離形）。解は
+$$ T_n(t)=C_n\,e^{-\lambda_n^2\kappa t}=C_n\,e^{-(n\pi/L)^2\kappa t}. $$
+<strong>⑦ 重ね合わせて一般解にする</strong>　方程式は線形なので、$X_n(x)T_n(t)$ の形の解（モード）をすべて足し合わせたものもまた解になる（線形性）。定数をまとめ直し $D_n:=B_nC_n$ とすると
+$$ u(x,t)=\sum_{n=1}^{\infty}D_n\,e^{-(n\pi/L)^2\kappa t}\sin\frac{n\pi x}{L}. $$
+</p>
+
+<h4>(2) 初期条件から係数を決める</h4>
+<p><strong>① $t=0$ を代入する</strong>　一般解に $t=0$（$e^0=1$）を代入すると
+$$ u(0,x)=\sum_{n=1}^{\infty}D_n\sin\frac{n\pi x}{L}. $$
+<strong>② 初期条件と見比べる</strong>　与えられた初期条件はすでに固有関数 $\sin(n\pi x/L)$ の有限和の形で書かれている：
+$$ 4\sin\frac{3\pi x}{L}-2\sin\frac{5\pi x}{L}=\sum_{n=1}^{\infty}D_n\sin\frac{n\pi x}{L}. $$
+固有関数 $\sin(n\pi x/L)\ (n=1,2,\dots)$ は $[0,L]$ 上で互いに直交する（第9回の直交性と同じ仕組みが一般周期・区間でも成り立つ）ので、両辺の $\sin(n\pi x/L)$ の係数は1対1に対応する：<strong>$D_3=4,\ D_5=-2$、それ以外の $D_n=0$</strong>。</p>
+<p><strong>③ 解を書き下す</strong>
+$$ u(x,t)=4\,e^{-(3\pi/L)^2\kappa t}\sin\frac{3\pi x}{L}-2\,e^{-(5\pi/L)^2\kappa t}\sin\frac{5\pi x}{L}. $$
+</p>
+<p><strong>④ 検算</strong>　境界条件：$x=0,L$ でどちらの $\sin$ 項も $0$ になるので $u(t,0)=u(t,L)=0$ ✓。初期条件：$t=0$ で指数部分がすべて $1$ になり、与えられた初期条件とそのまま一致 ✓。方程式：$u_t$ は各項を $t$ で微分して係数 $-(n\pi/L)^2\kappa$ が出て、$\kappa u_{xx}$ は各項を $x$ で2回微分して係数 $-(n\pi/L)^2$ が出て $\kappa$ 倍——両者は各モードで完全に一致する（$\dfrac{d^2}{dx^2}\sin\dfrac{n\pi x}L=-\Big(\dfrac{n\pi}L\Big)^2\sin\dfrac{n\pi x}L$ だから）✓。</p>
+<div class="why">
+<span class="label">$n=5$ のモードが先に消える</span>　$n=5$ の項は指数の肩が $-(5\pi/L)^2\kappa t$、$n=3$ の項は $-(3\pi/L)^2\kappa t$ で、$(5/3)^2\approx2.8$ 倍速く減衰する。時間が経つと $u(x,t)\approx4e^{-(3\pi/L)^2\kappa t}\sin(3\pi x/L)$ に近づき、細かい波（高次モード）から先に消えて滑らかな分布に近づいていく——<a href="15_第12回_偏微分方程式の分類と解法.html">第12回テキスト</a>の例12.3と同じ現象。
+</div>
+<p class="meta">→ 変数分離法・固有値問題の一般論は<a href="15_第12回_偏微分方程式の分類と解法.html">第12回テキスト</a>を参照。過去問（問4）は波動方程式のダランベールの解（進行波・後退波）を扱ったが、本問はもう一方の代表例である熱伝導方程式（変数分離・固有値展開）を扱う。両方とも「まず変数変換／変数分離で方程式を簡単にし、境界条件・初期条件を使って一般解の中から実際の解を選び出す」という同じ発想に基づく。</p>
+</details>
+
+<hr>
+<h2>期末直前チェックリスト</h2>
+<div class="box">
+<ul>
+  <li>□ 「両辺に $\cos mx$（または $\sin mx$）を掛けて積分する」という操作から、直交性を使ってフーリエ係数公式そのものを導出できる（問1）。</li>
+  <li>□ 偶関数・奇関数どちらにも当てはまらない関数（左右非対称）でも、$a_0,a_n,b_n$ をすべて部分積分で計算できる（問1）。</li>
+  <li>□ 偶関数のフーリエ変換が実数になること・奇関数のフーリエ変換が純虚数になることを、どちらの具体例でも説明できる（問2）。</li>
+  <li>□ 「時間側で鋭い ⇔ 周波数側で広がる」というトレードオフを、矩形パルス・三角パルスどちらの図でも説明できる（問2）。</li>
+  <li>□ ラプラス変換で作った代数方程式の分母が「重根」になる場合と「複素共役根」になる場合の両方を、部分分数分解から逆変換まで実行できる（問3）。</li>
+  <li>□ 特解の検算は「方程式の右辺と一致するか」で行う（$0$ になることではない）と理解している（問3）。</li>
+  <li>□ 変数分離定数を負（$-\lambda^2$）に取らなければならない理由を、境界条件のもとで正・ゼロ・負の3通りを比較して説明できる（問4）。</li>
+  <li>□ 波動方程式（ダランベールの解）と熱伝導方程式（変数分離・固有値展開）、両方の解法の流れを区別して説明できる（問4）。</li>
+</ul>
+</div>
+
+<div class="navi" style="margin-top:18px">
+本問題集は<strong>第9〜14回</strong>から、<a href="18_期末試験過去問_問題と解答解説.html">過去問</a>と同じ配点比率・同じテーマ構成で作成しました。過去問と本問題集を両方解き終えれば、「関数を波や周波数に分解し、簡単な世界で処理して戻す」という後半全体を貫く発想を、異なる具体例で2周できたことになります。仕上げに、各回テキストの章末チェックリストにも目を通しておきましょう。
+</div>
+
+<script>
+(function(){
+  var KEY = 'amII_prob_19';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  document.querySelectorAll('.prob-check').forEach(function(cb){
+    var id = cb.getAttribute('data-pid');
+    cb.checked = !!state[id];
+    cb.addEventListener('change', function(){
+      state[id] = cb.checked;
+      save();
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>門を閉じても月は入る</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+
+<div class="backlink">電磁気学 自習教材 ｜ 第1回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../01_第1回_クーロンの法則と電場.html">第1回 クーロンの法則と電場</a>（§4 電場）</div>
+
+<figure class="hero">
+  <img src="img/hero_tohaku_mist.jpg" alt="長谷川等伯《松林図屏風》左隻の部分。霧のなかに松の木立が濃淡を変えながら浮かび、あいだを白い霧が満たしている。">
+  <div class="ttl">門を閉じても<br>月は入る<small>遠隔作用・場・間</small></div>
+  <figcaption>長谷川等伯《松林図屏風》左隻（部分）　16世紀　東京国立博物館蔵　国宝</figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第一回</div>
+  <p class="lede">描かれているのは松である。だが見えているのは、松と松のあいだを満たす霧のほうだ。物理学が「場」と名づけたものは、この霧と、どこまで似ていて、どこから違うのか。</p>
+  <div class="keys"><span>閒（門＋月）</span><span>デカルトの渦</span><span>ニュートンの沈黙</span><span>ファラデーの線</span><span>西田幾多郎「場所」</span><span>柱間と能舞台</span><span>等伯の霧</span></div>
+</header>
+
+<article>
+
+<h2><span class="no">序</span>「間」という字には、もともと光が射しこんでいる</h2>
+
+<div class="kanji"><div class="ch">閒</div><div class="cap">「間」の古い字形。<br>門＋月</div></div>
+
+<p>「間」という字は、古くは「閒」と書いた。門がまえのなかに、日ではなく月がある。後漢の字書『説文解字』はこれを「隙なり」と説き、門と月から成る字だとする。夜になって門を閉ざしても、扉と扉のすきまから月の光が洩れ入ってくる。それが「間」なのだ、という字解が広く知られている（白川静のように、門前の祭祀に由来を求める別の解もある）。</p>
+
+<p>この字解をそのまま受け取るなら、見過ごせないことがひとつある。「あいだ」を表す文字に、最初から<strong>光が通っている</strong>のである。閉じたものと閉じたもののあいだは空っぽではない。そこを何かが渡ってくる。しかもそれは、手で触れられる物ではなく、光だった。</p>
+
+<p>電磁気学を学びはじめたばかりの読者に、ここで先回りして言っておきたい。この講義の最終回、第12回の主題は電磁波である。光とは、電場と磁場が互いを生みながら空間を渡っていく波なのだ。つまり物理学は、二千年近くかけて、「閒」の字の門のすきまを通ってくるものの正体を突きとめたことになる。もちろん漢字をつくった人々がそれを知っていたわけではない。けれども、<strong>あいだを渡ってくる光</strong>というイメージがまず文字のかたちとして置かれ、それがずっと後に物理学の結論として回収される。この符合を手がかりに、以下では「あいだ」をめぐる思考を、いくつかの分野をまたいで編んでみたい。</p>
+
+<p>出発点は、第1回の講義である。クーロンの法則には時間が書かれていない。二つの電荷の大きさと距離だけで力が決まり、片方を動かせば、もう片方の受ける力は式の上では同時に変わる。あいだに何もないまま、離れたものが離れたものを動かす。これを<strong>遠隔作用</strong>と呼ぶ。講義はこの力 <i>F</i> を、受け手の電荷 <i>q</i> と、受け手がいなくても空間の各点に決まっている量 <i>E</i> とに分けた。<i>F</i> = <i>qE</i>。たった一行のこの切り分けに、じつは四百年分の「あいだ」の思想史が折り畳まれている。</p>
+
+<h2><span class="no">一</span>充満と空虚のあいだを、物理学は振り子のように往復した</h2>
+
+<p>話は十七世紀から始まる。ルネ・デカルトは1644年の『哲学原理』で、宇宙に真空はないと考えた。空間はすみずみまで微細な物質で満たされていて（プレヌム＝充満）、その物質が巨大な渦をつくり、渦の流れが惑星を太陽のまわりに運んでいる。物が物を動かすには、必ずあいだに押すものがなければならない。デカルトにとって、空いた空間などというものは考えられなかったのである。</p>
+
+<p>四十年あまり後の1687年、ニュートンの『プリンキピア』がこの渦を一掃した。万有引力の法則は、渦を仮定しなくても惑星の運動をみごとに計算してみせた。空間は空っぽでよい。力は距離の二乗に反比例して、あいだを素通りして届く。ここで宇宙は、充満から空虚へと大きく振れた。</p>
+
+<p>ところが、空虚に振り切ったはずのニュートン本人が、そのことに納得していなかった。1693年、神学者リチャード・ベントリーに宛てた書簡に、次のようにある。</p>
+
+<blockquote>
+ある物体が、真空を通して、他の何の仲立ちもなしに、離れた別の物体に作用しうるということ……それは私にとってあまりにも大きな不合理であって、哲学の事柄についてまともな思考力をもつ者なら、誰もそんな考えに陥ることはないと思う。
+<span class="src">ニュートンからベントリーへの書簡（1693年）より、筆者訳</span>
+</blockquote>
+
+<p>そして1713年、『プリンキピア』第二版の巻末に置いた「一般注解」で、ニュートンは有名な一句を書く。「我は仮説をつくらず（Hypotheses non fingo）」。重力がなぜ距離を越えて届くのか、その原因は現象から突きとめられなかった。だから仮説で埋めることはしない、というのである。</p>
+
+<p>この一句は、ふつう実証主義の宣言として読まれる。だが「あいだ」の歴史として読むと、別の顔が見えてくる。ニュートンは、あいだを空っぽだと<strong>断定した</strong>のではない。あいだを<strong>空欄のまま残した</strong>のだ。答えを書かないことで、問いを後世に手渡した。科学はしばしば、こうした保留された空欄によって先へ進む。その空欄に、百三十年ほど後、まったく別の経歴の人物が線を引くことになる。</p>
+
+<p>先回りして言えば、振り子はその後も止まらない。ファラデーとマクスウェルが空間をふたたび「場」で満たし（充満）、1905年にアインシュタインが場を運ぶ媒質としてのエーテルを不要にし（空虚）、それでも場そのものは残った。さらに量子論は、何もないはずの真空にもゆらぎがあると考えるようになった（ふたたび充満）。物理学の歴史は、「あいだは空いているのか、詰まっているのか」という問いのうえを行ったり来たりしてきたのである。</p>
+
+<figure class="map">
+<svg viewBox="0 0 720 320" role="img" aria-label="充満と空虚のあいだを往復する物理学史の振り子図">
+  <defs>
+    <marker id="c01b2-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a8322a"/></marker>
+  </defs>
+  <style>
+    .lv{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:13px; fill:#5d5d6b; }
+    .nm{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:13.5px; fill:#1c1c22; text-anchor:middle; font-weight:bold; }
+    .yr{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:11.5px; fill:#5d5d6b; text-anchor:middle; }
+    .ds{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:11.5px; fill:#2b3a67; text-anchor:middle; }
+  </style>
+  <line x1="60" y1="90" x2="700" y2="90" stroke="#d9d6cc" stroke-dasharray="4 4"/>
+  <line x1="60" y1="235" x2="700" y2="235" stroke="#d9d6cc" stroke-dasharray="4 4"/>
+  <text class="lv" x="8" y="94">充満</text>
+  <text class="lv" x="8" y="239">空虚</text>
+  <polyline points="110,90 230,235 350,90 470,235 600,90" fill="none" stroke="#a8322a" stroke-width="2" marker-end="url(#c01b2-arw)"/>
+  <circle cx="110" cy="90" r="6" fill="#2b3a67"/><circle cx="230" cy="235" r="6" fill="#2b3a67"/><circle cx="350" cy="90" r="6" fill="#2b3a67"/><circle cx="470" cy="235" r="6" fill="#2b3a67"/><circle cx="600" cy="90" r="6" fill="#2b3a67"/>
+  <text class="ds" x="110" y="24">渦が空間を満たす</text><text class="nm" x="110" y="48">デカルト</text><text class="yr" x="110" y="66">1644</text>
+  <text class="nm" x="230" y="262">ニュートン</text><text class="yr" x="230" y="280">1687／1713</text><text class="ds" x="230" y="304">あいだは空欄のまま</text>
+  <text class="ds" x="350" y="24">力線と場が満ちる</text><text class="nm" x="350" y="48">ファラデー／マクスウェル</text><text class="yr" x="350" y="66">1845〜1865</text>
+  <text class="nm" x="470" y="262">アインシュタイン</text><text class="yr" x="470" y="280">1905</text><text class="ds" x="470" y="304">エーテル不要・場は残る</text>
+  <text class="ds" x="600" y="24">真空にもゆらぎ</text><text class="nm" x="600" y="48">量子論の真空</text><text class="yr" x="600" y="66">20世紀</text>
+</svg>
+<figcaption><b>図　充満と空虚の振り子</b>　「あいだは詰まっているのか、空いているのか」をめぐって、物理学の世界像は往復してきた。ただし往復のたびに、あいだを満たすものの正体は「物質の渦」から「力の状態（場）」へと入れ替わっている。図の高さは比喩であって、量的な意味はもたない。</figcaption>
+</figure>
+
+<h2><span class="no">二</span>渦と線。同じかたちに、違う存在論が宿る</h2>
+
+<figure class="pair">
+  <div>
+    <img src="img/descartes_vortex.jpg" alt="デカルト『哲学原理』の挿図。宇宙を満たす渦が、点線の曲線で描かれた多数の球として重なり合う。">
+    <figcaption><b>デカルト『哲学原理』（1644年）挿図</b>　中央 S が太陽。空間は渦で埋めつくされ、空いた場所がない。</figcaption>
+  </div>
+  <div>
+    <img src="img/faraday_filings.jpg" alt="ファラデーが作製した、鉄粉で磁力線を描き出した標本。">
+    <figcaption><b>ファラデー《鉄粉による磁力線の描出》</b>1851〜55年頃。Michael Faraday, via JSTOR / Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></figcaption>
+  </div>
+</figure>
+
+<p>二枚の図を並べてみると、まず目を奪われるのは、その<strong>かたちの近さ</strong>である。デカルトの挿図では、中心から細かい点線が弧を描いて広がり、隣の渦の弧とぶつかり合う。二百年後にファラデーが鉄粉で描き出した図でも、極から曲線が湧き出し、隣の極へと流れこんでいる。どちらも、何もないはずの空間に線を描き入れた図なのだ。</p>
+
+<p>しかし、かたちが似ているぶん、違いがかえってはっきりする。デカルトの線は<strong>物質の流れ</strong>だった。渦をなす微細な粒子が、実際に動いて惑星を押していく。これに対してファラデーの線は、何かが流れている跡ではない。空間のその場所が、どれだけ、どの向きに張りつめているかという<strong>状態</strong>を描いている。同じかたちの線に、まったく違う存在論が宿っているのである。</p>
+
+<p>この差は小さくない。デカルトは「あいだ」を物で埋めた。ファラデーは「あいだ」を物ではないもので埋めた。物でも空虚でもない第三のもの、すなわち<strong>場</strong>が、ここで初めて主役として登場する。1845年11月の日記で、ファラデーはこうした力の満ちた領域を「磁場（magnetic field）」と呼びはじめる。field、つまり野原である。誰の所有でもなく、境界もはっきりしない、ただ一面に広がるもの。その命名からして、物ではなく<strong>ひろがり</strong>を指している。</p>
+
+<p>翌1846年、ファラデーはさらに大胆な推測を書き送る。「光線の振動についての考察」と題された手紙のなかで、光とは、この力線そのものが震えて伝わっていくものではないか、と述べたのだ。その考えは「エーテルを退けるが、振動は退けない」。光を運ぶために特別な媒質を持ち出さなくても、空間に張られた線が震えればよい、というのである。</p>
+
+<p>ここで序に戻りたい。門と門のあいだを渡ってくる月の光。ファラデーは、そのあいだに張られた見えない線が震えることこそが光だと考えた。「閒」の字のなかの月光は、ファラデーの手で、あいだそのものの振動として読み直されたことになる。もちろん、字の成り立ちと物理学の推論は別の話である。だが二つを重ねてみると、「あいだに何かが通う」という同じ型の想像力が、時代も文化も違うところで二度働いたことが見えてくる。</p>
+
+<h2><span class="no">三</span>式を書かなかった者が、いちばん深く数学を見ていた</h2>
+
+<p>ファラデーが線で考えたのには理由がある。十四歳でロンドンの製本屋に徒弟として入り、七年間、綴じる本を読んで学んだ。『ブリタニカ百科事典』の電気の項目もその一冊だった。高等数学の教育は受けていない。だからファラデーは式を書かず、鉄粉をまき、線を見た。</p>
+
+<p>この欠如が、かえって決定的だった。式を書く者は、どうしても「何と何が、どれだけの強さで引き合うか」という、物と物との一対一の関係から考えはじめる。クーロンの法則もニュートンの法則も、その形をしている。式を書かない者は、紙の上に広がる線の全体を、まず一枚の絵として見る。そこでは物と物の関係より先に、<strong>あいだの姿</strong>が目に入る。</p>
+
+<p>この線の思考を数学の言葉に移したのが、ジェームズ・クラーク・マクスウェルである。1855年の論文「ファラデーの力線について」に始まり、十年をかけて電場と磁場の方程式を組み上げ、そのなかから光の速さが導かれた。そのマクスウェルが、のちに大著『電気磁気論』で、ファラデーの力線の扱い方は彼が「実は非常に高度な数学者」であったことを示している、と書いている。式を書かなかった人が、最も深いところで数学的に考えていた、という逆説である。</p>
+
+<div class="physics">
+<b>講義に引き戻すと</b>　<code>F = qE</code> は、ファラデーの転回を一行にしたものだと読める。左辺の <code>F</code> は「物が物から受ける力」で、ニュートン型の語り方をしている。右辺の <code>E</code> は、受け手がいなくても空間のあらゆる点に割り当てられた量で、ファラデー型の語り方をしている。電荷が置かれていない場所にも <code>E</code> はある。つまり <code>E</code> は「あいだ」に値を与える記号なのだ。第1回の補足で見たように、場の変化は光速 <code>c</code> で伝わる。これは場が、計算の都合で置いた補助的な量ではなく、自分で何かを運ぶ実在であることを示している。
+</div>
+
+<h2><span class="no">四</span>主語の論理から、場所の論理へ</h2>
+
+<p>ここで一本、補助線を引いておく。日本の哲学者、西田幾多郎の「場所」である。</p>
+
+<p>1926年、西田は論文「場所」を発表した（翌年『働くものから見るものへ』に収録）。アリストテレス以来の論理学は、「主語となって述語とならないもの」、つまり個物を世界の基体に置いてきた。「ソクラテスは人間である」と言うとき、主語のソクラテスが実体で、述語はそれに付け加わる性質にすぎない。西田はこの順序をひっくり返そうとした。むしろ「述語となって主語とならないもの」、すべての主語を包みこんで、そのなかに置く側のほうへと降りていこうとしたのである。西田はそれを「場所」と呼んだ。</p>
+
+<p>これを物理の言葉に重ねてみると、思いのほかよく響き合う。「電荷Aが電荷Bを引く」という文では、主語は物である。ニュートン型の、主語の論理だ。それに対して「この点の電場はこうなっている」という文では、語られているのは物ではなく、物を包んでいる<strong>場所</strong>のほうである。電荷は、場所のなかに置かれたとき、その場所の性質（<i>E</i>）にしたがって力を受ける。主語の座が、物から、物を置く場へと移っている。</p>
+
+<p>講義の第5章「重ね合わせの原理」を思い出すと、この響き合いはさらに深まる。ある一点の電場は、宇宙のすべての電荷がその点につくる電場の足し合わせだった。一つの点が、すべての電荷との関係を自分のなかに包みこんでいる。これは西田の場所とも、『華厳経』の因陀羅網、つまり一つの宝珠にほかのすべての宝珠が映りこむという世界像とも、同じ型をしている。</p>
+
+<p>念のために言っておく。西田は電磁気学の話をしたのではなく、ファラデーは哲学の話をしたのではない。ここでしているのは、別々の場所で育った二つの思考を並べ、そこに<strong>同じ型の転位</strong>を見つけるという作業である。一方は論理学の内側で、もう一方は実験台の上で、「主語」の座を物から「場」へ渡した。その転位の形が似ているのだ。</p>
+
+<h2><span class="no">五</span>柱ではなく、柱と柱の「間」で測る</h2>
+
+<figure>
+  <img src="img/noh_stage.jpg" alt="西本願寺北能舞台。四本柱に囲まれた檜の舞台と橋掛り。">
+  <figcaption><b>西本願寺 北能舞台</b>（国宝）。文化財保護委員会『国宝図録』1957年より（パブリックドメイン）。本舞台はおおむね京間三間四方、四本の柱のあいだの空間として寸法が決まる。奥の鏡板に老松が描かれているほかは、場面ごとの書き割りをもたない。</figcaption>
+</figure>
+
+<p>日本語の「間」は、時間や空白を指すだけの言葉ではない。建築では長さの単位でもあった。一間（いっけん）は、もともと柱と柱のあいだの寸法をいう。京間なら六尺五寸、およそ二メートル弱。日本の木造建築は、柱の太さではなく<strong>柱と柱のあいだ</strong>を単位にして空間を割りつけてきたのである。</p>
+
+<p>能舞台の本舞台は、京間で三間四方、一辺が約六メートルの正方形に、四本の柱を立てて屋根を架ける。三方は開け放たれ、場面ごとに取りかえる背景はない。舞台とは、ようするに、四本の柱が囲む「あいだ」そのものなのだ。そこに演者が立ち、動き、止まる。</p>
+
+<p>世阿弥は『花鏡』で、目の肥えた客が「せぬ所が面白き」と言うことがある、と書きとめている。舞を舞いやめたところ、謡を謡いやめたところ。何もしていない隙間が、なぜ面白いのか。世阿弥はこう答える。</p>
+
+<blockquote>
+せぬ所と申すは、その隙なり。このせぬ隙は何とて面白きぞと見る所、これは油断なく心をつなぐ性根なり。
+<span class="src">世阿弥『花鏡』より</span>
+</blockquote>
+
+<p>動作と動作のあいだで、演者は心を手放していない。見えない「心をつなぐ」はたらきが、隙間を満たしている。だから空白が空白にならない。世阿弥はさらに、その内心が観客に見えてしまってはいけない、見えたらそれはもう「わざ」になる、と念を押す。満ちているが、見えてはならない。この条件は、場の定義とよく似ている。場は空間を満たしているが、それ自体は見えない。受け手の電荷を置いて、力が生じたときに初めて、そこに場があったとわかる。世阿弥の「せぬ隙」もまた、次の動作が起こったときに、そのあいだがずっと張りつめていたことが事後的にわかるのである。</p>
+
+<p>柱ではなく柱間で測る建築。動作ではなく動作の隙で見せる芸能。電荷そのものではなく、電荷のあいだの各点に値を与える物理学。三つは別の文脈で生まれたものだが、どれも<strong>あいだを単位にして世界を見る</strong>という方法を共有している。</p>
+
+<h2><span class="no">六</span>等伯の霧は、遠さを濃淡で描く</h2>
+
+<figure>
+  <img src="img/tohaku.jpg" alt="長谷川等伯《松林図屏風》右隻。霧のなかに松の木立が浮かぶ。">
+  <figcaption><b>長谷川等伯《松林図屏風》右隻</b>　16世紀、東京国立博物館蔵、国宝（パブリックドメイン）。手前の松は濃く、奥の松ほど淡く霧に溶ける。</figcaption>
+</figure>
+
+<p>最後に、冒頭の写真に戻ろう。等伯の《松林図屏風》は、松を描いた絵というより、<strong>松と松のあいだの霧</strong>を描いた絵である。描かれていない白い紙が、霧として画面の大半を占める。そのなかで、手前の松は墨が濃く、奥へ行くほど淡くなって、ついには霧に溶けて見えなくなる。等伯は、遠さを線の長さではなく、墨の<strong>濃淡</strong>で表した。</p>
+
+<p>ここに一つの見立てを置いてみたい。点電荷のつくる電場は、距離の二乗に反比例して弱まっていく。近くでは強く、遠くへ行くほど淡く、しかしどこまで行ってもゼロにはならない。等伯の松林は、あたかもその減衰を墨で描いた図のように見える。もちろん等伯が逆二乗の法則を描いたわけではない。墨の濃さは物理量ではないし、霧の白は真空ではない。けれども「あいだを、存在の濃淡のグラデーションとして描く」という発想の型は、場の思想とたしかに通じている。</p>
+
+<p>思えば、宗達の金地も、等伯の霧も、能舞台の板も、「何も描いていない」ことによって最も多くを語る。日本の表現は、空白を空っぽとして扱わない技法を長く磨いてきた。物理学は、同じことを数式で行うまでに、デカルトからマクスウェルまでの二百年あまりを要した。</p>
+
+<h2><span class="no">結</span>あいだに主語を渡す、ということ</h2>
+
+<p>ここまでの道すじを振り返ってみる。門のすきまを渡る月の光から始め、デカルトの充満、ニュートンが残した空欄、ファラデーの線、西田の場所、柱間と能舞台、等伯の霧を経て、ふたたび電場に戻ってきた。どの分野でも、決め手になったのは同じ身ぶりだった。<strong>あいだを空っぽと見なさず、そこに主語の座を渡すこと</strong>である。</p>
+
+<p>私たちはいま、文字どおり場のなかで暮らしている。この画面を読んでいる部屋にも、無線LANや携帯電話の電波、つまり電場と磁場のさざ波が、見えないまま行き交っている。ニュートンが不合理と呼んだ空白は、いまや世界でいちばん混み合った場所になった。日本語で「場の空気を読む」とか「間が悪い」とか言うとき、私たちはそれと知らずに、目に見えないあいだの状態を読み取ろうとしている。</p>
+
+<p>講義に戻れば、第2回では、このあいだに張られた力線の本数を、閉じた曲面を貫く本数として数えることで、ガウスの法則が導かれる。あいだに主語を渡したとたん、あいだは数えられるものになる。ここに物理学のしたたかさがある。空白を空白のまま畏れるのではなく、空白に値を与え、測り、方程式に組みこむ。そうして最後に、その方程式のなかから光の速さが出てくる。</p>
+
+<p class="coda">門を閉じても、月は入る。<br>あいだは、はじめから、光の通り道だった。</p>
+
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+
+<h3>参照した本 ── 本文が依拠した原典</h3>
+<ul>
+  <li><span class="bk">許慎『説文解字』</span> <span class="pub">後漢・紀元100年頃成立</span><span class="why">「閒」を「隙なり」とし、門と月から成ると説く。序の出発点。</span></li>
+  <li><span class="bk">デカルト『哲学原理』</span> <span class="pub">1644年</span><span class="why">空間を渦で満たす宇宙像と、その挿図。一・二で使った。</span></li>
+  <li><span class="bk">ニュートン『プリンキピア（自然哲学の数学的諸原理）』第二版・一般注解</span> <span class="pub">初版1687年、第二版1713年</span><span class="why">「我は仮説をつくらず」。あわせてベントリー宛書簡（1693年）。</span></li>
+  <li><span class="bk">ファラデー「光線の振動についての考察」</span> <span class="pub">Philosophical Magazine、1846年</span><span class="why">光は力線そのものの振動ではないか、という推測。二で使った。</span></li>
+  <li><span class="bk">マクスウェル「ファラデーの力線について」／『電気磁気論』</span> <span class="pub">1855年／1873年</span><span class="why">線の思考を数式に移した論文と、ファラデーを「高度な数学者」と評した大著。</span></li>
+  <li><span class="bk">西田幾多郎「場所」</span> <span class="pub">『哲学研究』1926年、『働くものから見るものへ』1927年所収</span><span class="why">「述語となって主語とならないもの」。四の補助線。</span></li>
+  <li><span class="bk">世阿弥『花鏡』</span> <span class="pub">1424年頃</span><span class="why">「せぬ隙」の段。五で引用した。</span></li>
+</ul>
+<p class="note">※執筆にあたって、各原典を通読したわけではありません。該当箇所は、下の「事実確認に用いた資料」に挙げたオンライン資料（原文の翻刻・辞典・解説）で確認しました。</p>
+
+<h3>参考図書 ── さらに「あいだ」を歩くために</h3>
+<ul>
+  <li><span class="bk">山本義隆『磁力と重力の発見』全3巻</span> <span class="pub">みすず書房、2003年</span><span class="why">「離れたものがなぜ引き合うのか」という問いを、古代からニュートンとクーロンまでたどる大著。このコラムの一・二を、何倍もの厚みで読める。</span></li>
+  <li><span class="bk">ファラデー『ロウソクの科学』（竹内敬人訳）</span> <span class="pub">岩波文庫、2010年</span><span class="why">1860年のクリスマス講演。式を使わずに見ることで考えたファラデーの語り口に、じかに触れられる。</span></li>
+  <li><span class="bk">松岡正剛『日本という方法 ── おもかげ・うつろいの文化』</span> <span class="pub">NHKブックス、2006年（角川ソフィア文庫、2020年）</span><span class="why">日本を「主題」ではなく「方法」として読む本。このコラムが倣った「編集」の手つきの源流。</span></li>
+  <li><span class="bk">西田幾多郎『西田幾多郎哲学論集 Ⅰ 場所・私と汝 他六篇』（上田閑照編）</span> <span class="pub">岩波文庫、1987年</span><span class="why">論文「場所」を収録。難解だが、「主語から場所へ」の転回を原文で確かめられる。</span></li>
+  <li><span class="bk">鎌田茂雄『華厳の思想』</span> <span class="pub">講談社学術文庫、1988年</span><span class="why">因陀羅網・重重無尽の世界観への入門。重ね合わせの原理と並べて読むと面白い。</span></li>
+  <li><span class="bk">世阿弥『風姿花伝・花鏡』（小西甚一編訳）</span> <span class="pub">タチバナ教養文庫</span><span class="why">「せぬ隙」を含む『花鏡』を現代語訳つきで読める。</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法、つまり異なる分野を連想と見立てで結び、一つの問いに収束させる方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。史実は下記の出典で確認しましたが、分野をまたぐ結びつけ（見立て）は筆者の解釈であり、学説として確立したものではありません。「閒」の字解には諸説があります。</div>
+  <h3>図版（Wikimedia Commons）</h3>
+  <ul>
+    <li>長谷川等伯《松林図屏風》左隻・右隻：<a href="https://commons.wikimedia.org/wiki/File:Hasegawa_Tohaku_-_Pine_Trees_(Sh%C5%8Drin-zu_by%C5%8Dbu)_-_left_hand_screen.jpg">左隻</a>／<a href="https://commons.wikimedia.org/wiki/File:Hasegawa_Tohaku_-_Pine_Trees_(Sh%C5%8Drin-zu_by%C5%8Dbu)_-_right_hand_screen.jpg">右隻</a>（パブリックドメイン。扉の写真は左隻から切り出した）</li>
+    <li>デカルト『哲学原理』挿図：<a href="https://commons.wikimedia.org/wiki/File:Illustration_showing_Descartes%27_mechanical_view_of_a_universe_filled_with_plenum_and_a_system_of_vortexes_that_carries_planets_around_the_sun_LCCN92518505.jpg">Library of Congress 所蔵画像</a>（パブリックドメイン。図の部分を切り出した）</li>
+    <li>Michael Faraday《Delineation of Lines of Magnetic Force by Iron filings》：<a href="https://commons.wikimedia.org/wiki/File:Delineation_of_Lines_of_Magnetic_Force_by_Iron_filings.jpg">File:Delineation of Lines of Magnetic Force by Iron filings.jpg</a>（CC BY-SA 4.0。JPEGへの変換のみ）</li>
+    <li>西本願寺北能舞台：<a href="https://commons.wikimedia.org/wiki/File:North_Noh_Stage,_Nishi_Hongwanji.jpg">File:North Noh Stage, Nishi Hongwanji.jpg</a>（パブリックドメイン）</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://ja.wiktionary.org/wiki/%E9%96%92">閒 - ウィクショナリー日本語版</a>、<a href="https://www.zdic.net/hant/%E9%96%93">漢典「間」</a>：『説文解字』の「隙也」、門＋月の字解</li>
+    <li><a href="https://www.newtonproject.ox.ac.uk/view/texts/normalized/THEM00258">The Newton Project：ニュートンからベントリーへの書簡</a>（引用部の訳は筆者）</li>
+    <li><a href="https://en.wikipedia.org/wiki/General_Scholium">General Scholium - Wikipedia</a>、<a href="https://en.wikipedia.org/wiki/Hypotheses_non_fingo">Hypotheses non fingo - Wikipedia</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Michael_Faraday">Michael Faraday - Wikipedia</a>：製本屋での徒弟時代、マクスウェルによる評価</li>
+    <li><a href="https://www.ifi.unicamp.br/~assis/The-field-concepts-of-Faraday-and-Maxwell(2009).pdf">A. K. T. Assis, "The field concepts of Faraday and Maxwell"</a>：1845年11月の "magnetic field"</li>
+    <li><a href="https://pwg.gsfc.nasa.gov/Electric/wfarad1846.html">Faraday, "Thoughts on Ray-vibrations"（1846）</a></li>
+    <li><a href="https://en.wikisource.org/wiki/Index:On_Faraday's_Lines_of_Force.pdf">Maxwell, "On Faraday's Lines of Force"（Wikisource）</a></li>
+    <li><a href="https://kotobank.jp/word/%E5%A0%B4%E6%89%80%E3%81%AE%E8%AB%96%E7%90%86-114295">場所の論理 - コトバンク</a>、<a href="https://ja.wikipedia.org/wiki/%E8%A5%BF%E7%94%B0%E5%B9%BE%E5%A4%9A%E9%83%8E">西田幾多郎 - Wikipedia</a></li>
+    <li><a href="https://kotobank.jp/word/%E8%83%BD%E8%88%9E%E5%8F%B0-112015">能舞台 - コトバンク</a>、<a href="https://kotobank.jp/word/%E4%BA%AC%E9%96%93-53044">京間 - コトバンク</a></li>
+    <li><a href="http://nobunsha.jp/meigen/post_91.html">言の葉庵「花鏡 せぬ隙が、面白き」</a>：『花鏡』原文</li>
+    <li><a href="https://kotobank.jp/word/%E5%9B%A0%E9%99%80%E7%BE%85%E7%B6%B2-32991">因陀羅網 - コトバンク</a></li>
+    <li>参考図書の書誌：<a href="https://www.jstage.jst.go.jp/article/butsuri1946/59/5/59_KJ00002730661/_article/-char/ja/">『磁力と重力の発見』書評（日本物理学会誌）</a>、<a href="https://www.iwanami.co.jp/book/b246055.html">岩波書店『西田幾多郎哲学論集 I』</a>、<a href="https://www.kodansha.co.jp/book/products/0000150428">講談社『華厳の思想』</a>、<a href="https://ci.nii.ac.jp/ncid/BB03297756">CiNii『ロウソクの科学』</a>、<a href="https://ja.wikipedia.org/wiki/%E6%9D%BE%E5%B2%A1%E6%AD%A3%E5%89%9B">松岡正剛 - Wikipedia</a></li>
+  </ul>
+</div>
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../01_第1回_クーロンの法則と電場.html"><small>LESSON 1</small>← 教材：第1回 クーロンの法則と電場</a></nav>
+</body>
+</html>

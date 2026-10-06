@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第10回 フーリエ積分とフーリエ変換</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .why{ background:#fffdf0; border:1px solid #e8d48b; border-left:6px solid #e8c14b; border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; } .why .label{ color:#9a7d1a; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:560px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  table.tb{ border-collapse:collapse; margin:12px 0; font-size:14.5px; width:100%; }
+  table.tb th,table.tb td{ border:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ background:#eef2f7; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+  .prob-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); background:#fff; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:0 6px; cursor:pointer; vertical-align:middle; user-select:none; }
+  .prob-chk input{ margin:0; cursor:pointer; }
+  @media print{ .prob-chk{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第10回　フーリエ積分とフーリエ変換</h1>
+<p class="lead">教科書 p.236–241 ／ 第9回のフーリエ級数を「周期のない一般の関数」へ拡張します。スライドにもある通り、<strong>数式の展開を丸暗記するより「何を意味しているか」を考える</strong>のがこの回のコツです。</p>
+
+<div class="navi">
+大きな流れは1本道：<strong>フーリエ級数（周期あり・とびとびの周波数）→ 周期を $\infty$ に飛ばす → 周波数が連続になり、和 $\sum$ が積分 $\int$ に変わる → フーリエ変換</strong>。途中で「複素数化（$e^{ikx}$ でまとめる）」を挟むと式がすっきりします。
+</div>
+
+<h2>10.0　なぜフーリエ変換が必要か（動機）</h2>
+<p>第9回のフーリエ級数には<strong>「関数が周期的でなければならない」</strong>という制限がありました。しかし現実の信号（1回きりの衝撃音、パルス、減衰する振動…）は周期的ではありません。</p>
+<div class="why">
+<span class="label">やりたいこと</span>　三角関数は扱いやすい（微分・積分が簡単、直交性がある）。この便利さを、<strong>周期の制限を外して</strong>あらゆる関数に使いたい。そのための一般化がフーリエ変換です。キーアイデアは「周期 $2l$ をどんどん大きくして $\infty$ にすれば、事実上どんな関数も1周期に収まる」。
+</div>
+
+<h2>10.1　全体の道筋（2つのステップ）</h2>
+<p>フーリエ級数
+$$ \tfrac12\big[f(x{+})+f(x{-})\big]=\frac{a_0}{2}+\sum_{k=1}^{\infty}a_k\cos kx+\sum_{k=1}^{\infty}b_k\sin kx $$
+を出発点に、次の2段階で変換へ進みます。</p>
+<table class="tb">
+<tr><th>ステップ</th><th>やること</th><th>効果</th></tr>
+<tr><td>①一般化</td><td>周期 $[-\pi,\pi]\to[-l,l]\to[-\infty,\infty]$</td><td>周波数がとびとび→連続に</td></tr>
+<tr><td>②複素数化</td><td>$\cos kx,\sin kx$ を $e^{ikx}$ でまとめる</td><td>式が1本にまとまる</td></tr>
+</table>
+
+<h2>10.2　ステップ①　一般化：周期を無限へ</h2>
+<div class="box">
+区間 $[-\pi,\pi]$ の周期性を、まず一般の $[-l,l]$ に広げ、最後に $l\to\infty$（＝<strong>事実上、周期なし</strong>）とする。<br>
+これまで使っていた変数を $\xi$ と書き直し、新しい変数 $x$ を $x=\dfrac{\xi\,l}{\pi}$ で定義する（$\xi=\pi$ のとき $x=l$ に対応）。
+</div>
+<div class="why">
+<span class="label">何が起きるか（一番大事な直感）</span>　フーリエ級数の周波数は $k=1,2,3,\dots$ と<strong>とびとび</strong>でした。周期を $2l$ に広げると、隣り合う周波数の間隔は $\dfrac{\pi}{l}$ になり、$l\to\infty$ で<strong>間隔が $0$＝周波数が連続</strong>になります。スライドの表現では
+$$ \cos1x,\ \cos2x,\ \dots\ \longrightarrow\ \cos1.00001x,\ \cos1.00002x,\ \dots $$
+のように「すき間なく」埋まる。こうして<strong>「周波数についての和 $\sum_k$」が「積分 $\int dp$」に化ける</strong>のが、級数→変換の正体です。
+</div>
+<figure class="fig">
+<svg viewBox="0 0 480 180" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="mc1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <!-- left: discrete -->
+  <line x1="20" y1="120" x2="210" y2="120" stroke="#999" stroke-width="1.1" marker-end="url(#mc1)"/>
+  <g stroke="#1b4f72" stroke-width="2.5">
+    <line x1="45" y1="120" x2="45" y2="70"/><line x1="80" y1="120" x2="80" y2="55"/>
+    <line x1="115" y1="120" x2="115" y2="85"/><line x1="150" y1="120" x2="150" y2="100"/>
+    <line x1="185" y1="120" x2="185" y2="108"/>
+  </g>
+  <text x="30" y="150" fill="#666">とびとび（周期 2π）</text>
+  <text x="200" y="135" fill="#999">k</text>
+  <!-- arrow -->
+  <text x="228" y="95" fill="#7d3c98" font-size="22">→</text>
+  <text x="222" y="120" fill="#7d3c98">l→∞</text>
+  <!-- right: continuous -->
+  <line x1="270" y1="120" x2="465" y2="120" stroke="#999" stroke-width="1.1" marker-end="url(#mc1)"/>
+  <path d="M285 118 Q330 40 360 70 Q385 95 410 60 Q435 30 458 100" fill="none" stroke="#c0392b" stroke-width="2.2"/>
+  <text x="290" y="150" fill="#666">連続（周期なし）</text>
+  <text x="455" y="135" fill="#999">p</text>
+</svg>
+<figcaption>図10-1　周期を無限大にすると、離散スペクトル（左：棒）が連続スペクトル（右：曲線）に変わる。和 $\sum_k$ が積分 $\int dp$ になるのがフーリエ変換の本質。</figcaption>
+</figure>
+
+<h2>10.3　ステップ②　複素数化：複素フーリエ級数</h2>
+<p>オイラーの式で $\cos,\sin$ を $e^{ikx}$ に置き換えると、2つの和が1つにまとまります。</p>
+<div class="proof">
+$\cos kx=\dfrac{e^{ikx}+e^{-ikx}}{2},\quad\sin kx=\dfrac{e^{ikx}-e^{-ikx}}{2i}=-\dfrac{i}{2}\big(e^{ikx}-e^{-ikx}\big)$（$\dfrac1i=-i$ を使った）を代入して、$e^{ikx}$ と $e^{-ikx}$ でくくり直す：
+$$ a_k\cos kx+b_k\sin kx=a_k\cdot\frac{e^{ikx}+e^{-ikx}}{2}+b_k\cdot\Big(\!-\frac{i}{2}\Big)\big(e^{ikx}-e^{-ikx}\big). $$
+$e^{ikx}$ の係数は $\dfrac{a_k}{2}-\dfrac{ib_k}{2}=\dfrac{a_k-ib_k}{2}$、$e^{-ikx}$ の係数は $\dfrac{a_k}{2}+\dfrac{ib_k}{2}=\dfrac{a_k+ib_k}{2}$。ゆえに
+$$ a_k\cos kx+b_k\sin kx=\underbrace{\frac{a_k-ib_k}{2}}_{=\ \alpha_k}e^{ikx}+\underbrace{\frac{a_k+ib_k}{2}}_{=\ \alpha_{-k}}e^{-ikx}. $$
+そこで $\ \alpha_k=\dfrac{a_k-ib_k}{2},\quad \alpha_{-k}=\dfrac{a_k+ib_k}{2}\ $ と置く。すると $e^{-ikx}$ の項は「添字 $-k$ の項」とみなせるので、$k=1,2,\dots$ の和（$e^{ikx}$）と $k=-1,-2,\dots$ の和（$e^{-ikx}$）と定数項 $\dfrac{a_0}{2}=\alpha_0$ が合体し、$\pm k$ をまとめて $-\infty$ から $\infty$ までの1本の和になる：
+$$ f(x)=\sum_{k=-\infty}^{\infty}\alpha_k\,e^{ikx}. $$
+</div>
+<div class="def">
+<span class="label">複素フーリエ級数展開</span>
+$$ f(x)=\sum_{k=-\infty}^{\infty}\alpha_k\,e^{ikx},\qquad \alpha_k=\frac{1}{2\pi}\int_{-\pi}^{\pi}f(x)\,e^{-ikx}\,dx. $$
+</div>
+<div class="proof">
+<strong>係数 $\alpha_k$ の導出</strong>：定義 $\alpha_k=\dfrac{a_k-ib_k}{2}$ に第9回の $a_k,b_k$ を代入すると
+$$ \alpha_k=\frac12\Big(\frac1\pi\int_{-\pi}^{\pi}f\cos kx\,dx-i\,\frac1\pi\int_{-\pi}^{\pi}f\sin kx\,dx\Big)=\frac1{2\pi}\int_{-\pi}^{\pi}f(x)\big(\cos kx-i\sin kx\big)dx=\frac1{2\pi}\int_{-\pi}^{\pi}f(x)e^{-ikx}dx. $$
+$e^{-ikx}$ の指数がマイナスなのは、$e^{ikx}$ の成分を「射影で取り出す」とき複素共役を掛けるため（直交性 $\displaystyle\int_{-\pi}^{\pi}e^{ikx}e^{-inx}dx=2\pi\,\delta_{kn}$ に対応）。
+</div>
+<div class="why">
+<span class="label">ここが効く</span>　実の $\cos,\sin$ 展開では係数が2種類（$a_k,b_k$）ありましたが、複素化すると<strong>係数は $\alpha_k$ ただ1種類</strong>、基底も $e^{ikx}$ ただ1種類。式が半分の手間になり、次の「積分表示」への一般化も自然になります。
+</div>
+
+<h2>10.4　フーリエ積分表示（和 → 積分の導出）</h2>
+<p>ステップ①（$l\to\infty$）とステップ②（複素化）を合わせて、<strong>級数の和が二重積分に化ける過程を実際に導きます</strong>。ここが第10回の論理の核心です。</p>
+<div class="proof">
+<strong>① 周期 $2l$ の複素フーリエ級数から出発</strong>　周期を $2\pi$ から $2l$ に一般化すると、基底は $e^{ik\pi x/l}$（$\xi=\pi x/l$ と置けば前ページの $e^{ik\xi}$ に一致）：
+$$ f(x)=\sum_{k=-\infty}^{\infty}c_k\,e^{i k\pi x/l},\qquad c_k=\frac{1}{2l}\int_{-l}^{l}f(x')\,e^{-i k\pi x'/l}\,dx'. $$
+<strong>② 周波数 $p_k$ とその間隔 $\Delta p$ を導入</strong>　$p_k=\dfrac{k\pi}{l}$ とおくと、基底の指数は $e^{ik\pi x/l}=e^{ip_k x}$ と書ける。隣り合う周波数の間隔は $\Delta p=p_{k+1}-p_k=\dfrac{(k+1)\pi}{l}-\dfrac{k\pi}{l}=\dfrac{\pi}{l}$。ここが要で、係数の $\dfrac{1}{2l}$ を $\Delta p$ で書き換えられる：$\dfrac{1}{2l}=\dfrac{1}{2}\cdot\dfrac{\pi/l}{\pi}=\dfrac{\Delta p}{2\pi}$。<br>
+これらを $f(x)=\displaystyle\sum_k c_k\,e^{ip_k x}$ に代入する。まず $c_k=\dfrac{1}{2l}\displaystyle\int_{-l}^{l}f(x')e^{-ip_k x'}dx'$ の $\dfrac{1}{2l}$ を $\dfrac{\Delta p}{2\pi}$ に置き換えると
+$$ c_k=\frac{\Delta p}{2\pi}\int_{-l}^{l}f(x')\,e^{-i p_k x'}\,dx', $$
+これを和に戻せば（各 $k$ の項に $e^{ip_k x}$ が掛かる）
+$$ f(x)=\sum_{k=-\infty}^{\infty}\frac{\Delta p}{2\pi}\Big[\int_{-l}^{l}f(x')\,e^{-i p_k x'}\,dx'\Big]e^{i p_k x}. $$
+これで各項に間隔 $\Delta p$ が「掛け算の形」で表に出た——これが次に和を積分へ変える鍵になる。
+<strong>③ $l\to\infty$ で和を積分に</strong>　$l\to\infty$ のとき $\Delta p\to0$。$\displaystyle\sum_k \Delta p\,g(p_k)\to\int_{-\infty}^{\infty}g(p)\,dp$（区分求積）で和が積分になり、内側の積分範囲も $\pm\infty$ に広がる：
+$$ f(x)=\frac{1}{2\pi}\int_{-\infty}^{\infty}dp\Big[\int_{-\infty}^{\infty}f(x')\,e^{-ipx'}\,dx'\Big]e^{ipx}. $$
+これで<strong>離散スペクトル（$\sum$）が連続スペクトル（$\int dp$）に変わった</strong>。まとめると次のフーリエ積分表示を得る。
+</div>
+<div class="def">
+<span class="label">フーリエ積分表示</span>
+$$ f(x)=\frac{1}{2\pi}\int_{-\infty}^{\infty}dp\int_{-\infty}^{\infty}dx'\,f(x')\,e^{ip(x-x')}. $$
+</div>
+<div class="why">
+<span class="label">式の読み方</span>　内側の $\displaystyle\int dx'\,f(x')e^{-ipx'}$ は「$f$ の周波数 $p$ 成分の分量」（＝複素フーリエ係数 $\alpha_k$ の連続版）。外側の $\displaystyle\int dp\,(\cdots)e^{ipx}$ は「その分量を全周波数について足し戻して $f(x)$ を再構成」。<strong>分解してから組み立て直す</strong>、という往復がこの1本の式に入っています。この「分量を出す前半」と「組み立てる後半」を切り離したものが、次のフーリエ変換／逆変換です。
+</div>
+
+<h2>10.5　フーリエ変換とフーリエ逆変換</h2>
+<p>フーリエ積分表示の二重積分を、$x'$ の積分（前半）と $p$ の積分（後半）に<strong>切り分ける</strong>と、変換と逆変換が自然に現れます。</p>
+<div class="proof">
+<strong>切り分け</strong>　積分表示 $\displaystyle f(x)=\frac{1}{2\pi}\int_{-\infty}^{\infty}\!dp\,e^{ipx}\underbrace{\int_{-\infty}^{\infty}\!f(x')e^{-ipx'}dx'}_{\text{$p$ 成分の分量}}$ で、係数 $\dfrac{1}{2\pi}=\dfrac{1}{\sqrt{2\pi}}\cdot\dfrac{1}{\sqrt{2\pi}}$ を<strong>前後で対称に分ける</strong>。前半（$x'$ 積分）を $\hat f(p)$ と名付ければ
+$$ \hat f(p)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}f(x')e^{-ipx'}dx',\qquad
+f(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat f(p)\,e^{ipx}dp. $$
+前者が<strong>フーリエ変換</strong>（分解＝係数を求める）、後者が<strong>逆変換</strong>（再構成＝係数から $f$ を戻す）。$1/\sqrt{2\pi}$ を対称に配るのは両者の形を揃えるためで、$1/2\pi$ をどちらか片方に寄せる流儀もある。
+</div>
+<div class="def">
+<span class="label">フーリエ変換</span>（分解：$f(x)$ から周波数分布 $\hat f(p)$ へ）
+$$ \mathcal{F}[f(x)]=\hat f(p)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}f(x)\,e^{-ipx}\,dx $$
+<span class="label">フーリエ逆変換</span>（再構成：$\hat f(p)$ から $f(x)$ へ）
+$$ \mathcal{F}^{-1}[\hat f(p)]=f(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat f(p)\,e^{ipx}\,dp $$
+</div>
+<table class="tb">
+<tr><th></th><th>フーリエ級数（第9回）</th><th>フーリエ変換（第10回）</th></tr>
+<tr><td>対象</td><td>周期関数</td><td>周期なしの関数</td></tr>
+<tr><td>周波数</td><td>とびとび $k=1,2,\dots$</td><td>連続 $p$</td></tr>
+<tr><td>成分を出す</td><td>係数 $a_k,b_k,\alpha_k$</td><td>$\hat f(p)$（フーリエ変換）</td></tr>
+<tr><td>組み立てる</td><td>$\sum$ で足す</td><td>$\int dp$ で積分（逆変換）</td></tr>
+</table>
+<div class="why">
+<span class="label">意味（スライドの黄色）</span>　<strong>フーリエ変換＝フーリエ係数を求めること</strong>に相当。<strong>フーリエ逆変換＝係数を使って $f(x)$ を表すこと</strong>に相当。ただし $p$ は連続的に変化する（$p_k=\pi k/l,\ l\to\infty$）。前半 $1/\sqrt{2\pi}$ を変換・逆変換で対称に振り分けているのは、両者の形を綺麗に揃えるためです。
+</div>
+
+<h2>10.6　変換できる条件</h2>
+<div class="thm">
+<span class="label">フーリエ変換（フーリエ積分）の条件</span>　区間 $[-\infty,\infty]$ で定義された $f(x)$ が
+<ul>
+  <li>任意の有限区間で<strong>区分的に滑らか</strong>、かつ</li>
+  <li><strong>絶対可積分</strong>：$\displaystyle\int_{-\infty}^{\infty}|f(x)|\,dx&lt;\infty$</li>
+</ul>
+であればフーリエ変換できる。
+</div>
+<div class="why">
+<span class="label">なぜ絶対可積分？</span>　変換の積分 $\int f(x)e^{-ipx}dx$ がちゃんと有限値に収まるための保険です。$|e^{-ipx}|=1$ なので、$\int|f|dx$ が有限なら変換の積分も発散しません。図で言えば $f(x)$ は<strong>両端 $x\to\pm\infty$ でゼロに収束する</strong>波（減衰する信号）。$\sin x$ のように延々続く関数はこのままでは変換できず、後で学ぶデルタ関数が必要になります。
+</div>
+
+<h2>10.7　例題：$f(x)=\sqrt{\alpha}\,e^{-\alpha|x|}$ を変換する</h2>
+<div class="ex">
+<span class="label">例 10.1（スライドの例）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex10-1">完了</label>　$\alpha&gt;0$ として、$f(x)=\sqrt{\alpha}\,e^{-\alpha|x|}$ をフーリエ変換せよ。
+<div class="proof">
+絶対値 $|x|$ があるので、$x&lt;0$ と $x\ge0$ に分けて $e^{-\alpha|x|}$ を書き下す（$x&lt;0$ では $|x|=-x$）：
+$$ \hat f(p)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\sqrt{\alpha}\,e^{-\alpha|x|}e^{-ipx}dx=\sqrt{\frac{\alpha}{2\pi}}\Big[\int_{-\infty}^{0}e^{(\alpha-ip)x}dx+\int_{0}^{\infty}e^{-(\alpha+ip)x}dx\Big]. $$
+各積分を計算（$\alpha&gt;0$ なので端はゼロに収束する）：
+$$ \int_{-\infty}^{0}e^{(\alpha-ip)x}dx=\Big[\frac{e^{(\alpha-ip)x}}{\alpha-ip}\Big]_{-\infty}^{0}=\frac{1}{\alpha-ip},\qquad
+\int_{0}^{\infty}e^{-(\alpha+ip)x}dx=\Big[\frac{e^{-(\alpha+ip)x}}{-(\alpha+ip)}\Big]_{0}^{\infty}=\frac{1}{\alpha+ip}. $$
+足し合わせて通分：
+$$ \frac{1}{\alpha-ip}+\frac{1}{\alpha+ip}=\frac{(\alpha+ip)+(\alpha-ip)}{(\alpha-ip)(\alpha+ip)}=\frac{2\alpha}{\alpha^2+p^2}. $$
+よって
+$$ \hat f(p)=\sqrt{\frac{\alpha}{2\pi}}\cdot\frac{2\alpha}{p^2+\alpha^2}=\sqrt{\frac{2}{\pi}}\,\frac{\alpha\sqrt{\alpha}}{p^2+\alpha^2}. $$
+</div>
+</div>
+<div class="box">
+<strong>まとめ</strong>：$\displaystyle f(x)=\sqrt{\alpha}\,e^{-\alpha|x|}\ \xrightarrow{\ \mathcal F\ }\ \hat f(p)=\sqrt{\frac{2}{\pi}}\,\frac{\alpha\sqrt{\alpha}}{p^2+\alpha^2}$。<br>
+とがった山（$x=0$ で折れる指数関数）が、なだらかな山（$p$ の有理関数）に変わりました。
+</div>
+
+<h2>10.8　時間幅と周波数幅のトレードオフ</h2>
+<figure class="fig">
+<svg viewBox="0 0 480 210" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="mtf" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <!-- left panel f(x) -->
+  <line x1="20" y1="170" x2="230" y2="170" stroke="#999" stroke-width="1.1" marker-end="url(#mtf)"/>
+  <line x1="125" y1="185" x2="125" y2="20" stroke="#999" stroke-width="1.1" marker-end="url(#mtf)"/>
+  <text x="222" y="186" fill="#999">x</text><text x="100" y="30" fill="#999">f(x)</text>
+  <!-- large alpha: narrow & tall -->
+  <path d="M55 170 L120 45 L125 42 L130 45 L195 170" fill="none" stroke="#c0392b" stroke-width="2"/>
+  <!-- small alpha: wide & low -->
+  <path d="M30 170 Q80 120 125 108 Q170 120 220 170" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <text x="130" y="55" fill="#c0392b">α 大</text>
+  <text x="160" y="128" fill="#1b4f72">α 小</text>
+  <text x="55" y="200" fill="#666">時間で見た波（狭い⇔広い）</text>
+  <!-- right panel f^(p) -->
+  <line x1="270" y1="170" x2="470" y2="170" stroke="#999" stroke-width="1.1" marker-end="url(#mtf)"/>
+  <line x1="290" y1="185" x2="290" y2="20" stroke="#999" stroke-width="1.1" marker-end="url(#mtf)"/>
+  <text x="462" y="186" fill="#999">p</text><text x="298" y="30" fill="#999">f̂(p)</text>
+  <!-- small alpha: tall narrow peak at 0 -->
+  <path d="M290 55 Q320 60 340 110 Q360 165 400 168 Q440 169 465 169" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <!-- large alpha: low broad -->
+  <path d="M290 118 Q340 122 390 135 Q430 145 465 152" fill="none" stroke="#c0392b" stroke-width="2"/>
+  <text x="300" y="50" fill="#1b4f72">α 小</text>
+  <text x="400" y="130" fill="#c0392b">α 大</text>
+  <text x="290" y="200" fill="#666">周波数で見た分布（広い⇔狭い）</text>
+</svg>
+<figcaption>図10-2　$\alpha$ を変えたときの $f(x)$（左）と $\hat f(p)$（右）。$\alpha$ 大：時間軸で<strong>鋭く狭い</strong>波 ↔ 周波数軸では<strong>広く</strong>分布。$\alpha$ 小：時間軸で<strong>なだらかに広い</strong>波 ↔ 周波数軸では原点近くに<strong>集中</strong>。片方を狭くすると必ずもう片方が広がる。</figcaption>
+</figure>
+<div class="why">
+<span class="label">読み取り（周波数と変動の対応）</span>　$\hat f(p)$ を「どの周波数がどれだけ効いているか」の割合と見ると、
+<ul>
+  <li><strong>小さい $p$（低周波）が優勢</strong> ＝ ゆっくり・なだらかな変動が主成分（$\alpha$ 小の波）。</li>
+  <li><strong>大きい $p$（高周波）が優勢</strong> ＝ 細かく速い変動が主成分（$\alpha$ 大の鋭い波）。</li>
+</ul>
+「時間で鋭い（局在した）信号ほど、広い周波数帯域を必要とする」——これは信号処理・量子力学の<strong>不確定性関係</strong>の芽であり、JPEG 圧縮で細部を残すほどデータが増える理由でもあります。
+</div>
+<p class="meta">※ この「どちらの周波数が優勢か」の対応は、$p$（周波数）が大きいほど細かい振動、という物理的な意味に基づいて整理しています。</p>
+
+<hr>
+<h2>10.9　章末例題</h2>
+<p>変換の積分は「区間を分けて指数関数を素直に積分する」だけです。代表的な2つを最後まで解きます。</p>
+
+<div class="ex">
+<span class="label">例 10.2（矩形パルス → sinc）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex10-2">完了</label>　$a&gt;0$ として、$f(x)=\begin{cases}1 & (|x|&lt;a)\\ 0 & (|x|\ge a)\end{cases}$ をフーリエ変換せよ。
+<div class="proof">
+$$ \hat f(p)=\frac{1}{\sqrt{2\pi}}\int_{-a}^{a}e^{-ipx}\,dx=\frac{1}{\sqrt{2\pi}}\Big[\frac{e^{-ipx}}{-ip}\Big]_{-a}^{a}=\frac{1}{\sqrt{2\pi}}\cdot\frac{e^{ipa}-e^{-ipa}}{ip}. $$
+$e^{ipa}-e^{-ipa}=2i\sin pa$ を使うと
+$$ \hat f(p)=\frac{1}{\sqrt{2\pi}}\cdot\frac{2i\sin pa}{ip}=\sqrt{\frac{2}{\pi}}\,\frac{\sin pa}{p}. $$
+<span class="meta">（時間で幅 $2a$ の「箱」が、周波数では緩やかに広がる $\sin pa/p$ 型に。$a$ を小さく（箱を狭く）すると $\hat f$ は広がる＝トレードオフの典型例。）</span>
+</div>
+</div>
+
+<div class="ex">
+<span class="label">例 10.3（片側指数関数）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex10-3">完了</label>　$a&gt;0$ として、$f(x)=\begin{cases}e^{-ax} & (x&gt;0)\\ 0 & (x\le0)\end{cases}$ をフーリエ変換せよ。
+<div class="proof">
+$x&gt;0$ の部分だけ積分すればよい：
+$$ \hat f(p)=\frac{1}{\sqrt{2\pi}}\int_{0}^{\infty}e^{-ax}e^{-ipx}\,dx=\frac{1}{\sqrt{2\pi}}\int_{0}^{\infty}e^{-(a+ip)x}\,dx=\frac{1}{\sqrt{2\pi}}\Big[\frac{e^{-(a+ip)x}}{-(a+ip)}\Big]_{0}^{\infty}. $$
+$a&gt;0$ より上端は $0$。よって
+$$ \hat f(p)=\frac{1}{\sqrt{2\pi}}\cdot\frac{1}{a+ip}. $$
+<span class="meta">（今回の $\hat f$ は複素数。大きさは $|\hat f(p)|=\dfrac{1}{\sqrt{2\pi}\,\sqrt{a^2+p^2}}$ で、やはり高周波ほど小さくなる。）</span>
+</div>
+</div>
+
+<h2>10.10　演習問題</h2>
+<p>区間の分け方と「端がゼロに収束する（$a&gt;0$）」の確認がポイントです。</p>
+<ol>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill10-1">完了</label> $f(x)=e^{-a|x|}\ (a&gt;0)$ をフーリエ変換せよ。（例 10.1 の $\sqrt\alpha$ を外した素直版）</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill10-2">完了</label> 例 10.2 の矩形パルス（$a=1$）に<strong>プランシュレルの定理</strong>（フーリエ変換版パーセバル）$\displaystyle\int_{-\infty}^{\infty}|f(x)|^2dx=\int_{-\infty}^{\infty}|\hat f(p)|^2dp$ を適用し、$\displaystyle\int_{-\infty}^{\infty}\frac{\sin^2 p}{p^2}\,dp$ を求めよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill10-3">完了</label> 定数関数 $f(x)=1$ は、この章の定義のままではフーリエ変換できない。理由を条件に照らして述べよ。</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong> $|x|$ を符号で分けて $\hat f(p)=\dfrac{1}{\sqrt{2\pi}}\Big(\displaystyle\int_{-\infty}^{0}e^{(a-ip)x}dx+\int_{0}^{\infty}e^{-(a+ip)x}dx\Big)=\dfrac{1}{\sqrt{2\pi}}\Big(\dfrac{1}{a-ip}+\dfrac{1}{a+ip}\Big)=\dfrac{1}{\sqrt{2\pi}}\cdot\dfrac{2a}{a^2+p^2}=\sqrt{\dfrac2\pi}\,\dfrac{a}{p^2+a^2}$。<br>
+<span class="meta">（例 10.1 で $\sqrt\alpha$ を掛けない形。$\alpha=a$ とすれば同じ構造。）</span><br><br>
+<strong>2.</strong> $a=1$ の箱では $\displaystyle\int_{-\infty}^{\infty}|f|^2dx=\int_{-1}^{1}1\,dx=2$。一方 $\hat f(p)=\sqrt{\tfrac2\pi}\dfrac{\sin p}{p}$ より $\displaystyle\int_{-\infty}^{\infty}|\hat f|^2dp=\frac2\pi\int_{-\infty}^{\infty}\frac{\sin^2p}{p^2}dp$。<br>
+プランシュレルより $2=\dfrac2\pi\displaystyle\int_{-\infty}^{\infty}\frac{\sin^2p}{p^2}dp$、ゆえに $\displaystyle\int_{-\infty}^{\infty}\frac{\sin^2p}{p^2}dp=\pi$。<br><br>
+<strong>3.</strong> フーリエ変換には<strong>絶対可積分</strong> $\displaystyle\int_{-\infty}^{\infty}|f(x)|dx&lt;\infty$ が必要。$f=1$ では $\displaystyle\int_{-\infty}^{\infty}|1|\,dx=\infty$ で条件を満たさず、変換積分が収束しない（端でゼロに収束しない）。これを扱うには、次章以降の<strong>デルタ関数</strong>が必要になる（$\mathcal F[1]\propto\delta(p)$）。
+</div>
+</details>
+
+<hr>
+<h2>10.11　まとめ・チェックリスト</h2>
+<div class="box">
+<ul>
+  <li>□ フーリエ変換が必要な理由（周期の制限を外したい）を言える。</li>
+  <li>□ 級数→変換の道筋（周期 $l\to\infty$ で $\sum\to\int$、複素化で $e^{ikx}$ に統一）を説明できる。</li>
+  <li>□ 複素フーリエ級数 $f=\sum\alpha_k e^{ikx},\ \alpha_k=\dfrac1{2\pi}\int f e^{-ikx}dx$ を書ける。</li>
+  <li>□ フーリエ変換・逆変換の定義（$1/\sqrt{2\pi}$、指数の符号 $\mp ipx$）を正しく書ける。</li>
+  <li>□ 「変換＝係数を求める／逆変換＝係数から復元」という意味を説明できる。</li>
+  <li>□ 変換できる条件（区分的に滑らか＋絶対可積分 $\int|f|dx&lt;\infty$）を言える。</li>
+  <li>□ $f=\sqrt\alpha\,e^{-\alpha|x|}$ を最後まで変換できる（$\hat f=\sqrt{2/\pi}\,\alpha\sqrt\alpha/(p^2+\alpha^2)$）。</li>
+  <li>□ 時間幅と周波数幅のトレードオフ（片方が狭いともう片方が広い）を図で説明できる。</li>
+</ul>
+</div>
+
+<div class="navi" style="margin-top:18px">
+このあとは、絶対可積分でない関数（$\sin x$ など）も扱うための<strong>デルタ関数</strong>、そして時間微分を掛け算に変える<strong>ラプラス変換</strong>・<strong>偏微分方程式への応用</strong>へと続きます。いずれも「変換して簡単な世界で解き、戻す」という今回の発想の延長です。
+</div>
+
+<script>
+(function(){
+  var KEY = 'amII_prob_13';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  document.querySelectorAll('.prob-check').forEach(function(cb){
+    var id = cb.getAttribute('data-pid');
+    cb.checked = !!state[id];
+    cb.addEventListener('change', function(){
+      state[id] = cb.checked;
+      save();
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回 力はベクトルである｜機械力学</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 第1回（2026-10-01）講義資料「第1回.pdf」対応・改訂版（CLAUDE.md §8【最重要2】：順序と説明を組み直した）。設計：draft/01_設計.md -->
+<figure class="hero">
+<img src="img/hero_01.jpg" alt="イリヤ・レーピン《ヴォルガの船曳き》。砂浜を、十一人の男たちが革帯で一本の綱につながれ、身を傾けて船を曳いている">
+<div class="ttl"><p class="vol">第1回</p><h1>力はベクトルである</h1></div>
+<figcaption><p class="cap">十一人がそれぞれの角度で身を傾けても、船に届くのは綱一本ぶんの力である。</p><p class="cr">Ilya Repin／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Ilya_Repin_-_Barge_Haulers_on_the_Volga_-_Google_Art_Project.jpg">Wikimedia Commons</a>（《ヴォルガの船曳き》1870–73年、ロシア美術館）</p></figcaption>
+</figure>
+<p class="lead">2026-10-01／講義資料「第1回」（教科書 1章・2.1節）の範囲。<strong>2本のロープで 500 kg の荷を吊るとき、1本のロープはどれだけの力に耐えればよいか</strong>。この問いに答えるために、ニュートンの法則から「止まっている点では力の和が 0」を導き、力をベクトルとして足したり分けたりする道具（成分・単位ベクトル・内積・連立一次方程式）を一から用意する。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：<br>
+【土台】ニュートンの第一・第二法則 → 止まっている点では $\sum\boldsymbol F=\boldsymbol 0$（1章）<br>
+→ 【数学準備】ベクトルの和・成分・単位ベクトル・2点を結ぶ向き・内積・連立一次方程式（2章）<br>
+→ 【主張】力はベクトルとして足してよい。これは数学ではなく<strong>実験事実</strong>（3章）<br>
+→ 【合成】合力＝成分ごとの和。大きさは足し算にならない（4章）<br>
+→ 【分解】直交する2方向なら内積、任意の2方向なら<strong>連立一次方程式</strong>（教科書 式2.23）（5章）<br>
+→ 【運用】同じ手順①〜⑥で、ロープ・ワイヤ・部材の力を求める（6章）
+</div>
+
+<div class="box"><span class="label">この回で使う前提</span>
+<ul>
+<li><strong>仮定する</strong>：三平方の定理、直角三角形での三角比（sin・cos・tan）、文字式の計算、微分の初歩。</li>
+<li><strong>この回で一から説明する</strong>：ベクトルの和と定数倍、成分と基本ベクトル、一般角の三角関数と $\tan^{-1}$ の象限、単位ベクトルと方向余弦、2点を結ぶ向き、内積、2元連立一次方程式と行列式（2章）。積の微分公式（1.3節で、その場で作る）。</li>
+<li><strong>後回しにする</strong>：外積（講義資料「ベクトルの使い方4」）は、第2回のモーメントで扱う。</li>
+</ul></div>
+
+<div class="box"><span class="label">この教材の作り方について</span>講義スライドは穴埋め式で、空欄の答えはスライドのPDFに残っていた文字から復元し、本文にふつうの文章として入れた。推測で補った箇所と、スライドの誤植と思われる箇所には、その都度「推定」「注意」と書いている。説明の順序は講義資料どおりではなく、分かりやすさを優先して組み直した（どの内容がどこにあるかは、末尾の「講義資料との対応」に示した）。</div>
+
+<h2>序　この回の問い</h2>
+<p>授業では、台車にアームを載せた「小型移動マニピュレータ」が何度も例として出てくる（重さ 50 kg、アームのリンクは 0.4 m・0.3 m・0.2 m、持てる荷物は最大 10 kg）。こうした機械を設計するとき、最初に必要になるのは「どの部品に、どれだけの力がかかるか」である。この回で答えたい問いは次のものだ（講義資料の例題。6.2節で解く）。</p>
+<div class="def"><span class="label">この回の問い</span>天井の2点から、水平と 30° をなす2本のロープで、質量 500 kg の物体を吊るす。ロープに必要な引張強さはいくらか。</div>
+<p>答えるには、①「止まっている」ことを式にする（1章）、②斜めの力を数で表す（2章）、③力を足してよい理由を確かめる（3章）、④足す・分ける計算をする（4・5章）、の4つが要る。これが章の並びの理由である。前半（静力学）の目標は、スライドによれば次の二つ。</p>
+<ol><li><strong>力とモーメントの釣合い</strong>を完全に理解すること。</li><li>実際の問題に当てはめて、<strong>使いこなせる</strong>ようになること。</li></ol>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>力学の土台</h2>
+
+<h3><span class="no">1.1</span>静力学と動力学：何を解くのか</h3>
+<p>「機械力学」の授業では、二種類の力学を扱う。<strong>力学といえばニュートン</strong>（Isaac Newton）の法則が出発点である。</p>
+<table class="tb">
+<tr><th>前半</th><th>後半</th></tr>
+<tr><td><strong>静力学</strong>（statics）<br>止まっている物体の力の釣合い</td><td><strong>動力学</strong>（dynamics）<br>力を受けて物体がどう動くか</td></tr>
+<tr><td>→ この先の<strong>材料力学</strong>の土台になる</td><td>→ この先の<strong>機械力学・振動学</strong>の土台になる</td></tr>
+</table>
+<p class="meta">※スライドでは「静力学 ← ［材料力学］」「動力学 ← ［機械力学，振動学］」と書かれている。矢印は「その後の科目の基礎になる」という意味だと解釈した（推定）。</p>
+<p>静力学で求めたいのは、物体が止まっているときに、ロープ・柱・支点などに<strong>どれだけの力がかかっているか</strong>である。動かない物体の「動き」は分かっている（加速度が 0）ので、そこから逆に、見えない力を割り出す。</p>
+
+<h3><span class="no">1.2</span>ニュートンの三法則</h3>
+<div class="def"><span class="label">ニュートンの法則</span>
+<p><strong>第一法則（慣性の法則）</strong>：外から力が働かない限り、質点は同じ速度で動き続けるか、止まったままでいる。</p>
+<p><strong>第二法則（運動の法則、または運動方程式）</strong>：質点に外から力が働くと、質点の加速度は力に比例し、質量に反比例する。</p>
+<p><strong>第三法則（作用・反作用の法則）</strong>：質点Aが質点Bから力を受けているとき、AはBに、<strong>同じ直線上で、同じ大きさの、逆向きの力</strong>をおよぼしている。</p></div>
+<p>ここで<strong>質点</strong>とは、大きさを無視して1点とみなした物体のこと。ロープの結び目のように、すべての力が1点に集まる対象は質点として扱える。大きさがあって回転が問題になる物体（剛体）は、第2回以降で扱う。</p>
+
+<h3><span class="no">1.3</span>第二法則の一般形：運動量の時間変化＝力</h3>
+<p><strong>動機</strong>：「加速度は力に比例する」は、スライドの注のとおり<strong>質量が変わらない場合</strong>の言い方である。より一般的には、第二法則は<strong>運動量の時間変化＝力</strong>と書く。</p>
+<div class="thm"><span class="label">第二法則（一般形）</span>運動量 $\boldsymbol{p}=m\boldsymbol{v}$ の時間変化が力に等しい。$$\frac{d\boldsymbol{p}}{dt}=\boldsymbol{F}\qquad(1.1)$$</div>
+<p>ここから、おなじみの $m\boldsymbol{a}=\boldsymbol{F}$ を導く。</p>
+<div class="proof">
+<p><span class="step">STEP 1</span>　運動量の定義 $\boldsymbol{p}=m\boldsymbol{v}$ を (1.1) に代入する。$$\frac{d}{dt}(m\boldsymbol{v})=\boldsymbol{F}$$</p>
+<p><span class="step">STEP 2</span>　左辺は「質量×速度」という<strong>積</strong>の微分なので、積の微分公式 $(fg)'=f'g+fg'$ を使う。$$\frac{dm}{dt}\,\boldsymbol{v}+m\,\frac{d\boldsymbol{v}}{dt}=\boldsymbol{F}$$</p>
+<p class="note">　（積の微分公式の出所：$f(t+h)g(t+h)-f(t)g(t)=\{f(t+h)-f(t)\}g(t+h)+f(t)\{g(t+h)-g(t)\}$ と分けて $h$ で割り、$h\to 0$ とすれば $f'g+fg'$ になる。）</p>
+<p><span class="step">STEP 3</span>　質量が変わらない（$dm/dt=0$）なら、第1項が消える。速度の時間微分は加速度 $\boldsymbol{a}=d\boldsymbol{v}/dt$ なので、$$m\boldsymbol{a}=\boldsymbol{F}\qquad(1.2)$$</p>
+<p class="qed">□</p></div>
+<p><strong>確かめ（単位）</strong>：$dp/dt$ の単位は $\mathrm{kg\cdot(m/s)/s}=\mathrm{kg\,m/s^2}$、$ma$ も $\mathrm{kg\times m/s^2}$ で一致する（1.5節で、これを N と呼ぶ）。</p>
+<div class="why"><span class="label">直感：なぜわざわざ一般形を覚えるのか</span>燃料を噴き出しながら飛ぶロケットや、砂を落としながら走るトラックは、走りながら質量が変わる。そういうときは $m\boldsymbol{a}=\boldsymbol{F}$ ではなく $d\boldsymbol{p}/dt=\boldsymbol{F}$ が正しい。後半（第15回「運動量と角運動量」）で、この形がふたたび主役になる。</div>
+
+<h3><span class="no">1.4</span>静力学の基本式 $\sum\boldsymbol F=\boldsymbol 0$ を導く</h3>
+<p><strong>動機</strong>：この回の例題は、どれも「止まっている結び目」に働く力を求める。そのための式を、法則から一段ずつ導いておく。</p>
+<p>質点に複数の力 $\boldsymbol F_1,\boldsymbol F_2,\dots,\boldsymbol F_n$ が同時に働くとき、第二法則の $\boldsymbol F$ は、それらを<strong>ベクトルとして足したもの</strong> $\sum_i\boldsymbol F_i$（合力）である。ベクトルとして足してよい理由は 3.3 節で述べる（実験事実である）。</p>
+<div class="thm"><span class="label">質点の釣合い（静力学の基本式）</span>質点が止まったままでいるとき、働く力の合計は 0 である。$$\sum_{i=1}^{n}\boldsymbol F_i=\boldsymbol 0\qquad(1.3)$$</div>
+<div class="proof">
+<p><span class="step">STEP 1（止まっている＝速度が一定で 0）</span>　ある時間ずっと止まっているなら、その間の速度は $\boldsymbol v=\boldsymbol 0$ のまま変わらない。</p>
+<p><span class="step">STEP 2（加速度を出す）</span>　加速度は速度の時間微分。一定の値（ここでは $\boldsymbol 0$）の微分は 0 なので $\boldsymbol a=d\boldsymbol v/dt=\boldsymbol 0$。</p>
+<p><span class="step">STEP 3（第二法則に入れる）</span>　(1.2) で $\boldsymbol F=\sum_i\boldsymbol F_i$ とすると、$\sum_i\boldsymbol F_i=m\boldsymbol a=m\cdot\boldsymbol 0=\boldsymbol 0$。</p>
+<p class="qed">□</p></div>
+<p><strong>確かめ（いちばん簡単な場合）</strong>：天井から1本のロープで重さ $W$ の物体を吊るす。物体に働くのは上向きの張力 $T$ と下向きの重さ $W$ だけ。上を正として (1.3) は $T-W=0$、つまり $T=W$。これは経験とも合う。</p>
+<p><strong>第三法則の役目</strong>：結び目を引くロープの力と、ロープが結び目から引き返される力は、大きさが等しく逆向きである。だから「ロープが結び目を引く力」を求めれば、それがそのまま「ロープが耐えるべき力（張力）」になる。</p>
+<div class="warn"><span class="label">よくある誤解：「止まっている＝力が働いていない」</span>吊るされた物体には重さもロープの力も働いている。0 になるのは個々の力ではなく、<strong>その和</strong>である。また (1.3) は「速度が一定」なら動いていても成り立つ（STEP 2 で使ったのは「速度が変わらない」ことだけ）。等速で動くエレベーターのロープの張力は、止まっているときと同じ $W$ である。</div>
+
+<h3><span class="no">1.5</span>単位と有効数字</h3>
+<p>この授業では <strong>SI単位</strong>（Le Système International d'Unités、国際単位系）を使う。力学の基本は <strong>MKS系</strong>：</p>
+<ul><li><strong>M</strong> → m（メートル）：長さ</li><li><strong>K</strong> → kg（キログラム）：質量</li><li><strong>S</strong> → s（秒）：時間</li></ul>
+<div class="def"><span class="label">力の単位 N と重さ</span>力の単位 N（ニュートン）は、(1.2) の $F=ma$ から組み立てる：$$1\ \mathrm{N}=1\ \mathrm{kg}\times1\ \mathrm{m/s^2}$$ 質量 $m$ [kg] の物体にかかる重力（<strong>重さ</strong>）は、重力加速度 $g=9.81\ \mathrm{m/s^2}$ を使って $$W=mg\qquad(1.4)$$</div>
+<div class="def"><span class="label">有効数字（有効桁数）</span>答えは<strong>3〜4桁</strong>で書く。エンジニアは<strong>5桁以上は使わない</strong>（元のデータがそこまで正確でないため）。途中の計算は桁を多めに残し、最後に丸める。</div>
+<div class="ex"><span class="label">例題1〔A｜自作〕質量を重さに直す</span>
+<p>質量 500 kg の物体の重さを N で求め、3桁と4桁で書け。</p>
+<p><strong>解答</strong></p>
+<p>① (1.4) に入れる：$W=mg=500\times9.81=4905\ \mathrm{N}$。</p>
+<p>② 単位の確かめ：$\mathrm{kg\times m/s^2=N}$。</p>
+<p>③ 3桁：$4.91\times10^3\ \mathrm{N}=4.91\ \mathrm{kN}$。4桁：$4.905\times10^3\ \mathrm{N}$。</p></div>
+<div class="warn"><span class="label">よくある誤解：「500 kg の力」</span>kg は<strong>質量</strong>の単位で、力の単位ではない。「500 kg を吊る」と言われたら、力の式に入れる前に必ず $W=mg$ で N に直す。直し忘れると、答えが約 $1/10$（$1/9.81$）になる。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/a1_principia.jpg" alt="ニュートン『自然哲学の数学的諸原理（プリンキピア）』初版の扉" loading="lazy"></div>
+<p class="cap">1687年、運動の三法則はこの一冊の冒頭に「公理」として置かれた。</p>
+<p class="cr">Isaac Newton／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Newton_-_Principia_(1687),_title,_p._5,_color.jpg">Wikimedia Commons</a>（『プリンキピア』初版、1687年）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/b1_sumo.jpg" alt="歌川国貞の三枚続の相撲絵。二人の力士が四つに組み、左右に行司と審判がいる" loading="lazy"></div>
+<p class="cap">押せば押しただけ押し返される土俵の上で、二つの力はいつも一本の線の上で向き合っている。</p>
+<p class="cr">歌川国貞（三代豊国）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Sumo-Ukiyo-e-Utagawa_Kunisada-1854.jpg">Wikimedia Commons</a>（雲龍らの取組を描いた三枚続、1854年）</p></div>
+</figure>
+<p class="note">教科書 1・2節「力学の歴史」は、講義では省略（各自で読む）とされた。読み物コラム「力は見えない」も参照。</p>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>数学準備：ベクトル</h2>
+<p>1.4節の (1.3) は「力を足すと 0」という式だった。斜めの力を足すには、向きと大きさをもつ量＝<strong>ベクトル</strong>の計算が要る。この章で、使う道具を順に用意する。講義資料は「覚えておいてほしいベクトルの使い方」として次の4つを挙げている。</p>
+<table class="tb">
+<tr><th>道具</th><th>何に使うか（講義資料）</th><th>本教材</th></tr>
+<tr><td>1. 単位ベクトル（方向ベクトル、方向余弦）</td><td><strong>軸の向き</strong>を表す</td><td>2.5・2.6節</td></tr>
+<tr><td>2. 基本ベクトル（座標軸方向の単位ベクトル）</td><td><strong>ベクトル量の表現</strong></td><td>2.3節</td></tr>
+<tr><td>3. 内積（スカラー積）</td><td><strong>ベクトルの軸方向成分を求める</strong></td><td>2.7節</td></tr>
+<tr><td>4. 外積（ベクトル積）</td><td><strong>力のモーメントの性質</strong></td><td>第2回</td></tr>
+</table>
+<p class="note">式番号について：本教材の式番号 (2.5) などと、教科書の式番号（「教科書 式2.9」など）は別のものである。講義・試験では教科書の番号で呼ばれるので、両方を併記する。</p>
+
+<h3><span class="no">2.1</span>スカラーとベクトル、書き方の約束</h3>
+<p>質量・時間・長さのように、<strong>数1つ</strong>（と単位）で決まる量を<strong>スカラー</strong>という。力・速度・変位のように、<strong>大きさと向き</strong>をもつ量を<strong>ベクトル</strong>という。ベクトルは矢印で表し、長さが大きさ、向きが向きを表す。</p>
+<ul>
+<li>ベクトル：太字 $\boldsymbol{V}$（板書では $\vec{V}$ とも書く）。</li>
+<li>ベクトルの大きさ：細字 $V$、または $|\boldsymbol{V}|$。</li>
+<li>変数は<strong>斜体（イタリック）</strong>、定数・単位は<strong>立体（ローマン）</strong>で書く。例：$m$（質量という変数）と $\mathrm{m}$（メートルという単位）。</li>
+</ul>
+<p>成分（2.3節）の書き方は、教科書と講義資料で違う。</p>
+<table class="tb">
+<tr><th>教科書（行の形）</th><th>講義資料（列の形）</th><th>点の座標</th></tr>
+<tr><td>$\boldsymbol{V}=(V_x,V_y)$　［教科書 式2.1］</td><td>$\boldsymbol{V}=\begin{bmatrix}V_x\\V_y\end{bmatrix}=[V_x\ \ V_y]^T$</td><td>$\mathrm{A}(x,y)$</td></tr>
+</table>
+<p>$T$ は「転置」（行と列を入れかえる）の記号。中身は同じで、書く向きが違うだけである。本教材は読みやすさのため本文では行の形で書き、行列の式（5.3節）では列の形で書く。<strong>試験では講義資料の流儀（列ベクトル）で書けるようにしておく</strong>。点の座標 $\mathrm{A}(x,y)$ は「場所」で、ベクトル（向きと大きさ）とは区別する。</p>
+
+<h3><span class="no">2.2</span>ベクトルの和と定数倍</h3>
+<div class="def"><span class="label">定義（和・定数倍・差）</span>
+<ul>
+<li><strong>和</strong> $\boldsymbol a+\boldsymbol b$：$\boldsymbol a$ の先に $\boldsymbol b$ の根元をつなぎ、$\boldsymbol a$ の根元から $\boldsymbol b$ の先へ引いた矢印（<strong>つなぎ</strong>）。根元をそろえて描けば、$\boldsymbol a,\boldsymbol b$ を2辺とする平行四辺形の対角線になる（<strong>平行四辺形</strong>）。どちらも同じ矢印である。</li>
+<li><strong>定数倍</strong> $k\boldsymbol a$：向きはそのまま（$k\lt0$ なら逆向き）、長さを $|k|$ 倍した矢印。</li>
+<li><strong>差</strong> $\boldsymbol a-\boldsymbol b=\boldsymbol a+(-1)\boldsymbol b$。</li>
+</ul></div>
+<figure><svg viewBox="0 0 720 240" width="720" role="img" aria-label="ベクトルの和（つなぎ・平行四辺形）と定数倍">
+<g transform="translate(0,0)"><defs><marker id="vs1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="vs1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="vs1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="vs1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="vs1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="vs1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<circle cx="37.5" cy="171.7" r="3.5" fill="#2a2723"/>
+<line x1="37.5" y1="171.7" x2="162.5" y2="130.0" stroke="#2b3a67" stroke-width="2.6" marker-end="url(#vs1-b)"/>
+<line x1="162.5" y1="130.0" x2="204.2" y2="46.7" stroke="#4f7a4a" stroke-width="2.6" marker-end="url(#vs1-g)"/>
+<line x1="37.5" y1="171.7" x2="204.2" y2="46.7" stroke="#a8322a" stroke-width="3" marker-end="url(#vs1-r)"/>
+<text x="108.3" y="163.3" fill="#2b3a67" text-anchor="start" font-size="14">a</text>
+<text x="189.6" y="92.5" fill="#4f7a4a" text-anchor="start" font-size="14">b</text>
+<text x="79.2" y="84.2" fill="#a8322a" text-anchor="start" font-size="14">a + b</text>
+<text x="10.0" y="18.0" fill="#2a2723" text-anchor="start" font-size="13">(a) つなぎ</text>
+</g></g>
+<g transform="translate(240,0)"><defs><marker id="vs2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="vs2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="vs2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="vs2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="vs2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="vs2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M162.5,130.0 L204.2,46.7" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="4 4" opacity="1"/>
+<path d="M79.2,88.3 L204.2,46.7" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="4 4" opacity="1"/>
+<circle cx="37.5" cy="171.7" r="3.5" fill="#2a2723"/>
+<line x1="37.5" y1="171.7" x2="162.5" y2="130.0" stroke="#2b3a67" stroke-width="2.6" marker-end="url(#vs2-b)"/>
+<line x1="37.5" y1="171.7" x2="79.2" y2="88.3" stroke="#4f7a4a" stroke-width="2.6" marker-end="url(#vs2-g)"/>
+<line x1="37.5" y1="171.7" x2="204.2" y2="46.7" stroke="#a8322a" stroke-width="3" marker-end="url(#vs2-r)"/>
+<text x="108.3" y="163.3" fill="#2b3a67" text-anchor="start" font-size="14">a</text>
+<text x="41.7" y="117.5" fill="#4f7a4a" text-anchor="start" font-size="14">b</text>
+<text x="133.3" y="100.8" fill="#a8322a" text-anchor="start" font-size="14">a + b</text>
+<text x="10.0" y="18.0" fill="#2a2723" text-anchor="start" font-size="13">(b) 平行四辺形</text>
+</g></g>
+<g transform="translate(480,0)"><defs><marker id="vs3-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="vs3-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="vs3-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="vs3-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="vs3-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="vs3-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<circle cx="94.2" cy="122.3" r="3.5" fill="#2a2723"/>
+<line x1="94.2" y1="122.3" x2="209.6" y2="83.8" stroke="#a06a32" stroke-width="2.4" marker-end="url(#vs3-o)"/>
+<line x1="94.2" y1="122.3" x2="151.9" y2="103.1" stroke="#2b3a67" stroke-width="3" marker-end="url(#vs3-b)"/>
+<line x1="94.2" y1="122.3" x2="36.5" y2="141.5" stroke="#4f7a4a" stroke-width="2.6" marker-end="url(#vs3-g)"/>
+<text x="175.0" y="74.2" fill="#a06a32" text-anchor="start" font-size="14">2a</text>
+<text x="117.3" y="99.2" fill="#2b3a67" text-anchor="start" font-size="14">a</text>
+<text x="44.2" y="156.9" fill="#4f7a4a" text-anchor="start" font-size="14">−a</text>
+<text x="10.0" y="18.0" fill="#2a2723" text-anchor="start" font-size="13">(c) 定数倍</text>
+</g></g>
+</svg>
+<figcaption>図2.1　(a) つなぎ：$\boldsymbol a$ の先に $\boldsymbol b$ の根元をつなぐ。(b) 平行四辺形：根元をそろえ、対角線をとる。(a)(b) の赤い矢印は同じもの。(c) 定数倍：$2\boldsymbol a$ は同じ向きで2倍、$-\boldsymbol a$ は逆向き。</figcaption></figure>
+<p>つなぎ方は3つ以上でも同じで、$\boldsymbol a+\boldsymbol b+\boldsymbol c$ は矢印を順につないだ折れ線の始点から終点への矢印である。足す順番を変えても終点は変わらない（$\boldsymbol a+\boldsymbol b=\boldsymbol b+\boldsymbol a$：平行四辺形の2通りの回り方）。</p>
+
+<h3><span class="no">2.3</span>成分と基本ベクトル、大きさ</h3>
+<p><strong>動機</strong>：矢印の作図は直感的だが、力が3つ、4つと増えると正確に描けない。そこで矢印を<strong>数の組</strong>に直し、計算で扱う。</p>
+<div class="def"><span class="label">定義（成分と基本ベクトル）</span>$x,y,z$ 軸の正の向きを向いた長さ1のベクトルを<strong>基本ベクトル</strong>といい、$\boldsymbol i,\boldsymbol j,\boldsymbol k$ と書く。どのベクトルも、$x$ 方向に $V_x$、$y$ 方向に $V_y$、$z$ 方向に $V_z$ 進む矢印の和として書ける：
+$$\boldsymbol{V}=\begin{bmatrix}V_x\\V_y\\V_z\end{bmatrix}=V_x\begin{bmatrix}1\\0\\0\end{bmatrix}+V_y\begin{bmatrix}0\\1\\0\end{bmatrix}+V_z\begin{bmatrix}0\\0\\1\end{bmatrix}=V_x\boldsymbol{i}+V_y\boldsymbol{j}+V_z\boldsymbol{k}\qquad(2.1)$$
+2次元なら $\boldsymbol V=V_x\boldsymbol i+V_y\boldsymbol j$［教科書 式2.10］。数 $V_x,V_y,V_z$ を<strong>成分</strong>という。</div>
+<p><strong>和と定数倍は成分ごと</strong>：$\boldsymbol a+\boldsymbol b=(a_x+b_x)\boldsymbol i+(a_y+b_y)\boldsymbol j$、$k\boldsymbol a=ka_x\boldsymbol i+ka_y\boldsymbol j$。（理由：(2.1) の形に書いて、$\boldsymbol i$ の項どうし、$\boldsymbol j$ の項どうしをまとめればよい。図2.1(a) で、つないだ矢印の横の進み・縦の進みがそれぞれ足し算になることと同じ。）</p>
+<div class="thm"><span class="label">大きさ</span>$$V=|\boldsymbol V|=\sqrt{V_x^2+V_y^2}\quad(\text{2次元}),\qquad V=\sqrt{V_x^2+V_y^2+V_z^2}\quad(\text{3次元})\qquad(2.2)$$</div>
+<div class="proof">
+<p><span class="step">STEP 1（2次元）</span>　矢印 $\boldsymbol V$ を斜辺、横の進み $|V_x|$ と縦の進み $|V_y|$ を2辺とする直角三角形ができる。三平方の定理から $V^2=V_x^2+V_y^2$（2乗するので符号は関係ない）。</p>
+<p><span class="step">STEP 2（3次元）</span>　まず床（$xy$ 面）の上の影の長さが STEP 1 より $\sqrt{V_x^2+V_y^2}$。この影と高さ $|V_z|$ が、$\boldsymbol V$ を斜辺とする別の直角三角形の2辺になる（高さは床に垂直だから）。もう一度三平方の定理を使って $V^2=(V_x^2+V_y^2)+V_z^2$。</p>
+<p class="qed">□</p></div>
+<p><strong>最小の具体例</strong>：$\boldsymbol V=(3,4)$ なら $V=\sqrt{9+16}=5$。$\boldsymbol V=(2,-3,6)$ なら $V=\sqrt{4+9+36}=\sqrt{49}=7$。</p>
+<div class="warn"><span class="label">よくある誤解：「大きさは成分の和」</span>$(3,4)$ の大きさは $3+4=7$ ではなく 5。成分は直交する2方向の進みなので、斜めの長さは三平方の定理で出す。</div>
+
+<h3><span class="no">2.4</span>三角関数の準備：一般角と $\tan^{-1}$ の象限</h3>
+<p><strong>動機</strong>：力は「$x$ 軸から角 $\theta$ の向きに大きさ $F$」の形で与えられることが多い。$\theta$ が 90° を超えても使える成分の式と、成分から角度に戻すときの落とし穴を、ここで整理しておく。</p>
+<div class="def"><span class="label">定義（一般角の cos・sin）</span>原点を中心とする半径1の円（単位円）の上で、$x$ 軸の正の向きから反時計回りに角 $\theta$ だけ回った点の座標を $(\cos\theta,\ \sin\theta)$ と定める。$\theta$ は 90° を超えても、負でもよい。</div>
+<p>$0^\circ\lt\theta\lt90^\circ$ では、この点から $x$ 軸に垂線を下ろした直角三角形（斜辺1）で、横の辺が $\cos\theta$、縦の辺が $\sin\theta$ になり、直角三角形での定義と一致する。$\theta$ が大きくなると点は第2・第3・第4象限に入り、座標の符号がそのまま cos・sin の符号になる。</p>
+<figure><svg viewBox="0 0 640 330" width="640" role="img" aria-label="単位円と一般角。各象限の cos・sin の符号">
+<defs><marker id="uc-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="uc-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="uc-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="uc-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="uc-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="uc-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M45.4,169.6 L324.6,169.6" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M185.0,303.9 L185.0,35.4" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M292.4,169.6 L292.4,166.2 L292.2,162.9 L291.9,159.5 L291.6,156.1 L291.1,152.7 L290.5,149.4 L289.8,146.1 L289.0,142.8 L288.1,139.5 L287.1,136.3 L286.0,133.1 L284.8,129.9 L283.5,126.8 L282.1,123.7 L280.6,120.6 L279.0,117.6 L277.3,114.7 L275.5,111.8 L273.7,109.0 L271.7,106.2 L269.6,103.5 L267.5,100.9 L265.3,98.3 L263.0,95.8 L260.6,93.4 L258.2,91.0 L255.7,88.8 L253.1,86.6 L250.4,84.5 L247.7,82.4 L244.9,80.5 L242.1,78.7 L239.2,76.9 L236.2,75.2 L233.2,73.7 L230.2,72.2 L227.1,70.8 L223.9,69.5 L220.8,68.3 L217.5,67.3 L214.3,66.3 L211.0,65.4 L207.7,64.7 L204.4,64.0 L201.0,63.4 L197.7,63.0 L194.3,62.6 L190.9,62.4 L187.5,62.3 L184.2,62.2 L180.8,62.3 L177.4,62.5 L174.0,62.8 L170.6,63.2 L167.3,63.7 L163.9,64.3 L160.6,65.0 L157.3,65.8 L154.1,66.8 L150.8,67.8 L147.6,68.9 L144.5,70.2 L141.4,71.5 L138.3,72.9 L135.3,74.4 L132.3,76.1 L129.4,77.8 L126.5,79.6 L123.7,81.5 L120.9,83.4 L118.2,85.5 L115.6,87.7 L113.0,89.9 L110.6,92.2 L108.2,94.6 L105.8,97.0 L103.6,99.6 L101.4,102.2 L99.3,104.9 L97.3,107.6 L95.4,110.4 L93.6,113.3 L91.8,116.2 L90.2,119.1 L88.7,122.2 L87.2,125.2 L85.8,128.3 L84.6,131.5 L83.4,134.7 L82.4,137.9 L81.4,141.1 L80.6,144.4 L79.8,147.7 L79.2,151.1 L78.7,154.4 L78.2,157.8 L77.9,161.2 L77.7,164.5 L77.6,167.9 L77.6,171.3 L77.7,174.7 L77.9,178.1 L78.2,181.5 L78.7,184.8 L79.2,188.2 L79.8,191.5 L80.6,194.8 L81.4,198.1 L82.4,201.4 L83.4,204.6 L84.6,207.8 L85.8,210.9 L87.2,214.0 L88.7,217.1 L90.2,220.1 L91.8,223.1 L93.6,226.0 L95.4,228.9 L97.3,231.7 L99.3,234.4 L101.4,237.1 L103.6,239.7 L105.8,242.2 L108.2,244.7 L110.6,247.1 L113.0,249.4 L115.6,251.6 L118.2,253.8 L120.9,255.8 L123.7,257.8 L126.5,259.7 L129.4,261.5 L132.3,263.2 L135.3,264.8 L138.3,266.3 L141.4,267.8 L144.5,269.1 L147.6,270.3 L150.8,271.5 L154.1,272.5 L157.3,273.4 L160.6,274.2 L163.9,275.0 L167.3,275.6 L170.6,276.1 L174.0,276.5 L177.4,276.8 L180.8,277.0 L184.2,277.0 L187.5,277.0 L190.9,276.9 L194.3,276.6 L197.7,276.3 L201.0,275.8 L204.4,275.3 L207.7,274.6 L211.0,273.8 L214.3,273.0 L217.5,272.0 L220.8,270.9 L223.9,269.7 L227.1,268.5 L230.2,267.1 L233.2,265.6 L236.2,264.0 L239.2,262.4 L242.1,260.6 L244.9,258.8 L247.7,256.8 L250.4,254.8 L253.1,252.7 L255.7,250.5 L258.2,248.2 L260.6,245.9 L263.0,243.5 L265.3,241.0 L267.5,238.4 L269.6,235.7 L271.7,233.0 L273.7,230.3 L275.5,227.4 L277.3,224.6 L279.0,221.6 L280.6,218.6 L282.1,215.6 L283.5,212.5 L284.8,209.4 L286.0,206.2 L287.1,203.0 L288.1,199.7 L289.0,196.5 L289.8,193.2 L290.5,189.9 L291.1,186.5 L291.6,183.2 L291.9,179.8 L292.2,176.4 L292.4,173.0 L292.4,169.6" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="3 3" opacity="1"/>
+<text x="324.6" y="180.4" fill="#2a2723" text-anchor="end" font-size="12">x</text>
+<text x="190.4" y="40.7" fill="#2a2723" text-anchor="start" font-size="12">y</text>
+<text x="265.6" y="49.3" fill="#968d80" text-anchor="middle" font-size="11">第1象限 (+, +)</text>
+<text x="104.4" y="49.3" fill="#968d80" text-anchor="middle" font-size="11">第2象限 (−, +)</text>
+<text x="104.4" y="298.5" fill="#968d80" text-anchor="middle" font-size="11">第3象限 (−, −)</text>
+<text x="265.6" y="298.5" fill="#968d80" text-anchor="middle" font-size="11">第4象限 (+, −)</text>
+<line x1="185.0" y1="169.6" x2="92.0" y2="115.9" stroke="#a8322a" stroke-width="2.4" marker-end="url(#uc-r)"/>
+<path d="M92.0,169.6 L92.0,115.9" fill="none" stroke="#a06a32" stroke-width="1.2" stroke-dasharray="4 3" opacity="1"/>
+<path d="M92.0,115.9 L185.0,115.9" fill="none" stroke="#a06a32" stroke-width="1.2" stroke-dasharray="4 3" opacity="1"/>
+<path d="M211.0,169.6 L211.0,168.2 L210.9,166.9 L210.7,165.5 L210.4,164.1 L210.1,162.8 L209.7,161.4 L209.2,160.1 L208.7,158.9 L208.1,157.6 L207.4,156.4 L206.6,155.2 L205.8,154.1 L205.0,153.0 L204.1,151.9 L203.1,151.0 L202.1,150.0 L201.0,149.1 L199.9,148.3 L198.7,147.5 L197.5,146.8 L196.3,146.2 L195.0,145.6 L193.7,145.1 L192.4,144.7 L191.1,144.3 L189.7,144.1 L188.3,143.8 L186.9,143.7 L185.6,143.6 L184.2,143.6 L182.8,143.7 L181.4,143.9 L180.0,144.1 L178.7,144.4 L177.3,144.8 L176.0,145.2 L174.7,145.7 L173.5,146.3 L172.2,147.0 L171.0,147.7 L169.9,148.5 L168.8,149.3 L167.7,150.2 L166.7,151.1 L165.8,152.1 L164.8,153.2 L164.0,154.3 L163.2,155.4 L162.5,156.6" fill="none" stroke="#a8322a"/>
+<text x="191.4" y="148.1" fill="#a8322a" text-anchor="start" font-size="11">150°</text>
+<text x="45.4" y="85.9" fill="#a8322a" text-anchor="start" font-size="11">(cos150°, sin150°)</text>
+<text x="45.4" y="98.7" fill="#a8322a" text-anchor="start" font-size="11">= (-0.866, 0.500)</text>
+<g transform="translate(330,0)"><defs><marker id="uc2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="uc2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="uc2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="uc2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="uc2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="uc2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M40.0,164.4 L280.0,164.4" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M160.0,294.0 L160.0,34.8" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<line x1="160.0" y1="164.4" x2="88.0" y2="260.4" stroke="#a8322a" stroke-width="2.4" marker-end="url(#uc2-r)"/>
+<text x="83.2" y="274.8" fill="#a8322a" text-anchor="middle" font-size="11">(−3, −4)</text>
+<line x1="160.0" y1="164.4" x2="232.0" y2="68.4" stroke="#968d80" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#uc2-s)"/>
+<text x="236.8" y="58.8" fill="#968d80" text-anchor="middle" font-size="11">(3, 4)</text>
+<path d="M182.0,164.4 L182.0,163.1 L181.9,161.9 L181.7,160.6 L181.4,159.3 L181.1,158.1 L180.7,156.9 L180.2,155.7 L179.7,154.6 L179.1,153.4 L178.4,152.4 L177.7,151.3 L176.9,150.3 L176.0,149.3 L175.1,148.4 L174.2,147.6 L173.2,146.8" fill="none" stroke="#968d80"/>
+<path d="M194.0,164.4 L194.0,162.6 L193.8,160.8 L193.6,159.0 L193.2,157.2 L192.8,155.4 L192.3,153.7 L191.6,152.0 L190.9,150.3 L190.1,148.6 L189.2,147.1 L188.3,145.5 L187.2,144.0 L186.1,142.6 L184.9,141.2 L183.6,139.9 L182.3,138.7 L180.9,137.6 L179.4,136.5 L177.9,135.5 L176.3,134.6 L174.7,133.7 L173.0,133.0 L171.3,132.3 L169.6,131.8 L167.8,131.3 L166.0,130.9 L164.2,130.7 L162.4,130.5 L160.6,130.4 L158.8,130.4 L157.0,130.5 L155.2,130.7 L153.4,131.1 L151.6,131.5 L149.9,131.9 L148.1,132.5 L146.4,133.2 L144.8,134.0 L143.2,134.8 L141.6,135.8 L140.1,136.8 L138.7,137.9 L137.3,139.1 L136.0,140.3 L134.7,141.7 L133.5,143.1 L132.4,144.5 L131.4,146.0 L130.5,147.6 L129.6,149.2 L128.8,150.8 L128.2,152.5 L127.6,154.2 L127.1,156.0 L126.7,157.7 L126.3,159.5 L126.1,161.3 L126.0,163.2 L126.0,165.0 L126.1,166.8 L126.3,168.6 L126.5,170.4 L126.9,172.2 L127.4,174.0 L127.9,175.7 L128.6,177.4 L129.3,179.0 L130.1,180.7 L131.1,182.2 L132.1,183.8 L133.1,185.2 L134.3,186.6 L135.5,188.0 L136.8,189.3 L138.2,190.5 L139.6,191.6" fill="none" stroke="#a8322a"/>
+<text x="176.8" y="152.4" fill="#968d80" text-anchor="start" font-size="11">53.1°</text>
+<text x="118.0" y="129.6" fill="#a8322a" text-anchor="start" font-size="11">233.1°</text>
+<text x="169.6" y="250.8" fill="#968d80" text-anchor="start" font-size="11">tan⁻¹(−4/−3)</text>
+<text x="169.6" y="270.0" fill="#968d80" text-anchor="start" font-size="11">= tan⁻¹(4/3) = 53.1°</text>
+<text x="169.6" y="289.2" fill="#968d80" text-anchor="start" font-size="11">→ (3, 4) と区別できない</text>
+</g></g>
+</g></svg>
+<figcaption>図2.2　左：単位円の上の点 $(\cos\theta,\sin\theta)$。各象限での符号（cos, sin）。$\theta=150^\circ$ では $(-0.866,\ 0.500)$。右：$(3,4)$ と $(-3,-4)$ は $R_y/R_x$ が同じ $4/3$ なので、$\tan^{-1}$ だけでは区別できない。</figcaption></figure>
+<div class="thm"><span class="label">角度と大きさから成分へ</span>$x$ 軸から反時計回りに角 $\theta$ の向きで大きさ $F$ の力は $$\boldsymbol F=F(\cos\theta,\ \sin\theta)=(F\cos\theta,\ F\sin\theta)\qquad(2.3)$$ $\theta$ がどの象限にあっても、この1本の式で符号まで正しく出る。</div>
+<p><strong>理由</strong>：$(\cos\theta,\sin\theta)$ は向き $\theta$ を向いた長さ1の矢印（単位円上の点）で、2.2節の定数倍によりそれを $F$ 倍すれば、同じ向きで長さ $F$ の矢印になる。</p>
+<p><strong>成分から角度へ戻す</strong>：$\tan\theta=F_y/F_x$ なので電卓で $\tan^{-1}(F_y/F_x)$ を押したくなるが、$\tan^{-1}$ は $-90^\circ$〜$90^\circ$ の角しか返さない。$F_x\lt0$（左向き）のときは <strong>180° を足す</strong>。関数電卓やプログラムの <code>atan2(Fy, Fx)</code> は、象限まで含めて正しい角（$-180^\circ$〜$180^\circ$）を返す。</p>
+<table class="tb">
+<tr><th>$F_x$ の符号</th><th>正しい角 $\theta$</th></tr>
+<tr><td>$F_x\gt0$</td><td>$\tan^{-1}(F_y/F_x)$ のまま</td></tr>
+<tr><td>$F_x\lt0$</td><td>$\tan^{-1}(F_y/F_x)+180^\circ$</td></tr>
+<tr><td>$F_x=0$</td><td>$F_y\gt0$ なら $90^\circ$、$F_y\lt0$ なら $270^\circ$（$=-90^\circ$）</td></tr>
+</table>
+<div class="ex"><span class="label">例題2〔A｜自作〕角度と成分の行き来</span>
+<p>(1) $x$ 軸から 150° の向きで大きさ 10 N の力の成分を求めよ。(2) 成分が $(-3,\ -4)$ N の力の大きさと向き（$x$ 軸から反時計回りの角）を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (1) (2.3) に入れる：$\boldsymbol F=(10\cos150^\circ,\ 10\sin150^\circ)=(10\times(-0.8660),\ 10\times0.5000)=(-8.660,\ 5.000)\ \mathrm{N}$。</p>
+<p>② (1) の確かめ：150° は第2象限なので $(-,+)$。大きさ $\sqrt{8.660^2+5.000^2}=10.00$ で元に戻る。</p>
+<p>③ (2) 大きさ：$\sqrt{3^2+4^2}=5.00\ \mathrm{N}$。</p>
+<p>④ (2) 向き：$\tan^{-1}\{(-4)/(-3)\}=\tan^{-1}(1.333)=53.13^\circ$。しかし $F_x\lt0$ なので 180° を足して $\theta=233.1^\circ$（第3象限、左下）。<code>atan2(-4, -3)</code> $=-126.9^\circ$ も同じ向き（$-126.9^\circ+360^\circ=233.1^\circ$）。</p></div>
+<div class="warn"><span class="label">よくある誤解：「$\tan^{-1}$ の答えがそのまま向き」</span>例題2(2) で 53.1° と答えると、右上を向いた $(3,4)$ と同じ向きになってしまう（図2.2右）。答えを出したら、成分の符号から象限を確かめる習慣をつける。</div>
+
+<h3><span class="no">2.5</span>単位ベクトルと方向余弦</h3>
+<p><strong>動機</strong>：ロープや部材が引く力は、<strong>向きは形から分かるが、大きさが分からない</strong>。そこで「向きだけ」を表す長さ1のベクトルを作り、力を「大きさ×向き」と書けるようにする（5.3節の分解で使う）。</p>
+<div class="def"><span class="label">定義（単位ベクトル）</span>大きさが1のベクトルを<strong>単位ベクトル</strong>（方向ベクトル）という。ベクトル $\boldsymbol V$ と同じ向きの単位ベクトルは、$\boldsymbol V$ を自分の大きさで割って作る：
+$$\boldsymbol{v}=\frac{\boldsymbol{V}}{V}=\left(\frac{V_x}{V},\ \frac{V_y}{V}\right)=\left(\frac{V_x}{\sqrt{V_x^2+V_y^2}},\ \frac{V_y}{\sqrt{V_x^2+V_y^2}}\right)\qquad(2.4)\ \ ［\text{教科書 式2.9}］$$</div>
+<div class="warn"><span class="label">注意：スライドの誤植と思われる箇所</span>スライドの式(2.9)は、右端の第2成分の分子が $V_x$ になっている。下の導出のとおり、正しくは $V_y$ のはずである（未確認）。</div>
+<div class="proof">
+<p><span class="step">STEP 1（長さを1にする）</span>　2.2節の定数倍で、ベクトルを数 $1/V$ 倍すると、向きはそのまま（$1/V\gt0$ だから）で長さが $V\times(1/V)=1$ になる。各成分も $1/V$ 倍される。</p>
+<p><span class="step">STEP 2（確かめ）</span>　(2.2) で大きさを計算すると $\sqrt{(V_x/V)^2+(V_y/V)^2}=\sqrt{(V_x^2+V_y^2)/V^2}=\sqrt{V^2/V^2}=1$。</p>
+<p><span class="step">STEP 3（なぜ「方向余弦」と呼ぶか）</span>　$\boldsymbol{V}$ が $x$ 軸となす角を $\alpha$、$y$ 軸となす角を $\beta$ とする。図2.3の直角三角形で cos の定義（隣の辺÷斜辺）から $V_x=V\cos\alpha$、$V_y=V\cos\beta$。よって $$\boldsymbol{v}=(\cos\alpha,\ \cos\beta)$$ 単位ベクトルの成分は、各軸とのなす角の<strong>余弦（cos）</strong>そのもの。だから<strong>方向余弦</strong>という。</p>
+<p class="qed">□</p></div>
+<figure>
+<svg viewBox="0 0 320 230" width="320" role="img" aria-label="ベクトルの成分と方向角">
+<defs><marker id="f01b" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#2b3a67"/></marker>
+<marker id="f01c" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#6b645a"/></marker></defs>
+<line x1="40" y1="200" x2="300" y2="200" stroke="#6b645a" marker-end="url(#f01c)"/><text x="292" y="220" font-size="14">x</text>
+<line x1="40" y1="200" x2="40" y2="20" stroke="#6b645a" marker-end="url(#f01c)"/><text x="22" y="28" font-size="14">y</text>
+<line x1="40" y1="200" x2="220" y2="70" stroke="#2b3a67" stroke-width="3" marker-end="url(#f01b)"/>
+<line x1="220" y1="70" x2="220" y2="200" stroke="#6b645a" stroke-dasharray="4 4"/>
+<line x1="220" y1="70" x2="40" y2="70" stroke="#6b645a" stroke-dasharray="4 4"/>
+<path d="M90,200 A50,50 0 0 0 80,171" fill="none" stroke="#a8322a"/><text x="96" y="190" font-size="14" fill="#a8322a">α</text>
+<path d="M40,150 A50,50 0 0 0 69,159" fill="none" stroke="#a8322a"/><text x="52" y="140" font-size="14" fill="#a8322a">β</text>
+<text x="150" y="110" font-size="15" fill="#2b3a67">V</text>
+<text x="120" y="218" font-size="13">Vx = V cos α</text>
+<text x="230" y="140" font-size="13">Vy = V cos β</text>
+</svg>
+<figcaption>図2.3　成分 $V_x,V_y$ は、それぞれ $x$ 軸・$y$ 軸とのなす角 $\alpha,\beta$ の余弦で書ける。</figcaption>
+</figure>
+<p>3次元でも同じ形になる（第3回で使うので、ここで覚えておく）。$z$ 軸とのなす角を $\gamma$ とすると、</p>
+$$\begin{aligned}\boldsymbol{v}&=\left[\frac{V_x}{\sqrt{V_x^2+V_y^2+V_z^2}}\ \ \frac{V_y}{\sqrt{V_x^2+V_y^2+V_z^2}}\ \ \frac{V_z}{\sqrt{V_x^2+V_y^2+V_z^2}}\right]^T\&=[\cos\alpha\ \ \cos\beta\ \ \cos\gamma]^T\end{aligned}\qquad(2.5)$$
+<p><strong>確かめ</strong>：単位ベクトルの成分の2乗和は必ず1（$\cos^2\alpha+\cos^2\beta+\cos^2\gamma=1$）。計算のたびに検算に使える。</p>
+<div class="ex"><span class="label">例題3〔A｜自作〕大きさ・単位ベクトル・方向角</span>
+<p>力 $\boldsymbol{F}=(30,\ 40)\ \mathrm{N}$ の大きさ、単位ベクトル、$x$ 軸・$y$ 軸とのなす角を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 大きさ：$F=\sqrt{30^2+40^2}=\sqrt{2500}=50.0\ \mathrm{N}$。</p>
+<p>② 単位ベクトル：$\boldsymbol{f}=(30/50,\ 40/50)=(0.600,\ 0.800)$。検算：$0.6^2+0.8^2=1$。</p>
+<p>③ $\cos\alpha=0.600$ より $\alpha=53.1^\circ$、$\cos\beta=0.800$ より $\beta=36.9^\circ$。確かめ：$\alpha+\beta=90^\circ$（2次元では $x$ 軸と $y$ 軸が直交しているので当然）。</p></div>
+<div class="ex"><span class="label">例題4〔A｜自作〕3次元の方向余弦</span>
+<p>$\boldsymbol{V}=(2,\ -3,\ 6)$ の単位ベクトルと、各軸とのなす角を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① $V=\sqrt{4+9+36}=\sqrt{49}=7$。</p>
+<p>② $\boldsymbol{v}=(2/7,\ -3/7,\ 6/7)=(0.2857,\ -0.4286,\ 0.8571)$。</p>
+<p>③ $\alpha=\cos^{-1}0.2857=73.4^\circ$、$\beta=\cos^{-1}(-0.4286)=115.4^\circ$、$\gamma=\cos^{-1}0.8571=31.0^\circ$。$\cos^{-1}$ は 0°〜180° を返すので、なす角では象限の心配はいらない。</p>
+<p>④ 検算：$(4+9+36)/49=1$。$y$ 成分が負なので、$y$ 軸とのなす角は 90° より大きい。</p></div>
+
+<h3><span class="no">2.6</span>2点を結ぶ向き：位置ベクトルから単位ベクトルへ</h3>
+<p><strong>動機</strong>：実際の問題では、角度ではなく<strong>点の座標</strong>（部材の両端など）が与えられることが多い（教科書 例題2・3）。座標から向きを作る方法を用意する。</p>
+<div class="def"><span class="label">定義（位置ベクトルと2点を結ぶベクトル）</span>原点Oから点 $\mathrm P(x,y)$ へ引いたベクトル $\boldsymbol r_{\mathrm P}=(x,y)$ を、点Pの<strong>位置ベクトル</strong>という。点Pから点Qへ向かうベクトルは $$\overrightarrow{\mathrm{PQ}}=\boldsymbol r_{\mathrm Q}-\boldsymbol r_{\mathrm P}\quad(\text{終点}-\text{始点}),\qquad \boldsymbol u_{\mathrm{PQ}}=\frac{\boldsymbol r_{\mathrm Q}-\boldsymbol r_{\mathrm P}}{|\boldsymbol r_{\mathrm Q}-\boldsymbol r_{\mathrm P}|}\qquad(2.6)$$</div>
+<p><strong>理由</strong>：つなぎ（2.2節）で、O→P とつないだ先に P→Q をつなぐと O→Q になる：$\boldsymbol r_{\mathrm P}+\overrightarrow{\mathrm{PQ}}=\boldsymbol r_{\mathrm Q}$。両辺から $\boldsymbol r_{\mathrm P}$ を引けば (2.6) の左の式。右の式は、それを (2.4) で長さ1にしたもの。</p>
+<figure><svg viewBox="0 0 520 300" width="520" role="img" aria-label="位置ベクトルと2点を結ぶベクトル">
+<defs><marker id="pv-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="pv-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="pv-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="pv-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="pv-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="pv-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="40.0" y1="20.0" x2="40.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="92.0" y1="20.0" x2="92.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="144.0" y1="20.0" x2="144.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="196.0" y1="20.0" x2="196.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="248.0" y1="20.0" x2="248.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="300.0" y1="20.0" x2="300.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="352.0" y1="20.0" x2="352.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="404.0" y1="20.0" x2="404.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="280.0" x2="430.0" y2="280.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="228.0" x2="430.0" y2="228.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="176.0" x2="430.0" y2="176.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="124.0" x2="430.0" y2="124.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="72.0" x2="430.0" y2="72.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="20.0" x2="430.0" y2="20.0" stroke="#e2dccf"/>
+<path d="M40.0,176.0 L419.6,176.0" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M92.0,280.0 L92.0,20.0" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<text x="419.6" y="191.6" fill="#2a2723" text-anchor="end" font-size="11">x [m]</text>
+<text x="97.2" y="33.0" fill="#2a2723" text-anchor="start" font-size="11">y [m]</text>
+<line x1="352.0" y1="228.0" x2="92.0" y2="176.0" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#pv-b)"/>
+<text x="107.6" y="241.0" fill="#2b3a67" text-anchor="start" font-size="11">C→A = r_A − r_C = (−5, 1)</text>
+<line x1="352.0" y1="228.0" x2="92.0" y2="72.0" stroke="#4f7a4a" stroke-width="2.4" marker-end="url(#pv-g)"/>
+<text x="227.2" y="116.2" fill="#4f7a4a" text-anchor="start" font-size="11">C→B = r_B − r_C = (−5, 3)</text>
+<line x1="352.0" y1="228.0" x2="301.0" y2="217.8" stroke="#a8322a" stroke-width="3.2" marker-end="url(#pv-r)"/>
+<text x="310.4" y="267.0" fill="#a8322a" text-anchor="start" font-size="11">u_CA（長さ 1）</text>
+<circle cx="92.0" cy="176.0" r="3.5" fill="#2a2723"/>
+<text x="42.6" y="168.2" fill="#2a2723" text-anchor="start" font-size="13">A(0, 0)</text>
+<circle cx="92.0" cy="72.0" r="3.5" fill="#2a2723"/>
+<text x="98.2" y="65.8" fill="#2a2723" text-anchor="start" font-size="13">B(0, 2)</text>
+<circle cx="352.0" cy="228.0" r="3.5" fill="#2a2723"/>
+<text x="358.2" y="220.2" fill="#2a2723" text-anchor="start" font-size="13">C(5, −1)</text>
+</g></svg>
+<figcaption>図2.4　教科書 例題2・3 の座標（単位 m）。C→A と C→B は「終点−始点」で作る。赤い短い矢印が長さ1の $\boldsymbol u_{\mathrm{CA}}$（方眼1目盛り＝1 m と同じ縮尺）。</figcaption></figure>
+<div class="ex"><span class="label">例題5〔A｜例題2・3の準備〕2点から単位ベクトルを作る</span>
+<p>点 $\mathrm A(0,0)$、$\mathrm B(0,2)$、$\mathrm C(5,-1)$（単位 m）について、C から A へ向かう単位ベクトル $\boldsymbol u_{\mathrm{CA}}$ と、C から B へ向かう単位ベクトル $\boldsymbol u_{\mathrm{CB}}$ を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① C→A：終点−始点 $=(0-5,\ 0-(-1))=(-5,\ 1)$。長さ $\sqrt{25+1}=\sqrt{26}=5.099$。</p>
+<p>② $\boldsymbol u_{\mathrm{CA}}=(-5,\ 1)/5.099=(-0.9806,\ 0.1961)$。</p>
+<p>③ C→B：$(0-5,\ 2-(-1))=(-5,\ 3)$。長さ $\sqrt{25+9}=\sqrt{34}=5.831$。$\boldsymbol u_{\mathrm{CB}}=(-0.8575,\ 0.5145)$。</p>
+<p>④ 検算：$0.9806^2+0.1961^2=1.000$、$0.8575^2+0.5145^2=1.000$。どちらも左上向き（$(-,+)$）で、図2.4と合う。</p></div>
+<div class="warn"><span class="label">よくある誤解：引き算の順番</span>「C から A へ」は $\boldsymbol r_{\mathrm A}-\boldsymbol r_{\mathrm C}$（終点−始点）。逆に引くと向きが逆の単位ベクトルになり、あとで求める力の符号がすべて反転する。</div>
+
+<h3><span class="no">2.7</span>内積：ある方向の成分を取り出す</h3>
+<p><strong>動機</strong>：斜面に沿った力、部材の方向の力のように、「<strong>ある向きに沿った成分</strong>」を知りたい場面が多い。それを1回の計算で取り出す道具が内積である。</p>
+<div class="def"><span class="label">定義（内積）</span>ベクトル $\boldsymbol{a},\boldsymbol{b}$ のなす角を $\theta$（$0^\circ\le\theta\le180^\circ$）とすると、$$\boldsymbol{a}\cdot\boldsymbol{b}=ab\cos\theta\qquad(2.7)\ \ ［\text{教科書 式2.65}］$$ 結果はベクトルではなく<strong>数（スカラー）</strong>。</div>
+<p><strong>使い方</strong>：$\boldsymbol{u}$ を単位ベクトル（$u=1$）にとると $$\boldsymbol{a}\cdot\boldsymbol{u}=a\cos\theta\qquad(2.8)$$ これは $\boldsymbol a$ の<strong>$\boldsymbol{u}$ 方向成分</strong>である。$\boldsymbol{a}$ の先端から $\boldsymbol{u}$ の直線に垂線を下ろすと、直角三角形の隣の辺の長さが $a\cos\theta$ になるからだ（$\theta\gt90^\circ$ なら負：$\boldsymbol u$ と逆向きの成分）。</p>
+<figure class="slide"><img src="img/slide01/fig2_54a.jpg" alt="教科書 図2.54 ベクトルの内積" loading="lazy" style="width:380px;max-width:48%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><img src="img/slide01/fig2_54d.jpg" alt="教科書 図2.54(d) 単位ベクトルとの内積" loading="lazy" style="width:380px;max-width:48%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><figcaption>教科書 図2.54。(b) 同じ向きなら $ab$、(c) 直交なら 0、(d) 単位ベクトル $\boldsymbol{u}$ との内積は $\boldsymbol{a}$ の $\boldsymbol{u}$ 方向成分。出典：講義資料 第1回 スライド21</figcaption></figure>
+<p>実際の計算は成分で行う。その式を導く。</p>
+<div class="thm"><span class="label">内積の成分の式</span>$$\boldsymbol{a}\cdot\boldsymbol{b}=a_xb_x+a_yb_y\qquad(3\text{次元なら }+a_zb_z)\qquad(2.9)$$</div>
+<div class="proof">
+<p><span class="step">STEP 1（基本ベクトルどうしの内積）</span>　定義 (2.7) に当てはめる。$\boldsymbol{i}$ と $\boldsymbol{i}$ は長さ1・なす角0なので $\boldsymbol{i}\cdot\boldsymbol{i}=1\cdot1\cdot\cos0^\circ=1$。$\boldsymbol{i}$ と $\boldsymbol{j}$ は直交（なす角90°）なので $\boldsymbol{i}\cdot\boldsymbol{j}=1\cdot1\cdot\cos 90^\circ=0$。同様に $\boldsymbol{j}\cdot\boldsymbol{j}=1$、$\boldsymbol j\cdot\boldsymbol i=0$。</p>
+<p><span class="step">STEP 2（分配法則を確かめる）</span>　展開するには $\boldsymbol u\cdot(\boldsymbol b+\boldsymbol c)=\boldsymbol u\cdot\boldsymbol b+\boldsymbol u\cdot\boldsymbol c$ が要る。$\boldsymbol u$ を単位ベクトルとすると、(2.8) より左辺は「$\boldsymbol b+\boldsymbol c$ の $\boldsymbol u$ 方向の影の長さ」。つなぎ（図2.1(a)）で $\boldsymbol b$ の先に $\boldsymbol c$ をつなぐと、影も $\boldsymbol b$ の影の先に $\boldsymbol c$ の影がつながる（符号つきで）ので、影の長さは足し算になる。一般の $\boldsymbol a=a\boldsymbol u$ では両辺を $a$ 倍すればよい。</p>
+<p><span class="step">STEP 3（展開する）</span>　$\boldsymbol{a}=a_x\boldsymbol{i}+a_y\boldsymbol{j}$、$\boldsymbol{b}=b_x\boldsymbol{i}+b_y\boldsymbol{j}$ とおき、STEP 2 の分配法則で項ごとに分ける。$$\boldsymbol{a}\cdot\boldsymbol{b}=a_xb_x(\boldsymbol{i}\cdot\boldsymbol{i})+a_xb_y(\boldsymbol{i}\cdot\boldsymbol{j})+a_yb_x(\boldsymbol{j}\cdot\boldsymbol{i})+a_yb_y(\boldsymbol{j}\cdot\boldsymbol{j})$$</p>
+<p><span class="step">STEP 4（STEP 1 を代入）</span>　$\boldsymbol{i}\cdot\boldsymbol{j}=\boldsymbol{j}\cdot\boldsymbol{i}=0$ の項が消え、残りは $\boldsymbol i\cdot\boldsymbol i=\boldsymbol j\cdot\boldsymbol j=1$ なので (2.9) になる。</p>
+<p class="qed">□</p></div>
+<p><strong>確かめ</strong>：(2.9) で $\boldsymbol b=\boldsymbol i=(1,0)$ とおくと $\boldsymbol a\cdot\boldsymbol i=a_x$。「$x$ 成分」とは「$x$ 軸方向の成分」のことで、(2.8) と矛盾しない。また $\boldsymbol a\cdot\boldsymbol a=a_x^2+a_y^2=a^2$ は (2.2) と一致する（なす角 0 なので $\cos0^\circ=1$）。</p>
+<p><strong>なす角を出す</strong>：(2.7) と (2.9) を等しいとおくと $\cos\theta=\dfrac{\boldsymbol a\cdot\boldsymbol b}{ab}=\dfrac{a_xb_x+a_yb_y}{ab}$。内積が 0 なら $\theta=90^\circ$（直交）。</p>
+<div class="ex"><span class="label">例題6〔A｜自作〕斜め方向の成分</span>
+<p>$\boldsymbol a=(3,\ 4)$ の、単位ベクトル $\boldsymbol u=(1,\ 1)/\sqrt2$ 方向の成分を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① $\boldsymbol u$ が単位ベクトルか確かめる：$(1/\sqrt2)^2+(1/\sqrt2)^2=1$。</p>
+<p>② (2.9)：$\boldsymbol a\cdot\boldsymbol u=3\times\dfrac{1}{\sqrt2}+4\times\dfrac{1}{\sqrt2}=\dfrac{7}{\sqrt2}=\dfrac{7}{1.414}=4.950$。</p>
+<p>③ 確かめ：$a=5$ なので、成分 4.950 は 5 より少し小さい。$\boldsymbol a$（$x$ 軸から 53.1°）と $\boldsymbol u$（45°）のなす角は 8.1° と小さく、$5\cos8.1^\circ=4.950$ と一致する。</p></div>
+<div class="warn"><span class="label">よくある誤解</span>① 内積の結果はベクトルではない（数である）。② (2.8) で成分が取り出せるのは $\boldsymbol u$ が<strong>長さ1</strong>のときだけ。$(1,1)$ のまま内積をとると 7 になり、$\sqrt2$ 倍ずれる。</div>
+
+<h3><span class="no">2.8</span>2元連立一次方程式と行列式</h3>
+<p><strong>動機</strong>：5.3節で、力を任意の2方向に分ける問題は「未知数2つの連立一次方程式」になる。その解き方と、解が決まらない場合の見分け方を用意する。</p>
+<div class="def"><span class="label">問題の形</span>未知数 $x_1,x_2$ について $$a_{11}x_1+a_{12}x_2=b_1\quad\text{(i)},\qquad a_{21}x_1+a_{22}x_2=b_2\quad\text{(ii)}$$ 列ベクトルと行列で書くと $\begin{bmatrix}a_{11}&a_{12}\\a_{21}&a_{22}\end{bmatrix}\begin{bmatrix}x_1\\x_2\end{bmatrix}=\begin{bmatrix}b_1\\b_2\end{bmatrix}$。左の行列の<strong>行列式</strong>を $d=a_{11}a_{22}-a_{12}a_{21}$ と書く。</div>
+<div class="thm"><span class="label">解の公式（消去法の結果）</span>$d\neq0$ のとき、解はただ1つで $$x_1=\frac{a_{22}b_1-a_{12}b_2}{d},\qquad x_2=\frac{-a_{21}b_1+a_{11}b_2}{d}\qquad(2.10)$$</div>
+<div class="proof">
+<p><span class="step">STEP 1（$x_2$ を消す）</span>　$x_2$ の係数をそろえるため、(i) に $a_{22}$、(ii) に $a_{12}$ を掛ける：$a_{11}a_{22}x_1+a_{12}a_{22}x_2=a_{22}b_1$、$a_{21}a_{12}x_1+a_{22}a_{12}x_2=a_{12}b_2$。</p>
+<p><span class="step">STEP 2（引く）</span>　上から下を引くと $x_2$ の項 $a_{12}a_{22}x_2-a_{22}a_{12}x_2=0$ が消え、$(a_{11}a_{22}-a_{12}a_{21})x_1=a_{22}b_1-a_{12}b_2$、つまり $d\,x_1=a_{22}b_1-a_{12}b_2$。</p>
+<p><span class="step">STEP 3（$x_1$ を消す）</span>　同じ考えで、(ii) に $a_{11}$、(i) に $a_{21}$ を掛けて引く：$a_{11}a_{22}x_2-a_{21}a_{12}x_2=a_{11}b_2-a_{21}b_1$、つまり $d\,x_2=-a_{21}b_1+a_{11}b_2$。</p>
+<p><span class="step">STEP 4（$d$ で割る）</span>　$d\neq0$ なら両辺を $d$ で割れて (2.10)。</p>
+<p class="qed">□</p></div>
+<div class="ex"><span class="label">例題7〔A｜自作〕公式と消去法で解く</span>
+<p>$2x_1+x_2=5$、$x_1-x_2=1$ を解け。</p>
+<p><strong>解答</strong></p>
+<p>① 係数：$a_{11}=2,\ a_{12}=1,\ a_{21}=1,\ a_{22}=-1$、$b_1=5,\ b_2=1$。</p>
+<p>② $d=2\times(-1)-1\times1=-3$。</p>
+<p>③ (2.10)：$x_1=\{(-1)(5)-(1)(1)\}/(-3)=-6/(-3)=2$、$x_2=\{-(1)(5)+(2)(1)\}/(-3)=-3/(-3)=1$。</p>
+<p>④ 検算（元の式に代入）：$2\cdot2+1=5$、$2-1=1$。どちらも成り立つ。</p></div>
+<figure><svg viewBox="0 0 640 285" width="640" role="img" aria-label="2直線の交点（解が1つ）と平行な2直線（d = 0）">
+<defs><marker id="ln-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ln-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ln-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ln-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ln-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ln-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="40.0" y1="30.0" x2="40.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="92.0" y1="30.0" x2="92.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="144.0" y1="30.0" x2="144.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="196.0" y1="30.0" x2="196.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="248.0" y1="30.0" x2="248.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="300.0" y1="30.0" x2="300.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="240.0" x2="300.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="213.8" x2="300.0" y2="213.8" stroke="#e2dccf"/>
+<line x1="40.0" y1="187.5" x2="300.0" y2="187.5" stroke="#e2dccf"/>
+<line x1="40.0" y1="161.2" x2="300.0" y2="161.2" stroke="#e2dccf"/>
+<line x1="40.0" y1="135.0" x2="300.0" y2="135.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="108.8" x2="300.0" y2="108.8" stroke="#e2dccf"/>
+<line x1="40.0" y1="82.5" x2="300.0" y2="82.5" stroke="#e2dccf"/>
+<line x1="40.0" y1="56.2" x2="300.0" y2="56.2" stroke="#e2dccf"/>
+<line x1="40.0" y1="30.0" x2="300.0" y2="30.0" stroke="#e2dccf"/>
+<path d="M40.0,187.5 L300.0,187.5" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M92.0,240.0 L92.0,30.0" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M66.0,30.0 L274.0,240.0" fill="none" stroke="#2b3a67" stroke-width="2" opacity="1"/>
+<path d="M40.0,240.0 L300.0,108.8" fill="none" stroke="#4f7a4a" stroke-width="2" opacity="1"/>
+<circle cx="196.0" cy="161.2" r="4.5" fill="#a8322a"/>
+<text x="211.6" y="178.3" fill="#a8322a" text-anchor="start" font-size="12">(2, 1)</text>
+<text x="112.8" y="51.0" fill="#2b3a67" text-anchor="start" font-size="11">2x + y = 5</text>
+<text x="227.2" y="108.8" fill="#4f7a4a" text-anchor="start" font-size="11">x − y = 1</text>
+<text x="40.0" y="259.7" fill="#2a2723" text-anchor="start" font-size="11">(a) d = 2·(−1) − 1·1 = −3 ≠ 0：交点が1つ</text>
+<g transform="translate(320,0)"><defs><marker id="ln2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ln2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ln2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ln2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ln2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ln2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="40.0" y1="30.0" x2="40.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="92.0" y1="30.0" x2="92.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="144.0" y1="30.0" x2="144.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="196.0" y1="30.0" x2="196.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="248.0" y1="30.0" x2="248.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="300.0" y1="30.0" x2="300.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="240.0" x2="300.0" y2="240.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="213.8" x2="300.0" y2="213.8" stroke="#e2dccf"/>
+<line x1="40.0" y1="187.5" x2="300.0" y2="187.5" stroke="#e2dccf"/>
+<line x1="40.0" y1="161.2" x2="300.0" y2="161.2" stroke="#e2dccf"/>
+<line x1="40.0" y1="135.0" x2="300.0" y2="135.0" stroke="#e2dccf"/>
+<line x1="40.0" y1="108.8" x2="300.0" y2="108.8" stroke="#e2dccf"/>
+<line x1="40.0" y1="82.5" x2="300.0" y2="82.5" stroke="#e2dccf"/>
+<line x1="40.0" y1="56.2" x2="300.0" y2="56.2" stroke="#e2dccf"/>
+<line x1="40.0" y1="30.0" x2="300.0" y2="30.0" stroke="#e2dccf"/>
+<path d="M40.0,187.5 L300.0,187.5" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M92.0,240.0 L92.0,30.0" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M40.0,135.0 L248.0,240.0" fill="none" stroke="#2b3a67" stroke-width="2" opacity="1"/>
+<path d="M40.0,121.9 L274.0,240.0" fill="none" stroke="#4f7a4a" stroke-width="2" stroke-dasharray="6 4" opacity="1"/>
+<text x="170.0" y="166.5" fill="#2b3a67" text-anchor="start" font-size="11">x + y = 1</text>
+<text x="45.2" y="93.0" fill="#4f7a4a" text-anchor="start" font-size="11">2x + 2y = 3</text>
+<text x="40.0" y="259.7" fill="#2a2723" text-anchor="start" font-size="11">(b) d = 1·2 − 1·2 = 0：平行で交わらない</text>
+</g></g>
+</g></svg>
+<figcaption>図2.5　(a) 2つの式は平面上の2直線で、解は交点。(b) $d=0$ のときは2直線が平行で、交わらない（解なし）か、重なる（解が無数）。</figcaption></figure>
+<p><strong>$d=0$ のとき</strong>：$d=a_{11}a_{22}-a_{12}a_{21}=0$ は、2本の式の左辺の係数が比例している（2直線の傾きが同じ）ことを表す。たとえば $x_1+x_2=1$ と $2x_1+2x_2=3$ は平行で解がなく、$x_1+x_2=1$ と $2x_1+2x_2=2$ は同じ直線で解が無数にある。どちらにしても「ただ1つ」には決まらない。</p>
+<div class="why"><span class="label">直感：行列式 $d$ は平行四辺形の面積</span>行列の2つの列 $(a_{11},a_{21})$、$(a_{12},a_{22})$ を2辺とする平行四辺形の（符号つきの）面積が $d$ である（例：列が $(1,0)$ と $(0,1)$ なら正方形で $d=1$）。2つの列が同じ直線上にあると平行四辺形がつぶれて面積 0。5.4節で、この見方が「分解できない向きの組」の説明になる。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>力はベクトルである</h2>
+<p>講義資料が「今日のポイント」として挙げるのは一文、<strong>「力はベクトルである」</strong>。この章では、この一文が何を主張しているのかを、2章の道具を使って正確に述べる。</p>
+
+<h3><span class="no">3.1</span>力の三要素：大きさ・向き・作用点</h3>
+<p>力は矢印で表し、矢印の長さが大きさ、矢印の向きが力の向きを表す（教科書 図2.1）。しかし力は「大きさと向き」だけでは決まらない。本を両側から押すとき、同じ高さで押せば本は止まったままだが、押す高さを上下にずらすと本は回り出す（教科書 図2.2）。力の<strong>作用する位置</strong>も効いている。</p>
+<figure class="slide"><img src="img/slide01/fig2_1.jpg" alt="教科書 図2.1 力ベクトル" loading="lazy" style="width:300px;max-width:48%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><img src="img/slide01/fig2_2.jpg" alt="教科書 図2.2 力の作用する位置による運動の違い" loading="lazy" style="width:300px;max-width:48%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><figcaption>左：教科書 図2.1（力ベクトル）、右：図2.2（押す位置で本の回り方が変わる）。出典：講義資料 第1回 スライド14</figcaption></figure>
+<div class="def"><span class="label">定義（力の三要素・作用点・作用線）</span>力は<strong>大きさ・向き・作用点</strong>の3つで決まる（力の三要素）。力が働く点を<strong>作用点</strong>、作用点を通って力の向きにのばした直線を<strong>作用線</strong>という。</div>
+<figure>
+<svg viewBox="0 0 460 200" width="460" role="img" aria-label="作用点と作用線の図">
+<defs><marker id="f01a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#a8322a"/></marker></defs>
+<rect x="250" y="40" width="110" height="140" fill="#efebe2" stroke="#2a2723"/>
+<line x1="40" y1="190" x2="440" y2="10" stroke="#6b645a" stroke-dasharray="6 5"/>
+<line x1="140" y1="145" x2="246" y2="97" stroke="#a8322a" stroke-width="4" marker-end="url(#f01a)"/>
+<circle cx="250" cy="96" r="5" fill="#2a2723"/>
+<text x="258" y="88" font-size="14" fill="#2a2723">作用点</text>
+<text x="40" y="170" font-size="14" fill="#6b645a">作用線</text>
+<text x="160" y="150" font-size="14" fill="#a8322a">力 F</text>
+</svg>
+<figcaption>図3.1　作用点（力が働く点）と作用線（作用点を通り、力の向きに引いた直線）。</figcaption>
+</figure>
+<div class="box"><span class="label">補足：作用線に沿ってずらしてよい（剛体の場合）</span>変形しない物体（剛体）なら、力を作用線の上でずらしても、物体の動き方は変わらない（力の伝達性）。逆に、作用線から外れた位置に力をずらすと「回す働き」が変わる。この回す働きが次回の<strong>モーメント</strong>である。この回は、すべての力が1点（結び目など）に働く場合だけを扱うので、作用点の違いはまだ問題にならない。</div>
+
+<h3><span class="no">3.2</span>力を数で書く</h3>
+<p>2章の道具を使うと、力は次のどちらかの形で書ける。</p>
+<ul>
+<li><strong>成分で</strong>：$\boldsymbol F=(F_x,\ F_y)=F_x\boldsymbol i+F_y\boldsymbol j$（単位 N）。角度で与えられたら (2.3) で直す。</li>
+<li><strong>大きさ×単位ベクトルで</strong>：$\boldsymbol F=F\boldsymbol u$。向き $\boldsymbol u$ は形（ロープの方向、2点の座標）から分かり、大きさ $F$ だけが未知、という場面で使う。</li>
+</ul>
+<p>どちらの形でも、作用点は別に覚えておく（この回は全部同じ1点なので省略できる）。</p>
+
+<h3><span class="no">3.3</span>なぜ力をベクトルとして足してよいのか</h3>
+<p><strong>動機</strong>：1.4節の $\sum\boldsymbol F_i=\boldsymbol 0$ では、力を2.2節のルール（平行四辺形）で足した。しかし「力が矢印で描ける」ことと「矢印のルールで足してよい」ことは別の話である。矢印で描けても、足し方まで矢印のルールに従う保証は、数学からは出てこない。</p>
+<div class="thm"><span class="label">力の平行四辺形の法則（実験事実）</span>1点に同時に働く2つの力 $\boldsymbol F_1,\boldsymbol F_2$ は、それらを2辺とする平行四辺形の対角線の力 $\boldsymbol R=\boldsymbol F_1+\boldsymbol F_2$ ただ1つと、同じ作用をもつ。</div>
+<p><strong>実験による確かめ</strong>：小さな輪に3本の糸を結び、それぞれをばねばかりで引いて、輪が止まった状態にする。3つの目盛り（大きさ）と糸の向きを記録し、2本の力を縮尺どおりの矢印で描いて平行四辺形を作ると、その対角線は3本目の力と<strong>大きさが等しく、向きが逆</strong>になる（測定の誤差の範囲で）。つまり「2本の力のベクトル和」が「3本目の力を打ち消す1本の力」と同じ働きをしている。高校物理の「力の合成」の実験と同じものである。ニュートンも『プリンキピア』で、運動の法則のすぐ後に、この平行四辺形の規則を置いている。</p>
+<p>この実験事実があるから、2章のベクトルの計算（成分ごとの足し算、内積）を、力にそのまま使ってよい。</p>
+<div class="warn"><span class="label">よくある誤解</span>① <strong>大きさを足せば合力</strong>：足してよいのはベクトル（矢印）であって、大きさ（数）ではない（4.2節で数値例）。② <strong>どんな2力でも1点に足してよい</strong>：この法則は1点に働く力（作用線が1点で交わる力）についてのもの。作用点が違う力を剛体に加えると、回す働きまで含めて考える必要がある（第2回）。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/a2_windsock.jpg" alt="青空を背景に、赤い吹き流しが風を受けて横に伸びている" loading="lazy"></div>
+<p class="cap">吹き流しは、見えない風の向きを筒の向きで、強さを膨らみ方で示している。</p>
+<p class="cr">Mrmanssss／<a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:United_States_Airport_Windsock_at_66G_Airport,_Frankenmuth,_MI.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/b2_portolan.jpg" alt="14世紀の地中海の海図。羅針の点から放射状の線が図面全体に引かれている" loading="lazy"></div>
+<p class="cap">十四世紀の海図では、羅針の一点から同じ向きの線が地図の果てまで引かれ、船はその一本に乗って進んだ。</p>
+<p class="cr">作者不詳（ジェノヴァ製か）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Mediterranean_chart_fourteenth_century2.jpg">Wikimedia Commons</a>（ポルトラーノ海図、1320〜50年頃）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>力の合成</h2>
+
+<h3><span class="no">4.1</span>定義と、成分ごとの和</h3>
+<div class="def"><span class="label">定義（力の合成）</span>複数の力を、<strong>同じ</strong>作用をもつ1つの力にまとめる操作を<strong>力の合成</strong>（composition of forces）という。$$\boldsymbol{R}=\boldsymbol{F}_1+\boldsymbol{F}_2+\cdots+\boldsymbol{F}_n=\sum_{i=1}^{n}\boldsymbol{F}_i\qquad(4.1)\ \ ［\text{教科書 式2.12}］$$ $\boldsymbol{R}$ を<strong>合力</strong>（resultant force）という。$\boldsymbol{F}_1,\dots,\boldsymbol{F}_n$ による作用＝$\boldsymbol{R}$ による作用。</div>
+<p>ここでは、すべての力が1点に働く場合を考える。3.3節の実験事実により、合力は2.2節のベクトルの和で計算してよい。</p>
+<div class="thm"><span class="label">合力の成分</span>$$R_x=\sum_{i=1}^{n}F_{ix},\qquad R_y=\sum_{i=1}^{n}F_{iy}\qquad(4.2)$$</div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　各力を基本ベクトルで書く（(2.1)）：$\boldsymbol F_i=F_{ix}\boldsymbol i+F_{iy}\boldsymbol j$。</p>
+<p><span class="step">STEP 2</span>　(4.1) に代入し、和の順番を入れかえて $\boldsymbol i$ の項と $\boldsymbol j$ の項をまとめる（ベクトルの和は順番によらない、2.2節）：$\boldsymbol R=(\sum_iF_{ix})\boldsymbol i+(\sum_iF_{iy})\boldsymbol j$。</p>
+<p><span class="step">STEP 3</span>　$\boldsymbol i$ の係数が $R_x$、$\boldsymbol j$ の係数が $R_y$ なので (4.2)。</p>
+<p class="qed">□</p></div>
+<figure>
+<svg viewBox="0 0 350 210" width="350" role="img" aria-label="平行四辺形による力の合成">
+<defs><marker id="f01d" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#2b3a67"/></marker>
+<marker id="f01e" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#a8322a"/></marker></defs>
+<line x1="60" y1="180" x2="250" y2="180" stroke="#2b3a67" stroke-width="3" marker-end="url(#f01d)"/>
+<line x1="60" y1="180" x2="140" y2="50" stroke="#2b3a67" stroke-width="3" marker-end="url(#f01d)"/>
+<line x1="250" y1="180" x2="330" y2="50" stroke="#6b645a" stroke-dasharray="4 4"/>
+<line x1="140" y1="50" x2="330" y2="50" stroke="#6b645a" stroke-dasharray="4 4"/>
+<line x1="60" y1="180" x2="322" y2="54" stroke="#a8322a" stroke-width="3" marker-end="url(#f01e)"/>
+<circle cx="60" cy="180" r="5" fill="#2a2723"/>
+<text x="150" y="200" font-size="15" fill="#2b3a67">F1</text>
+<text x="70" y="110" font-size="15" fill="#2b3a67">F2</text>
+<text x="215" y="150" font-size="15" fill="#a8322a">R = F1 + F2</text>
+</svg>
+<figcaption>図4.1　2力の合成。$\boldsymbol{F}_1$ と $\boldsymbol{F}_2$ を2辺とする平行四辺形の対角線が合力 $\boldsymbol{R}$。</figcaption>
+</figure>
+
+<h3><span class="no">4.2</span>合力の大きさと向き</h3>
+<p>成分 $(R_x,R_y)$ が出たら、大きさは (2.2) で $R=\sqrt{R_x^2+R_y^2}$、向きは 2.4節の規則（$R_x\lt0$ なら $\tan^{-1}$ に 180° を足す）で出す。</p>
+<div class="ex"><span class="label">例題8〔A｜自作〕大きさは足し算にならない</span>
+<p>大きさ 100 N の力 $\boldsymbol{F}_1$（$x$ 軸方向）と、大きさ 100 N の力 $\boldsymbol{F}_2$（$x$ 軸から 60°）が1点に働く。合力の大きさと向きを求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 成分に直す（(2.3)）：$\boldsymbol{F}_1=(100,\ 0)$、$\boldsymbol{F}_2=(100\cos60^\circ,\ 100\sin60^\circ)=(50.0,\ 86.60)\ \mathrm{N}$。</p>
+<p>② 成分ごとに足す（(4.2)）：$\boldsymbol{R}=(150.0,\ 86.60)\ \mathrm{N}$。</p>
+<p>③ 大きさ：$R=\sqrt{150^2+86.60^2}=\sqrt{22500+7500}=\sqrt{30000}=173.2\ \mathrm{N}$。</p>
+<p>④ 向き：$R_x\gt0$ なので $\tan^{-1}(86.60/150.0)=30.0^\circ$（2力のちょうど真ん中。同じ大きさの2力なので平行四辺形がひし形になり、対角線が角を2等分するから）。</p>
+<p>⑤ $F_1+F_2=200\ \mathrm{N}$ だが $R=173\ \mathrm{N}$。大きさの和と合力の大きさは等しくない。</p></div>
+<figure><svg viewBox="0 0 560 280" width="560" role="img" aria-label="100 N の2力（60°）と合力 173.2 N を縮尺どおりに描いた図">
+<defs><marker id="cp-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="cp-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="cp-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="cp-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="cp-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="cp-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="80.0" y1="30.0" x2="80.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="130.0" y1="30.0" x2="130.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="180.0" y1="30.0" x2="180.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="230.0" y1="30.0" x2="230.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="280.0" y1="30.0" x2="280.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="330.0" y1="30.0" x2="330.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="380.0" y1="30.0" x2="380.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="60.0" y1="230.0" x2="420.0" y2="230.0" stroke="#e2dccf"/>
+<line x1="60.0" y1="180.0" x2="420.0" y2="180.0" stroke="#e2dccf"/>
+<line x1="60.0" y1="130.0" x2="420.0" y2="130.0" stroke="#e2dccf"/>
+<line x1="60.0" y1="80.0" x2="420.0" y2="80.0" stroke="#e2dccf"/>
+<line x1="60.0" y1="30.0" x2="420.0" y2="30.0" stroke="#e2dccf"/>
+<text x="80.0" y="244.0" fill="#968d80" text-anchor="middle" font-size="10">0</text>
+<text x="180.0" y="244.0" fill="#968d80" text-anchor="middle" font-size="10">50</text>
+<text x="280.0" y="244.0" fill="#968d80" text-anchor="middle" font-size="10">100</text>
+<text x="380.0" y="244.0" fill="#968d80" text-anchor="middle" font-size="10">150</text>
+<text x="74.0" y="132.0" fill="#968d80" text-anchor="end" font-size="10">50</text>
+<text x="74.0" y="32.0" fill="#968d80" text-anchor="end" font-size="10">100</text>
+<text x="420.0" y="244.0" fill="#968d80" text-anchor="end" font-size="10">[N]</text>
+<path d="M280.0,230.0 L380.0,56.8" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="4 4" opacity="1"/>
+<path d="M180.0,56.8 L380.0,56.8" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="4 4" opacity="1"/>
+<line x1="80.0" y1="230.0" x2="280.0" y2="230.0" stroke="#2b3a67" stroke-width="2.2" marker-end="url(#cp-b)"/>
+<line x1="80.0" y1="230.0" x2="180.0" y2="56.8" stroke="#4f7a4a" stroke-width="2.2" marker-end="url(#cp-g)"/>
+<line x1="80.0" y1="230.0" x2="380.0" y2="56.8" stroke="#a8322a" stroke-width="2.8" marker-end="url(#cp-r)"/>
+<path d="M120.0,230.0 L119.9,227.8 L119.8,225.6 L119.5,223.4 L119.0,221.3 L118.5,219.1 L117.8,217.0 L117.1,214.9 L116.2,212.9 L115.2,211.0 L114.1,209.1 L112.9,207.2 L111.6,205.4 L110.2,203.7 L108.7,202.1 L107.1,200.6 L105.4,199.1 L103.7,197.8 L101.9,196.5 L100.0,195.4" fill="none" stroke="#2a2723"/>
+<text x="124.0" y="214.0" fill="#2a2723" text-anchor="start" font-size="11">60°</text>
+<path d="M150.0,230.0 L149.9,225.9 L149.5,221.9 L148.9,217.8 L148.1,213.9 L147.1,209.9 L145.8,206.1 L144.3,202.3 L142.6,198.6 L140.6,195.0" fill="none" stroke="#a8322a"/>
+<text x="164.0" y="216.0" fill="#a8322a" text-anchor="start" font-size="11">30°</text>
+<text x="190.0" y="218.0" fill="#2b3a67" text-anchor="start" font-size="11">F₁ = 100 N</text>
+<text x="100.0" y="90.0" fill="#4f7a4a" text-anchor="start" font-size="11">F₂ = 100 N</text>
+<text x="320.0" y="46.0" fill="#a8322a" text-anchor="start" font-size="12">R = 173.2 N</text>
+<circle cx="80.0" cy="230.0" r="3.5" fill="#2a2723"/>
+</g></svg>
+<figcaption>図4.2　例題8を縮尺どおりに描いた図（計算した成分の値で作図）。赤い対角線の長さ 173.2 N は、2本の青・緑の長さの和 200 N より短い。</figcaption></figure>
+<div class="warn"><span class="label">よくある誤解：大きさは足し算にならない</span>$$F_1+F_2+\cdots+F_n\ \neq\ R$$ 足してよいのは<strong>ベクトル</strong>（矢印）であって、<strong>大きさ</strong>（数）ではない。等号が成り立つのは、すべての力の向きがそろっているときだけである（次の 4.3節で確かめる）。</div>
+<div class="why"><span class="label">🙋 質問から追加：角度と大きさで与えられた2力の合力の向き（角度）はどう求める？</span>
+<p><strong>問い</strong>：$x$ 軸から20°の向きの32 Nの力 $\boldsymbol{F}_1$ と、190°の向きの64 Nの力 $\boldsymbol{F}_2$。合力 $\boldsymbol{R}$ の向き（角度）は？</p>
+<p><strong>方針</strong>：角度どうしを足したり平均したりはできない（大きさを足せないのと同じ理由）。<strong>成分に直して足し、最後に角度に戻す</strong>。</p>
+<p><span class="step">STEP 1（成分に直す）</span>　$x$ 軸から角 $\theta$ の向きで大きさ $F$ の力は、直角三角形の cos・sin の定義から $(F\cos\theta,\ F\sin\theta)$。§2.5 の方向余弦と同じ考え方で、$\theta$ が90°を超えても cos・sin の符号が向きを自動で表してくれる。</p>
+$$\boldsymbol{F}_1=(32\cos20^\circ,\ 32\sin20^\circ)=(30.07,\ 10.94)\ \mathrm{N}$$
+$$\boldsymbol{F}_2=(64\cos190^\circ,\ 64\sin190^\circ)=(64\times(-0.9848),\ 64\times(-0.1736))=(-63.03,\ -11.11)\ \mathrm{N}$$
+<p><span class="step">STEP 2（成分ごとに足す）</span>　式(2.12)のとおり。</p>
+$$\boldsymbol{R}=(30.07-63.03,\ 10.94-11.11)=(-32.96,\ -0.17)\ \mathrm{N}$$
+<p><span class="step">STEP 3（大きさ）</span>　三平方の定理で $R=\sqrt{32.96^2+0.17^2}=33.0\ \mathrm{N}$。</p>
+<p><span class="step">STEP 4（角度に戻す：ここが落とし穴）</span>　$\tan\varphi=R_y/R_x=(-0.17)/(-32.96)=0.00512$ なので、電卓で $\tan^{-1}$ を押すと $0.29^\circ$ が出る。しかしこれは<strong>間違い</strong>。$\tan^{-1}$ は $-90^\circ$〜$90^\circ$ の角しか返さないので、$R_x$ が負（左向き）のときは<strong>180°を足す</strong>必要がある。$R_x\lt0,\ R_y\lt0$ なので $\boldsymbol{R}$ は第3象限にあり、</p>
+$$\varphi=180^\circ+0.29^\circ=180.3^\circ$$
+<p><strong>答え</strong>：合力は約33.0 N、向きは $x$ 軸から約180.3°（ほぼ真左、わずかに下向き）。</p>
+<p><strong>検算（感覚で確かめる）</strong>：20°と190°は170°違い、ほぼ逆向き。逆向きの力は引き算に近いので、大きさは $64-32=32$ N前後になり、向きは大きいほうの力（190°）に近くなる。答えの33.0 N・180.3°はこの見当と合う。</p>
+<p class="note">象限の判定：$R_x\gt0$ なら $\tan^{-1}$ の値のまま、$R_x\lt0$ なら $+180^\circ$。関数電卓やプログラムの <code>atan2(Ry, Rx)</code> を使えば、象限まで含めて正しい角度が一度に出る（この例では $-179.7^\circ$、つまり $180.3^\circ$ と同じ向き）。<br>
+もし知りたいのが「2つのベクトルのなす角」なら、それは $190^\circ-20^\circ=170^\circ$。成分から求めるなら内積(2.65)を使い、$\cos\theta=\dfrac{\boldsymbol{F}_1\cdot\boldsymbol{F}_2}{F_1F_2}$ から出せる。</p>
+</div>
+<p class="meta">※上の🙋ボックスの中の「式(2.12)」「内積(2.65)」は教科書の式番号（本教材の (4.1)・(2.7)）。</p>
+
+<h3><span class="no">4.3</span>2力の合力の大きさを内積で導く（確かめ）</h3>
+<p>2力のなす角 $\varphi$ が分かっているとき、合力の大きさは成分を経由せずに出せる。内積 (2.7) を使って導き、特別な場合で既知の結果に戻ることを確かめる。</p>
+<div class="thm"><span class="label">2力の合力の大きさ（余弦定理の形）</span>$$R^2=F_1^2+F_2^2+2F_1F_2\cos\varphi\qquad(4.3)$$</div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　大きさの2乗は自分自身との内積：$R^2=\boldsymbol R\cdot\boldsymbol R$（2.7節の確かめ）。$\boldsymbol R=\boldsymbol F_1+\boldsymbol F_2$ を入れる。</p>
+<p><span class="step">STEP 2</span>　分配法則（2.7節 STEP 2）で展開する：$(\boldsymbol F_1+\boldsymbol F_2)\cdot(\boldsymbol F_1+\boldsymbol F_2)=\boldsymbol F_1\cdot\boldsymbol F_1+\boldsymbol F_1\cdot\boldsymbol F_2+\boldsymbol F_2\cdot\boldsymbol F_1+\boldsymbol F_2\cdot\boldsymbol F_2$。</p>
+<p><span class="step">STEP 3</span>　$\boldsymbol F_1\cdot\boldsymbol F_1=F_1^2$、$\boldsymbol F_2\cdot\boldsymbol F_2=F_2^2$、$\boldsymbol F_1\cdot\boldsymbol F_2=\boldsymbol F_2\cdot\boldsymbol F_1=F_1F_2\cos\varphi$（定義 (2.7)）を入れると (4.3)。</p>
+<p class="qed">□</p></div>
+<p><strong>確かめ</strong>：</p>
+<ul>
+<li>例題8（$F_1=F_2=100$、$\varphi=60^\circ$）：$R^2=10000+10000+2\times10000\times0.5=30000$、$R=173.2\ \mathrm N$。成分で出した値と一致。</li>
+<li>同じ向き（$\varphi=0^\circ$）：$R^2=(F_1+F_2)^2$、$R=F_1+F_2$。大きさが足し算になるのはこのときだけ。</li>
+<li>逆向き（$\varphi=180^\circ$）：$R=|F_1-F_2|$。直交（$\varphi=90^\circ$）：$R=\sqrt{F_1^2+F_2^2}$（三平方の定理）。</li>
+</ul>
+<p class="note">高校で習う余弦定理 $c^2=a^2+b^2-2ab\cos C$ と符号が違うのは、$C$ が三角形の内角（$=180^\circ-\varphi$）だからである（$\cos(180^\circ-\varphi)=-\cos\varphi$）。</p>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>力の分解</h2>
+
+<h3><span class="no">5.1</span>定義と、一つに決まらないこと</h3>
+<div class="def"><span class="label">定義（力の分解）</span>1つの力を、同じ作用をもつ<strong>複数</strong>の力に分ける操作を<strong>力の分解</strong>（resolution of a force）という。合成の<strong>逆</strong>の操作である。分けた力を<strong>分力</strong>（component of force）という。</div>
+<ul>
+<li>力の合成 ⇒ 答えは<strong>一意に定まる</strong>（(4.1) の和は1つ）。</li>
+<li>力の分解 ⇒ 何の条件もなければ<strong>任意</strong>（いくらでも分け方がある）。</li>
+</ul>
+<p>理由：$\boldsymbol F=\boldsymbol F_1+\boldsymbol F_2$ を満たす組は、$\boldsymbol F_1$ を好きに選んで $\boldsymbol F_2=\boldsymbol F-\boldsymbol F_1$ とすれば必ず作れる。未知数（2次元で $\boldsymbol F_1,\boldsymbol F_2$ の成分4つ）に対して、式（成分ごとの等式）が2本しかないからだ。分解を1つに決めるには、未知数を2つに減らす条件が要る。典型的なのは<strong>2つの分力の向き（作用線）を指定する</strong>こと（図2.19）で、未知数が2つの大きさだけになる。向きは「ロープの方向」「部材の方向」のように構造から決まることが多い。</p>
+<figure class="slide"><img src="img/slide01/fig2_18_19.jpg" alt="教科書 図2.18 図2.19 力の分解" loading="lazy" style="width:520px;max-width:98%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><figcaption>左：教科書 図2.18（一方の分力が決まっている場合）、右：図2.19（二つの分力の作用線が決まっている場合）。出典：講義資料 第1回 スライド23</figcaption></figure>
+
+<h3><span class="no">5.2</span>直交する2方向への分解：内積で一発</h3>
+<p><strong>動機</strong>：いちばんよく使うのは、互いに直交する2方向（$x$ と $y$、斜面に沿う向きと垂直な向き）への分解である。この場合は連立方程式を解かなくても、内積だけで分力が出る。</p>
+<div class="thm"><span class="label">直交分解</span>$\boldsymbol u$ と $\boldsymbol n$ が直交する単位ベクトルなら $$\boldsymbol F=(\boldsymbol F\cdot\boldsymbol u)\,\boldsymbol u+(\boldsymbol F\cdot\boldsymbol n)\,\boldsymbol n\qquad(5.1)$$</div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　向きを指定したので、分力は「数×単位ベクトル」：$\boldsymbol F=F_u\boldsymbol u+F_n\boldsymbol n$ と書け、未知数は $F_u,F_n$ の2つ。</p>
+<p><span class="step">STEP 2</span>　$F_n$ の項を消すため、両辺と $\boldsymbol u$ の内積をとる：$\boldsymbol F\cdot\boldsymbol u=F_u(\boldsymbol u\cdot\boldsymbol u)+F_n(\boldsymbol n\cdot\boldsymbol u)$。</p>
+<p><span class="step">STEP 3</span>　$\boldsymbol u\cdot\boldsymbol u=1$（長さ1）、$\boldsymbol n\cdot\boldsymbol u=0$（直交）なので $F_u=\boldsymbol F\cdot\boldsymbol u$。同様に $\boldsymbol n$ との内積で $F_n=\boldsymbol F\cdot\boldsymbol n$。</p>
+<p class="qed">□</p></div>
+<p><strong>確かめ</strong>：$\boldsymbol u=\boldsymbol i$、$\boldsymbol n=\boldsymbol j$ とすると $F_u=F_x$、$F_n=F_y$ で、(2.1) に戻る。</p>
+<div class="ex"><span class="label">例題9〔B｜自作〕斜面上の重さの分解</span>
+<p>傾き 30° のなめらかな斜面に、質量 10.0 kg の物体が置かれている。物体の重さを、斜面に沿って下る向きの成分と、斜面に垂直な向きの成分に分けよ。</p>
+<figure><svg viewBox="0 0 520 300" width="520" role="img" aria-label="斜面上の物体の重さを、斜面に沿う向きと垂直な向きに分解した図">
+<defs><marker id="ic-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ic-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ic-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ic-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ic-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ic-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M80.0,210.0 L374.4,210.0 L80.0,40.0 z" fill="#efebe2" stroke="#2a2723"/>
+<path d="M180.5,98.0 L222.0,122.0 L246.0,80.4 L204.5,56.4 z" fill="#d9d2c3" stroke="#2a2723"/>
+<line x1="213.2" y1="89.2" x2="213.2" y2="236.4" stroke="#a8322a" stroke-width="2.6" marker-end="url(#ic-r)"/>
+<line x1="213.2" y1="89.2" x2="277.0" y2="126.0" stroke="#2b3a67" stroke-width="2.2" marker-end="url(#ic-b)"/>
+<line x1="213.2" y1="89.2" x2="149.5" y2="199.6" stroke="#4f7a4a" stroke-width="2.2" marker-end="url(#ic-g)"/>
+<path d="M277.0,126.0 L213.2,236.4" fill="none" stroke="#968d80" stroke-width="1.1" stroke-dasharray="4 4" opacity="1"/>
+<path d="M149.5,199.6 L213.2,236.4" fill="none" stroke="#968d80" stroke-width="1.1" stroke-dasharray="4 4" opacity="1"/>
+<circle cx="213.2" cy="89.2" r="3.5" fill="#2a2723"/>
+<text x="219.2" y="248.4" fill="#a8322a" text-anchor="start" font-size="11">W = 98.1 N</text>
+<text x="285.0" y="118.0" fill="#2b3a67" text-anchor="start" font-size="11">斜面に沿う成分 49.1 N</text>
+<text x="141.5" y="219.6" fill="#4f7a4a" text-anchor="end" font-size="11">垂直な成分 85.0 N</text>
+<path d="M334.6,187.0 L333.3,189.4 L332.2,191.8 L331.2,194.3 L330.4,196.8 L329.7,199.4 L329.1,202.0 L328.8,204.7 L328.5,207.3 L328.4,210.0" fill="none" stroke="#2a2723"/>
+<text x="282.4" y="202.0" fill="#2a2723" text-anchor="start" font-size="11">30°</text>
+</g></svg>
+<figcaption>図5.1　重さ $W$（赤）を、斜面に沿う向き（青）と斜面に垂直な向き（緑）に分解（計算した値の縮尺で作図）。</figcaption></figure>
+<p><strong>解答</strong></p>
+<p>① 物体に働く重さ $W=10.0\times9.81=98.1\ \mathrm N$（下向き）を分解の対象とする。</p>
+<p>② 座標軸：$x$ 右、$y$ 上。斜面は右下がりで、水平と 30°。</p>
+<p>③ 向きの単位ベクトル：斜面に沿って下る向き $\boldsymbol u=(\cos30^\circ,\ -\sin30^\circ)=(0.8660,\ -0.5000)$、斜面に垂直で斜面に押しつける向き $\boldsymbol n=(-\sin30^\circ,\ -\cos30^\circ)=(-0.5000,\ -0.8660)$。直交の確かめ：$\boldsymbol u\cdot\boldsymbol n=-0.4330+0.4330=0$。重さは $\boldsymbol W=(0,\ -98.1)\ \mathrm N$。</p>
+<p>④ (5.1)：$W_u=\boldsymbol W\cdot\boldsymbol u=0\times0.8660+(-98.1)(-0.5000)=49.05\ \mathrm N$、$W_n=\boldsymbol W\cdot\boldsymbol n=(-98.1)(-0.8660)=84.96\ \mathrm N$。</p>
+<p>⑤ 答え：斜面に沿う成分 $W\sin30^\circ=49.1\ \mathrm N$、垂直な成分 $W\cos30^\circ=85.0\ \mathrm N$。</p>
+<p>⑥ 確かめ：$\sqrt{49.05^2+84.96^2}=98.1$ で元の重さに戻る。傾き 0° なら沿う成分 0・垂直成分 $W$、90°（鉛直な壁）なら沿う成分 $W$ になり、どちらも直感と合う。</p></div>
+
+<h3><span class="no">5.3</span>任意の2方向への分解：連立一次方程式を解く</h3>
+<p><strong>動機</strong>：ロープや部材の向きは、たいてい直交していない。そのときは (5.1) が使えない（STEP 3 で $\boldsymbol n\cdot\boldsymbol u=0$ を使ったため）。一般の場合を、2.8節の連立一次方程式として解く。</p>
+<p>力 $\boldsymbol{F}=(F_x,F_y)$ を、向きを表す単位ベクトル $\boldsymbol{u}_1,\boldsymbol{u}_2$ の方向に分解したい。</p>
+<figure class="slide"><img src="img/slide01/fig2_21.jpg" alt="教科書 図2.21 単位ベクトルを用いた力の分解" loading="lazy" style="width:380px;max-width:98%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><figcaption>教科書 図2.21。$\boldsymbol{u}_1,\boldsymbol{u}_2$ の作用線（破線）に沿って $\boldsymbol{F}$ を分ける。出典：講義資料 第1回 スライド24</figcaption></figure>
+<div class="proof">
+<p><span class="step">STEP 1（未知数を「大きさ」だけにする）</span>　分力の向きは分かっているので、分からないのは大きさだけ。そこで分力を「大きさ×単位ベクトル」と書く（3.2節）。$$\boldsymbol{F}_1=F_1\boldsymbol{u}_1,\qquad \boldsymbol{F}_2=F_2\boldsymbol{u}_2$$ 未知数は数 $F_1,F_2$ の2つだけになる。</p>
+<p><span class="step">STEP 2（分解の条件を式にする）</span>　分力を合成すると元の力に戻る：$\boldsymbol{F}_1+\boldsymbol{F}_2=\boldsymbol{F}$。STEP 1 を代入して $$F_1\boldsymbol{u}_1+F_2\boldsymbol{u}_2=\boldsymbol{F}$$</p>
+<p><span class="step">STEP 3（成分に分ける）</span>　ベクトルの等式は「$x$ 成分どうし、$y$ 成分どうしが等しい」という2本の式と同じ（(2.1) で $\boldsymbol i,\boldsymbol j$ の係数を比べる）。列ベクトルで書くと $$F_1\begin{bmatrix}u_{1x}\\u_{1y}\end{bmatrix}+F_2\begin{bmatrix}u_{2x}\\u_{2y}\end{bmatrix}=\begin{bmatrix}u_{1x}&u_{2x}\\u_{1y}&u_{2y}\end{bmatrix}\begin{bmatrix}F_1\\F_2\end{bmatrix}=\begin{bmatrix}F_x\\F_y\end{bmatrix}$$ つまり $$u_{1x}F_1+u_{2x}F_2=F_x\quad\text{(i)},\qquad u_{1y}F_1+u_{2y}F_2=F_y\quad\text{(ii)}$$ これは $F_1,F_2$ についての<strong>連立一次方程式</strong>である。行列の<strong>列</strong>が $\boldsymbol u_1,\boldsymbol u_2$ になっていることに注意。</p>
+<p><span class="step">STEP 4（2.8節の公式に当てはめる）</span>　(2.10) で $x_1=F_1,\ x_2=F_2$、$a_{11}=u_{1x},\ a_{12}=u_{2x},\ a_{21}=u_{1y},\ a_{22}=u_{2y}$、$b_1=F_x,\ b_2=F_y$ とおく。行列式は $d=a_{11}a_{22}-a_{12}a_{21}=u_{1x}u_{2y}-u_{2x}u_{1y}$。</p>
+<p><span class="step">STEP 5（$F_1$）</span>　$F_1=(a_{22}b_1-a_{12}b_2)/d=(u_{2y}F_x-u_{2x}F_y)/d$。（消去法で直接やるなら：(i) に $u_{2y}$、(ii) に $u_{2x}$ を掛けて引くと $F_2$ の項 $u_{2x}u_{2y}F_2-u_{2y}u_{2x}F_2=0$ が消え、$dF_1=u_{2y}F_x-u_{2x}F_y$。）</p>
+<p><span class="step">STEP 6（$F_2$）</span>　$F_2=(-a_{21}b_1+a_{11}b_2)/d=(-u_{1y}F_x+u_{1x}F_y)/d$。（消去法なら：(ii) に $u_{1x}$、(i) に $u_{1y}$ を掛けて引く。）</p>
+<p class="qed">□</p></div>
+<div class="thm"><span class="label">力の分解の公式</span>$d\neq0$ のとき $$F_1=\frac{u_{2y}F_x-u_{2x}F_y}{d},\qquad F_2=\frac{-u_{1y}F_x+u_{1x}F_y}{d},\qquad d=u_{1x}u_{2y}-u_{2x}u_{1y}\qquad(5.2)\ \ ［\text{教科書 式2.23}］$$</div>
+
+<h3><span class="no">5.4</span>符号の読み方・確かめ・$d=0$ の意味</h3>
+<p><strong>符号の読み方</strong>：</p>
+<ul><li>$F_i\gt 0$ のとき → $\boldsymbol{F}_i$ は $\boldsymbol{u}_i$ と<strong>同じ</strong>向き</li><li>$F_i\lt 0$ のとき → $\boldsymbol{F}_i$ は $\boldsymbol{u}_i$ と<strong>逆の</strong>向き</li></ul>
+<p>向きを先に決めつけず、とりあえず $\boldsymbol{u}_i$ の向きを仮定して解き、符号で本当の向きを知る。これが成分で解くことの強みである。</p>
+<p><strong>確かめ（特別な場合で既知の結果に戻るか）</strong>：</p>
+<ul>
+<li>$\boldsymbol u_1=\boldsymbol i=(1,0)$、$\boldsymbol u_2=\boldsymbol j=(0,1)$：$d=1\cdot1-0\cdot0=1$、$F_1=(1\cdot F_x-0\cdot F_y)/1=F_x$、$F_2=(-0\cdot F_x+1\cdot F_y)/1=F_y$。ふつうの成分に戻る。</li>
+<li>直交する単位ベクトル $\boldsymbol u_1=(c,s)$、$\boldsymbol u_2=(-s,c)$（$c^2+s^2=1$）：$d=c\cdot c-(-s)\cdot s=1$、$F_1=cF_x+sF_y=\boldsymbol F\cdot\boldsymbol u_1$、$F_2=-sF_x+cF_y=\boldsymbol F\cdot\boldsymbol u_2$。5.2節の (5.1) に戻る。</li>
+</ul>
+<div class="ex"><span class="label">例題10〔B｜自作〕分解して符号を読む</span>
+<p>力 $\boldsymbol{F}=(0,\ -200)\ \mathrm{N}$ を、$\boldsymbol{u}_1=(1,\ 0)$ と $\boldsymbol{u}_2=(\cos45^\circ,\ \sin45^\circ)$ の方向に分解せよ。分力の本当の向きも答えよ。</p>
+<p><strong>解答</strong></p>
+<p>① 分解する力は $\boldsymbol F$、分力の向きは $\boldsymbol u_1,\boldsymbol u_2$（ともに単位ベクトル）。</p>
+<p>② 座標軸：$x$ 右、$y$ 上。</p>
+<p>③ $\boldsymbol u_1=(1,\ 0)$、$\boldsymbol u_2=(0.7071,\ 0.7071)$、$F_x=0$、$F_y=-200\ \mathrm N$。</p>
+<p>④ $F_1\boldsymbol u_1+F_2\boldsymbol u_2=\boldsymbol F$。$d=u_{1x}u_{2y}-u_{2x}u_{1y}=1\times0.7071-0.7071\times0=0.7071$。</p>
+<p>⑤ (5.2)：$F_1=(0.7071\times0-0.7071\times(-200))/0.7071=200\ \mathrm{N}$、$F_2=(-0\times0+1\times(-200))/0.7071=-282.8\ \mathrm{N}$。</p>
+<p>⑥ 確かめ：$200(1,0)-282.8(0.7071,0.7071)=(200-200.0,\ -200.0)=(0.0,\ -200)$ で元に戻る。$F_2\lt0$ なので $\boldsymbol F_2$ は $\boldsymbol u_2$ と逆向き（左下45°）で大きさ 282.8 N。$\boldsymbol F_1$ は右向き 200 N。</p></div>
+<figure><svg viewBox="0 0 520 320" width="520" role="img" aria-label="力 (0, −200) N を、(1, 0) 方向と 45° 方向に分解した図">
+<defs><marker id="dc-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="dc-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="dc-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="dc-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="dc-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="dc-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M48.5,87.7 L471.5,87.7" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="6 4" opacity="1"/>
+<path d="M73.8,273.8 L327.7,20.0" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="6 4" opacity="1"/>
+<text x="471.5" y="80.9" fill="#968d80" text-anchor="end" font-size="11">u₁ の作用線</text>
+<text x="310.8" y="26.8" fill="#968d80" text-anchor="end" font-size="11">u₂ の作用線</text>
+<line x1="260.0" y1="87.7" x2="310.8" y2="87.7" stroke="#2a2723" stroke-width="1.6" marker-end="url(#dc-k)"/>
+<text x="285.4" y="79.2" fill="#2a2723" text-anchor="start" font-size="11">u₁</text>
+<line x1="260.0" y1="87.7" x2="295.9" y2="51.8" stroke="#2a2723" stroke-width="1.6" marker-end="url(#dc-k)"/>
+<text x="285.4" y="43.7" fill="#2a2723" text-anchor="start" font-size="11">u₂</text>
+<line x1="260.0" y1="87.7" x2="429.2" y2="87.7" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#dc-b)"/>
+<text x="378.5" y="99.5" fill="#2b3a67" text-anchor="middle" font-size="11">F₁ = +200 N</text>
+<line x1="260.0" y1="87.7" x2="90.8" y2="256.9" stroke="#4f7a4a" stroke-width="2.4" marker-end="url(#dc-g)"/>
+<text x="200.8" y="121.5" fill="#4f7a4a" text-anchor="end" font-size="11">F₂u₂、F₂ = −282.8 N</text>
+<text x="188.1" y="138.5" fill="#4f7a4a" text-anchor="end" font-size="11">（u₂ と逆向き）</text>
+<line x1="260.0" y1="87.7" x2="260.0" y2="256.9" stroke="#a8322a" stroke-width="2.8" marker-end="url(#dc-r)"/>
+<text x="266.8" y="248.5" fill="#a8322a" text-anchor="start" font-size="11">F = (0, −200) N</text>
+<path d="M429.2,87.7 L260.0,256.9" fill="none" stroke="#968d80" stroke-width="1.1" stroke-dasharray="3 3" opacity="1"/>
+<path d="M90.8,256.9 L260.0,256.9" fill="none" stroke="#968d80" stroke-width="1.1" stroke-dasharray="3 3" opacity="1"/>
+<circle cx="260.0" cy="87.7" r="3.5" fill="#2a2723"/>
+</g></svg>
+<figcaption>図5.2　例題10を縮尺どおりに描いた図。緑の分力（282.8 N）は、元の力（200 N）より長い。</figcaption></figure>
+<div class="warn"><span class="label">よくある誤解</span>① <strong>分力は元の力より小さい</strong>：直交分解ではそうだが、直交しない分解では分力が元の力より大きくなりうる（例題10の 282.8 N）。② <strong>分力＝内積</strong>：$\boldsymbol F\cdot\boldsymbol u_1=0$ だが $F_1=200\ \mathrm N$。内積で分力が出るのは、2方向が直交しているときだけ（5.2節）。</div>
+<div class="why"><span class="label">直感：$d=0$ のときは何が起きているか</span>$d$ は行列 $\begin{bmatrix}u_{1x}&u_{2x}\\u_{1y}&u_{2y}\end{bmatrix}$ の<strong>行列式</strong>で、2.8節のとおり $\boldsymbol{u}_1,\boldsymbol{u}_2$ が作る平行四辺形の（符号つき）面積でもある。$\boldsymbol{u}_1$ と $\boldsymbol{u}_2$ が平行だと平行四辺形がつぶれて $d=0$。同じ直線上の二方向だけでは、その直線から外れた力は作れないので、分解はできない（式としても0で割ることになる）。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/a3_tug.jpg" alt="港で、赤い貨物船の船腹を二隻のタグボートが別々の位置から押している" loading="lazy"></div>
+<p class="cap">二隻のタグボートは、船腹に「TUG」と記された別々の点に舳先を当てて、大きな船の向きを変える。</p>
+<p class="cr">Hellotheworld／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Ship_Pietersgracht_with_tugboats_in_Saint_Nazaire_harbour_01.jpg">Wikimedia Commons</a>（サン＝ナゼール港、2019年）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/b3_yukitsuri.jpg" alt="兼六園の雪吊り。松の中央に立てた柱の頂から、無数の縄が円錐状に枝へ降りている" loading="lazy"></div>
+<p class="cap">雪吊りの縄は一本の柱の頂から放射状に降り、枝ごとに違う重みを、それぞれの縄の向きに引き受ける。</p>
+<p class="cr">そらみみ／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Yukitsuri_in_Kenroku_Garden.jpg">Wikimedia Commons</a>（兼六園、2015年）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>実際の問題に使う</h2>
+<p>前半の目標の2つ目「使いこなす」のために、どの問題も同じ手順で解く。</p>
+
+<h3><span class="no">6.1</span>解き方の手順①〜⑥</h3>
+<div class="box"><span class="label">解き方の手順（この教材で毎回使う）</span>
+<ol><li><strong>切り出す</strong>：力が集まる点（結び目など）を選び、そこに働く力をすべて描く（<strong>自由物体図</strong>）。ロープ・部材が点を引く（押す）力は、第三法則によりロープ・部材の張力（圧縮力）と同じ大きさ。</li>
+<li><strong>座標軸を決める</strong>（ふつうは $x$ 右、$y$ 上）。</li>
+<li><strong>力を成分で書く</strong>：角度で与えられた力は (2.3)、座標で与えられた向きは (2.6)。向きが分かって大きさが未知の力は「大きさ×単位ベクトル」。</li>
+<li><strong>式を立てる</strong>：釣合いなら $\sum\boldsymbol F_i=\boldsymbol 0$（1.3）、合成なら $\boldsymbol{R}=\sum\boldsymbol{F}_i$（4.1）、分解なら $F_1\boldsymbol{u}_1+F_2\boldsymbol{u}_2=\boldsymbol{F}$。</li>
+<li><strong>解く</strong>：連立一次方程式（または (5.2)＝教科書 式2.23）。</li>
+<li><strong>確かめる</strong>：符号の意味・単位・有効数字（3〜4桁）、元の式に代入して検算、特別な場合で直感と合うか。</li></ol></div>
+<p class="note">釣合い $\sum\boldsymbol F_i=\boldsymbol 0$ と分解 $F_1\boldsymbol u_1+F_2\boldsymbol u_2=\boldsymbol F$ は同じ式である。未知の2力以外の既知の力を右辺に移し、符号を変えたものを $\boldsymbol F$ とおけばよい（「2本のロープの合力が、重さを打ち消す上向きの力に等しい」）。</p>
+
+<h3><span class="no">6.2</span>講義の例題：ロープに必要な強さ</h3>
+<div class="ex"><span class="label">例題11〔B｜講義資料の例題・解答は自作〕ロープに必要な引張強さ</span>
+<p>天井の2点A、Bから、水平と30°をなすロープACとBCで、質量500 kgの物体を点Cに吊るす（ACとBCは左右対称）。ロープに必要な引張強さを求めよ。</p>
+<figure>
+<svg viewBox="0 0 360 230" width="340" role="img" aria-label="2本のロープで物体を吊る図と点Cの自由物体図">
+<defs><marker id="f01f" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#a8322a"/></marker></defs>
+<rect x="20" y="20" width="60" height="14" fill="#ccc4b4"/><rect x="280" y="20" width="60" height="14" fill="#ccc4b4"/>
+<line x1="40" y1="34" x2="180" y2="115" stroke="#2a2723" stroke-width="2"/>
+<line x1="320" y1="34" x2="180" y2="115" stroke="#2a2723" stroke-width="2"/>
+<line x1="180" y1="115" x2="180" y2="160" stroke="#2a2723" stroke-width="2"/>
+<rect x="150" y="160" width="60" height="50" fill="#efebe2" stroke="#2a2723"/><text x="160" y="190" font-size="13">500 kg</text>
+<text x="30" y="56" font-size="14">A</text><text x="322" y="56" font-size="14">B</text><text x="188" y="112" font-size="14">C</text>
+<text x="66" y="48" font-size="12" fill="#6b645a">30°</text><text x="272" y="48" font-size="12" fill="#6b645a">30°</text>
+<line x1="180" y1="115" x2="125" y2="83" stroke="#a8322a" stroke-width="3" marker-end="url(#f01f)"/>
+<line x1="180" y1="115" x2="235" y2="83" stroke="#a8322a" stroke-width="3" marker-end="url(#f01f)"/>
+<text x="100" y="100" font-size="13" fill="#a8322a">TA</text><text x="240" y="100" font-size="13" fill="#a8322a">TB</text>
+</svg>
+<figcaption>図6.1　点Cには、ロープの張力 $T_A$（C→A方向）、$T_B$（C→B方向）と、下の物体を吊るロープの張力（＝重さ $W$、下向き）が働く。</figcaption>
+</figure>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：点Cに働く力は、$T_A$（C→A）、$T_B$（C→B）、下向きの $W=500\times9.81=4905\ \mathrm{N}$（1.4節の確かめと同じく、物体を吊るロープの張力は $W$）。</p>
+<p>② <strong>座標軸</strong>：右を $x$、上を $y$。</p>
+<p>③ <strong>成分</strong>：C→A は左上30°なので (2.3) で $\theta=150^\circ$：$\boldsymbol{u}_A=(-\cos30^\circ,\ \sin30^\circ)=(-0.8660,\ 0.5000)$。C→B は $\theta=30^\circ$：$\boldsymbol{u}_B=(0.8660,\ 0.5000)$。重さは $(0,\ -4905)\ \mathrm N$。</p>
+<p>④ <strong>式</strong>：止まっているので (1.3)：$T_A\boldsymbol{u}_A+T_B\boldsymbol{u}_B+(0,\ -4905)=\boldsymbol 0$。重さを右辺に移すと $T_A\boldsymbol{u}_A+T_B\boldsymbol{u}_B=(0,\ 4905)$。<br>$x$ 成分：$-0.8660T_A+0.8660T_B=0$ → $T_A=T_B$（対称だから当然）。<br>$y$ 成分：$0.5000T_A+0.5000T_B=4905$。</p>
+<p>⑤ <strong>解く</strong>：$T_A=T_B=T$ を $y$ 成分の式に入れて $2\times0.5000\,T=4905$ → $T=4905\ \mathrm{N}\approx4.91\ \mathrm{kN}$。<br>（(5.2) でも確かめる：$d=(-0.8660)(0.5000)-(0.8660)(0.5000)=-0.8660$、$T_A=\{0.5000\cdot0-0.8660\cdot4905\}/(-0.8660)=4905\ \mathrm{N}$。）</p>
+<p>⑥ <strong>確かめる</strong>：どちらも正なので、張力は仮定どおりC→Aの向き（ロープが点Cを引っ張る）で、ロープは引っ張られている。30°で吊ると、<strong>各ロープに物体の重さと同じ 4.91 kN</strong> がかかる。1本で真上に吊るのと同じ強さが、2本のそれぞれに必要になる（2本に分けても半分にはならない）。</p>
+<p class="meta">※スライドには問題だけが載っていて解答はない。上の解答は本教材の自作（検算済み）。</p></div>
+
+<h3><span class="no">6.3</span>安全率</h3>
+<div class="def"><span class="label">安全率</span>あるシステムが破壊または正常に作動しなくなる最小の負荷と、予測されるシステムへの最大の負荷との比（前者／後者）。$$\text{安全率}=\frac{\text{材料が耐えられる限界の強さ}}{\text{実際に発生する荷重}}\qquad(6.1)$$</div>
+<p>例題11で、もし安全率を5にとるなら（この値は説明のための仮定）、ロープには $4.91\times5\approx24.5\ \mathrm{kN}$ に耐える強さが必要になる。実際の値は用途や規格で決まる。</p>
+<div class="box"><span class="label">授業メモ（10/1）：航空機と自動車、安全率が高いのはどちらか</span>
+<p>授業で出された問い。ポイントは<strong>「安全率が高い＝安全性が高い」ではない</strong>こと。</p>
+<p><strong>答えの目安</strong>：安全率が低いのは<strong>航空機</strong>のほう。旅客機の構造は、米国の基準（14 CFR 25.303）で、想定される最大の荷重（制限荷重）の<strong>1.5倍</strong>に耐えればよい、と決められている。自動車や一般の機械は、これより大きめの安全率をとることが多い。それでも、移動距離あたりで見た死亡事故の少なさでは、旅客機は自動車よりずっと安全な乗り物だとされる。</p>
+<p class="meta">※「航空機の1.5」は規格で確認した値。自動車の具体的な安全率は部品や会社によって違うため、ここでは数字を書かない。授業で示された答えと違っていたら、こちらを直す。</p></div>
+<div class="why"><span class="label">直感：なぜ安全率が低い航空機のほうが安全なのか</span>
+<p>安全率は「<strong>分からなさ</strong>」に払う余裕である（読み物コラム「力は見えない」§五）。分母の「実際に発生する荷重」の見積もりがあいまいなほど、大きな安全率が必要になる。</p>
+<ul>
+<li><strong>航空機</strong>：重くすると飛べないので、余裕を大きくとれない。そのかわりに次の方法で「分からなさ」そのものを小さくしている。
+  <ul>
+  <li>荷重をくわしく解析し、実機で試験する。</li>
+  <li>点検・整備を厳しく定め、傷を早く見つける。</li>
+  <li>一か所が壊れても全体は落ちない構造（冗長性・フェールセーフ）にする。</li>
+  </ul>
+  だから低い安全率で足りる。</li>
+<li><strong>自動車</strong>：運転のしかたや道路、整備の状態が持ち主ごとにばらばらで、荷重が読みにくい。そのぶん安全率を大きめにとる。</li>
+</ul>
+<p>さらに、安全率を上げても防げない危険がある。</p>
+<ul>
+<li>見積もっていない壊れ方は防げない（例：繰り返し荷重による疲労、腐食、座屈）。</li>
+<li>重くなること自体が、燃費や操縦性など別のリスクを生む。</li>
+</ul>
+<p>安全率は安全性の一部を数字にしたものにすぎない。安全性は「荷重をどれだけ正しく知っているか」と「壊れたときにどう備えるか」で決まる。</p></div>
+
+<h3><span class="no">6.4</span>教科書 例題2・2：浮きを支える2本のワイヤ</h3>
+<div class="ex"><span class="label">例題12〔B｜教科書 例題2・2〕川に浮かべた浮きのワイヤ</span>
+<p>川の流れで、浮きを上流向き（図の上向き）に 100 N の力で支える必要がある。水平なワイヤ $T_1$ と、水平から30°傾いたワイヤ $T_2$（左上向き）の張力を求めよ。</p>
+<figure class="slide"><img src="img/slide01/ex2_2a.jpg" alt="例題2・2 問題図" loading="lazy" style="width:420px;max-width:98%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><figcaption>教科書 例題2・2 (a) 問題。川の流れ（黒い矢印）に逆らって、浮きを上向き100 Nで支える。出典：講義資料 第1回 スライド28</figcaption></figure>
+<p><strong>解答1（幾何学的解法）</strong>：$T_1$、$T_2$、100 N の矢印で三角形を作ると、直角三角形の辺の比から $$T_1\tan30^\circ=100\ \mathrm{N},\qquad T_2\cos60^\circ=100\ \mathrm{N}$$ $$T_1=100/\tan30^\circ=173\ \mathrm{N},\qquad T_2=100/\cos60^\circ=200\ \mathrm{N}$$</p>
+<figure class="slide"><img src="img/slide01/ex2_2b.jpg" alt="例題2・2 解答1 幾何学的解法の図" loading="lazy" style="width:420px;max-width:98%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><figcaption>(b) 解答1。$T_1$、$T_2$ を2辺とする平行四辺形の対角線が100 N。下の2つの直角三角形から $\tan30^\circ$、$\cos60^\circ$ の式が出る。出典：講義資料 第1回 スライド29</figcaption></figure>
+<p><strong>解答2（成分表示による解法）</strong>：</p>
+<figure class="slide"><img src="img/slide01/ex2_2c.jpg" alt="例題2・2 解答2 成分表示による解法の図" loading="lazy" style="width:420px;max-width:98%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><figcaption>(c) 解答2。$x$ 右・$y$ 上の座標軸をとり、$\boldsymbol{T}_1+\boldsymbol{T}_2=\boldsymbol{T}$ を成分で書く。出典：講義資料 第1回 スライド30</figcaption></figure>
+<p>① 浮きをつないだ結び目に働く力：$\boldsymbol{T}_1$（右向き）、$\boldsymbol{T}_2$（左上30°）。この2力の合力が、必要な力 $\boldsymbol{T}$ に等しい。</p>
+<p>② $x$ 右、$y$ 上。</p>
+<p>③ $\boldsymbol{T}_1=(T_1,\ 0)$、$\boldsymbol{T}_2=(-T_2\cos30^\circ,\ T_2\sin30^\circ)$、$\boldsymbol{T}=(0,\ 100)\ \mathrm{N}$。</p>
+<p>④ $\boldsymbol{T}_1+\boldsymbol{T}_2=\boldsymbol{T}$ を成分で書くと $$T_1-T_2\cos30^\circ=0,\qquad T_2\sin30^\circ=100\ \mathrm{N}$$</p>
+<p>⑤ 2本目から $T_2=100/0.5=200\ \mathrm{N}$。1本目に入れて $T_1=200\times0.8660=173\ \mathrm{N}$。</p>
+<p>⑥ 解答1と一致。$T_2$ のほうが大きいのは、$T_2$ だけが上向きの100 Nを受け持っているから（$T_2\sin30^\circ=100$）。</p>
+<p class="meta">※図は教科書 p.11 を参照。幾何学的解法は図に頼るので、力が3つ以上になると成分表示のほうが確実である。</p></div>
+
+<h3><span class="no">6.5</span>教科書 例題2・3：部材AC・BCに加わる力</h3>
+<div class="ex"><span class="label">例題13〔B｜教科書 例題2・3〕合成してから分解する</span>
+<p>壁の点A(0, 0) m、B(0, 2) m から部材AC、BCが点C(5, −1) m に伸び、Cに滑車がある。モータからのワイヤ（張力1000 N、Cから見て左下20°の向き）と、真下に吊った重り（1000 N）が点Cを引く。点Cに働く力が、部材AC、BCの長さ方向に与える力を求めよ。</p>
+<figure class="slide"><img src="img/slide01/ex2_3.jpg" alt="例題2・3 問題図と解答図" loading="lazy" style="width:300px;max-width:98%;height:auto;vertical-align:bottom;margin:0 4px;background:#fff"><figcaption>教科書 図2.22。上 (a) 問題、下 (b) 解答：A(0, 0)、B(0, 2)、C(5, −1) m。点Cで $\boldsymbol{F}_1$（ワイヤ）と $\boldsymbol{F}_2$（重り）を合成して $\boldsymbol{R}$ を作り、それを $\boldsymbol{u}_{CA}$、$\boldsymbol{u}_{CB}$ 方向に分解する。出典：講義資料 第1回 スライド32</figcaption></figure>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：点Cに働く外力は $\boldsymbol{F}_1$（ワイヤ、左下20°）と $\boldsymbol{F}_2$（重り、真下）。これを部材の方向に分ける。</p>
+<p>② <strong>座標軸</strong>：$x$ 右、$y$ 上、原点A。</p>
+<p>③ <strong>成分</strong>（手順1：合力 $\boldsymbol{R}$ を求める。教科書 式2.24）：左下20°は (2.3) で $\theta=200^\circ$。$$\boldsymbol{F}_1=(-1000\cos20^\circ,\ -1000\sin20^\circ)=(-939.7,\ -342.0)\ \mathrm{N},\qquad \boldsymbol{F}_2=(0,\ -1000)\ \mathrm{N}$$ $$\boldsymbol{R}=\boldsymbol{F}_1+\boldsymbol{F}_2=(-939.7,\ -1342)\ \mathrm{N}$$ 部材の向きは例題5で求めた（教科書 式2.25）：$\boldsymbol{u}_{CA}=(-0.9806,\ 0.1961)$、$\boldsymbol{u}_{CB}=(-0.8575,\ 0.5145)$。</p>
+<div class="warn"><span class="label">注意：スライドの符号</span>スライドでは $\boldsymbol{R}=(-939.7,\ 1342)$ と、$y$ 成分のマイナスが抜けているように見える。$-342.0+(-1000)=-1342$ なので負が正しく、スライドの $F_{CA}$、$F_{CB}$ の値もこの負の値で計算すると一致する（誤植と思われるが未確認）。</div>
+<p>④ <strong>式</strong>（手順2：分解）：$F_{CA}\boldsymbol{u}_{CA}+F_{CB}\boldsymbol{u}_{CB}=\boldsymbol{R}$。</p>
+<p>⑤ <strong>解く</strong>：(5.2) に $\boldsymbol{u}_1=\boldsymbol{u}_{CA}$、$\boldsymbol{u}_2=\boldsymbol{u}_{CB}$ として当てはめる。$$d=(-0.9806)(0.5145)-(-0.8575)(0.1961)=-0.5045+0.1682=-0.3364$$ $$\begin{aligned}F_{CA}&=\frac{u_{CBy}R_x-u_{CBx}R_y}{d}=\frac{(0.5145)(-939.7)-(-0.8575)(-1342)}{-0.3364}\\&=\frac{-483.5-1150.8}{-0.3364}=4.858\times10^3\ \mathrm{N}\end{aligned}$$ $$\begin{aligned}F_{CB}&=\frac{-u_{CAy}R_x+u_{CAx}R_y}{d}=\frac{-(0.1961)(-939.7)+(-0.9806)(-1342)}{-0.3364}\\&=\frac{184.3+1316.0}{-0.3364}=-4.460\times10^3\ \mathrm{N}\end{aligned}$$</p>
+<p>⑥ <strong>確かめる</strong>：代入すると $x$ 成分 $4858(-0.9806)+(-4460)(-0.8575)=-4764+3824=-940$、$y$ 成分 $4858(0.1961)+(-4460)(0.5145)=952.7-2294.7=-1342$ で $\boldsymbol{R}$ に戻る（丸めの範囲で一致）。<br><strong>符号の意味</strong>：$F_{CA}\gt0$ なので、荷重の分力はC→Aの向き、つまり部材ACを壁に向かって<strong>押し込む</strong>（ACは圧縮）。$F_{CB}\lt0$ なので、分力はC→Bと逆向き、つまり部材BCを壁から<strong>引きはがす</strong>向き（BCは引張り）。</p>
+<figure><svg viewBox="0 0 620 320" width="620" role="img" aria-label="例題2・3の合力Rを、部材CA方向とCB方向に分解した図（縮尺どおり）">
+<defs><marker id="e23-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="e23-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="e23-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="e23-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="e23-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="e23-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M584.1,154.8 L25.8,43.2" fill="none" stroke="#2b3a67" stroke-width="1" stroke-dasharray="6 4" opacity="0.6"/>
+<path d="M584.1,250.5 L25.8,-84.4" fill="none" stroke="#4f7a4a" stroke-width="1" stroke-dasharray="6 4" opacity="0.6"/>
+<line x1="344.8" y1="107.0" x2="68.5" y2="51.7" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#e23-b)"/>
+<line x1="344.8" y1="107.0" x2="566.6" y2="240.1" stroke="#4f7a4a" stroke-width="2.4" marker-end="url(#e23-g)"/>
+<line x1="344.8" y1="107.0" x2="290.3" y2="184.8" stroke="#a8322a" stroke-width="2.8" marker-end="url(#e23-r)"/>
+<path d="M68.5,51.7 L290.3,184.8" fill="none" stroke="#968d80" stroke-width="1.1" stroke-dasharray="3 3" opacity="1"/>
+<path d="M566.6,240.1 L290.3,184.8" fill="none" stroke="#968d80" stroke-width="1.1" stroke-dasharray="3 3" opacity="1"/>
+<circle cx="344.8" cy="107.0" r="3.5" fill="#2a2723"/>
+<text x="353.5" y="98.3" fill="#2a2723" text-anchor="start" font-size="13">C</text>
+<text x="80.1" y="27.4" fill="#2b3a67" text-anchor="start" font-size="11">F_CA u_CA（F_CA = 4859 N、A へ向かう向き）</text>
+<text x="566.6" y="255.2" fill="#4f7a4a" text-anchor="end" font-size="11">F_CB u_CB（F_CB = −4460 N、B から離れる向き）</text>
+<text x="283.3" y="191.8" fill="#a8322a" text-anchor="end" font-size="11">R（1638 N）</text>
+</g></svg>
+<figcaption>図6.2　例題13の分解を縮尺どおりに描いた図。$|\boldsymbol R|=1638\ \mathrm N$ に対し、分力は約 4.9 kN と 4.5 kN。部材の向きどうしの角が小さい（約 20°）ほど、$d$ が 0 に近づき、分力は大きくなる。</figcaption></figure>
+<p class="meta">※「圧縮／引張り」の読み取りは本教材での説明。部材の内力は第7回（トラス）で改めて扱う。分解の図は、スライドの4桁の単位ベクトルを使って計算した。</p></div>
+
+<h3><span class="no">6.6</span>吊り角と張力：なぜ綱はたわむのか</h3>
+<div class="ex"><span class="label">例題14〔B｜自作〕吊り角と張力</span>
+<p>例題11で、ロープと水平のなす角を $\theta$ とする（左右対称）。張力 $T$ を $W$ と $\theta$ で表し、$\theta=90^\circ,\ 45^\circ,\ 30^\circ,\ 10^\circ,\ 1^\circ$ のときの $T/W$ を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 点Cを切り出す：$T$（左上 $\theta$）、$T$（右上 $\theta$）、$W$（下）。対称なので2本の張力は等しい（例題11の $x$ 成分の式と同じ理由）。</p>
+<p>② $x$ 右、$y$ 上。</p>
+<p>③ $\boldsymbol u_A=(-\cos\theta,\ \sin\theta)$、$\boldsymbol u_B=(\cos\theta,\ \sin\theta)$、重さ $(0,\ -W)$。</p>
+<p>④ $y$ 成分の釣合い：$T\sin\theta+T\sin\theta-W=0$。</p>
+<p>⑤ $$T=\frac{W}{2\sin\theta}\qquad(6.2)$$ $\theta=90^\circ$：$T/W=0.500$。$45^\circ$：$1/(2\times0.7071)=0.707$。$30^\circ$：$1/(2\times0.5)=1.00$。$10^\circ$：$1/(2\times0.1736)=2.88$。$1^\circ$：$1/(2\times0.01745)=28.6$。</p>
+<p>⑥ 確かめ：$\theta=90^\circ$（2本とも真上）で $W/2$ は、2本で重さを半分ずつ持つという直感と合う。$\theta=30^\circ$ で例題11の $T=W$ に戻る。ロープを水平に近づけるほど張力は急に大きくなり、$\theta\to0$ で $T\to\infty$。どんなに強く張った綱も、重みがかかれば必ず少したわむ（$\theta$ が 0 にはならない）のはこのためである。</p></div>
+<figure><svg viewBox="0 0 640 320" width="640" role="img" aria-label="吊り角θと張力の比 T/W のグラフ">
+<defs><marker id="sg-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="sg-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="sg-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="sg-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="sg-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="sg-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="60.0" y1="40.0" x2="60.0" y2="270.0" stroke="#ebe5d8"/>
+<line x1="115.6" y1="40.0" x2="115.6" y2="270.0" stroke="#ebe5d8"/>
+<line x1="171.1" y1="40.0" x2="171.1" y2="270.0" stroke="#ebe5d8"/>
+<line x1="226.7" y1="40.0" x2="226.7" y2="270.0" stroke="#ebe5d8"/>
+<line x1="282.2" y1="40.0" x2="282.2" y2="270.0" stroke="#ebe5d8"/>
+<line x1="337.8" y1="40.0" x2="337.8" y2="270.0" stroke="#ebe5d8"/>
+<line x1="393.3" y1="40.0" x2="393.3" y2="270.0" stroke="#ebe5d8"/>
+<line x1="448.9" y1="40.0" x2="448.9" y2="270.0" stroke="#ebe5d8"/>
+<line x1="504.4" y1="40.0" x2="504.4" y2="270.0" stroke="#ebe5d8"/>
+<line x1="560.0" y1="40.0" x2="560.0" y2="270.0" stroke="#ebe5d8"/>
+<line x1="60.0" y1="270.0" x2="560.0" y2="270.0" stroke="#ebe5d8"/>
+<line x1="60.0" y1="231.7" x2="560.0" y2="231.7" stroke="#ebe5d8"/>
+<line x1="60.0" y1="193.3" x2="560.0" y2="193.3" stroke="#ebe5d8"/>
+<line x1="60.0" y1="155.0" x2="560.0" y2="155.0" stroke="#ebe5d8"/>
+<line x1="60.0" y1="116.7" x2="560.0" y2="116.7" stroke="#ebe5d8"/>
+<line x1="60.0" y1="78.3" x2="560.0" y2="78.3" stroke="#ebe5d8"/>
+<line x1="60.0" y1="40.0" x2="560.0" y2="40.0" stroke="#ebe5d8"/>
+<line x1="56" y1="270.0" x2="574" y2="270.0" stroke="#2a2723" marker-end="url(#sg-k)"/>
+<line x1="60.0" y1="274" x2="60.0" y2="26" stroke="#2a2723" marker-end="url(#sg-k)"/>
+<text x="578" y="274.0">θ [°]</text>
+<text x="66.0" y="26">T / W</text>
+<line x1="60.0" y1="270.0" x2="60.0" y2="274.0" stroke="#2a2723"/>
+<text x="60.0" y="287.0" text-anchor="middle" font-size="11">0</text>
+<line x1="115.6" y1="270.0" x2="115.6" y2="274.0" stroke="#2a2723"/>
+<text x="115.6" y="287.0" text-anchor="middle" font-size="11">10</text>
+<line x1="171.1" y1="270.0" x2="171.1" y2="274.0" stroke="#2a2723"/>
+<text x="171.1" y="287.0" text-anchor="middle" font-size="11">20</text>
+<line x1="226.7" y1="270.0" x2="226.7" y2="274.0" stroke="#2a2723"/>
+<text x="226.7" y="287.0" text-anchor="middle" font-size="11">30</text>
+<line x1="282.2" y1="270.0" x2="282.2" y2="274.0" stroke="#2a2723"/>
+<text x="282.2" y="287.0" text-anchor="middle" font-size="11">40</text>
+<line x1="337.8" y1="270.0" x2="337.8" y2="274.0" stroke="#2a2723"/>
+<text x="337.8" y="287.0" text-anchor="middle" font-size="11">50</text>
+<line x1="393.3" y1="270.0" x2="393.3" y2="274.0" stroke="#2a2723"/>
+<text x="393.3" y="287.0" text-anchor="middle" font-size="11">60</text>
+<line x1="448.9" y1="270.0" x2="448.9" y2="274.0" stroke="#2a2723"/>
+<text x="448.9" y="287.0" text-anchor="middle" font-size="11">70</text>
+<line x1="504.4" y1="270.0" x2="504.4" y2="274.0" stroke="#2a2723"/>
+<text x="504.4" y="287.0" text-anchor="middle" font-size="11">80</text>
+<line x1="560.0" y1="270.0" x2="560.0" y2="274.0" stroke="#2a2723"/>
+<text x="560.0" y="287.0" text-anchor="middle" font-size="11">90</text>
+<line x1="56.0" y1="270.0" x2="60.0" y2="270.0" stroke="#2a2723"/>
+<text x="53.0" y="274.0" text-anchor="end" font-size="11">0</text>
+<line x1="56.0" y1="231.7" x2="60.0" y2="231.7" stroke="#2a2723"/>
+<text x="53.0" y="235.7" text-anchor="end" font-size="11">1</text>
+<line x1="56.0" y1="193.3" x2="60.0" y2="193.3" stroke="#2a2723"/>
+<text x="53.0" y="197.3" text-anchor="end" font-size="11">2</text>
+<line x1="56.0" y1="155.0" x2="60.0" y2="155.0" stroke="#2a2723"/>
+<text x="53.0" y="159.0" text-anchor="end" font-size="11">3</text>
+<line x1="56.0" y1="116.7" x2="60.0" y2="116.7" stroke="#2a2723"/>
+<text x="53.0" y="120.7" text-anchor="end" font-size="11">4</text>
+<line x1="56.0" y1="78.3" x2="60.0" y2="78.3" stroke="#2a2723"/>
+<text x="53.0" y="82.3" text-anchor="end" font-size="11">5</text>
+<line x1="56.0" y1="40.0" x2="60.0" y2="40.0" stroke="#2a2723"/>
+<text x="53.0" y="44.0" text-anchor="end" font-size="11">6</text>
+<path d="M86.7,40.9 L87.9,50.7 L89.0,59.6 L90.2,67.8 L91.4,75.5 L92.6,82.5 L93.8,89.1 L95.0,95.2 L96.2,100.9 L97.3,106.3 L98.5,111.3 L99.7,116.0 L100.9,120.4 L102.1,124.6 L103.3,128.6 L104.5,132.3 L105.6,135.9 L106.8,139.3 L108.0,142.5 L109.2,145.5 L110.4,148.4 L111.6,151.2 L112.8,153.8 L114.0,156.4 L115.1,158.8 L116.3,161.1 L117.5,163.3 L118.7,165.5 L119.9,167.5 L121.1,169.5 L122.3,171.4 L123.4,173.2 L124.6,174.9 L125.8,176.6 L127.0,178.3 L128.2,179.8 L129.4,181.4 L130.6,182.8 L131.7,184.2 L132.9,185.6 L134.1,186.9 L135.3,188.2 L136.5,189.5 L137.7,190.7 L138.9,191.8 L140.1,193.0 L141.2,194.1 L142.4,195.1 L143.6,196.2 L144.8,197.2 L146.0,198.2 L147.2,199.1 L148.4,200.1 L149.5,201.0 L150.7,201.8 L151.9,202.7 L153.1,203.5 L154.3,204.3 L155.5,205.1 L156.7,205.9 L157.8,206.7 L159.0,207.4 L160.2,208.1 L161.4,208.8 L162.6,209.5 L163.8,210.2 L165.0,210.8 L166.1,211.4 L167.3,212.1 L168.5,212.7 L169.7,213.3 L170.9,213.9 L172.1,214.4 L173.3,215.0 L174.5,215.5 L175.6,216.1 L176.8,216.6 L178.0,217.1 L179.2,217.6 L180.4,218.1 L181.6,218.6 L182.8,219.0 L183.9,219.5 L185.1,220.0 L186.3,220.4 L187.5,220.8 L188.7,221.3 L189.9,221.7 L191.1,222.1 L192.2,222.5 L193.4,222.9 L194.6,223.3 L195.8,223.7 L197.0,224.1 L198.2,224.4 L199.4,224.8 L200.6,225.1 L201.7,225.5 L202.9,225.8 L204.1,226.2 L205.3,226.5 L206.5,226.8 L207.7,227.2 L208.9,227.5 L210.0,227.8 L211.2,228.1 L212.4,228.4 L213.6,228.7 L214.8,229.0 L216.0,229.3 L217.2,229.6 L218.3,229.8 L219.5,230.1 L220.7,230.4 L221.9,230.6 L223.1,230.9 L224.3,231.2 L225.5,231.4 L226.6,231.7 L227.8,231.9 L229.0,232.2 L230.2,232.4 L231.4,232.6 L232.6,232.9 L233.8,233.1 L235.0,233.3 L236.1,233.5 L237.3,233.7 L238.5,234.0 L239.7,234.2 L240.9,234.4 L242.1,234.6 L243.3,234.8 L244.4,235.0 L245.6,235.2 L246.8,235.4 L248.0,235.6 L249.2,235.8 L250.4,236.0 L251.6,236.1 L252.7,236.3 L253.9,236.5 L255.1,236.7 L256.3,236.9 L257.5,237.0 L258.7,237.2 L259.9,237.4 L261.1,237.5 L262.2,237.7 L263.4,237.9 L264.6,238.0 L265.8,238.2 L267.0,238.3 L268.2,238.5 L269.4,238.6 L270.5,238.8 L271.7,238.9 L272.9,239.1 L274.1,239.2 L275.3,239.4 L276.5,239.5 L277.7,239.7 L278.8,239.8 L280.0,239.9 L281.2,240.1 L282.4,240.2 L283.6,240.3 L284.8,240.5 L286.0,240.6 L287.2,240.7 L288.3,240.8 L289.5,241.0 L290.7,241.1 L291.9,241.2 L293.1,241.3 L294.3,241.4 L295.5,241.6 L296.6,241.7 L297.8,241.8 L299.0,241.9 L300.2,242.0 L301.4,242.1 L302.6,242.2 L303.8,242.3 L304.9,242.5 L306.1,242.6 L307.3,242.7 L308.5,242.8 L309.7,242.9 L310.9,243.0 L312.1,243.1 L313.2,243.2 L314.4,243.3 L315.6,243.4 L316.8,243.5 L318.0,243.6 L319.2,243.6 L320.4,243.7 L321.6,243.8 L322.7,243.9 L323.9,244.0 L325.1,244.1 L326.3,244.2 L327.5,244.3 L328.7,244.4 L329.9,244.4 L331.0,244.5 L332.2,244.6 L333.4,244.7 L334.6,244.8 L335.8,244.8 L337.0,244.9 L338.2,245.0 L339.3,245.1 L340.5,245.2 L341.7,245.2 L342.9,245.3 L344.1,245.4 L345.3,245.5 L346.5,245.5 L347.7,245.6 L348.8,245.7 L350.0,245.7 L351.2,245.8 L352.4,245.9 L353.6,246.0 L354.8,246.0 L356.0,246.1 L357.1,246.2 L358.3,246.2 L359.5,246.3 L360.7,246.3 L361.9,246.4 L363.1,246.5 L364.3,246.5 L365.4,246.6 L366.6,246.7 L367.8,246.7 L369.0,246.8 L370.2,246.8 L371.4,246.9 L372.6,247.0 L373.8,247.0 L374.9,247.1 L376.1,247.1 L377.3,247.2 L378.5,247.2 L379.7,247.3 L380.9,247.3 L382.1,247.4 L383.2,247.4 L384.4,247.5 L385.6,247.5 L386.8,247.6 L388.0,247.6 L389.2,247.7 L390.4,247.7 L391.5,247.8 L392.7,247.8 L393.9,247.9 L395.1,247.9 L396.3,248.0 L397.5,248.0 L398.7,248.1 L399.8,248.1 L401.0,248.2 L402.2,248.2 L403.4,248.3 L404.6,248.3 L405.8,248.3 L407.0,248.4 L408.2,248.4 L409.3,248.5 L410.5,248.5 L411.7,248.5 L412.9,248.6 L414.1,248.6 L415.3,248.7 L416.5,248.7 L417.6,248.7 L418.8,248.8 L420.0,248.8 L421.2,248.9 L422.4,248.9 L423.6,248.9 L424.8,249.0 L425.9,249.0 L427.1,249.0 L428.3,249.1 L429.5,249.1 L430.7,249.1 L431.9,249.2 L433.1,249.2 L434.3,249.2 L435.4,249.3 L436.6,249.3 L437.8,249.3 L439.0,249.4 L440.2,249.4 L441.4,249.4 L442.6,249.5 L443.7,249.5 L444.9,249.5 L446.1,249.5 L447.3,249.6 L448.5,249.6 L449.7,249.6 L450.9,249.6 L452.0,249.7 L453.2,249.7 L454.4,249.7 L455.6,249.8 L456.8,249.8 L458.0,249.8 L459.2,249.8 L460.4,249.9 L461.5,249.9 L462.7,249.9 L463.9,249.9 L465.1,249.9 L466.3,250.0 L467.5,250.0 L468.7,250.0 L469.8,250.0 L471.0,250.1 L472.2,250.1 L473.4,250.1 L474.6,250.1 L475.8,250.1 L477.0,250.2 L478.1,250.2 L479.3,250.2 L480.5,250.2 L481.7,250.2 L482.9,250.3 L484.1,250.3 L485.3,250.3 L486.4,250.3 L487.6,250.3 L488.8,250.3 L490.0,250.4 L491.2,250.4 L492.4,250.4 L493.6,250.4 L494.8,250.4 L495.9,250.4 L497.1,250.5 L498.3,250.5 L499.5,250.5 L500.7,250.5 L501.9,250.5 L503.1,250.5 L504.2,250.5 L505.4,250.5 L506.6,250.6 L507.8,250.6 L509.0,250.6 L510.2,250.6 L511.4,250.6 L512.5,250.6 L513.7,250.6 L514.9,250.6 L516.1,250.6 L517.3,250.7 L518.5,250.7 L519.7,250.7 L520.9,250.7 L522.0,250.7 L523.2,250.7 L524.4,250.7 L525.6,250.7 L526.8,250.7 L528.0,250.7 L529.2,250.7 L530.3,250.7 L531.5,250.8 L532.7,250.8 L533.9,250.8 L535.1,250.8 L536.3,250.8 L537.5,250.8 L538.6,250.8 L539.8,250.8 L541.0,250.8 L542.2,250.8 L543.4,250.8 L544.6,250.8 L545.8,250.8 L547.0,250.8 L548.1,250.8 L549.3,250.8 L550.5,250.8 L551.7,250.8 L552.9,250.8 L554.1,250.8 L555.3,250.8 L556.4,250.8 L557.6,250.8 L558.8,250.8 L560.0,250.8" fill="none" stroke="#a8322a" stroke-width="2.2" opacity="1"/>
+<path d="M60.0,231.7 L560.0,231.7" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 4" opacity="1"/>
+<path d="M60.0,250.8 L560.0,250.8" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 4" opacity="1"/>
+<circle cx="115.6" cy="159.6" r="3.5" fill="#a8322a"/>
+<text x="126.7" y="150.0" fill="#a8322a" text-anchor="start" font-size="11">θ = 10°：2.88</text>
+<circle cx="226.7" cy="231.7" r="3.5" fill="#a8322a"/>
+<text x="232.2" y="206.7" fill="#a8322a" text-anchor="start" font-size="11">θ = 30°：1.00（講義の例題）</text>
+<circle cx="310.0" cy="242.9" r="3.5" fill="#a8322a"/>
+<text x="321.1" y="225.6" fill="#a8322a" text-anchor="start" font-size="11">θ = 45°：0.707</text>
+<circle cx="560.0" cy="250.8" r="3.5" fill="#a8322a"/>
+<text x="554.4" y="246.2" fill="#a8322a" text-anchor="end" font-size="11">θ = 90°：0.5</text>
+<text x="93.3" y="49.6" fill="#2a2723" text-anchor="start" font-size="11">θ → 0 で T/W → ∞（θ = 1° で 28.6）</text>
+<text x="554.4" y="264.2" fill="#968d80" text-anchor="end" font-size="11">θ = 90°（2本とも真上）で各ロープは W/2</text>
+</g></svg>
+<figcaption>図6.3　(6.2) の $T/W=1/(2\sin\theta)$ を計算して描いたグラフ。30° より寝かせると急に張力が増える。</figcaption></figure>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/a4_chinook.jpg" alt="大型輸送ヘリコプターが、2本のスリングで軍用車両を吊り下げて飛んでいる" loading="lazy"></div>
+<p class="cap">ヘリコプターが車両を吊るとき、スリングの張力は荷の重さより大きくなり、吊り角が開くほど大きくなる。</p>
+<p class="cr">Sgt. Jason Dangel（U.S. Army）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Training_on_the_Flying_Crane_-_4th_Combat_Aviation_Brigade_Soldiers_Perfect_the_Art_of_Chinook_Sling_Loads_(cropped).jpg">Wikimedia Commons</a>（2009年）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/b4_blondin.jpg" alt="ナイアガラ川の上に張られた綱を、長い平衡棒を持った綱渡り師ブロンダンが歩いている" loading="lazy"></div>
+<p class="cap">1859年にナイアガラを渡ったブロンダンの綱は、どれほど張っても一直線にはならず、人ひとりの重みで必ずたわむ。</p>
+<p class="cr">William England／Public domain／<a href="https://commons.wikimedia.org/wiki/File:William_England_-_Blondin_crossing_Niagara_river.jpg">Wikimedia Commons</a>（1859年）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">7</span>章末例題</h2>
+<p class="meta">※〔A〕小テスト水準、〔B〕定期試験水準、〔C〕定期試験で満点を取るための発展。外部の問題は和訳し、出典と照合状況を問題の下に書いた。解答は手順①〜⑥で本教材が作成し、数値は Python で検算した。</p>
+
+<div class="ex"><span class="label">例題15〔A｜自作〕3力の合成と象限</span>
+<p>1点に、$x$ 軸から 0° の向きに 200 N、120° の向きに 150 N、225° の向きに 100 N の3力が働く。合力の大きさと向きを求めよ。</p>
+<p class="cr">出典：本教材の自作。</p>
+<p><strong>解答</strong></p>
+<p>① 3力は1点に働くので、そのまま合成できる。</p>
+<p>② $x$ 右、$y$ 上。</p>
+<p>③ (2.3)：$\boldsymbol F_1=(200,\ 0)$、$\boldsymbol F_2=(150\cos120^\circ,\ 150\sin120^\circ)=(-75.00,\ 129.9)$、$\boldsymbol F_3=(100\cos225^\circ,\ 100\sin225^\circ)=(-70.71,\ -70.71)\ \mathrm N$。</p>
+<p>④ (4.2)：$R_x=200-75.00-70.71=54.29$、$R_y=0+129.9-70.71=59.19\ \mathrm N$。</p>
+<p>⑤ $R=\sqrt{54.29^2+59.19^2}=80.32\ \mathrm N$。$R_x\gt0$ なので向きは $\tan^{-1}(59.19/54.29)=47.47^\circ$。</p>
+<p>⑥ 確かめ：$R_x\gt0,\ R_y\gt0$ で第1象限、47.5° と合う。大きさの和 450 N よりずっと小さい（力どうしが打ち消し合っている）。</p></div>
+
+<div class="ex"><span class="label">例題16〔B｜自作〕3次元のロープの力</span>
+<p>原点Aに結んだロープが点 B(2, −3, 6) m へ張られ、張力は 700 N である。ロープが点Aを引く力を成分で書け。</p>
+<p class="cr">出典：本教材の自作（第3回の予習）。</p>
+<p><strong>解答</strong></p>
+<p>① 点Aを切り出す。ロープは A を B の向きに引く。</p>
+<p>② $x,y,z$ の直交座標（単位 m）。</p>
+<p>③ (2.6)：A→B $=(2-0,\ -3-0,\ 6-0)=(2,\ -3,\ 6)$、長さ $\sqrt{4+9+36}=7$、$\boldsymbol u_{AB}=(2/7,\ -3/7,\ 6/7)$（例題4と同じ）。</p>
+<p>④ 力＝大きさ×単位ベクトル：$\boldsymbol T=700\,\boldsymbol u_{AB}$。</p>
+<p>⑤ $\boldsymbol T=(700\times2/7,\ 700\times(-3/7),\ 700\times6/7)=(200,\ -300,\ 600)\ \mathrm N$。</p>
+<p>⑥ 確かめ：$\sqrt{200^2+300^2+600^2}=\sqrt{490000}=700\ \mathrm N$。</p></div>
+
+<div class="ex"><span class="label">例題17〔B｜自作〕左右非対称の吊り下げ</span>
+<p>質量 100 kg の物体を、左のロープ（水平から 30°）と右のロープ（水平から 60°）で吊るす。各ロープの張力を求めよ。</p>
+<p class="cr">出典：本教材の自作。</p>
+<p><strong>解答</strong></p>
+<p>① 結び目を切り出す：$T_A$（左上30°）、$T_B$（右上60°）、$W=100\times9.81=981\ \mathrm N$（下）。</p>
+<p>② $x$ 右、$y$ 上。</p>
+<p>③ $\boldsymbol u_A=(-\cos30^\circ,\ \sin30^\circ)=(-0.8660,\ 0.5000)$、$\boldsymbol u_B=(\cos60^\circ,\ \sin60^\circ)=(0.5000,\ 0.8660)$。</p>
+<p>④ $T_A\boldsymbol u_A+T_B\boldsymbol u_B=(0,\ 981)$。</p>
+<p>⑤ $d=(-0.8660)(0.8660)-(0.5000)(0.5000)=-0.7500-0.2500=-1.000$。(5.2)：$T_A=(0.8660\times0-0.5000\times981)/(-1.000)=490.5\ \mathrm N$、$T_B=(-0.5000\times0+(-0.8660)\times981)/(-1.000)=849.6\ \mathrm N$。</p>
+<p>⑥ 確かめ：両方正（引っ張り）。$x$：$-0.8660\times490.5+0.5000\times849.6=-424.8+424.8=0$。立っているロープ（60°）のほうが大きな力を受け持つ。$d=-1$ になったのは、2本のロープが直交している（30°+60°=90°）から（5.4節の直交の場合）。</p></div>
+
+<div class="ex"><span class="label">例題18〔B｜OpenStax UP1 5章 問63〕電線にとまった鳥</span>
+<p>質量 26 g の鳥が、張った電話線の中央にとまっている。(a) 線の張力が $T=mg/(2\sin\theta)$ で計算できることを示せ。(b) $\theta=5^\circ$、(c) $\theta=0.5^\circ$ のときの張力を求めよ。線の左右半分はそれぞれ直線とみなす。</p>
+<p class="note">原文：A bird has a mass of 26 g and perches in the middle of a stretched telephone line. (a) Show that the tension in the line can be calculated using the equation T = mg / (2 sin θ). Determine the tension when (b) θ = 5° and (c) θ = 0.5°. Assume that each half of the line is straight.</p>
+<figure><img src="img/ex01_os_5_63_bird.jpg" alt="両端の柱の間に張った線が中央でV字にたるみ、鳥がとまっている。破線は水平で、θは水平と線のなす角" loading="lazy" style="width:460px;max-width:98%;height:auto;background:#fff"><figcaption>破線は水平、$\theta$ は水平と線のなす角。図の出典：OpenStax, <i>University Physics Volume 1</i>, Ch.5（CC BY-NC-SA 4.0）。</figcaption></figure>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 5 Problems, §5.6, Problem 63（CC BY-NC-SA 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/5-problems">https://openstax.org/books/university-physics-volume-1/pages/5-problems</a>。和訳は本教材。公式解答（(b) 1.5 N、(c) 15 N）と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 鳥のいる点を切り出す：$mg$（下）、$T$（左上 $\theta$）、$T$（右上 $\theta$）。左右対称なので2つの張力の大きさは等しい。</p>
+<p>② $x$ 右、$y$ 上。</p>
+<p>③ $\boldsymbol T_{\text{左}}=T(-\cos\theta,\ \sin\theta)$、$\boldsymbol T_{\text{右}}=T(\cos\theta,\ \sin\theta)$、$\boldsymbol W=(0,\ -mg)$。</p>
+<p>④ (1.3)：$x$ 成分は $-T\cos\theta+T\cos\theta=0$ で自動的に成り立つ。$y$ 成分は $2T\sin\theta-mg=0$。</p>
+<p>⑤ (a) $T=\dfrac{mg}{2\sin\theta}$（例題14の (6.2) と同じ式）。$mg=0.026\times9.80=0.2548\ \mathrm N$。(b) $T=0.2548/(2\sin5^\circ)=0.2548/(2\times0.08716)=1.46\ \mathrm N\approx1.5\ \mathrm N$。(c) $T=0.2548/(2\sin0.5^\circ)=0.2548/(2\times0.008727)=14.6\ \mathrm N\approx15\ \mathrm N$。</p>
+<p>⑥ 確かめ：$\theta$ を 1/10 にすると $T$ はほぼ10倍（小さい角では $\sin\theta\approx\theta$ [rad]）。26 g（重さ 0.25 N）の鳥でも、ほとんどたるまない線には 15 N（鳥の重さの約57倍）がかかる。$g=9.81$ でも 3 桁の答えは同じ（1.46 N、14.6 N）。原文は有効数字2桁なので、答えも2桁で書く。</p></div>
+
+<div class="ex"><span class="label">例題19〔C｜OpenStax UP1 6章 問26〕信号機を支える3本のケーブル</span>
+<p>信号機の重さが $2.00\times10^2\ \mathrm N$ のとき、信号機を支える3本のケーブルそれぞれの張力を求めよ。</p>
+<p class="note">原文：Find the tension in each of the three cables supporting the traffic light if it weighs 2.00 × 10² N.</p>
+<figure><img src="img/ex01_os_6_26_trafficlight.jpg" alt="天井からケーブルT1（天井と41.0度）とT2（天井と63.0度）が結び目で合わさり、結び目から鉛直のT3が信号機を吊る。重さw=200 N" loading="lazy" style="width:220px;max-width:60%;height:auto;background:#fff"><figcaption>$T_1$ は天井と 41.0°、$T_2$ は天井と 63.0°。図の出典：OpenStax, <i>University Physics Volume 1</i>, Ch.6（CC BY-NC-SA 4.0）。</figcaption></figure>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 6 Problems, §6.1, Problem 26（CC BY-NC-SA 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/6-problems">https://openstax.org/books/university-physics-volume-1/pages/6-problems</a>。和訳は本教材。偶数番の問題で公式解答が公開されていないため、自作の解答・未照合。</p>
+<p><strong>解答</strong></p>
+<p>① 2段階で切り出す。(i) 信号機だけ：$T_3$（上）と $w$（下）の釣合いで $T_3=200\ \mathrm N$。(ii) 結び目：$T_1$（左上）、$T_2$（右上）、$T_3=200\ \mathrm N$（下）。天井は水平なので、図の角は水平からの角。</p>
+<p>② $x$ 右、$y$ 上。</p>
+<p>③ $\boldsymbol T_1=T_1(-\cos41.0^\circ,\ \sin41.0^\circ)=T_1(-0.7547,\ 0.6561)$、$\boldsymbol T_2=T_2(\cos63.0^\circ,\ \sin63.0^\circ)=T_2(0.4540,\ 0.8910)$、$\boldsymbol T_3=(0,\ -200)$。</p>
+<p>④ $x$：$-0.7547T_1+0.4540T_2=0$。$y$：$0.6561T_1+0.8910T_2-200=0$。</p>
+<p>⑤ $x$ の式から $T_1=(0.4540/0.7547)T_2=0.6015T_2$。$y$ の式に入れて $(0.6015\times0.6561+0.8910)T_2=1.2856T_2=200$、$T_2=155.6\ \mathrm N$、$T_1=0.6015\times155.6=93.6\ \mathrm N$。<br>別解（力の三角形と正弦定理）：3力をつなぐと閉じた三角形になり、$T_3$ の向かいの角は $180^\circ-41^\circ-63^\circ=76^\circ$、$T_1$ の向かいは $90^\circ-63^\circ=27^\circ$、$T_2$ の向かいは $90^\circ-41^\circ=49^\circ$。$T_1=200\sin27^\circ/\sin76^\circ=93.6\ \mathrm N$、$T_2=200\sin49^\circ/\sin76^\circ=155.6\ \mathrm N$。</p>
+<p>⑥ 確かめ：$T_2\gt T_1$（急なほうのケーブルが多く受け持つ。例題17と同じ傾向）。$T_1+T_2=249\ \mathrm N\gt200\ \mathrm N$ なのは、水平成分どうしが打ち消し合うぶん余計に引いているから（4.2節の $F_1+F_2\neq R$）。<strong>よくある誤り</strong>：角を鉛直から測ったと読むと $T_1=183.7$、$T_2=135.2\ \mathrm N$ となり、大小が逆転する。</p></div>
+
+<div class="ex"><span class="label">例題20〔C｜Engineering Statics §2.9〕直交しない2方向への分解（スカラー成分）</span>
+<p>大きさ 800 kN の力 $\boldsymbol F$ の、$a$ 方向と $b$ 方向のスカラー成分を求めよ。$b$ 軸は $a$ 軸から反時計回りに 60°、$\boldsymbol F$ は $a$ 軸から反時計回りに 135° の向きである。注：スカラー成分とは、対応するベクトル成分（分力）の大きさに、向きを表す + または − をつけた値である。軸のラベルのある端を向いていれば正、反対なら負。</p>
+<p class="note">原文（抜粋）：Determine the scalar components of 800 kN force F in the a- and b- directions. Note: A Scalar component is a scalar value equal to the magnitude of the corresponding vector component, but with a + or − sign to indicate its sense. The positive direction is towards the labeled end of the axis.</p>
+<figure><svg viewBox="0 0 520 320" width="520" role="img" aria-label="800 kN の力 F を、a 方向と b 方向に分解した図">
+<defs><marker id="ec1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ec1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ec1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ec1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ec1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ec1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M20.0,251.9 L472.5,251.9" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="6 4" opacity="1"/>
+<path d="M285.9,281.3 L435.8,21.7" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="6 4" opacity="1"/>
+<line x1="302.8" y1="251.9" x2="387.7" y2="251.9" stroke="#2a2723" stroke-width="1.6" marker-end="url(#ec1-k)"/>
+<text x="387.7" y="263.2" fill="#2a2723" text-anchor="middle" font-size="13">a</text>
+<line x1="302.8" y1="251.9" x2="345.3" y2="178.4" stroke="#2a2723" stroke-width="1.6" marker-end="url(#ec1-k)"/>
+<text x="350.3" y="178.4" fill="#2a2723" text-anchor="start" font-size="13">b</text>
+<path d="M336.8,251.9 L336.8,250.0 L336.6,248.2 L336.4,246.3 L336.0,244.5 L335.5,242.7 L335.0,240.9 L334.3,239.1 L333.6,237.4 L332.7,235.7 L331.8,234.1 L330.8,232.5 L329.7,231.0 L328.5,229.6 L327.2,228.2 L325.9,226.9 L324.4,225.7 L323.0,224.5 L321.4,223.5 L319.8,222.5" fill="none" stroke="#2a2723"/>
+<text x="316.4" y="243.4" fill="#2a2723" text-anchor="start" font-size="11">60°</text>
+<path d="M331.8,201.7 L329.0,200.2 L326.2,198.8 L323.3,197.6 L320.3,196.6 L317.2,195.7 L314.1,195.0 L311.0,194.5 L307.9,194.1 L304.7,194.0 L301.6,193.9 L298.4,194.1 L295.3,194.4 L292.1,194.9 L289.0,195.6 L286.0,196.4 L283.0,197.4 L280.0,198.6 L277.2,199.9 L274.4,201.4 L271.7,203.0 L269.0,204.8 L266.5,206.7 L264.1,208.7 L261.8,210.9" fill="none" stroke="#a8322a"/>
+<text x="294.3" y="227.9" fill="#a8322a" text-anchor="start" font-size="11">75°</text>
+<line x1="302.8" y1="251.9" x2="50.5" y2="251.9" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#ec1-b)"/>
+<line x1="302.8" y1="251.9" x2="395.2" y2="91.9" stroke="#4f7a4a" stroke-width="2.4" marker-end="url(#ec1-g)"/>
+<line x1="302.8" y1="251.9" x2="142.8" y2="91.9" stroke="#a8322a" stroke-width="2.8" marker-end="url(#ec1-r)"/>
+<path d="M50.5,251.9 L142.8,91.9" fill="none" stroke="#968d80" stroke-width="1.1" stroke-dasharray="3 3" opacity="1"/>
+<path d="M395.2,91.9 L142.8,91.9" fill="none" stroke="#968d80" stroke-width="1.1" stroke-dasharray="3 3" opacity="1"/>
+<text x="140.0" y="84.9" fill="#a8322a" text-anchor="middle" font-size="12">F = 800 kN</text>
+<text x="176.6" y="271.7" fill="#2b3a67" text-anchor="middle" font-size="11">F_a a（F_a = -892.3 kN）</text>
+<text x="374.0" y="75.0" fill="#4f7a4a" text-anchor="middle" font-size="11">F_b b（F_b = +653.2 kN）</text>
+<circle cx="302.8" cy="251.9" r="3.5" fill="#2a2723"/>
+</g></svg>
+<figcaption>図7.1　描き直した図（$a$ 軸を水平にとった）。原図は全体が 30° 回っているが、答えには影響しない。分力は計算値の縮尺で描いた。</figcaption></figure>
+<p class="cr">出典：T. Baker &amp; D. Haynes, <i>Engineering Statics: Open and Interactive</i>, §2.9 Exercises “Arbitrary components”（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/Chapter_02-11.html">https://engineeringstatics.org/Chapter_02-11.html</a>。和訳は本教材。数値は一例（原問題は開くたびに数値が変わる。ここでは $F=800\ \mathrm{kN}$、135°、60° を採用）。自作の解答・未照合（同書の解説の式 $F_a=-F\sin(\theta-\beta)/\sin\beta$、$F_b=F\sin(180^\circ-\theta)/\sin\beta$ とは一致）。</p>
+<p><strong>解答</strong></p>
+<p>① $\boldsymbol F$ を $a$ 方向・$b$ 方向の分力の和として表す（平行四辺形）。</p>
+<p>② $a$ 軸を $x$ 軸にとる：$\boldsymbol a=(1,\ 0)$、$\boldsymbol b=(\cos60^\circ,\ \sin60^\circ)=(0.5000,\ 0.8660)$。</p>
+<p>③ $\boldsymbol F=800(\cos135^\circ,\ \sin135^\circ)=(-565.7,\ 565.7)\ \mathrm{kN}$。</p>
+<p>④ $F_a\boldsymbol a+F_b\boldsymbol b=\boldsymbol F$：$x$：$F_a+0.5000F_b=-565.7$、$y$：$0.8660F_b=565.7$。</p>
+<p>⑤ $y$ から $F_b=+653.2\ \mathrm{kN}$。$x$ に入れて $F_a=-565.7-326.6=-892.3\ \mathrm{kN}$。(5.2) でも：$d=1\times0.8660-0.5000\times0=0.8660$、$F_a=(0.8660\times(-565.7)-0.5000\times565.7)/0.8660=-892.3$、$F_b=(0+1\times565.7)/0.8660=653.2$。<br>別解（正弦定理）：分力と $\boldsymbol F$ が作る三角形の内角は 45°・75°・60° で、$|F_a|=800\sin75^\circ/\sin60^\circ=892.3$、$|F_b|=800\sin45^\circ/\sin60^\circ=653.2$。</p>
+<p>⑥ 答え：$F_a=-892\ \mathrm{kN}$、$F_b=+653\ \mathrm{kN}$。$F_a\lt0$ は、$a$ のラベルのない端の向き（左向き）。成分の大きさ 892 kN が元の 800 kN より大きいのは、非直交分解だから（5.4節）。<strong>よくある誤り</strong>：内積 $\boldsymbol F\cdot\boldsymbol a=-565.7$、$\boldsymbol F\cdot\boldsymbol b=207.1$ は直交射影であって、この問題の分力ではない。</p>
+<p class="meta">※原図は GeoGebra の動的な図で取得できなかったため、問題文と解答式から幾何を復元して描き直した（原図は未確認）。</p></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">8</span>演習問題</h2>
+<p class="meta">※〔A〕小テスト水準、〔B〕定期試験水準、〔C〕定期試験で満点を取るための発展。解答は折りたたんである。</p>
+
+<div class="box"><span class="label">問1〔A｜自作〕単位と有効数字</span>(1) 質量 2.50 kg の物体の重さを N で求めよ。(2) 4905 N を有効数字3桁で、kN を使って書け。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (1) $W=mg=2.50\times9.81=24.525$。3桁で $24.5\ \mathrm N$。</p>
+<p>② (2) $4905\ \mathrm N=4.905\ \mathrm{kN}$、3桁に丸めて $4.91\ \mathrm{kN}$（$4.91\times10^3\ \mathrm N$）。</p></details></div>
+
+<div class="box"><span class="label">問2〔A｜自作〕内積の計算</span>$\boldsymbol{a}=(3,\ 4)$、$\boldsymbol{b}=(4,\ -3)$ とする。(1) $\boldsymbol{a}\cdot\boldsymbol{b}$ を求め、2つのベクトルの関係を述べよ。(2) $\boldsymbol a$ と $\boldsymbol c=(1,\ 0)$ のなす角を求めよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (1) (2.9)：$3\times4+4\times(-3)=0$。内積が 0 なので $\cos\theta=0$、2つは<strong>直交</strong>している。</p>
+<p>② (2) $\cos\theta=\boldsymbol a\cdot\boldsymbol c/(ac)=3/(5\times1)=0.600$、$\theta=53.1^\circ$（例題3の $\alpha$ と同じ）。</p></details></div>
+
+<div class="box"><span class="label">問3〔A｜自作〕ロープの強さ</span>例題11で、ロープと水平のなす角を 45° にすると、各ロープの張力はいくらになるか。30° のときと比べよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (6.2)：$T=W/(2\sin45^\circ)=4905/(2\times0.7071)=3468\ \mathrm{N}\approx3.47\ \mathrm{kN}$。</p>
+<p>② 30° のとき（4.91 kN）より小さい。ロープを立てるほど、各ロープの負担は減る（図6.3）。</p></details></div>
+
+<div class="box"><span class="label">問4〔B｜自作〕分解の公式を使う</span>力 $\boldsymbol F=(100,\ 50)\ \mathrm N$ を、$\boldsymbol u_1=(1,\ 0)$ と $\boldsymbol u_2=(\cos60^\circ,\ \sin60^\circ)$ の方向に分解し、元の式に代入して検算せよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① $\boldsymbol u_2=(0.5000,\ 0.8660)$。$d=1\times0.8660-0.5000\times0=0.8660$。</p>
+<p>② (5.2)：$F_1=(0.8660\times100-0.5000\times50)/0.8660=(86.60-25.00)/0.8660=71.13\ \mathrm N$、$F_2=(-0\times100+1\times50)/0.8660=57.74\ \mathrm N$。</p>
+<p>③ 検算：$x$：$71.13+57.74\times0.5000=100.0$、$y$：$57.74\times0.8660=50.00$。どちらも正なので、分力は $\boldsymbol u_1,\boldsymbol u_2$ と同じ向き。</p></details></div>
+
+<div class="box"><span class="label">問5〔B｜自作〕$d=0$ の考え方</span>力を $\boldsymbol{u}_1=(1,\ 0)$ と $\boldsymbol{u}_2=(-1,\ 0)$ の方向に分解しようとすると、どうなるか。(5.2)（教科書 式2.23）の $d$ を使って説明せよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① $d=1\times0-(-1)\times0=0$ となり、(5.2) は 0 で割ることになって使えない。</p>
+<p>② $\boldsymbol{u}_1$ と $\boldsymbol{u}_2$ は同じ直線（$x$ 軸）上の向きなので、$y$ 成分をもつ力はどう組み合わせても作れない（解なし）。$y$ 成分が 0 の力なら、逆に組み合わせ方が無数にある（解が一つに決まらない）。2.8節の「平行な2直線」と同じ状況である。</p></details></div>
+
+<div class="box"><span class="label">問6〔B｜Engineering Statics §2.9〕3力の合成と象限</span>質点Pに3つの力が働く。$\boldsymbol A$ は大きさ 40 N で、負の $x$ 軸から反時計回りに 30° の向き。$\boldsymbol B$ は大きさ 50 N で、Pから出る傾き $3/(-4)$ の半直線に沿う（左へ4進むと上へ3）。$\boldsymbol C$ は大きさ 20 N で真下。(1) $\boldsymbol A,\boldsymbol B,\boldsymbol C$ のスカラー成分を求めよ。(2) $\boldsymbol R=\boldsymbol A+\boldsymbol B+\boldsymbol C$ を、つなぎ合わせの縮尺図に描け。(3) 合力の成分を求めよ。(4) $\boldsymbol R$ の大きさと、正の $x$ 軸となす角を求めよ。
+<p class="cr">出典：T. Baker &amp; D. Haynes, <i>Engineering Statics: Open and Interactive</i>, §2.9 Exercises “Vector Addition: no diagram”（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/Chapter_02-11.html">https://engineeringstatics.org/Chapter_02-11.html</a>。和訳は本教材。数値は一例（原問題は開くたびに数値が変わる）。自作の解答・未照合。</p>
+<details><summary>解答</summary>
+<p>① (1) $\boldsymbol A$：負の $x$ 軸から反時計回りに 30° は、正の $x$ 軸から $180^\circ+30^\circ=210^\circ$。$\boldsymbol A=40(\cos210^\circ,\ \sin210^\circ)=(-34.64,\ -20.00)\ \mathrm N$。</p>
+<p>② $\boldsymbol B$：向きは $(-4,\ 3)$、長さ 5 なので単位ベクトル $(-0.8,\ 0.6)$。$\boldsymbol B=50(-0.8,\ 0.6)=(-40.00,\ 30.00)\ \mathrm N$。$\boldsymbol C=(0,\ -20.00)\ \mathrm N$。</p>
+<p>③ (3) $\boldsymbol R=(-34.64-40.00+0,\ -20.00+30.00-20.00)=(-74.64,\ -10.00)\ \mathrm N$。</p>
+<p>④ (4) $R=\sqrt{74.64^2+10.00^2}=75.31\ \mathrm N$。$R_x\lt0,\ R_y\lt0$ で第3象限。$\tan^{-1}(10.00/74.64)=7.63^\circ$ をそのまま答えると誤り。正しくは $180^\circ+7.63^\circ=187.6^\circ$（$=-172.4^\circ$、負の $x$ 軸から下へ 7.63°）。</p>
+<figure><svg viewBox="0 0 520 300" width="520" role="img" aria-label="3力 A, B, C をつなぎ合わせて合力 R を作る縮尺図">
+<defs><marker id="eb1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="eb1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="eb1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="eb1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="eb1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="eb1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="71.5" y1="20.0" x2="71.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="114.5" y1="20.0" x2="114.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="157.5" y1="20.0" x2="157.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="200.5" y1="20.0" x2="200.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="243.5" y1="20.0" x2="243.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="286.5" y1="20.0" x2="286.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="329.5" y1="20.0" x2="329.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="372.5" y1="20.0" x2="372.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="415.5" y1="20.0" x2="415.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="458.5" y1="20.0" x2="458.5" y2="278.0" stroke="#e2dccf"/>
+<line x1="50.0" y1="256.5" x2="480.0" y2="256.5" stroke="#e2dccf"/>
+<line x1="50.0" y1="213.5" x2="480.0" y2="213.5" stroke="#e2dccf"/>
+<line x1="50.0" y1="170.5" x2="480.0" y2="170.5" stroke="#e2dccf"/>
+<line x1="50.0" y1="127.5" x2="480.0" y2="127.5" stroke="#e2dccf"/>
+<line x1="50.0" y1="84.5" x2="480.0" y2="84.5" stroke="#e2dccf"/>
+<line x1="50.0" y1="41.5" x2="480.0" y2="41.5" stroke="#e2dccf"/>
+<path d="M50.0,127.5 L480.0,127.5" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M415.5,278.0 L415.5,20.0" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<text x="71.5" y="271.6" fill="#968d80" text-anchor="middle" font-size="10">-80</text>
+<text x="157.5" y="271.6" fill="#968d80" text-anchor="middle" font-size="10">-60</text>
+<text x="243.5" y="271.6" fill="#968d80" text-anchor="middle" font-size="10">-40</text>
+<text x="329.5" y="271.6" fill="#968d80" text-anchor="middle" font-size="10">-20</text>
+<text x="415.5" y="271.6" fill="#968d80" text-anchor="middle" font-size="10">0</text>
+<text x="475.7" y="114.6" fill="#968d80" text-anchor="end" font-size="10">x [N]</text>
+<text x="419.8" y="32.9" fill="#968d80" text-anchor="start" font-size="10">y [N]</text>
+<line x1="415.5" y1="127.5" x2="266.5" y2="213.5" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#eb1-b)"/>
+<line x1="266.5" y1="213.5" x2="94.5" y2="84.5" stroke="#4f7a4a" stroke-width="2.4" marker-end="url(#eb1-g)"/>
+<line x1="94.5" y1="84.5" x2="94.5" y2="170.5" stroke="#a06a32" stroke-width="2.4" marker-end="url(#eb1-o)"/>
+<line x1="415.5" y1="127.5" x2="94.5" y2="170.5" stroke="#a8322a" stroke-width="2.8" marker-end="url(#eb1-r)"/>
+<text x="349.6" y="187.7" fill="#2b3a67" text-anchor="start" font-size="11">A（40 N）</text>
+<text x="200.5" y="192.0" fill="#4f7a4a" text-anchor="end" font-size="11">B（50 N）</text>
+<text x="85.9" y="110.3" fill="#a06a32" text-anchor="end" font-size="11">C（20 N）</text>
+<text x="103.1" y="192.0" fill="#a8322a" text-anchor="start" font-size="13">R</text>
+<circle cx="415.5" cy="127.5" r="3.5" fill="#2a2723"/>
+<text x="424.1" y="142.5" fill="#2a2723" text-anchor="start" font-size="12">P</text>
+</g></svg>
+<figcaption>図8.1　(2) の縮尺図（計算した成分で作図）。A→B→C の順につないだ折れ線の始点から終点への赤い矢印が $\boldsymbol R=(-74.64,\ -10.00)\ \mathrm N$。</figcaption></figure>
+</details></div>
+
+<div class="box"><span class="label">問7〔B｜Engineering Statics §2.9〕回転した座標軸での成分（内積）</span>力 $\boldsymbol F$ の大きさは 250 N で、水平から 30° の向き（左上向き：正の $x$ 軸から 150°）に働く。(a) $x,y$ 方向のスカラー成分を求めよ。(b) $x,y$ 軸を反時計回りに 40° 回した $x',y'$ 軸の方向のスカラー成分を求めよ。
+<figure><svg viewBox="0 0 440 300" width="440" role="img" aria-label="力 F と、40°回した座標軸 x′, y′">
+<defs><marker id="eb2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="eb2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="eb2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="eb2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="eb2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="eb2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M47.8,231.3 L400.0,231.3" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<path d="M243.5,270.4 L243.5,27.8" fill="none" stroke="#2a2723" stroke-width="1" opacity="1"/>
+<text x="396.1" y="242.3" fill="#2a2723" text-anchor="end" font-size="12">x</text>
+<text x="248.2" y="31.7" fill="#2a2723" text-anchor="start" font-size="12">y</text>
+<line x1="243.5" y1="231.3" x2="369.4" y2="125.7" stroke="#968d80" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#eb2-s)"/>
+<line x1="243.5" y1="231.3" x2="137.8" y2="105.4" stroke="#968d80" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#eb2-s)"/>
+<text x="375.5" y="126.3" fill="#968d80" text-anchor="start" font-size="12">x′</text>
+<text x="124.4" y="99.3" fill="#968d80" text-anchor="start" font-size="12">y′</text>
+<path d="M277.5,231.3 L277.4,229.3 L277.2,227.4 L277.0,225.4 L276.6,223.5 L276.0,221.6 L275.4,219.7 L274.7,217.8 L273.9,216.0 L272.9,214.3 L271.9,212.6 L270.8,211.0 L269.5,209.4" fill="none" stroke="#968d80"/>
+<text x="276.3" y="221.9" fill="#968d80" text-anchor="start" font-size="11">40°</text>
+<line x1="243.5" y1="231.3" x2="74.0" y2="133.5" stroke="#a8322a" stroke-width="2.8" marker-end="url(#eb2-r)"/>
+<text x="77.2" y="125.7" fill="#a8322a" text-anchor="start" font-size="12">F = 250 N</text>
+<path d="M198.4,205.3 L197.0,208.0 L195.7,210.7 L194.6,213.5 L193.7,216.4 L192.9,219.3 L192.3,222.3 L191.8,225.3 L191.6,228.3 L191.5,231.3" fill="none" stroke="#a8322a"/>
+<text x="184.8" y="223.5" fill="#a8322a" text-anchor="start" font-size="11">30°</text>
+<circle cx="243.5" cy="231.3" r="3.5" fill="#2a2723"/>
+</g></svg>
+<figcaption>図8.2　描き直した図。灰色の破線が回した軸 $x',y'$。</figcaption></figure>
+<p class="cr">出典：T. Baker &amp; D. Haynes, <i>Engineering Statics: Open and Interactive</i>, §2.9 Exercises “Rectangular components: P to R”（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/Chapter_02-11.html">https://engineeringstatics.org/Chapter_02-11.html</a>。和訳は本教材。数値は一例（原問題は角度の与え方も含めて開くたびに変わる）。自作の解答・未照合。</p>
+<details><summary>解答</summary>
+<p>① (a) (2.3)：$F_x=250\cos150^\circ=-216.5\ \mathrm N$、$F_y=250\sin150^\circ=+125.0\ \mathrm N$。</p>
+<p>② (b) 回した軸の単位ベクトル：$\boldsymbol e_{x'}=(\cos40^\circ,\ \sin40^\circ)$、$\boldsymbol e_{y'}=(-\sin40^\circ,\ \cos40^\circ)$（直交していることは内積 0 で確かめられる）。直交分解なので (5.1) の内積が使える。</p>
+<p>③ $F_{x'}=\boldsymbol F\cdot\boldsymbol e_{x'}=250(\cos150^\circ\cos40^\circ+\sin150^\circ\sin40^\circ)=250\cos(150^\circ-40^\circ)=250\cos110^\circ=-85.51\ \mathrm N$。<br>（加法定理の出所：単位ベクトル $(\cos\alpha,\sin\alpha)$ と $(\cos\beta,\sin\beta)$ のなす角は $\alpha-\beta$ なので、内積の定義 (2.7) と成分の式 (2.9) を等しいとおくと $\cos(\alpha-\beta)=\cos\alpha\cos\beta+\sin\alpha\sin\beta$。）</p>
+<p>④ $F_{y'}=\boldsymbol F\cdot\boldsymbol e_{y'}=250(-\cos150^\circ\sin40^\circ+\sin150^\circ\cos40^\circ)=250\sin(150^\circ-40^\circ)=250\sin110^\circ=+234.9\ \mathrm N$。</p>
+<p>⑤ 確かめ：$\sqrt{85.51^2+234.9^2}=250.0\ \mathrm N$。軸を回しても大きさは変わらない。$\boldsymbol F$ は $x'$ 軸から 110° の向きなので、$x'$ 成分が負・$y'$ 成分が正で合う。</p></details></div>
+
+<div class="box"><span class="label">問8〔B｜OpenStax UP1 2章 問65〕3次元の方向余弦</span>ベクトル $\boldsymbol D=(2.0\,\boldsymbol i-4.0\,\boldsymbol j+\boldsymbol k)\ \mathrm m$ が $x$ 軸、$y$ 軸、$z$ 軸となす角を求めよ。
+<p class="note">原文：Find the angles that vector D = (2.0 i − 4.0 j + k) m makes with the x-, y-, and z-axes.</p>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 2 Problems, §2.4, Problem 65（CC BY-NC-SA 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/2-problems">https://openstax.org/books/university-physics-volume-1/pages/2-problems</a>。和訳は本教材。公式解答（64.12°、150.79°、77.39°）と照合済み（$\theta_z$ は丸め方で 0.01° 違う。真値は 77.396°）。</p>
+<details><summary>解答</summary>
+<p>① $D=\sqrt{2.0^2+4.0^2+1^2}=\sqrt{21}=4.583\ \mathrm m$。</p>
+<p>② (2.5)：$\cos\theta_x=2.0/4.583=0.4364$、$\cos\theta_y=-4.0/4.583=-0.8729$、$\cos\theta_z=1/4.583=0.2182$。</p>
+<p>③ $\theta_x=64.12^\circ$、$\theta_y=150.79^\circ$、$\theta_z=77.40^\circ$。</p>
+<p>④ 確かめ：$0.4364^2+0.8729^2+0.2182^2=1.000$。$y$ 成分が負なので $\theta_y\gt90^\circ$。</p></details></div>
+
+<div class="box"><span class="label">問9〔C｜OpenStax UP1 2章 問89〕内積による射影（3次元）</span>力のベクトル $\boldsymbol G=(3.0\,\boldsymbol i+4.0\,\boldsymbol j+10.0\,\boldsymbol k)\ \mathrm N$ の、力のベクトル $\boldsymbol H=(1.0\,\boldsymbol i+4.0\,\boldsymbol j)\ \mathrm N$ の方向の成分を求めよ。
+<p class="note">原文：What is the component of the force vector G = (3.0 i + 4.0 j + 10.0 k) N along the force vector H = (1.0 i + 4.0 j) N?</p>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 2 Challenge Problems, Problem 89（CC BY-NC-SA 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/2-challenge-problems">https://openstax.org/books/university-physics-volume-1/pages/2-challenge-problems</a>。和訳は本教材。公式解答（約 4.6 N）と照合済み。</p>
+<details><summary>解答</summary>
+<p>① $\boldsymbol H$ の向きの単位ベクトルを作る：$H=\sqrt{1+16}=\sqrt{17}=4.123$、$\boldsymbol u_H=(1,\ 4,\ 0)/4.123$。</p>
+<p>② (2.8)：$G_H=\boldsymbol G\cdot\boldsymbol u_H=(3.0\times1+4.0\times4+10.0\times0)/4.123=19.0/4.123=4.61\ \mathrm N$。</p>
+<p>③ ベクトルとして書くなら $G_H\boldsymbol u_H=4.61\times(0.2425,\ 0.9701,\ 0)=(1.118,\ 4.471,\ 0)\ \mathrm N$。</p>
+<p>④ 確かめ：$G=\sqrt{9+16+100}=11.18\ \mathrm N$ で、なす角は $\cos^{-1}(4.61/11.18)=65.7^\circ$。$\boldsymbol G$ の大部分は $z$ 方向で、$\boldsymbol H$ は $xy$ 面内にあるので、成分が小さいのは妥当。<strong>よくある誤り</strong>：$\boldsymbol G\cdot\boldsymbol H=19.0$ で止める（単位が $\mathrm N^2$ になってしまう。$\boldsymbol H$ は長さ1ではない）。</p></details></div>
+
+<div class="box"><span class="label">問10〔C｜OpenStax UP1 2章 問88〕合力の大きさから2力のなす角</span>ベクトル $\boldsymbol B$ の長さは 5.0 cm、ベクトル $\boldsymbol A$ の長さは 4.0 cm である。$|\boldsymbol A+\boldsymbol B|=3.0\ \mathrm{cm}$ のとき、2つのベクトルのなす角を求めよ。
+<p class="note">原文：Vector B is 5.0 cm long and vector A is 4.0 cm long. Find the angle between these two vectors when |A + B| = 3.0 cm.</p>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 2 Challenge Problems, Problem 88（CC BY-NC-SA 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/2-challenge-problems">https://openstax.org/books/university-physics-volume-1/pages/2-challenge-problems</a>。和訳は本教材。偶数番の問題で公式解答が公開されていないため、自作の解答・未照合。</p>
+<details><summary>解答</summary>
+<p>① 4.3節の (4.3)（内積の展開）を使う：$|\boldsymbol A+\boldsymbol B|^2=A^2+B^2+2AB\cos\varphi$。</p>
+<p>② 代入：$3.0^2=4.0^2+5.0^2+2\times4.0\times5.0\cos\varphi$、$9=41+40\cos\varphi$。</p>
+<p>③ $\cos\varphi=-32/40=-0.80$、$\varphi=143.1^\circ$。</p>
+<p>④ 確かめ：$\boldsymbol A=(4,0)$、$\boldsymbol B=5(\cos143.1^\circ,\ \sin143.1^\circ)=(-4.0,\ 3.0)$ とおくと $\boldsymbol A+\boldsymbol B=(0,\ 3.0)$ で長さ 3.0。3-4-5 の直角三角形になっている（$\boldsymbol A\cdot(\boldsymbol A+\boldsymbol B)=0$）。<strong>よくある誤り</strong>：三角形の内角 $36.9^\circ$（$=180^\circ-143.1^\circ$）を「なす角」と答える。なす角は根元をそろえて測る。</p></details></div>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 静力学と動力学の違い、ニュートンの三法則を言える。</li>
+<li>□ $d\boldsymbol{p}/dt=\boldsymbol{F}$ から $m\boldsymbol{a}=\boldsymbol{F}$ を（質量一定の条件つきで）導き、さらに止まっている質点で $\sum\boldsymbol F_i=\boldsymbol 0$ を導ける。</li>
+<li>□ 「500 kg」を力（N）に直せる。答えを3〜4桁で書ける。</li>
+<li>□ 成分・基本ベクトル・大きさを使え、行と列の書き方（教科書と講義資料）を区別できる。</li>
+<li>□ 角度から成分を出し（どの象限でも）、成分から角度に戻すとき $\tan^{-1}$ の象限を正しく判定できる。</li>
+<li>□ 単位ベクトル（方向余弦）を2次元・3次元で求め、2点の座標から「終点−始点」で向きを作れる。</li>
+<li>□ 内積の成分の式 $a_xb_x+a_yb_y$ を基本ベクトルから導き、「ある方向の成分＝単位ベクトルとの内積」を使える。</li>
+<li>□ 力の三要素（大きさ・向き・作用点）を言え、力を足してよいのは実験事実（平行四辺形の法則）だと説明できる。</li>
+<li>□ $F_1+F_2\neq R$ を例で示し、$R^2=F_1^2+F_2^2+2F_1F_2\cos\varphi$ を内積から導ける。</li>
+<li>□ 分解の公式（教科書 式2.23）を連立方程式から導き、符号から本当の向きを読め、$d=0$ の意味を説明できる。</li>
+<li>□ 手順①〜⑥で、ロープ・ワイヤ・部材の力を求められる。安全率の意味を説明できる。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第2回・10/6）</strong>：2次元のモーメント（教科書 2.2）。今回の 3.1節で見た「作用点をずらすと物体が回る」働きを、力×腕の長さとして数える。後回しにした外積も、そこで導入する。<br>
+<a href="index.html">← 目次へ</a>
+</div>
+
+<div class="box"><span class="label">講義資料との対応（どこで扱ったか）</span>
+<table class="tb">
+<tr><th>講義資料（スライド）</th><th>本教材</th></tr>
+<tr><td>1・1 力学とは（静力学・動力学・ニュートン）</td><td>1.1</td></tr>
+<tr><td>ニュートンの法則／第二法則の注</td><td>1.2／1.3</td></tr>
+<tr><td>1・3 単位・有効数字</td><td>1.5</td></tr>
+<tr><td>前半の目標・マニピュレータ</td><td>序</td></tr>
+<tr><td>今日のポイント「力はベクトル」、2・1 力（図2.1・2.2）</td><td>3章</td></tr>
+<tr><td>ベクトルの表し方・成分表示 (2.1)</td><td>2.1</td></tr>
+<tr><td>ベクトルの使い方4つ</td><td>2章冒頭（外積は第2回）</td></tr>
+<tr><td>単位ベクトル (2.9)／基本ベクトル (2.10)</td><td>2.5／2.3</td></tr>
+<tr><td>内積 (2.65)、図2.54</td><td>2.7</td></tr>
+<tr><td>力の合成 (2.12)</td><td>4章</td></tr>
+<tr><td>力の分解、一般的な分解方法 (2.23)</td><td>5章</td></tr>
+<tr><td>例題（ロープ）・安全率</td><td>6.2・6.3</td></tr>
+<tr><td>例題2・2／例題2・3 (2.24)(2.25)</td><td>6.4／6.5</td></tr>
+</table></div>
+
+<p class="meta">出典：講義資料「第1回」（PDF）と教科書『機械工学のための力学』（日本機械学会）1章・2.1節の範囲を、本教材の方針（説明の順序を組み直し、導出を省かない）で書き直したもの。例題の解答の書き方、自作の例題・演習・補足・写真の見立ては本教材による。外部の問題は各問題の下に出典を書いた（OpenStax <i>University Physics Volume 1</i> と Baker &amp; Haynes <i>Engineering Statics: Open and Interactive</i>、いずれも CC BY-NC-SA 4.0。和訳・描き直しの図・解答は本教材）。教科書の図（図2.1・2.2・2.18・2.19・2.21・2.22・2.54、例題2・2の図）は、講義資料のスライドから切り出して<strong>個人の学習用</strong>に転載したもので、転載・再配布はしないこと。グラフと縮尺図は Python で計算して描いた。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="column/C01_力は見えない.html"><small>READING</small>読み物：力は見えない →</a></nav>
+
+</body>
+</html>

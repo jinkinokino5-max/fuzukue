@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>応用数学Ⅱ 自習教材トップ（複素関数論・フーリエ解析・ラプラス変換）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --warn:#fff4e5; --warnline:#e0a96d; --star:#c0392b; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink);
+        line-height:1.75; margin:0 auto; padding:24px 26px; max-width:960px; font-size:15.5px; }
+  h1{ font-size:24px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:30px 0 12px; }
+  .lead{ color:var(--sub); margin:6px 0 16px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:10px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-radius:6px; padding:10px 14px; margin:12px 0; }
+  .key{ font-weight:bold; color:var(--accent2); } .star{ color:var(--star); font-weight:bold; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); }
+  /* card grid */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .card{ position:relative; display:block; text-decoration:none; color:inherit; border:1px solid var(--line); border-left:6px solid var(--accent);
+         border-radius:8px; padding:12px 15px; background:#fff; transition:box-shadow .15s, transform .15s, opacity .2s, filter .2s; }
+  .card:hover{ box-shadow:0 4px 14px rgba(0,0,0,.12); transform:translateY(-2px); }
+  .card .no{ display:inline-block; font-size:12px; font-weight:bold; color:#fff; background:var(--accent);
+             border-radius:10px; padding:1px 9px; margin-bottom:6px; }
+  .card .ttl{ font-size:16px; font-weight:bold; color:var(--accent); margin:2px 0 5px; }
+  .card .dsc{ font-size:13px; color:var(--sub); line-height:1.6; }
+  .card.special{ border-left-color:var(--accent2); }
+  .card.special .no{ background:var(--accent2); } .card.special .ttl{ color:var(--accent2); }
+  .card.exam{ border-left-color:var(--star); }
+  .card.exam .no{ background:var(--star); } .card.exam .ttl{ color:var(--star); }
+  .map{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:12px 14px; line-height:2.1; }
+  .map a{ color:var(--accent); text-decoration:none; font-weight:bold; } .map a:hover{ text-decoration:underline; }
+  .chk{ list-style:none; padding-left:4px; } .chk li::before{ content:"□ "; color:var(--accent); font-weight:bold; }
+  footer{ margin-top:30px; padding-top:12px; border-top:1px dashed var(--line); font-size:13px; color:var(--sub); }
+
+  /* --- 気分ナビゲーター（アイデア8） --- */
+  .mood-nav{ background:var(--box); border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin:14px 0; }
+  .mood-nav .mood-title{ font-weight:bold; margin-bottom:8px; }
+  .mood-btns{ display:flex; flex-wrap:wrap; gap:8px; }
+  .mood-btn{ cursor:pointer; border:1px solid var(--accent); background:#fff; color:var(--accent); border-radius:20px;
+             padding:6px 14px; font-size:13.5px; font-weight:bold; transition:.15s; }
+  .mood-btn:hover{ background:#e8f0f7; }
+  .mood-btn.active{ background:var(--accent); color:#fff; }
+  .mood-hint{ font-size:12.5px; color:var(--sub); margin-top:8px; min-height:18px; }
+  .card.mood-dim{ opacity:.28; filter:grayscale(70%); }
+  .card.mood-hit{ box-shadow:0 0 0 3px rgba(27,79,114,.35); }
+
+  /* --- 読了スタンプ（アイデア1・7 共通データ） --- */
+  .stamp-btn{ position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:50%;
+              border:2px solid var(--line); background:#fff; font-size:14px; line-height:1; cursor:pointer;
+              display:flex; align-items:center; justify-content:center; color:transparent; z-index:2; }
+  .stamp-btn:hover{ border-color:var(--star); }
+  .stamp-btn.done{ border-color:var(--star); color:var(--star); background:#fff5f3; }
+  .stamp-btn.done::after{ content:"✓"; }
+
+  /* --- 学習の旅マップ 進捗バー（アイデア1） --- */
+  .progress-wrap{ margin:6px 0 16px; }
+  .progress-label{ font-size:12.5px; color:var(--sub); margin-bottom:4px; }
+  .progress-track{ position:relative; height:10px; background:#e4e9ee; border-radius:6px; margin:4px 2px 20px; }
+  .progress-fill{ height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:6px; transition:width .3s; }
+  .progress-runner{ position:absolute; top:-15px; transform:translateX(-50%); transition:left .3s; font-size:17px; }
+  .map .stamp{ margin-right:2px; cursor:pointer; }
+  .map [data-map-id]{ white-space:nowrap; }
+
+  /* --- スタンプカード・バッジ（アイデア7） --- */
+  .badge-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin:14px 0; }
+  .badge{ border:1px solid var(--line); border-radius:10px; padding:14px; text-align:center; background:#f4f4f4;
+          filter:grayscale(100%); opacity:.5; transition:.25s; }
+  .badge.unlocked{ filter:none; opacity:1; background:#fff; border-color:var(--accent2); box-shadow:0 3px 10px rgba(0,0,0,.1); }
+  .badge .icon{ font-size:30px; }
+  .badge .name{ font-weight:bold; margin:6px 0 2px; color:var(--accent2); font-size:14px; }
+  .badge .cond{ font-size:11.5px; color:var(--sub); }
+  .reset-progress{ display:inline-block; margin-top:8px; font-size:12px; color:var(--sub); text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; }
+
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } .card:hover{ box-shadow:none; transform:none; }
+    .mood-nav, .stamp-btn, .badge-grid, .reset-progress{ display:none !important; } }
+</style>
+</head>
+<body>
+<!--fzk-back--><p style="margin:0 0 18px;font-size:12px;letter-spacing:.2em;line-height:1.6"><a href="../index.html" style="color:#a8322a;text-decoration:none">← 文机 FUZUKUE</a></p>
+
+<h1>応用数学Ⅱ 自習教材トップ</h1>
+<p class="lead">複素関数論（第1〜7回／中間試験範囲）を、基礎からひとつずつ理解するための教材一式です。<br>
+ゴールは「公式を使えること」ではなく、<span class="key">なぜその公式が成り立つのかを自分で再現できること</span>。先生の方針に沿って、証明・導出を省かずに解説しています。</p>
+
+<div class="box">
+<strong>はじめての方へ（おすすめの進め方）</strong>
+<ol>
+  <li>まず <a href="00_カリキュラム.html">カリキュラム</a> で全体像と学び方を確認する。</li>
+  <li>つまずいた回の<strong>テキスト（第3〜7回）</strong>を、図と証明を追いながら読む。</li>
+  <li>分からない箇所は <a href="08_AI教師エージェント_プロンプト.md">AI教師プロンプト</a> を対話AIに貼り、質問する。</li>
+  <li>各回末の演習問題と <span class="star">中間直前チェックリスト</span>（下記）で仕上げる。</li>
+</ol>
+</div>
+
+<div class="mood-nav">
+  <div class="mood-title">🧭 今の気分で選ぶ</div>
+  <div class="mood-btns">
+    <button type="button" class="mood-btn" data-mood-btn="sleepy">😴 眠くてやる気が出ない</button>
+    <button type="button" class="mood-btn" data-mood-btn="cram">😰 試験前で焦ってる</button>
+    <button type="button" class="mood-btn" data-mood-btn="deep">🧠 じっくり理解したい</button>
+    <button type="button" class="mood-btn" data-mood-btn="quick">⏱ 5分だけ読みたい</button>
+  </div>
+  <div class="mood-hint" id="mood-hint"></div>
+</div>
+
+<h2>教材一覧</h2>
+<div class="grid">
+
+  <a class="card special" href="00_カリキュラム.html" data-id="00" data-mood="deep quick">
+    <button type="button" class="stamp-btn" data-id="00" aria-label="読了にする"></button>
+    <span class="no">カリキュラム</span>
+    <div class="ttl">学習設計書（全体地図）</div>
+    <div class="dsc">先生の方針・複素関数論の論理の幹・前提知識チェック・全7回ロードマップ・各回の到達目標と試験対策。最初に読む1冊。</div>
+  </a>
+
+  <a class="card" href="03_第3回_等角写像・複素積分・コーシーの定理.html" data-id="03" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="03" aria-label="読了にする"></button>
+    <span class="no">第3回</span>
+    <div class="ttl">等角写像・複素積分・コーシーの定理</div>
+    <div class="dsc">複素積分の定義（区分求積）、基本積分 $\oint(z-a)^n dz$、コーシーの定理の証明。後半すべての土台。</div>
+  </a>
+
+  <a class="card exam" href="04_第4回_積分路の変更・不定積分・コーシーの積分表示・グルサの公式.html" data-id="04" data-mood="deep cram">
+    <button type="button" class="stamp-btn" data-id="04" aria-label="読了にする"></button>
+    <span class="no">第4回 ★試験最重要</span>
+    <div class="ttl">積分路の変更・不定積分・積分表示・グルサ</div>
+    <div class="dsc"><span class="star">不定積分の存在証明（試験必出）</span>を三段で詳説。コーシーの積分表示・グルサの公式の導出も。</div>
+  </a>
+
+  <a class="card" href="05_第5回_モレラの定理・テイラー展開・特異点の分類.html" data-id="05" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="05" aria-label="読了にする"></button>
+    <span class="no">第5回</span>
+    <div class="ttl">モレラの定理・テイラー展開・特異点分類</div>
+    <div class="dsc">テイラー展開の導出と収束半径、特異点の分類。<span class="star">「正則点ならローラン＝テイラー」</span>（過去問 問4）の証明つき。</div>
+  </a>
+
+  <a class="card" href="06_第6回_ローラン展開・極・留数・留数定理.html" data-id="06" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="06" aria-label="読了にする"></button>
+    <span class="no">第6回</span>
+    <div class="ttl">ローラン展開・極・留数・留数定理</div>
+    <div class="dsc">留数の定義と計算公式（1位・$n$位の極、$g/h$形）を導出つきで。留数定理の証明と過去問の留数計算。</div>
+  </a>
+
+  <a class="card" href="07_第7回_留数定理の実積分への応用.html" data-id="07" data-mood="deep cram">
+    <button type="button" class="stamp-btn" data-id="07" aria-label="読了にする"></button>
+    <span class="no">第7回</span>
+    <div class="ttl">留数定理の実積分への応用</div>
+    <div class="dsc">実定積分の3型（三角関数・有理関数・フーリエ）。過去問 問5（$=\pi/6$）の完全解答と解法テンプレート、直前チェックリスト。</div>
+  </a>
+
+  <a class="card special" href="11_第7回_やさしい詳説_留数定理の実積分への応用.html" data-id="11" data-mood="sleepy quick deep">
+    <button type="button" class="stamp-btn" data-id="11" aria-label="読了にする"></button>
+    <span class="no">第7回 やさしい詳説</span>
+    <div class="ttl">第7回を初学者向けに超詳細解説</div>
+    <div class="dsc">「公式は知ってるのに手が止まる」人向け。<span class="key">なぜ複素にするのか</span>の直感から、計算を1ステップも飛ばさず解説。例題を STEP 1〜6 に分解、つまずきQ&A付き。</div>
+  </a>
+
+  <a class="card exam" href="09_中間試験_問題と解答解説.html" data-id="09" data-mood="cram">
+    <button type="button" class="stamp-btn" data-id="09" aria-label="読了にする"></button>
+    <span class="no">中間試験 ★実物</span>
+    <div class="ttl">中間試験 問題・解答・解説</div>
+    <div class="dsc">2025/6/26実施の実際の試験（全5問）。<span class="star">問題＋先生の略解＋詳しい解説</span>を統合。配点内訳・部分点の取り方・各問の対応テキストへのリンク付き。</div>
+  </a>
+
+  <a class="card" href="10_レポート課題_解答と解説.html" data-id="10" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="10" aria-label="読了にする"></button>
+    <span class="no">レポート No.1〜3</span>
+    <div class="ttl">レポート課題 解答と解説</div>
+    <div class="dsc">提出課題3回分（復習／等角写像・複素積分／コーシー・グルサ・留数）の全14問。<span class="meta">※参考解答（非公式・自作）</span>。図・該当テキストへのリンク付き。</div>
+  </a>
+
+  <a class="card" href="12_第9回_フーリエ級数展開.html" data-id="12" data-mood="deep sleepy">
+    <button type="button" class="stamp-btn" data-id="12" aria-label="読了にする"></button>
+    <span class="no">第9回 ★後半</span>
+    <div class="ttl">フーリエ級数展開</div>
+    <div class="dsc">中間後の後半戦スタート。三角関数の直交性・係数の導出・<span class="star">矩形波の完全展開</span>（$5/8+\sum\sin$）・ギブス現象・パーセバル。直感を説明する黄色枠つき。</div>
+  </a>
+
+  <a class="card" href="13_第10回_フーリエ変換.html" data-id="13" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="13" aria-label="読了にする"></button>
+    <span class="no">第10回 ★後半</span>
+    <div class="ttl">フーリエ積分とフーリエ変換</div>
+    <div class="dsc">周期の制限を外し級数を変換へ一般化。複素フーリエ級数・積分表示・変換／逆変換の定義と意味・<span class="star">$\sqrt\alpha e^{-\alpha|x|}$ の変換例</span>・時間幅と周波数幅のトレードオフ。</div>
+  </a>
+
+  <a class="card" href="14_第11回_フーリエ変換の応用.html" data-id="14" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="14" aria-label="読了にする"></button>
+    <span class="no">第11回 ★後半</span>
+    <div class="ttl">フーリエ変換の応用</div>
+    <div class="dsc"><span class="star">デルタ関数</span>をフーリエ積分表示から導出。ふるい落とし性質・$\mathcal F[\delta]=1/\sqrt{2\pi}$・たたみ込み定理の証明・微分方程式の「変換→代数→逆変換」解法とグリーン関数。</div>
+  </a>
+
+  <a class="card" href="15_第12回_偏微分方程式の分類と解法.html" data-id="15" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="15" aria-label="読了にする"></button>
+    <span class="no">第12回 ★後半</span>
+    <div class="ttl">偏微分方程式の分類と解法</div>
+    <div class="dsc">判別式 $D=b^2-ac$ による3分類（双曲・放物・楕円）。<span class="star">ダランベールの解</span>（進行波＋後退波）の導出と、熱伝導の<span class="star">変数分離法</span>——フーリエ級数が本来の出番を迎える回。</div>
+  </a>
+
+  <a class="card" href="16_第13回_ラプラス変換とラプラス逆変換.html" data-id="16" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="16" aria-label="読了にする"></button>
+    <span class="no">第13回 ★後半</span>
+    <div class="ttl">ラプラス変換とラプラス逆変換</div>
+    <div class="dsc">フーリエ変換の条件を緩めた変換を定義。<span class="star">コーシーの定理＋モレラの定理で正則性を証明</span>し、フーリエ逆変換から逆変換公式を導出。<span class="star">留数定理（第6・7回）</span>による逆変換と変換表の導出まで。</div>
+  </a>
+
+  <a class="card" href="17_第14回_微分方程式・偏微分方程式へのラプラス変換の応用とたたみ込み.html" data-id="17" data-mood="deep">
+    <button type="button" class="stamp-btn" data-id="17" aria-label="読了にする"></button>
+    <span class="no">第14回 ★後半</span>
+    <div class="ttl">微分方程式・偏微分方程式への応用とたたみ込み</div>
+    <div class="dsc">「変換→代数方程式→逆変換」で常微分方程式を2通りに解き、<span class="star">たたみ込み定理を証明</span>。波動方程式にラプラス変換を適用すると<span class="star">第12回のダランベールの解</span>が別の道から再登場。</div>
+  </a>
+
+  <a class="card" href="20_第15回_ステップ関数とデルタ関数・システムの応答.html" data-id="20" data-mood="deep quick">
+    <button type="button" class="stamp-btn" data-id="20" aria-label="読了にする"></button>
+    <span class="no">第15回 ★試験範囲外</span>
+    <div class="ttl">ステップ関数とデルタ関数・システムの応答</div>
+    <div class="dsc">単位関数のラプラス変換と<span class="star">第二移動定理</span>を証明し、矩形波に応用。パルスの極限として<span class="star">デルタ関数を第11回とは別ルートで再構成</span>。システムのインピーダンス $Z(s)$・ステップ応答／インパルス応答・たたみ込みによる一般応答まで。</div>
+  </a>
+
+  <a class="card exam" href="18_期末試験過去問_問題と解答解説.html" data-id="18" data-mood="cram">
+    <button type="button" class="stamp-btn" data-id="18" aria-label="読了にする"></button>
+    <span class="no">期末試験過去問 ★実物</span>
+    <div class="ttl">期末試験過去問 問題・解答・解説</div>
+    <div class="dsc">2025/7/24実施の過去問（全4問）。<span class="star">問題＋先生の略解＋懇切丁寧な解説</span>を統合。フーリエ級数・フーリエ変換・ラプラス変換・ダランベールの解を横断する構成。</div>
+  </a>
+
+  <a class="card exam" href="19_期末試験対策問題集_予想問題と解答解説.html" data-id="19" data-mood="cram">
+    <button type="button" class="stamp-btn" data-id="19" aria-label="読了にする"></button>
+    <span class="no">期末対策問題集 ★予想問題</span>
+    <div class="ttl">期末試験対策問題集 予想問題・解答・解説</div>
+    <div class="dsc">過去問と<span class="star">同じ配点比率・同じテーマ構成</span>で作成した自作の予想問題（全4問・約90分）。フーリエ級数の一般係数導出、三角パルスのフーリエ変換、振動型のラプラス逆変換、熱伝導方程式の変数分離を新規の題材で練習。</div>
+  </a>
+
+  <a class="card special" href="08_AI教師エージェント_プロンプト.md" data-id="08" data-mood="quick sleepy">
+    <button type="button" class="stamp-btn" data-id="08" aria-label="読了にする"></button>
+    <span class="no">AIプロンプト</span>
+    <div class="ttl">専属AI教師システムプロンプト</div>
+    <div class="dsc">対話AIに貼るだけで、少ない入力から講義の文脈を推定し基礎から教えるAI教師に。本文をコピーして使用。</div>
+  </a>
+
+</div>
+<p class="meta">※ 第1・2回（複素関数・正則性・C-R方程式／初等関数）は、現状 <a href="00_カリキュラム.html">カリキュラム</a> の各回詳細で要点を確認できます。要望があれば同形式の独立テキストを追加します。</p>
+
+<h2>複素関数論の論理の幹（学習の旅マップ）</h2>
+<div class="progress-wrap" id="complex-progress">
+  <div class="progress-label" id="complex-label">0 / 5 回 読了（0%）</div>
+  <div class="progress-track"><div class="progress-fill" style="width:0%"></div><div class="progress-runner" id="complex-runner" style="left:0%">🚩</div></div>
+</div>
+<div class="map">
+正則性（微分可能）
+&nbsp;⟶&nbsp; コーシー・リーマンの方程式
+&nbsp;⟶&nbsp; <span data-map-id="03"><span class="stamp">⬜</span><a href="03_第3回_等角写像・複素積分・コーシーの定理.html">複素積分・コーシーの定理</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="04"><span class="stamp">⬜</span><a href="04_第4回_積分路の変更・不定積分・コーシーの積分表示・グルサの公式.html">不定積分・積分表示・グルサ</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="05"><span class="stamp">⬜</span><a href="05_第5回_モレラの定理・テイラー展開・特異点の分類.html">テイラー展開・特異点</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="06"><span class="stamp">⬜</span><a href="06_第6回_ローラン展開・極・留数・留数定理.html">ローラン展開・留数・留数定理</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="07"><span class="stamp">⬜</span><a href="07_第7回_留数定理の実積分への応用.html">実積分への応用</a></span>
+</div>
+<p class="meta">鍵は「正則」。正則であることが、積分の経路独立・無限回微分可能・べき級数展開、すべての出発点です。カード右上の◯（またはここのマス目の⬜）をクリックすると読了スタンプが押せます。</p>
+
+<h2>後半（フーリエ解析〜ラプラス変換）の論理の幹（学習の旅マップ）</h2>
+<div class="progress-wrap" id="fourier-progress">
+  <div class="progress-label" id="fourier-label">0 / 7 回 読了（0%）</div>
+  <div class="progress-track"><div class="progress-fill" style="width:0%"></div><div class="progress-runner" id="fourier-runner" style="left:0%">🚩</div></div>
+</div>
+<div class="map">
+<span data-map-id="12"><span class="stamp">⬜</span><a href="12_第9回_フーリエ級数展開.html">フーリエ級数展開</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="13"><span class="stamp">⬜</span><a href="13_第10回_フーリエ変換.html">フーリエ積分・フーリエ変換</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="14"><span class="stamp">⬜</span><a href="14_第11回_フーリエ変換の応用.html">デルタ関数・たたみ込み</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="15"><span class="stamp">⬜</span><a href="15_第12回_偏微分方程式の分類と解法.html">偏微分方程式（ダランベール・変数分離）</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="16"><span class="stamp">⬜</span><a href="16_第13回_ラプラス変換とラプラス逆変換.html">ラプラス変換・逆変換</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="17"><span class="stamp">⬜</span><a href="17_第14回_微分方程式・偏微分方程式へのラプラス変換の応用とたたみ込み.html">微分方程式・偏微分方程式への応用</a></span>
+&nbsp;⟶&nbsp; <span data-map-id="20"><span class="stamp">⬜</span><a href="20_第15回_ステップ関数とデルタ関数・システムの応答.html">ステップ関数・デルタ関数・システムの応答</a></span>
+</div>
+<p class="meta">鍵は「関数を波・周波数成分に分解し、簡単な世界（代数）で処理してから逆変換で戻す」という一貫した発想。フーリエ変換とラプラス変換は、この発想を異なる関数のクラス（周期的／絶対可積分／片側で因果的）に適用した<strong>姉妹関係</strong>にあります。</p>
+
+<h2>中間試験 直前チェックリスト</h2>
+<div class="box">
+<ul class="chk">
+  <li>C-R方程式を導出し、$f'$ を作り<strong>不定積分で $f(z)$ を復元</strong>できる（第1・4回）</li>
+  <li><span class="star">不定積分の存在証明</span>を何も見ずに書ける（第4回）</li>
+  <li>$\oint(z-a)^n dz$ の値、コーシーの定理・積分表示・グルサを使い分けられる（第3・4回）</li>
+  <li>テイラー展開を計算でき、<span class="star">「正則点ならローラン＝テイラー」</span>を証明できる（第5回）</li>
+  <li>1位・$n$位の極の留数を導出付きで計算できる（第6回）</li>
+  <li>3つの型の実積分を、範囲・経路・極の選び方に注意して解ける（第7回）</li>
+  <li>$\log z=\ln|z|+i\arg z$ で実部・虚部を取り出せる（第2回）</li>
+</ul>
+</div>
+
+<h2>期末試験 直前チェックリスト</h2>
+<div class="box">
+<ul class="chk">
+  <li>フーリエ係数を相関係数として説明でき、偶奇性から不要な係数を見抜ける（第9回）</li>
+  <li>矩形波などのフーリエ級数展開を、部分積分の途中式を省略せず計算できる（第9回）</li>
+  <li>フーリエ変換の定義・逆変換、区分的に定義された関数の変換を計算できる（第10回）</li>
+  <li>デルタ関数のふるい落とし性質と<span class="star">たたみ込み定理の証明</span>を説明できる（第11回）</li>
+  <li>PDEを判別式 $D=b^2-ac$ で分類し、<span class="star">ダランベールの解</span>を変数変換から導出できる（第12回）</li>
+  <li>ラプラス変換の適用条件・収束域を言え、<span class="star">正則性をモレラの定理で証明</span>できる（第13回）</li>
+  <li>留数定理によるラプラス逆変換と、変換表の各公式を定義から導出できる（第13回）</li>
+  <li>微分方程式をラプラス変換で解き、<span class="star">部分分数分解・留数法・たたみ込み</span>を使い分けられる（第14回）</li>
+  <li>波動方程式にラプラス変換を適用し、進行波・後退波の形に帰着できる（第14回）</li>
+</ul>
+</div>
+
+<div class="warn">
+<strong>後半（中間試験後）について</strong>：<strong>第9〜15回（フーリエ級数・フーリエ変換・変換の応用・偏微分方程式・ラプラス変換・ラプラス変換の応用・ステップ関数とシステムの応答）</strong>と<strong>期末試験過去問の解説</strong>を追加しました（上記カード）。第15回は<span class="star">試験範囲外</span>ですが、証明・導出は他の回と同じ水準で載せています。
+</div>
+
+<h2>🏅 スタンプカード</h2>
+<p class="meta">教材カードの右上の◯（または論理の幹マップの⬜）をクリックすると読了スタンプが押せます。集めるとバッジが解放されます（記録はこの端末のブラウザ内にのみ保存されます）。</p>
+<div class="badge-grid">
+  <div class="badge" id="badge-complex">
+    <div class="icon">🌀</div>
+    <div class="name">複素関数論マスター</div>
+    <div class="cond">第3〜7回をすべて読了</div>
+  </div>
+  <div class="badge" id="badge-fourier">
+    <div class="icon">🌊</div>
+    <div class="name">フーリエ・ラプラスマスター</div>
+    <div class="cond">第9〜15回をすべて読了</div>
+  </div>
+  <div class="badge" id="badge-complete">
+    <div class="icon">👑</div>
+    <div class="name">応用数学Ⅱ コンプリート</div>
+    <div class="cond">前半・後半をすべて読了</div>
+  </div>
+</div>
+<button type="button" class="reset-progress" id="reset-progress">読了記録をリセットする</button>
+
+<footer>
+応用数学Ⅱ（機械システムコース）複素関数論 自習教材 ／ 数式表示は MathJax、図はインラインSVG。<br>
+各ページはブラウザの印刷機能でPDF化できます（演習の解答は印刷時に自動展開）。
+</footer>
+
+<script>
+(function(){
+  var KEY = 'amII_progress_v1';
+  var progress = {};
+  try{ progress = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ progress = {}; }
+
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(progress)); }catch(e){} }
+
+  var COMPLEX_IDS = ['03','04','05','06','07'];
+  var FOURIER_IDS = ['12','13','14','15','16','17','20'];
+
+  function countDone(ids){ return ids.filter(function(id){ return !!progress[id]; }).length; }
+
+  function updateBar(trackWrapId, runnerId, labelId, ids){
+    var done = countDone(ids), total = ids.length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+    var wrap = document.getElementById(trackWrapId);
+    var fill = wrap ? wrap.querySelector('.progress-fill') : null;
+    var runner = document.getElementById(runnerId);
+    var label = document.getElementById(labelId);
+    if(fill) fill.style.width = pct + '%';
+    if(runner) runner.style.left = pct + '%';
+    if(label) label.textContent = done + ' / ' + total + ' 回 読了（' + pct + '%）';
+  }
+
+  function setBadge(id, unlocked){
+    var el = document.getElementById(id);
+    if(el) el.classList.toggle('unlocked', unlocked);
+  }
+
+  function renderAll(){
+    updateBar('complex-progress', 'complex-runner', 'complex-label', COMPLEX_IDS);
+    updateBar('fourier-progress', 'fourier-runner', 'fourier-label', FOURIER_IDS);
+    var complexDone = countDone(COMPLEX_IDS) === COMPLEX_IDS.length;
+    var fourierDone = countDone(FOURIER_IDS) === FOURIER_IDS.length;
+    setBadge('badge-complex', complexDone);
+    setBadge('badge-fourier', fourierDone);
+    setBadge('badge-complete', complexDone && fourierDone);
+
+    document.querySelectorAll('.map [data-map-id]').forEach(function(el){
+      var id = el.getAttribute('data-map-id');
+      var s = el.querySelector('.stamp');
+      if(s) s.textContent = progress[id] ? '✅' : '⬜';
+    });
+    document.querySelectorAll('.card[data-id]').forEach(function(card){
+      var id = card.getAttribute('data-id');
+      var btn = card.querySelector('.stamp-btn');
+      if(btn){
+        btn.classList.toggle('done', !!progress[id]);
+        btn.setAttribute('aria-label', progress[id] ? '読了（クリックで解除）' : '読了にする');
+      }
+    });
+  }
+
+  function toggle(id){
+    if(!id) return;
+    progress[id] = !progress[id];
+    save();
+    renderAll();
+  }
+
+  document.addEventListener('click', function(e){
+    var stampBtn = e.target.closest('.stamp-btn');
+    if(stampBtn){
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(stampBtn.getAttribute('data-id'));
+      return;
+    }
+    var mapStamp = e.target.closest('.map [data-map-id] .stamp');
+    if(mapStamp){
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(mapStamp.closest('[data-map-id]').getAttribute('data-map-id'));
+      return;
+    }
+    var resetBtn = e.target.closest('#reset-progress');
+    if(resetBtn){
+      if(window.confirm('読了記録をすべてリセットしますか？')){
+        progress = {};
+        save();
+        renderAll();
+      }
+      return;
+    }
+  });
+
+  // 気分ナビゲーター（アイデア8）
+  var moodTexts = {
+    sleepy: '眠い時は、直感重視のやさしい解説から。まずは軽く読める所だけつまみ食い。',
+    cram: '試験前は、★マーク（試験最重要・実物問題）を優先的に。',
+    deep: 'じっくり派には、証明・導出を省かない本編を上から順に。',
+    quick: '5分だけなら、要点だけつかめるページを1つだけ。'
+  };
+  var moodBtns = document.querySelectorAll('.mood-btn');
+  var hint = document.getElementById('mood-hint');
+  moodBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var mood = b.getAttribute('data-mood-btn');
+      var wasActive = b.classList.contains('active');
+      moodBtns.forEach(function(x){ x.classList.remove('active'); });
+      document.querySelectorAll('.card[data-mood]').forEach(function(c){
+        c.classList.remove('mood-dim', 'mood-hit');
+      });
+      if(wasActive){
+        if(hint) hint.textContent = '';
+        return;
+      }
+      b.classList.add('active');
+      document.querySelectorAll('.card[data-mood]').forEach(function(c){
+        var moods = (c.getAttribute('data-mood') || '').split(' ');
+        c.classList.add(moods.indexOf(mood) !== -1 ? 'mood-hit' : 'mood-dim');
+      });
+      if(hint) hint.textContent = moodTexts[mood] || '';
+    });
+  });
+
+  renderAll();
+})();
+</script>
+
+</body>
+</html>

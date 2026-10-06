@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第14回 微分方程式・偏微分方程式へのラプラス変換の応用とたたみ込み</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .why{ background:#fffdf0; border:1px solid #e8d48b; border-left:6px solid #e8c14b; border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; } .why .label{ color:#9a7d1a; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; background:#fafafa; border:1px solid var(--line); border-radius:6px; padding:4px 12px; }
+  summary{ cursor:pointer; color:var(--accent); font-weight:bold; padding:5px 0; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:480px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  table.tb{ border-collapse:collapse; margin:12px 0; font-size:14.5px; width:100%; }
+  table.tb th,table.tb td{ border:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ background:#eef2f7; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+  .prob-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); background:#fff; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:0 6px; cursor:pointer; vertical-align:middle; user-select:none; }
+  .prob-chk input{ margin:0; cursor:pointer; }
+  @media print{ .prob-chk{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第14回　微分方程式・偏微分方程式へのラプラス変換の応用／たたみ込み</h1>
+<p class="lead">前回、ラプラス変換・逆変換の道具一式（定義、微分則、変換表、留数法）を揃えました。今回はそれらを実際に使い、<strong>常微分方程式</strong>と<strong>偏微分方程式</strong>を解きます。さらに逆変換の第3の方法「<strong>たたみ込み</strong>」を導入します。合言葉は「<strong>微分方程式 → ラプラス変換 → 代数方程式 → 逆変換</strong>」です。</p>
+
+<div class="navi">
+今回の流れ：<strong>① 常微分方程式への応用</strong>（変換表・部分分数で解く）→ <strong>② たたみ込み</strong>（定義・定理・証明——逆変換の第3の方法）→ <strong>③ たたみ込みで常微分方程式を解く</strong>→ <strong>④ 偏微分方程式への応用</strong>（波動方程式が実質的に常微分方程式になる）。④では<strong>第12回のダランベールの解</strong>が思わぬ形で再登場します。
+</div>
+
+<h2>14.0　解法のレシピと、逆変換の3つの方法</h2>
+<div class="thm">
+<span class="label">ラプラス変換による微分方程式の解法（レシピ）</span>
+$$ a\frac{d^2y}{dx^2}+b\frac{dy}{dx}+cy=f(x) \quad\xrightarrow{\ \mathcal L\ }\quad \hat y(s)=\hat g(s)+h\big[y'(0),y(0)\big] \quad\xrightarrow{\ \mathcal L^{-1}\ }\quad y(x) $$
+<ol>
+  <li>方程式の両辺をラプラス変換する（微分則 $\mathcal L[y'],\mathcal L[y'']$ を使う）。</li>
+  <li>初期条件 $y(0),y'(0)$ を代入する。</li>
+  <li>$\hat y(s)$ について解く——これは<strong>代数方程式</strong>を解くだけでよい。</li>
+  <li>必要なら部分分数分解する。</li>
+  <li>ラプラス逆変換して $y(x)$ を得る。</li>
+</ol>
+</div>
+<div class="warn">
+<span class="label">注意</span>　この方法で求まるのは、与えられた初期条件のもとでの<strong>特解</strong>です。（$C_1,C_2$ を含む）一般解が欲しいわけではありません——初期条件が最初から式に組み込まれているからです。
+</div>
+
+<div class="box">
+<strong>ラプラス逆変換、3つの方法（それぞれ必要な力）</strong>
+<table class="tb">
+<tr><th>方法</th><th>やること</th><th>必要なもの</th></tr>
+<tr><td>① 変換表を引く</td><td>部分分数分解して表と照合</td><td>経験とセンス</td></tr>
+<tr><td>② 留数定理</td><td>$f(x)=\sum\mathrm{Res}(e^{sx}\hat f(s))$（第13回）</td><td>勇気と根気</td></tr>
+<tr><td>③ たたみ込み積分</td><td>$\mathcal L^{-1}[\hat f_1(s)\hat f_2(s)]=f_1*f_2$（今回導入）</td><td>-</td></tr>
+</table>
+<p class="meta">実務ではほぼ①（変換表）で済みますが、複雑な分数関数では②・③が威力を発揮します。今回はまず①を例1で、次に③を導入してから例2で使います。</p>
+</div>
+
+<h2>14.1　常微分方程式への応用①——変換表で解く</h2>
+<div class="ex">
+<span class="label">例 14.1</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex14-1">完了</label>　$y''-3y'+2y=e^{2x}$、初期条件 $y(0)=0,\ y'(0)=0$ の特解を求めよ。
+<div class="proof">
+<strong>① 両辺をラプラス変換する</strong>　第13回の微分則 $\mathcal L[y'']=-y'(0)-sy(0)+s^2\hat y$、$\mathcal L[y']=-y(0)+s\hat y$ に、初期条件 $y(0)=y'(0)=0$ を入れると、境界項がすべて消えて
+$$ s^2\hat y-3s\hat y+2\hat y=\mathcal L[e^{2x}]=\frac{1}{s-2}. $$
+<strong>② $\hat y(s)$ について解く</strong>　左辺を $\hat y$ でくくる：
+$$ (s^2-3s+2)\hat y=\frac1{s-2}. $$
+$s^2-3s+2$ を因数分解すると（和が $3$、積が $2$ になる2数は $1,2$ なので）$s^2-3s+2=(s-1)(s-2)$。よって
+$$ (s-1)(s-2)\,\hat y=\frac1{s-2}\quad\Longrightarrow\quad \hat y(s)=\frac{1}{(s-1)(s-2)^2}. $$
+<strong>③ 部分分数分解する</strong>　$(s-2)$ が2乗で入っているので、
+$$ \frac{1}{(s-1)(s-2)^2}=\frac{A}{s-1}+\frac{B}{(s-2)^2}+\frac{C}{s-2} $$
+とおく。両辺に $(s-1)(s-2)^2$ を掛けて $1=A(s-2)^2+B(s-1)+C(s-1)(s-2)$。<br>
+・$s=1$ を代入：$1=A(1-2)^2=A$、よって $A=1$。<br>
+・$s=2$ を代入：$1=B(2-1)=B$、よって $B=1$。<br>
+・$s^2$ の係数を比較：左辺は $0$。右辺は $A(s-2)^2$ から $A$、$C(s-1)(s-2)$ から $C$（$B(s-1)$ は1次なので寄与なし）。よって $0=A+C$、$C=-1$。<br>
+検算（$s=0$）：右辺 $=A\cdot4+B\cdot(-1)+C\cdot(-1)(-2)=4-1-2=1$ ✓ 左辺 $1$ と一致。<br>
+したがって
+$$ \hat y(s)=\frac1{s-1}+\frac1{(s-2)^2}-\frac1{s-2}. $$
+<strong>④ 逆変換する（変換表を引く）</strong>　$\mathcal L^{-1}[1/(s-a)]=e^{ax}$、$\mathcal L^{-1}[1/(s-a)^2]=xe^{ax}$（変換表・移動則より、$\mathcal L[x]=1/s^2$ に移動則を適用）：
+$$ y(x)=e^{x}+xe^{2x}-e^{2x}=e^{x}+(x-1)e^{2x}. $$
+</div>
+<div class="proof">
+<strong>検算（初期条件と方程式を満たすか）</strong>　$y(0)=1+(0-1)=0$ ✓。$y'(x)=e^x+e^{2x}+2(x-1)e^{2x}=e^x+(2x-1)e^{2x}$、$y'(0)=1+(-1)=0$ ✓。$y''(x)=e^x+2e^{2x}+2(2x-1)e^{2x}=e^x+(4x)e^{2x}$。<br>
+$y''-3y'+2y=\big[e^x+4xe^{2x}\big]-3\big[e^x+(2x-1)e^{2x}\big]+2\big[e^x+(x-1)e^{2x}\big]$。$e^x$ の係数：$1-3+2=0$。$e^{2x}$ の係数：$4x-3(2x-1)+2(x-1)=4x-6x+3+2x-2=1$。合計 $=e^{2x}$ で、方程式の右辺 $e^{2x}$ と一致 ✓。
+</div>
+</div>
+
+<h2>14.2　たたみ込み（合成積）——逆変換の第3の方法</h2>
+<p>第11回でフーリエ変換のたたみ込みを学びました。ラプラス変換にも同様の道具があり、今回のような「$(s-1)(s-2)^2$」のような複雑な分母を分解せずに逆変換したいときに使えます。</p>
+
+<div class="def">
+<span class="label">たたみ込み（ラプラス変換版）</span>　ラプラス変換可能な2つの関数 $f_1(x),f_2(x)$（ともに $x&lt;0$ で $0$）に対して
+$$ (f_1*f_2)(x)=\int_{-\infty}^{\infty}f_1(x-y)f_2(y)\,dy=\int_0^x f_1(x-y)f_2(y)\,dy $$
+を<strong>たたみ込み</strong>という。
+</div>
+<div class="why">
+<span class="label">積分区間が $[0,x]$ に縮む理由</span>　$f_2(y)=0\ (y&lt;0)$ なので被積分関数は $y\ge0$ でしか生き残らない。また $f_1(x-y)=0\ (x-y&lt;0,\text{つまり}\,y&gt;x)$ なので $y\le x$ でしか生き残らない。両方を満たすのは $0\le y\le x$ だけ——だから積分区間が $\int_0^x$ に自動的に縮む（$x&lt;0$ なら区間が空になり、たたみ込みは $0$）。
+</div>
+
+<div class="thm">
+<span class="label">たたみ込み定理</span>
+$$ \mathcal L[f_1*f_2]=\mathcal L[f_1]\cdot\mathcal L[f_2] $$
+（フーリエ変換版と違って係数 $\sqrt{2\pi}$ が付かないことに注意——理由は証明の中で分かる。）
+</div>
+<div class="proof">
+<strong>① 定義を書き下す</strong>
+$$ \mathcal L[f_1*f_2]=\int_0^\infty e^{-sx}\Big[\int_0^x f_1(x-y)f_2(y)\,dy\Big]dx. $$
+<strong>② 積分順序を交換する</strong>　積分領域は $0\le y\le x&lt;\infty$（$xy$ 平面で $y=x$ の下側・第1象限）。この領域を「$y$ を先に固定し、$x$ を $y$ から $\infty$ まで動かす」順に読み替える：
+$$ =\int_0^\infty f_2(y)\Big[\int_y^\infty e^{-sx}f_1(x-y)\,dx\Big]dy. $$
+<strong>③ 内側の積分を置換する</strong>　$u=x-y$（$du=dx$、$x=y\Rightarrow u=0$、$x=\infty\Rightarrow u=\infty$）とおくと
+$$ \int_y^\infty e^{-sx}f_1(x-y)\,dx=\int_0^\infty e^{-s(u+y)}f_1(u)\,du=e^{-sy}\int_0^\infty e^{-su}f_1(u)\,du=e^{-sy}\,\hat f_1(s). $$
+<strong>④ 残った積分をまとめる</strong>　$\hat f_1(s)$ は $y$ に無関係なので積分の外に出せる：
+$$ \mathcal L[f_1*f_2]=\int_0^\infty f_2(y)\,e^{-sy}\hat f_1(s)\,dy=\hat f_1(s)\int_0^\infty e^{-sy}f_2(y)\,dy=\hat f_1(s)\,\hat f_2(s). $$
+</div>
+<div class="why">
+<span class="label">なぜ $\sqrt{2\pi}$ が付かないか</span>　フーリエ変換の定義には正規化定数 $1/\sqrt{2\pi}$ が入っていましたが、ラプラス変換の定義（第13回）にはそれがありません。証明の骨格（積分順序の交換＋置換積分）はフーリエ版と全く同じですが、正規化定数の有無がそのまま定理の見た目の違いになって現れます。
+</div>
+<div class="thm">
+<span class="label">たたみ込みによる逆変換</span>　定理を逆から読むと、$\hat f(s)=\hat f_1(s)\hat f_2(s)$ の形に分解できれば
+$$ \mathcal L^{-1}[\hat f_1(s)\hat f_2(s)]=f_1*f_2=\int_0^xf_1(x-y)f_2(y)\,dy $$
+——部分分数分解をしなくても、変換表で $f_1,f_2$ さえ分かれば積分1本で逆変換できる。
+</div>
+
+<h2>14.3　常微分方程式への応用②——たたみ込みで解く</h2>
+<div class="ex">
+<span class="label">例 14.2</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex14-2">完了</label>　$y''+y=f_0\cos2x$、初期条件 $y(0)=1,\ y'(0)=0$ の特解を求めよ（$f_0$ は定数）。
+<div class="proof">
+<strong>① 両辺をラプラス変換する</strong>　$\mathcal L[y'']=-y'(0)-sy(0)+s^2\hat y=-s+s^2\hat y$（$y'(0)=0,\,y(0)=1$ を代入）。$\mathcal L[\cos2x]=s/(s^2+4)$（第13回の変換表）。
+$$ s^2\hat y-s+\hat y=f_0\,\frac{s}{s^2+4}. $$
+<strong>② $\hat y(s)$ について解く</strong>
+$$ (s^2+1)\hat y=s+\frac{f_0s}{s^2+4}\quad\Longrightarrow\quad \hat y(s)=\frac{s}{s^2+1}+\frac{f_0\,s}{(s^2+1)(s^2+4)}. $$
+<strong>③ 第1項は表引きでそのまま</strong>　$\mathcal L^{-1}[s/(s^2+1)]=\cos x$（変換表）。<br>
+<strong>④ 第2項をたたみ込みで処理する</strong>　部分分数分解すると分母が $(s^2+1)(s^2+4)$ で少し面倒なので、代わりに<strong>積の形のまま</strong>たたみ込みを使う。$\dfrac{f_0s}{(s^2+1)(s^2+4)}=f_0\cdot\dfrac1{s^2+1}\cdot\dfrac{s}{s^2+4}=f_0\,\mathcal L[\sin x]\cdot\mathcal L[\cos2x]$（変換表：$\mathcal L[\sin x]=1/(s^2+1)$、$\mathcal L[\cos2x]=s/(s^2+4)$）。たたみ込み定理より
+$$ \mathcal L^{-1}\Big[f_0\,\mathcal L[\sin x]\mathcal L[\cos2x]\Big]=f_0\,(\sin x*\cos2x)=f_0\int_0^x\sin(x-y)\cos2y\,dy. $$
+<strong>⑤ 積分を計算する——積和公式で1つの三角関数に直す</strong>　被積分関数は $\sin(x-y)\cos2y$ という「2種類の三角関数の積」で、このままでは積分しにくい。そこで<strong>積和公式</strong>（加法定理2本を足し引きして作る道具、第9回の直交性の計算でも使った）を使う：
+$$ \sin(A)\cos(B)=\tfrac12\big[\sin(A+B)+\sin(A-B)\big] $$
+（$\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta$ と $\sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta$ を足すと $\cos\alpha\sin\beta$ の項が消え、$\sin(\alpha+\beta)+\sin(\alpha-\beta)=2\sin\alpha\cos\beta$——これを $\sin\alpha\cos\beta$ について解いた形）。$A=x-y,\ B=2y$ を代入すると
+$$ \sin(x-y)\cos2y=\tfrac12\big[\sin(x+y)+\sin(x-3y)\big] $$
+（$A+B=x-y+2y=x+y$、$A-B=x-y-2y=x-3y$）。<br>
+<strong>⑥ 2本の積分に分けて計算する</strong>
+$$ \int_0^x\sin(x-y)\cos2y\,dy=\frac12\int_0^x\sin(x+y)\,dy+\frac12\int_0^x\sin(x-3y)\,dy. $$
+第1項：$\displaystyle\int_0^x\sin(x+y)\,dy=\big[-\cos(x+y)\big]_0^x=-\cos2x+\cos x=\cos x-\cos2x$。<br>
+第2項：$u=x-3y$（$du=-3dy$、$y=0\Rightarrow u=x$、$y=x\Rightarrow u=-2x$）と置換：
+$$ \int_0^x\sin(x-3y)\,dy=\int_x^{-2x}\sin u\cdot\Big(-\frac{du}{3}\Big)=\frac13\int_{-2x}^{x}\sin u\,du=\frac13\big[-\cos u\big]_{-2x}^{x}=\frac13\big[\cos2x-\cos x\big]. $$
+<strong>⑦ 合体する</strong>
+$$ \int_0^x\sin(x-y)\cos2y\,dy=\frac12(\cos x-\cos2x)+\frac12\cdot\frac13(\cos2x-\cos x)=\Big(\frac12-\frac16\Big)(\cos x-\cos2x)=\frac13(\cos x-\cos2x). $$
+<strong>⑧ 結果をまとめる</strong>
+$$ y(x)=\cos x+\frac{f_0}{3}(\cos x-\cos2x). $$
+</div>
+<div class="proof">
+<strong>検算</strong>　$y(0)=1+\frac{f_0}3(1-1)=1$ ✓。$y'(x)=-\sin x+\frac{f_0}3(-\sin x+2\sin2x)$、$y'(0)=0$ ✓。
+</div>
+</div>
+<div class="why">
+<span class="label">2つの解き方の使い分け</span>　例14.1（分母が積の形で根が単純／重根）は<strong>部分分数分解</strong>が速く、例14.2（分母が $(s^2+1)(s^2+4)$ のように実根を持たない2次式の積）は無理に分解するより<strong>たたみ込み</strong>の方が見通しがよい場合が多いです。どちらも同じ答えにたどり着くので、慣れた方を選べばよい道具です。
+</div>
+
+<h2>14.4　偏微分方程式への応用</h2>
+<p>ラプラス変換は「$t$ に関する微分を $s$ の掛け算に変える」道具でした。この性質を使うと、時間 $t$ と空間 $x$ の両方を含む偏微分方程式から<strong>時間微分だけ</strong>を消し去り、$x$ だけの常微分方程式に還元できます。</p>
+
+<div class="ex">
+<span class="label">例 14.3（波動方程式の初期値問題）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex14-3">完了</label>　波動方程式 $\dfrac{\partial^2u}{\partial t^2}=c^2\dfrac{\partial^2u}{\partial x^2}$ を、初期条件 $u(x,0)=0,\ \dfrac{\partial u}{\partial t}(x,0)=\alpha\sin x$、境界条件 $u(0,t)=u(\pi,t)=0$ のもとで解け。
+<div class="proof">
+<strong>① $t$ についてラプラス変換する</strong>　$u(x,t)$ を $t$ の関数とみて、$x$ はパラメータとして固定したままラプラス変換 $\hat u(x,s)=\int_0^\infty e^{-st}u(x,t)\,dt$ を施す。左辺は微分則（第13回）そのまま：
+$$ \mathcal L_t\Big[\frac{\partial^2u}{\partial t^2}\Big]=s^2\hat u(x,s)-s\,u(x,0)-\frac{\partial u}{\partial t}(x,0)=s^2\hat u-s\cdot0-\alpha\sin x=s^2\hat u-\alpha\sin x. $$
+右辺は、$x$ による微分と $t$ による積分（＝ラプラス変換）の順序を交換してよいので（積分と微分がともに滑らかな範囲で成り立つ）
+$$ \mathcal L_t\Big[c^2\frac{\partial^2u}{\partial x^2}\Big]=c^2\frac{\partial^2}{\partial x^2}\mathcal L_t[u]=c^2\frac{\partial^2\hat u}{\partial x^2}. $$
+<strong>② 方程式を整理する</strong>　①を合わせて
+$$ s^2\hat u-\alpha\sin x=c^2\frac{\partial^2\hat u}{\partial x^2}\quad\Longrightarrow\quad \frac{\partial^2\hat u}{\partial x^2}-\Big(\frac sc\Big)^2\hat u=-\frac{\alpha}{c^2}\sin x. $$
+<strong>ここが今回の核心</strong>：$t$ による偏微分がすべて消え、$\hat u(x,s)$ についての<strong>$x$ に関する常微分方程式</strong>（$s$ は単なるパラメータ）になった。
+</div>
+
+<div class="proof">
+<strong>③ 常微分方程式を解く——同次解＋特解</strong>　これは $x$ に関する2階線形非同次方程式なので、一般解は「同次方程式の一般解」＋「非同次方程式の特解」。<br>
+<strong>同次解</strong>：特性方程式 $\lambda^2-(s/c)^2=0$ より $\lambda=\pm s/c$（実数根、$s&gt;0$ のとき）。よって
+$$ \hat u_{\text{同次}}=C_1(s)\,e^{\frac sc x}+C_2(s)\,e^{-\frac sc x}. $$
+<strong>特解</strong>：非同次項が $\sin x$ なので $\hat u_p=A\sin x$ と<strong>仮定</strong>する（微分しても関数の形が変わらない三角関数を当てはめる、定数係数線形方程式の定石）。$\hat u_p''=-A\sin x$ を方程式に代入：
+$$ -A\sin x-\Big(\frac sc\Big)^2A\sin x=-\frac{\alpha}{c^2}\sin x\quad\Longrightarrow\quad -A\Big[1+\Big(\frac sc\Big)^2\Big]=-\frac{\alpha}{c^2}. $$
+両辺を $-1$ 倍し、$1+(s/c)^2=(c^2+s^2)/c^2$ を使って整理すると
+$$ A=\frac{\alpha/c^2}{1+(s/c)^2}=\frac{\alpha/c^2}{(s^2+c^2)/c^2}=\frac{\alpha}{s^2+c^2}. $$
+<strong>一般解</strong>
+$$ \hat u(x,s)=C_1(s)e^{\frac sc x}+C_2(s)e^{-\frac sc x}+\frac{\alpha}{s^2+c^2}\sin x. $$
+</div>
+
+<div class="proof">
+<strong>④ 境界条件で任意関数を決める</strong>　$\sin x$ は $x=0,\pi$ で自動的に $0$ になる（$\sin0=\sin\pi=0$）。よって境界条件 $\hat u(0,s)=\hat u(\pi,s)=0$ を満たすには、指数関数の部分だけで $0$ になる必要がある：
+$$ C_1(s)+C_2(s)=0,\qquad C_1(s)e^{\frac{s\pi}{c}}+C_2(s)e^{-\frac{s\pi}{c}}=0. $$
+これは<strong>第12回演習2で確認した「$X''-\lambda^2X=0$ 型の同次方程式は、2点で $0$ という境界条件のもとでは自明解しか持たない」</strong>のと全く同じ形の連立方程式（$e^{\lambda x}$ と $e^{-\lambda x}$ が2点でともに消えるのは係数が両方 $0$ のときだけ）。よって $C_1(s)=C_2(s)=0$。したがって
+$$ \hat u(x,s)=\frac{\alpha}{s^2+c^2}\sin x. $$
+<strong>⑤ ラプラス逆変換する（$s\to t$）</strong>　変換表 $\mathcal L[\sin at]=a/(s^2+a^2)$ より $\mathcal L^{-1}[1/(s^2+c^2)]=\dfrac1c\sin ct$（$a=c$ として両辺を $c$ で割る）。$\sin x$ は $t$ に無関係な定数として外に出せるので
+$$ u(x,t)=\frac{\alpha}{c}\sin(ct)\,\sin x. $$
+</div>
+
+<div class="proof">
+<strong>⑥ 進行波・後退波の形に書き直す——第12回のダランベールの解の再登場</strong>　積和公式 $\sin A\sin B=\tfrac12[\cos(A-B)-\cos(A+B)]$（$\cos(A-B)=\cos A\cos B+\sin A\sin B$ と $\cos(A+B)=\cos A\cos B-\sin A\sin B$ を引き算して作る）を $A=x,\ B=ct$ として適用すると
+$$ u(x,t)=\frac{\alpha}{c}\cdot\frac12\big[\cos(x-ct)-\cos(x+ct)\big]=\frac{\alpha}{2c}\cos(x-ct)-\frac{\alpha}{2c}\cos(x+ct). $$
+</div>
+<div class="thm">
+<span class="label">結果</span>
+$$ u(x,t)=\underbrace{\frac{\alpha}{2c}\cos(x-ct)}_{\text{進行波の解}}\ -\ \underbrace{\frac{\alpha}{2c}\cos(x+ct)}_{\text{後退波の解}} $$
+</div>
+<div class="why">
+<span class="label">第12回とのつながり</span>　第12回では、波動方程式の一般解が変数変換 $\xi=x-ct,\eta=x+ct$ を使ったダランベールの解 $u=\phi(x-ct)+\psi(x+ct)$（進行波＋後退波）として求まりました。今回はラプラス変換という<strong>全く別の道具</strong>を使ったのに、答えはやはり「$x-ct$ の関数」と「$x+ct$ の関数」の和になりました。これは偶然ではありません——波動方程式の解はどんな解法を使っても、その本質的な構造（速さ $c$ で左右に伝わる波の重ね合わせ）を必ず反映するのです。道具は違っても、方程式の物理は変わりません。
+</div>
+</div>
+
+<hr>
+<h2>14.5　章末例題</h2>
+<div class="ex">
+<span class="label">例 14.4（共鳴が起きる場合）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex14-4">完了</label>　$y''-y=e^x$、初期条件 $y(0)=0,\ y'(0)=1$ の特解を求めよ。
+<div class="proof">
+<strong>① ラプラス変換する</strong>　$\mathcal L[y'']=-y'(0)-sy(0)+s^2\hat y=-1+s^2\hat y$。$\mathcal L[e^x]=1/(s-1)$。
+$$ -1+s^2\hat y-\hat y=\frac{1}{s-1}. $$
+<strong>② $\hat y$ について解く</strong>
+$$ (s^2-1)\hat y=1+\frac1{s-1}=\frac{(s-1)+1}{s-1}=\frac{s}{s-1}. $$
+$s^2-1=(s-1)(s+1)$ なので
+$$ \hat y(s)=\frac{s}{(s-1)^2(s+1)}. $$
+<strong>③ 部分分数分解する</strong>　$\dfrac{s}{(s-1)^2(s+1)}=\dfrac{A}{s-1}+\dfrac{B}{(s-1)^2}+\dfrac{C}{s+1}$ とおき、$s=A(s-1)(s+1)+B(s+1)+C(s-1)^2$。<br>
+・$s=1$：$1=B\cdot2\Rightarrow B=\tfrac12$。<br>
+・$s=-1$：$-1=C\cdot4\Rightarrow C=-\tfrac14$。<br>
+・$s^2$ の係数比較：$0=A+C\Rightarrow A=\tfrac14$。<br>
+検算（$s=0$）：右辺 $=A(-1)(1)+B(1)+C(1)=-\tfrac14+\tfrac12-\tfrac14=0$ ✓ 左辺 $0$ と一致。
+$$ \hat y(s)=\frac{1/4}{s-1}+\frac{1/2}{(s-1)^2}-\frac{1/4}{s+1}. $$
+<strong>④ 逆変換する</strong>
+$$ y(x)=\frac14e^x+\frac12xe^x-\frac14e^{-x}. $$
+</div>
+<div class="proof">
+<strong>検算</strong>　$y(0)=\tfrac14+0-\tfrac14=0$ ✓。$y'(x)=\tfrac14e^x+\tfrac12e^x+\tfrac12xe^x+\tfrac14e^{-x}=\tfrac34e^x+\tfrac12xe^x+\tfrac14e^{-x}$、$y'(0)=\tfrac34+\tfrac14=1$ ✓。$y''(x)=\tfrac34e^x+\tfrac12e^x+\tfrac12xe^x-\tfrac14e^{-x}=\tfrac54e^x+\tfrac12xe^x-\tfrac14e^{-x}$。$y''-y=\big(\tfrac54-\tfrac14\big)e^x+0\cdot xe^x+\big(-\tfrac14+\tfrac14\big)e^{-x}=e^x$ ✓ 方程式の右辺と一致。
+</div>
+<div class="why">
+<span class="label">$xe^x$ が出てくる理由（共鳴）</span>　右辺の $e^x$ は、実は同次方程式 $y''-y=0$ の解（$e^{\pm x}$ が同次解）そのものです。「方程式を揺さぶる力」が「揺れそのものの自然な形」と同じ振動数を持つとき、応答は単なる $e^x$ ではなく<strong>$xe^x$（時間とともに振幅が増大する項）</strong>を生みます。これは物理でいう<strong>共鳴</strong>そのもので、$\hat y(s)$ の分母に $(s-1)^2$ という<strong>重根</strong>が現れたことと対応しています（重根 → 逆変換に $x$ 倍の項が出る、というのは第13回の変換表 $\mathcal L[xe^{ax}]=1/(s-a)^2$ の逆読み）。
+</div>
+</div>
+
+<h2>14.6　演習問題</h2>
+<p>1 は基本の1階方程式、2 はステップ的な非同次項、3 はたたみ込みと部分分数分解の答えが一致することの確認です。</p>
+<ol>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill14-1">完了</label> $y'+2y=e^{-3x}$、$y(0)=1$ の特解を求めよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill14-2">完了</label> $y''+y=1$、$y(0)=0,\ y'(0)=0$ の特解を求めよ（$\mathcal L[1]=1/s$ を使う）。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill14-3">完了</label> $\hat f(s)=\dfrac{1}{s^2(s+1)}$ の逆変換を、(a) 部分分数分解、(b) たたみ込み（$f_1=1/s^2\to f_1(x)=x$、$f_2=1/(s+1)\to f_2(x)=e^{-x}$）の<strong>両方の方法</strong>で求め、一致することを確かめよ。</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong>　$\mathcal L[y']=-1+s\hat y$（$y(0)=1$）。$-1+s\hat y+2\hat y=\dfrac1{s+3}$ より $(s+2)\hat y=1+\dfrac1{s+3}=\dfrac{s+4}{s+3}$、
+$$ \hat y=\frac{s+4}{(s+2)(s+3)}=\frac{A}{s+2}+\frac{B}{s+3}. $$
+$s+4=A(s+3)+B(s+2)$。$s=-2$：$2=A\Rightarrow A=2$。$s=-3$：$1=-B\Rightarrow B=-1$。
+$$ y(x)=2e^{-2x}-e^{-3x}. $$
+検算：$y(0)=2-1=1$ ✓。<br><br>
+<strong>2.</strong>　$\mathcal L[y'']=s^2\hat y$（初期値ゼロ）。$s^2\hat y+\hat y=\dfrac1s$ より $\hat y=\dfrac1{s(s^2+1)}$。部分分数：$\dfrac1{s(s^2+1)}=\dfrac As+\dfrac{Bs+C}{s^2+1}$、$1=A(s^2+1)+(Bs+C)s$。定数項比較：$A=1$。$s^2$ 係数：$0=A+B\Rightarrow B=-1$。$s^1$ 係数：$0=C$。
+$$ \hat y=\frac1s-\frac{s}{s^2+1}\quad\Longrightarrow\quad y(x)=1-\cos x. $$
+検算：$y(0)=0$ ✓、$y'=\sin x,\,y'(0)=0$ ✓、$y''=\cos x$、$y''+y=\cos x+1-\cos x=1$ ✓。<br><br>
+<strong>3(a).</strong>　$\dfrac1{s^2(s+1)}=\dfrac As+\dfrac{B}{s^2}+\dfrac{C}{s+1}$、$1=As(s+1)+B(s+1)+Cs^2$。$s=0$：$1=B$。$s=-1$：$1=C$。$s^2$ 係数：$0=A+C\Rightarrow A=-1$。
+$$ f(x)=-1+x+e^{-x}=x-1+e^{-x}. $$
+<strong>3(b).</strong>　$(f_1*f_2)(x)=\displaystyle\int_0^x(x-y)e^{-y}\,dy=x\int_0^xe^{-y}dy-\int_0^xye^{-y}dy$。<br>
+$\int_0^xe^{-y}dy=1-e^{-x}$。$\int_0^xye^{-y}dy=\big[-ye^{-y}-e^{-y}\big]_0^x=-xe^{-x}-e^{-x}+1$（部分積分）。<br>
+$(f_1*f_2)(x)=x(1-e^{-x})-\big(1-xe^{-x}-e^{-x}\big)=x-xe^{-x}-1+xe^{-x}+e^{-x}=x-1+e^{-x}$。<br>
+(a)と(b)が一致 ✓。
+</div>
+</details>
+
+<hr>
+<h2>14.7　まとめ・チェックリスト</h2>
+<div class="box">
+<ul>
+  <li>□ 「両辺をラプラス変換→初期条件を代入→代数方程式を解く→逆変換」という解法のレシピを説明できる。</li>
+  <li>□ 部分分数分解して変換表で逆変換できる（重根 $(s-a)^2$ を含む場合も）。</li>
+  <li>□ たたみ込みの定義 $(f_1*f_2)(x)=\int_0^xf_1(x-y)f_2(y)dy$ と、積分区間が $[0,x]$ になる理由を説明できる。</li>
+  <li>□ たたみ込み定理 $\mathcal L[f_1*f_2]=\mathcal L[f_1]\mathcal L[f_2]$ を、積分順序の交換と置換積分で証明できる。</li>
+  <li>□ 部分分数分解が面倒な場合に、たたみ込みで逆変換できる（積和公式を使った積分計算を含めて）。</li>
+  <li>□ 偏微分方程式に $t$ についてのラプラス変換を施すと、$x$ に関する常微分方程式に還元されることを示せる。</li>
+  <li>□ 波動方程式の初期値・境界値問題をラプラス変換で解き、進行波・後退波の形（第12回のダランベールの解と同じ構造）に直せる。</li>
+  <li>□ 「非同次項が同次方程式の解と同じ振動数を持つ」共鳴のケースで、逆変換に $x$ 倍の項（重根の効果）が出ることを説明できる。</li>
+</ul>
+</div>
+
+<div class="navi" style="margin-top:18px">
+これで第13回・第14回のラプラス変換の学習が一区切りです。フーリエ変換（第10・11回）とラプラス変換（第13・14回）は、どちらも「関数を変換して簡単な世界（代数の世界）で処理し、逆変換で戻す」という同じ発想の道具でした。期末試験に向けては、<strong>フーリエ級数・フーリエ変換・ラプラス変換・偏微分方程式</strong>のどの回がどの計算に対応するかを、チェックリストで横断的に確認しておきましょう。
+</div>
+
+<script>
+(function(){
+  var KEY = 'amII_prob_17';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  document.querySelectorAll('.prob-check').forEach(function(cb){
+    var id = cb.getAttribute('data-pid');
+    cb.checked = !!state[id];
+    cb.addEventListener('change', function(){
+      state[id] = cb.checked;
+      save();
+    });
+  });
+})();
+</script>
+</body>
+</html>

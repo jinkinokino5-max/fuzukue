@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>力は見えない｜機械力学 第1回の読み物</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 読み物コラム C01（第1回に対応）。書き方は templates/コラムの作り方.md -->
+
+<div class="backlink">機械力学 自習教材 ｜ 第1回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../01_第1回_イントロダクションと力.html">第1回 力はベクトルである</a>（§3〜5）</div>
+
+<figure class="hero">
+  <img src="img/hero_ejiri.jpg" alt="葛飾北斎《冨嶽三十六景 駿州江尻》。強い風に木が大きくしなり、旅人の懐から紙が舞い上がり、笠が飛ばされている。遠くに富士が細い線で描かれている">
+  <div class="ttl" style="right:1.5%;top:4%;font-size:clamp(20px,3.6vw,36px)">力は見えない<small>風・球の輪・平行四辺形・隠れた質量</small></div>
+  <figcaption>葛飾北斎《冨嶽三十六景 駿州江尻》　1830〜32年頃　メトロポリタン美術館</figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第一回</div>
+  <p class="lede">第1回の講義は「力はベクトルである」と言い切った。だが、力を見た者はいない。見えるのは、しなる枝や舞う紙、切れるロープだけである。見えないものに矢印を与え、足したり分けたりしてよいのはなぜか。その問いを、北斎の風から十九世紀の物理学者の「力を消す」試みまでたどってみる。</p>
+  <div class="keys"><span>漢字の字源</span><span>浮世絵</span><span>永久機関の否定</span><span>証明と公理</span><span>記述としての力学</span><span>安全率</span></div>
+</header>
+
+<article>
+
+<h2><span class="no">序</span>「力」という字は、腕か、鋤か</h2>
+<div class="kanji"><div class="ch">力</div><div class="cap">甲骨文（左下図）では、柄の曲がった農具のようにも、曲げた腕のようにも見える</div></div>
+<p>「力」という字の成り立ちには、二つの読み方がある。後漢の字書『説文解字』は、これを人の筋（すじ）、つまり筋肉の形とした。ふくらんだ腕の線を写した字だという。これに対して白川静は、甲骨文の形を土を掘り起こす農具、鋤（すき）の象形と読んだ。鋤を表す字が、やがて「ちから」の意味に借りて使われるようになった、という説である。どちらが正しいかは、ここでは決めない。字源には今も諸説がある。</p>
+<p>面白いのは、二つの説の向きである。筋肉説は、力を<strong>持ち主の側</strong>に置く。力とは腕に宿るもの、蓄えておけるもの、という見方だ。鋤説は、力を<strong>道具と土のあいだ</strong>に置く。鋤が土に食い込み、土が割れる。その出来事の中にしか力はない。前者は「ある」力、後者は「働く」力と言ってもいい。</p>
+<p>機械力学の授業が採るのは、はっきりと後者である。講義資料は力の合成を「複数の力を<strong>同じ作用</strong>をもつ一つの力にまとめる操作」と定義した。力の正体は問わず、作用が同じなら同じ力とみなす。力は、働きによってしか定義されていない。</p>
+<p>鋤の説に立つと、ほかの字も読み替わる。たとえば「男」は田と力からなる。白川説では、これは田を耕す鋤、つまり田で働く者を表す字だという。「加」「助」「努」「勤」と、力を部品にもつ字は、どれも何かに<strong>向かって</strong>働きかける動作を含んでいる。力という字は、はじめから名詞であるより先に、矢印の形をした動詞だったのかもしれない。もちろんこれは見立てであって、字源学の結論ではない。だが、力を「ある量」ではなく「向きをもった働きかけ」として読む習慣は、漢字の側にも、どこかで用意されていたように見える。</p>
+<figure class="pair" style="max-width:400px;margin-left:auto;margin-right:auto">
+  <img src="img/chikara_oracle.jpg" alt="甲骨文の「力」">
+  <img src="img/chikara_seal.jpg" alt="篆書（小篆）の「力」">
+  <figcaption><b>「力」の古い字形</b>　左：甲骨文（殷代）、右：小篆（『説文解字』の字形）。Wikimedia Commons の字形データ, Public domain</figcaption>
+</figure>
+
+<h2><span class="no">一</span>風は描けない。描けるのは、風に負けたものだけだ</h2>
+<p>扉に掲げた北斎の《駿州江尻》は、風を描いた絵として名高い。だが画面のどこにも風は描かれていない。描かれているのは、根元から大きくしなる木、旅人の懐からこぼれて空に散る紙、飛ばされる笠、背を丸めて耐える人々である。富士山は、この騒ぎとは無関係に、細い一本の線で静まり返っている。</p>
+<p>見る者は、しなりの向きから風の向きを、紙の散り方から風の強さを読み取る。つまり風は、絵の中では<strong>向きと大きさをもつもの</strong>として、間接的にだけ存在している。これはそのまま、力学における力の立場である。ばねの伸び、ロープの張り、加速する台車。測れるのは、いつも力の「結果」のほうだ。</p>
+<p>もちろん、北斎が力学を考えていたわけではない。だが、見えないものをその作用の向きと強さで表すという型は、浮世絵と力学に共通している。木と紙と笠は、いわば風の<strong>分力</strong>を一つずつ受け持って、見えない一つの風を画面に分解して見せている。</p>
+<p>画面をよく見ると、紙は左下の旅人の懐からこぼれて右上へと一列に連なり、梢の枝葉も、飛ばされた笠も、同じ右上の方向へ流れている。北斎は風を描くかわりに、風の<strong>作用線</strong>を何本も引いたのだ。細い線だけで描かれた富士の、動かない三角形がその対比を際立たせる。動くものはすべて一つの向きにそろい、動かないものだけが向きをもたない。力が見えるようになるのは、何かがそれに負けて動いたときだけである。逆にいえば、負けないもの、つまり釣り合っているものの中では、力はどこまでも見えないままになる。前半の授業が扱う静力学は、まさにこの、何も動かない世界の見えない力を数える学問である。</p>
+
+<div class="physics"><b>講義では</b>　教材 §3.1 で、力を「大きさ・向き・作用点」の三つで表した。力そのものは見えないので、矢印という記号に置き換えて扱う。その矢印をどう足し、どう分けるかが §4・§5 の合成と分解である（<a href="../01_第1回_イントロダクションと力.html">第1回</a>）。</div>
+
+<h2><span class="no">二</span>球の首飾りは、なぜ回り出さないのか</h2>
+<p>見えないものの足し算に、最初に確かな手がかりを与えた人物の一人が、フランドル出身の技術者シモン・ステヴィンである。1586年、彼はオランダ語で書いた静力学の書『計量術の原理（De Beghinselen der Weeghconst）』を出版した。その扉に刻まれた図が、のちに「クロートクランス（球の輪）」と呼ばれる図である。</p>
+<figure>
+  <img src="img/stevin.jpg" alt="ステヴィン『計量術の原理』の扉。中央の装飾枠の中に、三角形の台に掛けられた球の首飾りが描かれている" style="max-width:300px;margin:0 auto">
+  <figcaption><b>ステヴィン『計量術の原理』扉</b>　1586年、ライデン刊。中央の楕円の中に「球の輪」の図。Simon Stevin, via Wikimedia Commons, Public domain</figcaption>
+</figure>
+<p>図はこうだ。左右の傾きが違う三角形の台に、等間隔に球をつないだ首飾りを掛ける。長い斜面には多くの球が、短く急な斜面には少ない球が乗る。下には首飾りの残りが垂れ下がっている。この首飾りは、ひとりでに回り出すだろうか。</p>
+<p>回り出すなら、回ったあとも配置はまったく同じなので、永遠に回り続けることになる。だがそんな永久運動は起こらない。だから首飾りは止まっている。下に垂れた部分は左右対称なので取り去っても釣合いは崩れない。すると、長い斜面の多くの球と、急な斜面の少ない球とが釣り合っていることになる。ここから、斜面に沿った重さの効き方は斜面の長さに反比例する、という斜面の法則が出てくる。これは、重力を斜面方向に<strong>分解</strong>する法則と同じ内容である。</p>
+<p>図の下に、ステヴィンは「不思議は不思議にあらず（Wonder en is gheen wonder）」という言葉を添えた。驚くべきことに見えても、理由を詰めれば驚くにはあたらない、という宣言である。彼はこの図を大いに気に入り、自著の扉や手紙の封にも使ったと伝えられる。</p>
+<p>この論証が鮮やかなのは、力をまったく「見ず」に、力の分け方を決めてしまう点にある。使ったのは、永久機関はありえないという確信と、左右対称という形の議論だけだ。見えないものの規則を、見えないまま、外堀から確定させている。</p>
+<p>この結論を授業の言葉に直すと、斜面に置いた物体の重さを「斜面に沿う向き」と「斜面に垂直な向き」の二つに分けたとき、斜面に沿う分力は重さに傾斜角の正弦を掛けたものになる、ということである。教材の式で言えば、分解の向きを先に決め、未知の大きさを求める手続きにあたる。ステヴィンは三角関数も連立方程式も使わず、球の数を数えるだけでそこへたどり着いた。分解の向きを決めているのは斜面という<strong>かたち</strong>であり、大きさを決めているのは「永久には回らない」という<strong>ふるまい</strong>である。かたちとふるまいから見えない力を割り出すという手つきは、四百年後の授業の例題で、ロープの向きと釣合いから張力を求めるやり方と少しも変わっていない。</p>
+
+<h2><span class="no">三</span>平行四辺形は証明できるか</h2>
+<p>授業では、二つの力を合成するには平行四辺形の対角線をとる、と習った。式で書けば <code><b>R</b> = <b>F</b>₁ + <b>F</b>₂</code>、成分ごとに足すだけの操作である。あまりに当然に見えるので、これが「なぜ正しいか」を問う人は少ない。だが十八世紀の数学者たちは、この問いに真剣に取り組んだ。</p>
+<p>ニュートンは1687年の『プリンキピア』で、運動の三法則のすぐあとに「系1」として力の平行四辺形を置いた。二つの力が別々に生む運動を組み合わせる、という運動の側からの説明である。同じ年、フランスのヴァリニョンも、運動の合成から同じ規則を導いている。</p>
+<p>これに満足しなかったのが、ダニエル・ベルヌーイである。1726年、彼はペテルブルク科学アカデミーの紀要に「力学の原理の検討、ならびに力の合成と分解の幾何学的証明」を発表した。運動を持ち出さず、静力学の中だけで、自明と思われるいくつかの場合から純粋に論理的に平行四辺形を導こうとしたのである。</p>
+<figure>
+  <img src="img/bernoulli.jpg" alt="若いダニエル・ベルヌーイの肖像画。巻き毛のかつらをつけている" style="max-width:300px;margin:0 auto">
+  <figcaption><b>ダニエル・ベルヌーイの肖像</b>　1720〜25年頃、バーゼル歴史博物館。作者不詳（Bammesk による補正版）, via Wikimedia Commons, CC BY-SA 4.0</figcaption>
+</figure>
+<p>その後もダランベールやフォンスネクスらが、平行四辺形を「先験的に」証明しようと挑んだ。しかし後の評価は厳しい。マッハは『力学史』で、こうした論理的導出は、証明すべきことをどこかで前提に忍び込ませている、と指摘した。今日では、力の平行四辺形は証明される定理ではなく、経験に支えられた<strong>公理</strong>として扱われることが多い。</p>
+<p>ここには一つの反転がある。授業の中でいちばん「計算」らしい操作、つまり成分ごとの足し算が、実は力学の中でいちばん「信じる」ことに近い場所に立っている。力学が <code><b>R</b> = Σ<b>F</b><sub>i</sub></code> を使い続けているのは、自然がそう振る舞うことを何百年も確かめてきたからであって、論理だけで強制されているからではない。</p>
+
+<div class="physics"><b>講義では</b>　教材 §4.2 の注意「<code>F₁ + F₂ + … + F<sub>n</sub> ≠ R</code>」は、まさにこの点に関わる。足してよいのは矢印であって大きさではない。何を足してよいかを決めているのは、数学ではなく自然のほうである。</div>
+
+<h2><span class="no">四</span>力を消そうとした物理学者</h2>
+<p>力が見えず、その合成則も経験からしか言えないなら、いっそ力という言葉をなくしてしまえないか。十九世紀の終わり、本気でそう考えた物理学者たちがいた。</p>
+<p>キルヒホッフは1876年の力学講義で、力学の課題を「自然の中で起こる運動を、完全に、もっとも簡単に<strong>記述</strong>すること」と述べた（筆者訳）。運動の「原因」を説明することは、課題から外されている。力は、記述を短くするための便利な略記にすぎない、という立場である。</p>
+<p>マッハも近い立場にいた。マッハにとって、力とは「質量×加速度」という観測できる量に与えた名前にすぎず、それ以上の何か、たとえば物体の内側にひそむ努力のようなものを想定する必要はなかった。こうして十九世紀の後半、力は、自然の中に実在する何かから、計算のための約束ごとへと格下げされかけていた。授業のスライドで、第二法則を「運動量の時間変化＝力」と書き直したのは、この意味でも示唆的である。左辺は観測できる運動の側にあり、右辺の力はそれに付けられた名前のようにも読めるからだ。</p>
+<p>さらに先へ進んだのが、電磁波の実験で知られるハインリヒ・ヘルツである。彼が亡くなった1894年に刊行された『力学原理』は、空間・時間・質量だけを基本の概念として、力を基本概念から外した力学を組み立てようとした。物体どうしが押し合い引き合うように見えるのは、目に見えない「隠れた質量」が隠れた運動をしていて、それと結びついているからだ、と彼は考えた。</p>
+<figure>
+  <img src="img/hertz.jpg" alt="ハインリヒ・ヘルツの肖像写真。あごひげをたくわえている" style="max-width:280px;margin:0 auto">
+  <figcaption><b>ハインリヒ・ヘルツ</b>　1894年までに撮影。Robert Krewaldt, via Wikimedia Commons, Public domain</figcaption>
+</figure>
+<p>この構想は、同時代の多くの読者を困惑させた。マッハは、見えない力の代わりに見えない質量を置いても、見えないものが一つ別のものに入れ替わっただけだと批判した。結局ヘルツの力学は主流にはならず、力は力学の言葉として生き残った。</p>
+<p>だが、この試みが失敗だったとは言い切れない。ヘルツが示したのは、力という言葉が<strong>なくても書けるかもしれない</strong>ほど、力は「見えないもの」だということである。北斎が風を描かずに風を描いたように、ヘルツは力を書かずに力学を書こうとした。両者の方法は、見えないものを見えるものの配置だけで語る、という一点で重なっている。</p>
+
+<h2><span class="no">五</span>見えないものに、余裕を払う</h2>
+<p>では工学は、この見えない力とどう付き合っているのか。授業の最初の例題は、二本のロープで500 kgの物体を吊るとき、ロープにどれだけの強さが必要かを問うものだった。答えは各ロープに約4.91 kN。だが講義は、そこで終わらずに<strong>安全率</strong>という言葉を出してきた。限界の強さを、実際にかかる荷重で割った比である。</p>
+<p>安全率は、計算が信用できないから掛けるのではない。計算そのものは正確でも、その計算に入れた力が本当にそれだけか、誰にもわからないから掛ける。ロープの傷、吊り上げるときの揺れ、思いがけない風。力は見えないので、見落とした力もまた見えない。安全率とは、見えないものに対して前もって払っておく余裕である。</p>
+<p>もう一つ、計算は見えない約束の上に立っている。例題のロープの張力を求めるとき、ロープは長さの方向にしか力を伝えず、引くことはできても押すことはできない、と黙って仮定した。だからロープの力の向きは、ロープの向きそのものとして先に決まり、未知数は大きさだけになった。教材で分力を「大きさ×単位ベクトル」と書いたのは、この約束を式にしたものである。けれども現実のロープは、結び目で曲がり、わずかに伸び、荷が揺れれば張力も揺れる。力学の答えは、こうした見えない約束をいくつも呑み込んだうえでの答えであり、安全率はその約束が破れたときのための保険でもある。</p>
+<p>ここで、ステヴィンからヘルツまでの道のりが一つにつながる。人はまず、見えない力に矢印という形を与えた。次に、その矢印の足し方を、論理と経験の両方から確かめようとした。そして最後に、確かめきれない残りに対しては、数字の余裕で備えることを覚えた。機械を設計するとは、この三つを同時に行うことにほかならない。</p>
+
+<figure class="map">
+<svg viewBox="0 0 640 210" role="img" aria-label="見えない力を扱う三つの段階">
+<defs><marker id="c01-arw" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#a8322a"/></marker></defs>
+<rect x="10" y="40" width="180" height="120" fill="#fbfaf7" stroke="#2b3a67"/>
+<rect x="230" y="40" width="180" height="120" fill="#fbfaf7" stroke="#2b3a67"/>
+<rect x="450" y="40" width="180" height="120" fill="#fbfaf7" stroke="#2b3a67"/>
+<line x1="192" y1="100" x2="226" y2="100" stroke="#a8322a" stroke-width="2" marker-end="url(#c01-arw)"/>
+<line x1="412" y1="100" x2="446" y2="100" stroke="#a8322a" stroke-width="2" marker-end="url(#c01-arw)"/>
+<text x="100" y="72" font-size="17" text-anchor="middle" fill="#2b3a67">形を与える</text>
+<text x="100" y="104" font-size="13" text-anchor="middle" fill="#555">見えない力を矢印に</text>
+<text x="100" y="128" font-size="12" text-anchor="middle" fill="#888">北斎の風・字源</text>
+<text x="320" y="72" font-size="17" text-anchor="middle" fill="#2b3a67">規則を確かめる</text>
+<text x="320" y="104" font-size="13" text-anchor="middle" fill="#555">足し方・分け方</text>
+<text x="320" y="128" font-size="12" text-anchor="middle" fill="#888">ステヴィン・ベルヌーイ</text>
+<text x="540" y="72" font-size="17" text-anchor="middle" fill="#2b3a67">余裕で備える</text>
+<text x="540" y="104" font-size="13" text-anchor="middle" fill="#555">見落とした力に</text>
+<text x="540" y="128" font-size="12" text-anchor="middle" fill="#888">安全率</text>
+<text x="320" y="196" font-size="12" text-anchor="middle" fill="#888">（ヘルツは一歩目そのものを疑い、矢印なしで書こうとした）</text>
+</svg>
+<figcaption>見えない力を扱う三つの段階（本コラムによる整理）</figcaption>
+</figure>
+
+<h2><span class="no">結</span>矢印は、作用点を離れられない</h2>
+<p>力は見えない。だから人は力に矢印を与え、矢印として足し、矢印として分けてきた。ただし、矢印には一つだけ、紙の上の記号らしくない癖がある。どこに描くかで、意味が変わるのだ。</p>
+<p>同じ大きさ、同じ向きの二つの力でも、本の同じ高さを押せば本は止まり、高さをずらせば本は回り出す。矢印は向きと長さだけでなく、<strong>どこに刺さっているか</strong>を覚えている。字源の鋤も同じで、鋤がどこに刺さるかで、土がどう割れるかは変わる。北斎の風も、同じ風なのに、木の根元ではなく梢に当たるからこそ、木を大きくしならせている。</p>
+<p>次回の講義は、この「どこに」を数える。力に腕の長さを掛けた量、モーメントである。見えない力は、ずらされたとき、回す働きとして姿を現す。</p>
+<p class="coda">力は見えない。<br>だが、どこを押したかは、ものが覚えている。</p>
+
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+<h3>参照した本 ── 本文が依拠した原典</h3>
+<ul>
+  <li><span class="bk">シモン・ステヴィン『計量術の原理（De Beghinselen der Weeghconst）』</span> <span class="pub">1586年</span><span class="why">球の輪の論証と「不思議は不思議にあらず」の銘（二）。</span></li>
+  <li><span class="bk">アイザック・ニュートン『自然哲学の数学的諸原理（プリンキピア）』</span> <span class="pub">1687年</span><span class="why">運動の法則の系1としての力の平行四辺形（三）。</span></li>
+  <li><span class="bk">ダニエル・ベルヌーイ「力学の原理の検討、ならびに力の合成と分解の幾何学的証明」</span> <span class="pub">1726年、ペテルブルク科学アカデミー紀要</span><span class="why">平行四辺形を静力学だけから導こうとした試み（三）。</span></li>
+  <li><span class="bk">グスタフ・キルヒホッフ『数理物理学講義　力学』</span> <span class="pub">1876年</span><span class="why">力学の課題を「記述」とした一節（四）。</span></li>
+  <li><span class="bk">ハインリヒ・ヘルツ『力学原理』</span> <span class="pub">1894年</span><span class="why">力を基本概念から外し、隠れた質量で置き換える構想（四）。</span></li>
+</ul>
+<p class="note">※原典はいずれも通読していない。該当箇所の内容は、科学史の研究書・論文やオンライン資料（下の「事実確認に用いた資料」）で確認した。</p>
+<h3>参考図書 ── さらに読むために</h3>
+<ul>
+  <li><span class="bk">エルンスト・マッハ『マッハ力学史 ―古典力学の発展と批判』上・下（岩野秀明訳）</span> <span class="pub">ちくま学芸文庫、2006年</span><span class="why">ステヴィンの球の輪から平行四辺形の「証明」批判まで、このコラムの骨格の多くがここにある。</span></li>
+  <li><span class="bk">マックス・ヤンマー『力の概念』（高橋毅・大槻義彦訳）</span> <span class="pub">講談社、1979年</span><span class="why">古代から二十世紀まで、「力」という概念がたどった変遷を一冊で通観できる。ヘルツの章もある。</span></li>
+  <li><span class="bk">山本義隆『古典力学の形成 ―ニュートンからラグランジュへ』</span> <span class="pub">日本評論社、1997年</span><span class="why">ニュートン以後の十八世紀に、力学がどのように数式の体系になったかを原典に沿ってたどる。</span></li>
+  <li><span class="bk">白川静『常用字解』</span> <span class="pub">平凡社、2003年</span><span class="why">「力」を鋤の象形とする説をはじめ、身近な漢字の成り立ちを一字ずつ読める。</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。分野をまたぐ結びつけ（見立て）は筆者の解釈であり、学説として確立したものではありません。「力」の字源には諸説があり、本文では二説を紹介するにとどめています。</div>
+  <h3>図版の出典</h3>
+  <ul>
+    <li>北斎《駿州江尻》：<a href="https://commons.wikimedia.org/wiki/File:%E5%86%A8%E5%B6%BD%E4%B8%89%E5%8D%81%E5%85%AD%E6%99%AF_%E9%A7%BF%E5%B7%9E%E6%B1%9F%E5%B0%BB-Ejiri_in_Suruga_Province_(Sunsh%C5%AB_Ejiri),_from_the_series_Thirty-six_Views_of_Mount_Fuji_(Fugaku_sanj%C5%ABrokkei)_MET_DP140977.jpg">File:冨嶽三十六景 駿州江尻 … MET DP140977.jpg</a>（CC0、メトロポリタン美術館。縮小のみ）</li>
+    <li>「力」の字形：<a href="https://commons.wikimedia.org/wiki/File:%E5%8A%9B-oracle.svg">File:力-oracle.svg</a>、<a href="https://commons.wikimedia.org/wiki/File:%E5%8A%9B-seal.svg">File:力-seal.svg</a>（Public domain。背景色をつけてJPEGに変換）</li>
+    <li>ステヴィン『計量術の原理』扉：<a href="https://commons.wikimedia.org/wiki/File:Simon_Stevin_-_Voorblad_van_De_Beghinselen_der_Weeghconst,_1586.png">File:Simon Stevin - Voorblad van De Beghinselen der Weeghconst, 1586.png</a>（Public domain。JPEGに変換）</li>
+    <li>ダニエル・ベルヌーイの肖像：<a href="https://commons.wikimedia.org/wiki/File:Portr%C3%A4t_des_Daniel_Bernoulli_(cropped).jpg">File:Porträt des Daniel Bernoulli (cropped).jpg</a>（<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>、補正：Bammesk。縮小のみ）</li>
+    <li>ヘルツの肖像：<a href="https://commons.wikimedia.org/wiki/File:Heinrich_Rudolf_Hertz.jpg">File:Heinrich Rudolf Hertz.jpg</a>（Public domain）</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://www.mathpages.com/home/kmath548/kmath548.htm">MathPages「Wonder En Is Gheen Wonder」</a>：球の輪の論証と銘、扉・封印への使用</li>
+    <li><a href="https://en.wikipedia.org/wiki/De_Beghinselen_Der_Weeghconst">Wikipedia「De Beghinselen Der Weeghconst」</a>：刊行年（1586年）と内容</li>
+    <li><a href="https://www.encyclopedia.com/science/dictionaries-thesauruses-pictures-and-press-releases/bernoulli-daniel-0">Encyclopedia.com「Bernoulli, Daniel」</a>：1726年の論文の題名・掲載誌と、その論証が循環的と評価されていること</li>
+    <li><a href="https://en.wikipedia.org/wiki/Parallelogram_of_force">Wikipedia「Parallelogram of force」</a>：ニュートン・ヴァリニョン以後の証明の試みと、公理としての扱い</li>
+    <li><a href="https://www.encyclopedia.com/humanities/encyclopedias-almanacs-transcripts-and-maps/hertz-heinrich-rudolf-1857-1894">Encyclopedia.com「Hertz, Heinrich Rudolf」</a>・<a href="https://centaur.reading.ac.uk/7137/1/Mach_and_Hertz.pdf">“Mach and Hertz's mechanics”</a>：『力学原理』の構想（空間・時間・質量、隠れた質量）とマッハの批判</li>
+    <li><a href="https://ja.wiktionary.org/wiki/%E5%8A%9B">ウィクショナリー「力」</a>・<a href="https://gaus.livedoor.biz/archives/28325461.html">「常用漢字論―白川漢字学説の検証」</a>：『説文解字』の筋説と白川静の鋤（耒）説</li>
+    <li><a href="https://www.chikumashobo.co.jp/product/9784480090232/">筑摩書房『マッハ力学史 上』</a>、<a href="https://www.hanmoto.com/bd/isbn/9784061221475">版元ドットコム『力の概念』</a>：参考図書の書誌</li>
+  </ul>
+</div>
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../01_第1回_イントロダクションと力.html"><small>LESSON 1</small>← 教材：第1回 力はベクトルである</a></nav>
+</body>
+</html>

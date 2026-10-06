@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第9回 フーリエ級数展開</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .why{ background:#fffdf0; border:1px solid #e8d48b; border-left:6px solid #e8c14b; border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; } .why .label{ color:#9a7d1a; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:560px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  table.tb{ border-collapse:collapse; margin:12px 0; font-size:14.5px; width:100%; }
+  table.tb th,table.tb td{ border:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ background:#eef2f7; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+  .prob-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); background:#fff; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:0 6px; cursor:pointer; vertical-align:middle; user-select:none; }
+  .prob-chk input{ margin:0; cursor:pointer; }
+  @media print{ .prob-chk{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第9回　フーリエ級数展開</h1>
+<p class="lead">教科書 p.192, p.201–205 ／ 中間試験後の後半戦スタート。「どんな波も、単純な波（$\sin,\cos$）の足し算で作れる」という考え方を学びます。複素関数論（オイラーの式・直交性・積分）の<strong>応用</strong>なので、前半の復習がそのまま効いてきます。</p>
+
+<div class="navi">
+この回のゴールは3つだけ：<strong>① フーリエ級数の形 $f(x)=\dfrac{a_0}{2}+\sum a_k\cos kx+\sum b_k\sin kx$ を書ける ② 係数 $a_k,b_k$ を「直交性」を使って導ける ③ 具体的な関数（矩形波）を実際に展開できる</strong>。あとはその周辺（収束・パーセバル・応用）です。
+</div>
+
+<h2>9.0　なぜフーリエ級数を学ぶのか（動機）</h2>
+<p>いきなり数式に入る前に、「何の役に立つのか」を先に押さえます。授業冒頭の2枚のスライドがまさにこれです。</p>
+<ul>
+  <li><strong>情報圧縮（JPEG）</strong>：同じ画像でも BMP は 937 KB、JPEG は 54 KB。約 1/17 に縮んでいるのに見た目はほぼ同じ。これは画像を「波の成分」に分解し、<span class="key">人間に見えにくい細かい波（高周波成分）を捨てている</span>から。分解の道具がフーリエ変換系です。</li>
+  <li><strong>パターンマッチング／スペクトル解析</strong>：指紋認証・笑顔認識・音声認識・機械の異音診断。いずれも信号を「周波数ごとの成分（スペクトル）」に直して特徴を比べます。</li>
+</ul>
+<div class="why">
+<span class="label">一言でいうと</span>　フーリエ級数は「関数（波形）を、周波数という物差しで測り直す」道具です。時間軸で見ていた $f(x)$ を、<strong>「どの周波数の波がどれだけ含まれているか」</strong>という別の顔（スペクトル）に翻訳します。機械システムでは振動・騒音・回転数の解析に直結します。</p>
+</div>
+
+<h2>9.1　準備①　三角関数の直交性</h2>
+<p>フーリエ級数の心臓部です。次の積分公式（区間は1周期 $[-\pi,\pi]$）を<strong>丸ごと覚える</strong>のではなく、「大半がゼロになる」ことを意識してください。$m,n$ は正の整数とします。</p>
+<div class="thm">
+<span class="label">三角関数の直交性</span>
+$$ \int_{-\pi}^{\pi}\cos mx\cos nx\,dx=\int_{-\pi}^{\pi}\sin mx\sin nx\,dx=\begin{cases}\pi & (m=n)\\[2pt] 0 & (m\ne n)\end{cases} $$
+$$ \int_{-\pi}^{\pi}\sin mx\cos nx\,dx=0\quad(\text{$m,n$ によらず常に }0) $$
+$$ \int_{-\pi}^{\pi}\cos mx\,dx=\int_{-\pi}^{\pi}\sin mx\,dx=0\quad(m\ge1) $$
+</div>
+<div class="why">
+<span class="label">「直交」とはどういう意味？</span>　ベクトルで内積が $0$ のとき「直交（垂直）」と呼びました。関数でも <strong>「掛けて積分した値」を内積とみなす</strong>と、$\int_{-\pi}^{\pi}\cos mx\cos nx\,dx=0\ (m\ne n)$ は「$\cos mx$ と $\cos nx$ は互いに垂直＝混ざらない独立な成分」を意味します。だから後で「1つの成分だけ」を綺麗に取り出せるのです。
+</div>
+<p>先生の方針にならい、この公式は暗記せず<strong>積和の公式から導きます</strong>。出発点は次の基本事実だけ：<br>
+$0$ でない整数 $\ell$ に対して $\displaystyle\int_{-\pi}^{\pi}\cos \ell x\,dx=\Big[\frac{\sin \ell x}{\ell}\Big]_{-\pi}^{\pi}=0$、$\displaystyle\int_{-\pi}^{\pi}\sin \ell x\,dx=0$（奇関数）。$\ell=0$ のときだけ $\displaystyle\int_{-\pi}^{\pi}\cos 0x\,dx=2\pi$。</p>
+<div class="box">
+<strong>積和の公式はどこから来る？（加法定理から作る）</strong>　暗記していなくても、$\cos$ の加法定理2本を足し引きすれば1分で作れます。
+$$ \cos(m+n)x=\cos mx\cos nx-\sin mx\sin nx,\qquad \cos(m-n)x=\cos mx\cos nx+\sin mx\sin nx. $$
+<strong>足す</strong>と $\sin\sin$ が消えて $\cos(m+n)x+\cos(m-n)x=2\cos mx\cos nx$、すなわち $\cos mx\cos nx=\dfrac12\{\cos(m+n)x+\cos(m-n)x\}$。<strong>引く</strong>と $\cos\cos$ が消えて $\sin mx\sin nx=\dfrac12\{\cos(m-n)x-\cos(m+n)x\}$。同様に $\sin$ の加法定理2本 $\sin(m\pm n)x=\sin mx\cos nx\pm\cos mx\sin nx$ を足すと $\sin mx\cos nx=\dfrac12\{\sin(m+n)x+\sin(m-n)x\}$。<strong>この3本を下の証明で使います。</strong>
+</div>
+<div class="proof">
+<strong>(1) $\displaystyle\int_{-\pi}^{\pi}\cos mx\cos nx\,dx$</strong>　積和の公式 $\cos mx\cos nx=\dfrac12\{\cos(m+n)x+\cos(m-n)x\}$ より
+$$ \int_{-\pi}^{\pi}\cos mx\cos nx\,dx=\frac12\int_{-\pi}^{\pi}\cos(m+n)x\,dx+\frac12\int_{-\pi}^{\pi}\cos(m-n)x\,dx. $$
+$m\ne n$ のとき：$m+n\ (\ne0)$, $m-n\ (\ne0)$ ともに整数だから両方 $0$ ⇒ 合計 $0$。<br>
+$m=n$ のとき：第2項は $\cos0x=1$ となり $\dfrac12\displaystyle\int_{-\pi}^{\pi}1\,dx=\dfrac12\cdot2\pi=\pi$（第1項は $\cos2mx$ で $0$）⇒ 合計 $\pi$。<br><br>
+<strong>(2) $\displaystyle\int_{-\pi}^{\pi}\sin mx\sin nx\,dx$</strong>　$\sin mx\sin nx=\dfrac12\{\cos(m-n)x-\cos(m+n)x\}$ より、(1) と全く同様に $m\ne n$ で $0$、$m=n$ で $\pi$。<br><br>
+<strong>(3) $\displaystyle\int_{-\pi}^{\pi}\sin mx\cos nx\,dx$</strong>　$\sin mx\cos nx=\dfrac12\{\sin(m+n)x+\sin(m-n)x\}$。$\sin(\text{整数})x$ は $[-\pi,\pi]$ で常に $0$（奇関数）だから、$m,n$ によらず<strong>常に $0$</strong>。<br><br>
+以上で3つの公式がすべて基本積分だけから導けた。ポイントは「積を<strong>和</strong>に直せば、各項が $\int\cos(\ell x)dx$・$\int\sin(\ell x)dx$ という<strong>すでに知っている積分</strong>に帰着する」こと。
+</div>
+
+<h2>9.2　準備②　オイラーの式（復習）</h2>
+<div class="box">
+$$ e^{i\theta}=\cos\theta+i\sin\theta $$
+</div>
+<p>今回は主に実数の $\sin,\cos$ で話を進めますが、<strong>第10回でこの式が「複素フーリエ級数」への橋渡し</strong>になります。$\cos\theta=\dfrac{e^{i\theta}+e^{-i\theta}}{2},\ \sin\theta=\dfrac{e^{i\theta}-e^{-i\theta}}{2i}$ もセットで思い出しておきましょう。</p>
+
+<h2>9.3　フーリエ級数展開の形</h2>
+<div class="def">
+<span class="label">フーリエ級数</span>　区間 $-\pi&lt; x\le\pi$ で周期性をもつ関数 $f(x)$ を、三角関数の和で表す：
+$$ f(x)=\frac{a_0}{2}+\sum_{k=1}^{\infty}a_k\cos kx+\sum_{k=1}^{\infty}b_k\sin kx $$
+</div>
+<ul>
+  <li>$\dfrac{a_0}{2}$：<strong>直流成分</strong>（$\cos0x=1$ に相当）。関数の「平均の高さ」。</li>
+  <li>$a_k\cos kx,\ b_k\sin kx$：周波数 $k$ の波。$k$ が大きいほど細かく振動する成分。</li>
+</ul>
+<div class="why">
+<span class="label">イメージ</span>　音でいえば「ド」の音は、基本の周波数だけでなく、その整数倍の倍音がいろいろな強さで混ざってできています。フーリエ級数はこの<strong>「混ざり具合のレシピ」</strong>そのもの。$a_k,b_k$ が各周波数の「分量」です。
+</div>
+
+<h2>9.4　係数 $a_k,b_k$ はどう決まるか（直交性で取り出す）</h2>
+<p>ここが第9回で一番大事な論理です。「どうやって係数を求めるか？」の答えは、<span class="key">$\cos nx$（または $\sin nx$）を掛けて、1周期 $[-\pi,\pi]$ で積分する</span>。すると直交性のおかげで、狙った1項だけが生き残ります。</p>
+<div class="proof">
+両辺に $\cos nx$（$n\ge1$）を掛けて $[-\pi,\pi]$ で積分する（有限項での収束を仮定し、項別積分できるとする）：
+$$ \int_{-\pi}^{\pi}f(x)\cos nx\,dx=\underbrace{\frac{a_0}{2}\int_{-\pi}^{\pi}\cos nx\,dx}_{=\,0}+\sum_{k=1}^{\infty}a_k\underbrace{\int_{-\pi}^{\pi}\cos kx\cos nx\,dx}_{=\,\pi\ (k=n),\ 0\ (k\ne n)}+\sum_{k=1}^{\infty}b_k\underbrace{\int_{-\pi}^{\pi}\sin kx\cos nx\,dx}_{=\,0} $$
+生き残るのは $k=n$ の1項だけ：$\displaystyle\int_{-\pi}^{\pi}f(x)\cos nx\,dx=a_n\pi$。ゆえに
+$$ a_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\cos nx\,dx. $$
+同様に $\sin nx$ を掛けて積分すれば $\displaystyle b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,dx$。
+</div>
+<div class="why">
+<span class="label">なぜこれで求まるのか</span>　無限個の未知数 $a_k,b_k$ があるのに、$\cos nx$ を掛けて積分すると<strong>他の項が全部ゼロに消えて、$a_n$ だけが残る</strong>。これは「$\cos nx$ 方向に射影して、その成分だけを測る」操作です（ベクトルで特定の軸の成分を内積で取り出すのと同じ）。直交性がこの魔法を可能にしています。
+</div>
+
+<h2>9.5　フーリエ係数の公式（$a_0$ の扱いに注意）</h2>
+<div class="thm">
+<span class="label">フーリエ係数</span>
+$$ a_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\cos nx\,dx\quad(n=0,1,2,\dots) $$
+$$ b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,dx\quad(n=1,2,\dots) $$
+</div>
+<div class="warn">
+<strong>なぜ定数項を $a_0$ でなく $\dfrac{a_0}{2}$ と書くのか？</strong>　上の $a_n$ の式で $n=0$ とすると $a_0=\dfrac1\pi\int_{-\pi}^{\pi}f(x)\,dx$。一方、定数項そのものは「平均値」$\dfrac1{2\pi}\int_{-\pi}^{\pi}f\,dx=\dfrac{a_0}{2}$。つまり $\dfrac{a_0}{2}$ と半分にしておくと、$a_n$ の公式が $n=0$ でもそのまま使えて統一的になります。これが $\dfrac{a_0}{2}$ 表記の理由です。
+</div>
+<div class="box">
+<strong>対称性の裏ワザ</strong>：$f(x)$ が<strong>偶関数</strong>なら $b_n=0$（$\cos$ だけの展開）、<strong>奇関数</strong>なら $a_n=0$（$\sin$ だけの展開）。計算前に必ずチェックすると手間が半減します。
+</div>
+
+<h2>9.6　例題：矩形波を展開する</h2>
+<div class="ex">
+<span class="label">例 9.1（スライドの例）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex9-1">完了</label>　次の周期関数（周期 $2\pi$）をフーリエ級数に展開せよ。
+$$ f(x)=\begin{cases}\dfrac14 & (-\pi&lt;x&lt;0)\\[4pt] 1 & (0\le x\le\pi)\end{cases} $$
+<figure class="fig">
+<svg viewBox="0 0 460 190" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="mrq" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="20" y1="140" x2="450" y2="140" stroke="#999" stroke-width="1.1" marker-end="url(#mrq)"/>
+  <line x1="235" y1="180" x2="235" y2="18" stroke="#999" stroke-width="1.1" marker-end="url(#mrq)"/>
+  <text x="442" y="156" fill="#999">x</text><text x="242" y="26" fill="#999">f(x)</text>
+  <!-- level 1 = y70 ; level 1/4 = y120 ; axis y140 -->
+  <g stroke="#c9a227" stroke-width="2.5" fill="none">
+    <line x1="40" y1="120" x2="130" y2="120"/>
+    <line x1="130" y1="70" x2="235" y2="70"/>
+    <line x1="235" y1="70" x2="340" y2="70"/>
+    <line x1="340" y1="120" x2="430" y2="120"/>
+  </g>
+  <g stroke="#c9a227" stroke-width="1" stroke-dasharray="3 3">
+    <line x1="130" y1="70" x2="130" y2="120"/><line x1="340" y1="70" x2="340" y2="120"/>
+  </g>
+  <text x="120" y="158" fill="#999">−π</text><text x="330" y="158" fill="#999">π</text>
+  <text x="243" y="66" fill="#666">1</text><text x="200" y="134" fill="#666">1/4</text>
+  <circle cx="235" cy="105" r="3" fill="#c0392b"/>
+  <text x="248" y="112" fill="#c0392b">不連続点（中点 5/8）</text>
+</svg>
+<figcaption>図9-1　矩形波 $f(x)$。$x=0$ と $x=\pm\pi$ で値が跳ぶ（不連続）。跳んでいる所ではフーリエ級数は「跳ぶ手前と直後の平均（中点）」に収束します。</figcaption>
+</figure>
+<div class="proof">
+<strong>① 直流成分 $a_0$</strong><br>
+$$ a_0=\frac1\pi\int_{-\pi}^{\pi}f\,dx=\frac1\pi\Big(\int_{-\pi}^{0}\frac14\,dx+\int_{0}^{\pi}1\,dx\Big)=\frac1\pi\Big(\frac14\pi+\pi\Big)=\frac1\pi\cdot\frac{5\pi}{4}=\frac54. $$
+よって定数項は $\dfrac{a_0}{2}=\dfrac58$（＝図の上下2つの高さ $1$ と $\tfrac14$ のちょうど平均）。<br><br>
+<strong>② $\cos$ 成分 $a_n\ (n\ge1)$</strong><br>
+$$ a_n=\frac1\pi\Big(\frac14\int_{-\pi}^{0}\cos nx\,dx+\int_{0}^{\pi}\cos nx\,dx\Big). $$
+$\displaystyle\int_{-\pi}^{0}\cos nx\,dx=\Big[\frac{\sin nx}{n}\Big]_{-\pi}^{0}=\frac{0-\sin(-n\pi)}{n}=0$、$\displaystyle\int_{0}^{\pi}\cos nx\,dx=\Big[\frac{\sin nx}{n}\Big]_{0}^{\pi}=\frac{\sin n\pi}{n}=0$。ゆえに $a_n=0\ (n\ge1)$。<br><br>
+<strong>③ $\sin$ 成分 $b_n\ (n\ge1)$</strong><br>
+$$ b_n=\frac1\pi\Big(\frac14\int_{-\pi}^{0}\sin nx\,dx+\int_{0}^{\pi}\sin nx\,dx\Big). $$
+$\displaystyle\int_{-\pi}^{0}\sin nx\,dx=\Big[\frac{-\cos nx}{n}\Big]_{-\pi}^{0}=\frac{-1}{n}\big(1-(-1)^n\big)$、$\displaystyle\int_{0}^{\pi}\sin nx\,dx=\Big[\frac{-\cos nx}{n}\Big]_{0}^{\pi}=\frac{1}{n}\big(1-(-1)^n\big)$。<br>
+足して $\displaystyle b_n=\frac1\pi\Big(\frac14\cdot\frac{-1}{n}+\frac{1}{n}\Big)\big(1-(-1)^n\big)=\frac{3}{4\pi n}\big(1-(-1)^n\big)$。<br>
+$1-(-1)^n$ は<strong>偶数 $n$ で $0$、奇数 $n$ で $2$</strong>。奇数を $n=2m+1$ と書くと $\displaystyle b_{2m+1}=\frac{3}{2(2m+1)\pi}$。<br><br>
+<strong>④ 結果</strong>
+$$ f(x)=\frac58+\sum_{m=0}^{\infty}\frac{3}{2(2m+1)\pi}\sin(2m+1)x. $$
+$\cos$ 項が全部消え、奇数次の $\sin$ だけが残る。<span class="meta">（$f$ から直流成分 $5/8$ を引いた残りが奇関数状のためで、$\sin$ だけで表せる。）</span>
+</div>
+</div>
+
+<h3>スペクトル（各周波数の分量）</h3>
+<figure class="fig">
+<svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="msp" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="45" y1="170" x2="450" y2="170" stroke="#999" stroke-width="1.1" marker-end="url(#msp)"/>
+  <line x1="45" y1="185" x2="45" y2="18" stroke="#999" stroke-width="1.1" marker-end="url(#msp)"/>
+  <text x="442" y="186" fill="#999">k</text><text x="8" y="28" fill="#999">大きさ</text>
+  <!-- bars: k=0 (a0/2=0.625), k=1 (b1=0.477), k=3(0.159),k=5(0.095),k=7(0.068),k=9(0.053) scaled x150 -->
+  <g fill="#e8c14b" stroke="#b8930f">
+    <rect x="60"  y="76"  width="20" height="94"/>
+    <rect x="100" y="98"  width="20" height="72"/>
+    <rect x="180" y="146" width="20" height="24"/>
+    <rect x="260" y="156" width="20" height="14"/>
+    <rect x="340" y="160" width="20" height="10"/>
+    <rect x="420" y="162" width="20" height="8"/>
+  </g>
+  <g fill="#666" font-size="11.5">
+    <text x="63" y="186">0</text><text x="103" y="186">1</text><text x="143" y="186">2</text>
+    <text x="183" y="186">3</text><text x="223" y="186">4</text><text x="263" y="186">5</text>
+    <text x="303" y="186">6</text><text x="343" y="186">7</text><text x="383" y="186">8</text><text x="423" y="186">9</text>
+  </g>
+  <text x="58" y="70" fill="#b8930f">a₀/2</text>
+  <text x="98" y="92" fill="#b8930f">b₁</text>
+</svg>
+<figcaption>図9-2　矩形波のスペクトル。左端が直流成分 $a_0/2=5/8$、続いて $b_1,b_3,b_5,\dots$。偶数次はゼロ。周波数が上がるほど分量が $\propto\dfrac1{2m+1}$ で小さくなります（＝細かい成分は少しずつしか効かない）。</figcaption>
+</figure>
+
+<h2>9.7　収束のしかたとギブス現象</h2>
+<p>フーリエ級数は無限和ですが、実際は有限項 $S_N(x)$ で打ち切って近似します。その振る舞いには2つの大事な性質があります。</p>
+<div class="def">
+<span class="label">部分和</span>　$\displaystyle S_N(x)=\frac58+\sum_{m=0}^{N}\frac{3}{2(2m+1)\pi}\sin(2m+1)x$
+</div>
+<figure class="fig">
+<svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="mgi" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="20" y1="150" x2="450" y2="150" stroke="#999" stroke-width="1.1" marker-end="url(#mgi)"/>
+  <line x1="235" y1="190" x2="235" y2="18" stroke="#999" stroke-width="1.1" marker-end="url(#mgi)"/>
+  <text x="442" y="166" fill="#999">x</text>
+  <!-- target square wave -->
+  <g stroke="#bbb" stroke-width="1.6" fill="none">
+    <line x1="40" y1="128" x2="235" y2="128"/><line x1="235" y1="62" x2="430" y2="62"/>
+  </g>
+  <!-- S_N approximation with overshoot near 0 and pi -->
+  <path d="M40 128 Q90 128 130 126 T210 120 Q225 116 232 70 Q234 52 238 55 Q250 66 270 62 T350 62 Q400 62 428 62"
+        fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <circle cx="234" cy="95" r="3" fill="#c0392b"/>
+  <text x="242" y="100" fill="#c0392b">中点 5/8 を通る</text>
+  <text x="250" y="46" fill="#7d3c98">↑ 行き過ぎ（ギブス現象）</text>
+  <text x="120" y="158" fill="#999">−π</text><text x="330" y="158" fill="#999">π</text>
+</svg>
+<figcaption>図9-3　$S_N(x)$ の様子（模式図）。なめらかな所では速く真の値に近づくが、<strong>不連続点のそばでは山（オーバーシュート）が残る</strong>。項数 $N$ を増やしても山の高さは約9%残り、幅だけが狭くなる。これがギブス現象。</figcaption>
+</figure>
+<div class="thm">
+<span class="label">収束の定理（区分的に滑らかな場合）</span>　$f$ が区間 $[-\pi,\pi]$ で「区分的に滑らか」なら、フーリエ級数は
+<ul>
+  <li>$f$ が<strong>連続な点</strong>では $f(x)$ に収束する。</li>
+  <li>$f$ が<strong>不連続な点</strong>では、左右の極限の平均（中点）に収束する：
+  $$ \frac12\big[f(x{+})+f(x{-})\big]. $$</li>
+</ul>
+</div>
+<div class="why">
+<span class="label">矩形波で確かめる</span>　$x=0$ では $f$ が $\tfrac14$ から $1$ へ跳びます。中点は $\dfrac{\tfrac14+1}{2}=\dfrac58$。一方、級数に $x=0$ を代入すると $\sin(2m+1)\cdot0=0$ なので $S(0)=\dfrac58$。<strong>ぴったり中点</strong>！ 直流成分 $5/8$ が跳びの中点と一致するのは偶然ではありません。
+</div>
+<p class="meta">なお「不連続点以外では十分速く収束する」ので、フーリエ級数は<strong>項別に積分してよい</strong>（第10回でこの性質を使います）。</p>
+
+<h2>9.8　ベッセルの不等式・パーセバルの等式</h2>
+<p>「有限項で打ち切った近似はどれくらい良いのか？」を測るのが次の関係です。結果を暗記するのではなく、<strong>「フーリエ係数が最良の近似を与える」ことから導きます</strong>（先生の重視する筋道）。</p>
+
+<h3>導出：フーリエ係数はなぜ最良か（最小二乗）</h3>
+<div class="proof">
+$f$ を<strong>任意の</strong>係数 $A_0,A_k,B_k$ をもつ有限三角和
+$\displaystyle S_N=\frac{A_0}{2}+\sum_{k=1}^{N}\big(A_k\cos kx+B_k\sin kx\big)$ で近似し、<strong>二乗誤差</strong>
+$\displaystyle E=\int_{-\pi}^{\pi}\big(f-S_N\big)^2dx$ を最小にする係数を探す。$(f-S_N)^2=f^2-2fS_N+S_N^2$ を項別に積分して
+$$ E=\int_{-\pi}^{\pi}f^2dx-2\int_{-\pi}^{\pi}f\,S_N\,dx+\int_{-\pi}^{\pi}S_N^{\,2}\,dx. $$
+<strong>第2項 $\displaystyle\int f\,S_N\,dx$ を計算する。</strong>　$S_N$ を代入し、$f$ との積を項ごとに積分する。ここで「$f$ に $\cos kx,\sin kx$ を掛けて積分したもの」は<strong>まさにフーリエ係数の定義</strong>そのもの：$\displaystyle\int_{-\pi}^{\pi}f\,dx=\pi a_0,\ \int_{-\pi}^{\pi}f\cos kx\,dx=\pi a_k,\ \int_{-\pi}^{\pi}f\sin kx\,dx=\pi b_k$。よって
+$$ \int_{-\pi}^{\pi}f\,S_N\,dx=\frac{A_0}{2}\!\int_{-\pi}^{\pi}\!f\,dx+\sum_{k=1}^{N}\Big(A_k\!\int_{-\pi}^{\pi}\!f\cos kx\,dx+B_k\!\int_{-\pi}^{\pi}\!f\sin kx\,dx\Big)=\pi\Big[\frac{A_0 a_0}{2}+\sum_{k=1}^{N}\big(A_k a_k+B_k b_k\big)\Big]. $$
+<strong>第3項 $\displaystyle\int S_N^{\,2}\,dx$ を計算する。</strong>　$S_N^2$ を展開すると「同じ関数どうしの積」と「異なる関数どうしの積（交差項）」が出るが、<strong>9.1 の直交性</strong>により交差項の積分はすべて $0$。生き残るのは自分自身との積だけで、$\displaystyle\int_{-\pi}^{\pi}\cos^2kx\,dx=\int_{-\pi}^{\pi}\sin^2kx\,dx=\pi$、定数項は $\displaystyle\int_{-\pi}^{\pi}\big(\tfrac{A_0}{2}\big)^2dx=\tfrac{A_0^2}{4}\cdot2\pi=\tfrac{\pi A_0^2}{2}$。したがって
+$$ \int_{-\pi}^{\pi}S_N^{\,2}\,dx=\pi\Big[\frac{A_0^2}{2}+\sum_{k=1}^{N}\big(A_k^2+B_k^2\big)\Big]. $$
+<strong>3項を合わせて平方完成する。</strong>　1つの係数 $A_k$ に注目すると、$E$ の中の $A_k$ 依存部分は $\pi A_k^2-2\pi A_k a_k$。これを平方完成すると
+$$ \pi A_k^2-2\pi A_k a_k=\pi\big(A_k-a_k\big)^2-\pi a_k^2 $$
+（$B_k$ も $A_0$ も全く同じ形）。$A_0$ は $\dfrac{\pi}{2}A_0^2-\pi A_0 a_0=\dfrac{\pi}{2}(A_0-a_0)^2-\dfrac{\pi}{2}a_0^2$。すべての項をこの形にまとめると
+$$ E=\int_{-\pi}^{\pi}f^2dx-\pi\Big[\frac{a_0^2}{2}+\sum_{k=1}^{N}(a_k^2+b_k^2)\Big]+\pi\Big[\frac{(A_0-a_0)^2}{2}+\sum_{k=1}^{N}\big((A_k-a_k)^2+(B_k-b_k)^2\big)\Big]. $$
+右辺で $A_0,A_k,B_k$ を含むのは<strong>最後の $[\ \cdots\ ]$ だけ</strong>で、中身は二乗の和だから $\ge0$。ゆえに $E$ が最小になるのは、この括弧が $0$ になるとき、すなわち <strong>$A_0=a_0,\ A_k=a_k,\ B_k=b_k$（＝フーリエ係数）のとき</strong>。これでフーリエ係数が二乗誤差を最小にする最良近似だと示せた。
+</div>
+<div class="why">
+<span class="label">ここからベッセル→パーセバル</span>　最小値は $\displaystyle E_{\min}=\int_{-\pi}^{\pi}f^2dx-\pi\Big[\frac{a_0^2}{2}+\sum_{k=1}^{N}(a_k^2+b_k^2)\Big]$。誤差は必ず $E_{\min}\ge0$ だから、移項すればそのまま<strong>ベッセルの不等式</strong>。さらに系が「完全」なら $N\to\infty$ で近似誤差 $E_{\min}\to0$ となり、不等号が等号（<strong>パーセバルの等式</strong>）になる。
+</div>
+
+<div class="thm">
+<span class="label">ベッセルの不等式（有限 $N$）</span>
+$$ \int_{-\pi}^{\pi}f(x)^2\,dx\ \ge\ \pi\Big[\frac{a_0^2}{2}+\sum_{k=1}^{N}\big(a_k^2+b_k^2\big)\Big] $$
+有限項のフーリエ級数は、$f$ の「変動の大きさ（エネルギー）」を<strong>必ず過小評価</strong>する（＝取りこぼす成分がある）。
+</div>
+<div class="thm">
+<span class="label">パーセバルの等式（$N\to\infty$）</span>
+$$ \int_{-\pi}^{\pi}f(x)^2\,dx\ =\ \pi\Big[\frac{a_0^2}{2}+\sum_{k=1}^{\infty}\big(a_k^2+b_k^2\big)\Big] $$
+無限項にすると不等号が等号になる。これが成り立つ直交関数系を<strong>「完全系」</strong>という（取りこぼしがゼロ）。
+</div>
+<div class="why">
+<span class="label">意味</span>　左辺は「元の波の全エネルギー」、右辺は「各周波数成分のエネルギーの合計」。パーセバルの等式は<strong>「時間で見てもスペクトルで見ても、総エネルギーは同じ」</strong>という保存則です。$\sin,\cos$ の全体が「完全系」＝どんな（まともな）波でも取りこぼしなく表せる、という保証になっています。
+</div>
+
+<h2>9.9　用途：スペクトル解析（機械システムでの実例）</h2>
+<div class="box">
+機械・構造物が出す<strong>騒音・異音</strong>を考える。音圧 $p(t)$ を測って<strong>フーリエ級数展開</strong>すると、横軸を周波数 $k$、縦軸を各成分の強さ $a_k^2+b_k^2$ とする<strong>スペクトル</strong>が得られる。
+<ul>
+  <li>とがったピークの位置 → モーターの回転数、筐体の共振周波数などを特定できる。</li>
+  <li>異常時のスペクトルを正常時と比べる → 故障診断・予知保全。</li>
+</ul>
+他にも化学成分分析・音声認識・指紋照合など、「信号を周波数の指紋に直して比べる」場面で広く使われます。
+</div>
+
+<hr>
+<h2>9.10　章末例題</h2>
+<p>偶関数・奇関数の性質を使うと計算が半分になります。矩形波（例 9.1）に続き、代表的な2つを最後まで解きます。</p>
+
+<div class="ex">
+<span class="label">例 9.2（奇関数 → $\sin$ のみ）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex9-2">完了</label>　$f(x)=x\ (-\pi&lt;x\le\pi)$、周期 $2\pi$ をフーリエ級数に展開せよ。
+<div class="proof">
+$f(x)=x$ は<strong>奇関数</strong>なので $a_n=0$（$\dfrac{a_0}{2}=0$ も含む）。$b_n$ だけ求める。<br>
+$b_n=\dfrac1\pi\displaystyle\int_{-\pi}^{\pi}x\sin nx\,dx=\dfrac2\pi\displaystyle\int_{0}^{\pi}x\sin nx\,dx$（被積分関数が偶関数）。<br>
+部分積分：$\displaystyle\int_{0}^{\pi}x\sin nx\,dx=\Big[-\frac{x\cos nx}{n}\Big]_{0}^{\pi}+\frac1n\int_{0}^{\pi}\cos nx\,dx=-\frac{\pi\cos n\pi}{n}+0=\frac{\pi(-1)^{n+1}}{n}$。<br>
+よって $b_n=\dfrac2\pi\cdot\dfrac{\pi(-1)^{n+1}}{n}=\dfrac{2(-1)^{n+1}}{n}$。<br>
+$$ x=\sum_{n=1}^{\infty}\frac{2(-1)^{n+1}}{n}\sin nx=2\Big(\sin x-\frac{\sin 2x}{2}+\frac{\sin 3x}{3}-\cdots\Big). $$
+</div>
+</div>
+
+<div class="ex">
+<span class="label">例 9.3（偶関数 → $\cos$ のみ）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex9-3">完了</label>　$f(x)=|x|\ (-\pi&lt;x\le\pi)$、周期 $2\pi$ をフーリエ級数に展開せよ。
+<div class="proof">
+$f(x)=|x|$ は<strong>偶関数</strong>なので $b_n=0$。$a_n$ だけ求める。<br>
+$a_0=\dfrac1\pi\displaystyle\int_{-\pi}^{\pi}|x|\,dx=\dfrac2\pi\displaystyle\int_{0}^{\pi}x\,dx=\dfrac2\pi\cdot\dfrac{\pi^2}{2}=\pi$、よって $\dfrac{a_0}{2}=\dfrac{\pi}{2}$。<br>
+$a_n=\dfrac2\pi\displaystyle\int_{0}^{\pi}x\cos nx\,dx=\dfrac2\pi\Big(\Big[\frac{x\sin nx}{n}\Big]_{0}^{\pi}-\frac1n\int_{0}^{\pi}\sin nx\,dx\Big)=\dfrac2\pi\cdot\frac{\cos n\pi-1}{n^2}=\frac{2\big((-1)^n-1\big)}{\pi n^2}$。<br>
+偶数 $n$ で $0$、奇数 $n=2m+1$ で $a_{2m+1}=\dfrac{-4}{\pi(2m+1)^2}$。<br>
+$$ |x|=\frac{\pi}{2}-\frac{4}{\pi}\sum_{m=0}^{\infty}\frac{\cos(2m+1)x}{(2m+1)^2}. $$
+<span class="meta">（$x=0$ を代入すると $0=\dfrac\pi2-\dfrac4\pi\sum\dfrac1{(2m+1)^2}$ から $\displaystyle\sum_{m=0}^\infty\frac1{(2m+1)^2}=\frac{\pi^2}{8}$ が得られる。）</span>
+</div>
+</div>
+
+<h2>9.11　演習問題</h2>
+<p>まず自分で解いてから解答を開いてください。偶奇の判定 → 消える係数を先に見抜くのがコツです。</p>
+<ol>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill9-1">完了</label> $f(x)=x^2\ (-\pi&lt;x\le\pi)$ を展開せよ。（偶関数 → $\cos$ のみ）</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill9-2">完了</label> $f(x)=\begin{cases}-1 & (-\pi&lt;x&lt;0)\\ 1 & (0&lt;x&lt;\pi)\end{cases}$ を展開せよ。（奇関数の矩形波 → $\sin$ のみ）</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill9-3">完了</label> 例 9.2（$f=x$）にパーセバルの等式を適用して、$\displaystyle\sum_{n=1}^{\infty}\frac1{n^2}$ の値を求めよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill9-4">完了</label> $f(x)=\cos^2 x$ を $[-\pi,\pi]$ で展開せよ。（積分せず、倍角公式で有限項に）</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong> 偶関数なので $b_n=0$。$a_0=\dfrac2\pi\displaystyle\int_0^\pi x^2dx=\dfrac{2\pi^2}{3}$ より $\dfrac{a_0}{2}=\dfrac{\pi^2}{3}$。<br>
+$a_n=\dfrac2\pi\displaystyle\int_0^\pi x^2\cos nx\,dx=\dfrac2\pi\Big(\Big[\frac{x^2\sin nx}{n}\Big]_0^\pi-\frac2n\int_0^\pi x\sin nx\,dx\Big)=\dfrac2\pi\cdot\frac{2\pi(-1)^n}{n^2}=\frac{4(-1)^n}{n^2}$。<br>
+$\displaystyle x^2=\frac{\pi^2}{3}+4\sum_{n=1}^{\infty}\frac{(-1)^n}{n^2}\cos nx$。（$x=\pi$ を代入すると $\displaystyle\sum\frac1{n^2}=\frac{\pi^2}{6}$ が出る。）<br><br>
+<strong>2.</strong> 奇関数なので $a_n=0$。$b_n=\dfrac2\pi\displaystyle\int_0^\pi\sin nx\,dx=\dfrac2\pi\cdot\dfrac{1-(-1)^n}{n}$。奇数 $n=2m+1$ のみ残り $b_{2m+1}=\dfrac{4}{(2m+1)\pi}$。<br>
+$\displaystyle f(x)=\frac4\pi\sum_{m=0}^{\infty}\frac{\sin(2m+1)x}{2m+1}=\frac4\pi\Big(\sin x+\frac{\sin 3x}{3}+\frac{\sin 5x}{5}+\cdots\Big)$。<br><br>
+<strong>3.</strong> 例 9.2 は $a_n=0,\ b_n=\dfrac{2(-1)^{n+1}}{n}$。パーセバル $\displaystyle\int_{-\pi}^{\pi}f^2dx=\pi\sum_{n=1}^\infty b_n^2$ に代入。<br>
+左辺 $=\displaystyle\int_{-\pi}^{\pi}x^2dx=\dfrac{2\pi^3}{3}$、右辺 $=\pi\displaystyle\sum_{n=1}^\infty\frac{4}{n^2}=4\pi\sum\frac1{n^2}$。<br>
+ゆえに $\dfrac{2\pi^3}{3}=4\pi\displaystyle\sum\frac1{n^2}$ より $\displaystyle\sum_{n=1}^{\infty}\frac1{n^2}=\frac{\pi^2}{6}$。<br><br>
+<strong>4.</strong> 倍角公式 $\cos^2x=\dfrac{1+\cos 2x}{2}$。これはすでにフーリエ級数の形（$\dfrac{a_0}{2}=\dfrac12,\ a_2=\dfrac12$、他はすべて $0$）。積分計算は不要。
+</div>
+</details>
+
+<hr>
+<h2>9.12　まとめ・チェックリスト</h2>
+<div class="box">
+<ul>
+  <li>□ 三角関数の直交性（大半が $0$、$m=n$ の $\cos\cdot\cos,\ \sin\cdot\sin$ だけ $\pi$）を言える。</li>
+  <li>□ フーリエ級数の形と、係数公式 $a_n,b_n=\dfrac1\pi\int_{-\pi}^{\pi}f\cos/\sin\,nx\,dx$ を書ける。</li>
+  <li>□ 係数が「$\cos nx,\sin nx$ を掛けて積分し、直交性で1項だけ残す」ことで出る、と説明できる。</li>
+  <li>□ $\dfrac{a_0}{2}$ が「平均＝直流成分」であり、$a_n$ の式を $n=0$ でも使うための半分だと分かる。</li>
+  <li>□ 偶関数→$\cos$ のみ、奇関数→$\sin$ のみ、を計算前に判断できる。</li>
+  <li>□ 矩形波を最後まで展開できる（$a_0/2=5/8$、$\sin$ の奇数次のみ）。</li>
+  <li>□ 不連続点では中点 $\tfrac12[f(x{+})+f(x{-})]$ に収束する、ギブス現象がある、と言える。</li>
+  <li>□ パーセバルの等式＝エネルギー保存、完全系＝取りこぼしなし、を説明できる。</li>
+</ul>
+</div>
+
+<div class="navi" style="margin-top:18px">
+次回 <strong>第10回：フーリエ変換</strong>では、「周期 $2\pi$」という制限を外し、周期を無限大にします。すると和 $\sum$ が積分 $\int$ に化け、フーリエ<strong>級数</strong>がフーリエ<strong>変換</strong>へ一般化されます。ここで第9回の「係数を積分で取り出す」考え方と、オイラーの式（複素数化）がそのまま効いてきます。
+</div>
+
+<script>
+(function(){
+  var KEY = 'amII_prob_12';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  document.querySelectorAll('.prob-check').forEach(function(cb){
+    var id = cb.getAttribute('data-pid');
+    cb.checked = !!state[id];
+    cb.addEventListener('change', function(){
+      state[id] = cb.checked;
+      save();
+    });
+  });
+})();
+</script>
+</body>
+</html>

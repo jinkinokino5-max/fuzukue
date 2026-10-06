@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3回 等角写像・複素積分・コーシーの定理</title>
+<script>
+  MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], tags:'none' },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink);
+        line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; }
+  .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; }
+  .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); }
+  .star{ color:#c0392b; font-weight:bold; }
+  .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  .toggle{ cursor:pointer; color:var(--accent); font-weight:bold; user-select:none; }
+  details{ margin:8px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:520px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第3回　等角写像・複素積分・コーシーの定理</h1>
+<p class="lead">教科書 p.147, 185, 153 ／ 全体地図では「正則性 → <strong>複素積分・コーシーの定理</strong> → 不定積分」へ進む入口です。</p>
+
+<div class="navi">
+この回でやること：①正則写像が角度を保つこと（等角写像）を知る → ②<strong>複素積分とは何か</strong>を定義から理解する → ③<strong>コーシーの定理</strong>「正則関数の閉曲線一周積分は 0」を証明する。<br>
+この回は<strong>後半すべての土台</strong>です。とくに②③は第4回の「不定積分の証明（試験必出）」へ直結します。
+</div>
+
+<h2>3.0　この回の位置づけ（なぜ複素積分を学ぶのか）</h2>
+<p>第1・2回で「複素関数が微分できる（正則である）とはどういうことか」を学びました。今回からは<strong>積分</strong>に入ります。実数の積分との最大の違いは、複素積分が<span class="key">「どの経路を通って積分するか」</span>を指定して行う点です。</p>
+<p>ところが、関数が正則でありさえすれば、<span class="key">積分の値は経路の選び方によらず、始点と終点だけで決まる</span>——これがコーシーの定理であり、複素関数論の心臓部です。この事実があるおかげで、第4回で「不定積分（原始関数）」が意味を持ち、第6・7回で「留数による積分計算」が可能になります。</p>
+
+<h2>3.1　等角写像（写像の等角性）</h2>
+
+<div class="def">
+<span class="label">定義 3.1（等角写像）</span><br>
+2本の曲線が点 $z_0$ で交わる角度が、写像 $w=f(z)$ によって移った先（$w_0=f(z_0)$）でも保たれるとき、$f$ は $z_0$ で<strong>等角</strong>であるという。
+</div>
+
+<div class="thm">
+<span class="label">定理 3.1</span><br>
+$f(z)$ が $z_0$ で正則かつ $f'(z_0)\neq 0$ ならば、$f$ は $z_0$ のまわりで<strong>等角</strong>である（写像後も曲線群のなす角が不変）。
+</div>
+
+<div class="proof">
+<span class="label">なぜ成り立つか（証明の要点）</span><br>
+点 $z_0$ の近くで、$f$ を1次近似すると
+$$ w-w_0 \;=\; f(z)-f(z_0) \;\approx\; f'(z_0)\,(z-z_0). $$
+つまり微小な変位 $z-z_0$ は、複素数 $f'(z_0)$ を掛けたものに移る。複素数の掛け算は<strong>「偏角の回転＋絶対値の拡大」</strong>だから、
+$$ \arg(w-w_0) \approx \arg f'(z_0) + \arg(z-z_0). $$
+この回転角 $\arg f'(z_0)$ は<strong>方向によらず一定</strong>。だから $z_0$ を通る2本の曲線の接線は、どちらも同じ角だけ回転する。よって2曲線のなす角は変わらない。<span class="qed">∎</span>
+</div>
+<figure class="fig">
+<svg viewBox="0 0 470 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="m31" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#7d3c98"/></marker></defs>
+  <text x="14" y="18" fill="#555">z 平面</text>
+  <line x1="40" y1="165" x2="180" y2="70" stroke="#1b4f72" stroke-width="2"/>
+  <line x1="55" y1="55" x2="165" y2="178" stroke="#1b4f72" stroke-width="2"/>
+  <path d="M97 132 A20 20 0 0 1 126 122" fill="none" stroke="#c0392b" stroke-width="1.4"/>
+  <text x="124" y="112" fill="#c0392b">α</text>
+  <circle cx="108" cy="116" r="3.5" fill="#c0392b"/><text x="84" y="112" fill="#c0392b">z₀</text>
+  <line x1="200" y1="110" x2="258" y2="110" stroke="#7d3c98" stroke-width="2" marker-end="url(#m31)"/>
+  <text x="203" y="100" fill="#7d3c98">w=f(z)</text>
+  <text x="300" y="18" fill="#555">w 平面</text>
+  <path d="M285 165 Q360 120 440 85" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <path d="M300 58 Q348 118 405 178" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <path d="M345 130 A20 20 0 0 1 374 122" fill="none" stroke="#c0392b" stroke-width="1.4"/>
+  <text x="372" y="112" fill="#c0392b">α</text>
+  <circle cx="356" cy="117" r="3.5" fill="#c0392b"/><text x="360" y="110" fill="#c0392b">w₀</text>
+</svg>
+<figcaption>図3-1　$f$ が正則で $f'(z_0)\neq0$ なら、2曲線のなす角 $\alpha$ は写像 $w=f(z)$ の前後で変わらない（等角性）。</figcaption>
+</figure>
+
+<p class="meta">ポイント：等角性は「偏角の変化が微係数 $f'(z_0)$ だけで決まる」ことの帰結。$f'(z_0)=0$ だと1次近似が消えて崩れる（角が保たれない）。</p>
+
+<div class="ex">
+<span class="label">例 3.1（対数写像による図形）</span><br>
+$w=\log z=\ln|z|+i\theta$ による写像を見る（$u=\ln|z|,\ v=\theta$）。
+<ul>
+  <li>円 $|z|=2$：$u=\ln 2$（一定）、$v=[0,2\pi]$ → $w$ 平面では<strong>縦線分</strong>。</li>
+  <li>半直線 $\arg z=\pi/4$：$v=\pi/4$（一定）、$u=[-\infty,\infty]$ → <strong>水平な無限直線</strong>。</li>
+</ul>
+もとの $z$ 平面で円と半直線は直交していた。写像後も縦線分と水平線は直交しており、<strong>角度が保たれている</strong>（等角性）。
+</div>
+
+<h2>3.2　複素積分</h2>
+
+<h3>3.2.1　定義（区分求積から）</h3>
+<p>経路 $C$ を、始点 $z_0=a$ から終点 $z_n=b$ まで $n$ 個の小区間に分け、各小区間に代表点 $\xi_k$ をとる。実積分と同じく、リーマン和（区分求積）を作る：</p>
+$$ W_n=\sum_{k=1}^{n} f(\xi_k)\,(z_k-z_{k-1}). $$
+<p>$f=u+iv$、$z_k-z_{k-1}=(x_k-x_{k-1})+i(y_k-y_{k-1})$ を代入して実部・虚部に分けると</p>
+$$ W_n=\sum_{k}\big[u(\xi_k)\Delta x_k - v(\xi_k)\Delta y_k\big] + i\sum_{k}\big[u(\xi_k)\Delta y_k + v(\xi_k)\Delta x_k\big]. $$
+<p>$n\to\infty$（分割を細かく）とした極限が複素積分である。</p>
+
+<div class="def">
+<span class="label">定義 3.2（複素積分）</span>
+$$ \int_C f(z)\,dz=\int_C (u\,dx - v\,dy)\;+\;i\int_C (u\,dy + v\,dx). $$
+これは2つの実線積分の組である。「$dz=dx+i\,dy$ を形式的に展開し、$f=u+iv$ を掛けたもの」と覚えてよい。
+</div>
+
+<h3>3.2.2　計算公式（実際にはこれを使う）</h3>
+<div class="box">
+<strong>(A) 媒介変数表示</strong>：経路を $z=z(t)\ (a\le t\le b)$ と表すと
+$$ \int_C f(z)\,dz=\int_a^b f\big(z(t)\big)\,\frac{dz(t)}{dt}\,dt. $$
+<strong>(B) 円弧 $C:\ |z|=R,\ \theta:\theta_1\to\theta_2$</strong>：$z=Re^{i\theta},\ dz=iRe^{i\theta}d\theta$ より
+$$ \int_C f(z)\,dz=\int_{\theta_1}^{\theta_2} f\big(Re^{i\theta}\big)\,iRe^{i\theta}\,d\theta. $$
+</div>
+<p>実際の計算は、ほぼ常に (A) か (B) に持ち込む。<strong>「経路を $t$ で表す → $dz$ を作る → 代入して実1変数の積分」</strong>が手順。</p>
+
+<h3>3.2.3　最重要の基本積分 <span class="star">（留数論の原型）</span></h3>
+<div class="thm">
+<span class="label">基本公式 3.2</span>　$a$ を中心とする半径 $r$ の円 $C:|z-a|=r$（反時計回り）上で、整数 $n$ に対し
+$$ \oint_{C}(z-a)^n\,dz=\begin{cases} 2\pi i & (n=-1)\\[4pt] 0 & (n\neq -1)\end{cases} $$
+</div>
+<div class="proof">
+<span class="label">証明</span>　$z=a+re^{i\theta}\ (\theta:0\to2\pi)$、$dz=ire^{i\theta}d\theta$ を代入：
+$$ \oint_C (z-a)^n dz=\int_0^{2\pi} (re^{i\theta})^n\, ire^{i\theta}\,d\theta = i\,r^{\,n+1}\int_0^{2\pi} e^{i(n+1)\theta}\,d\theta. $$
+<ul>
+  <li>$n=-1$ のとき：被積分は $e^{0}=1$ なので $\displaystyle i\int_0^{2\pi}d\theta=2\pi i$。</li>
+  <li>$n\neq-1$ のとき：$\displaystyle\int_0^{2\pi}e^{i(n+1)\theta}d\theta=\Big[\frac{e^{i(n+1)\theta}}{i(n+1)}\Big]_0^{2\pi}=0$（$e^{i(n+1)2\pi}=1$ より）。</li>
+</ul>
+<span class="qed">∎</span>
+</div>
+<figure class="fig">
+<svg viewBox="0 0 330 240" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="m32" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="18" y1="195" x2="312" y2="195" stroke="#999" stroke-width="1.2" marker-end="url(#m32)"/>
+  <line x1="55" y1="228" x2="55" y2="18" stroke="#999" stroke-width="1.2" marker-end="url(#m32)"/>
+  <text x="304" y="212" fill="#999">x</text><text x="40" y="22" fill="#999">y</text>
+  <circle cx="190" cy="118" r="66" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <line x1="190" y1="118" x2="256" y2="118" stroke="#1b4f72" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="214" y="111" fill="#1b4f72">r</text>
+  <circle cx="190" cy="118" r="3.5" fill="#c0392b"/><text x="196" y="115" fill="#c0392b">a</text>
+  <polygon points="256,107 251,119 261,119" fill="#1b4f72"/>
+  <text x="112" y="44" fill="#1b4f72">C : |z−a|=r（反時計回り）</text>
+</svg>
+<figcaption>図3-2　$\displaystyle\oint_C (z-a)^n\,dz = 2\pi i\ (n=-1),\ 0\ (n\neq-1)$。値は半径 $r$ によらない。これが留数論すべての原型。</figcaption>
+</figure>
+
+<div class="warn">
+この公式は<strong>必ず暗記＋自力で再現</strong>できるようにする。「$\dfrac{1}{z-a}$ を一周積分すると $2\pi i$ だけが残る」——これがコーシーの積分表示（第4回）も留数定理（第6回）も支えている。半径 $r$ にも依らない点が重要。
+</div>
+
+<h2>3.3　コーシーの定理</h2>
+
+<div class="thm">
+<span class="label">定理 3.3（コーシーの積分定理）</span><br>
+$f(z)$ が、単連結領域 $D$（穴のない領域）とその上で正則であるとする。$D$ 内の任意の閉曲線 $C$ に対して
+$$ \oint_C f(z)\,dz=0. $$
+</div>
+
+<div class="proof">
+<span class="label">証明（グリーンの定理 ＋ コーシー・リーマンの方程式）</span><br>
+定義 3.2 より
+$$ \oint_C f\,dz=\oint_C (u\,dx-v\,dy)+i\oint_C(u\,dy+v\,dx). $$
+$C$ が囲む領域を $S$ とし、各実線積分にグリーンの定理
+$\displaystyle\oint_C(P\,dx+Q\,dy)=\iint_S\Big(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\Big)dxdy$ を適用する。
+<p style="margin:6px 0">実部（$P=u,\ Q=-v$）：</p>
+$$ \oint_C(u\,dx-v\,dy)=\iint_S\Big(-\frac{\partial v}{\partial x}-\frac{\partial u}{\partial y}\Big)dxdy. $$
+<p style="margin:6px 0">虚部（$P=v,\ Q=u$）：</p>
+$$ \oint_C(v\,dx+u\,dy)=\iint_S\Big(\frac{\partial u}{\partial x}-\frac{\partial v}{\partial y}\Big)dxdy. $$
+ここで $f$ は正則だから<strong>コーシー・リーマンの方程式</strong>
+$$ \frac{\partial u}{\partial x}=\frac{\partial v}{\partial y},\qquad \frac{\partial u}{\partial y}=-\frac{\partial v}{\partial x} $$
+が成り立つ。これを代入すると、実部の被積分関数は $-v_x-u_y=u_y-u_y=0$、虚部の被積分関数は $u_x-v_y=0$。よって両方の二重積分が 0 となり、$\displaystyle\oint_C f\,dz=0$。<span class="qed">∎</span>
+</div>
+<p class="meta">注：上の証明は偏導関数の連続性を仮定している。これを仮定せずに証明できる（グルサの定理）ことも知られているが、本講義の流儀ではグリーン＋C-R の流れを押さえておけば十分。</p>
+
+<h3>3.3.1　コーシーの定理が「言っていること」</h3>
+<ul>
+  <li><strong>経路によらない</strong>：始点・終点が同じ2つの経路 $C_1,C_2$ について、$\int_{C_1}f\,dz=\int_{C_2}f\,dz$（差をとると閉曲線になり 0 だから）。→ 第4回「不定積分」の土台。</li>
+  <li><strong>正則性が命</strong>：内部に特異点（正則でない点）があると前提が崩れ、0 にならないことがある。</li>
+</ul>
+
+<div class="ex">
+<span class="label">例 3.2（正則 vs 非正則）</span>　いずれも $C:|z|=1$（反時計回り）。
+<ul>
+  <li>$\displaystyle\oint_C z\,dz$：$z$ は全平面で正則 → コーシーの定理より <strong>$=0$</strong>。</li>
+  <li>$\displaystyle\oint_C \bar z\,dz$：$\bar z$ は正則でない。直接計算する。$z=e^{i\theta},\ \bar z=e^{-i\theta},\ dz=ie^{i\theta}d\theta$ より
+  $\displaystyle\oint_C\bar z\,dz=\int_0^{2\pi}e^{-i\theta}\,ie^{i\theta}\,d\theta=i\int_0^{2\pi}d\theta=\mathbf{2\pi i}\ (\neq0)$。</li>
+</ul>
+正則でないと一周積分が 0 にならない好例。
+</div>
+
+<div class="ex">
+<span class="label">例 3.3（特異点が経路の内か外か）</span>
+<ul>
+  <li>$\displaystyle\oint_{|z|=2}\frac{dz}{z-1}$：特異点 $z=1$ は経路の<strong>内部</strong>。基本公式 3.2（$a=1$）より <strong>$=2\pi i$</strong>。</li>
+  <li>$\displaystyle\oint_{|z|=1/2}\frac{dz}{z-1}$：特異点 $z=1$ は経路の<strong>外部</strong>。内部で正則だからコーシーの定理より <strong>$=0$</strong>。</li>
+</ul>
+<strong>「特異点を内部に含むか否か」を必ず最初に確認する</strong>こと。
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 450 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <circle cx="110" cy="100" r="58" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <polygon points="168,89 163,101 173,101" fill="#1b4f72"/>
+  <g stroke="#c0392b" stroke-width="2"><line x1="118" y1="84" x2="130" y2="96"/><line x1="130" y1="84" x2="118" y2="96"/></g>
+  <text x="134" y="90" fill="#c0392b">特異点</text>
+  <text x="48" y="186" fill="#1b4f72">内部にある → ∮ = 2πi</text>
+  <circle cx="330" cy="100" r="48" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <polygon points="378,89 373,101 383,101" fill="#1b4f72"/>
+  <g stroke="#c0392b" stroke-width="2"><line x1="398" y1="54" x2="410" y2="66"/><line x1="410" y1="54" x2="398" y2="66"/></g>
+  <text x="392" y="48" fill="#c0392b">特異点</text>
+  <text x="296" y="186" fill="#1b4f72">外部にある → ∮ = 0</text>
+</svg>
+<figcaption>図3-3　まず「特異点が積分路の内か外か」を確認する。外部なら内部で正則ゆえコーシーの定理より $0$。</figcaption>
+</figure>
+
+<hr>
+<h2>3.4　章末例題（解答付き）</h2>
+
+<div class="ex">
+<span class="label">例題 3.A</span>　$\displaystyle\int_C z^2\,dz$ を、$C$ が $0$ から $1+i$ への線分のとき求めよ。
+<details><summary>解答を見る</summary>
+<div class="proof">
+$C:\ z(t)=(1+i)t\ (0\le t\le1)$, $dz=(1+i)dt$。
+$$ \int_C z^2dz=\int_0^1 (1+i)^2t^2\,(1+i)\,dt=(1+i)^3\int_0^1 t^2dt=(1+i)^3\cdot\frac13. $$
+$(1+i)^2=2i$, $(1+i)^3=2i(1+i)=-2+2i$ より $\displaystyle=\frac{-2+2i}{3}$。<br>
+（検算：原始関数 $z^3/3$ を使うと $\frac{(1+i)^3}{3}=\frac{-2+2i}{3}$。正則なので経路によらず一致——第4回の不定積分の予告。）
+</div>
+</details>
+</div>
+
+<div class="ex">
+<span class="label">例題 3.B</span>　$\displaystyle\oint_{|z|=3}\frac{dz}{(z-1)(z-2)}$ を求めよ。
+<details><summary>解答を見る</summary>
+<div class="proof">
+部分分数分解：$\dfrac{1}{(z-1)(z-2)}=\dfrac{-1}{z-1}+\dfrac{1}{z-2}$。<br>
+特異点 $z=1,2$ はともに $|z|=3$ の内部。基本公式 3.2 より各項の一周積分は $2\pi i$。
+$$ \oint=-2\pi i+2\pi i=\mathbf{0}. $$
+（後で学ぶ留数定理の先取り：留数の和 $-1+1=0$ に $2\pi i$ を掛けた値。）
+</div>
+</details>
+</div>
+
+<div class="ex">
+<span class="label">例題 3.C（中間過去問 問3(3) 型）</span>　$f(z)=\dfrac{2}{z}+\sin z$ について $\displaystyle\oint_{|z+1|=1/2} f(z)\,dz$ を求めよ。
+<details><summary>解答を見る</summary>
+<div class="proof">
+経路は中心 $z=-1$、半径 $1/2$ の円。$f$ の特異点は $z=0$ のみ。$|0-(-1)|=1>\tfrac12$ なので $z=0$ は経路の<strong>外部</strong>。よって経路の内部で $f$ は正則。コーシーの定理より
+$$ \oint_{|z+1|=1/2} f(z)\,dz=\mathbf{0}. $$
+</div>
+</details>
+</div>
+
+<h2>3.5　演習問題</h2>
+<ol>
+  <li>$\displaystyle\int_C \frac1z\,dz$ を、$C$ が $|z|=2$ の上半円（$2$ から $-2$ へ反時計回り）のとき求めよ。</li>
+  <li>$\displaystyle\oint_{|z|=1}\frac{dz}{z^2}$ を求めよ。（ヒント：基本公式 3.2 で $n=-2$）</li>
+  <li>$\displaystyle\oint_{|z|=1} \mathrm{Re}(z)\,dz$ を求めよ。（$\mathrm{Re}(z)$ は正則か？）</li>
+  <li>$\displaystyle\oint_{|z-2|=1}\frac{dz}{z(z-2)}$ を求めよ。（どの特異点が内部か）</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong> $z=2e^{i\theta}\ (\theta:0\to\pi)$, $dz=2ie^{i\theta}d\theta$。$\displaystyle\int_0^\pi\frac{1}{2e^{i\theta}}2ie^{i\theta}d\theta=i\int_0^\pi d\theta=\pi i$。<br>
+（別解：原始関数 $\log z$。$\log(-2)-\log 2=i\pi$。一致。）<br><br>
+<strong>2.</strong> 基本公式 3.2 で $n=-2\neq-1$ より $\displaystyle\oint_{|z|=1}z^{-2}dz=0$。<br><br>
+<strong>3.</strong> $\mathrm{Re}(z)=x$ は正則でない。$z=e^{i\theta}$, $x=\cos\theta$, $dz=ie^{i\theta}d\theta$。
+$\displaystyle\int_0^{2\pi}\cos\theta\cdot ie^{i\theta}d\theta=i\int_0^{2\pi}\cos\theta(\cos\theta+i\sin\theta)d\theta=i\big(\pi+ i\cdot0\big)=\pi i$。
+（$\int\cos^2=\pi$, $\int\cos\sin=0$）→ $\mathbf{\pi i}$。<br><br>
+<strong>4.</strong> 経路は中心 $z=2$、半径 1。内部の特異点は $z=2$ のみ（$z=0$ は外部）。
+部分分数 $\dfrac1{z(z-2)}=\dfrac{-1/2}{z}+\dfrac{1/2}{z-2}$。内部にあるのは $\dfrac{1/2}{z-2}$ の項だけなので
+$\displaystyle\oint=\frac12\cdot2\pi i=\pi i$。
+</div>
+</details>
+
+<h2>3.6　レポートに向けて</h2>
+<ul>
+  <li>該当レポート：<span class="meta">reference/レポートの問題/no2.pdf 付近</span>（複素積分の回）。先生の方針上、<strong>経路の媒介変数表示・$dz$ の作り方・特異点が内外どちらか</strong>を必ず明記し、途中計算を省かないこと。</li>
+  <li>図（経路と特異点の位置）を添えると「内部/外部の判断」が伝わり、減点されにくい。</li>
+</ul>
+
+<div class="navi" style="margin-top:18px">
+<strong>次回（第4回）への橋渡し</strong>：コーシーの定理から「積分は経路によらない」が出ました。これを使うと原始関数 $F(z)=\int_{z_0}^{z}f\,d\zeta$ が定義でき、<span class="star">不定積分の存在（試験必出の証明）</span>とコーシーの積分表示・グルサの公式に進みます。
+</div>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>等しくない腕｜機械力学 読み物 第2回</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+<!-- 読み物コラム C02（第2回に対応）。書き方は templates/コラムの作り方.md、途中の稿と講評は draft/column/C02_work/ -->
+
+<div class="backlink">機械力学 自習教材 ｜ 第2回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../02_第2回_モーメント.html">第2回 モーメント――力の回す働き</a>（§1・§3・§4）</div>
+
+<figure class="hero">
+  <img src="img/c02_hero_hunefer.jpg" alt="『フネフェルの死者の書』の心臓の計量の場面。左からアヌビスに手を引かれるフネフェル、水平な竿の天秤とその脇で下げ振りに指を添えるアヌビス、怪物アメミト、記録するトト、オシリスの前へ導くホルス。上段に神々の陪審">
+  <div class="ttl">等しくない腕<small>死者の書・竿秤・秤座</small></div>
+  <figcaption>『フネフェルの死者の書』心臓の計量　前1275年ごろ　大英博物館 EA 9901（右側の余白は紙色で付け足した）</figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第二回</div>
+  <p class="lede">第2回の講義は、回す働きの大きさを「力×腕の長さ」と<strong>定義</strong>した。足し算でも二乗でもなく、なぜ掛け算なのか。講義資料は理由を添えず、教材は「実験で決まる」とだけ書いて先へ進んだ。その実験をしたのは誰か。三千年あまり前の冥界の天秤から江戸の秤座の焼印まで、腕の長さの正しさがどこに預けられてきたかをたどる。</p>
+  <div class="keys"><span>死者の書</span><span>竿秤</span><span>墨子</span><span>アルキメデスとマッハ</span><span>秤座</span><span>定義</span></div>
+</header>
+
+<article>
+<h2><span class="no">序</span>水平を読む指</h2>
+<p>扉の絵は、紀元前1275年ごろ、エジプトの書記フネフェルのために描かれた『死者の書』の一場面である。死者の心臓が、天秤の左の皿に載せられている。右の皿には一枚の羽根。正しさの女神マアトの羽根だ。心臓が羽根より重ければ、天秤の脇で口を開けて待つ怪物アメミトに食われる。</p>
+<p>見るべきは皿よりも、支柱の脇にひざまずくジャッカルの頭の神アヌビスの手である。アヌビスは片手を高く上げ、支柱の頂から垂れる細い紐に指先を添えている。下げ振り、おもりをつけた糸だ。竿が少しでも傾けば、糸と支柱のあいだに角度が生まれる。アヌビスはその角度を読んでいる。</p>
+<p>この天秤は、心臓の重さを量っていない。左右が<strong>釣り合っているかどうか</strong>だけを読んでいる。同じ場面を描いた『アニの死者の書』について、エジプト学者ウォリス・バッジは、竿は水平のままで、神々は心臓が真理とちょうど釣り合えば満足したのだろうと書いた。フネフェルの絵でも、竿は定規で引いたように水平である。左へ回そうとする働きと右へ回そうとする働きが打ち消し合い、合計がゼロであること。下げ振りはそれを確かめる計器で、静力学の言葉でいえば $\sum M=0$ を読む最古の指だ。</p>
+<p>だが、この天秤が一度も問わないものがある。距離である。二つの皿は、支点から等しい距離に吊られている。</p>
+<p>一方、第2回の教科書の図2.25は「天秤」と題されている。描かれているのは、支点の左 $L/3$ に $2F$、右 $2L/3$ に $F$ を吊った棒で、腕は一対二。名前は等しい腕のもの、中身は等しくない腕のもの。この食い違いが、この稿の出発点になる。</p>
+<div class="physics"><b>講義では</b>　教材 1.2 節で、天秤（図2.25）の左右の「力×距離」が等しいことを確かめ、1.3 節で $M=FL$ を定義とした。下げ振りが読む「回す働きの合計が 0」は、第4回の釣合いの条件 $\sum M=0$ になる（<a href="../02_第2回_モーメント.html">第2回</a>）。</div>
+<h2><span class="no">一</span>正しさが形に宿るとき</h2>
+<p>等しい腕の天秤は、置き換えの道具である。片方に量りたいものを、もう片方に分銅を載せ、傾かなくなるまで分銅を足し引きする。比べているのは、同じ距離に置いた二つの重さだけで、比も掛け算もいらない。正しさは、左右が対称であるという<strong>形</strong>そのものに宿り、誰の目にも確かめられる。</p>
+<p>天秤は発明から約2500年のあいだ、知られるかぎりすべて等腕であり、その間「重さ」以外の力学の概念を生まなかった、とする研究がある（ユルゲン・レンとピーター・マクローリン、2018年）。等しい腕は正しさを保証した。そして、新しい量は何一つ数えなかった。</p>
+<p>形が正しさを引き受けているとき、不正が入りこめる隙間は二つしかない。分銅と、読みである。『死者の書』第125章で、死者は神々の前で生前の潔白を一つずつ唱える。そのなかに、秤の分銅に重さを加えなかった、秤の指針を読み違えなかった、という誓いがある。冥界の天秤の前で、生前の秤の正しさを誓うのである。</p>
+<p>江戸の両替商の店先にも、同じ形がある。天秤台から吊った等腕の天秤と、繭の形をした分銅。分銅は、幕府に許された後藤家だけが作ることができた。腕の形が正しいなら、守るべきは分銅のほうだからだ。</p>
+<figure style="max-width:420px;margin-left:auto;margin-right:auto"><img src="img/c02_ryogae.jpg" alt="江戸時代の両替商の店の再現。畳の上に木の天秤台から吊った等腕の天秤、繭形の分銅を並べた盆、算盤、開いた大福帳" loading="lazy"><figcaption><b>両替商の店先（再現）</b>　等腕の天秤と、繭の形の分銅。三菱東京UFJ銀行貨幣資料館、2012年撮影。KKPCW, via Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（縮小のみ）</figcaption></figure>
+<h2><span class="no">二</span>手が先に量を見つけた</h2>
+<p>腕を等しくしないと、何が起こるか。肉屋が、大きな肉の塊を小さな錘一つで量れるようになる。</p>
+<p>アリストテレス学派の『機械学の問題』（前4世紀後半ごろとされる）は、まさにそれを問う。なぜ竿秤は、小さな「付属物」で大きな肉を量れるのか。答えはこうだ。竿秤は天秤であると同時にてこであり、吊り紐が上からの支点になった、逆さのてこなのだ。答えは形の類比にとどまり、重さと距離の反比例には触れていない。</p>
+<p>ほぼ同じ時代とされる中国の『墨子』経説下は、竿秤の釣合いをこう書く。「権重相若也、相衡則本短標長」――錘と荷の重さが等しいのに釣り合っているなら、荷の側の腕は短く、錘の側の腕は長い。両方に同じ重さを足せば、長い腕の側が必ず下がる。「標得権也」、長い腕が錘の力を得るからだ。比例の式も証明もないまま、不等腕の釣合いの核心が言い当てられている。</p>
+<p>不等腕の秤を使う者は、異なる重さを、支点から異なる距離で釣り合わせなければならない。重さと距離を組にして比べる実践が、ここで初めて要る。その実践から、のちにギリシア語で「ロペー」、すなわちモーメントと呼ばれる量が生まれた、とレンらは推定する。</p>
+<p>量は、定義される前に、肉屋の手の中にあった。</p>
+<h2><span class="no">三</span>証明はそれを一つにした</h2>
+<p>アルキメデスの『平面の釣合いについて』は、等しい腕の世界から出発する。第一の公理は、等しい重さは等しい距離で釣り合う。そこから命題6と7で、二つの量は重さに反比例する距離で釣り合う、と導こうとする。重い錘を小さな錘の組に割り、支点の両側に対称に並べ直し、最後には「等しい重さが等しい距離」の形に帰着させる。</p>
+<p>二千年あまり後、エルンスト・マッハは『力学の発達』でこの証明を検めた。重さ $P$ が距離 $L$ で釣合いを乱す働きは積 $P\cdot L$（いわゆる静的モーメント）で測られる、という仮定が、アルキメデスとその後継者のすべてによって「多かれ少なかれ、こっそり、黙って」持ち込まれている。錘を対称な組に割って並べ直す操作そのものが、証明しようとしている命題をすでに使っているからだ。マッハはそれを「ギリシア的な証明熱」と呼んだ。$P\cdot L$ は証明されるのではなく、現象の中に直接見て取られるほかない、というのがマッハの立場である。</p>
+<p>それでもマッハは証明を捨てなかった。$P\cdot L$ を与えられたものとして受け取るなら、アルキメデスの演繹は、一つの単純な場合が他のすべてを含むことを示し、すべての場合に同じ見方を打ち立てる点で、なおかなりの価値を保つ、とも書いている。</p>
+<p>肉屋の手が量を見つけ、アルキメデスの手がそれを一つの見方に束ねた。量を見つけることと、量を法則にすることは、別の仕事だった。</p>
+<div class="physics"><b>講義では</b>　教材 3 章は、外積の分配法則でバリニオンの定理を示し、成分の式 $M=F_yr_x-F_xr_y$ を導いた。そこまでの道は証明でつながっているが、出発点の $M=FL$（1.3 節）だけは、証明ではなく定義として置かれている（<a href="../02_第2回_モーメント.html">第2回</a>）。</div>
+<h2><span class="no">四</span>証明の後も、目盛りは手で刻まれた</h2>
+<p>ポンペイの遺跡からは、ローマの竿秤が文字どおり何百も出ている。そのなかに、鍋の本体を錘にし、柄を竿にした即席の秤がある。柄のスリットに沿って刻まれた目盛りは、理論から割り出したものではなく、一つずつ実測でつけた跡だという。アルキメデスの死から約三百年後の刻みである。</p>
+<p>ナポリの国立考古学博物館には、こうした秤が壁一面に掛けられている。十九世紀の写真家ゾンマーが撮った一枚では、竿秤の錘の多くが人の胸像の形をしている。顔のついた錘が竿の上を滑り、止まった位置で重さを告げる。アヌビスは指で水平を読んだが、ここでは顔が自ら重さを告げる。</p>
+<figure style="max-width:440px;margin-left:auto;margin-right:auto"><img src="img/c02_napoli.jpg" alt="ナポリ国立考古学博物館の秤の展示を写したセピアの写真。壁に何本もの竿秤が掛かり、錘が人の胸像の形をしている。左下にアーチ形の枠に吊った等腕の天秤" loading="lazy"><figcaption><b>ジョルジョ・ゾンマー「ナポリ　博物館　秤」</b>　19世紀後半。胸像形の錘をもつ竿秤と、等腕の天秤が同じ壁に並ぶ。Giorgio Sommer, via Wikimedia Commons, Public domain</figcaption></figure>
+<p>腕を不揃いにしたとき、正しさの置き場所が移った。等腕の天秤では、正しさは形にあった。竿秤では、正しさは<strong>目盛り</strong>にある。そして目盛りは、見ただけでは確かめられない。刻みが一つずれていても、竿の形は何も変わらない。</p>
+<p>だから目盛りには、それを保証するものが要る。中国の竿秤の目盛り（秤星）は、北斗七星と南斗六星に福・禄・寿の三星を加えた十六の星だと伝えられる。一両ごまかせば福を、二両ごまかせば禄を、三両ごまかせば寿を損なう、と。エジプトでは一枚の羽根が魂全体を裁いたが、ここでは十六の星が刻み一つずつを見張っている。</p>
+<p>江戸幕府はそれを制度にした。承応二年（1653年）、東三十三か国の秤は江戸の守随家、西三十三か国は京都の神家が支配すると定められた。秤座は秤の製作、頒布、検定、修繕を独占し、合格した秤に印を押して、一挺につき金一分の印賃を取った。秤が壊れても、持ち主が自分で直すことは許されない。およそ十年ごとに「秤改め」が国々を回り、正しい秤には焼印を押し、悪い秤は取り上げて壊した。この仕組みは、明治八年（1875年）の度量衡取締条例まで続く。</p>
+<p>1878年の一枚のペン画（アメリカ議会図書館蔵）に、日本の竿秤と鞘が描かれている。竿の上に秤星が点々と並び、荷皿の側の端には吊り紐が三本ある。紐を掛け替えると支点が移り、同じ錘で量れる重さの範囲が変わる。腕の比を、手元で切り替える仕掛けである。秤座が廃されて三年、星は同じように竿に並んでいる。</p>
+<figure style="max-width:560px;margin-left:auto;margin-right:auto"><img src="img/c02_steelyard_jp.jpg" alt="日本の竿秤と鞘のペン画。竿に点々と目盛りがあり、左端近くに吊り紐が三本、左に荷皿、右に四角い錘、手前に木の鞘。右端に片仮名でハカリ" loading="lazy"><figcaption><b>「Steelyard &amp; case」</b>　1878年、ペン画。竿の左端近くの三本の吊り紐（取緒）と、竿に並ぶ秤星。米国議会図書館 LCCN 2009630080, via Wikimedia Commons, Public domain（台紙の余白を切り取った）</figcaption></figure>
+<h2><span class="no">結</span>定義は検印である</h2>
+<p>第2回の教材は、$M=FL$ を「定義」と書いた。</p>
+<p>定義とは、この刻みで数えると決めて押す検印である。秤座の焼印は幕府が押した。教科書の検印を押しているのは、ある一人の権威ではなく、竿の上で確かめ続けられてきた刻みの総体だ。三章のマッハの言葉の裏側には、ポンペイの鍋の柄に刻まれた一本一本の線がある。教科書の「定義」は、約束であると同時に、検定済みの目盛りでもある。</p>
+<p>図2.25 が「天秤」と題されているのも、だから誤りではない。名は等しい腕の時代から受け継ぎ、中身は等しくない腕の時代から受け取っている。</p>
+<p>この回の講義は、もう一つ、天秤の裏返しを用意していた。偶力である。天秤は、<strong>同じ向き</strong>に引く二つの重さを等しい腕に吊り、回す働きを消して竿を水平に保つ。偶力は、<strong>逆向き</strong>の二つの力を平行にずらして置き、並進させる働きを消して、回す働きだけを残す。アヌビスが読んだのは前者のゼロであり、ハンドルを回す両手が作るのは後者の、どこにも中心をもたない回転である。</p>
+<p class="coda">等しい腕は裁き、等しくない腕は数える。</p>
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+<h3>参照した本 ── 本文が依拠した原典</h3>
+<ul>
+  <li><span class="bk">『死者の書』第125章・第30B章（E. A. ウォリス・バッジ英訳 <i>The Book of the Dead</i>）</span> <span class="pub">英訳 1920年ごろ（Project Gutenberg #7145）</span><span class="why">アニの場面の「竿は水平のまま」という解説と、否定告白の秤の誓い（序・一）。</span></li>
+  <li><span class="bk">伝アリストテレス『機械学の問題』第20問</span> <span class="pub">前4世紀後半ごろ</span><span class="why">竿秤を「逆さのてこ」とする説明（二）。レンとマクローリンの論文の英訳で確認。</span></li>
+  <li><span class="bk">『墨子』経説下</span> <span class="pub">戦国時代</span><span class="why">「相衡則本短標長…標得権也」（二）。</span></li>
+  <li><span class="bk">アルキメデス『平面の釣合いについて』第1巻</span> <span class="pub">前3世紀</span><span class="why">公理1と命題6・7（三）。</span></li>
+  <li><span class="bk">エルンスト・マッハ『力学の発達』（<i>Die Mechanik in ihrer Entwickelung</i>）</span> <span class="pub">初版 1883年。引用は英訳第2版 <i>The Science of Mechanics</i>（T. J. McCormack 訳、Open Court、1902年）pp.14, 17–19 からの筆者訳</span><span class="why">アルキメデスの証明への批判と、その価値の認め方（三・結）。</span></li>
+  <li><span class="bk">J. Renn &amp; P. McLaughlin, “The Balance, the Lever and the Aristotelian Origins of Mechanics”</span> <span class="pub">R. Feldhay ほか編 <i>Emergence and Expansion of Preclassical Mechanics</i>、Springer、2018年</span><span class="why">等腕の天秤の約2500年、不等腕から生まれた量、ポンペイの即席の竿秤（一・二・四）。</span></li>
+</ul>
+<p class="note">※原典はいずれも通読していない。該当箇所は、英訳・研究論文・オンライン資料（下の「事実確認に用いた資料」）で確認した。</p>
+<h3>参考図書 ── さらに読むために</h3>
+<ul>
+  <li><span class="bk">エルンスト・マッハ『マッハ力学史 ―古典力学の発展と批判』上・下（岩野秀明訳）</span> <span class="pub">ちくま学芸文庫、2006年</span><span class="why">三章で引いたアルキメデス批判の全文が読める。第1回のコラムでも薦めた一冊。</span></li>
+  <li><span class="bk">E. A. ウォリス・バッジ <i>The Book of the Dead</i></span> <span class="pub">Project Gutenberg で全文公開</span><span class="why">アニのパピルスの場面を、図像の細部まで解説した古典的な英訳。</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。分野をまたぐ結びつけ（見立て）は筆者の解釈であり、学説として確立したものではありません。不等腕の秤からモーメントの概念が生まれたという説は、レンとマクローリンの推定として紹介しています。中国の秤星の由来は民間の言い伝えです。</div>
+  <h3>図版の出典</h3>
+  <ul>
+    <li>『フネフェルの死者の書』：<a href="https://commons.wikimedia.org/wiki/File:The_judgement_of_the_dead_in_the_presence_of_Osiris.jpg">File:The judgement of the dead in the presence of Osiris.jpg</a>（Public domain。右に紙色の余白を付け足した）</li>
+    <li>両替商の店先：<a href="https://commons.wikimedia.org/wiki/File:Money_Changers_in_Edo_period_-_2.jpg">File:Money Changers in Edo period - 2.jpg</a>（KKPCW、<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。縮小のみ）</li>
+    <li>ナポリ博物館の秤：<a href="https://commons.wikimedia.org/wiki/File:Sommer,_Giorgio_(1834-1914)_-_n._11144_-_Napoli_-_Museo_-_Bilance.jpg">File:Sommer, Giorgio (1834-1914) - n. 11144 - Napoli - Museo - Bilance.jpg</a>（Public domain）</li>
+    <li>日本の竿秤と鞘：<a href="https://commons.wikimedia.org/wiki/File:Steelyard_%26_case_LCCN2009630080.jpg">File:Steelyard &amp; case LCCN2009630080.jpg</a>（Public domain。台紙の余白を切り取った）</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://www.gutenberg.org/ebooks/7145">Budge, <i>The Book of the Dead</i>（Project Gutenberg）</a>：アニの場面の水平な竿、アヌビスと指針、否定告白の秤の誓い</li>
+    <li><a href="https://www.uni-heidelberg.de/md/philsem/texte/mcl_aristotelian_origins_mechanics.pdf">Renn &amp; McLaughlin (2018)</a>：等腕の天秤の約2500年、不等腕と rhopê、『機械学の問題』第20問、ポンペイの竿秤</li>
+    <li><a href="https://mathshistory.st-andrews.ac.uk/Extras/Archimedes_on_statics/">MacTutor “Archimedes on statics”</a>：公理1と命題6・7</li>
+    <li><a href="https://archive.org/details/cu31924004010504">Mach, <i>The Science of Mechanics</i>, 2nd ed. (1902)</a>：pp.14, 17–19 の引用</li>
+    <li><a href="https://zh.wikisource.org/wiki/%E5%A2%A8%E5%AD%90/%E7%B6%93%E8%AA%AA%E4%B8%8B">維基文庫「墨子/經說下」</a>：「相衡則本短標長…標得權也」の原文</li>
+    <li><a href="https://kotobank.jp/word/%E7%A7%A4%E5%BA%A7-599895">コトバンク「秤座」</a>・<a href="https://ja.wikipedia.org/wiki/%E7%A7%A4%E5%BA%A7">Wikipedia「秤座」</a>・<a href="https://www.city.chuo.lg.jp/a0052/bunkakankou/rekishi/bunkazai/kuminbunkazai/edohakarizaato.html">中央区「江戸秤座跡」</a>：1653年の東西分掌、独占の内容、印賃、秤改め、1875年の度量衡取締条例</li>
+    <li><a href="https://online.bunka.go.jp/heritages/detail/581453">文化遺産オンライン「両替天秤・分銅」</a>：後藤家の分銅</li>
+    <li><a href="https://baike.baidu.com/item/%E7%A7%A4%E6%98%9F/7841956">百度百科「秤星」</a>：十六星と福・禄・寿の言い伝え</li>
+  </ul>
+</div>
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../02_第2回_モーメント.html"><small>LESSON 2</small>← 教材：第2回 モーメント――力の回す働き</a></nav>
+</body>
+</html>

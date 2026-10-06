@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鬼は一口で何を食べたか</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 第1回の読み物コラム（異分野編集型）。書き方は templates/コラムの作り方.md -->
+
+<div class="backlink">芸術と文学『今昔物語集』を読む 自習教材 ｜ 第1回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../01_第1回_説話とは何か.html">第1回 説話とは何か</a>（§3 二つの「鬼一口」・§6 本文比較）</div>
+
+<figure class="hero">
+  <img src="img/hero_c01_hoitsu.jpg" alt="酒井抱一《夏秋草図屏風》右隻。銀地に、雨に打たれた夏草と、青い水流が描かれている">
+  <div class="ttl" style="right:auto;left:6%;">鬼は一口で<br>何を食べたか<small>露・雷・語り直し</small></div>
+  <figcaption>酒井抱一《夏秋草図屏風》右隻（夏草）　文政4年（1821）頃　東京国立博物館</figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第一回</div>
+  <p class="lede">『伊勢物語』では、女は鬼に一口で食われ、のちに「鬼とは兄たちのことだ」と種明かしされる。『今昔物語集』では、同じ女が頭と衣だけを残して消え、鬼は鬼のまま残る。一つの話が語り直されるとき、いったい何が食べられ、何が食べ残されるのか。</p>
+  <div class="keys"><span>妖怪図鑑</span><span>ギリシアの合理化</span><span>記憶の心理学</span><span>都市伝説</span><span>琳派の屏風</span><span>近代小説</span></div>
+</header>
+
+<article>
+
+<h2><span class="no">序</span>「鬼一口」は、話そのものの名前になった</h2>
+<p>江戸の絵師鳥山石燕は、妖怪を一つずつ描いて名をつけた画集を何冊も出した。その一冊『今昔百鬼拾遺』（安永十年〔1781〕刊とされる）に、「鬼一口」という一図がある。描かれているのは、雲のように渦巻く巨大な影と、そこからはみ出す女の衣、地に落ちた扇である。顔はない。脇の詞書は在原業平の名から書き起こされている。</p>
+<figure><img src="img/sekien_onihitokuchi.jpg" alt="鳥山石燕『今昔百鬼拾遺』の「鬼一口」。渦巻く影の中に女の衣と扇が描かれ、右上に詞書がある"><figcaption><b>鳥山石燕『今昔百鬼拾遺』より「鬼一口」</b>　18世紀後半。Toriyama Sekien, via Wikimedia Commons, Public domain</figcaption></figure>
+<p>ここで起きていることは小さくない。『伊勢物語』第六段の「鬼はや一口に食ひてけり」という一句が、石燕の手で<strong>一体の妖怪の名前</strong>に変わったのである。もとは出来事を述べる動詞句だったものが、名詞になり、見出し語になり、図鑑の一項目になった。話が食べられて、その食べ方だけが名前として残った、と言ってもよい。</p>
+<p>授業の第一回で、「説話」はまず一話という単位をもつ、と教わった。取り出せるから、移せる。移せるから、書き換えられる。石燕の一図は、その取り出しを極端なところまで押し進めた例である。物語の筋も、和歌も、二条の后も落ち、最後に「一口」という動作だけが残った。では、この話はこれまでに、どこで何を食べられてきたのか。それをたどるのが、このコラムの仕事である。</p>
+
+<h2><span class="no">一</span>鬼を人に戻す――古代ギリシアにも同じ手つきがあった</h2>
+<p>『伊勢物語』の第六段は、鬼の話として始まり、鬼の話として終わらない。歌のあとに「これは、二条の后の……」と注釈めいた文章が続き、女を取り返したのは后の兄たちだった、「それをかく鬼とはいふなりけり」と明かす。鬼は比喩だったのだ、という種明かしである。超自然を、人間の世界の出来事に読み戻す手つきだ。</p>
+<p>この手つきには、遠い先輩がいる。紀元前四世紀ごろのギリシアに、パライパトスという人物の名で伝わる『信じがたい話について』という小さな本がある。神話の怪異を一つずつ取り上げ、「実際にはこういうことだったのだ」と合理的に説明しなおす本である。たとえばアクタイオンの話。狩人アクタイオンは女神アルテミスの水浴を見てしまい、鹿に変えられ、自分の猟犬に食い殺される。オウィディウス『変身物語』でも知られる、凄惨な神話である。</p>
+<figure><img src="img/titian_actaeon.jpg" alt="ティツィアーノ《アクタイオンの死》。弓を構える女神と、右奥で猟犬に襲われる鹿の頭の男"><figcaption><b>ティツィアーノ《アクタイオンの死》</b>　1559〜75年頃　ロンドン・ナショナル・ギャラリー。Titian, via Wikimedia Commons, Public domain</figcaption></figure>
+<p>パライパトスはこれをこう読み替える。アクタイオンは狩りに夢中で、大勢の犬を養うことに財産を使い果たした。人々は「哀れなアクタイオン、自分の犬に食われてしまった」と言った。今でも、遊びで身を持ち崩した者を「女たちに食われた」と言うように――。犬に食われたのは体ではなく、財産だったというわけだ。</p>
+<p>もちろん、パライパトスと『伊勢物語』の後半とは何の関係もない。時代も言語も、目的も違う。だが<strong>型</strong>は驚くほど似ている。「食われた」という強烈な言葉を、比喩として人間の事情に戻す。怪異をほどいて、ありうる出来事にする。ティツィアーノの画面で、女神の弓と犬たちの牙のあいだに挟まれた男は、パライパトスの読みでは、ただ借金に追われる地主になってしまう。『伊勢物語』の鬼も、後半では、妹を連れ戻しに来た兄たちになってしまう。</p>
+<div class="physics"><b>講義では</b>　プリントの表で言えば「後日談」と「意味づけ」の欄である。『伊勢』の後半は、出来事に「本当はこうだった」という意味づけを与える部分だった。教材 <a href="../01_第1回_説話とは何か.html">第1回 §6.2 STEP 8</a> を参照。</div>
+
+<h2><span class="no">二</span>人を鬼に戻す――『今昔物語集』は振り子を逆に振った</h2>
+<p>ところが『今昔物語集』の巻二十七第七は、ちょうど逆のことをする。男には名前と官職が与えられる。右近の中将在原業平、たいへんな色好み。場所も具体的になる。北山科の、荒れた山荘の、片戸の倒れた大きな校倉。ここまでは「事実」の側へ寄せる書き方である。ところが肝心の一点で、語り手は合理化を退ける。雷の夜が明けて、女は頭と衣だけになっている。その後、この倉は人を取る倉として知られるようになった。「然レバ、雷電霹靂ニハ非ズシテ、倉ニ住ケル鬼ノシケルニヤ有ケム」――あれは雷ではなく、鬼のしわざだったのだろうか。</p>
+<p>雷という自然の説明が先に置かれ、それが打ち消されて鬼が呼び戻される。『伊勢』が鬼を人へ戻したのに対して、『今昔』は、ありうる出来事を怪異の側へ戻した。周辺を事実で固めておいて、中心にだけ闇を残す。闇がいっそう濃く見えるのは、周りが明るいからである。</p>
+<p>説話の歴史は、この振り子の往復として見ることができる。怪異を合理化する力と、合理化されたものを再び怪異に戻す力。ギリシアの神話も、合理化されたあとでルネサンスの画家たちによって、再び血の匂いのする場面として描き直された。ティツィアーノの絵は、パライパトスの合理化をくぐり抜けたあとの、もう一度の「再神話化」である。振り子は一方に振り切れることがない。一話が取り出せる単位である限り、誰かが必ず逆向きに振り直す。</p>
+<p>ここで大切なのは、どちらが「正しい」かではない。『今昔』の書き手が本当に鬼を信じていたかどうかは分からないし、確かめようもない。分かるのは、同じ骨組みの話を、ある書き手は人の世界へ、別の書き手は鬼の世界へ<strong>向けた</strong>ということだけである。授業のプリントが「鬼に食われたと信じるか？」と問うのは、信仰を問うためではなく、この向きの違いに気づかせるためだろう。</p>
+
+<h2><span class="no">三</span>語り直すと何が消えるのか――ケンブリッジの実験</h2>
+<p>話を語り直すと、何が落ちるのか。この問いを実験で確かめようとした心理学者がいる。イギリスのフレデリック・バートレットである。1932年の著書『想起の心理学』（原題 <i>Remembering</i>）で彼が報告した実験はよく知られている。北米先住民の民話「幽霊たちの戦争」を英国の被験者に読ませ、時間をおいて思い出させる。あるいは、ある人が再生した話を次の人に読ませ、その人の再生をまた次の人へ渡していく。伝言ゲームを、紙の上で丁寧にやったのである。</p>
+<p>話は回を重ねるごとに短くなり、なじみのない細部は落ちるか、なじみのある形に置き換えられていった。とりわけ、題名にもある「幽霊」にまつわる不可解な部分は、落ちたり、分かりやすい理屈に言い換えられたりしやすかったと報告されている。人は話を、そのままではなく、自分の知っている枠組みに合わせて覚え直す。バートレットはこの枠組みを「スキーマ」と呼んだ。</p>
+<p>この実験と『伊勢』『今昔』の関係を、直接の因果として言うことはできない。『今昔』の書き手は伝言ゲームの被験者ではないし、そもそも『伊勢』を直接見たかどうかも分かっていない。けれども、落ちたものの顔ぶれは示唆的である。『今昔』から消えたのは、芥河という川の名、草の上の露、女の「かれは何ぞ」という問い、そして露を詠んだ和歌であった。どれも、恋の哀しみという枠組みの中でしか意味をもたない細部である。恐ろしい倉の話という別の枠組みに入れ直されたとき、それらは<strong>覚えておく理由を失った</strong>。</p>
+<p>逆に、新しい枠組みに合うものは足される。北山科という地名、板敷の板もない荒れた家、片方の扉が倒れた倉。これらは「知らない所に泊まってはならない」という結びにとって、まさに必要な情報である。話は、聞き手が欲しがるものの形に削られ、盛られる。バートレットの被験者が幽霊を落としたように、『今昔』は露を落とし、そのかわりに倉の扉を一枚、倒しておいたのである。</p>
+<div class="physics"><b>講義では</b>　プリントの「術語『説話』のまとめ」にある「情報の変容／虚構まじり」「情報と枠組み（関心）」がこれにあたる。何が残り何が落ちるかは、話を受け取る側の枠組み（関心）で決まる。</div>
+
+<h2><span class="no">四</span>消える女は、いまも車に乗ってくる</h2>
+<p>夜道で車を走らせていると、若い女がひとりで立っている。乗せてやり、言われた住所へ向かう。着いて振り返ると、後部座席には誰もいない。家の人に話すと、その娘は何年も前に、ちょうどあの場所で亡くなったのだと言う――。アメリカの民俗学者ジャン・ハロルド・ブルンヴァンは、1981年の著書『消えるヒッチハイカー』で、こうした現代の噂話を集め、「都市伝説」という言葉を広めた。</p>
+<p>この話の骨組みは、鬼一口とよく似ている。男が女を乗せて（連れ出して）、夜の移動の途中で、女が消える。気づいたときには、座席の湿りや置き忘れた上着のような、わずかなものしか残っていない。『今昔』の倉に残された「頭ノ限ト着タリケル衣共」と同じように、消えた人の痕跡だけが、話の証拠として残される。</p>
+<p>そして、都市伝説の語られ方もまた、『今昔』の結びに似ている。都市伝説は、ふつう「友だちの友だちが実際に経験した話」として語られる、とよく言われる。名指しはできるが確かめられない誰か。具体的な道路の名前。そして、最後に添えられる小さな警告――あの道を夜に通るな。『今昔』もまた、業平という確かめられそうで確かめられない名を立て、北山科という地名を添え、「案内不知ザラム所ニハ、努々不立寄マジキ也」と警告して、「語リ伝ヘタルトヤ」と結ぶ。<strong>事実の足場と、確かめようのない中心と、警告</strong>。この三点セットは、九百年の時をへだてても驚くほど変わっていない。</p>
+<p>もちろん、平安の説話と現代の都市伝説を同じものと言うことはできない。語る場も、語る人も、文字と口頭の比重も違う。だが、プリントが説話の性格として挙げた「事実性」「虚構まじり」「比較的短い」「発信者と受信者の関係性」は、そのまま都市伝説の性格表として使える。説話という術語は、古典文学のためだけの道具ではなく、人が話を渡し合うときに必ず現れる形を名づけるための道具なのかもしれない。</p>
+
+<h2><span class="no">五</span>露の裏には、雷がいる</h2>
+<p>このコラムの扉に置いたのは、江戸後期の絵師酒井抱一の《夏秋草図屏風》である。銀地に、夕立に打たれてうなだれる夏草と、水かさの増した流れ。一見、何ということのない草花図だが、この屏風には有名な来歴がある。抱一はこれを、尾形光琳の《風神雷神図屏風》の<strong>裏面</strong>に描いたのである。雷神の裏には雨に濡れた夏草を、風神の裏には風になびく秋草を。表で神々が雨と風を起こし、裏でその雨と風を受けた草が揺れている。両者は保存のために、のちに別々の屏風に仕立て直された。</p>
+<p>この表と裏の関係は、『伊勢物語』第六段の構造を思い出させる。『伊勢』には、雷と露の両方がある。「神さへいといみじう鳴り」という雷の轟きと、「草の上に置きたりける露」という小さな光。雷は女の叫び「あなや」をかき消し、露は男の歌の中で「消えなましものを」という悔恨になる。雷が出来事の表であるなら、露はその裏で震えている感情である。</p>
+<p>『今昔物語集』は、この表だけを受け継いだ。「俄ニ雷電霹靂シテ喤ケレバ」――雷はむしろ大きくなり、男は太刀を抜いてそれに立ち向かう。だが露は描かれず、歌も詠まれない。屏風でいえば、風神雷神の表だけを残して、抱一の裏面を剥がしたようなものである。剥がされた裏面は、なくなったのではない。『伊勢物語』の側に残っている。二つの話を並べて読むとき、私たちはようやく一双の屏風の表と裏を、同時に見ることができる。</p>
+<div class="physics"><b>講義では</b>　プリントの表の「芥川・白露の下りが省略」「和歌がない」の二項目。『伊勢』は歌物語、『今昔』は説話集――ジャンルの違いが、露を残すか落とすかを決めている。教材 <a href="../01_第1回_説話とは何か.html">第1回 §6.1</a> の表を参照。</div>
+
+<h2><span class="no">六</span>もう一人の「芥川」が、今昔を食べにきた</h2>
+<p>話を近代へ飛ばそう。『伊勢物語』の川の名と同じ字を名に持つ小説家、芥川龍之介である。名前が同じなのはまったくの偶然にすぎない。だが、この偶然はできすぎている。芥川は、『今昔物語集』から最も多くを食べた近代の作家だったからだ。</p>
+<figure><img src="img/akutagawa.jpg" alt="書斎の机に向かう芥川龍之介の肖像写真"><figcaption><b>芥川龍之介</b>（1892〜1927）。Unknown author, via Wikimedia Commons, Public domain</figcaption></figure>
+<p>1915年の「羅生門」をはじめ、「鼻」「芋粥」など、芥川の初期の短編の多くは『今昔物語集』などの説話を素材にしている。彼は古い一話を取り出し、そこに近代の心理を詰めこんで、まったく別の小説に仕立て直した。晩年には「今昔物語鑑賞」という文章も書き、この集の生々しい魅力を高く評価したことで知られる。明治以降、『今昔物語集』が広く読まれるようになるうえで、芥川の仕事は大きな役割を果たした。</p>
+<p>授業のプリントで「説話とは①」の例文に「芥川は今昔物語集の説話を翻案した」という一文があったのを思い出したい。翻案とは、一話を取り出し、骨組みを借りて、別の肉をつけることである。石燕は鬼一口を妖怪の名にし、芥川は今昔の説話を近代小説にした。どちらも一話を「食べた」のであり、食べられた一話は、食べた者の身体の一部として生き延びた。</p>
+
+<h2><span class="no">結</span>説話とは、食べ残しのかたちである</h2>
+<p>ここまでの道のりを振り返ろう。『伊勢物語』は鬼を兄たちへ戻し、『今昔物語集』は兄たちを再び鬼へ戻した。語り直すたびに、露や和歌のように枠組みに合わないものは落ち、倉の扉のように枠組みに合うものが足された。現代の都市伝説は同じ骨組みで女を消し、石燕は「一口」という動作だけを名前にし、芥川は一話を食べて近代の小説にした。</p>
+<p>そう考えると、『今昔物語集』の倉の場面は、説話というものの自画像のように見えてくる。夜が明けると、女はいない。残っているのは、頭と、着ていた衣だけである。女という全体は鬼に食われ、しかし<strong>形を示すのに必要な最小限</strong>は残された。説話もまた、長い物語が時代という鬼に食べられたあとに残る、頭と衣なのではないか。全体は失われても、「誰が」「どうなった」を示す芯だけは残る。その芯を拾って、次の時代の誰かが、また新しい衣を着せる。</p>
+<p>次回の授業のテーマは「享受史」である。この話が、あるいは『今昔物語集』という一冊が、どの時代の誰に、どう食べられてきたのか。石燕と芥川は、その長い食卓のほんの二人にすぎない。</p>
+<p class="coda">物語は一口で食われ、<br>頭と衣だけが、説話として残る。</p>
+
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+<h3>参照した本 ── 本文が依拠した原典</h3>
+<ul>
+  <li><span class="bk">『伊勢物語』第六段「芥河」</span> <span class="pub">平安時代</span><span class="why">本文は授業の配付資料による。後半の「それをかく鬼とはいふなりけり」が、第一章の出発点。</span></li>
+  <li><span class="bk">『今昔物語集』巻二十七「在原業平中将女、被噉鬼語第七」</span> <span class="pub">12世紀前半</span><span class="why">本文は授業の配付資料による。「雷電霹靂ニハ非ズシテ」の反転が第二章、結びの警告が第四章の材料。</span></li>
+  <li><span class="bk">パライパトス『信じがたい話について』</span> <span class="pub">前4世紀ごろ</span><span class="why">アクタイオンの合理化（第一章）。英訳をオンラインで確認した。</span></li>
+  <li><span class="bk">F. C. Bartlett, <i>Remembering</i></span> <span class="pub">Cambridge University Press, 1932</span><span class="why">「幽霊たちの戦争」の再生実験（第三章）。</span></li>
+</ul>
+<p class="note">※パライパトスとバートレットは原典を通読しておらず、オンライン資料・概説で該当箇所を確認した。芥川「今昔物語鑑賞」（1927年）は本文を確認していないため、引用はしていない。</p>
+<h3>参考図書 ── さらに読むために</h3>
+<ul>
+  <li><span class="bk">小峯和明『説話の森』</span> <span class="pub">岩波現代文庫（ISBN 4006020414）</span><span class="why">授業の講義指定図書。説話という「森」の歩き方を、具体的な話に即して教えてくれる。</span></li>
+  <li><span class="bk">F. C. バートレット『想起の心理学』宇津木保・辻正三訳</span> <span class="pub">誠信書房、1983年</span><span class="why">第三章の実験の原典の邦訳。語り直しで話がどう変わるかを、実験の記録として読める。</span></li>
+  <li><span class="bk">ジャン・ハロルド・ブルンヴァン『消えるヒッチハイカー』満園真木訳</span> <span class="pub">東京創元社、2026年（旧訳は新宿書房、1988年）</span><span class="why">都市伝説研究の古典。今昔の結びと読み比べると、「語り伝え」の型が見えてくる。</span></li>
+  <li><span class="bk">『今昔物語集』1〜5（新日本古典文学大系）</span> <span class="pub">岩波書店</span><span class="why">授業の講義指定図書で、期末レポートの引用元に指定されている本文。</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。分野をまたぐ結びつけ（見立て）は筆者の解釈であり、学説として確立したものではありません。</div>
+  <h3>図版の出典</h3>
+  <ul>
+    <li>酒井抱一《夏秋草図屏風》右隻：<a href="https://commons.wikimedia.org/wiki/File:Natu-aki_kusa_zu_byoubu.jpg">File:Natu-aki kusa zu byoubu.jpg</a>（Public domain。縮小のみ）</li>
+    <li>鳥山石燕「鬼一口」：<a href="https://commons.wikimedia.org/wiki/File:SekienOni-hito-kuchi.jpg">File:SekienOni-hito-kuchi.jpg</a>（Public domain）</li>
+    <li>ティツィアーノ《アクタイオンの死》：<a href="https://commons.wikimedia.org/wiki/File:Actaeon.jpg">File:Actaeon.jpg</a>（Public domain。縮小のみ）</li>
+    <li>芥川龍之介肖像：<a href="https://commons.wikimedia.org/wiki/File:Akutagawa.ryunosuke.jpg">File:Akutagawa.ryunosuke.jpg</a>（Public domain）</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://cts.perseids.org/read/greekLit/tlg1553/tlg001/1st1K-eng1/6-7">Palaephatus, <i>De Incredibilibus</i>（Perseids、英訳）</a>：アクタイオンの合理化の内容。</li>
+    <li><a href="https://en.wikipedia.org/wiki/Palaephatus">Wikipedia「Palaephatus」</a>：著作と年代の概略。</li>
+    <li><a href="https://online.bunka.go.jp/heritages/detail/538828">文化遺産オンライン</a>ほか：《夏秋草図屏風》が光琳《風神雷神図屏風》の裏面に描かれたこと、文政4年頃、東京国立博物館蔵、のちに分離されたこと。</li>
+    <li><a href="https://realsound.jp/book/2026/07/post-2472135.html">Real Sound ブック（2026年7月）</a>：『消えるヒッチハイカー』旧訳（新宿書房、1988年）と新訳（東京創元社）の書誌。</li>
+    <li><a href="https://ci.nii.ac.jp/author/DA00419925">CiNii</a>：バートレット『想起の心理学』（誠信書房、1983年）の書誌。</li>
+    <li>鳥山石燕『今昔百鬼拾遺』の刊年は、Wikimedia Commons の記載（1780年）と一般の解説（安永10年＝1781年）に幅があるため、「とされる」とした。</li>
+  </ul>
+</div>
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../01_第1回_説話とは何か.html"><small>LESSON 1</small>← 教材：第1回 説話とは何か</a></nav>
+</body>
+</html>

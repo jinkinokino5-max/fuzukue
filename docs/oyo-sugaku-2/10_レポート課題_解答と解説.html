@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>レポート課題 No.1〜3 解答と解説（複素関数）</title>
+<script>
+  MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']], tags:'none' },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; --q:#eaf2fb; --qline:#1b4f72; --star:#c0392b; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink);
+        line-height:1.78; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:30px 0 12px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:18px 0 6px; }
+  h4{ font-size:14.5px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; }
+  .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .q{ background:var(--q); border:1px solid var(--qline); border-left:6px solid var(--qline); border-radius:5px; padding:10px 15px; margin:14px 0 10px; }
+  .q .label{ font-weight:bold; color:var(--accent); font-size:15.5px; }
+  .ans{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:10px 0; }
+  .ans .label{ font-weight:bold; color:#2e7d32; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .notice{ background:#fdecea; border:2px solid #e6736a; border-radius:6px; padding:9px 14px; margin:14px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .final{ background:#fffbe6; border:2px solid #e0c34d; border-radius:6px; padding:6px 12px; margin:10px 0; font-weight:bold; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); }
+  .star{ color:var(--star); font-weight:bold; }
+  .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:24px 0; }
+  details{ margin:8px 0; background:#fafafa; border:1px solid var(--line); border-radius:6px; padding:4px 12px; }
+  summary{ cursor:pointer; color:var(--accent); font-weight:bold; padding:5px 0; }
+  details[open]{ padding-bottom:10px; }
+  a{ color:var(--accent); } a:hover{ text-decoration:underline; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:7px 12px; }
+  .toc{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:8px 16px; columns:2; }
+  .toc a{ text-decoration:none; } .toc li{ margin:3px 0; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:480px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  .secband{ background:var(--accent2); }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } details>*{ display:block; } .toc{ columns:2; } }
+</style>
+</head>
+<body>
+
+<h1>レポート課題 No.1〜3　解答と解説</h1>
+<p class="lead">応用数学Ⅱ（複素関数論）の提出課題3回分を、問題ごとに「参考解答」と「考え方の解説」でまとめたものです。</p>
+
+<div class="notice">
+<strong>⚠ この解答は「参考解答（非公式・自作）」です。</strong><br>
+中間試験と違い、レポートには先生の模範解答が配布されていません。本ページの解答は<strong>学習補助として作成した参考解答</strong>であり、公式の正解ではありません。提出前には必ず自分で検算し、最終的な記述・図は自分の言葉で仕上げてください。誤りに気づいた場合はご指摘ください。
+</div>
+
+<div class="box">
+<strong>目次</strong>
+<ul class="toc">
+  <li><a href="#no1">No.1　複素数・微積分・ベクトル解析の復習（全8問）</a></li>
+  <li><a href="#no2">No.2　等角写像・複素積分（全2問）</a></li>
+  <li><a href="#no3">No.3　コーシーの定理・グルサ・留数（全4問）</a></li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<!-- ============================ No.1 ========================== -->
+<!-- ============================================================ -->
+<h2 id="no1">No.1　複素数・微積分・ベクトル解析の復習</h2>
+<p class="meta">配布日：2025/6/4 ／ 第1回前後の前提知識チェック。問1・2は「図と言葉で説明」する記述問題、問3〜8は計算・定義の確認。</p>
+
+<h3>問1　微分・偏微分・テイラー展開を図で説明</h3>
+<div class="q"><span class="label">問題</span>　微分・偏微分・テイラー展開について、それぞれ図を用いて説明しなさい（式だけでは不十分）。</div>
+<div class="ans">
+<span class="label">参考解答（要点）</span>
+<ul>
+  <li><strong>微分</strong>：$f'(a)=\lim_{h\to0}\dfrac{f(a+h)-f(a)}{h}$。2点を結ぶ<strong>割線</strong>の傾きで、$h\to0$ とした極限が点 $a$ での<strong>接線の傾き</strong>。＝「その点での瞬間の変化率」。</li>
+  <li><strong>偏微分</strong>：2変数 $f(x,y)$ を曲面とみたとき、$\partial f/\partial x$ は「$y$ を固定して $x$ 方向だけに切った断面曲線の傾き」。$\partial f/\partial y$ は $x$ を固定した断面の傾き。＝「一方向だけの変化率」。</li>
+  <li><strong>テイラー展開</strong>：$f(x)=\sum_{n=0}^\infty\dfrac{f^{(n)}(a)}{n!}(x-a)^n$。点 $a$ のまわりで関数を多項式で近似する。1次までで接線、2次で放物線…と<strong>次数を上げるほど元の曲線に密着</strong>する。</li>
+</ul>
+</div>
+<figure class="fig">
+<svg viewBox="0 0 480 170" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <!-- 微分: secant & tangent -->
+  <g transform="translate(0,0)">
+    <line x1="20" y1="150" x2="170" y2="150" stroke="#333"/><line x1="30" y1="160" x2="30" y2="20" stroke="#333"/>
+    <path d="M35 140 Q90 130 150 40" fill="none" stroke="#1b4f72" stroke-width="2"/>
+    <line x1="55" y1="135" x2="150" y2="55" stroke="#c0392b" stroke-dasharray="4 3"/>
+    <line x1="40" y1="142" x2="120" y2="78" stroke="#2e7d32" stroke-width="1.5"/>
+    <circle cx="60" cy="131" r="2.5" fill="#333"/><circle cx="120" cy="86" r="2.5" fill="#333"/>
+    <text x="52" y="128">a</text><text x="112" y="100">a+h</text>
+    <text x="20" y="165" font-weight="bold">微分（接線）</text>
+  </g>
+  <!-- テイラー近似 -->
+  <g transform="translate(180,0)">
+    <line x1="20" y1="150" x2="170" y2="150" stroke="#333"/><line x1="95" y1="160" x2="95" y2="20" stroke="#333"/>
+    <path d="M25 60 Q95 200 165 60" fill="none" stroke="#1b4f72" stroke-width="2"/>
+    <line x1="35" y1="110" x2="155" y2="110" stroke="#c0392b" stroke-dasharray="4 3"/>
+    <path d="M45 130 Q95 70 145 130" fill="none" stroke="#2e7d32" stroke-width="1.5"/>
+    <text x="20" y="165" font-weight="bold">テイラー近似</text>
+    <text x="120" y="104" fill="#c0392b" font-size="11">1次</text><text x="118" y="92" fill="#2e7d32" font-size="11">2次</text>
+  </g>
+  <!-- 偏微分 -->
+  <g transform="translate(360,0)">
+    <path d="M20 110 L70 90 L120 120 L70 140 Z" fill="#eef5ff" stroke="#5a87c4"/>
+    <path d="M70 90 L70 40 L120 70 L120 120" fill="none" stroke="#999"/>
+    <line x1="45" y1="100" x2="95" y2="130" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="10" y="165" font-weight="bold" font-size="11">偏微分（断面の傾き）</text>
+  </g>
+</svg>
+<figcaption>左：割線（赤破線）の極限が接線（緑）＝微分。中：次数を上げるほど近似（赤=1次,緑=2次）が元の曲線（青）に密着＝テイラー展開。右：曲面を一方向で切った断面の傾き＝偏微分。</figcaption>
+</figure>
+
+<h3>問2　微分方程式（一般解・解法・非線形項）</h3>
+<div class="q"><span class="label">問題</span>　(1) 一般解と特解の説明。(2) 定数係数非同次2階線形 $y''+ay'+by=Y(x)$ の解法。(3) 非線形項（例 $yy'$）を含むと何が問題になるか。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p><strong>(1)</strong> <strong>一般解</strong>＝任意定数を含み、その方程式の解をすべて表す式。<strong>特解</strong>＝初期条件・境界条件を与えて任意定数を確定した、特定の1つの解。</p>
+<p><strong>(2)</strong> 一般解は「<span class="key">同次解（余関数）$y_h$ ＋ 特解 $y_p$</span>」。
+① 同次方程式 $y''+ay'+by=0$ は特性方程式 $\lambda^2+a\lambda+b=0$ の根で場合分け：
+相異なる実根 $\lambda_1,\lambda_2$ なら $y_h=C_1e^{\lambda_1 x}+C_2e^{\lambda_2 x}$、重根なら $(C_1+C_2x)e^{\lambda x}$、複素根 $\alpha\pm i\beta$ なら $e^{\alpha x}(C_1\cos\beta x+C_2\sin\beta x)$。
+② 特解 $y_p$ は右辺 $Y(x)$ の形に応じて未定係数法（または定数変化法）で求める。</p>
+<p><strong>(3)</strong> 上の解法は<strong>重ね合わせの原理（線形性）</strong>に依存している。$yy'$ のような非線形項があると、解の和が再び解になる保証が消え、「同次解＋特解」の分解や特性方程式が使えない。一般に初等的な閉じた解法は存在せず、近似・数値解法に頼ることになる。</p>
+</div>
+
+<h3>問3　複素数の実部・虚部・共役・絶対値</h3>
+<div class="q"><span class="label">問題</span>　(1) $z=(1-i)(1-2i)+1$、(2) $z=\dfrac{i}{1+i}$ について、実部・虚部・共役・絶対値を求めよ。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p><strong>(1)</strong> $(1-i)(1-2i)=1-2i-i+2i^2=1-3i-2=-1-3i$、$+1$ して $z=-3i$。<br>
+$\Re z=0,\ \Im z=-3,\ \bar z=3i,\ |z|=3.$</p>
+<p><strong>(2)</strong> 分母を実数化：$z=\dfrac{i}{1+i}\cdot\dfrac{1-i}{1-i}=\dfrac{i(1-i)}{2}=\dfrac{i+1}{2}=\dfrac{1+i}{2}$。<br>
+$\Re z=\tfrac12,\ \Im z=\tfrac12,\ \bar z=\dfrac{1-i}{2},\ |z|=\sqrt{\tfrac14+\tfrac14}=\dfrac{1}{\sqrt2}=\dfrac{\sqrt2}{2}.$</p>
+</div>
+
+<h3>問4　マクローリン展開でオイラーの式を示す</h3>
+<div class="q"><span class="label">問題</span>　マクローリン展開を用いて $\exp(i\theta)=\cos\theta+i\sin\theta$ を示せ（各項を展開する）。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p>$e^{x}=\sum_{n=0}^\infty\dfrac{x^n}{n!}$ に $x=i\theta$ を代入：
+$$e^{i\theta}=\sum_{n=0}^\infty\frac{(i\theta)^n}{n!}=\sum_{n=0}^\infty\frac{i^n\theta^n}{n!}.$$
+$i^n$ は $1,i,-1,-i$ を周期4で繰り返す。<strong>偶数項</strong>（$n=2k$）は $i^{2k}=(-1)^k$ で
+$\sum_k\dfrac{(-1)^k\theta^{2k}}{(2k)!}=\cos\theta$。<strong>奇数項</strong>（$n=2k+1$）は $i^{2k+1}=i(-1)^k$ で
+$i\sum_k\dfrac{(-1)^k\theta^{2k+1}}{(2k+1)!}=i\sin\theta$。両者を合わせて
+$$e^{i\theta}=\cos\theta+i\sin\theta.\qquad\blacksquare$$</p>
+</div>
+
+<h3>問5　ド・モアブルの定理を導く</h3>
+<div class="q"><span class="label">問題</span>　オイラーの式から $(\cos\theta+i\sin\theta)^n=\cos n\theta+i\sin n\theta$ を導け。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p>オイラーの式より $\cos\theta+i\sin\theta=e^{i\theta}$。指数法則 $(e^{i\theta})^n=e^{in\theta}$ を使えば、
+$$(\cos\theta+i\sin\theta)^n=(e^{i\theta})^n=e^{in\theta}=\cos n\theta+i\sin n\theta.\qquad\blacksquare$$
+（$n$ が整数なら指数法則が成り立つことが要点。）</p>
+</div>
+
+<h3>問6　ベクトル場の線積分</h3>
+<div class="q"><span class="label">問題</span>　ベクトル場 $\boldsymbol{A}(\boldsymbol{r})$ の経路 $C$ に関する線積分を式で表し、その意味を図で示せ。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p>$$\int_C \boldsymbol{A}\cdot d\boldsymbol{r}=\int_C\big(A_x\,dx+A_y\,dy+A_z\,dz\big)=\int_{t_0}^{t_1}\boldsymbol{A}(\boldsymbol{r}(t))\cdot\frac{d\boldsymbol{r}}{dt}\,dt.$$
+意味：経路 $C$ を細かく分け、各微小区間で<strong>ベクトル場の「経路接線方向の成分」$\boldsymbol{A}\cdot d\boldsymbol{r}$ を足し合わせる</strong>。物理では「力 $\boldsymbol{A}$ が経路 $C$ に沿ってした仕事」に相当する。</p>
+</div>
+<figure class="fig">
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="r1a" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto"><polygon points="0,0 8,3.5 0,7" fill="#1b4f72"/></marker>
+  <marker id="r1b" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto"><polygon points="0,0 8,3.5 0,7" fill="#c0392b"/></marker></defs>
+  <path d="M30 110 Q120 20 290 70" fill="none" stroke="#1b4f72" stroke-width="2" marker-end="url(#r1a)"/>
+  <text x="150" y="30" fill="#1b4f72">経路 C</text>
+  <!-- field vectors along path -->
+  <line x1="70" y1="78" x2="95" y2="62" stroke="#c0392b" marker-end="url(#r1b)"/>
+  <line x1="140" y1="48" x2="168" y2="44" stroke="#c0392b" marker-end="url(#r1b)"/>
+  <line x1="220" y1="55" x2="245" y2="64" stroke="#c0392b" marker-end="url(#r1b)"/>
+  <text x="250" y="50" fill="#c0392b">A</text>
+</svg>
+<figcaption>青：経路 $C$（向き付き）。赤：各点でのベクトル場 $\boldsymbol{A}$。線積分は、各点で「$\boldsymbol{A}$ の経路方向への射影」を経路全体にわたって足し合わせる演算。</figcaption>
+</figure>
+
+<h3>問7　複素関数の極限</h3>
+<div class="q"><span class="label">問題</span>　極限 $\lim_{z\to a}f(z)=b$ について説明せよ。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p>「$z$ を $a$ に近づけたとき $f(z)$ が $b$ に近づく」こと。厳密には：任意の $\varepsilon&gt;0$ に対しある $\delta&gt;0$ があり、$0&lt;|z-a|&lt;\delta\Rightarrow|f(z)-b|&lt;\varepsilon$。<br>
+<span class="star">複素数の特徴</span>：$z$ は2次元平面の点なので、$a$ への近づき方は無数の方向がある。$\lim$ が存在するには<strong>どの方向・どの経路から近づいても同じ値 $b$ に収束</strong>しなければならない（実数の左右極限一致より強い条件）。</p>
+</div>
+
+<h3>問8　「正則」とは何か</h3>
+<div class="q"><span class="label">問題</span>　複素関数における「正則」とは何か説明せよ。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p>関数 $f(z)$ が<strong>ある領域の各点で複素微分可能</strong>であるとき、その領域で<strong>正則</strong>という。複素微分
+$f'(z)=\lim_{\Delta z\to0}\dfrac{f(z+\Delta z)-f(z)}{\Delta z}$ が、$\Delta z$ の近づく方向によらず一意に定まることを要求する。<br>
+この条件は実部・虚部 $f=u+iv$ について<strong>コーシー・リーマンの方程式</strong> $u_x=v_y,\ u_y=-v_x$ を満たすことと同値。正則性は、経路独立な積分・無限回微分可能性・べき級数展開など、複素関数論のすべての出発点。</p>
+<p class="meta">→ 正則性の詳細は <a href="00_カリキュラム.html">カリキュラム</a>・<a href="03_第3回_等角写像・複素積分・コーシーの定理.html">第3回</a>を参照。</p>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- ============================ No.2 ========================== -->
+<!-- ============================================================ -->
+<h2 id="no2">No.2　等角写像・複素積分</h2>
+<p class="meta">配布日：2026/6/17 ／ 第3回（等角写像・複素積分）に対応。問1は写像 $w=1/z$、問2は基本積分公式の証明。</p>
+
+<h3>問1　$w=1/z$ による曲線の写像と等角性</h3>
+<div class="q"><span class="label">問題</span>　$w=1/z$ により、$\ell_1:\Re z=1$、$\ell_2:\Im z=1$、$\ell_3:|z|=1$ がそれぞれ $\ell_1':|w-\tfrac12|=\tfrac12$、$\ell_2':|w+\tfrac{i}{2}|=\tfrac12$、$\ell_3':|w|=1$ に写ることを確認し、等角性を示せ。$\ell_3$ の内側領域が $w$ 平面のどこに写るかも示せ。（$\ell_1$ は解答例が問題に提示済み）</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p>$w=\dfrac1z=u+iv$ より $u=\dfrac{x}{x^2+y^2},\ v=-\dfrac{y}{x^2+y^2}$、逆に $x=\dfrac{u}{u^2+v^2},\ y=-\dfrac{v}{u^2+v^2}$（問題の $\ell_1$ 解答例と同じ関係）。</p>
+<p><strong>$\ell_2:\Im z=1$（$y=1$）</strong>：$-\dfrac{v}{u^2+v^2}=1\Rightarrow u^2+v^2+v=0\Rightarrow u^2+\Big(v+\tfrac12\Big)^2=\Big(\tfrac12\Big)^2$。すなわち $\Big|w+\dfrac{i}{2}\Big|=\dfrac12$。✓</p>
+<p><strong>$\ell_3:|z|=1$（$x^2+y^2=1$）</strong>：$u^2+v^2=\dfrac{x^2+y^2}{(x^2+y^2)^2}=\dfrac{1}{x^2+y^2}=1$。すなわち $|w|=1$。✓</p>
+<p><strong>等角性</strong>：$w=1/z$ は $z\neq0$ で正則かつ $w'=-1/z^2\neq0$ なので、すべての交点で角度を保つ（<a href="03_第3回_等角写像・複素積分・コーシーの定理.html">第3回 定理3.1</a>）。実際 $\ell_1$（縦線）と $\ell_2$（横線）は $z=1+i$ で<strong>直交</strong>し、その像 $\ell_1',\ell_2'$（2円）も交点 $w=\dfrac{1}{1+i}=\dfrac{1-i}{2}$ で<strong>直交</strong>する。</p>
+<p><strong>$\ell_3$ の内側</strong>：$|w|=1/|z|$ なので、$|z|&lt;1$（単位円の内側）は $|w|&gt;1$（単位円の<strong>外側</strong>）に写る。</p>
+</div>
+<figure class="fig">
+<svg viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="11.5">
+  <!-- z-plane -->
+  <g transform="translate(0,0)">
+    <line x1="20" y1="100" x2="190" y2="100" stroke="#333"/><line x1="100" y1="185" x2="100" y2="15" stroke="#333"/>
+    <text x="180" y="115">x</text><text x="104" y="22">y</text>
+    <line x1="140" y1="20" x2="140" y2="180" stroke="#1b4f72" stroke-width="1.8"/><text x="143" y="35" fill="#1b4f72">ℓ₁</text>
+    <line x1="20" y1="60" x2="190" y2="60" stroke="#2e7d32" stroke-width="1.8"/><text x="24" y="54" fill="#2e7d32">ℓ₂</text>
+    <circle cx="100" cy="100" r="40" fill="none" stroke="#c0392b" stroke-width="1.8"/><text x="140" y="135" fill="#c0392b">ℓ₃</text>
+    <text x="55" y="183" font-weight="bold">z 平面</text>
+  </g>
+  <!-- arrow -->
+  <text x="205" y="100" font-size="20">⟶</text><text x="200" y="120" font-size="11">w=1/z</text>
+  <!-- w-plane -->
+  <g transform="translate(250,0)">
+    <line x1="20" y1="100" x2="190" y2="100" stroke="#333"/><line x1="100" y1="185" x2="100" y2="15" stroke="#333"/>
+    <text x="180" y="115">u</text><text x="104" y="22">v</text>
+    <circle cx="120" cy="100" r="20" fill="none" stroke="#1b4f72" stroke-width="1.8"/><text x="128" y="78" fill="#1b4f72">ℓ₁′</text>
+    <circle cx="100" cy="120" r="20" fill="none" stroke="#2e7d32" stroke-width="1.8"/><text x="60" y="128" fill="#2e7d32">ℓ₂′</text>
+    <circle cx="100" cy="100" r="40" fill="none" stroke="#c0392b" stroke-width="1.8"/><text x="140" y="135" fill="#c0392b">ℓ₃′</text>
+    <text x="55" y="183" font-weight="bold">w 平面</text>
+  </g>
+</svg>
+<figcaption>直線 $\ell_1,\ell_2$ は $w=1/z$ で原点を通る円 $\ell_1',\ell_2'$ に写り、交点での直交（等角性）が保たれる。単位円 $\ell_3$ は単位円 $\ell_3'$ に写り、内側($|z|&lt;1$)は外側($|w|&gt;1$)へ反転する。</figcaption>
+</figure>
+
+<h3>問2　$\oint_C \dfrac{dz}{(z-a)^n}=0\ (n=2,3,\dots)$ の証明</h3>
+<div class="q"><span class="label">問題</span>　点 $z=a$ を囲む任意の閉積分路 $C$ に対し、$\displaystyle\oint_C\frac{dz}{(z-a)^n}=0\ (n=2,3,\dots)$ を示せ。（ヒント：$a$ 中心の極座標）</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<div class="proof">
+<p>被積分関数は $z=a$ 以外で正則なので、コーシーの定理により積分路を $a$ 中心の半径 $r$ の円 $|z-a|=r$ に変形してよい。$z-a=re^{i\theta}\ (0\le\theta\le2\pi)$ とおくと $dz=ire^{i\theta}d\theta$。
+$$\oint_C\frac{dz}{(z-a)^n}=\int_0^{2\pi}\frac{ire^{i\theta}}{r^n e^{in\theta}}\,d\theta=i\,r^{1-n}\int_0^{2\pi}e^{i(1-n)\theta}\,d\theta.$$
+$n\ge2$ なら $1-n$ は $0$ でない整数なので、
+$$\int_0^{2\pi}e^{i(1-n)\theta}\,d\theta=\left[\frac{e^{i(1-n)\theta}}{i(1-n)}\right]_0^{2\pi}=\frac{e^{i(1-n)2\pi}-1}{i(1-n)}=0$$
+（$e^{i(1-n)2\pi}=1$）。よって積分は $0$。$\blacksquare$</p>
+</div>
+<p class="meta">補足：$n=1$ のときだけ $\int_0^{2\pi}e^{0}d\theta=2\pi$ となり $\oint\dfrac{dz}{z-a}=2\pi i$。これが留数・コーシーの積分表示の源。→ <a href="03_第3回_等角写像・複素積分・コーシーの定理.html">第3回</a>の基本積分。</p>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- ============================ No.3 ========================== -->
+<!-- ============================================================ -->
+<h2 id="no3">No.3　コーシーの定理・グルサの公式・留数定理</h2>
+<p class="meta">配布日：2025/6/18 ／ 第4〜6回に対応。グルサの公式・ローラン展開・留数の核心。</p>
+
+<h3>問1　$I_k=\oint_{|z|=2}\dfrac{e^z}{(z-1)^k}\,dz$</h3>
+<div class="q"><span class="label">問題</span>　$k$ を整数、$C:|z|=2$ とするとき、$k\le0$ と $k\ge1$ のそれぞれについて $I_k=\displaystyle\oint_C\frac{e^z}{(z-1)^k}\,dz$ を求めよ。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p><strong>$k\le0$ のとき</strong>：$(z-1)^k=(z-1)^{|k|}$ は多項式なので、$e^z(z-1)^{|k|}$ は全平面で正則（整関数）。$C$ の内部に特異点が無いから、コーシーの定理より
+$$I_k=0\qquad(k\le0).$$</p>
+<p><strong>$k\ge1$ のとき</strong>：$z=1$ は $C:|z|=2$ の<strong>内部</strong>（$|1|=1&lt;2$）にある $k$ 位の極。グルサの公式
+$\displaystyle f^{(n)}(a)=\frac{n!}{2\pi i}\oint_C\frac{f(\zeta)}{(\zeta-a)^{n+1}}d\zeta$ を $f(z)=e^z,\ a=1,\ n=k-1$ に適用すると、
+$$I_k=\oint_C\frac{e^z}{(z-1)^k}\,dz=\frac{2\pi i}{(k-1)!}\,\frac{d^{k-1}}{dz^{k-1}}e^z\Big|_{z=1}=\frac{2\pi i\,e}{(k-1)!}.$$</p>
+</div>
+<div class="final">答：$I_k=0\ (k\le0)$、　$I_k=\dfrac{2\pi i\,e}{(k-1)!}\ (k\ge1)$</div>
+<p class="meta">検算：$k=1$ なら $I_1=2\pi i\,e$（コーシーの積分表示 $\oint\frac{e^z}{z-1}dz=2\pi i\,e^1$）に一致。→ <a href="04_第4回_積分路の変更・不定積分・コーシーの積分表示・グルサの公式.html">第4回</a>。</p>
+
+<h3>問2　テイラー展開はローラン展開の一部</h3>
+<div class="q"><span class="label">問題</span>　複素関数のテイラー展開はローラン展開の一部であることを示せ。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<div class="proof">
+<p>ローラン展開 $f(z)=\sum_{n=-\infty}^{\infty}c_n(z-a)^n,\ c_n=\dfrac{1}{2\pi i}\oint_C\dfrac{f(\zeta)}{(\zeta-a)^{n+1}}d\zeta$ において、$z=a$ が<strong>正則点</strong>の場合を考える。</p>
+<p>$n\le-1$ では $-(n+1)\ge0$ なので $f(\zeta)(\zeta-a)^{-(n+1)}$ は $a$ を含む領域で正則 → コーシーの定理より $c_n=0$（負べき＝主部が消える）。<br>
+$n\ge0$ ではグルサの公式より $c_n=\dfrac{f^{(n)}(a)}{n!}$。よって
+$$f(z)=\sum_{n=0}^{\infty}\frac{f^{(n)}(a)}{n!}(z-a)^n,$$
+これはテイラー展開そのもの。すなわちテイラー展開は、主部が消えた特別な場合のローラン展開＝<strong>ローラン展開の一部</strong>。$\blacksquare$</p>
+</div>
+<p class="meta">※ 中間試験 問4(2) と同内容。→ <a href="09_中間試験_問題と解答解説.html">中間試験ページ</a>・<a href="05_第5回_モレラの定理・テイラー展開・特異点の分類.html">第5回</a>に詳細。</p>
+</div>
+
+<h3>問3　留数 $=$ ローラン展開の $C_{-1}$</h3>
+<div class="q"><span class="label">問題</span>　$f(z)$ の $z=a$ における留数が、ローラン展開の負べき項の係数 $C_{-1}$ に等しいことを示せ。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<div class="proof">
+<p>留数の定義 $\mathrm{Res}(f,a)=\dfrac{1}{2\pi i}\oint_C f(z)\,dz$ に、ローラン展開 $f(z)=\sum_{n=-\infty}^{\infty}c_n(z-a)^n$ を代入して項別積分する。問2と同じ計算（$a$ 中心の円で極座標）により
+$$\oint_C(z-a)^n\,dz=\begin{cases}2\pi i & (n=-1)\\[2pt]0 & (n\neq-1)\end{cases}$$
+なので、和のうち $n=-1$ の項だけが残り、
+$$\oint_C f(z)\,dz=c_{-1}\cdot 2\pi i.$$
+両辺を $2\pi i$ で割って $\mathrm{Res}(f,a)=c_{-1}=C_{-1}$。$\blacksquare$</p>
+</div>
+<p class="meta">「留数＝$(z-a)^{-1}$ の係数」。これが留数計算の本質。→ <a href="06_第6回_ローラン展開・極・留数・留数定理.html">第6回</a>。</p>
+</div>
+
+<h3>問4　$I=\oint_{|z|=2}\dfrac{e^z}{z^2+1}\,dz$</h3>
+<div class="q"><span class="label">問題</span>　$\displaystyle I=\oint_{|z|=2}\frac{e^z}{z^2+1}\,dz$ を留数定理で求めよ。(1) 過程を省略しない、(2) 積分経路と特異点を図示。</div>
+<div class="ans">
+<span class="label">参考解答</span>
+<p>$z^2+1=(z-i)(z+i)$ より特異点は $z=\pm i$、ともに一位の極。$|\pm i|=1&lt;2$ なので<strong>両方とも $C:|z|=2$ の内部</strong>にある。</p>
+<p>一位の極の留数 $\mathrm{Res}(f,a)=\dfrac{g(a)}{h'(a)}$（$f=g/h,\ g=e^z,\ h=z^2+1,\ h'=2z$）：
+$$\mathrm{Res}(f,i)=\frac{e^{i}}{2i},\qquad \mathrm{Res}(f,-i)=\frac{e^{-i}}{-2i}.$$
+留数定理より
+$$I=2\pi i\left(\frac{e^{i}}{2i}+\frac{e^{-i}}{-2i}\right)=2\pi i\cdot\frac{e^{i}-e^{-i}}{2i}=\pi\,(e^{i}-e^{-i})=\pi\cdot 2i\sin 1=2\pi i\,\sin 1.$$</p>
+</div>
+<div class="final">答：$I=2\pi i\,\sin 1$</div>
+<figure class="fig">
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="r3a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><polygon points="0,0 9,4 0,8" fill="#1b4f72"/></marker></defs>
+  <line x1="20" y1="100" x2="220" y2="100" stroke="#333"/><line x1="120" y1="190" x2="120" y2="15" stroke="#333"/>
+  <text x="210" y="115">Re</text><text x="124" y="24">Im</text>
+  <circle cx="120" cy="100" r="70" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <polygon points="190,96 190,104 197,100" fill="#1b4f72"/>
+  <text x="150" y="40" fill="#1b4f72">C:|z|=2</text>
+  <circle cx="120" cy="65" r="3" fill="#c0392b"/><text x="127" y="62" fill="#c0392b">i</text>
+  <circle cx="120" cy="135" r="3" fill="#c0392b"/><text x="127" y="150" fill="#c0392b">−i</text>
+  <text x="100" y="92" font-size="11">0</text>
+</svg>
+<figcaption>積分路 $C:|z|=2$ の内部に、特異点 $z=i$（上）と $z=-i$（下）の2つの一位の極がある。両方の留数の和に $2\pi i$ を掛けたものが積分値。</figcaption>
+</figure>
+
+<hr>
+
+<div class="navi" style="margin-top:18px;">
+← <a href="index.html">教材トップ（目次）へ戻る</a> ／ 関連：<a href="09_中間試験_問題と解答解説.html">中間試験</a>・<a href="00_カリキュラム.html">カリキュラム</a>
+</div>
+
+<footer style="margin-top:26px; padding-top:12px; border-top:1px dashed #d5d5d5; font-size:13px; color:#555;">
+レポート課題 No.1〜3（2025/6/4・2026/6/17・2025/6/18 配布）の問題に基づく。<strong>解答は学習補助のための参考解答（非公式・自作）</strong>であり、公式の正解ではない。数式は MathJax、図はインラインSVG。
+</footer>
+
+</body>
+</html>

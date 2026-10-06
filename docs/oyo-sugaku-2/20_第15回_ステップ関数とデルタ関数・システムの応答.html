@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第15回 ステップ関数とデルタ関数・システムの応答（インピーダンス）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .why{ background:#fffdf0; border:1px solid #e8d48b; border-left:6px solid #e8c14b; border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; } .why .label{ color:#9a7d1a; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; background:#fafafa; border:1px solid var(--line); border-radius:6px; padding:4px 12px; }
+  summary{ cursor:pointer; color:var(--accent); font-weight:bold; padding:5px 0; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:480px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  table.tb{ border-collapse:collapse; margin:12px 0; font-size:14.5px; width:100%; }
+  table.tb th,table.tb td{ border:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ background:#eef2f7; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+  .prob-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); background:#fff; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:0 6px; cursor:pointer; vertical-align:middle; user-select:none; }
+  .prob-chk input{ margin:0; cursor:pointer; }
+  @media print{ .prob-chk{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第15回　ステップ関数とデルタ関数・システムの応答（インピーダンス）</h1>
+<p class="lead">今回は試験範囲外ですが、第13・14回で組み立てた<strong>ラプラス変換の道具一式</strong>を、制御工学・振動工学の基本語彙「<strong>ステップ関数・デルタ関数・システムのインピーダンス・ステップ応答／インパルス応答</strong>」に応用します。ゴールは2つ：① 単位関数（ステップ関数）を軸に<strong>デルタ関数をもう一つの方法で構成し直す</strong>こと、② 微分方程式で表されるシステムの応答を、<strong>インピーダンス $Z(s)$ とたたみ込み</strong>で統一的に記述することです。</p>
+
+<div class="navi">
+今回の流れ：<strong>① ステップ関数の定義とラプラス変換</strong>→ <strong>② 第二移動定理</strong>（時間軸をずらす）→ <strong>③ 矩形波への応用</strong>→ <strong>④ パルスからデルタ関数を構成</strong>（第11回とは別ルート）→ <strong>⑤ システムのインピーダンス $Z(s)$</strong>→ <strong>⑥ ステップ応答・インパルス応答</strong>→ <strong>⑦ たたみ込み（第14回）で一般入力への応答をまとめる</strong>。教科書 p.224, p.228 に対応。
+</div>
+
+<div class="warn">
+<span class="label">位置づけ（試験範囲外）</span>　この回は先生の説明の通り<strong>試験範囲外</strong>で、質問時間も兼ねています。ただし内容自体は第13・14回のラプラス変換の直接の応用であり、制御工学・振動工学に進む人には重要な語彙です。証明・導出は他の回と同じ水準で省略せずに載せます。<br>
+<span class="meta">表記の注意：第13・14回では変換前の変数を $x$ と書いていましたが、今回は工学の慣習に合わせて<strong>時間変数 $t$</strong> を使います（意味は同じです）。</span>
+</div>
+
+<h2>15.1　ステップ関数（単位関数）の定義とラプラス変換</h2>
+<div class="def">
+<span class="label">ステップ関数（単位関数）</span>
+$$ U_a(t)=\begin{cases}0 & (t\le a)\\ 1 & (t\gt a)\end{cases},\qquad U_a(t)=U(t-a) $$
+</div>
+<div class="meta">※ スライドの表記では2行目の条件が「$t\gt0$」となっていますが、図（下）の通り関数が跳ぶのは $t=a$ なので、正しくは「$t\gt a$」の誤植と考えられます。以下ではこの意味で扱います。</div>
+
+<figure class="fig">
+<svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="m15a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="20" y1="150" x2="400" y2="150" stroke="#999" stroke-width="1.1" marker-end="url(#m15a)"/>
+  <line x1="70" y1="170" x2="70" y2="20" stroke="#999" stroke-width="1.1" marker-end="url(#m15a)"/>
+  <text x="388" y="166" fill="#999">t</text><text x="76" y="30" fill="#999">U_a(t)</text>
+  <line x1="70" y1="150" x2="170" y2="150" stroke="#1b4f72" stroke-width="2.5"/>
+  <line x1="170" y1="90" x2="380" y2="90" stroke="#1b4f72" stroke-width="2.5"/>
+  <line x1="170" y1="150" x2="170" y2="90" stroke="#bbb" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="20" y1="90" x2="170" y2="90" stroke="#bbb" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="25" y="86" fill="#666">1</text>
+  <text x="163" y="166" fill="#666">a</text>
+  <text x="60" y="166" fill="#666">0</text>
+</svg>
+<figcaption>図15-1　ステップ関数 $U_a(t)=U(t-a)$。$t=a$ で $0$ から $1$ へ跳ぶ。</figcaption>
+</figure>
+
+<div class="proof">
+<span class="label">ラプラス変換 $\mathcal L[U(t-a)]$ の導出</span>　定義通り積分するだけだが、$U(t-a)$ が $t\le a$ で $0$ になることを使って積分区間を縮める。
+$$ \mathcal L[U(t-a)]=\int_0^\infty e^{-st}U(t-a)\,dt=\int_a^\infty e^{-st}\cdot1\,dt $$
+（$0\le t\le a$ では被積分関数が $0$ なので積分区間から落ちる）。あとは通常の積分：
+$$ \int_a^\infty e^{-st}\,dt=\Big[-\frac1s e^{-st}\Big]_a^\infty=\Big(0\Big)-\Big(-\frac1s e^{-as}\Big)=\frac{e^{-as}}{s}\qquad(s\gt0\ \text{で}\ e^{-st}\to0\ (t\to\infty)) $$
+$$ \therefore\quad \mathcal L[U(t-a)]=\frac{e^{-as}}{s} $$
+</div>
+
+<h2>15.2　第二移動定理——急に立ち上がる関数のラプラス変換</h2>
+<p>15.1 の結果を一般の関数 $f(t)$ の場合に拡張する。第13回で学んだ「$s$ 軸方向の移動則」$\mathcal L[e^{at}f(t)]=\hat f(s-a)$ とペアになる、「<strong>$t$ 軸方向の移動則</strong>」である。</p>
+
+<div class="thm">
+<span class="label">第二移動定理</span>　$f(t)$ を $t\ge0$ で定義された関数、$\hat f(s)=\mathcal L[f(t)]$ とすると
+$$ \mathcal L\big[U(t-a)f(t-a)\big]=e^{-as}\,\hat f(s) $$
+</div>
+<figure class="fig">
+<svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="m15b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="20" y1="150" x2="400" y2="150" stroke="#999" stroke-width="1.1" marker-end="url(#m15b)"/>
+  <line x1="70" y1="170" x2="70" y2="20" stroke="#999" stroke-width="1.1" marker-end="url(#m15b)"/>
+  <text x="388" y="166" fill="#999">t</text><text x="76" y="30" fill="#999">U(t-a)f(t-a)</text>
+  <line x1="70" y1="150" x2="170" y2="150" stroke="#7d3c98" stroke-width="2.5"/>
+  <path d="M170 100 Q220 78 270 100 Q320 122 370 90" fill="none" stroke="#7d3c98" stroke-width="2.5"/>
+  <line x1="170" y1="150" x2="170" y2="100" stroke="#bbb" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="163" y="166" fill="#666">a</text>
+  <text x="55" y="166" fill="#666">0</text>
+</svg>
+<figcaption>図15-2　$f(t)$ のグラフをそのまま右へ $a$ だけ平行移動し、$t\lt a$ では $0$ にした関数。</figcaption>
+</figure>
+
+<div class="proof">
+<strong>① 定義を書き、積分区間を縮める</strong>　$U(t-a)=0\ (t\le a)$ なので
+$$ \mathcal L\big[U(t-a)f(t-a)\big]=\int_0^\infty e^{-st}U(t-a)f(t-a)\,dt=\int_a^\infty e^{-st}f(t-a)\,dt. $$
+<strong>② 置換積分</strong>　$\tau=t-a$（$d\tau=dt$、$t=a\Rightarrow\tau=0$、$t\to\infty\Rightarrow\tau\to\infty$）とおくと
+$$ \int_a^\infty e^{-st}f(t-a)\,dt=\int_0^\infty e^{-s(\tau+a)}f(\tau)\,d\tau=e^{-as}\int_0^\infty e^{-s\tau}f(\tau)\,d\tau=e^{-as}\hat f(s). $$
+</div>
+<div class="why">
+<span class="label">15.1 との関係</span>　$f(t)=1$（定数関数、$\hat f(s)=1/s$）を代入すると $\mathcal L[U(t-a)]=e^{-as}/s$ となり、15.1 の結果に一致する（15.1 はこの定理の $f=1$ の特別な場合）。
+</div>
+
+<h2>15.3　応用：矩形波のラプラス変換</h2>
+<p>周期 $2$ の矩形波（$[0,1)$ で $1$、$[1,2)$ で $0$、以下繰り返し）を、ステップ関数の無限和で表す。</p>
+<div class="def">
+<span class="label">矩形波</span>
+$$ f(t)=U(t)-U(t-1)+U(t-2)-U(t-3)+U(t-4)-\cdots=\sum_{n=0}^{\infty}(-1)^n\,U(t-n) $$
+</div>
+<figure class="fig">
+<svg viewBox="0 0 460 180" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="m15c" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="20" y1="150" x2="440" y2="150" stroke="#999" stroke-width="1.1" marker-end="url(#m15c)"/>
+  <line x1="60" y1="170" x2="60" y2="20" stroke="#999" stroke-width="1.1" marker-end="url(#m15c)"/>
+  <text x="428" y="166" fill="#999">t</text><text x="66" y="30" fill="#999">f(t)</text>
+  <g stroke="#1b4f72" stroke-width="2.5" fill="none">
+    <line x1="60" y1="90" x2="120" y2="90"/>
+    <line x1="120" y1="150" x2="180" y2="150"/>
+    <line x1="180" y1="90" x2="240" y2="90"/>
+    <line x1="240" y1="150" x2="300" y2="150"/>
+    <line x1="300" y1="90" x2="360" y2="90"/>
+  </g>
+  <g stroke="#bbb" stroke-width="1" stroke-dasharray="3 3">
+    <line x1="120" y1="90" x2="120" y2="150"/><line x1="180" y1="90" x2="180" y2="150"/>
+    <line x1="240" y1="90" x2="240" y2="150"/><line x1="300" y1="90" x2="300" y2="150"/>
+    <line x1="20" y1="90" x2="60" y2="90"/>
+  </g>
+  <text x="25" y="86" fill="#666">1</text>
+  <text x="115" y="166" fill="#666">1</text><text x="175" y="166" fill="#666">2</text>
+  <text x="235" y="166" fill="#666">3</text><text x="295" y="166" fill="#666">4</text><text x="355" y="166" fill="#666">5</text>
+</svg>
+<figcaption>図15-3　矩形波 $f(t)$。$[0,1),[2,3),[4,5),\dots$ で $1$、それ以外で $0$。</figcaption>
+</figure>
+
+<div class="proof">
+<strong>① 線形性と 15.1 を適用</strong>
+$$ \mathcal L[f(t)]=\sum_{n=0}^{\infty}(-1)^n\,\mathcal L[U(t-n)]=\sum_{n=0}^{\infty}(-1)^n\,\frac{e^{-ns}}{s}=\frac1s\sum_{n=0}^{\infty}\big(-e^{-s}\big)^n. $$
+<strong>② 等比級数の和公式（出所の確認）</strong>　公比 $r=-e^{-s}$ の等比級数。部分和 $S_N=\sum_{n=0}^{N}r^n$ に対して $(1-r)S_N=(1+r+\cdots+r^N)-(r+r^2+\cdots+r^{N+1})=1-r^{N+1}$（中間の項がすべて打ち消し合う、いわゆる望遠鏡和）なので $S_N=\dfrac{1-r^{N+1}}{1-r}$。$s\gt0$ なら $|r|=e^{-s}\lt1$ なので $N\to\infty$ で $r^{N+1}\to0$、よって
+$$ \sum_{n=0}^{\infty}r^n=\frac{1}{1-r}. $$
+<strong>③ 代入して整理</strong>　$r=-e^{-s}$ を代入すると
+$$ \mathcal L[f(t)]=\frac1s\cdot\frac{1}{1-(-e^{-s})}=\frac{1}{s\big(1+e^{-s}\big)}. $$
+</div>
+<div class="why">
+<span class="label">第9回とのつながり</span>　第9回では同じ矩形波を<strong>フーリエ級数</strong>（正弦・余弦の無限和）として展開しました。今回は<strong>ラプラス変換の世界では単純な等比級数の和</strong>として表せることが分かります。同じ波形でも、どの道具で見るかで姿が変わります。
+</div>
+
+<h2>15.4　パルスの表現とデルタ関数——ラプラス変換による構成</h2>
+<p>第11回ではフーリエ積分表示から $\delta(x)=\lim_{L\to\infty}\dfrac{\sin Lx}{\pi x}$ としてデルタ関数を導入しました。今回はステップ関数を材料に、<strong>ラプラス変換の世界で独立に</strong>同じ対象を組み立て直します。</p>
+
+<div class="def">
+<span class="label">高さ $1$・幅 $\varepsilon$ のパルス</span>
+$$ h_\varepsilon(t)=U(t-a)-U\big(t-(a+\varepsilon)\big)=\begin{cases}0 & (t\le a)\\ 1 & (a\lt t\le a+\varepsilon)\\ 0 & (t\gt a+\varepsilon)\end{cases} $$
+</div>
+<figure class="fig">
+<svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="m15d" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="20" y1="150" x2="400" y2="150" stroke="#999" stroke-width="1.1" marker-end="url(#m15d)"/>
+  <line x1="70" y1="170" x2="70" y2="20" stroke="#999" stroke-width="1.1" marker-end="url(#m15d)"/>
+  <text x="388" y="166" fill="#999">t</text><text x="76" y="30" fill="#999">h_ε(t)</text>
+  <line x1="70" y1="150" x2="170" y2="150" stroke="#c0392b" stroke-width="2.5"/>
+  <line x1="170" y1="90" x2="220" y2="90" stroke="#c0392b" stroke-width="2.5"/>
+  <line x1="220" y1="150" x2="380" y2="150" stroke="#c0392b" stroke-width="2.5"/>
+  <line x1="170" y1="150" x2="170" y2="90" stroke="#bbb" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="220" y1="150" x2="220" y2="90" stroke="#bbb" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="20" y1="90" x2="170" y2="90" stroke="#bbb" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="25" y="86" fill="#666">1</text>
+  <text x="163" y="166" fill="#666">a</text>
+  <text x="196" y="166" fill="#666">a+ε</text>
+</svg>
+<figcaption>図15-4　パルス $h_\varepsilon(t)$。幅 $\varepsilon$・高さ $1$、面積は $\varepsilon$。</figcaption>
+</figure>
+
+<div class="proof">
+<span class="label">$\mathcal L[h_\varepsilon(t)]$ の計算</span>　線形性と 15.1 をそのまま適用する（$a\to a$ と $a\to a+\varepsilon$ の2回使うだけ）。
+$$ \mathcal L[h_\varepsilon(t)]=\mathcal L[U(t-a)]-\mathcal L\big[U(t-a-\varepsilon)\big]=\frac{e^{-as}}{s}-\frac{e^{-(a+\varepsilon)s}}{s}=\frac{e^{-as}}{s}\big(1-e^{-\varepsilon s}\big). $$
+</div>
+
+<div class="why">
+<span class="label">面積を $1$ に正規化する</span>　$h_\varepsilon(t)$ は幅 $\varepsilon$・高さ $1$ の箱なので面積は常に $\varepsilon$。そこで $\varepsilon$ で割った $\dfrac1\varepsilon h_\varepsilon(t)$（高さ $1/\varepsilon$・幅 $\varepsilon$）を考えると、面積は
+$$ \int_{-\infty}^{\infty}\frac1\varepsilon h_\varepsilon(t)\,dt=\frac1\varepsilon\times(\text{高さ}1\times\text{幅}\varepsilon)=1 $$
+と、$\varepsilon$ の値によらず<strong>常に $1$</strong> になる。さらに、連続な関数 $f$ に対して積分の平均値の性質から
+$$ \int_{-\infty}^{\infty}f(t)\,\frac1\varepsilon h_\varepsilon(t)\,dt=\frac1\varepsilon\int_a^{a+\varepsilon}f(t)\,dt\ \xrightarrow[\varepsilon\to0]{}\ f(a) $$
+（幅 $\varepsilon$ の区間での $f$ の平均値は、区間が $a$ につぶれると $f(a)$ に近づく）。「幅$\to0$・高さ$\to\infty$・面積$=1$・ふるい落とし性質」という<strong>デルタ関数の性質そのもの</strong>が、$\varepsilon\to0$ の極限として現れている。
+</div>
+
+<div class="def">
+<span class="label">デルタ関数（ラプラス変換ルートでの定義）</span>
+$$ \delta_a(t):=\lim_{\varepsilon\to0}\frac1\varepsilon h_\varepsilon(t),\qquad \int_{-\infty}^{\infty}\delta_a(t)\,dt=1,\qquad \int_{-\infty}^{\infty}f(t)\,\delta_a(t)\,dt=f(a) $$
+</div>
+
+<div class="proof">
+<span class="label">$\mathcal L[\delta_a(t)]$ の導出</span>　$\mathcal L[h_\varepsilon(t)]$ を $\varepsilon$ で割ってから極限をとる。
+$$ \mathcal L[\delta_a(t)]=\lim_{\varepsilon\to0}\frac1\varepsilon\mathcal L[h_\varepsilon(t)]=e^{-as}\lim_{\varepsilon\to0}\frac{1-e^{-\varepsilon s}}{\varepsilon s}. $$
+<strong>極限の計算（微分の定義を使う）</strong>　$\varphi(\tau)=e^{-\tau}$ とおき、$h=\varepsilon s$（$\varepsilon\to0$ で $h\to0$）とみると
+$$ \frac{1-e^{-\varepsilon s}}{\varepsilon s}=-\,\frac{\varphi(\varepsilon s)-\varphi(0)}{\varepsilon s}\ \xrightarrow[\varepsilon\to0]{}\ -\varphi'(0) $$
+（$\varphi(0)=e^0=1$ を使い、微分の定義 $\lim_{h\to0}\frac{\varphi(h)-\varphi(0)}{h}=\varphi'(0)$ をそのまま当てはめた）。$\varphi'(\tau)=-e^{-\tau}$ より $\varphi'(0)=-1$、よって $-\varphi'(0)=1$。したがって
+$$ \mathcal L[\delta_a(t)]=e^{-as}\cdot1=e^{-as}. $$
+</div>
+<div class="thm">
+<span class="label">まとめ</span>　$\mathcal L[\delta_a(t)]=e^{-as}$。特に $a=0$（原点でのデルタ関数）のとき $\mathcal L[\delta(t)]=1$。
+</div>
+<div class="why">
+<span class="label">「単位関数の微分」としての見方</span>　$\dfrac1\varepsilon h_\varepsilon(t)=\dfrac{U(t-a)-U(t-a-\varepsilon)}{\varepsilon}$ は、まさに $U(t-a)$ の差分商である。$U$ は $t=a$ で不連続なので通常の意味の導関数は存在しないが、この極限の意味で「$\dfrac{d}{dt}U(t-a)=\delta_a(t)$」と言われるのはこのためである。第11回の $\sin(Lx)/(\pi x)$ による構成とは入り口が違うが、行き着く先（面積1・ふるい落とし性質をもつ理想化されたパルス）は同じである。
+</div>
+
+<h2>15.5　システムの微分方程式とインピーダンス $Z(s)$</h2>
+<p>ばね・ダンパ（減衰器）・質量からなる力学系や、抵抗・コイル・コンデンサからなる電気回路は、いずれも「入力信号 $f(t)$」に対する「応答 $y(t)$」を、次の定数係数2階線形微分方程式で表せる。</p>
+<div class="box">
+$$ a\,y''+b\,y'+c\,y=f(t),\qquad y(0)=y_0,\ \ y'(0)=v_0 $$
+$a,b,c$ は<strong>システムの特性</strong>（ばね定数・減衰係数・質量など）、$f(t)$ が<strong>入力</strong>、$y(t)$ が<strong>応答（出力）</strong>である。
+</div>
+
+<div class="proof">
+<span class="label">両辺をラプラス変換する</span>　第13回の微分則 $\mathcal L[y']=s\hat y-y_0$、$\mathcal L[y'']=s^2\hat y-s\,y_0-v_0$（$\hat y=\mathcal L[y]$、$\hat f=\mathcal L[f]=F(s)$ と書く）を代入すると
+$$ a\big(s^2\hat y-s\,y_0-v_0\big)+b\big(s\hat y-y_0\big)+c\,\hat y=F(s). $$
+<strong>整理する</strong>　$\hat y$ の項をまとめ、初期値の項を右辺に移す。
+$$ \big(as^2+bs+c\big)\hat y(s)=(as+b)y_0+a v_0+F(s). $$
+<strong>$Z(s)$・$A(s)$ と名前をつける</strong>　方程式の左辺の係数を $Z(s)=as^2+bs+c$（<strong>システムのインピーダンス</strong>と呼ぶ）、右辺の初期値部分を $A(s)=(as+b)y_0+av_0$ とおくと
+$$ \hat y(s)=\frac{A(s)}{Z(s)}+\frac{F(s)}{Z(s)}. $$
+</div>
+<div class="why">
+<span class="label">2つの項の意味</span>　$A(s)/Z(s)$ の項は<strong>初期条件 $y_0,v_0$ とシステムの特性だけ</strong>で決まり、$f(t)=0$（同次方程式）の特解に対応する（<strong>自由応答</strong>）。$F(s)/Z(s)$ の項は $y_0=v_0=0$（<strong>初期静止</strong>）としたときの、入力 $f(t)$ だけによる応答（<strong>強制応答</strong>）である。電気回路でいう「インピーダンス」は電圧と電流の関係を $V=ZI$ と表す量だが、ここでも同じ発想で「入力 $F(s)$」と「応答 $\hat y(s)$」の関係を $Z(s)$ が仲立ちしている。
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="13">
+  <defs><marker id="m15e" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#666"/></marker></defs>
+  <line x1="30" y1="65" x2="150" y2="65" stroke="#666" stroke-width="1.6" marker-end="url(#m15e)"/>
+  <text x="35" y="52" fill="#1b4f72">入力 $F(s)$</text>
+  <rect x="150" y="35" width="110" height="60" fill="#eef5ff" stroke="#5a87c4" stroke-width="1.6"/>
+  <text x="178" y="72" fill="#274e80" font-size="16">$Z(s)$</text>
+  <line x1="260" y1="65" x2="390" y2="65" stroke="#666" stroke-width="1.6" marker-end="url(#m15e)"/>
+  <text x="262" y="52" fill="#7d3c98">応答 $F(s)/Z(s)$</text>
+</svg>
+<figcaption>図15-5　システムのブロック図。入力を $Z(s)$ で割ると（初期静止状態からの）応答が得られる。</figcaption>
+</figure>
+
+<h2>15.6　ステップ応答とインパルス応答</h2>
+<p>以下、初期静止状態（$y_0=v_0=0$、$A(s)=0$）を仮定し、$\hat y(s)=F(s)/Z(s)$ だけを考える。入力の種類ごとに、応答に名前がつく。</p>
+<div class="def">
+<span class="label">ステップ応答・インパルス応答</span>
+<ul>
+<li><strong>ステップ入力</strong> $f(t)=U(t)$：15.1（$a=0$）より $F(s)=1/s$。応答を <strong>ステップ応答 $g(t)$</strong> と呼び、$\displaystyle g(t)=\mathcal L^{-1}\Big[\frac{1}{sZ(s)}\Big]$。</li>
+<li><strong>インパルス入力</strong> $f(t)=\delta(t)$：15.4（$a=0$）より $F(s)=1$。応答を <strong>インパルス応答 $h(t)$</strong> と呼び、$\displaystyle h(t)=\mathcal L^{-1}\Big[\frac{1}{Z(s)}\Big]$。</li>
+</ul>
+</div>
+
+<div class="ex">
+<span class="label">例 15.1</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex15-1">完了</label>　$y''+3y'+2y=f(t)$（初期静止）のステップ応答 $g(t)$ とインパルス応答 $h(t)$ を求めよ。
+<div class="proof">
+<strong>① $Z(s)$ を因数分解</strong>　$Z(s)=s^2+3s+2=(s+1)(s+2)$（和が $3$・積が $2$ になる2数は $1,2$）。<br>
+<strong>② ステップ応答</strong>　$\dfrac{1}{sZ(s)}=\dfrac{1}{s(s+1)(s+2)}=\dfrac As+\dfrac{B}{s+1}+\dfrac{C}{s+2}$ とおき、$1=A(s+1)(s+2)+Bs(s+2)+Cs(s+1)$。<br>
+・$s=0$：$1=A\cdot1\cdot2\Rightarrow A=\tfrac12$。　・$s=-1$：$1=B\cdot(-1)\cdot1\Rightarrow B=-1$。　・$s=-2$：$1=C\cdot(-2)(-1)\Rightarrow C=\tfrac12$。
+$$ g(t)=\frac12-e^{-t}+\frac12e^{-2t}. $$
+検算：$g(0)=\tfrac12-1+\tfrac12=0$ ✓（システムに慣性があるので入力を急に $1$ にしても出力は瞬時には動かない）。<br>
+<strong>③ インパルス応答</strong>　$\dfrac{1}{Z(s)}=\dfrac{1}{(s+1)(s+2)}=\dfrac{1}{s+1}-\dfrac1{s+2}$（$1=A(s+2)+B(s+1)$、$s=-1$：$A=1$、$s=-2$：$B=-1$）。
+$$ h(t)=e^{-t}-e^{-2t}. $$
+</div>
+<div class="why">
+<span class="label">$h(t)=g'(t)$ になっている</span>　実際 $g'(t)=e^{-t}-e^{-2t}=h(t)$ で一致する。これは偶然ではない：15.4 で見た通り、形式的には $U'(t)=\delta(t)$ なので、<strong>ステップ入力を微分するとインパルス入力</strong>になる。線形なシステムでは「入力を微分すると応答も微分される」ので、<strong>インパルス応答はステップ応答の導関数</strong>になる。
+</div>
+</div>
+
+<h2>15.7　一般入力への応答——たたみ込みによる統一的表示</h2>
+<p>任意の入力 $f(t)$（初期静止、$f(0)$ は有限とする）に対する応答 $x(t)$ を、ステップ応答 $g(t)$ だけを使って書き表す。ここで第14回の<strong>たたみ込み定理</strong> $\mathcal L[g*f']=\mathcal L[g]\mathcal L[f']$ を使う。</p>
+
+<div class="proof">
+<strong>① $F(s)/Z(s)$ を $sF(s)$ と $1/(sZ(s))$ の積に分解する</strong>
+$$ \mathcal L[x(t)]=\frac{F(s)}{Z(s)}=\big[sF(s)\big]\cdot\Big[\frac{1}{sZ(s)}\Big]=\big[sF(s)\big]\cdot\mathcal L[g(t)]. $$
+<strong>② $sF(s)$ を微分則で書き換える</strong>　第13回の微分則 $\mathcal L[f'(t)]=sF(s)-f(0)$ を移項すると $sF(s)=\mathcal L[f'(t)]+f(0)$。代入して
+$$ \mathcal L[x(t)]=\Big\{\mathcal L[f'(t)]+f(0)\Big\}\cdot\mathcal L[g(t)]=f(0)\,\mathcal L[g(t)]+\mathcal L[f'(t)]\,\mathcal L[g(t)]. $$
+<strong>③ たたみ込み定理（第14回）を右辺第2項に適用</strong>　$\mathcal L[f']\mathcal L[g]=\mathcal L[g*f']$ なので
+$$ \mathcal L[x(t)]=f(0)\,\mathcal L[g(t)]+\mathcal L[g*f'](s). $$
+<strong>④ 逆変換する（線形性）</strong>
+$$ x(t)=f(0)\,g(t)+(g*f')(t)=f(0)\,g(t)+\int_0^t g(t-\tau)\,f'(\tau)\,d\tau. $$
+</div>
+<div class="thm">
+<span class="label">まとめ</span>　ステップ応答 $g(t)$ さえ分かれば、<strong>どんな入力 $f(t)$ に対する応答も</strong>
+$$ x(t)=f(0)\,g(t)+\int_0^t g(t-\tau)\,f'(\tau)\,d\tau $$
+で求まる。（工学ではこれを<strong>デュアメルの積分</strong>と呼ぶこともある。）
+</div>
+
+<hr>
+<h2>15.8　章末例題</h2>
+<div class="ex">
+<span class="label">例 15.2（2つの方法の一致を確認する）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex15-2">完了</label>　例15.1 のシステム $y''+3y'+2y=f(t)$（初期静止）に、入力 $f(t)=e^{-3t}$ を与えたときの応答 $x(t)$ を、(a) 直接ラプラス変換する方法、(b) 15.7 のたたみ込み公式、<strong>両方の方法</strong>で求め、一致することを確かめよ。
+<div class="proof">
+<strong>(a) 直接法</strong>　$F(s)=\dfrac1{s+3}$、$Z(s)=(s+1)(s+2)$ より
+$$ \hat x(s)=\frac{F(s)}{Z(s)}=\frac{1}{(s+1)(s+2)(s+3)}=\frac{A}{s+1}+\frac{B}{s+2}+\frac{C}{s+3}. $$
+$1=A(s+2)(s+3)+B(s+1)(s+3)+C(s+1)(s+2)$。$s=-1$：$1=A\cdot1\cdot2\Rightarrow A=\tfrac12$。$s=-2$：$1=B\cdot(-1)\cdot1\Rightarrow B=-1$。$s=-3$：$1=C\cdot(-2)(-1)\Rightarrow C=\tfrac12$。
+$$ x(t)=\frac12e^{-t}-e^{-2t}+\frac12e^{-3t}. $$
+</div>
+<div class="proof">
+<strong>(b) たたみ込み公式（15.7）</strong>　$f(0)=1$、$f'(t)=-3e^{-3t}$、$g(t)=\tfrac12-e^{-t}+\tfrac12e^{-2t}$（例15.1）なので
+$$ x(t)=g(t)+\int_0^t g(t-\tau)\big(-3e^{-3\tau}\big)\,d\tau. $$
+被積分関数を $g(t-\tau)=\tfrac12-e^{-(t-\tau)}+\tfrac12e^{-2(t-\tau)}$ とおき、3項に分けて積分する。<br>
+<strong>第1項</strong>：$\displaystyle-\frac32\int_0^te^{-3\tau}d\tau=-\frac32\Big[-\frac13e^{-3\tau}\Big]_0^t=\frac12\big(e^{-3t}-1\big)$。<br>
+<strong>第2項</strong>：$\displaystyle3e^{-t}\int_0^te^{\tau}e^{-3\tau}d\tau=3e^{-t}\int_0^te^{-2\tau}d\tau=3e^{-t}\Big[-\frac12e^{-2\tau}\Big]_0^t=-\frac32e^{-t}\big(e^{-2t}-1\big)=-\frac32e^{-3t}+\frac32e^{-t}$。<br>
+<strong>第3項</strong>：$\displaystyle-\frac32e^{-2t}\int_0^te^{2\tau}e^{-3\tau}d\tau=-\frac32e^{-2t}\int_0^te^{-\tau}d\tau=-\frac32e^{-2t}\big[-e^{-\tau}\big]_0^t=-\frac32e^{-2t}\big(1-e^{-t}\big)=-\frac32e^{-2t}+\frac32e^{-3t}$。<br>
+<strong>合計（積分部分）</strong>：$e^{-3t}$ の係数 $\tfrac12-\tfrac32+\tfrac32=\tfrac12$、$e^{-t}$ の係数 $\tfrac32$、$e^{-2t}$ の係数 $-\tfrac32$、定数 $-\tfrac12$。
+$$ \int_0^tg(t-\tau)(-3e^{-3\tau})d\tau=\frac12e^{-3t}+\frac32e^{-t}-\frac32e^{-2t}-\frac12. $$
+<strong>$g(t)$ を足す</strong>：$g(t)=\tfrac12-e^{-t}+\tfrac12e^{-2t}$ を加えると、定数 $\tfrac12-\tfrac12=0$、$e^{-t}$ の係数 $-1+\tfrac32=\tfrac12$、$e^{-2t}$ の係数 $\tfrac12-\tfrac32=-1$、$e^{-3t}$ の係数 $\tfrac12$。
+$$ x(t)=\frac12e^{-t}-e^{-2t}+\frac12e^{-3t}. $$
+</div>
+<div class="proof">
+<strong>(a) と (b) の比較</strong>　どちらも $x(t)=\dfrac12e^{-t}-e^{-2t}+\dfrac12e^{-3t}$ で完全に一致 ✓。直接法は速いが、$f(t)$ の変換 $F(s)$ が求まらない・複雑な場合には (b) のたたみ込み公式（ステップ応答さえ分かればよい）が有効である。
+</div>
+</div>
+
+<h2>15.9　演習問題</h2>
+<p>1 は第二移動定理の基本練習、2 は移動定理とステップ応答の組み合わせ、3 はデルタ関数のふるい落とし性質からラプラス変換を求める別ルートの確認です。</p>
+<ol>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill15-1">完了</label> $\mathcal L\big[U(t-2)\,e^{-(t-2)}\big]$ を第二移動定理を使って求めよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill15-2">完了</label> 例15.1 のシステム（$Z(s)=(s+1)(s+2)$）に、時刻 $t=1$ から始まるステップ入力 $f(t)=U(t-1)$ を与える。第二移動定理とステップ応答 $g(t)$ を使って、応答 $x(t)$ を求めよ。</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill15-3">完了</label> デルタ関数のふるい落とし性質 $\int_0^\infty f(t)\delta(t-a)dt=f(a)$（$a\ge0$）を認めて、$\mathcal L[\delta(t-a)]=\int_0^\infty e^{-st}\delta(t-a)dt$ を直接計算し、15.4 の結果 $e^{-as}$ と一致することを確かめよ。</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong>　$f(t)=e^{-t}$ とおくと $\hat f(s)=\dfrac1{s+1}$。第二移動定理 $\mathcal L[U(t-a)f(t-a)]=e^{-as}\hat f(s)$ に $a=2$ を代入して
+$$ \mathcal L\big[U(t-2)e^{-(t-2)}\big]=\frac{e^{-2s}}{s+1}. $$
+<br><br>
+<strong>2.</strong>　$f(t)=U(t-1)$ なので $F(s)=\dfrac{e^{-s}}{s}$（15.1、$a=1$）。応答は
+$$ \hat x(s)=\frac{F(s)}{Z(s)}=e^{-s}\cdot\frac{1}{sZ(s)}=e^{-s}\,\mathcal L[g(t)]. $$
+これは「$g(t)$ を $t$ 軸方向に $1$ だけ平行移動し、$t\le1$ で $0$ にしたもの」——第二移動定理をちょうど逆向きに読むと
+$$ x(t)=U(t-1)\,g(t-1)=U(t-1)\Big[\frac12-e^{-(t-1)}+\frac12e^{-2(t-1)}\Big]. $$
+<br>
+<strong>3.</strong>　ふるい落とし性質で「$t=a$ の値だけ」抜き出すと、被積分関数 $e^{-st}$ の $t=a$ での値がそのまま答えになる：
+$$ \int_0^\infty e^{-st}\delta(t-a)\,dt=e^{-sa}=e^{-as}. $$
+15.4 で $\varepsilon\to0$ の極限計算から得た結果と完全に一致 ✓。同じ結果に「極限を丁寧に計算するルート」と「ふるい落とし性質を認めて一瞬で求めるルート」の2通りで到達できることが確認できた。
+</div>
+</details>
+
+<hr>
+<h2>15.10　まとめ・チェックリスト</h2>
+<div class="box">
+<ul>
+  <li>□ ステップ関数 $U_a(t)=U(t-a)$ を定義し、$\mathcal L[U(t-a)]=e^{-as}/s$ を積分区間を縮めて導出できる。</li>
+  <li>□ 第二移動定理 $\mathcal L[U(t-a)f(t-a)]=e^{-as}\hat f(s)$ を置換積分で証明できる（第13回の $s$ 軸移動則とのペアであることを説明できる）。</li>
+  <li>□ 矩形波をステップ関数の無限和で表し、等比級数の和公式（望遠鏡和による導出込み）でラプラス変換できる。</li>
+  <li>□ パルス $h_\varepsilon(t)$ を2つのステップ関数の差として定義し、そのラプラス変換の $\varepsilon\to0$ 極限として $\mathcal L[\delta_a(t)]=e^{-as}$ を（微分の定義を使って）導出できる。</li>
+  <li>□ システムの微分方程式 $ay''+by'+cy=f(t)$ からインピーダンス $Z(s)=as^2+bs+c$ を導き、自由応答 $A(s)/Z(s)$ と強制応答 $F(s)/Z(s)$ に分解できる。</li>
+  <li>□ ステップ応答 $g(t)=\mathcal L^{-1}[1/(sZ(s))]$、インパルス応答 $h(t)=\mathcal L^{-1}[1/Z(s)]$ を定義・計算でき、$h=g'$ の関係を説明できる。</li>
+  <li>□ 第14回のたたみ込み定理を使って、一般入力への応答 $x(t)=f(0)g(t)+\int_0^tg(t-\tau)f'(\tau)d\tau$ を導出できる。</li>
+</ul>
+</div>
+
+<div class="navi" style="margin-top:18px">
+これで第13〜15回のラプラス変換パートが一区切りです。第9〜15回を通して、「フーリエ級数（周期関数）→ フーリエ変換（絶対可積分な関数）→ ラプラス変換（片側・因果的な関数）」という<strong>関数のクラスを広げながら同じ発想（変換して簡単な世界で処理し、逆変換で戻す）を繰り返し適用する</strong>流れを見てきました。期末試験は第14回までが範囲です。第15回の内容（今回）は試験範囲外ですが、制御・振動系を学ぶときにそのまま使える語彙なので、余裕があれば触れておくとよいでしょう。
+</div>
+
+<script>
+(function(){
+  var KEY = 'amII_prob_20';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  document.querySelectorAll('.prob-check').forEach(function(cb){
+    var id = cb.getAttribute('data-pid');
+    cb.checked = !!state[id];
+    cb.addEventListener('change', function(){
+      state[id] = cb.checked;
+      save();
+    });
+  });
+})();
+</script>
+</body>
+</html>

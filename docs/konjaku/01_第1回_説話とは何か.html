@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回 説話とは何か</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+<style>
+  /* 本科目用の追加（古典本文の組版のみ。雛形CSSは変更しない） */
+  .orig{ font-family:var(--mincho); font-size:16.5px; line-height:2.1; background:rgba(255,255,255,.55); padding:10px 16px; margin:8px 0; }
+  .orig .ttl{ font-weight:700; color:var(--accent); display:block; margin-bottom:4px; }
+  .orig .uta{ display:block; margin:8px 0 8px 2em; }
+  .trans{ font-size:14.5px; }
+  .gloss{ font-size:13.5px; color:var(--sub); }
+  table.tb.l td{ text-align:left; vertical-align:top; }
+  .tbwrap{ overflow-x:auto; }
+</style>
+</head>
+<body>
+<!-- 第1回 説話とは何か（改訂版：プリントの改良版として組み直し。2026-10-05） -->
+
+<figure class="hero">
+<img src="img/hero_01.jpg" alt="ブリューゲル《ネーデルラントの諺》。村の家並みと水辺に、諺を演じる大勢の人物が描きこまれている">
+<div class="ttl" style="left:auto;right:3%;top:3%;background:rgba(247,244,236,.86);padding:10px 20px;"><p class="vol">第1回</p><h1>説話とは何か</h1></div>
+<figcaption><p class="cap">百あまりの諺が一つの村に詰めこまれ、どの人物も一話ぶんの身ぶりだけを演じている。</p><p class="cr">Pieter Bruegel the Elder／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Pieter_Brueghel_the_Elder_-_The_Dutch_Proverbs_-_Google_Art_Project.jpg">Wikimedia Commons</a>（《ネーデルラントの諺》1559年、ベルリン絵画館）</p></figcaption>
+</figure>
+<p class="lead">第1回配布資料「説話とは何か ―『今昔物語集』を読む①」の範囲。この授業で使う道具＝術語「<strong>説話</strong>」を手に入れ、『伊勢物語』第六段と『今昔物語集』巻二十七第七話で実際に使ってみる回。<strong>説明の順序はプリントどおりではない</strong>：プリントは術語①〜④を先に示し、本文を後に置くが、本教材は<strong>先に時代と本文の読み方を準備し、二つの本文を読んでから</strong>、術語を一つずつ同じ二話に当てはめる（定義を読んだ直後に「使ってみる」相手がいるようにするため）。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：<br>
+【準備】『今昔物語集』は12世紀前半（院政期）の説話集である（1章）。漢字片仮名交じり文と古文の要点を押さえる（2章）<br>
+→ 【本文】同じ「鬼一口」の話を、『伊勢物語』と『今昔物語集』で逐語的に読む（3章）<br>
+→ 術語「説話」①：<span class="key">一話という単位</span>（4章）　②：<span class="key">事実として受け取られる</span>性格（5章）――一話だけで確かめられる<br>
+→ 【比較】二話を並べると、何が足され、何が削られ、意味づけが反転したかが本文の語句で示せる（6章）<br>
+→ ③：一話は時代をまたいで<span class="key">話群・話型</span>として動く＝動態（7章）　④：ある主体が集めて<span class="key">説話集</span>に固定する＝静態（8章）――比べて初めて見える<br>
+→ プリントの「術語『説話』のまとめ」11項目を、各章に対応させて整理する（9章）
+</div>
+
+<div class="box"><span class="label">この回で使う前提</span>
+<ul>
+<li><strong>仮定する</strong>：高校古典の初歩（歴史的仮名遣いが読める程度）。</li>
+<li><strong>この回で一から説明する</strong>：文学史の時代区分と院政期（1章）、漢字片仮名交じり文の読み方（返読・宛字）、古文文法の要点（え〜打消、まし、けり、なむ〜連体形、〜とや、にや有けむ）、登場人物（2章）。</li>
+</ul></div>
+
+<div class="box"><span class="label">授業の狙いと方法（プリントより）</span>
+<ul>
+<li>毎回、『今昔物語集』の<strong>一・二話を読み</strong>、<strong>説話・説話集に関わるトピック</strong>（享受史・凡例・世界認識・翻訳・同話・「今は昔」・仏法と王法・文体・空白・標題・配列・恐怖譚・和歌説話）を一つずつ扱う。15回の計画は<a href="index.html">目次</a>を参照。</li>
+<li>プリントの言い方では、<strong>「見えているのに見えていないもの」</strong>を見えるようにすることが狙いである。本教材では、その「見る」ための道具が術語だと考えて、術語の定義と使い方に重心を置く。</li>
+</ul></div>
+
+<div class="warn"><span class="label">評価について（要確認）</span>
+シラバスでは「レポート提出2回（30%）・期末（70%）」。第1回プリントでは「①毎回の授業を受けて、各自の興味関心につきコメントを作成（50〜400字程度、1週間以内）②全体の授業を受けてレポート作成 ③中間（主にコメントの分量増量）④期末：一話を具体的に取り上げ、関心のあるテーマについて自由に記述。<strong>必ず本文を引用し、出典として新日本古典文学大系を使用</strong>」とある。両者は細部が一致しないので、正確な配点は授業内の説明で確認すること。
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>準備：『今昔物語集』とその時代</h2>
+<p>プリントは『今昔物語集』の「前提となるもの」を二つ挙げる。<strong>ジャンル＝説話集・説話</strong>、<strong>時代＝中世（中古）</strong>。ジャンルのほうは、この回の主題そのものなので4〜8章で組み立てる。ここでは先に、本の基本的な事実と、時代の位置を確かめておく。</p>
+
+<h3><span class="no">1.1</span>基本的な事実</h3>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:18%">事項</th><th>内容</th></tr>
+<tr><td>成立</td><td><strong>12世紀前半（院政期）とされる</strong>。事典によって幅があり、「12世紀初頭」「1120年（保安元年）以降まもなく、白河院政のころ」「1130〜40年頃か」などと書かれる。シラバスは「12世紀初頭」。</td></tr>
+<tr><td>編者</td><td><strong>未詳</strong>。源隆国（宇治大納言）を編者とする説は、『宇治拾遺物語』序にいう『宇治大納言物語』と本書を同一視したことによるが、隆国の没後の記事を含むことなどから、そのままでは受け入れられないとされる。鳥羽僧正覚猷説もある。貴族か僧侶か、単独か複数かも決着していない。</td></tr>
+<tr><td>構成</td><td>全31巻（巻八・十八・二十一を欠く）。<strong>天竺（インド）＝巻一〜五、震旦（中国）＝巻六〜十、本朝（日本）＝巻十一〜三十一</strong>。それぞれを仏法と世俗に分ける。</td></tr>
+<tr><td>話数</td><td>1059話（標題だけ残って本文を欠く19話を含む）。一般向けには「一千余話」と言う。</td></tr>
+<tr><td>形式</td><td>各話は「<strong>今ハ昔</strong>」で書き起こし、「<strong>トナム語リ伝ヘタルトヤ</strong>」で結ぶ。漢字を大きく、片仮名を小さく添える書き方（<strong>片仮名宣命体</strong>）で書かれる（2章）。文中には意図的な欠字（空白）が多い（第10回「空白」）。</td></tr>
+<tr><td>巻二十七</td><td>「本朝 付霊鬼」。霊や鬼の怪異を集めた巻。今回読む話はその第七「在原業平中将女被噉鬼語」。</td></tr>
+<tr><td>伝本</td><td>現存最古の写本は<strong>鈴鹿本</strong>（鎌倉中期の書写、国宝、京都大学附属図書館蔵）。巻二・五・七・九・十・十二・十七・<strong>二十七</strong>・二十九の9冊が残り、巻二十七を含む。「今昔物語集」という書名は、この本によって確定できるとされる。</td></tr>
+<tr><td>刊本</td><td>江戸時代に井沢長秀（蟠竜）考訂『今昔物語』が<strong>本朝部のみ</strong>刊行された（享保18年＝1733年刊。前編は享保5年＝1720年刊かともいわれ、資料に揺れがある）。それまでは写本で、ごく限られた読者にしか読まれなかったとされる。</td></tr>
+<tr><td>引用に使う本</td><td>巻二十七は<strong>新日本古典文学大系37『今昔物語集 五』</strong>（森正人校注、岩波書店、1996）。『伊勢物語』は<strong>新日本古典文学大系17『竹取物語 伊勢物語』</strong>（堀内秀晃・秋山虔校注、1997。底本は学習院大学蔵伝定家筆本＝天福本）。</td></tr>
+</table></div>
+<p class="meta">出典：『日本大百科全書（ニッポニカ）』「今昔物語集」（森正人）、『改訂新版 世界大百科事典』「今昔物語集」（出雲路修）、『精選版 日本国語大辞典』、『山川 日本史小辞典』（いずれもコトバンク）。鈴鹿本は文化遺産オンライン（文化庁）の解説、刊本は国立国会図書館の書誌による。新大系の書誌はNDLサーチによる。新大系37の巻二十七の底本が鈴鹿本かどうかは、本教材では未確認。</p>
+<div class="warn"><span class="label">よくある誤解：「作者は源隆国」</span>古い入門書や江戸の版本（「源隆國撰」と記す）にはそう書かれていることがあるが、上の表のとおり、現在は<strong>編者未詳</strong>とするのがふつうである。試験やレポートで編者名を断定して書かないこと。</div>
+
+<h3><span class="no">1.2</span>時代区分の中の「中世（中古）」</h3>
+<p>文学史では、時代を<strong>上代・中古・中世・近世・近代・現代</strong>に分けるのが一般的である（おおよそ、上代＝奈良時代まで、中古＝平安時代、中世＝鎌倉〜室町時代、近世＝江戸時代）。12世紀前半の『今昔物語集』は平安時代末期なので、区分のうえでは「中古」に属する。それでもプリントが「中世（中古）」と<strong>両方を書いている</strong>のは、この本が二つの区分の境目に立つためと考えられる（境目であることの中身は次の1.3、説話が中世の文学を動かすという面は7.4で扱う）。</p>
+<div class="warn"><span class="label">よくある誤解：「『今昔』は中世の作品だ」と言い切る</span>年代の区分では中古（平安時代末）に入る。プリントの「中世（中古）」は、年代だけでなく<strong>説話という文学の性格</strong>の面から中世の側にも数えうる、という含みで読むのが安全である。どちらか一方に断定して書くより、「中古末（院政期）の成立で、中世文学への橋渡しとなる」のように書くほうが誤りがない。</div>
+
+<h3><span class="no">1.3</span>院政期という時代</h3>
+<p>12世紀前半は、白河上皇が院政を始めた（1086年）あとの<strong>院政期</strong>にあたる。本は人の手で一冊ずつ書き写す<strong>写本</strong>で伝わり、『今昔物語集』も江戸時代に刊行されるまで、写本で細々と伝わった（1.1）。この時代背景については、受講者の質問から書き足した次の囲みで詳しく見る。</p>
+
+<div class="why"><span class="label">🙋 質問から追加：『今昔物語集』はどんな時代に生まれたのか（歴史的な文脈）</span>
+<p><strong>授業メモ</strong>：文学の時代区分は、歴史の時代区分、つまり<strong>権力の所在</strong>と一致している。中世と近世のあいだには<strong>出版</strong>という大きな変化がある。</p>
+<p><span class="step">STEP 1</span>　<strong>時代区分＝「誰が権力を握っていたか」</strong>。区分の境目は、権力が別の担い手へ移った時点に置かれている。</p>
+<table class="tb l">
+<tr><th>文学史の区分</th><th>おおよその時代</th><th>権力の所在</th></tr>
+<tr><td>上代</td><td>奈良時代まで</td><td>天皇と、律令による朝廷（都は大和）</td></tr>
+<tr><td>中古</td><td>平安時代（794〜）</td><td>平安京の貴族政権。藤原氏の摂関政治 → 上皇の院政</td></tr>
+<tr><td>中世</td><td>鎌倉・室町時代（12世紀末〜）</td><td>武士の政権（幕府）が並び立ち、やがて主導する</td></tr>
+<tr><td>近世</td><td>江戸時代（1603〜）</td><td>江戸幕府による統一的な武家支配</td></tr>
+<tr><td>近代</td><td>明治以降</td><td>近代国家（天皇を元首とする立憲体制）</td></tr>
+</table>
+<p><span class="step">STEP 2</span>　<strong>『今昔』は「中古の最後、中世の直前」に置かれる</strong>。12世紀前半は、白河上皇が院政を始めた（1086年）あとの<strong>院政期</strong>にあたる。権力は摂関家から上皇（院）へ移り、さらにその院や貴族が、地方で力をつけた<strong>武士</strong>を頼りはじめていた。数十年後には平氏が政権を握り、12世紀末に鎌倉幕府が開かれて「中世」に入る。つまり『今昔』は、貴族の世の内側で、次の担い手（武士）の足音が聞こえはじめた時代の本である。プリントが「中世（中古）」と両方を書くのは、この境目の位置のためと読める。</p>
+<p><span class="step">STEP 3</span>　<strong>その時代の空気が、集の中身に表れている</strong>（本教材の整理）。</p>
+<ul>
+<li><strong>武士・盗賊・庶民が登場する</strong>：本朝の世俗の巻々には、貴族だけでなく、武士や盗賊、地方の人々の話が多く入っている。都の外と下の世界へ関心が広がっていた。</li>
+<li><strong>仏教の不安と救い</strong>：1052年（永承7年）から仏法が衰える「末法」の世に入る、と当時は信じられていた。仏の教えのありがたさを説く話が集の大きな柱になっているのは、この不安と結びつけて読まれることが多い（第8回「仏法と王法」）。</li>
+<li><strong>天竺・震旦・本朝という三部構成</strong>：仏教がインドから中国、日本へ伝わった道筋を、そのまま本の骨組みにしている。当時の人が思い描いた「世界」の形である（第4回「世界認識」）。</li>
+<li><strong>鬼や霊の話</strong>：今回読んだ巻二十七のように、荒れた屋敷や知らない土地の怪異が集められている。都の秩序がゆらぎ、その外側への恐れと好奇心が強まった時代、と重ねて読むこともできる。</li>
+</ul>
+<p><span class="step">STEP 4</span>　<strong>中世と近世のあいだの「出版」</strong>。中世までの本は、人が一冊ずつ書き写す<strong>写本</strong>で伝わった。読める人も部数もごくわずかである。江戸時代に入ると木版印刷による<strong>商業出版</strong>が広がり、同じ本が大量に、町の人々にも行きわたるようになった。『今昔物語集』も写本で細々と伝わったのち、18世紀前半に本朝の部が版本として刊行され、ひろく読まれる道が開けたとされる（PHOTO 5 の江戸時代の挿絵本は、この流れの中にある）。「誰が読めたか」が大きく変わるので、近世は「書き写す時代」から「刷って売る時代」への境目でもある。この話の続きは第2回「享受史」。</p>
+<p class="note">※ 年代は一般的な日本史の知識による。STEP 3 の「時代の空気」との結びつけは本教材の整理であり、授業での説明を優先すること。版本刊行の具体的な書名・年は未確認。</p>
+</div>
+<p class="note">※ 上の囲みの末尾で「未確認」とした版本については、その後の調べで、井沢長秀考訂『今昔物語』（本朝部のみ、享保18年＝1733年刊。前編は享保5年刊かともいう）であることを確認した（1.1の表と出典）。</p>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/a2_suzukabon_kan27.jpg" alt="鈴鹿本『今昔物語集』巻二十七の写本頁の影印" loading="lazy"></div>
+<p class="cap">鈴鹿本の巻二十七は、霊と鬼の話ばかりを集めた一巻を、古い写本のかたちで今に伝えている。</p>
+<p class="cr">岩波書店『日本古典文学大系』付録の影印／CC0（Commonsの記載による）／<a href="https://commons.wikimedia.org/wiki/File:KonjakuMonogatarisyu_codex_Suzuka.png">Wikimedia Commons</a>（巻二十七第二十六話の頁）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/b2_grandcanyon.jpg" alt="グランドキャニオンの断崖に、水平な地層が幾重にも重なっている" loading="lazy"></div>
+<p class="cap">地層は時代の名で呼ばれるが、境目の一枚はいつも上と下の両方に属している。</p>
+<p class="cr">United States Geological Survey／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Great_Angular_Unconformity_Grand_Canyon.jpg">Wikimedia Commons</a>（グランドキャニオンの大不整合）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>準備：二つの本文の読み方</h2>
+<p>3章で読む二つの本文は、見た目からして違う。『伊勢物語』は<strong>平仮名を主とする和文</strong>、『今昔物語集』は<strong>漢字片仮名交じり文</strong>である。後者は慣れないと一行も進めないので、読み方の規則を先にまとめる。</p>
+
+<h3><span class="no">2.1</span>平仮名の和文と、漢字片仮名交じり文</h3>
+<div class="def"><span class="label">定義（片仮名宣命体）</span>漢字で語の中心（名詞・動詞の語幹など）を大きく書き、助詞・助動詞・活用語尾を<strong>片仮名で小さく</strong>添える書き方。もとは天皇の命令文（宣命）の表記法に由来する名で、『今昔物語集』の本文はこの形で書かれている（『精選版 日本国語大辞典』）。</div>
+<p>写本では片仮名が漢字の右下に小さく添えられている（PHOTO 1 の鈴鹿本の頁、PHOTO 4 の写本の頁で見られる）。本教材の原文は、読みやすさのため片仮名を本文と同じ大きさで組んでいる。漢字だけを拾うと漢文のように見え、片仮名だけを拾うと助詞・助動詞の列になる。<strong>漢字を和語で読み、片仮名で活用と助詞を補う</strong>、というのが基本の読み方である。</p>
+
+<h3><span class="no">2.2</span>返読と宛字</h3>
+<p>漢字片仮名交じり文には、漢文の名残で<strong>下から返って読む字</strong>（返読文字）がある。「不」「可」「被」は、書かれた位置では読まず、後ろの語を読んでから戻って読む。片仮名の送り仮名が、どう読むかの手がかりになる。</p>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:18%">書き方</th><th style="width:30%">読み方</th><th>本文（巻二十七第七）の例</th></tr>
+<tr><td>不〜ズ／不〜ヌ／不〜ザリ…</td><td>後ろの動詞を読んでから、打消「ず」で読む。送り仮名がその活用形を示す。</td><td>世ニ<b>不知ズ</b>（しらず）／人モ<b>不住ヌ</b>（すまぬ）／音モ<b>不為ザリケレバ</b>（せざりければ）／案内<b>不知ザラム</b>（しらざらむ）／着物ヲモ<b>不取敢ズ</b>（とりあへず）</td></tr>
+<tr><td>可〜キ</td><td>「べき」と読む（「べし」の連体形）。</td><td><b>可将隠キ</b>所（ゐてかくるべき）／<b>可立寄キ</b>様（たちよるべき）</td></tr>
+<tr><td>不〜マジキ</td><td>「まじき」と読む。「不」は打消の意を示す字で、読みは「マジ」に含まれる。</td><td>努々<b>不立寄マジキ</b>也（たちよるまじきなり）</td></tr>
+<tr><td>不可〜ズ</td><td>「べからず」と読む。</td><td>宿セム事ハ<b>不可思懸ズ</b>（おもひかくべからず）</td></tr>
+<tr><td>被〜</td><td>受身「る・らる」で読む。</td><td>女<b>被噉</b>鬼（おににくらはるる）</td></tr>
+</table></div>
+<p>また、和語に<strong>意味の近い漢語・漢字を当てる宛字</strong>が多い。字面の音読みで読むと誤る。</p>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:22%">本文の字</th><th style="width:22%">読み</th><th>意味・注意</th></tr>
+<tr><td>微妙シ／微妙ク</td><td>めでたし／めでたく</td><td>すばらしい。仏典で「すぐれて妙なる」意の漢語「微妙」を当てたもの。</td></tr>
+<tr><td>仮借シ</td><td>けさうし</td><td>「懸想（けさう）す」＝恋い慕って言い寄る。音の近い「仮借」を当てる。</td></tr>
+<tr><td>奇異ク</td><td>あさましく</td><td>思いもよらず、あきれるほど。</td></tr>
+<tr><td>祖共</td><td>おやども</td><td>親たち。</td></tr>
+<tr><td>美</td><td>うるはし</td><td>端正で美しい。</td></tr>
+<tr><td>将（将行テ・可将隠キ）</td><td>ゐる（ゐて）</td><td>「率る」＝連れる。</td></tr>
+</table></div>
+<p class="meta">読みのうち、美（うるはし）・仮借（けさう）・祖（おや）・傅（かしづき）・繚（わづらひ）・喤（ののしり）・奇異（あさまし）・去（い）・宿（やどり）は、芳賀矢一『攷証今昔物語集』のルビ（やたがらすナビの電子化本文による）で確認した。微妙シ（めでたし）・被噉（くらはるる）・将（ゐる）・アゼ倉（あぜくら）は、照合先に読みの注記がなく、<strong>読みは通行の訓による</strong>。</p>
+
+<h3><span class="no">2.3</span>この回で使う文法</h3>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:20%">形</th><th style="width:34%">働き</th><th>本文の例と訳</th></tr>
+<tr><td>え〜打消</td><td>副詞「え」＋打消（ず・じ・まじ）で<strong>不可能</strong>「〜できない」。</td><td>女の<b>え得まじかり</b>ける（手に入れられそうになかった）／<b>え聞かざり</b>けり（聞くことができなかった）</td></tr>
+<tr><td>けり</td><td>過去の伝聞「〜たそうだ」と、気づき・詠嘆「〜だったのだ」。</td><td>男あり<b>けり</b>（いたそうだ）／鬼とはいふなり<b>けり</b>（言ったのだった）</td></tr>
+<tr><td>係り結び（なむ・か〜連体形）</td><td>係助詞「なむ」（強調）「か」（疑問）があると、文末が<strong>連体形</strong>になる。</td><td>「かれは何ぞ」と<b>なむ</b>男に問ひ<b>ける</b>／片戸ハ倒レテ<b>ナム</b>有<b>ケル</b>／何ニシテ<b>カ</b>構ヘ<b>ケム</b></td></tr>
+<tr><td>未然形＋なむ</td><td>終助詞「なむ」＝<strong>他への願望</strong>「〜してほしい」。</td><td>はや夜も明け<b>なむ</b>（早く夜が明けてほしい）</td></tr>
+<tr><td>（な）まし（ものを）</td><td>反実仮想「（実際はそうでないが）〜だったらよかったのに」。</td><td>消え<b>なましものを</b>（消えてしまえばよかったのに）</td></tr>
+<tr><td>〜にや有けむ</td><td>断定「なり」の連用形「に」＋疑問「や」＋「あり」＋過去推量「けむ」。「〜だったのだろうか」。</td><td>鬼ノシケル<b>ニヤ有ケム</b>（鬼のしわざだったのだろうか）</td></tr>
+<tr><td>〜とや</td><td>「〜と言ふにや」の略。<strong>伝聞</strong>で結ぶ「〜とかいうことだ」。</td><td>后のただにおはしける時<b>とや</b>／語リ伝ヘタル<b>トヤ</b></td></tr>
+</table></div>
+<div class="warn"><span class="label">よくある誤解：「え得まじ」の「得」を「え」と読む</span>「え」は副詞、「得」は動詞「う」（ア行下二段）である。「まじ」は終止形に付くので、「得」は終止形の「う」で読み、<strong>「えうまじかりける」</strong>となる。「ええまじ」と読むのは誤り。</div>
+
+<h3><span class="no">2.4</span>登場する人物</h3>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:24%">人物</th><th>本文での呼び方と、知っておくこと</th></tr>
+<tr><td>在原業平（ありわらのなりひら）</td><td>平安前期の歌人。六歌仙の一人。『今昔』は「右近ノ中将在原ノ業平」と実名で呼ぶ。『伊勢物語』は名を出さず「男」と書くが、業平の歌を多く含むため、古くから「男」は業平になぞらえて読まれてきた。</td></tr>
+<tr><td>二条の后（にじょうのきさき）＝藤原高子</td><td>のちに清和天皇の女御となり、陽成天皇の母となる。『伊勢』の後日談に名が出る。『今昔』は「或ル人ノ娘」としか書かない。</td></tr>
+<tr><td>堀河の大臣（ほりかわのおとど）＝藤原基経</td><td>高子の兄。のちの摂政・関白。</td></tr>
+<tr><td>国経（くにつね）＝藤原国経</td><td>高子・基経の長兄（「太郎」は長男の意）。のち大納言。</td></tr>
+</table></div>
+<p class="meta">人物の続柄・経歴は一般的な日本史の知識による（本教材では一次資料と照合していない）。『伊勢物語』の成立については、業平の没後に原形ができ、段階的に増補された（完成時期は説が分かれる）とされる（ニッポニカ「伊勢物語」鈴木日出男、世界大百科「伊勢物語」今井源衛）。</p>
+<div class="warn"><span class="label">よくある誤解：「『伊勢物語』は業平が書いた業平の日記だ」</span>作者・成立年は未詳である。主人公の「男」を業平とする読みは伝統的なものだが、作品自身はこの段で名を出していない。この違い（名を出すか出さないか）が、6章の比較の最初の項目になる。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>二つの「鬼一口」を読む</h2>
+<h3><span class="no">3.1</span>四つの問い</h3>
+<p>プリントは同じ筋の話を二つ並べ、まず四つの問いを投げる。</p>
+<ol>
+<li><strong>どちらが先か？</strong></li>
+<li><strong>鬼に食われたと信じるか？</strong></li>
+<li><strong>二つには関係があると思うか？</strong></li>
+<li><strong>二つは同じ話か、それとも違う話か？</strong></li>
+</ol>
+<p>どれも、二つの本文を正確に読まないと答えられない。ここでは答えを急がず、まず両方を逐語的に読む。答えは、1は6.3、2は5.3と6.4、3は6.3、4は7.3で出す。</p>
+
+<h3><span class="no">3.2</span>『伊勢物語』第六段「芥河」</h3>
+<div class="ex"><span class="label">原文と読み①　『伊勢物語』第六段</span>
+<div class="orig">
+<span class="ttl">六　芥河</span>
+むかし、男ありけり。女のえ得まじかりけるを、年を経てよばひわたりけるを、からうじて盗みいでて、いと暗きに来けり。芥河といふ河を率ていきければ、草の上に置きたりける露を、「かれは何ぞ」となむ男に問ひける。ゆく先多く、夜もふけにければ、鬼ある所とも知らで、神さへいといみじう鳴り、雨もいたう降りければ、あばらなる倉に、女をば奥におし入れて、男、弓・胡籙を負ひて戸口にをり。はや夜も明けなむと思ひつつゐたりけるに、鬼はや一口に食ひてけり。「あなや」といひけれど、神鳴るさわぎに、え聞かざりけり。やうやう夜も明けゆくに、見れば率て来し女もなし。足ずりをして泣けどもかひなし。
+<span class="uta">白玉か何ぞと人の問ひし時露とこたへて消えなましものを</span>
+これは、二条の后の、いとこの女御の御もとに、仕うまつるやうにてゐたまへりけるを、かたちのいとめでたくおはしければ、盗みて負ひていでたりけるを、御兄、堀河の大臣、太郎国経の大納言、まだ下臈にて内裏へ参りたまふに、いみじう泣く人あるを聞きつけて、とどめてとりかへしたまうてけり。それをかく鬼とはいふなりけり。まだいと若うて、后のただにおはしける時とや。
+</div>
+<p class="meta">出典：新日本古典文学大系17『竹取物語 伊勢物語』第六段。本文は配付プリントから書き起こした（字句の異同は3.4）。</p>
+<p><strong>現代語訳（自作）</strong></p>
+<p class="trans">昔、ある男がいた。とても手に入りそうにない女に、何年も求婚し続けていたが、やっとのことで盗み出して、ひどく暗い夜に逃げてきた。芥河という川のほとりを連れて行くと、女は草の上に置いた露を見て「あれは何？」と男に尋ねた。行く先はまだ遠く、夜も更けてしまったので、鬼のいる所とも知らず、雷までひどく鳴り、雨もはげしく降ってきたので、荒れた倉の奥に女を押し入れ、男は弓と胡籙を背負って戸口で見張っていた。早く夜が明けてほしいと思いながら座っていると、鬼がたちまち女を一口に食べてしまった。女は「あれえ」と叫んだが、雷の騒ぎで男には聞こえなかった。だんだん夜が明けてきて見ると、連れてきた女がいない。地団駄を踏んで泣いたが、どうにもならない。</p>
+<p class="trans">（歌）「あれは白玉かしら、何かしら」とあの人が尋ねたとき、「露だよ」と答えて、自分も露のように消えてしまえばよかったのに。</p>
+<p class="trans">これは、二条の后が、いとこの女御のもとにお仕えするような形でいらしたのを、容貌がたいそう美しかったので、男が盗んで背負って出ていったところ、后の兄の堀河の大臣（藤原基経）と、長兄の国経の大納言が、まだ身分の低いころで内裏へ参上なさる途中、ひどく泣いている人がいるのを聞きつけて、引きとめて取り返しなさったのである。それをこのように「鬼」と言ったのだった。后がまだたいそう若く、入内前のふつうの身分でいらしたときのことだとか。</p>
+<p><strong>語注（自作）</strong></p>
+<ul class="gloss">
+<li><b>え得まじかりける</b>：（えうまじかりける）「え〜打消」で不可能。とても手に入れられそうになかった（2.3）。</li>
+<li><b>よばひわたりける</b>：「よばふ」＝求婚する。「わたる」＝ずっと〜し続ける。</li>
+<li><b>来けり</b>：（きけり）カ変「来」の連用形＋「けり」。</li>
+<li><b>神</b>：ここでは雷（かみなり）。</li>
+<li><b>知らで</b>：「で」は打消の接続助詞。知らないで。</li>
+<li><b>あばらなる</b>：荒れて、すきまだらけの。</li>
+<li><b>胡籙（やなぐい）</b>：矢を入れて背負う武具。歴史的仮名遣いでは「やなぐひ」。</li>
+<li><b>食ひてけり</b>：完了「つ」の連用形「て」＋「けり」。食べてしまった。</li>
+<li><b>足ずり</b>：地団駄を踏むこと。激しい悲嘆のしぐさ。</li>
+<li><b>二条の后</b>：藤原高子（たかいこ）。のちに清和天皇の后となる（2.4）。</li>
+<li><b>内裏</b>：ここは「うち」と読む（3.4）。宮中。</li>
+<li><b>ただにおはしける時</b>：まだ后になる前、ふつうの身分でいたとき。</li>
+</ul>
+</div>
+
+<p><strong>逐語の要所</strong>（文の骨組みを決める語だけを、品詞と働きで押さえる）</p>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:30%">本文</th><th>品詞・働き</th><th style="width:28%">読みに効くこと</th></tr>
+<tr><td>男あり<b>けり</b></td><td>過去の助動詞「けり」終止形（伝聞）。</td><td>語り手が見ていない昔の話として始まる。</td></tr>
+<tr><td>「かれは何ぞ」と<b>なむ</b>男に問ひ<b>ける</b></td><td>係助詞「なむ」→結びは「けり」の連体形「ける」。</td><td>女の問いを強調。歌の伏線になる。</td></tr>
+<tr><td>はや夜も明け<b>なむ</b></td><td>下二段「明く」未然形＋終助詞「なむ」（願望）。</td><td>男の不安な待ち方。</td></tr>
+<tr><td>鬼はや一口に食ひ<b>てけり</b></td><td>完了「つ」連用形＋「けり」。</td><td><strong>語り手が「鬼が食った」と断言</strong>している（推量の語がない）。</td></tr>
+<tr><td><b>え</b>聞か<b>ざり</b>けり</td><td>副詞「え」＋打消「ず」連用形。</td><td>叫び声が聞こえなかった＝男は異変を知らない。</td></tr>
+<tr><td>消え<b>な</b><b>まし</b><b>ものを</b></td><td>完了「ぬ」未然形＋反実仮想「まし」＋接続助詞「ものを」（逆接・詠嘆）。</td><td>実際には消えなかった自分への悔い。</td></tr>
+<tr><td>鬼とはいふなり<b>けり</b></td><td>断定「なり」連用形＋「けり」（気づき）。</td><td>前半の「鬼」を<strong>言い直す</strong>（実は兄たちだった）。</td></tr>
+<tr><td>后のただにおはしける時<b>とや</b></td><td>格助詞「と」＋係助詞「や」（下に「言ふ」などが略される）。</td><td>伝聞で結ぶ。</td></tr>
+</table></div>
+
+<h3><span class="no">3.3</span>『今昔物語集』巻二十七第七</h3>
+<div class="ex"><span class="label">原文と読み②　『今昔物語集』巻二十七「在原業平中将女、被噉鬼語第七」</span>
+<div class="orig">
+<span class="ttl">在原業平中将女、被噉鬼語第七<span class="gloss">（ありはらのなりひらのちゅうじゃうのをむな、おににくらはるること）</span></span>
+今昔、右近ノ中将在原ノ業平ト云フ人有ケリ。極キ世ノ好色ニテ、世ニ有ル女ノ形チ美ト聞クヲバ、宮仕人ヲモ人ノ娘ヲモ見残ス無ク、員ヲ尽シテ見ムト思ケルニ、或ル人ノ娘ノ形チ・有様世ニ不知ズ微妙シト聞ケルヲ、心ヲ尽シテ極ク仮借シケレドモ、「止事無カラム聟取ヲセム」ト云テ、祖共ノ微妙ク傅ケレバ、業平ノ中将、力無クシテ有ケル程ニ、何ニシテカ構ヘケム、彼ノ女ヲ蜜ニ盗出シテケリ。<br>
+其レニ、忽ニ可将隠キ所ノ無カリケレバ、思ヒ繚テ、北山科ノ辺ニ旧キ山庄ノ荒テ人モ不住ヌガ有ケルニ、其ノ家ノ内ニ大ナルアゼ倉有ケリ。片戸ハ倒レテナム有ケル。住ケル屋ハ板敷ノ板モ無クテ、可立寄キ様モ無カリケレバ、此ノ倉ノ内ニ畳一枚ヲ具シテ、此ノ女ヲ具シテ将行テ臥セタリケル程ニ、俄ニ雷電霹靂シテ喤ケレバ、中将大刀ヲ抜テ、女ヲバ後ノ方ニ押遣テ、起居テヒラメカシケル程ニ、雷モ漸ク鳴止ニケレバ、夜モ曙ヌ。<br>
+而ル間、女、音モ不為ザリケレバ、中将怪ムデ見返テ見ルニ、女ノ頭ノ限ト着タリケル衣共ト許残タリ。中将、奇異ク怖シクテ、着物ヲモ不取敢ズ逃テ去ニケリ。<br>
+其レヨリ後ナム、此ノ倉ハ人取リ為ル倉トハ知ケル。然レバ、雷電霹靂ニハ非ズシテ、倉ニ住ケル鬼ノシケルニヤ有ケム。<br>
+然レバ、案内不知ザラム所ニハ、努々不立寄マジキ也。況ヤ、宿セム事ハ不可思懸ズトナム語リ伝ヘタルトヤ。
+</div>
+<p class="meta">出典：新日本古典文学大系37『今昔物語集 五』巻二十七第七。本文は配付プリントから書き起こした（字句の異同は3.4）。</p>
+<p><strong>現代語訳（自作）</strong></p>
+<p class="trans">今は昔、右近の中将在原業平という人がいた。たいへんな色好みで、世間で容貌が美しいと聞く女は、宮仕えの女房でも良家の娘でも残らず、ことごとく自分のものにしようと思っていた。ある人の娘が、容姿も様子も世に類のないほどすばらしいと聞いて、心を尽くして熱心に言い寄ったが、親たちが「高貴な婿を迎えよう」と言って大切に育てていたので、業平の中将は手の出しようがなかった。ところが、どう手はずを整えたのだろうか、その女をひそかに盗み出してしまった。</p>
+<p class="trans">しかし、すぐに連れて隠れられる場所がなかったので、思い悩んだ末、北山科のあたりに古い山荘が荒れて人も住んでいないのがあり、その敷地の中に大きな校倉（あぜくら）があった。片方の扉は倒れていた。人の住んでいた建物は床板もなく、立ち寄れそうになかったので、この倉の中に畳を一枚持ちこみ、女を連れて行って寝かせていたところ、急に雷がはげしく鳴りとどろいたので、中将は太刀を抜き、女を後ろのほうへ押しやって、起き上がって座ったまま太刀をきらめかせていた。そのうち雷もようやく鳴りやみ、夜も明けた。</p>
+<p class="trans">ところが、女が何の声も立てなかったので、中将が不審に思って振り返って見ると、女の頭だけと、着ていた衣類だけが残っていた。中将はあまりの異様さと恐ろしさに、自分の着物も取りあえず逃げ去った。</p>
+<p class="trans">それから後、この倉は人を取る倉だと知られるようになった。だから、あれは雷ではなく、倉に住んでいた鬼のしわざだったのだろうか。</p>
+<p class="trans">それゆえ、様子の分からない所には決して立ち寄ってはならない。まして泊まることなど思いもよらないことだ、と語り伝えているということだ。</p>
+<p><strong>語注（自作）</strong></p>
+<ul class="gloss">
+<li><b>今昔</b>：「いまはむかし」と読む。『今昔物語集』の各話に共通する書き出し。</li>
+<li><b>被噉鬼</b>：（おににくらはるる）鬼に食われる。「被」は受身（2.2）。読みは通行の訓による。</li>
+<li><b>形チ美ト</b>：（かたちうるはしと）容貌が端正で美しいと。</li>
+<li><b>員ヲ尽シテ</b>：（かずをつくして）数のかぎり、ことごとく。</li>
+<li><b>不知ズ微妙シ</b>：（しらずめでたし）類を知らないほどすばらしい。</li>
+<li><b>仮借シケレドモ</b>：（けさうしけれども）懸想して言い寄ったが。</li>
+<li><b>止事無カラム聟取</b>：（やむごとなからむむことり）高貴な身分の婿を迎えること。</li>
+<li><b>祖共</b>：（おやども）親たち。　<b>傅ケレバ</b>：（かしづきければ）大切に育てていたので。</li>
+<li><b>何ニシテカ構ヘケム</b>：（いかにしてかかまへけむ）どう手はずを整えたのだろうか。語り手の推量の挿入（係り結び「か〜けむ」）。</li>
+<li><b>蜜ニ</b>：（みそかに）ひそかに。照合先の多くは「密ニ」（3.4）。</li>
+<li><b>可将隠キ所</b>：（ゐてかくるべきところ）連れて隠れることのできる場所。</li>
+<li><b>思ヒ繚テ</b>：（おもひわづらひて）思い悩んで。</li>
+<li><b>アゼ倉</b>：校倉。断面が三角形の木材を井桁に組んで壁にした倉（PHOTO 3）。</li>
+<li><b>片戸</b>：両開きの戸の片方。</li>
+<li><b>雷電霹靂シテ喤ケレバ</b>：（らいでんへきれきしてののしりければ）雷がはげしく鳴りとどろいたので。</li>
+<li><b>ヒラメカシケル</b>：（太刀を）きらめかせていた。</li>
+<li><b>頭ノ限</b>：（かしらのかぎり）頭だけ。</li>
+<li><b>奇異ク</b>：（あさましく）あまりに意外で、あきれるほど。</li>
+<li><b>去ニケリ</b>：（いにけり）去ってしまった。</li>
+<li><b>案内</b>：（あんない）内部の事情・様子。</li>
+<li><b>宿セム事</b>：（やどりせむこと）泊まること。</li>
+<li><b>不可思懸ズ</b>：（おもひかくべからず）思いもかけてはならない（2.2）。</li>
+</ul>
+</div>
+
+<p><strong>逐語の要所</strong></p>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:30%">本文</th><th>品詞・働き</th><th style="width:28%">読みに効くこと</th></tr>
+<tr><td>今昔、…業平ト云フ人有<b>ケリ</b></td><td>「けり」終止形（伝聞）。</td><td>「今ハ昔」の型で始まる。</td></tr>
+<tr><td>何ニシテ<b>カ</b>構ヘ<b>ケム</b></td><td>係助詞「か」→過去推量「けむ」連体形。</td><td>語り手は<strong>経緯を知らない</strong>と明かしている。</td></tr>
+<tr><td>片戸ハ倒レテ<b>ナム</b>有<b>ケル</b></td><td>係助詞「なむ」→「けり」連体形。</td><td>荒れた倉の具体的な様子を強調。</td></tr>
+<tr><td>女、音モ<b>不為ザリケレバ</b></td><td>サ変「す」未然形＋打消「ず」連用形「ざり」＋「けれ」＋「ば」（確定条件）。</td><td>異変は<strong>音がしない</strong>ことでしか示されない。</td></tr>
+<tr><td>頭ノ限ト…衣共ト<b>許</b>残タリ</td><td>副助詞「許（ばかり）」＝〜だけ。</td><td>残ったものを示すだけで、鬼の姿は書かない。</td></tr>
+<tr><td>其レヨリ後<b>ナム</b>…知<b>ケル</b></td><td>係り結び。</td><td>後日の<strong>評判</strong>を根拠として挙げる。</td></tr>
+<tr><td>鬼ノシケル<b>ニヤ有ケム</b></td><td>断定「なり」連用形＋疑問「や」＋「あり」＋「けむ」。</td><td>鬼は<strong>推量</strong>として出る。</td></tr>
+<tr><td><b>努々</b>不立寄<b>マジキ</b>也／<b>況ヤ</b></td><td>副詞「ゆめゆめ」＋打消当然「まじ」：決して〜してはならない。「況ヤ」＝まして。</td><td>読者への<strong>教訓</strong>。</td></tr>
+<tr><td>トナム語リ伝ヘタル<b>トヤ</b></td><td>「なむ」の結びが「たる」（連体形）、さらに「とや」で伝聞。</td><td>教訓まで含めて<strong>伝聞の中</strong>に入れて閉じる。</td></tr>
+</table></div>
+
+<h3><span class="no">3.4</span>本文の字句について</h3>
+<div class="warn"><span class="label">本文について（照合の結果と未確認事項）</span>
+<p>原文は配付プリント（新日本古典文学大系系統の本文と考えられる）から書き起こし、ふりがなは省いた。公開されている校本・活字本と照合した結果、次の箇所で字句が異なる。<strong>どちらが新大系の本文かは確認できていない</strong>ので、教材の本文は書き起こしのまま残し、差を一覧にする。レポートで引用するときは必ず新日本古典文学大系の該当頁で確認すること。<strong>現代語訳と語注は本教材の自作</strong>で、プリントの注・訳を転記したものではない。</p>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:26%">本教材の字句</th><th>照合先の字句</th></tr>
+<tr><td colspan="2"><strong>『今昔物語集』巻二十七第七</strong></td></tr>
+<tr><td>女、音<b>モ</b>不為ザリケレバ</td><td>国史・攷証・明治刊のいずれも「モ」がない（「女音不為ザリケレバ」）。</td></tr>
+<tr><td><b>蜜</b>ニ盗出シテケリ</td><td>国史・攷証・史籍・明治刊はすべて「<b>密</b>ニ」。</td></tr>
+<tr><td>夜モ<b>曙</b>ヌ</td><td>国史・明治刊は「<b>曉</b>」、攷証は「曙」。意味はどちらも「明ける」。</td></tr>
+<tr><td>聟取<b>ヲセム</b></td><td>国史・史籍・明治刊は「ヲセム」で一致。やたナビの攷証本文は「聟取<b>らせむ</b>」（電子化の差か攷証の本文かは未確認）。</td></tr>
+<tr><td><b>住ケル</b>屋ハ</td><td>国史・明治刊は一致。やたナビの攷証本文は「屋は」（「住ける」なし）。</td></tr>
+<tr><td>見残ス無ク</td><td>攷証の校注に、「見残ス」の下に一本「事」、また一本「方」の字があるとの異本注記。</td></tr>
+<tr><td>大刀</td><td>国史・明治刊「大刀」、攷証「太刀」。</td></tr>
+<tr><td colspan="2"><strong>『伊勢物語』第六段</strong>（天福本との間に語句の差はない。表記の差のみ）</td></tr>
+<tr><td><b>内裏</b>へ参りたまふに</td><td>天福本は「<b>内</b>へまいりたまふに」（読みは「うち」）。</td></tr>
+<tr><td>となむ／明けなむ</td><td>天福本は「となん」「あけなん」（ん／む の表記差）。</td></tr>
+<tr><td>神鳴るさわぎに</td><td>天福本は「さはき」。歴史的仮名遣いに改めた形。</td></tr>
+<tr><td>（参考：伝本間の異同）</td><td>嵯峨本「夜も<b>ふけ</b>ゆくに」（天福本・武田本は「あけゆく」）、武田本「鬼とはいふ<b>なり</b>」「<b>おはしましける</b>」。本教材の本文はいずれも天福本どおり。</td></tr>
+</table></div>
+<p class="note">照合先：<b>国史</b>＝『国史大系』第16巻「今昔物語」（経済雑誌社、1901。本朝部は丹鶴叢書所収の校本を原とし、押小路家本・柳原家本等で校訂）／<b>攷証</b>＝芳賀矢一『攷証今昔物語集』下（冨山房、1921。底本は東京帝国大学所蔵・田中頼庸旧蔵本）。やたがらすナビの電子化本文（漢字平仮名交じりに改めたもの）で参照／<b>史籍</b>＝『史籍集覧』第9冊（1924。底本未確認）／<b>明治刊</b>＝『今昔物語集』巻第二十七（1882刊。底本未確認）／<b>天福本</b>＝池田亀鑑『伊勢物語に就きての研究 上（校本篇）』（1933）の底本本文＝三条西家旧蔵伝定家筆本（新大系17の底本と同じ本）／武田本＝Japanese Text Initiative（バージニア大学）／嵯峨本＝やたがらすナビ。いずれも国立国会図書館デジタルコレクションのテキスト等による。最古写本の鈴鹿本と、新大系の本文そのものは照合できていない。</p>
+</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/a3_kansai_akutagawa.jpg" alt="森寛斎《芥川図》。秋草の野を、男が女を背負って進む" loading="lazy"></div>
+<p class="cap">幕末明治の絵師は、鬼も倉も描かず、女を背負って草の野を分けていく一瞬だけを選んだ。</p>
+<p class="cr">森寛斎／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Akutagawa-zu_by_Mori_Kansai.jpg">Wikimedia Commons</a>（《芥川図》19世紀、山口県立美術館。Commonsの記載による）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/b3_vermeer_pearl.jpg" alt="フェルメール《真珠の耳飾りの少女》。振り向いた少女の耳に大粒の真珠が光る" loading="lazy"></div>
+<p class="cap">耳もとの白い粒は、真珠なのか光の露なのか、問われるたびに消えそうに光っている。</p>
+<p class="cr">Johannes Vermeer／Public domain／<a href="https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg">Wikimedia Commons</a>（《真珠の耳飾りの少女》1665年頃、マウリッツハイス美術館）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>術語「説話」①　一話という単位</h2>
+<h3><span class="no">4.1</span>動機：何を取り出して比べるのか</h3>
+<p>3章で読んだ二つの話を「比べる」には、まず、比べる相手を<strong>ひとまとまりとして切り出せる</strong>必要がある。『伊勢物語』は百二十余の段からなる一冊、『今昔物語集』は千余話の一冊である。その中から「この話」を指さして取り出すための語が、説話の第一の意味である。プリントには「<strong>この説話</strong>を見てください」「<strong>次の説話</strong>からこのような歴史的事実がわかる」「芥川は今昔物語集の<strong>説話</strong>を翻案した」という言い回しが並ぶ。どれも「説話」を<strong>数えられる一個のもの</strong>として扱っている。</p>
+
+<h3><span class="no">4.2</span>定義</h3>
+<div class="def"><span class="label">定義（説話①：プリント）</span>説話は、まず<strong>一話という単位</strong>をもつ話である。長編の「物語」に対して、短い「逸話」の側に立つ。<br>→ <strong>見分けるもの</strong>：どこからどこまでが「一つの話」か。</div>
+<div class="box"><span class="label">研究書・事典ではどう言うか</span>
+<ul>
+<li>『精選版 日本国語大辞典』は、「説話」はもと「話す」意で、現代では「『今昔物語集』などの説話集の類を構成する<strong>一話一話</strong>を指してもいう」とする。</li>
+<li>『日本大百科全書』「説話」（小島瓔禮）は、「文学のほうでは、説話といった場合には<strong>短編</strong>の説話をさし、<strong>長編</strong>のものは物語とよぶのが普通」とする。</li>
+</ul>
+<p>どちらも、プリントの①と同じく「一話の単位」「短さ」を挙げている。ここで定義は大きく分かれない（分かれるのは②以降。9.2）。<strong>試験ではプリントの言い方（一話という単位／物語と逸話）で答える</strong>。</p></div>
+
+<h3><span class="no">4.3</span>使ってみる：二話はどこで始まり、どこで閉じるか</h3>
+<ul>
+<li><strong>『今昔』巻二十七第七</strong>：標題「在原業平中将女被噉鬼語<strong>第七</strong>」が番号つきで一話を区切り、本文は「<strong>今昔</strong>」で始まり「<strong>語リ伝ヘタルトヤ</strong>」で閉じる。始まりと終わりの語が決まっているので、一話の範囲がはっきりしている。</li>
+<li><strong>『伊勢』第六段</strong>：「<strong>むかし、男ありけり</strong>」で始まり、歌のあとの後日談が「<strong>〜とや</strong>」で閉じる。段ごとに「むかし、男」で始めるので、これも一話として切り出せる。</li>
+</ul>
+<h3><span class="no">4.4</span>逐語で確かめる</h3>
+<p>『今昔』の標題の「<b>語</b>」は「ものがたり」と読まれ、一つの話を数える語として使われている（「〜語第七」＝第七の話）。冒頭の「今昔」と結びの「トナム語リ伝ヘタルトヤ」は、1.1で見たとおり全話に共通する型である。<strong>型が一話の両端を決めている</strong>――これが、説話①を本文の語句で確かめた結果である。『伊勢』の「むかし、男ありけり」も、ほとんどの段の冒頭に置かれる型である。</p>
+<div class="why"><span class="label">直感：なぜ「単位」から始めるのか</span>『源氏物語』を「この説話」とは呼ばない。長大で、一つの話として切り出せないからだ。逆に、短く「何がどうした」で閉じる話は、指さして取り出せる。取り出せるからこそ、別の本に移したり、書き換えたり、集めたりできる。説話のさまざまな性格は、この「取り出せる」ことから始まる。</div>
+<div class="warn"><span class="label">よくある誤解①：「短い話なら何でも説話」</span>短さ・一話性は説話の<strong>必要条件の一つ</strong>にすぎない。事典でも説話は「伝聞による報告」であること（小島瓔禮）や、伝承されることと組み合わせて説明される。現代の短編小説を「説話」と呼ばないのは、5章以下の性格（事実として受け取られる・伝わりながら変わる）をもたないからである。</div>
+<div class="warn"><span class="label">よくある誤解②：「『伊勢物語』は物語だから、その一段は説話ではない」</span>一概には言えない。『日本国語大辞典』は「説話文学」を広義には「中古の歌物語などをはじめ、その中に説話を含んでいるすべてのもの」とする。プリントの「<strong>枠組みの適用範囲</strong>」（9.1）は、まさに「説話という枠をどこまでの話に当てはめるか」を問う項目である。『伊勢』第六段を説話として扱えるかどうかは、決まった答えではなく、論じる側が立場を明らかにすべき問いである。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>術語「説話」②　事実と虚構のあいだ</h2>
+<h3><span class="no">5.1</span>動機：「本当の話か」を問うための語ではない</h3>
+<p>「その話は説話でしょ」と言うとき、人は「本当かどうか怪しい話」という含みをこめる。一方で「説話的な色彩を帯びる」「いかにも説話らしい」とも言う。どちらも、話の<strong>真偽</strong>ではなく、話の<strong>語られ方・受け取られ方</strong>の性格を言っている。3.1の問い「鬼に食われたと信じるか？」も、正解を当てる問いではなく、語り方を見るための問いとして読める。</p>
+
+<h3><span class="no">5.2</span>定義</h3>
+<div class="def"><span class="label">定義（説話②：プリント）</span>「説話」は<strong>虚構・作り話</strong>（その点では「物語」に近い）でありながら、<strong>事実に支えられる</strong>という性格をもつ。<br>→ <strong>見分けるもの</strong>：話が「事実として」語られ、受け取られる仕組み（事実性）。</div>
+<div class="box"><span class="label">研究書・事典ではどう言うか</span>
+<ul>
+<li>『日本大百科全書』「説話」（小島瓔禮）：説話は「体験的事実の報告ではなく、<strong>伝聞による報告</strong>であるところに特色」がある。</li>
+<li>『改訂新版 世界大百科事典』「今昔物語集」（出雲路修）：『今昔』は伝聞した事実を伝えることに専念している、という<strong>体裁</strong>をとり、末尾の評語まで伝聞として語られる。</li>
+</ul>
+<p>どちらも、「事実か虚構か」を判定するのでなく、<strong>事実として伝える形式</strong>を問題にしている。プリントの②もこの見方に近い。</p></div>
+
+<h3><span class="no">5.3</span>使ってみる：事実らしさはどの語句から生まれるか</h3>
+<div class="proof">
+<p><span class="step">STEP 1</span>　【固有名詞】『今昔』は「右近ノ中将在原ノ業平」と<strong>実名と官職</strong>を書き、「北山科ノ辺」と<strong>地名</strong>を書く。いつ・どこで・誰がを確かめられる形にしている。</p>
+<p><span class="step">STEP 2</span>　【残されたもの】「女ノ頭ノ限ト着タリケル衣共ト許残タリ」。鬼の姿ではなく、<strong>見えたもの</strong>だけを書く（副助詞「許」＝だけ）。</p>
+<p><span class="step">STEP 3</span>　【後日の評判】「其レヨリ後ナム、此ノ倉ハ人取リ為ル倉トハ知ケル」。人々が知るようになったという<strong>世間の知識</strong>を根拠にする。</p>
+<p><span class="step">STEP 4</span>　【推量と伝聞】「鬼ノシケルニヤ有ケム」と鬼は<strong>推量</strong>にとどめ、全体を「語リ伝ヘタルトヤ」と<strong>伝聞</strong>で閉じる。語り手は真偽を請け合わないまま、「あった話」として差し出している。</p>
+<p><span class="step">STEP 5</span>　【『伊勢』も事実を名乗る】『伊勢』の後日談「これは、二条の后の…とりかへしたまうてけり。それをかく鬼とはいふなりけり」は、実在の人物（基経・国経）を出して<strong>「本当はこうだった」</strong>と明かし、「〜とや」で結ぶ。こちらも事実の側から話を支えている。</p>
+<p class="qed">→ 二話とも、虚構まじりの出来事（鬼一口）を、事実の足場（実名・地名・後日の評判／実在の人物による種明かし）で支えている。説話②がそのまま見える。</p>
+</div>
+<div class="box"><span class="label">補足（教材独自の整理）</span>この回で読む二つの話は、どちらも在原業平（およびそれと分かる「男」）を主人公に立てる。実在の人物が「事実の足場」になり、鬼に食われるという出来事が「虚構まじり」の部分になる。ただし、どちらの「事実」が史実かは、本文からは決められない（下のよくある誤解）。</div>
+<div class="box"><span class="label">授業メモ：説話の事実性</span>説話には<strong>事実性</strong>がある。説話は<strong>事実として受け止められる</strong>。
+<p>ポイントは、「実際に起きたかどうか」ではなく、<strong>聞き手・読み手がそれを本当にあったこととして受け取る</strong>、という受け止め方の側にあることである（本教材の整理）。『今昔』巻二十七第七でいえば、「在原業平」という実名、「北山科」という地名、「其レヨリ後ナム、此ノ倉ハ人取リ為ル倉トハ知ケル」という後日の評判、「語リ伝ヘタルトヤ」という結び――どれも、話を「本当にあったこと」として受け取らせる仕掛けになっている。だからこそ結びの「知らない所に立ち寄るな」という警告が、作り話の教訓ではなく<strong>実際に役立つ情報</strong>として働く（第9章「術語『説話』のまとめ」の「事実性」「情報の利用」）。</p>
+<p class="note">※後半の作品への当てはめは本教材の解釈。</p></div>
+<div class="box"><span class="label">✎ 個人的メモ：事実性は何に寄与しているのか――説話とメディア</span>
+<p>現代の新聞やネットニュースなどの報道型メディアには事実性がある。それは記者によって編纂されている。そして、事実と異なることもある。説話とメディアを比較すると、何が得られるだろうか。</p>
+<p>アメリカで起きた事件が本当に事実なのかは、わからないはずだ。それでも多くの人は、何かを信頼して事実としてそれを受け取る。では、『今昔物語集』を読む人は、何を信頼して説話を聞いているのだろうか。そもそも、そんな信頼は必要ではないのだろうか。</p>
+<p>芸能人のスキャンダルにも事実性がある。こう考えると、事実性はとても重要だ。私たちは記者を信頼しているから事実として受け入れているのではなく、<strong>事実性があるから事実として受け入れている</strong>のかもしれない。では、事実性はどこから生まれているのだろうか。具体的な地名と人名だろうか。</p>
+<p><span class="step">応答（Claude による整理）</span>　事実性を生むものを分けてみると――</p>
+<ol>
+<li><strong>固有名詞</strong>：人名・地名・時（業平・北山科／ニュースの5W1H）。</li>
+<li><strong>語りの型</strong>：「〜トヤ（〜とかいうことだ）」「関係者によると」。伝聞と明示すると、真偽の責任を語り手から外したまま「あった話」として流通できる。</li>
+<li><strong>証拠・痕跡</strong>：残された「頭ト衣」、「人取リ為ル倉」として知られた場所（報道写真に相当）。</li>
+<li><strong>ありそうさ</strong>：受け手の思いこみの枠組み（スキーマ）に合う話は信じられやすい。スキャンダルが信じられやすいのもこれ（読み物コラム第三章のバートレット実験）。</li>
+</ol>
+<p>「信頼は必要か」については、真偽をいったん保留したまま、<strong>「あった話として扱う」という約束だけで流通する</strong>、と考えると、説話も噂も報道も同じ仕組みで比べられる。比べる問いを「本当か」から「その話は何の役に立っているか（警告・教訓・話の種）」へ移すと、説話とメディアの比較は実りが大きくなりそうである。</p>
+<p class="note">※上半分は受講者の個人的メモ（原文のまま、改行のみ整理）。応答部分は本教材の解釈で、授業の説明ではない。コメント・レポートの種として残す。</p>
+</div>
+<div class="warn"><span class="label">よくある誤解①：「事実性がある＝史実である」</span>事実性は<strong>受け取られ方・語られ方</strong>の性格であって、史実であることの保証ではない。現に、『伊勢』は「鬼の正体は兄たちだった」と事実を名乗り、『今昔』は同じ出来事を「鬼ノシケルニヤ」と鬼の側へ寄せる。二つの「事実」は両立しないが、どちらの本文も事実として語っている。どちらが史実かは本文からは決められず、また説話を読むうえで決める必要もない。</div>
+<div class="warn"><span class="label">よくある誤解②：「説話＝作り話」</span>プリントは「虚構・作り話」と並べて「<strong>事実に支えられる</strong>」と書く。説話は純粋な虚構（物語）でも純粋な記録（歴史）でもなく、<strong>その間</strong>にある。「作り話だから説話」と書くと、定義の半分を落とすことになる。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>本文比較：何が足され、何が削られたか</h2>
+<p>4・5章は、二話を<strong>一話ずつ</strong>見れば確かめられた。ここからは二話を<strong>並べて</strong>見る。プリントは「両テキストの違いを書き出してまとめてみる」よう求め、「『伊勢物語』と比べた『今昔物語集』の表現の差」として八つの項目を挙げ、それを「<strong>説明・省略・事実・目的・意味づけ</strong>」という五つの種類で捉える。</p>
+
+<h3><span class="no">6.1</span>対応箇所を並べる</h3>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:18%">プリントの項目</th><th>『伊勢物語』</th><th>『今昔物語集』</th><th style="width:12%">種類</th></tr>
+<tr><td>男の説明追加</td><td>「むかし、男ありけり」――名前も身分も言わない。</td><td>「右近ノ中将在原ノ業平」「極キ世ノ好色ニテ」――名と官職と性格を書く。</td><td>説明</td></tr>
+<tr><td>芥川・白露の下りが省略</td><td>「芥河といふ河」「草の上に置きたりける露を、『かれは何ぞ』」</td><td>川も露も、女の問いも出てこない。</td><td>省略</td></tr>
+<tr><td>山荘の描写</td><td>「あばらなる倉」とだけ言う。</td><td>「北山科ノ辺」「旧キ山庄」「大ナルアゼ倉」「片戸ハ倒レテ」「板敷ノ板モ無クテ」「畳一枚」</td><td>事実（場所の具体化）</td></tr>
+<tr><td>太刀と弓</td><td>「弓・胡籙を負ひて戸口にをり」――戸口で外を守る。</td><td>「大刀ヲ抜テ、女ヲバ後ノ方ニ押遣テ…ヒラメカシケル」――雷に向かって刃を振る。</td><td>説明</td></tr>
+<tr><td>女の失踪・鬼一口</td><td>「鬼はや一口に食ひてけり」「あなや」――語り手が鬼を断言する。</td><td>「女ノ頭ノ限ト着タリケル衣共ト許残タリ」――残ったものを見せ、鬼は後で推測する。</td><td>事実</td></tr>
+<tr><td>和歌がない</td><td>「白玉か何ぞと…」の歌がある。</td><td>歌はない。</td><td>省略</td></tr>
+<tr><td>まとめがある</td><td>――</td><td>「人取リ為ル倉」「案内不知ザラム所ニハ、努々不立寄マジキ也」</td><td>目的・意味づけ</td></tr>
+<tr><td>後日談はない</td><td>「これは、二条の后の…それをかく鬼とはいふなりけり」――鬼の正体は兄たちだったと明かす。</td><td>正体明かしはない。鬼は鬼のまま。</td><td>省略・意味づけ</td></tr>
+</table></div>
+<p class="meta">表の左列はプリントの項目。中央・右の引用と「種類」の割り振りは本教材による（「種類」はプリントの「説明／省略／事実／目的／意味づけ」の五つを当てはめたもの）。</p>
+
+<h3><span class="no">6.2</span>一項目ずつ根拠を示し、術語に戻す</h3>
+<div class="proof">
+<p><span class="step">STEP 1</span>　【説明：人物】『伊勢』の「男ありけり」に対し、『今昔』は「在原ノ業平ト云フ人有ケリ。極キ世ノ好色ニテ」と、名・官職・性格を書く。「好色」という評価語があるので、盗み出しは<strong>この人物の性格から起きた出来事</strong>として説明される（「員ヲ尽シテ見ムト思ケル」も同じ方向）。→ <strong>説明</strong>。説話②の事実の足場（実名）も太くしている。</p>
+<p><span class="step">STEP 2</span>　【省略：芥河と露】『伊勢』の「芥河」「露」「かれは何ぞ」は、後の歌「白玉か何ぞと人の問ひし時露とこたへて」と<strong>語が一対一で響き合う</strong>（問ひ⇔問ひし、露⇔露、何ぞ⇔何ぞ）。つまり露のくだりは歌のための伏線である。『今昔』は歌を持たないので、この伏線も持たない。→ <strong>省略</strong>（二つの省略は連動している）。</p>
+<p><span class="step">STEP 3</span>　【事実：場所】「あばらなる倉」（荒れた倉）の一句に対し、「北山科ノ辺」「旧キ山庄」「大ナルアゼ倉」「片戸ハ倒レテナム有ケル」「板敷ノ板モ無クテ」。地名と建物の造りまで書くので、<strong>読者が現実の場所として思い描ける</strong>。結びの「人取リ為ル倉」という評判も、この場所の特定があって初めて意味をもつ。→ <strong>事実</strong>（説話②）。</p>
+<p><span class="step">STEP 4</span>　【説明：武器と身ぶり】『伊勢』の男は「弓・胡籙を負ひて戸口にをり」――外からの敵を防ぐ構え。『今昔』の中将は「大刀ヲ抜テ…ヒラメカシケル」――雷に向かって刃を振る。どちらも女を守ろうとするが、『今昔』では<strong>刀を振っているすぐ後ろで女が消える</strong>ので、守りが空振りに終わる怖さが強まる。→ <strong>説明</strong>（場面の描き方の具体化）。</p>
+<p><span class="step">STEP 5</span>　【事実：失踪】『伊勢』は「鬼はや一口に食ひてけり」と<strong>断定</strong>し（推量の語がない。3.2）、女の叫び「あなや」まで書く。『今昔』は「音モ不為ザリケレバ」（音がしない）→「見返テ見ルニ」→「頭ノ限ト…衣共ト許残タリ」と、<strong>中将が見たものの順</strong>に書き、鬼は書かない。→ <strong>事実</strong>（見えたことだけを示す語り方）。</p>
+<p><span class="step">STEP 6</span>　【省略：和歌】『伊勢』は歌「白玉か…消えなましものを」で男の悲嘆を言い表し、段の中心をそこに置く。『今昔』は「奇異ク怖シクテ…逃テ去ニケリ」で、悲しみではなく<strong>恐怖</strong>で男を退場させる。→ <strong>省略</strong>。</p>
+<p><span class="step">STEP 7</span>　【目的：まとめ】『今昔』だけが「然レバ、案内不知ザラム所ニハ、努々不立寄マジキ也。況ヤ、宿セム事ハ不可思懸ズ」と<strong>教訓</strong>を置く。「然レバ」（だから）でつなぐので、話全体がこの教訓の<strong>根拠</strong>として使われている。→ <strong>目的</strong>。</p>
+<p><span class="step">STEP 8</span>　【意味づけ：鬼の扱いの反転】『伊勢』は「鬼一口」と語ったあとで「それをかく鬼とはいふなりけり」と<strong>鬼を人間（兄たち）に読み替える</strong>（「なりけり」＝気づきの言い直し）。『今昔』は逆に「雷電霹靂ニハ非ズシテ、倉ニ住ケル鬼ノシケルニヤ有ケム」と、雷という説明を退けて<strong>鬼の方へ寄せる</strong>。同じ出来事に、正反対の意味づけがされている。→ <strong>意味づけ</strong>。</p>
+<p class="qed">→ 五つの種類をまとめると、『今昔』は<strong>人物と場所を具体化し（説明・事実）、歌とその伏線と種明かしを落とし（省略）、教訓を加えて（目的）、鬼を本物の鬼として意味づけた</strong>。</p>
+</div>
+
+<div class="def"><span class="label">定義（歌物語）</span>和歌を中心に置き、その歌が詠まれた事情を散文で語る物語。『伊勢物語』『大和物語』などを指す文学史の一般的な用語。</div>
+<p>STEP 1〜8 を、プリントの言葉に戻す。</p>
+<ul>
+<li><strong>歌物語と説話</strong>：『伊勢』第六段は、露の伏線（STEP 2）から歌（STEP 6）へと収束する。<strong>歌が話の到達点</strong>である。『今昔』は歌を持たず、教訓（STEP 7）が到達点である。</li>
+<li><strong>興味関心はどこにあるのか</strong>：『伊勢』は<strong>失った女への悲嘆</strong>（「足ずりをして泣けどもかひなし」と歌）に、『今昔』は<strong>危険な場所</strong>（北山科の倉、「人取リ為ル倉」）に関心がある。</li>
+<li><strong>方向性はどうか</strong>：『伊勢』は鬼を人間に解いて<strong>宮廷の恋の秘話</strong>の方へ、『今昔』は鬼を鬼のままにして<strong>怪異と警告</strong>の方へ向かう（STEP 8）。後者は巻二十七「本朝 付霊鬼」に収まる向きでもある（8章）。</li>
+<li><strong>変容</strong>：同じ出来事の骨組みを保ったまま、関心と方向性が入れ替わった。この「同じで違う」を言い表すのが、次の7章の説話③である。</li>
+</ul>
+<div class="why"><span class="label">直感：同じ話か、違う話か</span>骨組み（話型）だけを見れば同じ話。味つけ（関心・方向性）を見れば違う話。プリントの「二つは同じ話か？」という問いには、「どの水準で見るか」を決めないと答えられない。説話を読むとは、この二つの水準を行き来することである。</div>
+
+<h3><span class="no">6.3</span>○直接的関係は？――どちらが先か</h3>
+<div class="box"><span class="label">事実の確認</span>
+<ul>
+<li><strong>どちらが先か</strong>：『伊勢物語』は、業平の没後（9世紀末）から10世紀にかけて段階的に形を整えた歌物語とされる（完成時期は説が分かれる）。『今昔物語集』は12世紀前半。<strong>『伊勢』が先</strong>であることは確かである。</li>
+<li><strong>直接の関係</strong>：『今昔』のこの話が<strong>『伊勢』を直接見て書かれたかどうかは確定していない</strong>。『今昔』の各話は一般に「直接にはなんらかの文献にもとづいていると推定される」（世界大百科、出雲路修）が、本話の直接の出典を明記した資料は、本教材の調べでは確認できなかった。芳賀矢一『攷証今昔物語集』（1921）は本話の参考として『伊勢』の当該段を掲げるが、これは同じ話（類話）として並べたものである。</li>
+<li>だからプリントは「○直接的関係は？」と<strong>問いのまま</strong>残している。</li>
+</ul>
+<p class="note">※新日本古典文学大系37の脚注・解説で本話の出典がどう扱われているかは未確認。指定図書で確かめるとよい。</p></div>
+
+<h3><span class="no">6.4</span>よくある誤解</h3>
+<div class="warn"><span class="label">よくある誤解①：「『今昔』の編者が『伊勢』を書き換えた」</span>6.3のとおり、直接の典拠関係は確定していない。差（STEP 1〜8）は確かに本文にあるが、それが『今昔』の編者の手によるものか、編者が見た別の資料の段階ですでに生じていたものかは、本文だけからは決められない。<strong>「『伊勢』と比べると『今昔』では〜となっている」と書き、「編者が〜に改めた」とは断定しない</strong>のが安全である。</div>
+<div class="warn"><span class="label">よくある誤解②：「鬼に食われたと信じるか？」に正解がある</span>正解のある問いではない。語り手が鬼を信じさせる方へ語るのか（『今昔』）、鬼を比喩として解いてみせるのか（『伊勢』）、という<strong>語り方の違い</strong>を見るための問いだと考えるとよい。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph pair"><img src="img/a4_shosoin.jpg" alt="東大寺正倉院正倉の外観。高床の大きな校倉" loading="lazy"><img src="img/a4_azekura.jpg" alt="校倉の壁の角。断面が三角形の木材が井桁に積み重なっている" loading="lazy"></div>
+<p class="cap">「大ナルアゼ倉」と書かれたとき、読み手の目には、三角の木材を積み上げたこの壁が浮かんだはずである。</p>
+<p class="cr">左：あずきごはん／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Shosin-shouso.jpg">Wikimedia Commons</a>（正倉院正倉）　右：ignis／<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Azekura-dukuri_JPN.JPG">Wikimedia Commons</a>（校倉造の壁）。いずれも縮小のみ。</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/b4_holbein.jpg" alt="ホルバイン《大使たち》。二人の男の足もとに、斜めに引き伸ばされた髑髏が浮かぶ" loading="lazy"></div>
+<p class="cap">足もとの奇妙な染みは、斜めから覗いたときだけ髑髏になる。</p>
+<p class="cr">Hans Holbein the Younger／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg">Wikimedia Commons</a>（《大使たち》1533年、ロンドン・ナショナル・ギャラリー）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">7</span>術語「説話」③　話群・話型・動態</h2>
+<h3><span class="no">7.1</span>動機：「同じで違う」を言い表す語</h3>
+<p>6章で、二つの話は骨組みを共有しながら、関心と方向性が違うことを確かめた。この関係は、①（一話）や②（事実性）のように一話だけを見ていては言い表せない。<strong>複数の話を一つのまとまりとして見る</strong>語が必要になる。それが説話③である。</p>
+
+<h3><span class="no">7.2</span>定義</h3>
+<div class="def"><span class="label">定義（説話③：プリント）</span>説話は一話で閉じず、<strong>一連の話群</strong>をなす。<strong>通史・時代をまたがり</strong>、<strong>バリエーション</strong>を生み、<strong>運動体・動態</strong>として動く。その骨組みが<strong>話型</strong>である。<br>→ <strong>見分けるもの</strong>：複数の話のあいだで、何が共通し（話型）、何が変わったか（バリエーション）。</div>
+<div class="def"><span class="label">定義（話型）</span>くり返し現れる話から、人物名・地名などの固有の要素を抜いたときに残る、<strong>出来事の骨組み</strong>。</div>
+<div class="box"><span class="label">研究書・事典ではどう言うか</span>
+<ul>
+<li>『改訂新版 世界大百科事典』「説話文学」（今野達）：説話文学は、特定の個人の名で作られても、「常にその背後に、素材の<strong>伝承過程に加えられた多数者の創作行為</strong>が潜在している」。</li>
+<li>『山川 日本史小辞典』「説話文学」：説話は本来口承されたもので、「その伝達は厳密ではなく、<strong>伝承者が話を再構築</strong>するもの」。</li>
+</ul>
+<p>どちらも、話が伝わる途中で作り変えられることを説話の本質に置く。プリントの「運動体・動態」はこの見方に近い。ただし「伝承」を口承に限るか、書物から書物への書承も含めるかは立場が分かれる（9.2）。</p></div>
+
+<h3><span class="no">7.3</span>使ってみる：二話を一つの話型のバリエーションとして書く</h3>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:22%">話型の要素</th><th>『伊勢』第六段</th><th>『今昔』巻二十七第七</th></tr>
+<tr><td>①男が、手に入らない女を盗み出す</td><td>「え得まじかりける」女を「からうじて盗みいでて」</td><td>「止事無カラム聟取ヲセム」と守られた娘を「蜜ニ盗出シテケリ」</td></tr>
+<tr><td>②夜、荒れた倉に入る</td><td>「あばらなる倉」</td><td>「北山科」の「大ナルアゼ倉」</td></tr>
+<tr><td>③雷が鳴り、男は武器を構える</td><td>「神さへいといみじう鳴り」／弓・胡籙</td><td>「雷電霹靂シテ喤ケレバ」／大刀</td></tr>
+<tr><td>④夜明けに女が消えている</td><td>「率て来し女もなし」</td><td>「頭ノ限ト…衣共ト許残タリ」</td></tr>
+<tr><td>⑤それをどう意味づけるか（ここが分かれる）</td><td>歌の悲嘆 → 鬼は兄たちだった</td><td>恐怖の逃走 → 鬼のしわざか → 教訓</td></tr>
+</table></div>
+<p>①〜④は共通し、⑤が分かれる。だから3.1の問い「二つは同じ話か？」には、<strong>「話型（①〜④）の水準では同じ話、意味づけ（⑤）の水準では違う話。二つは同じ話型のバリエーションである」</strong>と答えられる。</p>
+<div class="why"><span class="label">直感：話型はレシピ、一話は料理</span>同じレシピでも、作る人・土地・時代で味は変わる。料理（一話）は一回ごとに違うが、レシピ（話型）は共通している。説話を読み比べるとは、料理を食べ比べて、共通のレシピと、それぞれの「味つけの意図」を探ることに近い。</div>
+<div class="box"><span class="label">授業メモ：譚・話型</span>授業で「譚」と「話型」が並べて示された。「〜譚」（恐怖譚・霊験譚など。第13回は「恐怖譚」）は話を<strong>内容・テーマ</strong>で呼び分ける言い方、「話型」は話を<strong>骨組み</strong>で呼び分ける言い方、と整理できる。たとえば今回の二つの話は、内容でいえば恐怖譚（とくに『今昔』）、骨組みでいえば「盗み出した女が一夜の宿で消える」という話型にあたる。<span class="note">※この整理は本教材の解釈。授業での定義を確認すること。</span></div>
+
+<h3><span class="no">7.4</span>時代をまたぐ：「中世とは」</h3>
+<div class="def"><span class="label">「中世とは」（プリントの項目）</span>中世の文学は<strong>説話の影響を受けている</strong>。例：<strong>小野小町説話</strong>、<strong>遁世説話</strong>。</div>
+<div class="box"><span class="label">補足（一般的な知識）</span><strong>小野小町説話</strong>：絶世の美女とされた歌人小野小町が、老いて落ちぶれさまようという話群。<strong>遁世説話</strong>：世俗を捨てて出家・隠遁した人々の話群。どちらも、のちの能や物語に多く取りこまれた。</div>
+<p>プリントがこの項目を『今昔』の「時代」の前提の中に置いているのは、中世を、単なる年代の区切りとしてだけでなく、<strong>説話が時代をまたいで動き、ほかの文学を動かしはじめる時代</strong>として捉えているためと読める。これは説話③「通史・時代をまたがる」「運動体・動態」の実例である。プリントの「芥川は今昔物語集の説話を翻案した」（4.1）も、同じ動きが近代まで続いている例になる。</p>
+<div class="warn"><span class="label">注意</span>『今昔物語集』を「のちの文学に流れこむ説話の大きな貯水池」のように捉えるのは本教材の解釈である。授業での位置づけ（なぜ「中世」を先に書くのか）は、第2回「享受史」で改めて確認したい。</div>
+
+<div class="warn"><span class="label">よくある誤解①：「話型が同じなら、一方が他方を写した」</span>話型の一致は、直接の書き写しの証拠にはならない。話は口伝えでも、別の書物を経由しても伝わり、伝わるたびに作り変えられる（今野・山川）。現に本話の直接の出典は確定していない（6.3）。<strong>「同じ話型」と「典拠関係」は別の問い</strong>として扱う。</div>
+<div class="warn"><span class="label">よくある誤解②：「話型＝あらすじ」</span>あらすじは一話ごとのもので、固有名（業平・北山科）を含む。話型は、それを抜いて<strong>複数の話に共通する骨組み</strong>だけを取り出したものである。7.3の①〜④が話型、各列の引用があらすじ（の素材）にあたる。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/a1_konjaku_kan5.jpg" alt="『今昔物語集』写本の見開き。右端に標題があり、次の行が「今昔天竺ニ」で始まる" loading="lazy"></div>
+<p class="cap">『今昔物語集』の写本では、一話ごとに標題が立ち、本文は決まって「今昔」から書き起こされる。</p>
+<p class="cr">作者不詳／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Konjaku_Monogatarishu.jpg">Wikimedia Commons</a>（巻五第一話の冒頭。Commonsの記載による）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/b1_hokusai_gaifu.jpg" alt="葛飾北斎《富嶽三十六景 凱風快晴》。朝日に赤く染まった富士" loading="lazy"></div>
+<p class="cap">同じ山を三十六の場所から描けば、一枚ごとに別の富士が立ちあがる。</p>
+<p class="cr">葛飾北斎／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Katsushika_Hokusai_-_Fine_Wind,_Clear_Morning_(Gaif%C5%AB_kaisei)_-_Google_Art_Project.jpg">Wikimedia Commons</a>（《富嶽三十六景 凱風快晴》）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">8</span>術語「説話」④　説話集・説話文学（静態）</h2>
+<h3><span class="no">8.1</span>動機：一話を「本の中の一話」として見る</h3>
+<p>7章の話群は、時代をまたいで<strong>動いている</strong>話の集まりだった。ところが、今回読んだ『今昔』の話は、巻二十七の<strong>第七</strong>という<strong>決まった位置</strong>に置かれている。動いていた話が、ある本の中に書きとめられて位置をもつ――この面を見るための語が説話④である。</p>
+
+<h3><span class="no">8.2</span>定義</h3>
+<div class="def"><span class="label">定義（説話④：プリント）</span><strong>説話集</strong>とは、一連の話群を<strong>同一の主体（編者）に基づいて編纂した物</strong>であり、そこに入った一話は、その編纂物の<strong>一部</strong>になる。説話・説話集を文学として扱うとき、<strong>説話文学</strong>と呼ぶ。<br>→ <strong>見分けるもの</strong>：一話そのものと、<strong>一冊の中の一話</strong>（位置・標題・形式の統一）。</div>
+<div class="box"><span class="label">研究書・事典ではどう言うか</span>
+<ul>
+<li>『改訂新版 世界大百科事典』「説話文学」（今野達）：説話文学が「ある<strong>意図</strong>のもとに集成されたものが説話集」。</li>
+<li>『日本大百科全書』「説話文学」（三木紀人）：説話文学は個人の創作性に乏しいが、<strong>選別、整序、意味づけ</strong>などの仕方に作者としての姿勢が表れる。また「説話」「説話文学」の語は<strong>大正期の国文学</strong>で生まれた用語で、範囲は「かならずしも一定しない」。</li>
+<li>『精選版 日本国語大辞典』「説話文学」：<strong>広義</strong>には説話を含むすべての作品（上代の叙事文学・中古の歌物語など）、<strong>狭義</strong>には説話を収集した説話集。</li>
+</ul>
+<p>プリントの「同一主体に基づく編纂物の一部」は、今野・三木の「意図」「選別・整序」に近い。「説話文学」の範囲は広義・狭義で分かれるので、答案では<strong>プリントの定義（説話・説話集を文学として扱う呼び名）</strong>で書き、必要なら広狭の別があることを添える。</p></div>
+
+<h3><span class="no">8.3</span>使ってみる：『今昔』の中の巻二十七第七</h3>
+<div class="proof">
+<p><span class="step">STEP 1</span>　【形式の統一】冒頭「今昔」と結び「トナム語リ伝ヘタルトヤ」は全話共通の型である（1.1・4.4）。千余話を<strong>一つの形にそろえた</strong>主体がいる、ということが本文の形から分かる。</p>
+<p><span class="step">STEP 2</span>　【配置】本話は巻二十七「本朝 付霊鬼」に置かれる。6.2 STEP 8 で見た「鬼を鬼のままにする」意味づけは、<strong>霊鬼の巻</strong>という置き場所と向きが一致している。</p>
+<p><span class="step">STEP 3</span>　【標題】標題は「女、<strong>被噉鬼</strong>」（鬼に食われる）と言い切る。本文では鬼は「鬼ノシケルニヤ有ケム」と推量にとどまるのに、標題は断定している。<strong>本文と標題で鬼の確かさが違う</strong>ことは、標題が一話の外側から付けられた「見出し」であることを示している（本教材の観察。第11回「標題」で確かめたい）。</p>
+<p class="qed">→ 一話は、型（STEP 1）・置き場所（STEP 2）・見出し（STEP 3）によって、『今昔物語集』という一冊の<strong>一部</strong>になっている。</p>
+</div>
+<p>ばらばらに流れていた話（説話③の動態）を、ある主体が選び、並べ、一冊にする。すると一話は「その本の第何話」として位置を与えられる。だから、ある話を読むときには、<strong>一話そのもの</strong>と、<strong>一冊の中の一話</strong>という二つの見方ができる（第11回「標題」、第12回「配列」はこの二つ目の見方を扱うと思われる）。</p>
+
+<div class="why"><span class="label">🙋 質問から追加：「編纂」と「編集」はどう違うのか</span>
+<p><span class="step">編纂</span>　多くの<strong>既存の資料を集め</strong>、一定の方針で<strong>整理・配列</strong>して、まとまった書物にすること。辞書・史書・法典・勅撰集など、大部で体系的な本に使われることが多い。重心は「集めて、整えて、残す」にある。</p>
+<p><span class="step">編集</span>　材料を<strong>選び、組み合わせ、手を加えて</strong>、一つの作品・媒体（新聞・雑誌・本・映像など）に仕立てること。より広く日常的な語で、重心は「選んで、作り変えて、届ける」にある。</p>
+<p><span class="step">今昔では</span>　『今昔物語集』の編者は、両方をしていると見られる。話を集めて天竺・震旦・本朝に分け、標題を立てて並べるのは<strong>編纂</strong>の側（第11回「標題」・第12回「配列」）。「今ハ昔」で書き起こし「語リ伝ヘタルトヤ」で結ぶ形にそろえ、元の話から露や和歌を落とし、教訓を足すのは<strong>編集</strong>の側（第6章の比較）。説話④の「同一主体に基づく編纂物」という定義は、前者に光を当てた言い方である。</p>
+<p class="note">※語の区別は一般的な用法による整理で、厳密な定義には辞書・授業での用法を確認すること。</p>
+</div>
+<p class="note">※上の囲みの「元の話から露や和歌を落とし」については、6.4の誤解①のとおり、直接の典拠が確定していないことに注意。</p>
+
+<figure>
+<svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="説話の四つの側面の関係図">
+<defs><marker id="l01v2-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6b645a"/></marker></defs>
+<g font-family="sans-serif" font-size="14" fill="#2a2723" text-anchor="middle">
+<path d="M12,34 L12,24 L358,24 L358,34" fill="none" stroke="#6b645a"/>
+<text x="185" y="16" font-size="12" fill="#6b645a">一話だけで確かめられる（4・5章）</text>
+<path d="M392,34 L392,24 L748,24 L748,34" fill="none" stroke="#6b645a"/>
+<text x="570" y="16" font-size="12" fill="#6b645a">二話以上を比べて見える（6・7・8章）</text>
+<rect x="10" y="50" width="160" height="90" fill="#edf1e8" stroke="#6b8a5a"/><text x="90" y="80" font-weight="bold">① 一話</text><text x="90" y="104" font-size="12">取り出せる単位</text><text x="90" y="124" font-size="11" fill="#6b645a">「今昔…トヤ」</text>
+<rect x="200" y="50" width="160" height="90" fill="#f7f1dc" stroke="#c9a43a"/><text x="280" y="80" font-weight="bold">② 事実性</text><text x="280" y="104" font-size="12">事実として語られる</text><text x="280" y="124" font-size="11" fill="#6b645a">実名・地名・後日の評判</text>
+<rect x="390" y="50" width="160" height="90" fill="#f1edf2" stroke="#8a6d94"/><text x="470" y="80" font-weight="bold">③ 話群・話型</text><text x="470" y="104" font-size="12">時代をまたぐ動態</text><text x="470" y="124" font-size="11" fill="#6b645a">同じ骨組み・違う意味づけ</text>
+<rect x="580" y="50" width="170" height="90" fill="#eceff4" stroke="#4a5f8c"/><text x="665" y="80" font-weight="bold">④ 説話集</text><text x="665" y="104" font-size="12">編者が固定する静態</text><text x="665" y="124" font-size="11" fill="#6b645a">型・置き場所・標題</text>
+<line x1="170" y1="95" x2="198" y2="95" stroke="#6b645a" marker-end="url(#l01v2-arw)"/>
+<line x1="360" y1="95" x2="388" y2="95" stroke="#6b645a" marker-end="url(#l01v2-arw)"/>
+<line x1="550" y1="95" x2="578" y2="95" stroke="#6b645a" marker-end="url(#l01v2-arw)"/>
+<path d="M665,142 C665,205 90,205 90,144" fill="none" stroke="#a8322a" stroke-dasharray="5 4" marker-end="url(#l01v2-arw)"/>
+<text x="380" y="222" font-size="12" fill="#a8322a">集められた一話は、また取り出されて別の本へ移っていく</text>
+<text x="380" y="252" font-size="12" fill="#6b645a">説話文学＝説話・説話集を文学として扱うときの呼び名（範囲には広義・狭義がある）</text>
+</g></svg>
+<figcaption>図1　説話①〜④の関係（教材独自の図）。単位があるから取り出せ、事実として語られて伝わり、伝わりながら変わって話群になり、話群を編者が固定すると説話集になる。</figcaption>
+</figure>
+
+<div class="warn"><span class="label">よくある誤解①：「説話集＝話の寄せ集め」</span>今野達は「ある意図のもとに集成」、三木紀人は「選別、整序、意味づけ」に作者の姿勢が出るとする。本文でも、全話の型の統一、霊鬼の巻への配置、標題の付け方（8.3）に、集める主体の手が見える。「集めただけ」では8.3の三点が説明できない。</div>
+<div class="warn"><span class="label">よくある誤解②：「説話集に入った話は、元の話そのままだ」</span>6章で見たとおり、同じ話型の話でも、本によって関心と意味づけが違う。説話集に入った一話は、その本の型と置き場所に合わせた形で読まれる。ただし、どこまでが編者の手によるかは典拠が分からないと決められない（6.4）。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/a5_sarugami.jpg" alt="江戸時代の版本の挿絵。屋敷と人物が線描で描かれている" loading="lazy"></div>
+<p class="cap">『今昔物語集』の猿神の話は、江戸時代には挿絵入りの本となって、もう一度読者のもとへ動き出した。</p>
+<p class="cr">作者不詳／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Konjaku_Monogatarishu_Sarugami.jpg">Wikimedia Commons</a>（18世紀。Commonsの記載による）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/b5_specimen.jpg" alt="昆虫標本箱。緑の名札とともに多数の昆虫がピンで留められている" loading="lazy"></div>
+<p class="cap">ピンで留められた虫は、一匹ずつ名札をもらうかわりに、もう飛ばない。</p>
+<p class="cr">Hayan Alhasan／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Agricultural_Entomology_student_insect_collection_box,_Syria.jpg">Wikimedia Commons</a>（縮小のみ）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">9</span>術語「説話」のまとめ</h2>
+<h3><span class="no">9.1</span>プリントの一覧と、この回の対応</h3>
+<p>プリントは最後に、術語「説話」が含むものを一覧にする。4〜8章で見たことと対応させておく。</p>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:32%">プリントの項目</th><th>この回で見たこと（本教材による対応づけ）</th></tr>
+<tr><td>【情報の利用】</td><td>説話は「読み物」である前に、人から人へ渡る<strong>情報</strong>として使われる。『今昔』の結びは、まさに危険な場所の情報になっていた（6.2 STEP 7）。</td></tr>
+<tr><td>事実性</td><td>業平の名・官職、北山科という地名、後日の評判、伝聞の結び（5章）。</td></tr>
+<tr><td>情報の変容／虚構まじり</td><td>鬼の扱いの反転、和歌の脱落（6章）。鬼一口という虚構まじりの出来事（5.3）。</td></tr>
+<tr><td>比較的短い（何がどうだとまとまる）…物語との違い</td><td>一話という単位（4章）。</td></tr>
+<tr><td>発信者と受信者の関係性</td><td>「語リ伝ヘタルトヤ」――誰かが語り、誰かが聞いた、という形をとる（3.3・5.3）。</td></tr>
+<tr><td>情報と枠組み（関心）</td><td>同じ出来事を、恋の哀しみの枠で語るか、恐ろしい場所の枠で語るか（6.2「興味関心」）。</td></tr>
+<tr><td>時間性</td><td>「今ハ昔」「其レヨリ後ナム」――話が時間の流れの中に置かれる。時代をまたいで伝わる（7.4）。</td></tr>
+<tr><td>一話の単位と数話の単位</td><td>一話（4章）と、話群・説話集（7・8章）。</td></tr>
+<tr><td>動態としての説話／静態としての説話</td><td>時代をまたいで動く話群（7章）と、説話集に書きとめられて固定された一話（8章）。</td></tr>
+<tr><td>枠組みの適用範囲</td><td>「説話」という枠を、どこまでの話に当てはめるか（『伊勢』の第六段は説話か？ 4.4 誤解②）。</td></tr>
+<tr><td>発信する主体／分裂する枠組み・主体</td><td>『今昔』の編者・語り手・作中で語り伝えた人々――発信する者は一人とは限らない（下の補足）。</td></tr>
+</table></div>
+<div class="box"><span class="label">補足（教材独自の解釈）</span>最後の「分裂する枠組み・主体」は、プリントの文字だけでは意味がとりにくい項目である。たとえば『今昔』の結びは「（人々が）語り伝えている、と（書き手が）書く」という二重の形をしており、発信する主体が二つに割れている、と読むことができる。教訓「努々不立寄マジキ也」まで「語リ伝ヘタルトヤ」の内側に入っている（3.3の逐語の要所。出雲路修も、今昔では末尾の評語まで伝聞として語られるとする）ので、教訓を言っているのが編者なのか語り伝えた人々なのかも二重になる。授業での説明を確認し、第7回「今は昔」・第9回「文体」で改めて見直したい。</div>
+
+<h3><span class="no">9.2</span>研究者によって定義が分かれる点</h3>
+<p>「説話」は研究上の後から作られた用語であり、定義には揺れがある。どこで分かれるかを知っておくと、指定図書や事典を読んだときに混乱しない。</p>
+<div class="tbwrap"><table class="tb l">
+<tr><th style="width:20%">分かれる軸</th><th>一方の立場</th><th>もう一方の立場</th><th style="width:22%">授業（プリント）では</th></tr>
+<tr><td>語の歴史</td><td colspan="2">「説話」は中古・中世には「話す」意で、ジャンル名ではなかった（日国）。ジャンル名としての「説話」「説話文学」は大正期の国文学の用語（三木）。今昔の各話は自らを「語（ものがたり）」と呼ぶ。</td><td>研究の道具としての術語として使う。</td></tr>
+<tr><td>口承か、書承も含むか</td><td>民俗学・口承文芸論：説話＝口伝えで継承される散文（神話・伝説・昔話・世間話を含む）（小島）。</td><td>国文学：文字に記された説話を扱う（三木・今野）。今昔は口頭伝承を記録した体裁だが、各話は文献にもとづくと推定される（出雲路）。</td><td>説話集・説話文学を扱う国文学側に近い。</td></tr>
+<tr><td>一話の性質か、ジャンルか</td><td>説話集を構成する一話一話（日国）。</td><td>集成された作品＝説話集（日国の狭義、今野）。広義には歌物語の中の話も含む（日国）。</td><td>両方を立てる（①一話＝動態／④説話集の一部＝静態）。</td></tr>
+<tr><td>長さ・叙述</td><td colspan="2">短編＝説話、長編＝物語（小島）。叙事中心で心理描写に乏しい（三木・今野）。</td><td>「比較的短い」「物語との違い」。</td></tr>
+<tr><td>作者性</td><td colspan="2">個人の創作性は乏しいが、選別・整序・意味づけに編者の姿勢が出る（三木）。背後に伝承過程の多数者の創作（今野）。</td><td>「同一主体に基づく編纂物」「発信する主体」。</td></tr>
+<tr><td>内容の区分</td><td colspan="2">仏教（神仏）説話と世俗（一般）説話に二大別する習わし（三木、デジタル大辞泉）。</td><td>第8回「仏法と王法」で扱うと思われる。</td></tr>
+</table></div>
+<p class="meta">出典：『精選版 日本国語大辞典』「説話」「説話文学」（日国）、『日本大百科全書』「説話」（小島瓔禮）・「説話文学」（三木紀人）、『改訂新版 世界大百科事典』「説話文学」（今野達）・「今昔物語集」（出雲路修）、『山川 日本史小辞典』「説話文学」、『デジタル大辞泉』「説話文学」（いずれもコトバンク）。「授業では」欄は本教材の見立てであり、プリントがどの研究者の説によるかは未確認。講義指定図書の小峯和明『説話の森』（岩波現代文庫）・本田義憲ほか『説話の講座』1「説話とは何か」（勉誠社）は本教材では直接確認できていないので、定義の詳細は指定図書で確かめるとよい。</p>
+<div class="thm"><span class="label">要点：答案ではどう書くか</span>
+<ul>
+<li>試験・レポートでは、<strong>プリントの四つの側面（①一話という単位 ②事実に支えられる虚構 ③話群・話型・動態 ④説話集の一部＝静態）</strong>で定義する。</li>
+<li>事典の定義を引くときは、どの立場（口承文芸論か国文学か、広義か狭義か）のものかを明記する。</li>
+<li>術語を使うときは、必ず本文の語句を根拠に添える（例：「事実性」なら「北山科ノ辺」「人取リ為ル倉トハ知ケル」）。</li>
+</ul></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">10</span>語句・読解問題</h2>
+<p class="meta">※問題・解答は本教材の自作。実際の出題を保証するものではない。</p>
+<h3><span class="no">10.1</span>『伊勢物語』第六段（2章・3.2）</h3>
+<div class="box"><span class="label">問1（語句）</span>『伊勢』の「女の<u>え得まじかり</u>ける」を現代語に訳せ。
+<details><summary>解答</summary><p>手に入れることができそうになかった。「え〜打消（まじ）」で不可能を表す（読みは「えうまじかり」。2.3）。</p></details></div>
+<div class="box"><span class="label">問2（語句）</span>「年を経て<u>よばひわたり</u>ける」の「よばふ」「わたる」の意味をそれぞれ答えよ。
+<details><summary>解答</summary><p>「よばふ」＝求婚する、言い寄る。「わたる」＝（動詞について）ずっと〜し続ける。</p></details></div>
+<div class="box"><span class="label">問3（語句）</span>「<u>神</u>さへいといみじう鳴り」の「神」は何を指すか。
+<details><summary>解答</summary><p>雷。</p></details></div>
+<div class="box"><span class="label">問4（語句）</span>「胡籙」の読みと意味を答えよ。
+<details><summary>解答</summary><p>やなぐい（歴史的仮名遣いでは「やなぐひ」）。矢を入れて背負う武具。</p></details></div>
+<div class="box"><span class="label">問5（読解）</span>『伊勢』の和歌「白玉か何ぞと人の問ひし時露とこたへて消えなましものを」は、本文のどの場面を受けているか。また「消えなましものを」に込められた気持ちを説明せよ。
+<details><summary>解答</summary><p>芥河のほとりで女が草の上の露を見て「かれは何ぞ」と尋ねた場面を受ける。「〜まし（ものを）」は反実仮想で、「あのとき露だと答えて、露のように自分も消えてしまえばよかったのに（そうすればこんな悲しみを味わわずにすんだ）」という後悔と悲嘆を表す。</p></details></div>
+<div class="box"><span class="label">問6（読解）</span>『伊勢』の後半によれば、「鬼」とは実際には何のことだったか。
+<details><summary>解答</summary><p>二条の后（藤原高子）の兄たち、堀河の大臣（基経）と国経の大納言が、泣いている后の声を聞きつけて取り返したこと。それを「鬼が一口に食った」と言ったのである。</p></details></div>
+
+<h3><span class="no">10.2</span>『今昔物語集』巻二十七第七（2章・3.3）</h3>
+<div class="box"><span class="label">問7（語句）</span>『今昔』の「心ヲ尽シテ極ク<u>仮借シ</u>ケレドモ」「祖共ノ微妙ク<u>傅ケ</u>レバ」の下線部の読みと意味を答えよ。
+<details><summary>解答</summary><p>「仮借シ」＝けさうし。懸想して、言い寄って。「傅ケ（レバ）」＝かしづき（ければ）。「かしづく」＝大切に育てる。</p></details></div>
+<div class="box"><span class="label">問8（読解）</span>『今昔』で、夜が明けたあと倉に残っていたものは何か。原文の語句で答えよ。
+<details><summary>解答</summary><p>「女ノ頭ノ限ト着タリケル衣共」――女の頭だけと、着ていた衣類。</p></details></div>
+<div class="box"><span class="label">問9（読解）</span>『今昔』の「然レバ、雷電霹靂ニハ非ズシテ、倉ニ住ケル鬼ノシケルニヤ有ケム」は、何を何と判断しなおしているか。
+<details><summary>解答</summary><p>夜中の出来事を、雷（雷電霹靂）のせいではなく、倉に住んでいた鬼のしわざだったのだろうか、と推測しなおしている。「人取リ為ル倉」と知られるようになった後日の評判が、その根拠になっている。</p></details></div>
+<div class="box"><span class="label">問10（読解）</span>『今昔』の結び「案内不知ザラム所ニハ、努々不立寄マジキ也。況ヤ、宿セム事ハ不可思懸ズ」を現代語に訳せ。
+<details><summary>解答</summary><p>様子の分からない所には、決して立ち寄ってはならない。まして泊まることなど、考えてもならない。（「努々〜マジ」＝決して〜してはならない。「況ヤ」＝まして。）</p></details></div>
+
+<h3><span class="no">10.3</span>二つの本文の比較（6章）</h3>
+<div class="box"><span class="label">問11（読解）</span>プリントの「『伊勢物語』と比べた『今昔物語集』の表現の差」のうち、「省略」にあたるものを二つ挙げよ。
+<details><summary>解答</summary><p>例：芥川・白露のくだり（女の「かれは何ぞ」という問い）／和歌／二条の后をめぐる後日談。このうち二つ。</p></details></div>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 『今昔物語集』の基本事実（12世紀前半・院政期の成立とされる／編者未詳／天竺・震旦・本朝の三部、31巻／巻二十七＝本朝付霊鬼）を言える。</li>
+<li>□ 文学史の時代区分（上代・中古・中世・近世・近代・現代）と、『今昔物語集』が「中世（中古）」と書かれる理由が分かる。</li>
+<li>□ 漢字片仮名交じり文の返読（不〜ズ・可〜キ・被〜）と宛字（微妙シ・仮借ス）を読める。</li>
+<li>□ 『伊勢物語』第六段と『今昔物語集』巻二十七第七の原文を、語注を見ながら読める。</li>
+<li>□ 説話①〜④（一話という単位／事実と虚構／話群・話型・動態／説話集）を、それぞれ一文で、<strong>何を見分けるための語か</strong>とともに説明できる。</li>
+<li>□ 各術語を、本文の語句を根拠に二話へ当てはめられる（例：事実性＝「北山科ノ辺」「人取リ為ル倉トハ知ケル」）。</li>
+<li>□ 二つの話の表現の差（説明・省略・事実・目的・意味づけ）を、本文の語句を挙げて説明でき、鬼の扱いが反転していることを言える。</li>
+<li>□ 「話型」と「バリエーション」の違い、「同じ話型」と「典拠関係」が別の問いであることを言える。</li>
+<li>□ 「説話」の定義が研究者で分かれる点（口承か書承か、一話かジャンルか）を知り、授業の定義で答えられる。</li>
+<li>□ 第1回のコメント（50〜400字程度・1週間以内）を出した。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第2回）</strong>：享受史 ――『今昔物語集』はどのように読まれ、受け継がれてきたか。1.1で見た「写本で細々と伝わり、江戸時代に本朝部が刊行された」という流れが、ここで主題になる。今回の教材と同じく、プリントの順序にはこだわらず、読むための準備を先に置いて組み直す予定。<br>
+<a href="index.html">← 目次へ</a>　｜　第2回へ →（資料待ち）
+</div>
+
+<p class="meta">出典：第1回配付資料「説話とは何か ―『今昔物語集』を読む①」およびシラバスの範囲を、本教材の方針（プリントは範囲と論点の決定に使い、説明の順序を組み直す）で書き直したもの。原文は配付資料から書き起こし、公開の校本・活字本と照合した（3.4。新日本古典文学大系そのものとは未照合）。基本事実と定義の違いは、各章の出典欄に挙げた事典類による。現代語訳・語注・逐語の解説・問題・補足・写真の見立ては自作。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="column/C01_鬼は一口で何を食べたか.html"><small>READING</small>読み物：鬼は一口で何を食べたか →</a></nav>
+</body>
+</html>

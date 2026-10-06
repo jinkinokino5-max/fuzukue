@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第12回 偏微分方程式の分類と解法（ダランベールの解・変数分離法）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .why{ background:#fffdf0; border:1px solid #e8d48b; border-left:6px solid #e8c14b; border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; } .why .label{ color:#9a7d1a; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:560px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  table.tb{ border-collapse:collapse; margin:12px 0; font-size:14.5px; width:100%; }
+  table.tb th,table.tb td{ border:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ background:#eef2f7; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+  .prob-chk{ display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); background:#fff; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:0 6px; cursor:pointer; vertical-align:middle; user-select:none; }
+  .prob-chk input{ margin:0; cursor:pointer; }
+  @media print{ .prob-chk{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第12回　偏微分方程式の分類と解法</h1>
+<p class="lead">多くの力学（振動・波動、熱・拡散、流体、電磁気…）では、現象を<strong>偏微分方程式（PDE）</strong>として表します。この回では、偏微分方程式の<strong>種類（分類）</strong>と<strong>代表的な解法（ダランベールの解・変数分離法）</strong>を学び、それら力学の勉強に備えます。</p>
+
+<div class="navi">
+今回の流れ：<strong>① 分類</strong>（判別式 $D$ で双曲型・放物型・楕円型の3タイプに分ける）→ <strong>② ダランベールの解</strong>（波動方程式の一般解＝進行波＋後退波）→ <strong>③ 変数分離法</strong>（境界値問題を2本の常微分方程式に落とす）→ <strong>④ 解法の選び方</strong>（初見の問題でどちらを使うかの判断フロー）。③で<strong>第9回のフーリエ級数</strong>が主役として帰ってきます。
+</div>
+
+<h2>12.0　偏微分方程式とは（動機）</h2>
+<p>これまでの微分方程式（常微分方程式・ODE）は「1変数関数 $y(x)$」が未知でした。しかし物理の現象は多くの場合「<strong>場所と時間の両方に依存する量</strong>」——弦の変位 $u(x,t)$、棒の温度 $u(x,t)$、空間の電位 $u(x,y)$——で記述されます。未知関数が多変数になると、微分は偏微分になり、方程式は<strong>偏微分方程式</strong>になります。</p>
+<table class="tb">
+<tr><th>現象</th><th>方程式</th><th>未知関数の意味</th></tr>
+<tr><td>弦・音・光の<strong>波</strong></td><td>$\dfrac{\partial^2u}{\partial t^2}=c^2\dfrac{\partial^2u}{\partial x^2}$（波動方程式）</td><td>位置 $x$・時刻 $t$ での変位</td></tr>
+<tr><td><strong>熱</strong>の伝わり・物質の<strong>拡散</strong></td><td>$\dfrac{\partial u}{\partial t}=\kappa\dfrac{\partial^2u}{\partial x^2}$（拡散方程式）</td><td>位置 $x$・時刻 $t$ での温度・濃度</td></tr>
+<tr><td>静電場・定常温度・ポテンシャル</td><td>$\dfrac{\partial^2u}{\partial x^2}+\dfrac{\partial^2u}{\partial y^2}=0$（ラプラス方程式）<br><span class="meta">右辺に源があるものはポアソン方程式</span></td><td>点 $(x,y)$ での電位など</td></tr>
+</table>
+<div class="why">
+<span class="label">見た目が似ているのに性質が全く違う</span>　上の3つはどれも「2階の偏微分方程式」で形がそっくりです。しかし解のふるまいは、<strong>波が形を保って走る</strong>（波動）、<strong>とがりが一瞬でなまって広がる</strong>（拡散）、<strong>時間なしで全体が瞬時に釣り合う</strong>（ラプラス）と三者三様。そこでまず「<strong>与えられた方程式がどのタイプか</strong>」を機械的に判定する道具＝分類を用意します。
+</div>
+
+<h2>12.1　偏微分方程式（PDE）の分類</h2>
+<div class="def">
+<span class="label">定数係数2階線形偏微分方程式の一般形</span>　独立変数 $x,y$（片方が時間 $t$ の場合も含む）と未知関数 $u(x,y)$ について
+$$ a\frac{\partial^2u}{\partial x^2}+2b\frac{\partial^2u}{\partial x\partial y}+c\frac{\partial^2u}{\partial y^2}
++d\frac{\partial u}{\partial x}+e\frac{\partial u}{\partial y}+fu=g(x,y) $$
+（$a$〜$f$ は定数）。2階微分の部分（<strong>主要部</strong>）が方程式の性格を決める。
+</div>
+<p class="meta">※ 交差項の係数はスライドでは $b\,\partial^2u/\partial x\partial y$ と書かれていますが、ここでは次の2次曲線との対応が見やすいように $2b$ と書きます（$b$ の置き方が変わるだけで、分類の結果は同じです）。</p>
+
+<div class="proof">
+<strong>分類の考え方——2次曲線との対比</strong>　主要部の係数の並び $(a,\,2b,\,c)$ は、2次曲線（円錐曲線）
+$$ ax^2+2bxy+cy^2=1 $$
+の係数の並びと同じ形をしている（$\partial/\partial x\to x$、$\partial/\partial y\to y$ と置き換えた「そっくりさん」）。2次曲線は判別式
+$$ D=b^2-ac $$
+の符号で<strong>双曲線（$D &gt; 0$）・放物線（$D=0$）・楕円（$D &lt; 0$）</strong>に分類されるのだった（例：$x^2-y^2=1$ は双曲線で $D=1 &gt; 0$、$y=x^2$ 型は $D=0$、$x^2+y^2=1$ は円＝楕円の特別な場合で $D=-1 &lt; 0$）。この対比をそのまま借りて、偏微分方程式も $D=b^2-ac$ の符号で3タイプに分類し、同じ名前で呼ぶ。
+</div>
+
+<div class="thm">
+<span class="label">PDEの分類（判別式 $D=b^2-ac$）</span>
+<table class="tb">
+<tr><th>判別式</th><th>型</th><th>代表例</th><th>現象</th></tr>
+<tr><td>$D &gt; 0$</td><td><strong>双曲型</strong></td><td>波動方程式 $\dfrac{\partial^2u}{\partial t^2}=c^2\dfrac{\partial^2u}{\partial x^2}$</td><td>波が伝わる</td></tr>
+<tr><td>$D=0$</td><td><strong>放物型</strong></td><td>拡散方程式 $\dfrac{\partial u}{\partial t}=\kappa\dfrac{\partial^2u}{\partial x^2}$</td><td>熱・濃度がなまって広がる</td></tr>
+<tr><td>$D &lt; 0$</td><td><strong>楕円型</strong></td><td>ポアソン方程式 $\dfrac{\partial^2u}{\partial x^2}+a\dfrac{\partial^2u}{\partial y^2}=0$（$a &gt; 0$）</td><td>釣り合いの場（静電位など）</td></tr>
+</table>
+</div>
+<div class="proof">
+<strong>代表例の判別式を実際に確認する</strong>（変数を $(t,x)$ または $(x,y)$ として、一般形の $(a,\,2b,\,c)$ を読み取る）：
+<ul>
+<li><strong>波動方程式</strong>　$\dfrac{\partial^2u}{\partial t^2}-c^2\dfrac{\partial^2u}{\partial x^2}=0$ と移項して読む。$\partial_t^2$ の係数 $=1$、交差項 $=0$（よって $b=0$）、$\partial_x^2$ の係数 $=-c^2$。$D=b^2-ac=0-(1)(-c^2)=c^2 &gt; 0$ ✓ <strong>双曲型</strong>。</li>
+<li><strong>拡散方程式</strong>　$-\kappa\dfrac{\partial^2u}{\partial x^2}+\dfrac{\partial u}{\partial t}=0$。2階微分は $\partial_x^2$ の1つだけで、$\partial_t^2$ も交差項もない：主要部の係数は $(a,\,2b,\,c)=(-\kappa,\,0,\,0)$。$D=0^2-(-\kappa)\cdot0=0$ ✓ <strong>放物型</strong>（$\partial u/\partial t$ は1階なので主要部に入らない点に注意）。</li>
+<li><strong>ポアソン（ラプラス）方程式</strong>　$\dfrac{\partial^2u}{\partial x^2}+a\dfrac{\partial^2u}{\partial y^2}=0$。係数は $(1,\,0,\,a)$。$D=0-1\cdot a=-a &lt; 0$ ✓ <strong>楕円型</strong>。</li>
+</ul>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 480 190" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <!-- hyperbola -->
+  <line x1="15" y1="95" x2="150" y2="95" stroke="#ccc" stroke-width="1"/>
+  <line x1="82" y1="20" x2="82" y2="170" stroke="#ccc" stroke-width="1"/>
+  <path d="M100 30 Q88 95 100 160" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <path d="M64 30 Q76 95 64 160" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <text x="40" y="185" fill="#274e80">双曲線 D＞0</text>
+  <!-- parabola -->
+  <line x1="175" y1="95" x2="310" y2="95" stroke="#ccc" stroke-width="1"/>
+  <line x1="242" y1="20" x2="242" y2="170" stroke="#ccc" stroke-width="1"/>
+  <path d="M195 35 Q242 210 290 35" fill="none" stroke="#c0392b" stroke-width="2"/>
+  <text x="200" y="185" fill="#c0392b">放物線 D＝0</text>
+  <!-- ellipse -->
+  <line x1="335" y1="95" x2="470" y2="95" stroke="#ccc" stroke-width="1"/>
+  <line x1="402" y1="20" x2="402" y2="170" stroke="#ccc" stroke-width="1"/>
+  <ellipse cx="402" cy="95" rx="52" ry="34" fill="none" stroke="#2e7d32" stroke-width="2"/>
+  <text x="362" y="185" fill="#2e7d32">楕円 D＜0</text>
+</svg>
+<figcaption>図12-1　名前の由来：主要部の係数を2次曲線 $ax^2+2bxy+cy^2=1$ に見立てたときの曲線のタイプ。判別式 $D=b^2-ac$ の符号がそのまま方程式の分類になる。</figcaption>
+</figure>
+
+<div class="why">
+<span class="label">なぜ分類が大事か</span>　型が同じなら、係数が違っても<strong>解のふるまい・適切な条件の与え方・有効な解法が共通</strong>だからです。双曲型は「初期の波形と速度」を与えて時間発展を追う（初期値問題）。放物型も初期分布から時間発展（ただし一方通行：熱は戻らない）。楕円型は時間がなく、「領域の縁の値」を与えて内部を決める（境界値問題）。——方程式を見たらまず $D$ を計算する、が第一手です。
+</div>
+
+<h2>12.2　解法①　ダランベールの解——波動方程式の一般解</h2>
+<p>双曲型の代表・波動方程式は、<strong>うまい変数変換</strong>を1回かますだけで一般解が求まります。これが<strong>ダランベールの解</strong>です。</p>
+
+<div class="proof">
+<strong>① 変数変換を導入する</strong>　波動方程式
+$$ \frac{\partial^2u}{\partial t^2}=c^2\frac{\partial^2u}{\partial x^2} $$
+に対して、新しい変数
+$$ \xi=x+ct,\qquad \eta=x-ct $$
+を導入する（なぜこの形か：波動方程式の主要部は $\partial_t^2-c^2\partial_x^2=(\partial_t-c\partial_x)(\partial_t+c\partial_x)$ と<strong>因数分解</strong>でき、その2つの因子が定数になる方向——直線 $x\pm ct=$ 一定——に軸を取り直すため。$D &gt; 0$ の双曲型はいつもこの形の2方向を持つ）。<br><br>
+<strong>② 偏微分を書き換える（合成関数の微分）</strong>　$u(t,x)=u(\xi(t,x),\,\eta(t,x))$ とみて連鎖律を使う。$\dfrac{\partial\xi}{\partial t}=c,\ \dfrac{\partial\eta}{\partial t}=-c,\ \dfrac{\partial\xi}{\partial x}=1,\ \dfrac{\partial\eta}{\partial x}=1$ だから
+$$ \frac{\partial u}{\partial t}=\frac{\partial u}{\partial\xi}\frac{\partial\xi}{\partial t}+\frac{\partial u}{\partial\eta}\frac{\partial\eta}{\partial t}=c\Big(\frac{\partial u}{\partial\xi}-\frac{\partial u}{\partial\eta}\Big),\qquad
+\frac{\partial u}{\partial x}=\frac{\partial u}{\partial\xi}+\frac{\partial u}{\partial\eta}. $$
+<strong>③ 2階微分を計算する</strong>　②の操作（$\partial_t=c(\partial_\xi-\partial_\eta)$、$\partial_x=\partial_\xi+\partial_\eta$）をもう一度ずつ適用する。まず $t$：
+$$ \frac{\partial^2u}{\partial t^2}=c\Big(\frac{\partial}{\partial\xi}-\frac{\partial}{\partial\eta}\Big)\Big[c\Big(\frac{\partial u}{\partial\xi}-\frac{\partial u}{\partial\eta}\Big)\Big]
+=c^2\Big(\frac{\partial^2u}{\partial\xi^2}-2\frac{\partial^2u}{\partial\xi\partial\eta}+\frac{\partial^2u}{\partial\eta^2}\Big) $$
+（展開の途中：$\partial_\xi\partial_\xi u-\partial_\xi\partial_\eta u-\partial_\eta\partial_\xi u+\partial_\eta\partial_\eta u$。混合偏微分は順序交換できるので真ん中2つが合体して $-2\partial_\xi\partial_\eta u$）。同様に $x$：
+$$ \frac{\partial^2u}{\partial x^2}=\Big(\frac{\partial}{\partial\xi}+\frac{\partial}{\partial\eta}\Big)\Big(\frac{\partial u}{\partial\xi}+\frac{\partial u}{\partial\eta}\Big)
+=\frac{\partial^2u}{\partial\xi^2}+2\frac{\partial^2u}{\partial\xi\partial\eta}+\frac{\partial^2u}{\partial\eta^2}. $$
+<strong>④ 方程式に代入する</strong>　波動方程式の左辺・右辺に③を入れる：
+$$ c^2\Big(u_{\xi\xi}-2u_{\xi\eta}+u_{\eta\eta}\Big)=c^2\Big(u_{\xi\xi}+2u_{\xi\eta}+u_{\eta\eta}\Big). $$
+両辺の $u_{\xi\xi},u_{\eta\eta}$ が消え、$-2u_{\xi\eta}=+2u_{\xi\eta}$、すなわち $4c^2u_{\xi\eta}=0$。$c\ne0$ だから
+$$ \frac{\partial^2u}{\partial\xi\,\partial\eta}=0. $$
+<strong>⑤ 2回積分して一般解を得る</strong>　$\dfrac{\partial}{\partial\xi}\Big(\dfrac{\partial u}{\partial\eta}\Big)=0$ は「$\dfrac{\partial u}{\partial\eta}$ が $\xi$ に依らない」こと、つまり $\dfrac{\partial u}{\partial\eta}=h(\eta)$（$\eta$ だけの任意関数）を意味する。これを $\eta$ で積分すると、$h$ の原始関数を $\phi$ と書いて
+$$ u=\phi(\eta)+\psi(\xi) $$
+（積分定数は「$\xi$ だけの任意関数 $\psi(\xi)$」になる点が常微分との違い：$\eta$ で微分して消えるものは $\xi$ の関数全体だから）。変数を元に戻して次を得る。
+</div>
+
+<div class="thm">
+<span class="label">ダランベールの解（波動方程式の一般解）</span>
+$$ u(x,t)=\phi(x-ct)+\psi(x+ct) $$
+$\phi,\psi$ は<strong>任意関数</strong>。$\phi(x-ct)$ は<strong>進行波</strong>（速さ $c$ で右へ）、$\psi(x+ct)$ は<strong>後退波</strong>（速さ $c$ で左へ）。
+</div>
+<div class="why">
+<span class="label">なぜ $\phi(x-ct)$ が「右へ走る波」か</span>　波形の峰は $\phi$ の引数が一定の場所：$x-ct=\varphi_0$（定数）。これを $x$ について解くと $x=\varphi_0+ct$——峰の位置が<strong>時刻に比例して右へ動く</strong>（速さ $c$）。形は一切崩れず、丸ごと平行移動するだけ。これが「双曲型＝波が伝わる」の正体です。しかも $\phi$ は<strong>どんな形でもよい</strong>（微分方程式なのに任意の波形が解！）。
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="mw1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="20" y1="150" x2="460" y2="150" stroke="#999" stroke-width="1.1" marker-end="url(#mw1)"/>
+  <text x="452" y="168" fill="#999">x</text>
+  <!-- pulse at t=0 -->
+  <path d="M40 150 Q80 150 100 150 Q125 150 140 90 Q155 30 170 90 Q185 150 210 150" fill="none" stroke="#1b4f72" stroke-width="2.2"/>
+  <text x="120" y="45" fill="#1b4f72">t = 0：φ(x)</text>
+  <!-- pulse at t=t1 -->
+  <path d="M250 150 Q290 150 310 150 Q335 150 350 90 Q365 30 380 90 Q395 150 420 150" fill="none" stroke="#c0392b" stroke-width="2.2" stroke-dasharray="6 3"/>
+  <text x="330" y="45" fill="#c0392b">t = t₁：φ(x−ct₁)</text>
+  <path d="M190 70 L300 70" stroke="#7d3c98" stroke-width="2" marker-end="url(#mw1)"/>
+  <text x="215" y="62" fill="#7d3c98">速さ c で平行移動</text>
+  <text x="30" y="188" fill="#666">峰の位置：x − ct = 一定 ⇔ x = φ₀ + ct</text>
+</svg>
+<figcaption>図12-2　進行波 $\phi(x-ct)$。波形は変わらず、時刻とともに丸ごと右へ速さ $c$ で移動する。後退波 $\psi(x+ct)$ はその鏡写し（左へ移動）。一般解はこの2つの重ね合わせ。</figcaption>
+</figure>
+
+<h3>初期値問題——任意関数を初期条件で決める</h3>
+<p>一般解の $\phi,\psi$ は、<strong>初期条件</strong>（$t=0$ の波形と速度）を与えると決まります。代表的な場合を最後まで解きます。</p>
+<div class="ex">
+<span class="label">例 12.1（初期波形 $f$、初速ゼロ）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex12-1">完了</label>　$u(x,0)=f(x)$、$\dfrac{\partial u}{\partial t}(x,0)=0$ のとき、$u(x,t)$ を求めよ。
+<div class="proof">
+<strong>① 一般解に初期条件を課す</strong>　$u=\phi(x-ct)+\psi(x+ct)$ に $t=0$ を入れる：
+$$ \phi(x)+\psi(x)=f(x). \tag{A} $$
+<strong>② 初速の条件</strong>　$u_t=-c\,\phi'(x-ct)+c\,\psi'(x+ct)$（合成関数の微分：内側の $t$ 微分が $\mp c$ を出す）。$t=0$ で
+$$ -c\,\phi'(x)+c\,\psi'(x)=0\qquad\Longrightarrow\qquad \psi'(x)=\phi'(x). $$
+<strong>③ 積分して関係式に</strong>　両辺を $x$ で積分すると $\psi(x)=\phi(x)+C$（$C$ は積分定数）。<br>
+<strong>④ (A) と連立</strong>　(A) に代入：$\phi+(\phi+C)=f$ より $\phi(x)=\dfrac{f(x)-C}{2},\ \psi(x)=\dfrac{f(x)+C}{2}$。<br>
+<strong>⑤ 一般解に戻す</strong>
+$$ u(x,t)=\frac{f(x-ct)-C}{2}+\frac{f(x+ct)+C}{2}=\frac{1}{2}\Big[f(x-ct)+f(x+ct)\Big] $$
+（$C$ はきれいに打ち消える）。<strong>初期波形が半分ずつに割れて左右へ走る</strong>——ギターの弦を離した瞬間の運動そのものです。
+</div>
+</div>
+<div class="box">
+<strong>補足（初速もある場合）</strong>　$u_t(x,0)=g(x)$ も与えると、同様の手順（②の右辺が $g$ になり、③で $g$ の積分が残る）で
+$$ u(x,t)=\frac12\big[f(x-ct)+f(x+ct)\big]+\frac{1}{2c}\int_{x-ct}^{x+ct}g(s)\,ds $$
+（<strong>ダランベールの公式</strong>）。時刻 $t$ の点 $x$ に影響するのは区間 $[x-ct,\,x+ct]$ の初期データだけ——「情報は速さ $c$ でしか伝わらない」ことも式から読み取れます。
+</div>
+
+<h2>12.3　解法②　変数分離法——境界値問題の定石</h2>
+<p>ダランベールの解は無限に長い弦向きでした。現実には「長さ $L$ の棒」「両端を固定した弦」のように<strong>境界条件</strong>がつきます。このときの定石が<strong>変数分離法</strong>です。放物型の代表・熱伝導（拡散）方程式で実演します。</p>
+
+<div class="def">
+<span class="label">問題設定（両端の温度を0に保った棒の冷却）</span>　長さ $L$ の棒の温度 $u(t,x)$：
+$$ \frac{\partial u}{\partial t}=\kappa\frac{\partial^2u}{\partial x^2}\qquad(0\le x\le L,\ t\ge0) $$
+<ul>
+  <li><strong>境界条件（B.C.）</strong>：$u(t,0)=0,\ u(t,L)=0$（両端を氷水に浸すイメージ）</li>
+  <li><strong>初期条件（I.C.）</strong>：$u(0,x)=f(x)$（最初の温度分布）</li>
+</ul>
+</div>
+
+<div class="proof">
+<strong>① 解を「積の形」で探す</strong>
+$$ u(t,x)=T(t)\,X(x) $$
+（時間だけの関数×場所だけの関数）と<strong>仮定</strong>して方程式に代入する。$u_t=T'(t)X(x)$、$u_{xx}=T(t)X''(x)$ だから
+$$ T'(t)\,X(x)=\kappa\,T(t)\,X''(x). $$
+<strong>② 変数を左右に分離する</strong>　両辺を $\kappa\,T(t)X(x)$ で割る（$\ne0$ の範囲で）：
+$$ \frac{T'(t)}{\kappa\,T(t)}=\frac{X''(x)}{X(x)}. $$
+<strong>③ 両辺は定数でなければならない</strong>　左辺は $t$ だけの関数、右辺は $x$ だけの関数。$t$ を動かしても右辺は変わらないから左辺も変われない。$x$ についても同様。つまり両辺は $t$ にも $x$ にも依らない<strong>定数</strong>である。この定数を $-\lambda^2$ と書く（<strong>負に置く理由</strong>：右辺 $=X''/X=$ 正の定数や $0$ だと、後で見るように境界条件を満たす解が $u\equiv0$ しかなくなる〔演習2〕。また左辺 $=T'/(\kappa T)$ が正だと温度が勝手に発散して物理的におかしい。負なら両方うまくいく）。<br>
+<strong>④ 2本の常微分方程式（ODE）に分かれる</strong>
+$$ \frac{X''}{X}=-\lambda^2\ \Rightarrow\ X''+\lambda^2X=0,\qquad
+\frac{T'}{\kappa T}=-\lambda^2\ \Rightarrow\ T'+\lambda^2\kappa\,T=0. $$
+偏微分方程式が<strong>ただの常微分方程式2本</strong>になった——これが変数分離法の御利益。
+</div>
+
+<h3>空間側 $X$：境界条件が周波数を選ぶ（固有値問題）</h3>
+<div class="proof">
+<strong>① $X''+\lambda^2X=0$ の一般解</strong>　特性方程式 $\mu^2=-\lambda^2$ より $\mu=\pm i\lambda$、よって
+$$ X(x)=A\cos\lambda x+B\sin\lambda x. $$
+<strong>② 境界条件 $X(0)=0$</strong>　$\cos0=1,\ \sin0=0$ なので $X(0)=A=0$。残るは $X=B\sin\lambda x$。<br>
+<strong>③ 境界条件 $X(L)=0$</strong>　$B\sin\lambda L=0$。$B=0$ だと $X\equiv0$（つまらない自明解）なので、<strong>$\sin\lambda L=0$ が必要</strong>。$\sin$ がゼロになるのは引数が $\pi$ の整数倍のときだから
+$$ \lambda L=n\pi\qquad\Longrightarrow\qquad \lambda=\lambda_n=\frac{n\pi}{L}\quad(n=1,2,\cdots). $$
+<strong>④ 結論</strong>　境界条件を満たす $X$ は<strong>とびとびの $\lambda_n$ に限って</strong>存在し、
+$$ X_n(x)=b_n\sin\lambda_nx,\qquad \lambda_n=\frac{n\pi}{L}. $$
+「許される $\lambda$（固有値）とそのときの形 $X_n$（固有関数）を求める問題」なので<strong>固有値問題</strong>と呼ぶ。ギターの弦が特定の音（基音・倍音）しか出さないのと同じ仕組み。
+</div>
+
+<h3>時間側 $T$：指数関数的な減衰</h3>
+<div class="proof">
+$T'+\lambda_n^2\kappa T=0$ は変数分離できる1階ODE：$\dfrac{dT}{T}=-\lambda_n^2\kappa\,dt$ を積分して $\ln|T|=-\lambda_n^2\kappa t+$ 定数、すなわち
+$$ T_n(t)=C_n\,e^{-\lambda_n^2\kappa t}. $$
+</div>
+
+<div class="thm">
+<span class="label">変数分離解（モード解）と一般解</span>　各 $n$ について
+$$ u_n(x,t)=X_n(x)\,T_n(t)=D_n\,e^{-\lambda_n^2\kappa t}\sin\lambda_nx\qquad\Big(\lambda_n=\frac{n\pi}{L}\Big) $$
+が解。方程式は線形なので<strong>重ね合わせ</strong>も解であり、一般解は
+$$ u(x,t)=\sum_{n=1}^{\infty}D_n\,e^{-\lambda_n^2\kappa t}\sin\frac{n\pi x}{L}. $$
+</div>
+
+<div class="proof">
+<strong>係数 $D_n$ は初期条件＋フーリエ級数（第9回）で決まる</strong>　$t=0$ を代入すると $e^0=1$ なので
+$$ f(x)=u(0,x)=\sum_{n=1}^{\infty}D_n\sin\frac{n\pi x}{L}. $$
+これは $f$ の<strong>フーリエ正弦級数展開</strong>そのもの。第9回で導いた係数公式（$\sin$ どうしの直交性 $\int_0^L\sin\frac{n\pi x}{L}\sin\frac{m\pi x}{L}dx=\frac L2\delta_{nm}$ から従う）により
+$$ D_n=\frac{2}{L}\int_0^Lf(x)\sin\frac{n\pi x}{L}\,dx. $$
+<span class="meta">フーリエがフーリエ級数を発明したのは、まさにこの熱伝導方程式を解くためでした。第9回の道具がここで本来の出番を迎えます。</span>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 480 210" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <defs><marker id="mh1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0L7,3L0,6z" fill="#999"/></marker></defs>
+  <line x1="30" y1="150" x2="450" y2="150" stroke="#999" stroke-width="1.1" marker-end="url(#mh1)"/>
+  <line x1="40" y1="185" x2="40" y2="25" stroke="#999" stroke-width="1.1" marker-end="url(#mh1)"/>
+  <text x="443" y="168" fill="#999">x</text><text x="48" y="35" fill="#999">u</text>
+  <text x="36" y="168" fill="#666">0</text><text x="408" y="168" fill="#666">L</text>
+  <line x1="410" y1="145" x2="410" y2="155" stroke="#666" stroke-width="1.2"/>
+  <!-- n=1 mode t=0 -->
+  <path d="M40 150 Q225 20 410 150" fill="none" stroke="#1b4f72" stroke-width="2.2"/>
+  <!-- n=1 mode later -->
+  <path d="M40 150 Q225 85 410 150" fill="none" stroke="#1b4f72" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <!-- n=3 mode t=0 -->
+  <path d="M40 150 Q71 95 102 122 Q133 150 163 150 Q194 150 225 122 Q256 95 287 122 Q318 150 348 150 Q379 150 410 122" fill="none" stroke="#c0392b" stroke-width="1.6" opacity="0.85"/>
+  <text x="200" y="45" fill="#1b4f72">n=1（ゆっくり冷える）</text>
+  <text x="285" y="100" fill="#c0392b">n=3（すぐ消える）</text>
+  <text x="60" y="200" fill="#666">細かい凸凹（大きい n）ほど e^(−(nπ/L)²κt) で速く減衰 → 分布はなめらかに</text>
+</svg>
+<figcaption>図12-3　熱伝導のモード分解。初期分布をフーリエ正弦級数（$n=1,2,3,\dots$ のモード）に分解すると、各モードは形を保ったまま $e^{-\lambda_n^2\kappa t}$ で減衰する。減衰の速さは $\lambda_n^2\propto n^2$——<strong>細かい凸凹ほど桁違いに速く消える</strong>ので、どんな初期分布もすぐ「なまる」。これが放物型（拡散）の特徴。</figcaption>
+</figure>
+
+<div class="why">
+<span class="label">解法の全体像（レシピ化）</span>
+<ol>
+  <li>$u=T(t)X(x)$ と置いて代入 → 両辺を割って変数を左右に分離。</li>
+  <li>「$t$ だけの式＝$x$ だけの式」→ 両辺は定数 $-\lambda^2$。ODEが2本できる。</li>
+  <li>境界条件を $X$ に課す → 固有値 $\lambda_n$ と固有関数 $X_n$（$\sin$ や $\cos$）が決まる。</li>
+  <li>$T_n$ を解き、$u_n=X_nT_n$ を重ね合わせる。</li>
+  <li>初期条件をフーリエ級数展開して係数を決める。</li>
+</ol>
+波動方程式（有限の弦）でも手順は同じで、$T''+\lambda^2c^2T=0$ から $T_n$ が $\cos,\sin$（振動）になる点だけが違います。<strong>拡散＝減衰、波動＝振動</strong>という型の違いが、時間側のODEの階数にそのまま現れます。
+</div>
+
+<hr>
+<h2>12.4　解法の選び方——初見の問題をどう判断するか</h2>
+<p class="lead">ここまでで「ダランベールの解」と「変数分離法」という2つの武器を手に入れました。しかし実際に問題を渡されたとき、<strong>どちらを使うべきかを見た瞬間に判断できる</strong>ことが実戦では一番大事です。この章では、これまでの例（例12.1〜12.3）を振り返りながら、その判断基準を言葉と図で明文化します。</p>
+
+<div class="thm">
+<span class="label">判断のための3つのチェックポイント</span>
+<ol>
+  <li><strong>領域は無限（半無限）か、有限か</strong>——空間変数 $x$ に対して、両端で満たすべき条件（境界条件）が与えられているか。</li>
+  <li><strong>与えられている条件は何か・何個か</strong>——初期条件（$t=0$ での値）だけか、境界条件（$x=$一定 での値）も込みか。</li>
+  <li><strong>PDEの型（判別式 $D$ の符号）</strong>——双曲型（波動）・放物型（拡散）・楕円型（ポアソン）のどれか（12.1節）。</li>
+</ol>
+</div>
+
+<div class="proof">
+<strong>① 「領域」を見る——ここが最初の分岐点</strong>　弦や棒が<strong>無限に長い</strong>（あるいは端の影響を考えなくてよい）なら、$x$ に境界条件は付かず、条件は「$t=0$ での波形・速度」＝初期条件だけになります。このとき解を<strong>閉じた式</strong>（進行波＋後退波）でズバリ書けるのがダランベールの解でした（12.2節）。<br>
+一方、弦や棒の<strong>長さが有限</strong>（$0\le x\le L$）で、両端が固定・絶縁などの条件を持つなら、$x=0,\,L$ で満たすべき<strong>境界条件</strong>が追加されます。この「両端の制約」が、許される波の形（固有関数）を<strong>とびとびに選び出す</strong>ため、変数分離法＋固有値問題が必要になります（12.3節）。<br><br>
+<strong>② 「条件の個数と種類」を数える</strong>　波動方程式（2階のODEが2本、$X,T$ とも2階）は本来 $X$ に2定数、$T$ に2定数＝計4つの自由度を持ちます。無限区間では境界条件がない代わりに初期条件が2つ（$u(x,0)=f$、$u_t(x,0)=g$）与えられ、ちょうど帳尻が合う——だからダランベールの解には未知定数が残らず、$f,g$ だけで完全に決まります。有限区間では境界条件2つ（$X(0)=X(L)=0$）が先に $X$ を離散化し、残りの自由度（各モードの係数 $D_n$）を初期条件のフーリエ級数展開で決めます。<strong>「境界条件の有無」がそのまま「解法の選択」に直結する</strong>、と覚えるのが実戦的です。<br><br>
+<strong>③ 「型」は解の性格と必要な条件の数を教えてくれる</strong>　型そのものは解法を直接指定しませんが、次を保証します：双曲型・放物型は<strong>初期値問題</strong>として立てる（時間発展を追う）のが自然、楕円型は時間がなく<strong>境界値問題</strong>として立てる（12.1節末の「なぜ分類が大事か」を参照）。今回学んだ2手法のうち、ダランベールの解は<strong>双曲型・無限区間専用</strong>の特別な近道（因数分解で $u_{\xi\eta}=0$ に落ちるのは波動方程式だけの特権）、変数分離法は<strong>型を問わず・有限区間の境界値問題全般</strong>に効く汎用の方法です。
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><marker id="mdec1" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto"><path d="M0,0L6,2.5L0,5z" fill="#777"/></marker></defs>
+  <rect x="170" y="8" width="180" height="34" rx="7" fill="#eef2f7" stroke="#888"/>
+  <text x="260" y="29" text-anchor="middle" fill="#333">PDEと与えられた条件を見る</text>
+  <line x1="260" y1="42" x2="260" y2="64" stroke="#777" stroke-width="1.3" marker-end="url(#mdec1)"/>
+
+  <polygon points="260,60 360,102 260,144 160,102" fill="#fffdf0" stroke="#e0c14b"/>
+  <text x="260" y="98" text-anchor="middle" fill="#9a7d1a">空間 x に境界条件は</text>
+  <text x="260" y="114" text-anchor="middle" fill="#9a7d1a">あるか？（領域は有限か）</text>
+
+  <line x1="160" y1="102" x2="70" y2="102" stroke="#777" stroke-width="1.3" marker-end="url(#mdec1)"/>
+  <text x="112" y="94" text-anchor="middle" fill="#666">ない（無限区間）</text>
+  <rect x="10" y="112" width="150" height="46" rx="7" fill="#fbf6ff" stroke="#a779c4"/>
+  <text x="85" y="130" text-anchor="middle" fill="#6a3a8c">初期条件のみ</text>
+  <text x="85" y="145" text-anchor="middle" fill="#6a3a8c">（u(x,0), uₜ(x,0)）</text>
+  <line x1="85" y1="158" x2="85" y2="182" stroke="#777" stroke-width="1.3" marker-end="url(#mdec1)"/>
+  <rect x="4" y="184" width="162" height="46" rx="7" fill="#eef5ff" stroke="#5a87c4"/>
+  <text x="85" y="203" text-anchor="middle" fill="#274e80" font-weight="bold">ダランベールの解</text>
+  <text x="85" y="219" text-anchor="middle" fill="#274e80">φ(x−ct) + ψ(x+ct)</text>
+
+  <line x1="360" y1="102" x2="450" y2="102" stroke="#777" stroke-width="1.3" marker-end="url(#mdec1)"/>
+  <text x="410" y="94" text-anchor="middle" fill="#666">ある（有限区間）</text>
+  <rect x="360" y="112" width="150" height="46" rx="7" fill="#fbf6ff" stroke="#a779c4"/>
+  <text x="435" y="130" text-anchor="middle" fill="#6a3a8c">境界条件＋初期条件</text>
+  <text x="435" y="145" text-anchor="middle" fill="#6a3a8c">（両端で0など）</text>
+  <line x1="435" y1="158" x2="435" y2="182" stroke="#777" stroke-width="1.3" marker-end="url(#mdec1)"/>
+  <rect x="354" y="184" width="162" height="60" rx="7" fill="#eef5ff" stroke="#5a87c4"/>
+  <text x="435" y="203" text-anchor="middle" fill="#274e80" font-weight="bold">変数分離法</text>
+  <text x="435" y="219" text-anchor="middle" fill="#274e80">→ 固有値問題 Xₙ, λₙ</text>
+  <text x="435" y="234" text-anchor="middle" fill="#274e80">→ フーリエ級数で係数決定</text>
+
+  <text x="260" y="270" text-anchor="middle" fill="#666">型（D の符号）は「初期値問題型か境界値問題型か」の目安を与えるだけ。</text>
+  <text x="260" y="286" text-anchor="middle" fill="#666">実際の手法選択を決めるのは「境界条件があるかどうか」。</text>
+</svg>
+<figcaption>図12-4　解法選択の判断フロー。最初の分岐は「$x$ 方向に境界条件があるか＝領域が有限か無限か」。ここが分かれば使う手法は機械的に決まる。</figcaption>
+</figure>
+
+<table class="tb">
+<tr><th></th><th>ダランベールの解</th><th>変数分離法</th></tr>
+<tr><td>使える領域</td><td>無限・半無限区間</td><td>有限区間（境界条件つき）</td></tr>
+<tr><td>使える型</td><td>双曲型（波動方程式）限定</td><td>型を問わず汎用（波動・拡散・ラプラスいずれも）</td></tr>
+<tr><td>与える条件</td><td>初期条件のみ（$f,g$）</td><td>境界条件＋初期条件</td></tr>
+<tr><td>解の形</td><td>閉じた式（進行波＋後退波）</td><td>級数（固有関数の無限和）</td></tr>
+<tr><td>要となる道具</td><td>変数変換 $\xi=x+ct,\eta=x-ct$</td><td>固有値問題＋フーリエ級数（第9回）</td></tr>
+</table>
+
+<div class="proof">
+<strong>これまでの例を「判断」の視点で振り返る</strong>
+<ul>
+<li><strong>例12.1・例12.2</strong>　問題文に $x$ 方向の境界条件が一切なく、$u(x,0)$ と $u_t(x,0)$ だけが与えられている——チェックポイント①②より即座に「無限区間・初期値問題」と判定でき、ダランベールの解を選ぶ。実際、例12.2の答え $u=\sin x\cos ct$ は変数分離法で解いたときの形（固有関数×時間関数）と一致するが、これは<strong>境界条件なしでも $\sin x$ 自体がたまたま初期波形だった</strong>という偶然であり、一般には無限区間で変数分離の固有値問題は組めない（固有値を離散化する「壁」が無いため）。</li>
+<li><strong>例12.3</strong>　「長さ $L=\pi$」「$u(t,0)=u(t,\pi)=0$」と<strong>両端の境界条件が明記</strong>されている——チェックポイント①より「有限区間」、迷わず変数分離法。初期分布が最初から $\sin$ の有限和だったので、係数はフーリエ係数の積分公式を回さずに<strong>見比べるだけ</strong>で済んだ（これも「判断」の一種：初期条件の形を見て、積分が要るかどうかを先に判定する）。</li>
+</ul>
+</div>
+
+<div class="warn">
+<span class="label">陥りやすい罠</span>
+<ul>
+<li><strong>境界条件のない問題にいきなり変数分離を試みる</strong>——固有値を選び出す「壁」が無いので $\lambda$ が離散化されず、$\sum_n$ の形に持ち込めない。境界条件の有無は必ず最初に確認する。</li>
+<li><strong>有限区間の問題にダランベールの解をそのまま使う</strong>——$u=\phi(x-ct)+\psi(x+ct)$ は境界条件 $u(t,0)=u(t,L)=0$ を一般には満たさない（$\phi,\psi$ を境界条件に合わせて特殊な形に折り返す高度な技法＝鏡像法が必要になり、この講義の範囲を超える）。有限区間では素直に変数分離法を使う。</li>
+<li><strong>境界条件が0でない（非斉次）場合</strong>——例えば $u(t,0)=T_1,\ u(t,L)=T_2$（両端の温度が0でない）だと、変数分離の前提「両辺が同じ定数」という議論がそのままでは成り立たない。この場合は定常解（$t\to\infty$ の一定温度分布）を先に引き算し、残りを斉次境界条件の問題として変数分離する、という一手間が必要（発展内容）。</li>
+</ul>
+</div>
+
+<div class="ex">
+<span class="label">判断ドリル（解く前に、手法だけ判定せよ）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="judge12-1">完了</label>　次の(a)〜(c)について、ダランベールの解／変数分離法のどちらを使うべきか、チェックポイント①②に沿って理由とともに答えよ（実際に解く必要はない）。
+<ol style="margin-top:6px;">
+  <li>$u_{tt}=c^2u_{xx}\ (-\infty&lt;x&lt;\infty)$、$u(x,0)=e^{-x^2}$、$u_t(x,0)=0$。</li>
+  <li>$u_t=\kappa u_{xx}\ (0\le x\le L)$、$u(t,0)=u(t,L)=0$、$u(0,x)=x(L-x)$。</li>
+  <li>$u_{tt}=c^2u_{xx}\ (0\le x\le L)$、$u(t,0)=u(t,L)=0$、$u(0,x)=\sin\frac{\pi x}{L}$、$u_t(x,0)=0$。</li>
+</ol>
+<div class="proof">
+<strong>(a)</strong>　$x$ の範囲が $(-\infty,\infty)$ で境界条件が無く、条件は $u,u_t$ の初期値のみ→<strong>ダランベールの解</strong>（例12.1の公式に $f(x)=e^{-x^2}$ を代入すればよい）。<br>
+<strong>(b)</strong>　$0\le x\le L$ で両端の境界条件 $u(t,0)=u(t,L)=0$ が明記→<strong>変数分離法</strong>。初期分布 $x(L-x)$ は $\sin$ の有限和ではないので、係数はフーリエ正弦級数の積分公式 $D_n=\frac2L\int_0^Lf(x)\sin\frac{n\pi x}Ldx$ を実際に計算する必要がある。<br>
+<strong>(c)</strong>　境界条件があるので<strong>変数分離法</strong>が本筋。ただし波動方程式かつ初期分布がすでに固有関数 $\sin\frac{\pi x}{L}$（$n=1$ モード）そのものなので、係数比較だけで $u(x,t)=\sin\frac{\pi x}{L}\cos\frac{\pi ct}{L}$ と即答できる（例12.2と同じ「積分不要」パターン）。
+</div>
+</div>
+
+<hr>
+<h2>12.5　章末例題</h2>
+
+<div class="ex">
+<span class="label">例 12.2（ダランベール：$\sin$ の初期波形）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex12-2">完了</label>　$\dfrac{\partial^2u}{\partial t^2}=c^2\dfrac{\partial^2u}{\partial x^2}$、$u(x,0)=\sin x$、$u_t(x,0)=0$ を解き、解の形を解釈せよ。
+<div class="proof">
+<strong>① 例 12.1 の結果を使う</strong>　初速ゼロなので
+$$ u(x,t)=\frac12\big[\sin(x-ct)+\sin(x+ct)\big]. $$
+<strong>② 和を積に直す</strong>　ここで使う道具（和積公式）はその場で作れる：加法定理2本
+$$ \sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta,\qquad \sin(\alpha-\beta)=\sin\alpha\cos\beta-\cos\alpha\sin\beta $$
+を<strong>足し合わせる</strong>と $\sin(\alpha+\beta)+\sin(\alpha-\beta)=2\sin\alpha\cos\beta$（$\cos\alpha\sin\beta$ の項が $+$ と $-$ で打ち消し合う）。$\alpha=x,\ \beta=ct$ として
+$$ u(x,t)=\frac12\cdot2\sin x\cos ct=\sin x\,\cos ct. $$
+<strong>③ 解釈</strong>　「左右へ走る2つの波の重ね合わせ」が、書き直すと「<strong>形 $\sin x$ は動かず、振幅だけが $\cos ct$ で振動する</strong>」＝<strong>定在波</strong>。節（動かない点 $x=n\pi$）を持つ、弦の振動でおなじみの形です。進行波の重ね合わせと定在波は同じものの2つの見方だと分かる。
+</div>
+</div>
+
+<div class="ex">
+<span class="label">例 12.3（熱伝導：初期分布がモードの組み合わせ）</span> <label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="ex12-3">完了</label>　長さ $L=\pi$ の棒で
+$$ \frac{\partial u}{\partial t}=\kappa\frac{\partial^2u}{\partial x^2},\qquad u(t,0)=u(t,\pi)=0,\qquad u(0,x)=3\sin x-\sin 3x $$
+を解け。
+<div class="proof">
+<strong>① 一般解を書く</strong>　$L=\pi$ なので $\lambda_n=\dfrac{n\pi}{L}=n$。一般解は
+$$ u(x,t)=\sum_{n=1}^{\infty}D_n\,e^{-n^2\kappa t}\sin nx. $$
+<strong>② 初期条件と見比べて係数を決める</strong>　$t=0$：
+$$ 3\sin x-\sin 3x=\sum_{n=1}^{\infty}D_n\sin nx. $$
+右辺の $\sin nx$ は互いに直交する（第9回）ので、係数は左右で1対1に対応する：$D_1=3$、$D_3=-1$、他の $D_n=0$（積分公式 $D_n=\frac2\pi\int_0^\pi f\sin nx\,dx$ を回してもよいが、初期分布が既に $\sin$ の和なら「見比べる」だけでよい）。<br>
+<strong>③ 解</strong>
+$$ u(x,t)=3\,e^{-\kappa t}\sin x-e^{-9\kappa t}\sin 3x. $$
+<strong>検算</strong>　$u_t=-3\kappa e^{-\kappa t}\sin x+9\kappa e^{-9\kappa t}\sin3x$、$\kappa u_{xx}=\kappa(-3e^{-\kappa t}\sin x+9e^{-9\kappa t}\sin3x)$ で一致 ✓。$x=0,\pi$ で $\sin$ が消えて B.C. ✓。$t=0$ で I.C. ✓。<br>
+<span class="meta">$n=3$ のモードは $e^{-9\kappa t}$——$n=1$ の<strong>9倍の速さ（指数の肩で）</strong>で消える。少し時間が経つと $u\approx3e^{-\kappa t}\sin x$ となり、細かい構造から先に消えていく（図12-3）。</span>
+</div>
+</div>
+
+<h2>12.6　演習問題</h2>
+<p>1 は判別式の練習、2 は「なぜ $-\lambda^2$ と置くのか」の裏付け、3 は例 12.3 の型です。</p>
+<ol>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill12-1">完了</label> 次の方程式を双曲型・放物型・楕円型に分類せよ（一般形の $a,\ 2b,\ c$ を読み取って $D=b^2-ac$ を計算）。<br>
+  (a) $\dfrac{\partial^2u}{\partial x^2}+\dfrac{\partial^2u}{\partial y^2}=0$
+  (b) $\dfrac{\partial^2u}{\partial x^2}+4\dfrac{\partial^2u}{\partial x\partial y}+\dfrac{\partial^2u}{\partial y^2}=0$
+  (c) $\dfrac{\partial^2u}{\partial x^2}+2\dfrac{\partial^2u}{\partial x\partial y}+\dfrac{\partial^2u}{\partial y^2}+\dfrac{\partial u}{\partial x}=0$</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill12-2">完了</label> 変数分離の定数を $-\lambda^2$ でなく <strong>$+\lambda^2$（正）と置くと、境界条件 $X(0)=X(L)=0$ を満たす解が $X\equiv0$ しかない</strong>ことを示せ。（定数 $0$ の場合も確かめよ。）</li>
+  <li><label class="prob-chk"><input type="checkbox" class="prob-check" data-pid="drill12-3">完了</label> 長さ $L$ の棒で $u_t=\kappa u_{xx}$、$u(t,0)=u(t,L)=0$、$u(0,x)=5\sin\dfrac{2\pi x}{L}$ を解け。</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong>　(a) $(a,2b,c)=(1,0,1)$ → $D=0-1\cdot1=-1 &lt; 0$：<strong>楕円型</strong>（ラプラス方程式）。<br>
+(b) $2b=4$ より $b=2$、$(a,c)=(1,1)$ → $D=4-1=3 &gt; 0$：<strong>双曲型</strong>。<br>
+(c) $2b=2$ より $b=1$、$(a,c)=(1,1)$ → $D=1-1=0$：<strong>放物型</strong>（1階の項 $u_x$ は分類に影響しない）。<br><br>
+<strong>2.</strong>　$X''-\lambda^2X=0$（$\lambda &gt; 0$）の特性方程式は $\mu^2=\lambda^2$、$\mu=\pm\lambda$（実数！）なので一般解は $X=Ae^{\lambda x}+Be^{-\lambda x}$。<br>
+$X(0)=0$：$A+B=0$ → $B=-A$、つまり $X=A(e^{\lambda x}-e^{-\lambda x})$。<br>
+$X(L)=0$：$A(e^{\lambda L}-e^{-\lambda L})=0$。$\lambda L &gt; 0$ では $e^{\lambda L} &gt; 1 &gt; e^{-\lambda L}$ なので括弧は決してゼロにならない。よって $A=0$、$X\equiv0$（自明解のみ）。<br>
+定数 $0$ の場合：$X''=0$ → $X=Ax+B$（直線）。$X(0)=0$ で $B=0$、$X(L)=0$ で $AL=0$ → $A=0$。やはり $X\equiv0$。<br>
+∴ 非自明解が出るのは負の定数（$\sin,\cos$ 型で何度もゼロを横切れる）だけ——「$-\lambda^2$ と置く」のは必然だった。<br><br>
+<strong>3.</strong>　一般解 $u=\sum D_n e^{-(n\pi/L)^2\kappa t}\sin\frac{n\pi x}{L}$ に $t=0$ を入れ、$5\sin\frac{2\pi x}{L}=\sum D_n\sin\frac{n\pi x}{L}$ と見比べる：$D_2=5$、他は $0$。よって
+$$ u(x,t)=5\,e^{-\left(\frac{2\pi}{L}\right)^2\kappa t}\,\sin\frac{2\pi x}{L}. $$
+</div>
+</details>
+
+<hr>
+<h2>12.7　まとめ・チェックリスト</h2>
+<div class="box">
+<ul>
+  <li>□ 定数係数2階線形PDEの一般形を書き、主要部から $D=b^2-ac$ を計算できる。</li>
+  <li>□ $D$ の符号と型（双曲型＝波動／放物型＝拡散／楕円型＝ポアソン）・名前の由来（2次曲線との対比）を言える。</li>
+  <li>□ 波動・拡散・ポアソン方程式それぞれの $D$ を自分で確認できる。</li>
+  <li>□ 変数変換 $\xi=x+ct,\ \eta=x-ct$ と連鎖律で波動方程式を $u_{\xi\eta}=0$ に直せる。</li>
+  <li>□ $u_{\xi\eta}=0$ を2回積分して、ダランベールの解 $u=\phi(x-ct)+\psi(x+ct)$（進行波＋後退波）を導ける。</li>
+  <li>□ $\phi(x-ct)$ が「速さ $c$ で右へ走る波」である理由（$x=\varphi_0+ct$）を説明できる。</li>
+  <li>□ 初期値問題（$u(x,0)=f$、初速 $0$）から $u=\frac12[f(x-ct)+f(x+ct)]$ を導ける。</li>
+  <li>□ $u=T(t)X(x)$ と置いて拡散方程式を2本のODE（$X''+\lambda^2X=0$、$T'+\lambda^2\kappa T=0$）に分離できる。分離定数が「定数」である理由と「負」に置く理由を言える。</li>
+  <li>□ 境界条件から固有値 $\lambda_n=\dfrac{n\pi}{L}$・固有関数 $\sin\lambda_nx$ を導ける（固有値問題）。</li>
+  <li>□ モード解 $u_n=D_ne^{-\lambda_n^2\kappa t}\sin\lambda_nx$ を重ね合わせ、初期条件を<strong>フーリエ正弦級数</strong>（第9回）で展開して係数を決められる。</li>
+  <li>□ 初見の問題を見て「境界条件があるか（領域が有限か無限か）」をまず確認し、ダランベールの解／変数分離法のどちらを使うべきか判断できる。</li>
+  <li>□ 有限区間にダランベールの解をそのまま使えない理由、無限区間で変数分離の固有値が離散化されない理由を説明できる。</li>
+</ul>
+</div>
+
+<div class="navi" style="margin-top:18px">
+これで後半戦の幹——<strong>フーリエ級数（第9回）→ フーリエ変換（第10回）→ デルタ関数・たたみ込み・微分方程式への応用（第11回）→ 偏微分方程式（第12回）</strong>——が一本につながりました。「関数を波に分解し、簡単な世界で解いて戻す」という一貫した発想を、期末に向けて各回のチェックリストで固めましょう。
+</div>
+
+<script>
+(function(){
+  var KEY = 'amII_prob_15';
+  var state = {};
+  try{ state = JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ state = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  document.querySelectorAll('.prob-check').forEach(function(cb){
+    var id = cb.getAttribute('data-pid');
+    cb.checked = !!state[id];
+    cb.addEventListener('change', function(){
+      state[id] = cb.checked;
+      save();
+    });
+  });
+})();
+</script>
+</body>
+</html>

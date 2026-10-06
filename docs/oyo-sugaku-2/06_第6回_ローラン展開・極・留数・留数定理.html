@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6回 ローラン展開・極・留数・留数定理</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root{ --ink:#1a1a1a; --sub:#555; --accent:#1b4f72; --accent2:#7d3c98; --line:#d5d5d5; --box:#f4f7fa;
+         --thm:#eef5ff; --thmline:#5a87c4; --def:#f0f9f0; --defline:#5fae5f; --ex:#fbf6ff; --exline:#a779c4;
+         --warn:#fff4e5; --warnline:#e0a96d; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); line-height:1.75; margin:0 auto; padding:22px 26px; max-width:920px; font-size:15.5px; }
+  h1{ font-size:23px; border-bottom:3px solid var(--accent); padding-bottom:8px; margin:0 0 4px; }
+  h2{ font-size:19px; color:#fff; background:var(--accent); padding:6px 12px; border-radius:4px; margin:28px 0 10px; }
+  h3{ font-size:16.5px; color:var(--accent); border-left:5px solid var(--accent); padding-left:8px; margin:20px 0 6px; }
+  h4{ font-size:15px; color:var(--accent2); margin:14px 0 4px; }
+  p{ margin:7px 0; } .lead{ color:var(--sub); margin:4px 0 14px; }
+  .box{ background:var(--box); border:1px solid var(--line); border-radius:6px; padding:9px 14px; margin:10px 0; }
+  .thm{ background:var(--thm); border:1px solid var(--thmline); border-left:6px solid var(--thmline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .def{ background:var(--def); border:1px solid var(--defline); border-left:6px solid var(--defline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .ex{ background:var(--ex); border:1px solid var(--exline); border-left:6px solid var(--exline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .warn{ background:var(--warn); border:1px solid var(--warnline); border-left:6px solid var(--warnline); border-radius:5px; padding:9px 14px; margin:12px 0; }
+  .proof{ margin:8px 0 8px 4px; padding-left:12px; border-left:2px dashed #bbb; }
+  .label{ font-weight:bold; } .thm .label{ color:#274e80; } .def .label{ color:#2e7d32; } .ex .label{ color:#6a3a8c; }
+  .qed{ text-align:right; color:#888; }
+  ul,ol{ margin:6px 0; padding-left:22px; } li{ margin:3px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:#c0392b; font-weight:bold; } .key{ font-weight:bold; color:var(--accent2); }
+  hr{ border:none; border-top:1px dashed var(--line); margin:22px 0; }
+  details{ margin:8px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13px; color:var(--sub); background:#f7f7f7; border:1px solid var(--line); border-radius:6px; padding:6px 12px; }
+  figure.fig{ margin:16px auto; text-align:center; max-width:520px; }
+  figure.fig svg{ width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:7px; padding:4px; }
+  figcaption{ font-size:12.5px; color:var(--sub); margin-top:6px; line-height:1.6; text-align:left; }
+  @media print{ body{ font-size:11pt; } h2{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } details{ display:block; } summary{ display:none; } }
+</style>
+</head>
+<body>
+
+<h1>第6回　ローラン展開・極・留数・留数定理</h1>
+<p class="lead">教科書 p.172, 176, 177, 179 ／ 全体地図の「ローラン展開 → 極・留数 → <strong>留数定理</strong> → 実積分応用」、複素積分計算の総仕上げです。</p>
+
+<div class="navi">
+特異点まわりの展開（<strong>ローラン展開</strong>）から、係数 $C_{-1}$ を<strong>留数</strong>として取り出します。これにより、特異点を含む複素積分が「留数の和 × $2\pi i$」で一気に計算できます（<strong>留数定理</strong>）。これが第7回の実積分計算へ直結します。
+</div>
+
+<h2>6.1　ローラン展開</h2>
+<div class="thm">
+<span class="label">定理 6.1（ローラン展開）</span><br>
+$f$ が環状領域（$a$ を中心とするドーナツ状の領域）で正則なら、<strong>負べきを含む</strong>級数に展開できる：
+$$ f(z)=\sum_{n=-\infty}^{\infty} C_n (z-a)^n,\qquad C_n=\frac{1}{2\pi i}\oint_C \frac{f(\zeta)}{(\zeta-a)^{n+1}}\,d\zeta. $$
+</div>
+<p>テイラー展開（第5回）との違いは $n$ が<strong>負まで動く</strong>こと。$a$ が特異点だと、$f(\zeta)$ は $C$ の内部に特異点をもつので、テイラーのときのように「グルサで $C_n=f^{(n)}/n!$」とは書けない。係数 $C_n$ を積分から直接求めるのは一般に難しく、<strong>実際は既知のテイラー展開を組み合わせて求める</strong>。</p>
+
+<figure class="fig">
+<svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <defs><mask id="ring6"><rect width="300" height="230" fill="#fff"/><circle cx="150" cy="118" r="38" fill="#000"/></mask></defs>
+  <circle cx="150" cy="118" r="92" fill="#eef5ff" mask="url(#ring6)"/>
+  <circle cx="150" cy="118" r="92" fill="none" stroke="#1b4f72" stroke-width="2"/>
+  <circle cx="150" cy="118" r="38" fill="none" stroke="#1b4f72" stroke-width="2" stroke-dasharray="5 3"/>
+  <g stroke="#c0392b" stroke-width="2"><line x1="144" y1="112" x2="156" y2="124"/><line x1="156" y1="112" x2="144" y2="124"/></g>
+  <text x="158" y="116" fill="#c0392b">a</text>
+  <text x="96" y="40" fill="#1b4f72">この環状領域で f は正則</text>
+</svg>
+<figcaption>図6-1　特異点 $a$ を囲む<strong>環状領域（ドーナツ状）</strong>で正則なら、負べきを含む<strong>ローラン展開</strong>ができる。中央の穴に特異点（×）がある。</figcaption>
+</figure>
+
+<div class="def">
+<span class="label">定義 6.2（主部と極）</span>　負べきの部分 $\varphi(z)=C_{-1}(z-a)^{-1}+C_{-2}(z-a)^{-2}+\cdots$ を<strong>主部</strong>という。
+主部が $(z-a)^{-n}$ までで止まるとき、$a$ は<strong>$n$ 位の極</strong>。
+</div>
+
+<div class="ex">
+<span class="label">例 6.1</span>　$f(z)=\dfrac{e^z}{z^2}$ を $z=0$ のまわりで展開。$e^z=1+z+\frac{z^2}{2}+\cdots$ を割って
+$$ \frac{e^z}{z^2}=\frac{1}{z^2}+\frac{1}{z}+\frac12+\frac{z}{6}+\cdots $$
+主部は $z^{-2}$ まで → <strong>2位の極</strong>。$C_{-1}=1$（後述の留数）。
+</div>
+
+<h2>6.2　留数</h2>
+<div class="def">
+<span class="label">定義 6.3（留数）</span>　孤立特異点 $a$ における留数を、ローラン展開の $(z-a)^{-1}$ の係数で定める：
+$$ \mathrm{Res}(f,a)=C_{-1}=\frac{1}{2\pi i}\oint_C f(z)\,dz. $$
+</div>
+<div class="proof">
+<span class="label">なぜ $C_{-1}$ だけ残るのか</span>　$f$ のローラン展開を $a$ 中心の小円 $C$ 上で一周積分する。第3回 基本公式 $\displaystyle\oint_C(z-a)^n dz=\begin{cases}2\pi i&(n=-1)\\0&(n\neq-1)\end{cases}$ により、$n=-1$ の項だけが生き残る：
+$$ \oint_C f(z)\,dz=\sum_n C_n\oint_C(z-a)^n dz=C_{-1}\cdot2\pi i. $$
+よって $\mathrm{Res}(f,a)=C_{-1}=\dfrac{1}{2\pi i}\oint_C f\,dz$。<span class="qed">∎</span>
+</div>
+
+<h3>6.2.1　留数の計算公式（導出つき）</h3>
+<div class="thm">
+<span class="label">公式 6.4（1位の極）</span>
+$$ \mathrm{Res}(f,a)=\lim_{z\to a}(z-a)f(z). $$
+</div>
+<div class="proof">
+<span class="label">導出</span>　1位の極なら $f(z)=\phi(z)+\dfrac{C_{-1}}{z-a}$（$\phi$ は正則部）。両辺に $(z-a)$ を掛けて $z\to a$：
+$\displaystyle\lim_{z\to a}(z-a)f(z)=\lim_{z\to a}\big[(z-a)\phi(z)+C_{-1}\big]=C_{-1}.$<span class="qed">∎</span>
+</div>
+
+<div class="thm">
+<span class="label">公式 6.5（$n$ 位の極）</span>
+$$ \mathrm{Res}(f,a)=\lim_{z\to a}\frac{1}{(n-1)!}\frac{d^{n-1}}{dz^{n-1}}\Big[(z-a)^n f(z)\Big]. $$
+</div>
+<div class="proof">
+<span class="label">導出</span>　$n$ 位の極なら $f(z)=\phi(z)+\dfrac{C_{-1}}{z-a}+\cdots+\dfrac{C_{-n}}{(z-a)^n}$。$(z-a)^n$ を掛けると<strong>正則関数</strong>
+$$ (z-a)^n f(z)=(z-a)^n\phi(z)+C_{-1}(z-a)^{n-1}+\cdots+C_{-n}. $$
+$C_{-1}$ は $(z-a)^{n-1}$ の係数だから、$(n-1)$ 回微分して $z\to a$ とすれば $(n-1)!\,C_{-1}$ が残る（より低次の項は微分で消え、より高次の項は $z\to a$ で消える）。$(n-1)!$ で割って $C_{-1}$。<span class="qed">∎</span>
+</div>
+
+<div class="thm">
+<span class="label">公式 6.6（便利形：$f=g/h$ で $h(a)=0,\ h'(a)\neq0,\ g(a)\neq0$ の1位の極）</span>
+$$ \mathrm{Res}(f,a)=\frac{g(a)}{h'(a)}. $$
+</div>
+<div class="proof">
+<span class="label">導出</span>　$\displaystyle\mathrm{Res}=\lim_{z\to a}(z-a)\frac{g(z)}{h(z)}=\lim_{z\to a} g(z)\cdot\frac{z-a}{h(z)-h(a)}=\frac{g(a)}{h'(a)}$（最後は微分の定義の逆数）。<span class="qed">∎</span>
+</div>
+<p class="meta">公式を丸暗記する必要はないが、<strong>導出を理解しておくこと</strong>（先生の方針）。$g/h$ 形は実積分（第7回）で多用する。</p>
+
+<h2>6.3　留数定理</h2>
+<div class="thm">
+<span class="label">定理 6.7（留数定理）</span><br>
+$f$ が閉曲線 $C$ の内部に孤立特異点 $a_1,\dots,a_m$ をもち、それ以外で正則なら
+$$ \oint_C f(z)\,dz=2\pi i\sum_{k=1}^{m}\mathrm{Res}(f,a_k). $$
+</div>
+<div class="proof">
+<span class="label">証明</span>　積分路の変更（第4回 定理 4.2）で、$C$ 上の積分を各特異点を囲む小円 $C_k$ 上の積分の和に分ける：$\displaystyle\oint_C f\,dz=\sum_k\oint_{C_k}f\,dz$。各小円上では定義 6.3 より $\displaystyle\oint_{C_k}f\,dz=2\pi i\,\mathrm{Res}(f,a_k)$。和をとって結論。<span class="qed">∎</span>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12.5">
+  <path d="M160 25 C70 30 35 110 62 175 C90 235 238 235 266 168 C293 100 250 22 160 25 Z" fill="#f4f7fa" stroke="#1b4f72" stroke-width="2"/>
+  <text x="62" y="46" fill="#1b4f72">C</text>
+  <g>
+   <circle cx="120" cy="110" r="24" fill="#fff" stroke="#7d3c98" stroke-width="1.6"/>
+   <polygon points="144,99 139,111 149,111" fill="#7d3c98"/>
+   <g stroke="#c0392b" stroke-width="2"><line x1="114" y1="104" x2="126" y2="116"/><line x1="126" y1="104" x2="114" y2="116"/></g>
+   <text x="105" y="90" fill="#c0392b" font-size="11">a₁</text>
+  </g>
+  <g>
+   <circle cx="195" cy="150" r="24" fill="#fff" stroke="#7d3c98" stroke-width="1.6"/>
+   <polygon points="219,139 214,151 224,151" fill="#7d3c98"/>
+   <g stroke="#c0392b" stroke-width="2"><line x1="189" y1="144" x2="201" y2="156"/><line x1="201" y1="144" x2="189" y2="156"/></g>
+   <text x="180" y="132" fill="#c0392b" font-size="11">a₂</text>
+  </g>
+</svg>
+<figcaption>図6-2　$\displaystyle\oint_C f\,dz = 2\pi i\sum_k \mathrm{Res}(f,a_k)$。各極（×）を小円で囲み、留数の和に帰着させる（留数定理）。</figcaption>
+</figure>
+
+<div class="ex">
+<span class="label">例 6.2（スライドの例題）</span>　$\displaystyle\oint_{|z|=2}\frac{dz}{z^2(z-1)}$。<br>
+特異点は $z=0$（2位の極）と $z=1$（1位の極）。いずれも $|z|=2$ の内部。<br>
+$z=1$：$\mathrm{Res}(f,1)=\lim_{z\to1}(z-1)\dfrac{1}{z^2(z-1)}=\dfrac{1}{1}=1$。<br>
+$z=0$：$\mathrm{Res}(f,0)=\lim_{z\to0}\dfrac{d}{dz}\Big[z^2\cdot\dfrac{1}{z^2(z-1)}\Big]=\lim_{z\to0}\dfrac{d}{dz}\dfrac{1}{z-1}=\lim_{z\to0}\dfrac{-1}{(z-1)^2}=-1$。<br>
+留数定理より $\displaystyle\oint=2\pi i(1-1)=0$。
+</div>
+
+<hr>
+<h2>6.4　章末例題</h2>
+<div class="ex">
+<span class="label">例題 6.A</span>　$\displaystyle\oint_{|z|=3}\frac{z}{(z-1)(z+2)}\,dz$。
+<details><summary>解答を見る</summary>
+<div class="proof">
+1位の極 $z=1,-2$ ともに内部。公式 6.6（$g=z,\ h=(z-1)(z+2),\ h'=2z+1$）：
+$\mathrm{Res}(f,1)=\dfrac{1}{3}$, $\mathrm{Res}(f,-2)=\dfrac{-2}{-3}=\dfrac23$。
+$\displaystyle\oint=2\pi i\Big(\tfrac13+\tfrac23\Big)=2\pi i$。
+</div>
+</details>
+</div>
+<div class="ex">
+<span class="label">例題 6.B（過去問 問5 の留数）</span>　$f(z)=\dfrac{z^2}{(z^2+1)(z^2+4)}$ の $z=i$ と $z=2i$ での留数を求めよ。
+<details><summary>解答を見る</summary>
+<div class="proof">
+いずれも1位の極。公式 6.6 を $z=i$ に：$g=z^2$, 分母 $h=(z^2+1)(z^2+4)$, $h'=2z(z^2+4)+2z(z^2+1)$。$z=i$ では $z^2+1=0$ なので $h'(i)=2i(i^2+4)=2i(3)=6i$、$g(i)=i^2=-1$。
+$\mathrm{Res}(f,i)=\dfrac{-1}{6i}=\dfrac{i}{6}$。<br>
+$z=2i$ では $z^2+4=0$、$h'(2i)=2(2i)((2i)^2+1)=4i(-3)=-12i$、$g(2i)=(2i)^2=-4$。
+$\mathrm{Res}(f,2i)=\dfrac{-4}{-12i}=\dfrac{1}{3i}=-\dfrac{i}{3}$。<br>
+（過去問の値 $i/6,\ -i/3$ に一致。第7回 問5 で使う。）
+</div>
+</details>
+</div>
+
+<h2>6.5　演習問題</h2>
+<ol>
+  <li>$\displaystyle\oint_{|z|=1}\frac{e^z}{z}\,dz$。</li>
+  <li>$\displaystyle\oint_{|z|=2}\frac{dz}{z^2+1}$。（極 $z=\pm i$）</li>
+  <li>$\displaystyle\oint_{|z|=1}\frac{\cos z}{z^3}\,dz$。（3位ではなく主部に注意）</li>
+  <li>$f(z)=\dfrac{1}{z(z-1)^2}$ の各特異点の留数を求めよ。</li>
+</ol>
+<details><summary>解答を見る</summary>
+<div class="proof">
+<strong>1.</strong> 1位の極 $z=0$、$\mathrm{Res}=e^0=1$ → $\oint=2\pi i$。<br>
+<strong>2.</strong> 内部に $z=\pm i$。$\mathrm{Res}(f,i)=\dfrac{1}{2i}$, $\mathrm{Res}(f,-i)=\dfrac{1}{-2i}$、和 $0$ → $\oint=0$。<br>
+<strong>3.</strong> $\dfrac{\cos z}{z^3}=\dfrac{1}{z^3}\big(1-\frac{z^2}{2}+\cdots\big)=z^{-3}-\tfrac12 z^{-1}+\cdots$、$C_{-1}=-\tfrac12$ → $\oint=2\pi i(-\tfrac12)=-\pi i$。<br>
+<strong>4.</strong> $z=0$（1位）：$\mathrm{Res}=\lim_{z\to0}z\cdot f=\dfrac{1}{(0-1)^2}=1$。$z=1$（2位）：$\mathrm{Res}=\lim_{z\to1}\dfrac{d}{dz}\big[(z-1)^2 f\big]=\lim_{z\to1}\dfrac{d}{dz}\dfrac1z=\lim_{z\to1}\dfrac{-1}{z^2}=-1$。
+</div>
+</details>
+
+<h2>6.6　レポート・試験に向けて</h2>
+<ul>
+  <li>該当レポート：<span class="meta">reference/レポートの問題/no3.pdf 付近</span>。「特異点の位置と位数」「内部か外部か」「留数の計算過程」を省かず記述。</li>
+  <li>$n$ 位の極の留数公式は、$(z-a)^n f(z)$ が正則になることを必ず確認してから微分する。</li>
+</ul>
+
+<div class="navi" style="margin-top:18px">
+<strong>次回（第7回）への橋渡し</strong>：留数定理を使うと、実数の難しい定積分 $\displaystyle\int_{-\infty}^\infty,\ \int_0^{2\pi}$ が計算できる。経路を複素平面に持ち上げ、内部の極の留数を足すだけ——複素関数論のクライマックス。
+</div>
+
+</body>
+</html>

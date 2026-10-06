@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>機械力学 自習教材 目次</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 目次：教材ページと同じ書籍風デザイン。各回は「教材｜読み物」を対で載せる */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.85; margin:0 auto; padding:56px 28px 60px; max-width:860px; font-size:15px; letter-spacing:.02em; }
+  a{ color:inherit; }
+  .mast{ border-bottom:1px solid var(--ink); padding-bottom:18px; margin-bottom:18px; }
+  .mast .en{ font-family:var(--num); font-weight:300; font-size:20px; letter-spacing:.3em; color:var(--shu); margin:0; }
+  .mast h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(30px,5vw,44px); letter-spacing:.1em; margin:2px 0 6px; line-height:1.3; }
+  .mast .lead{ color:var(--sub); margin:0; font-size:14.5px; }
+  .spine{ font-size:14px; color:var(--sub); border-left:3px solid var(--line); padding:4px 0 4px 14px; margin:20px 0 8px; }
+  .spine strong{ color:var(--ink); }
+  h2{ font-family:var(--mincho); font-weight:700; font-size:17px; letter-spacing:.08em; margin:48px 0 4px; display:flex; align-items:baseline; gap:12px; }
+  h2 small{ font-family:inherit; font-weight:500; font-size:13px; color:var(--sub); letter-spacing:.04em; }
+
+  /* 1回分の行：番号｜題｜教材・読み物 */
+  .row{ display:grid; grid-template-columns:72px 1fr auto; gap:6px 18px; align-items:center; padding:16px 0; border-bottom:1px solid var(--line); }
+  .row .no{ font-family:var(--num); font-weight:300; font-size:46px; line-height:1; color:var(--shu); text-align:center;
+            font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  .row .tt{ font-family:var(--mincho); font-weight:700; font-size:18px; letter-spacing:.05em; margin:0; line-height:1.5; }
+  .row .tt a{ text-decoration:none; } .row .tt a:hover{ color:var(--accent); }
+  .row .dt{ font-size:12px; color:var(--sub); letter-spacing:.1em; margin:0; }
+  .row .ds{ font-size:13px; color:var(--sub); margin:2px 0 0; }
+  .row .go{ display:flex; flex-direction:column; gap:6px; min-width:200px; }
+  .go a,.go span{ display:block; font-size:12.5px; padding:6px 12px; text-decoration:none; border:1px solid var(--ink); line-height:1.4; }
+  .go a small,.go span small{ display:block; font-size:10px; letter-spacing:.2em; color:var(--sub); }
+  .go a.les{ background:var(--ink); color:var(--paper); } .go a.les small{ color:#c9c2b4; }
+  .go a.col{ border-color:var(--shu); color:var(--shu); font-family:var(--mincho); }
+  .go a:hover{ opacity:.85; }
+  .go span{ border-style:dashed; border-color:var(--line); color:#a59d90; }
+  .row.todo .no{ color:#cfc6b6; } .row.todo .tt{ color:#a59d90; }
+  .row.test .no{ font-size:15px; letter-spacing:.1em; font-family:var(--mincho); font-weight:700; color:#a06a32; }
+  .other{ margin-top:48px; font-size:14px; }
+  .meta{ font-size:12.5px; color:var(--sub); margin-top:36px; border-top:1px solid var(--line); padding-top:12px; }
+  @media (max-width:640px){
+    body{ padding:36px 16px 40px; }
+    .row{ grid-template-columns:52px 1fr; }
+    .row .no{ font-size:36px; }
+    .row .go{ grid-column:1 / -1; flex-direction:row; min-width:0; }
+    .go a,.go span{ flex:1; }
+  }
+</style>
+</head>
+<body>
+<!--fzk-back--><p style="margin:0 0 18px;font-size:12px;letter-spacing:.2em;line-height:1.6"><a href="../index.html" style="color:#a8322a;text-decoration:none">← 文机 FUZUKUE</a></p>
+<header class="mast">
+<p class="en">MECHANICS FOR MECHANICAL ENGINEERING</p>
+<h1>機械力学</h1>
+<p class="lead">2026年度 自習教材。各回は、導出の筋道を省かずに説明し直した<strong>教材</strong>と、そこから遠くまで連れていく<strong>読み物</strong>の二冊で一組。</p>
+</header>
+
+<p class="spine"><strong>全体の骨格</strong>：力はベクトル → モーメント（2次元・3次元）→ 力とモーメントの釣合い → 重心・摩擦・トラスへの応用（ここまで静力学）→ 質点の運動 → 剛体の運動 → エネルギと運動量（動力学）</p>
+
+<h2>前半：静力学 <small>10/1〜10/29</small></h2>
+<div class="row">
+  <div class="no">1</div>
+  <div><p class="dt">第1回・10/1（教科書 1章・2.1）</p><p class="tt"><a href="01_第1回_イントロダクションと力.html">力はベクトルである</a></p>
+  <p class="ds">ニュートンの法則／単位ベクトル・内積／力の合成と分解（式2.23）／ロープの張力</p></div>
+  <div class="go"><a class="les" href="01_第1回_イントロダクションと力.html"><small>LESSON</small>教材を読む</a>
+  <a class="col" href="column/C01_力は見えない.html"><small>READING</small>力は見えない</a></div>
+</div>
+<div class="row">
+  <div class="no">2</div>
+  <div><p class="dt">第2回・10/6（教科書 2.2）</p><p class="tt"><a href="02_第2回_モーメント.html">モーメント――力の回す働き</a></p>
+  <p class="ds">M=FL と腕・符号／2次元の外積／バリニオンの定理（式2.30′）／偶力・純粋モーメント／力の移動（式2.40・2.41）／関節トルク</p></div>
+  <div class="go"><a class="les" href="02_第2回_モーメント.html"><small>LESSON</small>教材を読む</a>
+  <a class="col" href="column/C02_等しくない腕.html"><small>READING</small>等しくない腕</a></div>
+</div>
+<div class="row todo"><div class="no">3</div><div><p class="dt">第3回・10/8（2.3）</p><p class="tt">3次元の力とモーメント</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">4</div><div><p class="dt">第4回・10/13（3.1）</p><p class="tt">力の釣合い</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">5</div><div><p class="dt">第5回・10/20（3.2）</p><p class="tt">重心</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">6</div><div><p class="dt">第6回・10/22（3.3）</p><p class="tt">摩擦力</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">7</div><div><p class="dt">第7回・10/27（3.4）</p><p class="tt">平面トラスの静解析</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row test"><div class="no">中間</div><div><p class="dt">第8回・10/29</p><p class="tt">中間まとめ および 中間試験</p><p class="ds">予想問題ページは試験前に作成予定</p></div><div class="go"></div></div>
+
+<h2>後半：動力学 <small>担当教員が交代</small></h2>
+<div class="row todo"><div class="no">9</div><div><p class="dt">第9回・日程未定</p><p class="tt">質点の運動学</p><p class="ds">資料待ち（後半の方針は開始時に確認）</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">10</div><div><p class="dt">第10回・日程未定</p><p class="tt">質点の運動方程式</p><p class="ds">資料待ち（後半の方針は開始時に確認）</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">11</div><div><p class="dt">第11回・日程未定</p><p class="tt">相対運動</p><p class="ds">資料待ち（後半の方針は開始時に確認）</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">12</div><div><p class="dt">第12回・日程未定</p><p class="tt">慣性モーメント</p><p class="ds">資料待ち（後半の方針は開始時に確認）</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">13</div><div><p class="dt">第13回・日程未定</p><p class="tt">剛体の運動方程式</p><p class="ds">資料待ち（後半の方針は開始時に確認）</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">14</div><div><p class="dt">第14回・日程未定</p><p class="tt">仕事とエネルギ</p><p class="ds">資料待ち（後半の方針は開始時に確認）</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">15</div><div><p class="dt">第15回・日程未定</p><p class="tt">運動量と角運動量</p><p class="ds">資料待ち（後半の方針は開始時に確認）</p></div><div class="go"></div></div>
+<div class="row test"><div class="no">期末</div><div><p class="dt">第16回</p><p class="tt">期末まとめ および 期末試験</p><p class="ds">予想問題ページは試験前に作成予定</p></div><div class="go"></div></div>
+
+<p class="other"><a href="はじめに_使い方ガイド.html">はじめに：このフォルダの使い方</a> ― 分からないところは質問すれば教材に追記される（ティーチングモード）。</p>
+<p class="meta">講義資料（穴埋め式スライド）と教科書『機械工学のための力学』（日本機械学会）をもとに再構成。例題の解答・演習・読み物は自作であり、実際の出題を保証するものではない。</p>
+
+</body>
+</html>
