@@ -108,16 +108,16 @@
 <body>
 <header style="padding-top:48px">
 <p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第2回・小テスト解説</p>
-<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">課題 2A（必修）の解き方</h1>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">課題 2A・2B の解き方</h1>
 </header>
-<p class="lead">2026/10/6／第2回「モーメント」の Moodle 小テスト（課題 2A、全4問）。各問を、教材の解き方の手順①〜⑥で解き直したもの。</p>
+<p class="lead">2026/10/6／第2回「モーメント」の Moodle 小テスト（課題 2A〔必修〕全4問＋<a href="#2B">課題 2B〔任意〕</a>全3問）。各問を、教材の解き方の手順①〜⑥で解き直したもの。</p>
 
 <div class="navi">
 <strong>4問に共通する道具</strong>：力を成分に分ける（第1回）→ 成分の式 $M=F_yr_x-F_xr_y$（教材 式3.4、講義資料 式2.30′）→ 複数の力を1点に集める：合力 $\boldsymbol F=\sum\boldsymbol F_i$ と合モーメント $M=\sum M_i$（教材 式5.2・5.3、教科書 式2.40・2.41）。<br>
 <strong>符号の約束</strong>：反時計回り（ccw）を＋とする（教材 式1.2）。Moodle の解答欄は「大きさ（正の値）」と「向き」を別々に入れる形式なので、最後に符号を向きに直して答える。
 </div>
 
-<div class="warn"><span class="label">この解説の位置づけ</span>問題文と図は Moodle の画面（reference/講義資料/第2回小テスト.png）から転載した。解答は<strong>自作</strong>であり、公式の解答とはまだ照合していない。数値は Python（draft/check_quiz02.py）で検算した。図の読み取り（とくに 2A-3 のベルトの位置）は画面の図から判断したもので、読み取りの前提は各問に書いておく。</div>
+<div class="warn"><span class="label">この解説の位置づけ</span>問題文と図は Moodle の画面（reference/講義資料/第2回小テスト.png、同 第2回小テスト続き.pdf）から転載した。解答は<strong>自作</strong>であり、公式の解答とはまだ照合していない。数値は Python（draft/check_quiz02.py）で検算した。図の読み取り（とくに 2A-3 のベルトの位置）は画面の図から判断したもので、読み取りの前提は各問に書いておく。</div>
 
 <!-- ============================================================ -->
 <h2><span class="no">1</span>2A-1　バリニオンの定理で1本の力のモーメント</h2>
@@ -219,6 +219,87 @@ $$M_O=9.000\times0.1500-(-15.59)\times0.6598=1.350+10.29=11.64\ \mathrm{N\cdot m
 <div class="warn"><span class="label">よくある誤り</span>(1) $\theta_2$ を $x$ 軸から測った角と読んでしまう：図では、破線（リンク1の延長）から測っている。(2) $\boldsymbol F$ を「リンク2の向き」にとってしまう：直角の印があるので、$\boldsymbol F$ はリンク2に<strong>垂直</strong>である。(3) $F_x$ の符号：左向きなので負になる。成分の欄には符号つきで入れる（大きさの欄ではない）。</div>
 
 <!-- ============================================================ -->
+<h2 id="2B" style="border-top:3px double var(--ink)">課題 2B（任意）</h2>
+<p class="lead" style="margin-top:0">課題 2A の続き（全3問）。2A の道具に、「1本の力に戻す」（教材 5.5節）と純粋モーメント（教材 4.4節）が加わる。</p>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>2B-1　平行な3力を1本の力に戻す</h2>
+<div class="ex"><span class="label">2B-1〔A〕</span>
+<p>図のように、$x$ 軸に垂直に3つの力が作用しているとき、これら3つの力と等価な作用を系に与える一つの力の大きさ、向き、および力の作用点の位置を求めなさい。</p>
+<figure class="slide"><img src="img/quiz02/q2b1.png" alt="x軸上の点Aに上向き20 N、Aから3 mの点Bに下向き20 N、Bから5 mの点Cに上向き80 N" loading="lazy" style="width:440px;max-width:95%;height:auto;background:#fff"><figcaption>2B-1 の図。出典：第2回小テスト（Moodle 課題 2B 問題1）</figcaption></figure>
+<p class="note">解答欄：力の大きさ（正の値）[N]、向き、作用点「点Aから右向きに □ m の点」。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：3本の力をいったん点 A に集め（教材 5.3節）、そのあと1本の力に戻す（教材 5.5節）。</p>
+<p>② <strong>座標軸</strong>：A を原点とし、右を $x$、上を $y$ とする。反時計回りを＋。着力点は A(0)、B(3)、C(3+5=8) m。</p>
+<p>③ <strong>成分で書く</strong>：すべて鉛直なので $F_x=0$。$F_{Ay}=+20$、$F_{By}=-20$、$F_{Cy}=+80$ N。</p>
+<p>④ <strong>式を立てる</strong>：
+$$F_y=20-20+80,\qquad M_A=\sum F_{iy}x_i=20(0)+(-20)(3)+80(8)$$
+1本の力 $F_y$ を A から右へ $d$ の位置に置いたとき、A まわりのモーメントが $M_A$ と等しくなればよい：$F_y\,d=M_A$。<br><span class="note">（なぜこの式か：「等価」とは、合力も、どの点まわりのモーメントも同じという意味。合力はもう一致しているので、A まわりのモーメントを合わせれば十分である（教材 式5.4 で、1点で合えばどの点でも合う）。）</span></p>
+<p>⑤ <strong>解く</strong>：$F_y=+80$ N。$M_A=0-60+640=+580$ N·m。$d=M_A/F_y=580/80=7.25$ m。</p>
+<p>⑥ <strong>確かめ（別の見方）</strong>：A の 20 N（上）と B の 20 N（下）は大きさが等しく向きが逆なので、<strong>偶力</strong>になる（教材 4.1節）。そのモーメントは $-20\times3=-60$ N·m（時計回り）。偶力は合力 0 なので、残るのは C の 80 N だけだ。80 N を左へ $s$ ずらすと、A まわりのモーメントは $80\times s$ だけ減る。$80s=60$ から $s=0.75$ m、位置は $8-0.75=7.25$ m で一致する。</p>
+<p><strong>答え：大きさ 80 N、上向き、作用点は点 A から右へ 7.25 m の点</strong></p></div>
+<div class="warn"><span class="label">よくある誤り：合力の大きさと位置</span>(1) 合力は符号つきで足す：$20-20+80=80$。$-20$ を足し忘れたり、全部を足して $120$ としたりしない。(2) 作用点は「合モーメント ÷ 合力」で、力の大きさで重みをつけた平均の位置になる。$(0+3+8)/3$ のような単純な平均ではない。(3) 偶力のぶん（−60 N·m）があるので、答えは C（8 m）より少し左になる。答えが C より右に出たら、符号を見直す。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>2B-2　斜めの力と純粋モーメントを点Aに集める</h2>
+<div class="ex"><span class="label">2B-2〔B〕</span>
+<p>Reduce the forces and moments into the simplest force-moment system at the point A. Answer the $x$ and $y$ component of the force, and moment.</p>
+<p class="note">（訳：力とモーメントを、点 A における最も簡単な「力＋モーメント」の系にまとめよ。力の $x$ 成分・$y$ 成分と、モーメントを答えよ。）解答欄：$x$ 成分 [N]、$y$ 成分 [N]、モーメントの大きさ（正の値）[N·m]、向き。</p>
+<figure class="slide"><img src="img/quiz02/q2b2.png" alt="L字形の部材。角の点Aから上へ3 mの先端に上向き33 N、Aから右へ2 mの点に右上45°の68 N、右へ4 mの右端に下向き85 N、Aのまわりに反時計回りの280 Nm" loading="lazy" style="width:420px;max-width:95%;height:auto;background:#fff"><figcaption>2B-2 の図。A は部材の中心線（一点鎖線）どうしの交点。出典：第2回小テスト（Moodle 課題 2B 問題2）</figcaption></figure>
+<p><strong>図の読み取り（本解説の前提）</strong>：寸法は中心線で測っている。33 N は縦の部材の先端（A の真上 3 m）、68 N は A から右へ 2 m の点、85 N は右端（右へ 4 m）に働く。280 N·m の矢印は、右下から右・上を回って左へ向かうので<strong>反時計回り</strong>。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：L字部材全体。3本の力と1つの純粋モーメントを点 A に集める（教材 式5.2・5.3）。</p>
+<p>② <strong>座標軸</strong>：A を原点とし、右を $x$、上を $y$ とする。反時計回りを＋。</p>
+<p>③ <strong>成分で書く</strong>：68 N は水平から 45° 右上なので $68\cos45^\circ=68\sin45^\circ=68\times0.7071=48.08$ N。</p>
+<table class="tb"><tr><th>力・モーメント</th><th>着力点 $\boldsymbol r$ [m]</th><th>$\boldsymbol F$ [N]</th><th>$M_i=F_yr_x-F_xr_y$ [N·m]</th></tr>
+<tr><td>33 N</td><td>(0, 3)</td><td>(0, 33)</td><td>$33\times0-0\times3=0$</td></tr>
+<tr><td>68 N</td><td>(2, 0)</td><td>(48.08, 48.08)</td><td>$48.08\times2-48.08\times0=+96.17$</td></tr>
+<tr><td>85 N</td><td>(4, 0)</td><td>(0, −85)</td><td>$(-85)\times4=-340$</td></tr>
+<tr><td>純粋モーメント</td><td>―</td><td>―</td><td>$+280$</td></tr>
+<tr><td><strong>合計</strong></td><td></td><td><strong>(48.08, −3.917)</strong></td><td><strong>+36.17</strong></td></tr></table>
+<p>④ <strong>式を立てる</strong>：
+$$F_x=48.08,\qquad F_y=33+48.08-85,\qquad M_A=0+96.17-340+280$$
+純粋モーメントは、どの点に集めても<strong>そのまま足す</strong>（腕を掛けない。教材 4.4節：偶力のモーメントは基準点によらない）。</p>
+<p>⑤ <strong>解く</strong>：$F_x=+48.08$ N、$F_y=-3.917$ N、$M_A=+36.17$ N·m。</p>
+<p>⑥ <strong>確かめ</strong>：33 N は作用線が A を通る（A の真上で鉛直）ので、モーメントは 0。68 N は A の右を上に押すので反時計回り、85 N は A の右を下に引くので時計回りになり、符号は図の感覚と合う。68 N の $F_x$ は着力点が $y=0$ にあるので、モーメントに効かない。単位は N と N·m。</p>
+<p><strong>答え：$F_x=48.1$ N（48.08）、$F_y=-3.92$ N（−3.917）、モーメント 36.2 N·m（36.17）・反時計回り</strong></p></div>
+<div class="warn"><span class="label">よくある誤り</span>(1) 純粋モーメント 280 N·m に腕を掛けてしまう：純粋モーメントは「力」ではないので、移しても値は変わらない。(2) 33 N の腕を 3 m としてしまう：腕は着力点までの距離ではなく、作用線までの垂線である（教材 1.6節・図1.1）。33 N の作用線は A を通るので、腕は 0。(3) $F_y$ の符号：$-3.917$ と負になる（わずかに下向き）。成分の欄には符号つきで入れる。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">7</span>2B-3　関節Aの純粋モーメントを加えたロボットアーム</h2>
+<div class="ex"><span class="label">2B-3〔B〕</span>
+<p>図のように、ロボットアームの先端Bに大きさ 18 N の力 $\boldsymbol F$ が作用しており、関節Aに、時計まわりに大きさ 15 Nm の純粋モーメント $M$ が作用している。このとき、以下の問いに答えなさい。ただし、リンク1、2の長さをそれぞれ 0.4 m、0.3 m、角度 $\theta_1$、$\theta_2$ をそれぞれ 90度、30度 とする。<br>
+(a) 関節Aに作用する力 $\boldsymbol F_A$ とモーメント $M_A$ を求めなさい。<br>
+(b) 関節Aに作用する力 $\boldsymbol F_A$ とモーメント $M_A$ を出発点として、点Oに作用する力 $\boldsymbol F_O$ とモーメント $M_O$ を求めなさい。<br>
+(c) 以下の2つの結果を比較し、考察しなさい。(i) (b)の結果　(ii) 課題2A-4の結果に対し、関節Aまわりに大きさ 15 Nm (cw) の純粋モーメントを加えた場合の結果</p>
+<figure class="slide"><img src="img/quiz02/q2b3.png" alt="2A-4と同じ2リンクのロボットアーム。関節Aのまわりに時計回りの純粋モーメントM" loading="lazy" style="width:360px;max-width:85%;height:auto;background:#fff"><figcaption>2B-3 の図。形と力 $\boldsymbol F$ は 2A-4 と同じで、関節 A に時計回りの $M$ が加わっている。出典：第2回小テスト（Moodle 課題 2B 問題3）</figcaption></figure>
+<p class="note">解答欄：$\boldsymbol F_A=[\ \square\ \ \square\ ]^{\mathsf T}$ N、$M_A$ [N·m]、$\boldsymbol F_O$、$M_O$（いずれも ccw を正として符号つき）。(c) は導出過程レポートに書く。</p>
+<p><strong>解答</strong>（位置と力の成分は 2A-4 の③をそのまま使う：$\mathrm A=(0,\ 0.4)$、$\mathrm B=(0.1500,\ 0.6598)$ m、$\boldsymbol F=(-15.59,\ 9.000)$ N）</p>
+<p><strong>(a) 関節 A へ集める</strong></p>
+<p>① <strong>切り出す</strong>：A より先の部分（リンク2）に働くもの、つまり B の $\boldsymbol F$ と A の $M$ を、点 A に集める。</p>
+<p>② <strong>座標軸</strong>：A を基準点とし、反時計回りを＋。時計回りの 15 N·m は $M=-15$ N·m になる。</p>
+<p>③ <strong>位置ベクトル</strong>：$\overrightarrow{\mathrm{AB}}=0.3\,\boldsymbol u=(0.1500,\ 0.2598)$ m。</p>
+<p>④ <strong>式を立てる</strong>：力はそのまま移り（式 5.2）、モーメントは「移した力のぶん＋純粋モーメント」（式 5.3）になる。
+$$\boldsymbol F_A=\boldsymbol F,\qquad M_A=\overrightarrow{\mathrm{AB}}\times\boldsymbol F+M$$</p>
+<p>⑤ <strong>解く</strong>：$\overrightarrow{\mathrm{AB}}\times\boldsymbol F=0.1500\times9.000-0.2598\times(-15.59)=1.350+4.050=5.400$ N·m。これは 2A-4 ⑥と同じく、腕 0.3 m × 18 N で求めた値と一致する。よって
+$$\boldsymbol F_A=(-15.59,\ 9.000)\ \mathrm N,\qquad M_A=5.400+(-15)=-9.600\ \mathrm{N\cdot m}$$</p>
+<p>⑥ <strong>確かめ</strong>：$M_A$ が負（時計回り）になるのは、時計回りの $M$（15）が $\boldsymbol F$ による反時計回り（5.4）より大きいからだ。</p>
+<p><strong>(b) A から O へ移す</strong></p>
+<p>④ <strong>式を立てる</strong>：A にある「力 $\boldsymbol F_A$＋モーメント $M_A$」を、O へ移す。$M_A$ は純粋モーメントとしてそのまま持っていき、$\boldsymbol F_A$ を移すぶんのモーメントを足す（式 5.1・5.3）。
+$$\boldsymbol F_O=\boldsymbol F_A,\qquad M_O=M_A+\overrightarrow{\mathrm{OA}}\times\boldsymbol F_A$$</p>
+<p>⑤ <strong>解く</strong>：$\overrightarrow{\mathrm{OA}}=(0,\ 0.4)$ なので、$\overrightarrow{\mathrm{OA}}\times\boldsymbol F_A=0\times9.000-0.4\times(-15.59)=+6.235$ N·m。
+$$\boldsymbol F_O=(-15.59,\ 9.000)\ \mathrm N,\qquad M_O=-9.600+6.235=-3.365\ \mathrm{N\cdot m}$$</p>
+<p>⑥ <strong>確かめ</strong>：O から B へ直接移す計算でも、$\overrightarrow{\mathrm{OB}}\times\boldsymbol F+M=11.64-15=-3.365$ N·m で一致する（Python でも検算）。</p>
+<p><strong>(c) 比較と考察</strong>（自作の解答例）</p>
+<p>(ii) 2A-4 の結果は $\boldsymbol F_O=(-15.59,\ 9.000)$ N、$M_O=+11.64$ N·m だった。これに A まわりの 15 N·m（cw）を加えると、$\boldsymbol F_O$ は変わらず、$M_O=11.64-15=-3.365$ N·m になる。</p>
+<p>これは (i) (b) の結果と<strong>完全に一致する</strong>。理由は次の2つである。</p>
+<p>・<strong>純粋モーメントは、どこに置いても同じ働きをする</strong>：偶力のモーメントは基準点によらない（教材 4.2節）ので、「A に加えた 15 N·m」は、O まわりで見てもそのまま 15 N·m である。だから、加える順番（先に A に足すか、O に移してから足すか）で結果は変わらない。<br>
+・<strong>移す操作は「足し算」だけでできている</strong>：$M_O=\overrightarrow{\mathrm{OB}}\times\boldsymbol F+M$ は、$\boldsymbol F$ の寄与と $M$ の寄与を足しただけの式である。$\overrightarrow{\mathrm{OB}}=\overrightarrow{\mathrm{OA}}+\overrightarrow{\mathrm{AB}}$ と分けて A を経由しても、外積の分配法則（教材 式2.5(iii)）で同じ値になる（2B-3 (a)(b) の道筋）。</p>
+<p>工学的な意味：関節 A のモータが時計回りに 15 N·m 出すと、基部 O が支えるモーメントは 11.64 から −3.365 N·m に変わり、向きまで反転する。先端の力によるモーメントを、途中の関節のトルクで打ち消せることを示している。</p>
+<p><strong>答え：(a) $\boldsymbol F_A=[-15.6\ \ 9.00]^{\mathsf T}$ N、$M_A=-9.60$ N·m　(b) $\boldsymbol F_O=[-15.6\ \ 9.00]^{\mathsf T}$ N、$M_O=-3.36$ N·m（−3.365）</strong></p></div>
+<div class="warn"><span class="label">注意：解釈と符号の確認</span>(1) 本解説では、「関節 A に作用する力とモーメント」を、<strong>A より先の部分に働く荷重（$\boldsymbol F$ と $M$）を A に集めたもの</strong>と解釈した（2A-4 の「基部 O に作用する力とモーメント」と同じ読み方）。関節がリンクを支える<strong>反力</strong>と読むと、すべて符号が逆になる。Moodle の正解がどちらの読み方かは未確認。(2) $M_O=-3.365$ は、有効数字の取り方で −3.36 または −3.37 になりうる。入力の許容誤差は未確認。</div>
+
+<!-- ============================================================ -->
 <h2>まとめ・チェックリスト</h2>
 <div class="box"><ul>
 <li>□ 斜めの力を成分に分け、$M=F_yr_x-F_xr_y$ で符号まで含めて計算できる（2A-1）。</li>
@@ -226,6 +307,9 @@ $$M_O=9.000\times0.1500-(-15.59)\times0.6598=1.350+10.29=11.64\ \mathrm{N\cdot m
 <li>□ 複数の力を1点に集めるとき、合力と合モーメントの両方を答えられる（2A-2・2A-3）。</li>
 <li>□ 合力の向きを「水平から反時計回りの角」で 0〜360° に直せる（2A-3）。</li>
 <li>□ リンクの角度から先端の位置と、リンクに垂直な力の成分を作れる（2A-4）。</li>
+<li>□ 平行な力の系を、合力と「合モーメント÷合力」の位置で1本の力に戻せる（2B-1）。</li>
+<li>□ 純粋モーメントは腕を掛けずにそのまま足すと説明できる（2B-2・2B-3）。</li>
+<li>□ 力＋モーメントを A → O と順に移しても、直接移しても同じになる理由を言える（2B-3）。</li>
 <li>□ 答えを別の分け方（分力ごと・リンクごと）で検算する習慣がある。</li>
 </ul></div>
 
@@ -233,7 +317,7 @@ $$M_O=9.000\times0.1500-(-15.59)\times0.6598=1.350+10.29=11.64\ \mathrm{N\cdot m
 <a href="index.html">← 目次へ</a>　｜　<a href="02_第2回_モーメント.html">教材：第2回 モーメント</a>
 </div>
 
-<p class="meta">出典：問題文と図は第2回小テスト（Moodle 課題 2A）の画面より転載（個人の学習用。転載・再配布しない）。解答・解説は自作で、公式解答とは未照合。数値は Python で検算済み。</p>
+<p class="meta">出典：問題文と図は第2回小テスト（Moodle 課題 2A）の画面より転載。解答・解説は自作で、公式解答とは未照合。数値は Python で検算済み。</p>
 
 <nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="02_第2回_モーメント.html"><small>LESSON</small>← 教材：第2回 モーメント</a></nav>
 </body>
