@@ -465,6 +465,16 @@ $$M=FL\sin\theta\qquad(3.1)$$</p>
 <p>(3.1) は外積 (2.4) そのものである。P から着力点へのベクトル $\boldsymbol r$（長さ $L$）と $\boldsymbol F$ のなす角が $\theta$ なので、$\boldsymbol r\times\boldsymbol F=LF\sin\theta$。<strong>モーメントは外積で書ける</strong>：
 $$M=\boldsymbol r\times\boldsymbol F\qquad(\boldsymbol r:\ \text{基準点}\to\text{着力点})\qquad(3.2)$$
 符号も合っている。$\boldsymbol F$ が $\boldsymbol r$ から見て反時計回り側を向くとき、物体は P のまわりに反時計回りに回る。</p>
+<div class="why"><span class="label">🙋 質問から追加：「着力点」とは何か</span>
+<p><strong>① 言葉</strong>：着力点＝力が物体に働く点。第1回 3.1節の<strong>作用点</strong>と同じものである（教科書・講義資料はこの回から「着力点」と呼ぶ）。図2.30 では棒の先端、つまり力の矢印の根元の点がそれにあたる。問題では「ロープを結んだ点」「手で押す点」「接触している点」が着力点になり、重力なら重心が着力点になる（第5回）。</p>
+<p><strong>② この段落の $L$ は「腕」ではない</strong>：ここでの $L$ は棒の長さ、つまり P から着力点までの距離 PA である。腕（P から作用線への垂線 PH、図1.1）は $L\sin\theta$ で、こちらは別の量だ。外積 $\boldsymbol r\times\boldsymbol F=LF\sin\theta$ の中の $\sin\theta$ が「PA を PH に縮める」役をしているので、$\boldsymbol r$ は腕ではなく着力点までのベクトルで書いてよい。</p>
+<p><strong>③ 実は作用線上のどの点でもよい</strong>：着力点 A の代わりに、作用線上の別の点 A′ を使ってみる。A′ は A から力の向きにずらした点なので $\overrightarrow{\mathrm{PA'}}=\boldsymbol r+k\boldsymbol F$（$k$ は実数）と書ける。外積の分配法則 (2.5)(iii) と、平行なら 0 になる性質 (2.5)(ii) を使うと
+$$(\boldsymbol r+k\boldsymbol F)\times\boldsymbol F=\boldsymbol r\times\boldsymbol F+k\,(\boldsymbol F\times\boldsymbol F)=\boldsymbol r\times\boldsymbol F+0$$
+となり、値は変わらない。これは力の伝達性（第1回 3.1節）の式による裏づけである。着力点は「作用線上の点として、いちばん分かりやすい1点」なので使っている。</p>
+<p><strong>④ 数値で確かめる</strong>：$L=0.40$ m の棒の先に、$F=10$ N、$\theta=30^\circ$ の力が働く。棒を $x$ 軸に置くと $\boldsymbol r=(0.40,\ 0)$、$\boldsymbol F=(10\cos30^\circ,\ 10\sin30^\circ)=(8.660,\ 5.000)$。<br>
+・着力点で計算：$\boldsymbol r\times\boldsymbol F=0.40\times5.000-0\times8.660=2.000$ N·m。$FL\sin\theta=10\times0.40\times0.5=2.000$ と一致する。<br>
+・作用線上で $k=0.02$ ずらした点で計算：$\boldsymbol r+k\boldsymbol F=(0.5732,\ 0.1000)$、$0.5732\times5.000-0.1000\times8.660=2.866-0.866=2.000$ N·m。やはり同じ値になる。</p>
+<p><strong>⑤ よくある誤り</strong>：$\boldsymbol r$ を作用線から外れた点（たとえば棒の途中の、力が働いていない点）に向けると、値が変わってしまう。$\boldsymbol r$ の終点は、必ず着力点か作用線上の点にとる。</p></div>
 
 <h3><span class="no">3.2</span>分力で計算しても同じになる（講義資料の確かめ）</h3>
 <p>図2.30 下のように、$\boldsymbol F$ を棒に沿う分力 $\boldsymbol F_1$ と、棒に垂直な分力 $\boldsymbol F_2$ に分ける。2つの分力が P まわりに与える合モーメント $M'$ を計算する。</p>
@@ -511,6 +521,19 @@ $$\boldsymbol r\times\boldsymbol F_1+\boldsymbol r\times\boldsymbol F_2+\dots+\b
 <div class="thm"><span class="label">力ベクトルの成分によるモーメントの計算式</span>
 $$M=F_yr_x-F_xr_y\qquad(3.4)\quad\text{（講義資料 式2.30′、教科書 式2.30）}$$
 ここで $\boldsymbol r=(r_x,\ r_y)$ は<strong>基準点 → 着力点</strong>。外積で書けば $M=\boldsymbol r\times\boldsymbol F=r_xF_y-r_yF_x$（同じもの）。</div>
+<div class="why"><span class="label">🙋 質問から追加：(3.4) は (3.2) の $M=\boldsymbol r\times\boldsymbol F$ と何が違うのか</span>
+<p><strong>① 結論：中身は同じ式である</strong>。(3.2) の外積を定義 (2.3)（$\boldsymbol a\times\boldsymbol b=a_xb_y-a_yb_x$）で展開する。$\boldsymbol a=\boldsymbol r$、$\boldsymbol b=\boldsymbol F$ を代入すると
+$$\boldsymbol r\times\boldsymbol F=r_xF_y-r_yF_x$$
+となる。これは (3.4) の $F_yr_x-F_xr_y$ と、掛け算の順を入れ替えただけの同じ式だ。(3.4) は「外積を成分で書き下した形」と読んでよい。</p>
+<p><strong>② 違うのは「導き方」</strong>：同じ式を、2つの別の道筋で出している。</p>
+<p>・(3.2) の道：図形から $M=FL\sin\theta$ を出し、それが外積の性質 (2.4) $ab\sin\varphi$ と同じ形だと気づく（数学の側から）。<br>
+・(3.4) の道：外積を使わずに、力を $F_x$ と $F_y$ に分ける。それぞれの「力×腕」を図で数え（STEP 2・3）、バリニオンの定理で足す（物理の側から。講義資料・教科書 式2.30 の道）。</p>
+<p>独立な2つの道が同じ式に着くので、「外積の定義 (2.3) はモーメントを正しく表している」ことが確かめられた、というのが 3.4節の意味である。試験では、講義資料と同じ (3.4) の形と、STEP 2・3 の「腕で数える」説明で答えられるようにしておくとよい。</p>
+<p><strong>③ 注意：$\boldsymbol F\times\boldsymbol r$ ではなく $\boldsymbol r\times\boldsymbol F$</strong>：外積は順番を入れ替えると符号が反転する（反対称 (2.5)(i)）。$\boldsymbol F\times\boldsymbol r$ と書くと、モーメントの向きが逆になってしまう。図3.2 の数値（$\boldsymbol r=(3,1)$、$\boldsymbol F=(1,2)$）で確かめる。<br>
+・(3.4)：$F_yr_x-F_xr_y=2\times3-1\times1=+5$<br>
+・$\boldsymbol r\times\boldsymbol F=3\times2-1\times1=+5$（一致する）<br>
+・$\boldsymbol F\times\boldsymbol r=1\times1-2\times3=-5$（符号が逆になる）<br>
+覚え方：「<strong>腕（位置）が先、力が後</strong>」。(3.4) でも、$F_y$ に掛かるのは $r_x$ で、引くのは $F_xr_y$ のほうだ。</p></div>
 <figure><svg viewBox="0 0 660 300" width="660" role="img" aria-label="力 F と分力 Fx・Fy の点 P まわりのモーメント">
 <defs><marker id="var-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="var-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="var-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="var-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="var-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="var-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
 <g font-family="sans-serif" font-size="12" fill="#2a2723">

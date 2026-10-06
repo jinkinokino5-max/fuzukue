@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2回 小テスト解説（課題2A）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<header style="padding-top:48px">
+<p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第2回・小テスト解説</p>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">課題 2A（必修）の解き方</h1>
+</header>
+<p class="lead">2026/10/6／第2回「モーメント」の Moodle 小テスト（課題 2A、全4問）。各問を、教材の解き方の手順①〜⑥で解き直したもの。</p>
+
+<div class="navi">
+<strong>4問に共通する道具</strong>：力を成分に分ける（第1回）→ 成分の式 $M=F_yr_x-F_xr_y$（教材 式3.4、講義資料 式2.30′）→ 複数の力を1点に集める：合力 $\boldsymbol F=\sum\boldsymbol F_i$ と合モーメント $M=\sum M_i$（教材 式5.2・5.3、教科書 式2.40・2.41）。<br>
+<strong>符号の約束</strong>：反時計回り（ccw）を＋とする（教材 式1.2）。Moodle の解答欄は「大きさ（正の値）」と「向き」を別々に入れる形式なので、最後に符号を向きに直して答える。
+</div>
+
+<div class="warn"><span class="label">この解説の位置づけ</span>問題文と図は Moodle の画面（reference/講義資料/第2回小テスト.png）から転載した。解答は<strong>自作</strong>であり、公式の解答とはまだ照合していない。数値は Python（draft/check_quiz02.py）で検算した。図の読み取り（とくに 2A-3 のベルトの位置）は画面の図から判断したもので、読み取りの前提は各問に書いておく。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>2A-1　バリニオンの定理で1本の力のモーメント</h2>
+<div class="ex"><span class="label">2A-1〔A〕</span>
+<p>A force of 20 N at 30 degree from the $x$-axis is acting at the point (5, −4) m. <u>Using Varignon's theorem</u>, determine the moment of the force about the origin.</p>
+<p class="note">（訳：$x$ 軸から 30° の向きの 20 N の力が点 (5, −4) m に働く。<u>バリニオンの定理を使って</u>、原点まわりのモーメントを求めよ。）解答欄：モーメントの大きさ（正の値）[N·m]、向き。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：力は1本、基準点は原点 O、着力点は Q(5, −4)。</p>
+<p>② <strong>座標軸</strong>：問題の $x$, $y$ 軸をそのまま使う。反時計回りを＋。</p>
+<p>③ <strong>成分で書く</strong>：力は $x$ 軸から 30° なので（第1回の成分分解）
+$$F_x=20\cos30^\circ=20\times0.8660=17.32\ \mathrm N,\qquad F_y=20\sin30^\circ=20\times0.5=10.00\ \mathrm N$$
+位置ベクトルは基準点 → 着力点：$\boldsymbol r=(5-0,\ -4-0)=(5,\ -4)$ m。</p>
+<p>④ <strong>バリニオンの定理で式を立てる</strong>：力 $\boldsymbol F$ のモーメントは、分力 $F_x$ と $F_y$ のモーメントの和に等しい（教材 3.3節）。<br>
+・$F_y$（上向き 10 N）：作用線は $x=5$ の鉛直線で、腕は $|r_x|=5$ m。O の右を上に押すので反時計回り：$+F_yr_x=+10.00\times5=+50.00$ N·m。<br>
+・$F_x$（右向き 17.32 N）：作用線は $y=-4$ の水平線で、腕は $|r_y|=4$ m。O の<strong>下</strong>を右に押すので反時計回り：$-F_xr_y=-17.32\times(-4)=+69.28$ N·m。</p>
+<p>⑤ <strong>解く</strong>：$M=50.00+69.28=119.28\ \mathrm{N\cdot m}$。成分の式 (3.4) $M=F_yr_x-F_xr_y=10\times5-17.32\times(-4)$ に一度に代入しても同じ値になる。</p>
+<p>⑥ <strong>確かめ</strong>：単位は N × m = N·m。符号は正なので反時計回り。どちらの分力も反時計回りに回すので、和が正になるのは図の感覚とも合う。</p>
+<p><strong>答え：大きさ 119.3 N·m（119.28）、向き：反時計回り</strong></p></div>
+<div class="why"><span class="label">直感：$F_x$ の項がなぜ足し算になるのか</span>式では $-F_xr_y$ と「引く」形をしているが、$r_y=-4$ が負なので、結果は $+69.28$ になる。図で見ると、O より下の点を右へ押すと物体は反時計回りに回る。式の符号を覚えるより、「上を右へ押せば時計回り、下を右へ押せば反時計回り」と図で確かめるほうが間違えにくい。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>2A-2　平行な力を点Aの1本の力とモーメントにまとめる</h2>
+<div class="ex"><span class="label">2A-2〔A〕</span>
+<p>図のように、梁に垂直な複数の力が作用している。これらを点Aにおける単一の力とモーメントに置き換えなさい。</p>
+<figure class="slide"><img src="img/quiz02/q2.png" alt="長さ12 mの梁。左端Aに下向き600 N、Aから4 mに上向き100 N、8 mに上向き400 N、12 m（右端）に上向き200 N" loading="lazy" style="width:440px;max-width:95%;height:auto;background:#fff"><figcaption>2A-2 の図。出典：第2回小テスト（Moodle 課題 2A 問題2）</figcaption></figure>
+<p class="note">解答欄：力の大きさ（正の値）[N]、力の向き、モーメントの大きさ（正の値）[N·m]、モーメントの向き。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：梁全体に働く4本の力を、点 A に集める（教材 5.3節）。</p>
+<p>② <strong>座標軸</strong>：A を原点とし、梁に沿って右を $x$、上を $y$ とする。反時計回りを＋。</p>
+<p>③ <strong>成分で書く</strong>：すべて鉛直な力なので $F_x=0$。着力点は A から見て $\boldsymbol r=(x_i,\ 0)$。</p>
+<table class="tb"><tr><th>力</th><th>$x_i$ [m]</th><th>$F_{iy}$ [N]</th><th>$M_i=F_{iy}x_i$ [N·m]</th></tr>
+<tr><td>600 N（下）</td><td>0</td><td>−600</td><td>0</td></tr>
+<tr><td>100 N（上）</td><td>4</td><td>+100</td><td>+400</td></tr>
+<tr><td>400 N（上）</td><td>8</td><td>+400</td><td>+3200</td></tr>
+<tr><td>200 N（上）</td><td>12</td><td>+200</td><td>+2400</td></tr>
+<tr><td><strong>合計</strong></td><td></td><td><strong>+100</strong></td><td><strong>+6000</strong></td></tr></table>
+<p>④ <strong>式を立てる</strong>：合力は式 (5.2)、合モーメントは式 (5.3) を使う。$r_y=0$ なので (3.4) の $-F_xr_y$ の項は消え、$M_i=F_{iy}x_i$ だけが残る。
+$$F_y=\sum F_{iy}=-600+100+400+200,\qquad M_A=\sum F_{iy}x_i=(-600)(0)+100(4)+400(8)+200(12)$$</p>
+<p>⑤ <strong>解く</strong>：$F_y=+100$ N、$M_A=0+400+3200+2400=+6000$ N·m。</p>
+<p>⑥ <strong>確かめ</strong>：600 N は A を通るので腕 0 で、モーメントには効かない（作用線が基準点を通る）。上向きの3本はどれも A の右を上に押すので、すべて反時計回りになる。単位は N と N·m。</p>
+<p><strong>答え：力 100 N・上向き、モーメント 6000 N·m・反時計回り</strong></p></div>
+<div class="warn"><span class="label">よくある誤り：合力だけで済ませる</span>「1本の力に置き換える」問題でも、点 A に移すなら<strong>モーメントを必ず添える</strong>（教材 5.2節：力を移すと純粋モーメントが付く）。100 N だけを答えると、梁を回す働き（6000 N·m）が消えてしまう。逆に、モーメントを付けずに1本の力だけで表したければ、作用線を A から $d=|M|/F=6000/100=60$ m 右にずらすことになる（式 5.5）。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>2A-3　連結したプーリーにかかるベルトの力</h2>
+<div class="ex"><span class="label">2A-3〔B〕</span>
+<p>図のような、連結されたプーリーに掛けられたベルトに作用する力が、点Oに与える力とモーメントを求めなさい。ただし、ベルトは垂直または水平のいずれかの状態であるとする。力は大きさと作用方向を答えなさい。</p>
+<figure class="slide"><img src="img/quiz02/q3.png" alt="中心Oの同心プーリー。外側半径2 m、内側半径1 m。外側の上端に右向き20 N、下端に右向き15 N。内側の左端から下向き40 N、右端から下向き30 N" loading="lazy" style="width:380px;max-width:85%;height:auto;background:#fff"><figcaption>2A-3 の図。出典：第2回小テスト（Moodle 課題 2A 問題3）</figcaption></figure>
+<p class="note">解答欄：力の大きさ（正の値）[N]、力の向き（水平方向から反時計まわりに）[degree]、モーメントの大きさ（正の値）[N·m]、モーメントの向き。</p>
+<p><strong>図の読み取り（本解説の前提）</strong>：ベルトはプーリーに<strong>接する向き</strong>に引っ張るので、着力点は接点にとればよい。<br>
+・20 N：外側（半径 2 m）の<strong>上端</strong>で接し、右向き。<br>
+・15 N：外側の<strong>下端</strong>で接し、右向き。<br>
+・40 N：内側（半径 1 m）の<strong>左端</strong>で接し、下向き。<br>
+・30 N：内側の<strong>右端</strong>で接し、下向き。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：連結された2つのプーリーを1つの剛体とみて、4本のベルトの力を点 O に集める。</p>
+<p>② <strong>座標軸</strong>：O を原点とし、右を $x$、上を $y$ とする。反時計回りを＋。</p>
+<p>③ <strong>成分で書く</strong>：鉛直なベルトの着力点は、作用線上のどの点にとってもよい（教材 3.4節の確かめ(b)）。ここでは接点（$y=0$）にとる。</p>
+<table class="tb"><tr><th>力</th><th>着力点 $\boldsymbol r$ [m]</th><th>$\boldsymbol F$ [N]</th><th>$M_i=F_yr_x-F_xr_y$ [N·m]</th></tr>
+<tr><td>20 N</td><td>(0, 2)</td><td>(20, 0)</td><td>$0-20\times2=-40$</td></tr>
+<tr><td>15 N</td><td>(0, −2)</td><td>(15, 0)</td><td>$0-15\times(-2)=+30$</td></tr>
+<tr><td>40 N</td><td>(−1, 0)</td><td>(0, −40)</td><td>$(-40)(-1)-0=+40$</td></tr>
+<tr><td>30 N</td><td>(1, 0)</td><td>(0, −30)</td><td>$(-30)(1)-0=-30$</td></tr>
+<tr><td><strong>合計</strong></td><td></td><td><strong>(35, −70)</strong></td><td><strong>0</strong></td></tr></table>
+<p>④ <strong>式を立てる</strong>：合力は式 (5.2)、合モーメントは式 (5.3)。
+$$F_x=20+15=35\ \mathrm N,\qquad F_y=-40-30=-70\ \mathrm N,\qquad M_O=-40+30+40-30$$</p>
+<p>⑤ <strong>解く</strong>：<br>
+・大きさ：$F=\sqrt{F_x^2+F_y^2}=\sqrt{35^2+70^2}=\sqrt{1225+4900}=\sqrt{6125}=35\sqrt5=78.26$ N。<br>
+・向き：$\tan\alpha=F_y/F_x=-70/35=-2$ で、$F_x\gt0$、$F_y\lt0$（右下、第4象限）なので $\alpha=\tan^{-1}(-2)=-63.43^\circ$。水平から反時計回りに測ると $360^\circ-63.43^\circ=296.57^\circ$。<br>
+・モーメント：$M_O=0$ N·m。</p>
+<p>⑥ <strong>確かめ</strong>：外側のベルトは、上の 20 N が時計回りに 40、下の 15 N が反時計回りに 30 で、差し引き時計回りに 10 N·m。内側のベルトは、左の 40 N が反時計回りに 40、右の 30 N が時計回りに 30 で、差し引き反時計回りに 10 N·m。2つが打ち消し合って 0 になる。つまり、このプーリーを回そうとする働きはつり合っていて、軸 O には「押す力」だけがかかる。</p>
+<p><strong>答え：力 78.3 N（78.26）、向き：水平から反時計回りに 296.6°（＝右下へ 63.4°）、モーメント 0 N·m</strong></p></div>
+<div class="warn"><span class="label">注意：角度の答え方とモーメント 0 の向き</span>(1) 解答欄は「水平方向から反時計まわりに」なので、−63.4° ではなく 296.6° と入れるのが自然である。ただし、Moodle がどちらを正解にしているかは未確認。(2) モーメントが 0 のときは、向きの選択肢が本来は意味を持たない。どちらを選べばよいかは採点の設定しだいで、本解説では判断できない。(3) 大きさを答えるとき、$\sqrt{F_x^2+F_y^2}$ を $|F_x|+|F_y|=105$ としてしまう誤りに注意する（第1回：足してよいのはベクトルで、大きさではない）。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>2A-4　ロボットアーム先端の力を基部Oに集める</h2>
+<div class="ex"><span class="label">2A-4〔B〕</span>
+<p>図のように、ロボットアームの先端Bに大きさ 18 N の力 $\boldsymbol F$ が作用している。このとき、アームの基部Oに作用する力とモーメントを求めなさい。ただし、リンク1、2の長さをそれぞれ 0.4 m、0.3 m、角度 $\theta_1$、$\theta_2$ をそれぞれ 90度、30度 とする。</p>
+<figure class="slide"><img src="img/quiz02/q4.png" alt="2リンクのロボットアーム。Oから鉛直にLink 1（θ1）、Aから鉛直線に対しθ2だけ右に傾いたLink 2、先端BにLink 2と直角に左上向きの力F" loading="lazy" style="width:380px;max-width:85%;height:auto;background:#fff"><figcaption>2A-4 の図。$\theta_1$ は $x$ 軸からリンク1まで、$\theta_2$ はリンク1の延長（破線）からリンク2までの角。$\boldsymbol F$ はリンク2に垂直（直角の印）。出典：第2回小テスト（Moodle 課題 2A 問題4）</figcaption></figure>
+<p class="note">解答欄：力ベクトルの $x$ 成分 [N]、$y$ 成分 [N]、モーメントの大きさ（正の値）[N·m]、モーメントの向き。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：アーム全体（リンク1＋リンク2）を1つの物体とみて、先端 B の力を基部 O に移す（教材 5.1・5.2節）。</p>
+<p>② <strong>座標軸</strong>：O を原点とし、図の $x$（右）、$y$（上）をそのまま使う。反時計回りを＋。</p>
+<p>③ <strong>位置と力を成分で書く</strong>：<br>
+・A：$\theta_1=90^\circ$ なのでリンク1は真上を向き、$\mathrm A=(0,\ 0.4)$ m。<br>
+・リンク2の向き：鉛直から右へ 30° 傾いているので、単位ベクトルは $\boldsymbol u=(\sin30^\circ,\ \cos30^\circ)=(0.5000,\ 0.8660)$。<br>
+・B：$\mathrm B=\mathrm A+0.3\,\boldsymbol u=(0.3\times0.5000,\ 0.4+0.3\times0.8660)=(0.1500,\ 0.6598)$ m。<br>
+・$\boldsymbol F$ の向き：リンク2に垂直で左上向きなので、$\boldsymbol u$ を反時計回りに 90° 回したベクトル（教材 2.2節：$(a_x,a_y)\to(-a_y,a_x)$）$\boldsymbol u^{\perp}=(-0.8660,\ 0.5000)$ の向きになる。<br>
+$$\boldsymbol F=18\,\boldsymbol u^{\perp}=(-18\times0.8660,\ 18\times0.5000)=(-15.59,\ 9.000)\ \mathrm N$$</p>
+<p>④ <strong>式を立てる</strong>：O に移すと、力はそのまま $\boldsymbol F$、それにモーメント $M_O=F_yr_x-F_xr_y$（式 5.1）が付く。ここで $\boldsymbol r=\overrightarrow{\mathrm{OB}}=(0.1500,\ 0.6598)$。</p>
+<p>⑤ <strong>解く</strong>：
+$$M_O=9.000\times0.1500-(-15.59)\times0.6598=1.350+10.29=11.64\ \mathrm{N\cdot m}$$</p>
+<p>⑥ <strong>確かめ（別の計算）</strong>：$\overrightarrow{\mathrm{OB}}=\overrightarrow{\mathrm{OA}}+\overrightarrow{\mathrm{AB}}$ に分け、外積の分配法則（教材 式2.5(iii)）を使う。<br>
+・$\overrightarrow{\mathrm{AB}}\times\boldsymbol F$：$\boldsymbol F$ はリンク2に垂直なので、腕はリンク2の長さそのもの。$\boldsymbol F$ は $\overrightarrow{\mathrm{AB}}$ から見て反時計回り側にあるので $+0.3\times18=+5.400$。<br>
+・$\overrightarrow{\mathrm{OA}}\times\boldsymbol F=0\times9.000-0.4\times(-15.59)=+6.235$（$=0.4\times18\cos30^\circ$）。<br>
+・和：$5.400+6.235=11.64$ N·m で一致する。$\boldsymbol F\cdot\boldsymbol u=(-15.59)(0.5)+(9.000)(0.866)=0$ なので、リンク2に垂直であることも確かめられる。単位は N と N·m、有効数字は4桁。</p>
+<p><strong>答え：$F_x=-15.6$ N（−15.59）、$F_y=9.00$ N、モーメント 11.6 N·m（11.64）・反時計回り</strong></p></div>
+<div class="why"><span class="label">直感：関節トルクとの関係</span>⑥の分け方は、教材 6章の「関節トルク」と同じ考え方である。$5.400$ N·m は「A の関節がリンク2を支えるのに要るモーメント」、$11.64$ N·m は「O の関節（基部）が要るモーメント」にあたる。根元に近い関節ほど腕が長くなるので、大きなトルクが要る。</div>
+<div class="warn"><span class="label">よくある誤り</span>(1) $\theta_2$ を $x$ 軸から測った角と読んでしまう：図では、破線（リンク1の延長）から測っている。(2) $\boldsymbol F$ を「リンク2の向き」にとってしまう：直角の印があるので、$\boldsymbol F$ はリンク2に<strong>垂直</strong>である。(3) $F_x$ の符号：左向きなので負になる。成分の欄には符号つきで入れる（大きさの欄ではない）。</div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 斜めの力を成分に分け、$M=F_yr_x-F_xr_y$ で符号まで含めて計算できる（2A-1）。</li>
+<li>□ 作用線が基準点を通る力はモーメント 0 だと、すぐに気づける（2A-2 の 600 N）。</li>
+<li>□ 複数の力を1点に集めるとき、合力と合モーメントの両方を答えられる（2A-2・2A-3）。</li>
+<li>□ 合力の向きを「水平から反時計回りの角」で 0〜360° に直せる（2A-3）。</li>
+<li>□ リンクの角度から先端の位置と、リンクに垂直な力の成分を作れる（2A-4）。</li>
+<li>□ 答えを別の分け方（分力ごと・リンクごと）で検算する習慣がある。</li>
+</ul></div>
+
+<div class="navi">
+<a href="index.html">← 目次へ</a>　｜　<a href="02_第2回_モーメント.html">教材：第2回 モーメント</a>
+</div>
+
+<p class="meta">出典：問題文と図は第2回小テスト（Moodle 課題 2A）の画面より転載（個人の学習用。転載・再配布しない）。解答・解説は自作で、公式解答とは未照合。数値は Python で検算済み。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="02_第2回_モーメント.html"><small>LESSON</small>← 教材：第2回 モーメント</a></nav>
+</body>
+</html>
