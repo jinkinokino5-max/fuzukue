@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>石を返した王｜上代文学へのいざない 読み物</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<div class="backlink">上代文学へのいざない 自習教材 ｜ 第1回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../01_第1回_漢字で書かれた神話.html">第1回 漢字で書かれた神話</a>（7.2・8章）</div>
+
+<figure class="hero">
+  <img src="img/hero_c01_banana_flower.jpg" alt="赤紫の苞が開きかけて垂れ下がるバナナの花">
+  <div class="ttl">石を<br>返した王<small>日継・バナナ型神話・王の二つの身体</small></div>
+  <figcaption>バナナの花序。Anton 17, via <a href="https://commons.wikimedia.org/wiki/File:Banana_inflorescence.JPG">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第一回</div>
+  <p class="lede">天皇の支配の由来を語る書物が、天皇の命に限りがあることの起源を、天孫の選り好みとして書きとめた。しかもその命は、五百年を超えて続く。古事記のいう「長さ」とは何か。</p>
+  <div class="keys"><span>古事記・日本書紀</span><span>人類学（バナナ型神話）</span><span>植物学（偽茎と吸芽）</span><span>法制史（王の二つの身体）</span></div>
+</header>
+
+<article>
+<h2><span class="no">序</span>花嫁は二人いた</h2>
+<p>九州南端の笠沙の岬で、天から降りたばかりの邇々芸命は一人の娘に目をとめた。山の神・大山津見神の娘、木花之佐久夜毘売である。結婚を申し入れると、父神は大いに喜び、姉の石長比売を添えて二人を差し出した。邇々芸は姉を送り返す。理由は一語、「甚凶醜（いとみにく）きに因りて」。</p>
+<p>返された側の代価は、父の口から長々と語られる。石長比売を置けば天つ神の御子の命は「雪零り風吹くとも、恒に石の如くして、常はに堅はに動かず」、木花之佐久夜毘売を置けば「木の花の栄ゆるが如く栄え」る。そう誓って二人を並べたのに、石は返された。だから御子の命は「木の花のあまひのみ」となる。地の文が物語の時間を突き抜けて言い切る。「故、是を以て今に至るまで、天皇命等の御命長くあらぬぞ」。</p>
+<figure><img src="img/c01_ninigi_sakuya.jpg" alt="笹の葉を手にした木花之佐久夜毘売と、彼女を見つめる邇々芸命" loading="lazy"><figcaption><b>石井林響の日本画</b>（1906年）。笠沙の岬で、天孫は妹のほうに目をとめた。 石井林響, via <a href="https://commons.wikimedia.org/wiki/File:Ninigi_and_Sakuyahime.jpg">Wikimedia Commons</a>, Public domain</figcaption></figure>
+<p>奇妙なのは、同じ上巻の末尾である。石を返した邇々芸の子、火遠理命は、高千穂の宮に「伍佰捌拾歳」――五百八十年坐したと記される。中巻に入れば神武天皇は百三十七歳、崇神天皇は百六十八歳。長くあらぬはずの御命が、百年を軽々と超えていく。</p>
+<p>古事記がいう「長さ」は、年数のことではないらしい。</p>
+<h2><span class="no">一</span>綱の先の石</h2>
+<p>二つのものを並べられ、石のほうを拒んだために死ぬようになった――この形の話は、日本列島だけのものではない。</p>
+<p>イギリスの人類学者フレイザーは『不死の信仰と死者の崇拝』第一巻（1913）で、世界各地の死の起源の話を、月の満ち欠けの型、蛇の脱皮の型などに分け、その一つを「バナナ型」と名づけた。見本は、オランダの宣教師クロイトの報告から要約した、中部セレベス（スラウェシ）のポソ地方の話である。</p>
+<figure><img src="img/c01_poso.jpg" alt="ポソ地方の高床住居と住民" loading="lazy"><figcaption><b>中部セレベス、ポソ地方の家</b>。1919年、スウェーデンの民族学者カウデルン撮影。 Walter Kaudern, via <a href="https://commons.wikimedia.org/wiki/File:Bostadshus._Binoetek_(by_i_Lamala),_Banggaai,_Poso,_Celebes._Banggaai,_Poso,_Sulawesi,_Lamala_-_SMVK_-_000342.tif">Wikimedia Commons</a>, Public domain</figcaption></figure>
+<p>はじめ天は地のすぐ近くにあり、創造主は綱の先に贈り物を結んで降ろしていた。ある日降りてきたのは石だった。最初の夫婦は「石をどうしろというのか、別のものを」と叫ぶ。綱が引き上げられ、次にバナナが降りてくる。二人は駆け寄って取る。天の声が告げる。バナナを選んだのだから、お前たちの命はバナナの命のようになる。バナナの木は子ができると親の幹が死ぬ。お前たちも死に、子がその場所を継ぐ。石を選んでいれば、石のように変わらず、死なずにいられたものを。</p>
+<p>骨組みは笠沙と同じだ。差し出された二つのもの。片方は石。石を拒んだ者の命は、受け取ったほうの命の形をとる。のちに大林太良らが、石長比売の話をこのバナナ型の一つとして論じている。</p>
+<p>違うのは、誰が死ぬかである。ポソで死ぬのは人類のすべて。笠沙で限りある命を負うのは「天皇命等」だけだ。</p>
+<p>日本書紀はこの二つのあいだで揺れている。巻二、天孫降臨の段の一書第二で、返された磐長姫は恥じて呪う。妹だけを召したから、生まれる子は必ず木の花のように移ろい落ちる――呪われるのは天孫の子、王の系譜である。ところが同じ一書は「一に云はく」として別の伝えを続ける。磐長姫は唾を吐き泣いて言った、「顕見蒼生（うつしきあをひとくさ）は、木の花の如く、俄に遷転（うつろ）ひて衰去へなむ」。この世の人間はみな、花のようにたちまち衰える。「此れ世の人の短折（いのちみじか）き縁なり」。</p>
+<p>書紀は王の死と人の死を一つの一書に並べ、どちらとも決めない。古事記は決めた。人類の死の神話になりえた話を天皇の死の神話として引き受け、「今に至るまで」と編者の現在に釘で留めた。世界の起源を天皇の起源へ縮める天皇神話の手つきが、この一行ほど露骨に見える場所は少ない。</p>
+<div class="physics"><b>講義では</b>　この一行が、まとめプリント§1の★「記紀の神話は天皇家の支配にかかわる範囲でのみ起源を語る」の実例になる。原文と訳は<a href="../01_第1回_漢字で書かれた神話.html">第1回</a>の7.2、天皇神話と多元性は8章。</div>
+<h2><span class="no">二</span>死ぬのは幹だけ</h2>
+<p>ポソの天の声は、植物については半分しか正しくない。</p>
+<p>バナナは木ではない。幹に見えるのは、葉の付け根の鞘が何重にも巻き重なった「偽茎」で、その芯を花茎が上ってきて、一度だけ房をつける。実を取られた偽茎は、もう二度と実らない。農家はそれを切り倒す。だが倒されるのは地上の部分だけで、根元の地下茎は生きており、脇からすでに次の芽――吸芽――を出している。いちばん勢いのよい一本が残され、次の偽茎になる。</p>
+<figure><img src="img/c01_banana.jpg" alt="下から見上げたバナナの果房と、その先に垂れる紫の花序" loading="lazy"><figcaption><b>バナナの果房と花序</b>。この一房を実らせた偽茎は、収穫のあと二度と実らない。 Praveenp, via <a href="https://commons.wikimedia.org/wiki/File:Banana_fruit_and_inflorescence.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a></figcaption></figure>
+<p>個体に見えていたものは、本体ではなかった。本体は土の中にあり、偽茎は一本ずつ交替で地上に出てくる顔にすぎない。</p>
+<p>古事記の「天皇命等」は、この偽茎にあたる。一度だけ実り、倒れる。地下で続いているものには、序文が名前を与えている。天武天皇が稗田阿礼に誦み習わせた「帝皇日継（すめらみことのひつぎ）」――皇位が次々に受け継がれていくこと、その系譜である。御命が長くあらぬのは偽茎であり、日継は地下茎の側にある。百三十七歳も五百八十歳も、偽茎の背丈にすぎない。</p>
+<h2><span class="no">三</span>バナナではない系譜</h2>
+<p>ただし、この見立ては途中で折れる。</p>
+<p>吸芽は親株の分身で、遺伝的には同じものだ。店に並ぶ黄色いバナナの大半は種をつくらず、株分けだけで殖やされてきた。同じものしかない畑は、一つの病気でまとめて倒れる。20世紀半ばまで輸出の主役だったグロ・ミシェル種は、土壌の病原菌によるパナマ病で畑ごと消え、いまのキャベンディッシュ種もその新しい型におびえている。</p>
+<p>天孫の家は、同じものの株替わりでは続かない。邇々芸は山の神の娘をめとる。その子の火遠理命は海の神の娘、豊玉毘売をめとる。豊玉毘売が海へ帰ると、その妹の玉依毘売が地上へ来て子を育て、その子の妻となる。山の血を一代、海の血を二代、外から迎えて、ようやく神武天皇が生まれる。</p>
+<p>そう見ると、笠沙で何が選ばれたのかが言い直せる。石長比売も木花之佐久夜毘売も、同じ父が差し出した外の花嫁である。選ばれたのは花嫁ではなく、命の性質だった。石は「常はに」――一つの身体が変わらずにありつづけること。木の花は「栄ゆる」――一輪は散るが、木は季節ごとに咲きなおすこと。天孫は、一人の王が変わらずにありつづける道を返し、散っては咲きなおす道を受け取った。そして咲きなおすたびに、外から花嫁を迎える。編者がそこまで意図したかどうかより、上巻の系譜が現にその形で組まれていることのほうが重い。</p>
+<h2><span class="no">四</span>死なない王</h2>
+<p>正反対の答えを出した王権がある。</p>
+<p>歴史家カントーロヴィチの『王の二つの身体』（1957）は、16世紀イングランドの法律家たちの理屈を掘り起こした。王には二つの身体がある。病み、老い、死ぬ「自然の身体」と、目に見えず、誤らず、死なない「政治の身体」。王個人が死んでも、王位は一瞬も途切れない。フランスで王の死を告げるときの決まり文句「王は死んだ、王万歳」も、同じ考えの上に立つ。</p>
+<figure><img src="img/c01_stonehenge.jpg" alt="草原に立つストーンヘンジの環状列石" loading="lazy"><figcaption><b>ストーンヘンジ</b>（英国ウィルトシャー）。石は、建てた者の名を忘れても立ちつづける。 Diego Delso, via <a href="https://commons.wikimedia.org/wiki/File:Stonehenge,_Condado_de_Wiltshire,_Inglaterra,_2014-08-12,_DD_13.JPG">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></figcaption></figure>
+<p>この王権は石を選んだ。死なない身体という法の虚構をこしらえ、王の内側に住まわせた。古事記は石を返し、王の死を神話の側で先に認めた。不死をどこに置くかという同じ問いに、一方は王の身体の内側と答え、もう一方は身体の外、花嫁から花嫁へと咲きなおす系譜の中と答えた。</p>
+<h2><span class="no">結</span>日継</h2>
+<p>笠沙の岬で、石長比売は父のもとへ帰された。「常はに堅はに動かず」は返され、「木の花のあまひのみ」が残った。「あまひ」の意味はいまも定まらない。ただ、一度だけ実って切り倒される偽茎を見たあとでは、一輪の花が咲いて散るまでの時間として読むほかなくなる。</p>
+<p>「御命長くあらぬ」とは、年数が短いことではなかった。五百八十年生きても、終わりがあること。石のように「常はに」ではないこと。終わりがあるから、次の代が立つ。古事記の天皇神話にとって、王の死は欠陥ではなく、日継が日継であるための条件だった。</p>
+<p>上巻と中巻に並ぶ「某を娶して生みませる御子」の列挙は、名前の羅列に見える。だがそれは、散っては咲きなおす花の記録であり、そのたびに迎えられた花嫁の名簿である。</p>
+<div class="physics"><b>講義では</b>　上巻の系譜（<a href="../01_第1回_漢字で書かれた神話.html">第1回</a>の5.5）を、結婚と出産の連鎖として読み直してみる。次回の中巻は、その系譜の先で神武天皇が地上の王になるところから始まる。</div>
+<p class="coda">石は変わらずに残る。花は散るから、次が咲く。</p>
+
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+<h3>参照した本 ── 本文が依拠した原典</h3>
+<ul>
+  <li><span class="bk">『古事記』上巻・中巻</span> <span class="pub">712年</span><span class="why">石長比売の段、火遠理命の580歳、中巻の天皇の年齢。真福寺本系の公開本文（ウィキソース中国語版）で確認した。</span></li>
+  <li><span class="bk">『日本書紀』巻二 神代下 第九段 一書第二</span> <span class="pub">720年</span><span class="why">磐長姫の呪詛と「一云」の「顕見蒼生」。同じく公開本文で確認した。</span></li>
+  <li><span class="bk">J. G. Frazer, <i>The Belief in Immortality and the Worship of the Dead</i>, vol. 1</span> <span class="pub">London: Macmillan, 1913</span><span class="why">「バナナ型」とポソの話（Kruijt 1894 による）。Project Gutenberg 版で該当箇所を読んだ。</span></li>
+  <li><span class="bk">E. H. Kantorowicz, <i>The King's Two Bodies</i></span> <span class="pub">Princeton University Press, 1957</span><span class="why">四章の「王の二つの身体」。</span></li>
+</ul>
+<p class="note">※カントーロヴィチと大林太良は通読しておらず、広く知られた要旨にもとづく。</p>
+<h3>参考図書 ── さらに読むために</h3>
+<ul>
+  <li><span class="bk">神野志隆光『古事記と日本書紀』</span> <span class="pub">講談社現代新書、1999</span><span class="why">記紀を「一つの日本神話」ではなく別々の作品として読む。講義§1が参照を指示している本。</span></li>
+  <li><span class="bk">大林太良『日本神話の起源』</span> <span class="pub">角川書店、1961</span><span class="why">日本神話を東南アジア・太平洋の神話と比べる古典的な研究。石長比売の話をバナナ型の死の起源神話と比べる議論でも知られる。</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。バナナの偽茎と日継、カントーロヴィチと古事記を結びつける見立ては筆者の解釈であり、学説として確立したものではありません。古事記・日本書紀の書き下しは自作です。</div>
+  <h3>図版の出典</h3>
+  <ul>
+    <li>冒頭：<a href="https://commons.wikimedia.org/wiki/File:Banana_inflorescence.JPG">File:Banana inflorescence.JPG</a>（Anton 17、CC BY-SA 4.0。縮小のみ）</li>
+    <li>序：<a href="https://commons.wikimedia.org/wiki/File:Ninigi_and_Sakuyahime.jpg">File:Ninigi and Sakuyahime.jpg</a>（石井林響、パブリックドメイン。題名・所蔵は Commons に記載なし）</li>
+    <li>一：<a href="https://commons.wikimedia.org/wiki/File:Bostadshus._Binoetek_(by_i_Lamala),_Banggaai,_Poso,_Celebes._Banggaai,_Poso,_Sulawesi,_Lamala_-_SMVK_-_000342.tif">Walter Kaudern 撮影、ポソ地方の住居</a>（スウェーデン世界文化博物館、パブリックドメイン）</li>
+    <li>二：<a href="https://commons.wikimedia.org/wiki/File:Banana_fruit_and_inflorescence.jpg">File:Banana fruit and inflorescence.jpg</a>（Praveenp、CC BY-SA 3.0。縮小のみ）</li>
+    <li>四：<a href="https://commons.wikimedia.org/wiki/File:Stonehenge,_Condado_de_Wiltshire,_Inglaterra,_2014-08-12,_DD_13.JPG">Stonehenge, 2014</a>（Diego Delso、CC BY-SA 4.0。縮小のみ）</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://zh.wikisource.org/wiki/古事記/上卷">ウィキソース「古事記/上卷」</a>・<a href="https://zh.wikisource.org/wiki/古事記/中卷">「中卷」</a>：石長比売の段の原文、火遠理命「伍佰捌拾歳」、神武137・崇神168・垂仁153・応神130歳。</li>
+    <li><a href="https://zh.wikisource.org/wiki/日本書紀/卷第二">ウィキソース「日本書紀/卷第二」</a>：第九段一書第二の磐長姫の詛と「一云…顕見蒼生…此世人短折之縁也」。</li>
+    <li><a href="https://www.gutenberg.org/ebooks/20116">Project Gutenberg #20116</a>：Frazer の「Banana type」の命名と、ポソの話の要約（脚注で A. C. Kruijt, 1894, p. 340 を典拠とする）。</li>
+  </ul>
+</div>
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../01_第1回_漢字で書かれた神話.html"><small>LESSON 1</small>← 教材：第1回 漢字で書かれた神話</a></nav>
+</body>
+</html>
