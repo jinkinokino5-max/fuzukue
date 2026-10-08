@@ -84,7 +84,17 @@ try {
   try {
     git add -A
     git diff --cached --quiet
-    if ($LASTEXITCODE -eq 0) { Log '変更なし'; return }
+    if ($LASTEXITCODE -eq 0) {
+      # 前回 push に失敗したコミットが残っていれば、ここで push し直す（ネットワークの一時的な不調対策）
+      $ahead = (git rev-list --count origin/main..main) 2>$null
+      if ($ahead -and [int]$ahead -gt 0 -and -not $NoPush) {
+        Log "変更なし（未 push のコミットが $ahead 件あるので push する）"
+        git push -q origin main 2>&1 | ForEach-Object { Log "  $_" }
+        if ($LASTEXITCODE -ne 0) { throw 'git push failed' }
+        Log 'push 完了'
+      } else { Log '変更なし' }
+      return
+    }
     $names = git -c core.quotepath=false diff --cached --name-only
     $slugs = @($names | ForEach-Object { if ($_ -match '^docs/([^/]+)/') { $Matches[1] } } | Sort-Object -Unique)
     $msg = 'sync: {0:yyyy-MM-dd HH:mm} {1}' -f (Get-Date), ($(if ($slugs) { $slugs -join ', ' } else { 'portal' }))
