@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2 · The Romans — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--shu:#a8322a;--gl:#8a7f70}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.75;transition:color .4s}
+.col{max-width:640px;margin:0 auto;padding:0 22px}
+.ja{font-family:"Shippori Mincho","Yu Mincho",serif}
+a.s{color:inherit;text-decoration:none;border-radius:2px;transition:background .2s;-webkit-tap-highlight-color:rgba(168,50,42,.15)}
+a.s:hover{background:rgba(168,50,42,.08)} .here{background:rgba(201,164,58,.28);box-shadow:0 0 0 3px rgba(201,164,58,.28)}
+p.t{margin:0 0 1.1em;text-indent:1.4em} p.t.first,p.t.cont{text-indent:0}
+p.t.first::first-letter{float:left;font-size:4.1em;line-height:.82;padding:.06em .08em 0 0;color:var(--shu)}
+.gl{font-family:"Shippori Mincho",serif;font-size:12.5px;line-height:1.7;color:var(--gl);margin:-.5em 0 2em;padding-top:.5em;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.gl b{font-family:"EB Garamond",serif;font-weight:500;font-size:14px;color:var(--ink);opacity:.8}
+.gl span{margin-right:1.1em;display:inline-block}
+.hero{position:relative;height:92vh;min-height:520px;overflow:hidden;margin-bottom:40px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12vh;text-align:center;padding:0 16px}
+.hero .no{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:16px;letter-spacing:.6em;color:var(--shu)}
+.hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,8vw,96px);letter-spacing:.06em;margin:0;line-height:1}
+.hero .sub{font-family:"Shippori Mincho",serif;font-size:14px;letter-spacing:.3em;color:var(--sub)}
+.hero .home{position:absolute;top:14px;left:16px;font:13px/1 "Shippori Mincho",serif;letter-spacing:.2em;color:#f5efe2;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.map{font-family:"Shippori Mincho",serif;font-size:15px;line-height:2;color:var(--sub);border-left:2px solid var(--shu);padding:2px 0 2px 18px;margin:0 0 56px}
+.map b{display:block;color:var(--shu);letter-spacing:.3em;font-size:12px}
+.map .how{display:block;margin-top:.6em;font-size:13px;opacity:.85}
+/* 霞：本文の地に溶ける画像 */
+.haze{margin:30px -60px 36px;position:relative}
+.haze img{display:block;width:100%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%)}
+.cr{font:11px/1.5 system-ui,sans-serif;color:var(--gl);text-align:right;margin:4px 60px 0} .cr a{color:inherit}
+/* 暗唱プレート：全幅の絵に活字 */
+.plate{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;margin:70px 0;overflow:hidden;color:#f5efe2}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(10,12,18,.55),rgba(10,12,18,.15) 70%)}
+.plate .q{position:relative;z-index:2;max-width:860px;padding:0 28px;text-align:center}
+.kick{font:12px/1 system-ui,sans-serif;letter-spacing:.5em;opacity:.8;margin-bottom:22px}
+.plate blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,4.4vw,52px);line-height:1.3;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+a.rl{color:inherit;text-decoration:none}
+.plate .cr{position:absolute;left:14px;right:14px;bottom:8px;z-index:2;color:rgba(255,255,255,.65);margin:0}
+.plate.fade>img{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+/* 活字だけの暗唱 */
+.line{text-align:center;margin:44px auto 52px;max-width:720px;padding:0 22px}
+.line .kick{color:var(--shu);opacity:1}
+.line blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(25px,3.4vw,36px);line-height:1.35}
+.line::after{content:"";display:block;width:36px;height:1px;background:var(--shu);margin:22px auto 0}
+/* 転換：ここで地の色が変わる */
+.turn{position:relative;height:100vh;margin:60px 0}
+.turn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+.turn .cr{position:absolute;right:14px;bottom:4px;margin:0;color:rgba(255,255,255,.6)}
+.pair{display:grid;grid-template-columns:.62fr 1fr;gap:18px;align-items:end;margin:34px -40px}
+.pair img{width:100%;height:auto;display:block}
+.pair .a img{filter:sepia(.25) brightness(.85);-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.pair .b img{-webkit-mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent);mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent)}
+.pair .cr{text-align:left;margin:4px 0 0}
+/* 暗唱の帳 */
+.sheet{max-width:720px;margin:90px auto 0;padding:0 22px}
+.sheet h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:30px;letter-spacing:.2em;text-align:center;margin:0}
+.sheet .ja{font-size:13px;color:var(--sub);text-align:center;margin:4px 0 30px;letter-spacing:.1em}
+.sheet ol{list-style:none;margin:0;padding:0;counter-reset:r}
+.sheet li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:6px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--gl) 30%,transparent);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:23px;line-height:1.4}
+.sheet .sptop{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin:0 0 14px}
+.sheet .mk{font-size:12.5px;text-align:center;margin:0 0 22px;letter-spacing:0}
+.sheet li .sp{vertical-align:-4px}
+.sheet li::before{content:counter(r,upper-roman);font-style:normal;font-size:14px;color:var(--shu);padding-top:.35em;letter-spacing:.1em}
+.colcard{display:block;max-width:640px;margin:70px auto 0;padding:26px 24px;border:1px solid color-mix(in srgb,var(--shu) 60%,transparent);color:var(--ink);text-decoration:none;text-align:center}
+.colcard:hover{background:color-mix(in srgb,var(--shu) 7%,transparent)}
+.colcard .kick{display:block;color:var(--shu);opacity:1;margin-bottom:12px}
+.colcard .ct{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;line-height:1.2}
+.colcard .cs{display:block;font-size:13px;color:var(--sub);margin-top:8px}
+.srcs{max-width:640px;margin:70px auto 0;padding:0 22px;font-size:13px;line-height:1.8;color:var(--sub)}
+.srcs h3{font-size:13px;letter-spacing:.2em;color:var(--shu);margin:0 0 6px}.srcs ul{margin:0 0 8px;padding-left:1.2em}.srcs a{color:inherit}
+.foot{max-width:640px;margin:80px auto 0;padding:26px 22px 90px;display:flex;justify-content:space-between;gap:12px;font-family:"Shippori Mincho",serif;font-size:14px;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.foot a{color:var(--ink);text-decoration:none} .foot .off{color:var(--gl)}
+.foot .src{display:block;font:11px/1.6 system-ui,sans-serif;color:var(--gl);margin-top:6px}
+@media (max-width:720px){body{font-size:18px}.haze,.pair{margin-left:-16px;margin-right:-16px}.col{padding:0 16px}.cr{margin-right:16px}
+ .pair{grid-template-columns:1fr 1fr;gap:10px}.pair .cr{padding:0 8px}.plate{min-height:78vh}.plate .q{padding:0 18px}.line{padding:0 16px}
+ .sheet{padding:0 16px}.colcard{margin-left:16px;margin-right:16px}.srcs{padding:0 16px}.sheet li{font-size:20px;grid-template-columns:1.9em 1fr}.foot{padding-left:16px;padding-right:16px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<style>:root{--bg:#1b1c24;--ink:#e6e0d3;--sub:#aba395;--gl:#9d9486;--shu:#d0634f;}</style>
+<header class="hero"><img src="img/cole_desolation.jpg" width="1600" height="996" alt="The Course of Empire: Desolation"><a class="home" href="index.html">← 目次</a>
+<div class="ttl"><div class="no">PART ONE · 2</div><h1>The Romans</h1><div class="sub">千九百年前のテムズ</div></div></header>
+<div class="col">
+<div class="map ja"><b>読む前の地図</b>日が沈み、ネリー号の上は夜。語り手はまず、マーロウがどんな船乗りかを紹介する。ふつうの船乗りの話は、割ったクルミの殻の中に意味が収まっているが、マーロウの話の意味は外側にあって、霞のように話を包んでいる。前回の最後の一言「ここもまた、地上の暗黒の場所のひとつだった」の続きとして、マーロウは、千九百年前にこのテムズを遡ったローマ人を想像してみせる。地の果てに送られた司令官と、一旗あげに来た若者。そして話は「征服」とは何かへ向かう。征服を救うのは、その背後にある〈理念〉だけだ、と。読みどころは、ローマ人の話が、これから語られるアフリカの話の鏡になっていること。最後に、マーロウは自分が川船の船乗りになった話を始める。<span class="how">文をタップすると、その文の対訳と語注へ。戻ると、読んでいた文に戻ります。</span></div>
+<p class="t first"><a class="s" id="s1-01" href="02_notes.html#n1-01">He was the only man of us who still “followed the sea.”</a> <a class="s" id="s1-02" href="02_notes.html#n1-02">The worst that could be said of him was that he did not represent his class.</a> <a class="s" id="s1-03" href="02_notes.html#n1-03">He was a seaman, but he was a wanderer, too, while most seamen lead, if one may so express it, a sedentary life.</a> <a class="s" id="s1-04" href="02_notes.html#n1-04">Their minds are of the stay-at-home order, and their home is always with them—the ship; and so is their country—the sea.</a> <a class="s" id="s1-05" href="02_notes.html#n1-05">One ship is very much like another, and the sea is always the same.</a> <a class="s" id="s1-06" href="02_notes.html#n1-06">In the immutability of their surroundings the foreign shores, the foreign faces, the changing immensity of life, glide past, veiled not by a sense of mystery but by a slightly disdainful ignorance; for there is nothing mysterious to a seaman unless it be the sea itself, which is the mistress of his existence and as inscrutable as Destiny.</a> <a class="s" id="s1-07" href="02_notes.html#n1-07">For the rest, after his hours of work, a casual stroll or a casual spree on shore suffices to unfold for him the secret of a whole continent, and generally he finds the secret not worth knowing.</a> <a class="s" id="s1-08" href="02_notes.html#n1-08">The yarns of seamen have a direct simplicity, the whole meaning of which lies within the shell of a cracked nut.</a> <a class="s" id="s1-09" href="02_notes.html#n1-09">But Marlow was not typical (if his propensity to spin yarns be excepted), and to him the meaning of an episode was not inside like a kernel but outside, enveloping the tale which brought it out only as a glow brings out a haze, in the likeness of one of these misty halos that sometimes are made visible by the spectral illumination of moonshine.</a></p><div class="gl"><span><b>follow the sea</b> 船乗りを職業にする（第1回にも出た）</span><span><b>represent</b> 代表する・典型である</span><span><b>class</b> （ここでは）同じ職業の人々・種族</span><span><b>wanderer</b> 放浪者</span><span><b>if one may so express it</b> こう言ってよければ</span><span><b>sedentary</b> 座りがちの・定住した</span><span><b>order</b> （ここでは）種類・型</span><span><b>stay-at-home</b> 家にこもりがちな</span><span><b>immutability</b> 不変</span><span><b>immensity</b> 広大さ</span><span><b>glide</b> 滑るように動く</span><span><b>veil</b> 覆い隠す</span><span><b>disdainful</b> 見下した・軽蔑的な</span><span><b>mistress</b> 女主人・支配者</span><span><b>inscrutable</b> 計り知れない</span><span><b>Destiny</b> 運命</span><span><b>for the rest</b> そのほかの点では</span><span><b>stroll</b> 散歩</span><span><b>spree</b> 浮かれ騒ぎ</span><span><b>suffice</b> 十分である</span><span><b>unfold</b> 明らかにする・広げる</span><span><b>yarn</b> （船乗りの）ほら話</span><span><b>shell</b> 殻</span><span><b>cracked nut</b> 割れたクルミ</span><span><b>typical</b> 典型的な</span><span><b>propensity</b> 傾向・癖</span><span><b>spin yarns</b> ほら話を紡ぐ（長々と話す）</span><span><b>except</b> 除外する</span><span><b>episode</b> 出来事・挿話</span><span><b>kernel</b> （木の実の）核・仁</span><span><b>envelop</b> 包み込む</span><span><b>glow</b> （ほのかな）光</span><span><b>haze</b> 霞・もや</span><span><b>likeness</b> 似姿</span><span><b>misty</b> 霧のような・おぼろな</span><span><b>halo</b> 暈（かさ）・光輪</span><span><b>spectral</b> 幽霊のような・幽かな</span><span><b>illumination</b> 照明・照らすこと</span><span><b>moonshine</b> 月光</span></div>
+</div>
+<section class="plate fade"><img src="img/grimshaw_reflections.jpg" width="1600" height="950" alt="Reflections on the Thames, Westminster" loading="lazy"><div class="q"><div class="kick">RECITE · II</div><blockquote><a class="rl" id="r1-09" href="02_notes.html#n1-09">To him the meaning of an episode was not inside like a kernel but outside, enveloping the tale.</a></blockquote></div><p class="cr">J. A. Grimshaw, <i>Reflections on the Thames, Westminster</i>, 1880／Public domain／<a href="https://commons.wikimedia.org/wiki/File:John%20Atkinson%20Grimshaw%20%281836-1893%29%20-%20Reflections%20on%20the%20Thames%2C%20Westminster%2C%20London%20-%20LEEAG.PA.1900.0181%20-%20Leeds%20Art%20Gallery.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s2-01" href="02_notes.html#n2-01">His remark did not seem at all surprising.</a> <a class="s" id="s2-02" href="02_notes.html#n2-02">It was just like Marlow.</a> <a class="s" id="s2-03" href="02_notes.html#n2-03">It was accepted in silence.</a> <a class="s" id="s2-04" href="02_notes.html#n2-04">No one took the trouble to grunt even; and presently he said, very slow—“I was thinking of very old times, when the Romans first came here, nineteen hundred years ago—the other day ....</a> <a class="s" id="s2-05" href="02_notes.html#n2-05">Light came out of this river since—you say Knights?</a> <a class="s" id="s2-06" href="02_notes.html#n2-06">Yes; but it is like a running blaze on a plain, like a flash of lightning in the clouds.</a> <a class="s" id="s2-07" href="02_notes.html#n2-07">We live in the flicker—may it last as long as the old earth keeps rolling!</a> <a class="s" id="s2-08" href="02_notes.html#n2-08">But darkness was here yesterday.</a></p><div class="gl"><span><b>take the trouble to ~</b> わざわざ〜する</span><span><b>grunt</b> うなる・ぶつぶつ言う</span><span><b>presently</b> （古風）やがて</span><span><b>the other day</b> このあいだ・先日</span><span><b>Knights</b> 騎士たち（第1回でテムズから出ていった英雄たちを「騎士」と呼んだことを受ける）</span><span><b>blaze</b> 炎・燃え上がり</span><span><b>plain</b> 平原</span><span><b>flash of lightning</b> 稲妻のひらめき</span><span><b>flicker</b> （炎・光の）ちらつき・明滅</span></div>
+</div>
+<section class="turn" data-to="1"><img src="img/turner_snowstorm.jpg" width="1600" height="1198" alt="Snow Storm – Steam-Boat off a Harbour’s Mouth" loading="lazy"><p class="cr">J. M. W. Turner, <i>Snow Storm – Steam-Boat off a Harbour’s Mouth</i>, 1842／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Joseph%20Mallord%20William%20Turner%20-%20Snow%20Storm%20-%20Steam-Boat%20off%20a%20Harbour%27s%20Mouth%20-%20WGA23178.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s2-09" href="02_notes.html#n2-09">Imagine the feelings of a commander of a fine—what d’ye call ’em?—trireme in the Mediterranean, ordered suddenly to the north; run overland across the Gauls in a hurry; put in charge of one of these craft the legionaries—a wonderful lot of handy men they must have been, too—used to build, apparently by the hundred, in a month or two, if we may believe what we read.</a> <a class="s" id="s2-10" href="02_notes.html#n2-10">Imagine him here—the very end of the world, a sea the colour of lead, a sky the colour of smoke, a kind of ship about as rigid as a concertina—and going up this river with stores, or orders, or what you like.</a> <a class="s" id="s2-11" href="02_notes.html#n2-11">Sand-banks, marshes, forests, savages,—precious little to eat fit for a civilized man, nothing but Thames water to drink.</a> <a class="s" id="s2-12" href="02_notes.html#n2-12">No Falernian wine here, no going ashore.</a> <a class="s" id="s2-13" href="02_notes.html#n2-13">Here and there a military camp lost in a wilderness, like a needle in a bundle of hay—cold, fog, tempests, disease, exile, and death—death skulking in the air, in the water, in the bush.</a></p><div class="gl"><span><b>commander</b> 司令官</span><span><b>what d’ye call ’em</b> = what do you call them（何と言ったっけ）</span><span><b>trireme</b> 三段櫂船（櫂の列が三段ある古代の軍船）</span><span><b>the Mediterranean</b> 地中海</span><span><b>run overland</b> 陸路を急いで行く</span><span><b>the Gauls</b> ガリア（今のフランス周辺）</span><span><b>craft</b> 船（単複同形）</span><span><b>legionary</b> （ローマの）軍団兵</span><span><b>handy</b> 器用な</span><span><b>apparently</b> どうやら〜らしい</span><span><b>lead</b> 鉛（発音はレッド）</span><span><b>rigid</b> 硬い・しっかりした</span><span><b>concertina</b> コンサーティーナ（小型のアコーディオン）</span><span><b>stores</b> 物資・食料</span><span><b>sand-bank</b> 砂州</span><span><b>marsh</b> 沼地</span><span><b>savage</b> 未開人（当時の差別的な言い方）</span><span><b>precious little</b> ほんのわずかしか〜ない</span><span><b>fit for ~</b> 〜にふさわしい</span><span><b>Falernian wine</b> ファレルノ酒（古代ローマの銘酒）</span><span><b>go ashore</b> 上陸する</span><span><b>military camp</b> 軍の野営地</span><span><b>wilderness</b> 荒野</span><span><b>like a needle in a bundle of hay</b> 干し草の中の針のように（見つけにくい・ぽつんとした）</span><span><b>tempest</b> 嵐</span><span><b>exile</b> 追放・流刑</span><span><b>skulk</b> こそこそ潜む</span></div>
+<figure class="haze"><img src="img/romtrireme.jpg" width="1600" height="1109" alt="Roman ship" loading="lazy"><p class="cr">ローマ時代のモザイク（チュニジア）, <i>Roman ship</i>／写真 Mathiasrex／CC BY 2.5／<a href="https://commons.wikimedia.org/wiki/File:Romtrireme.jpg">Commons</a></p></figure>
+<p class="t cont"><a class="s" id="s2-14" href="02_notes.html#n2-14">They must have been dying like flies here.</a> <a class="s" id="s2-15" href="02_notes.html#n2-15">Oh, yes—he did it.</a> <a class="s" id="s2-16" href="02_notes.html#n2-16">Did it very well, too, no doubt, and without thinking much about it either, except afterwards to brag of what he had gone through in his time, perhaps.</a> <a class="s" id="s2-17" href="02_notes.html#n2-17">They were men enough to face the darkness.</a></p><div class="gl"><span><b>like flies</b> ハエのように（ばたばたと）</span><span><b>brag of ~</b> 〜を自慢する</span><span><b>go through</b> （苦難を）経験する</span><span><b>in one’s time</b> 若いころに・自分の時代に</span><span><b>men enough to ~</b> 〜するだけの男らしさがある</span></div>
+<p class="t cont"><a class="s" id="s2-18" href="02_notes.html#n2-18">And perhaps he was cheered by keeping his eye on a chance of promotion to the fleet at Ravenna by and by, if he had good friends in Rome and survived the awful climate.</a> <a class="s" id="s2-19" href="02_notes.html#n2-19">Or think of a decent young citizen in a toga—perhaps too much dice, you know—coming out here in the train of some prefect, or tax-gatherer, or trader even, to mend his fortunes.</a> <a class="s" id="s2-20" href="02_notes.html#n2-20">Land in a swamp, march through the woods, and in some inland post feel the savagery, the utter savagery, had closed round him—all that mysterious life of the wilderness that stirs in the forest, in the jungles, in the hearts of wild men.</a> <a class="s" id="s2-21" href="02_notes.html#n2-21">There’s no initiation either into such mysteries.</a> <a class="s" id="s2-22" href="02_notes.html#n2-22">He has to live in the midst of the incomprehensible, which is also detestable.</a> <a class="s" id="s2-23" href="02_notes.html#n2-23">And it has a fascination, too, that goes to work upon him.</a> <a class="s" id="s2-24" href="02_notes.html#n2-24">The fascination of the abomination—you know, imagine the growing regrets, the longing to escape, the powerless disgust, the surrender, the hate.”</a></p><div class="gl"><span><b>cheer</b> 元気づける</span><span><b>keep one’s eye on ~</b> 〜から目を離さない</span><span><b>promotion</b> 昇進</span><span><b>fleet</b> 艦隊</span><span><b>Ravenna</b> ラヴェンナ（ローマ海軍の基地があったイタリアの港）</span><span><b>by and by</b> やがて</span><span><b>survive</b> 生きのびる</span><span><b>decent</b> まともな・ちゃんとした家の</span><span><b>toga</b> トーガ（ローマ市民の外衣）</span><span><b>dice</b> さいころ（賭博）</span><span><b>in the train of ~</b> 〜の随行として</span><span><b>prefect</b> （ローマの）長官・総督</span><span><b>tax-gatherer</b> 徴税人</span><span><b>mend one’s fortunes</b> 財産を立て直す</span><span><b>swamp</b> 沼地</span><span><b>inland post</b> 内陸の駐屯地</span><span><b>savagery</b> 野蛮</span><span><b>utter</b> まったくの</span><span><b>close round</b> 取り囲む</span><span><b>stir</b> うごめく</span><span><b>initiation</b> （秘儀への）手ほどき・入門</span><span><b>mysteries</b> （ここでは）秘儀</span><span><b>in the midst of ~</b> 〜の真ん中で</span><span><b>incomprehensible</b> 理解できない</span><span><b>detestable</b> ひどく嫌な</span><span><b>fascination</b> 魅惑</span><span><b>go to work upon ~</b> 〜に働きかける</span><span><b>abomination</b> 忌まわしいもの</span><span><b>longing</b> 渇望</span><span><b>powerless</b> 無力な</span><span><b>disgust</b> 嫌悪</span><span><b>surrender</b> 降伏・屈服</span></div>
+</div>
+<section class="plate fade"><img src="img/cole_savage.jpg" width="1600" height="995" alt="The Course of Empire: The Savage State" loading="lazy"><div class="q"><div class="kick">RECITE · IV</div><blockquote><a class="rl" id="r2-24" href="02_notes.html#n2-24">The fascination of the abomination—you know, imagine the growing regrets, the longing to escape, the powerless disgust, the surrender, the hate.</a></blockquote></div><p class="cr">Thomas Cole, <i>The Course of Empire: The Savage State</i>, 1834／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Cole%20Thomas%20The%20Course%20of%20Empire%20The%20Savage%20State%201836.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s3-01" href="02_notes.html#n3-01">He paused.</a></p>
+<p class="t"><a class="s" id="s4-01" href="02_notes.html#n4-01">“Mind,” he began again, lifting one arm from the elbow, the palm of the hand outwards, so that, with his legs folded before him, he had the pose of a Buddha preaching in European clothes and without a lotus-flower—“Mind, none of us would feel exactly like this.</a> <a class="s" id="s4-02" href="02_notes.html#n4-02">What saves us is efficiency—the devotion to efficiency.</a> <a class="s" id="s4-03" href="02_notes.html#n4-03">But these chaps were not much account, really.</a> <a class="s" id="s4-04" href="02_notes.html#n4-04">They were no colonists; their administration was merely a squeeze, and nothing more, I suspect.</a> <a class="s" id="s4-05" href="02_notes.html#n4-05">They were conquerors, and for that you want only brute force—nothing to boast of, when you have it, since your strength is just an accident arising from the weakness of others.</a> <a class="s" id="s4-06" href="02_notes.html#n4-06">They grabbed what they could get for the sake of what was to be got.</a> <a class="s" id="s4-07" href="02_notes.html#n4-07">It was just robbery with violence, aggravated murder on a great scale, and men going at it blind—as is very proper for those who tackle a darkness.</a> <a class="s" id="s4-08" href="02_notes.html#n4-08">The conquest of the earth, which mostly means the taking it away from those who have a different complexion or slightly flatter noses than ourselves, is not a pretty thing when you look into it too much.</a> <a class="s" id="s4-09" href="02_notes.html#n4-09">What redeems it is the idea only.</a> <a class="s" id="s4-10" href="02_notes.html#n4-10">An idea at the back of it; not a sentimental pretence but an idea; and an unselfish belief in the idea—something you can set up, and bow down before, and offer a sacrifice to....”</a></p><div class="gl"><span><b>Mind</b> いいかい（注意を促す）</span><span><b>lift</b> 持ち上げる</span><span><b>palm</b> 手のひら</span><span><b>outwards</b> 外側へ</span><span><b>pose</b> 姿勢</span><span><b>preach</b> 説教する・説法する</span><span><b>lotus-flower</b> 蓮の花</span><span><b>efficiency</b> 能率・効率</span><span><b>devotion</b> 献身</span><span><b>chap</b> （口語）やつ</span><span><b>not much account</b> たいしたものではない</span><span><b>colonist</b> 植民者</span><span><b>administration</b> 統治・行政</span><span><b>squeeze</b> 搾り取り</span><span><b>conqueror</b> 征服者</span><span><b>brute force</b> むき出しの力・腕力</span><span><b>boast of ~</b> 〜を自慢する</span><span><b>arise from ~</b> 〜から生じる</span><span><b>grab</b> つかみ取る</span><span><b>for the sake of ~</b> 〜のために</span><span><b>robbery with violence</b> 暴力をともなう強盗（法律用語）</span><span><b>aggravated murder</b> 加重殺人・凶悪な殺人</span><span><b>on a great scale</b> 大規模に</span><span><b>go at ~</b> 〜に取りかかる</span><span><b>tackle</b> 取り組む</span><span><b>conquest</b> 征服</span><span><b>complexion</b> 肌の色・顔色</span><span><b>look into ~</b> 〜を詳しく調べる</span><span><b>redeem</b> 償う・救う（宗教的には「贖う」）</span><span><b>sentimental</b> 感傷的な</span><span><b>pretence</b> 見せかけ（米 pretense）</span><span><b>unselfish</b> 私心のない</span><span><b>set up</b> 打ち立てる</span><span><b>bow down before ~</b> 〜の前にひれ伏す</span><span><b>sacrifice</b> いけにえ</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · V</div><blockquote><a class="rl" id="r4-08" href="02_notes.html#n4-08">The conquest of the earth, which mostly means the taking it away from those who have a different complexion or slightly flatter noses than ourselves, is not a pretty thing when you look into it too much. What redeems it is the idea only.</a></blockquote></section>
+<section class="turn" data-to="2"><img src="img/whistler_rocket.jpg" width="1600" height="2263" alt="Nocturne in Black and Gold: The Falling Rocket" loading="lazy"><p class="cr">J. M. Whistler, <i>Nocturne in Black and Gold: The Falling Rocket</i>, 1875／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Whistler%20James%20Nocturne%20in%20Black%20and%20Gold%20The%20Falling%20Rocket%201875.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s5-01" href="02_notes.html#n5-01">He broke off.</a> <a class="s" id="s5-02" href="02_notes.html#n5-02">Flames glided in the river, small green flames, red flames, white flames, pursuing, overtaking, joining, crossing each other—then separating slowly or hastily.</a> <a class="s" id="s5-03" href="02_notes.html#n5-03">The traffic of the great city went on in the deepening night upon the sleepless river.</a> <a class="s" id="s5-04" href="02_notes.html#n5-04">We looked on, waiting patiently—there was nothing else to do till the end of the flood; but it was only after a long silence, when he said, in a hesitating voice, “I suppose you fellows remember I did once turn fresh-water sailor for a bit,” that we knew we were fated, before the ebb began to run, to hear about one of Marlow’s inconclusive experiences.</a></p><div class="gl"><span><b>break off</b> （話を）急にやめる</span><span><b>glide</b> 滑るように動く</span><span><b>pursue</b> 追いかける</span><span><b>overtake</b> 追いつく・追い越す</span><span><b>hastily</b> 慌ただしく</span><span><b>traffic</b> 往来・交通</span><span><b>sleepless</b> 眠らない</span><span><b>the flood</b> 上げ潮</span><span><b>hesitating</b> ためらいがちな</span><span><b>fresh-water sailor</b> 淡水（川）の船乗り</span><span><b>for a bit</b> しばらく</span><span><b>fated</b> 運命づけられた</span><span><b>the ebb</b> 引き潮</span><span><b>inconclusive</b> 結論の出ない</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · VI</div><blockquote><a class="rl" id="r5-03" href="02_notes.html#n5-03">The traffic of the great city went on in the deepening night upon the sleepless river.</a></blockquote></section>
+<section class="sheet"><h2>RECITE</h2><div class="ja">暗唱の帳 ── 今回の6つ</div><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><button class="spall" type="button">▶ 通しで聞く</button></div><ol><li><span><a class="rl" id="k1-05" href="02_notes.html#n1-05">One ship is very much like another, and the sea is always the same.</a><button class="sp" type="button" data-t="One ship is very much like another, and the sea is always the same." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k1-09" href="02_notes.html#n1-09">To him the meaning of an episode was not inside like a kernel but outside, enveloping the tale.</a><button class="sp" type="button" data-t="To him the meaning of an episode was not inside like a kernel but outside, enveloping the tale." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k2-07" href="02_notes.html#n2-07">We live in the flicker—may it last as long as the old earth keeps rolling! But darkness was here yesterday.</a><button class="sp" type="button" data-t="We live in the flicker—may it last as long as the old earth keeps rolling! But darkness was here yesterday." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k2-24" href="02_notes.html#n2-24">The fascination of the abomination—you know, imagine the growing regrets, the longing to escape, the powerless disgust, the surrender, the hate.</a><button class="sp" type="button" data-t="The fascination of the abomination—you know, imagine the growing regrets, the longing to escape, the powerless disgust, the surrender, the hate." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k4-08" href="02_notes.html#n4-08">The conquest of the earth, which mostly means the taking it away from those who have a different complexion or slightly flatter noses than ourselves, is not a pretty thing when you look into it too much. What redeems it is the idea only.</a><button class="sp" type="button" data-t="The conquest of the earth, which mostly means the taking it away from those who have a different complexion or slightly flatter noses than ourselves, is not a pretty thing when you look into it too much. What redeems it is the idea only." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k5-03" href="02_notes.html#n5-03">The traffic of the great city went on in the deepening night upon the sleepless river.</a><button class="sp" type="button" data-t="The traffic of the great city went on in the deepening night upon the sleepless river." aria-label="読み上げ"></button></span></li></ol></section>
+<a class="colcard" href="02_col.html"><span class="kick">BACKGROUND · COLUMN</span><span class="ct">Roman Britain</span><span class="cs ja">ローマ人の見たブリテン島　→ 英文の背景コラムを読む</span></a><nav class="foot ja"><div><a href="01.html">← 第1回</a><a href="index.html" style="margin-left:1.2em">目次</a><span class="src">原文：Project Gutenberg #219（公有）／訳・注：本教材の自作</span></div><div><a href="03.html">第3回 →</a></div></nav>
+<script>
+(function(){
+  var KEY='hod-pos:'+location.pathname;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a.s, a.rl'); if(!a) return;
+    try{ history.replaceState(null,'','#'+a.id); }catch(_){}
+    try{ sessionStorage.setItem(KEY,String(window.scrollY)); }catch(_){}
+  });
+  function restore(){
+    var h=location.hash.slice(1), el=h&&document.getElementById(h);
+    document.querySelectorAll('.here').forEach(function(x){x.classList.remove('here')});
+    if(el){ el.classList.add('here'); el.scrollIntoView({block:'center'}); return; }
+    try{ var y=sessionStorage.getItem(KEY); if(y) window.scrollTo(0,+y); }catch(_){}
+  }
+  window.addEventListener('pageshow',function(){ requestAnimationFrame(restore); });
+})();
+</script><script>
+(function(){
+  var T=[{"bg": "#1b1c24", "ink": "#e6e0d3", "sub": "#aba395", "gl": "#9d9486", "shu": "#d0634f"}, {"bg": "#3a3d41", "ink": "#eeeae1", "sub": "#c9c3b6", "gl": "#bab3a5", "shu": "#e6866e"}, {"bg": "#0c0c10", "ink": "#e9e3d6", "sub": "#aaa194", "gl": "#978e81", "shu": "#d0634f"}], R=document.documentElement.style, turns=[].slice.call(document.querySelectorAll('.turn'));
+  function rgb(h){h=h.replace('#','');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+  function ss(e0,e1,x){var t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
+  function upd(){
+    var bg=rgb(T[0].bg), txt=T[0], vh=innerHeight;
+    turns.forEach(function(el){
+      var to=T[+el.dataset.to], rc=el.getBoundingClientRect(), t=(vh*.5-rc.top)/rc.height;
+      if(t<=0) return;
+      var k=ss(.3,.7,t), nb=rgb(to.bg);
+      bg=bg.map(function(v,i){return v+(nb[i]-v)*k});
+      if(t>.5) txt=to;
+    });
+    R.setProperty('--bg',mix(bg,bg,0));
+    ['ink','sub','gl','shu'].forEach(function(n){if(txt[n])R.setProperty('--'+n,txt[n])});
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); addEventListener('pageshow',upd); upd();
+})();
+</script><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

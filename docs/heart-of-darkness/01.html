@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1 · The Sea-Reach — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--shu:#a8322a;--gl:#8a7f70}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.75;transition:color .4s}
+.col{max-width:640px;margin:0 auto;padding:0 22px}
+.ja{font-family:"Shippori Mincho","Yu Mincho",serif}
+a.s{color:inherit;text-decoration:none;border-radius:2px;transition:background .2s;-webkit-tap-highlight-color:rgba(168,50,42,.15)}
+a.s:hover{background:rgba(168,50,42,.08)} .here{background:rgba(201,164,58,.28);box-shadow:0 0 0 3px rgba(201,164,58,.28)}
+p.t{margin:0 0 1.1em;text-indent:1.4em} p.t.first,p.t.cont{text-indent:0}
+p.t.first::first-letter{float:left;font-size:4.1em;line-height:.82;padding:.06em .08em 0 0;color:var(--shu)}
+.gl{font-family:"Shippori Mincho",serif;font-size:12.5px;line-height:1.7;color:var(--gl);margin:-.5em 0 2em;padding-top:.5em;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.gl b{font-family:"EB Garamond",serif;font-weight:500;font-size:14px;color:var(--ink);opacity:.8}
+.gl span{margin-right:1.1em;display:inline-block}
+.hero{position:relative;height:92vh;min-height:520px;overflow:hidden;margin-bottom:40px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12vh;text-align:center;padding:0 16px}
+.hero .no{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:16px;letter-spacing:.6em;color:var(--shu)}
+.hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,8vw,96px);letter-spacing:.06em;margin:0;line-height:1}
+.hero .sub{font-family:"Shippori Mincho",serif;font-size:14px;letter-spacing:.3em;color:var(--sub)}
+.hero .home{position:absolute;top:14px;left:16px;font:13px/1 "Shippori Mincho",serif;letter-spacing:.2em;color:#f5efe2;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.map{font-family:"Shippori Mincho",serif;font-size:15px;line-height:2;color:var(--sub);border-left:2px solid var(--shu);padding:2px 0 2px 18px;margin:0 0 56px}
+.map b{display:block;color:var(--shu);letter-spacing:.3em;font-size:12px}
+.map .how{display:block;margin-top:.6em;font-size:13px;opacity:.85}
+/* 霞：本文の地に溶ける画像 */
+.haze{margin:30px -60px 36px;position:relative}
+.haze img{display:block;width:100%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%)}
+.cr{font:11px/1.5 system-ui,sans-serif;color:var(--gl);text-align:right;margin:4px 60px 0} .cr a{color:inherit}
+/* 暗唱プレート：全幅の絵に活字 */
+.plate{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;margin:70px 0;overflow:hidden;color:#f5efe2}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(10,12,18,.55),rgba(10,12,18,.15) 70%)}
+.plate .q{position:relative;z-index:2;max-width:860px;padding:0 28px;text-align:center}
+.kick{font:12px/1 system-ui,sans-serif;letter-spacing:.5em;opacity:.8;margin-bottom:22px}
+.plate blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,4.4vw,52px);line-height:1.3;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+a.rl{color:inherit;text-decoration:none}
+.plate .cr{position:absolute;left:14px;right:14px;bottom:8px;z-index:2;color:rgba(255,255,255,.65);margin:0}
+.plate.fade>img{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+/* 活字だけの暗唱 */
+.line{text-align:center;margin:44px auto 52px;max-width:720px;padding:0 22px}
+.line .kick{color:var(--shu);opacity:1}
+.line blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(25px,3.4vw,36px);line-height:1.35}
+.line::after{content:"";display:block;width:36px;height:1px;background:var(--shu);margin:22px auto 0}
+/* 転換：ここで地の色が変わる */
+.turn{position:relative;height:100vh;margin:60px 0}
+.turn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+.turn .cr{position:absolute;right:14px;bottom:4px;margin:0;color:rgba(255,255,255,.6)}
+.pair{display:grid;grid-template-columns:.62fr 1fr;gap:18px;align-items:end;margin:34px -40px}
+.pair img{width:100%;height:auto;display:block}
+.pair .a img{filter:sepia(.25) brightness(.85);-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.pair .b img{-webkit-mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent);mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent)}
+.pair .cr{text-align:left;margin:4px 0 0}
+/* 暗唱の帳 */
+.sheet{max-width:720px;margin:90px auto 0;padding:0 22px}
+.sheet h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:30px;letter-spacing:.2em;text-align:center;margin:0}
+.sheet .ja{font-size:13px;color:var(--sub);text-align:center;margin:4px 0 30px;letter-spacing:.1em}
+.sheet ol{list-style:none;margin:0;padding:0;counter-reset:r}
+.sheet li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:6px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--gl) 30%,transparent);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:23px;line-height:1.4}
+.sheet .sptop{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin:0 0 14px}
+.sheet .mk{font-size:12.5px;text-align:center;margin:0 0 22px;letter-spacing:0}
+.sheet li .sp{vertical-align:-4px}
+.sheet li::before{content:counter(r,upper-roman);font-style:normal;font-size:14px;color:var(--shu);padding-top:.35em;letter-spacing:.1em}
+.colcard{display:block;max-width:640px;margin:70px auto 0;padding:26px 24px;border:1px solid color-mix(in srgb,var(--shu) 60%,transparent);color:var(--ink);text-decoration:none;text-align:center}
+.colcard:hover{background:color-mix(in srgb,var(--shu) 7%,transparent)}
+.colcard .kick{display:block;color:var(--shu);opacity:1;margin-bottom:12px}
+.colcard .ct{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;line-height:1.2}
+.colcard .cs{display:block;font-size:13px;color:var(--sub);margin-top:8px}
+.srcs{max-width:640px;margin:70px auto 0;padding:0 22px;font-size:13px;line-height:1.8;color:var(--sub)}
+.srcs h3{font-size:13px;letter-spacing:.2em;color:var(--shu);margin:0 0 6px}.srcs ul{margin:0 0 8px;padding-left:1.2em}.srcs a{color:inherit}
+.foot{max-width:640px;margin:80px auto 0;padding:26px 22px 90px;display:flex;justify-content:space-between;gap:12px;font-family:"Shippori Mincho",serif;font-size:14px;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.foot a{color:var(--ink);text-decoration:none} .foot .off{color:var(--gl)}
+.foot .src{display:block;font:11px/1.6 system-ui,sans-serif;color:var(--gl);margin-top:6px}
+@media (max-width:720px){body{font-size:18px}.haze,.pair{margin-left:-16px;margin-right:-16px}.col{padding:0 16px}.cr{margin-right:16px}
+ .pair{grid-template-columns:1fr 1fr;gap:10px}.pair .cr{padding:0 8px}.plate{min-height:78vh}.plate .q{padding:0 18px}.line{padding:0 16px}
+ .sheet{padding:0 16px}.colcard{margin-left:16px;margin-right:16px}.srcs{padding:0 16px}.sheet li{font-size:20px;grid-template-columns:1.9em 1fr}.foot{padding-left:16px;padding-right:16px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<style>:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--gl:#8a7f70;--shu:#a8322a;}</style>
+<header class="hero"><img src="img/wyllie_seareach.jpg" width="1280" height="618" alt="Sea Reach, Thames"><a class="home" href="index.html">← 目次</a>
+<div class="ttl"><div class="no">PART ONE · 1</div><h1>The Sea-Reach</h1><div class="sub">テムズ河口、日没まで</div></div></header>
+<div class="col">
+<div class="map ja"><b>読む前の地図</b>ある日の夕暮れ、ロンドンから下ったテムズ河口。遊覧帆船ネリー号が、潮の変わり目を待って錨を下ろしている。乗っているのは、昔の船乗り仲間の5人（重役、弁護士、会計士、マーロウ、そして語り手の「私」）。日が沈んでいくあいだ、語り手は、この川から世界へ漕ぎ出していった英雄と船の歴史を思い浮かべる。そして闇が降りたとき、マーロウがぽつりと一言を放つ。そこから長い物語が始まる。<span class="how">文をタップすると、その文の対訳と語注へ。戻ると、読んでいた文に戻ります。</span></div>
+<p class="t first"><a class="s" id="s1-01" href="01_notes.html#n1-01">The Nellie, a cruising yawl, swung to her anchor without a flutter of the sails, and was at rest.</a> <a class="s" id="s1-02" href="01_notes.html#n1-02">The flood had made, the wind was nearly calm, and being bound down the river, the only thing for it was to come to and wait for the turn of the tide.</a></p><div class="gl"><span><b>yawl</b> ヨール（2本マストの小型帆船）</span><span><b>swing to her anchor</b> （船が）錨を軸にくるりと向きを変える</span><span><b>flutter</b> はためき</span><span><b>the flood</b> 上げ潮（満ちてくる潮）</span><span><b>make</b> （潮が）満ちる</span><span><b>bound down the river</b> 川を下る途中で</span><span><b>come to</b> （船が）停まる・錨を下ろす</span><span><b>tide</b> 潮</span></div>
+<p class="t"><a class="s" id="s2-01" href="01_notes.html#n2-01">The sea-reach of the Thames stretched before us like the beginning of an interminable waterway.</a> <a class="s" id="s2-02" href="01_notes.html#n2-02">In the offing the sea and the sky were welded together without a joint, and in the luminous space the tanned sails of the barges drifting up with the tide seemed to stand still in red clusters of canvas sharply peaked, with gleams of varnished sprits.</a> <a class="s" id="s2-03" href="01_notes.html#n2-03">A haze rested on the low shores that ran out to sea in vanishing flatness.</a> <a class="s" id="s2-04" href="01_notes.html#n2-04">The air was dark above Gravesend, and farther back still seemed condensed into a mournful gloom, brooding motionless over the biggest, and the greatest, town on earth.</a></p><div class="gl"><span><b>sea-reach</b> 河口近くの、海へ続く広い水域</span><span><b>interminable</b> 果てしない</span><span><b>offing</b> 沖（岸から見える遠くの海）</span><span><b>weld</b> 溶接する</span><span><b>luminous</b> 光り輝く</span><span><b>tanned sails</b> （防腐処理で）赤褐色に染めた帆</span><span><b>barge</b> 艀（はしけ）・川船</span><span><b>cluster</b> 群れ・かたまり</span><span><b>canvas</b> 帆布</span><span><b>peaked</b> 尖った</span><span><b>varnished</b> ニスを塗った</span><span><b>sprit</b> スプリット（帆を張る斜めの棒）</span><span><b>haze</b> 霞・もや</span><span><b>Gravesend</b> グレーヴズエンド（テムズ下流の港町）</span><span><b>condensed</b> 凝縮した</span><span><b>mournful</b> 悲しげな・陰鬱な</span><span><b>gloom</b> 薄暗がり・陰鬱</span><span><b>brood</b> （雲・闇が）垂れこめる／じっと考え込む</span></div>
+</div>
+<section class="plate fade"><img src="img/whistler_chelsea.jpg" width="1600" height="1312" alt="Nocturne: Blue and Silver – Chelsea" loading="lazy"><div class="q"><div class="kick">RECITE · II</div><blockquote><a class="rl" id="r2-01" href="01_notes.html#n2-01">The sea-reach of the Thames stretched before us like the beginning of an interminable waterway.</a></blockquote></div><p class="cr">J. M. Whistler, <i>Nocturne: Blue and Silver – Chelsea</i>, 1871／Public domain／<a href="https://commons.wikimedia.org/wiki/File:James%20Abbott%20McNeill%20Whistler%20-%20Nocturne-%20Blue%20and%20Silver%20-%20Chelsea%20-%20Google%20Art%20Project.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s3-01" href="01_notes.html#n3-01">The Director of Companies was our captain and our host.</a> <a class="s" id="s3-02" href="01_notes.html#n3-02">We four affectionately watched his back as he stood in the bows looking to seaward.</a> <a class="s" id="s3-03" href="01_notes.html#n3-03">On the whole river there was nothing that looked half so nautical.</a> <a class="s" id="s3-04" href="01_notes.html#n3-04">He resembled a pilot, which to a seaman is trustworthiness personified.</a> <a class="s" id="s3-05" href="01_notes.html#n3-05">It was difficult to realize his work was not out there in the luminous estuary, but behind him, within the brooding gloom.</a></p><div class="gl"><span><b>host</b> 主人役・もてなし役</span><span><b>bows</b> 舳先（船首）</span><span><b>seaward</b> 海の方へ</span><span><b>nautical</b> 船乗りらしい・航海の</span><span><b>pilot</b> 水先案内人</span><span><b>trustworthiness</b> 信頼できること</span><span><b>personified</b> 擬人化された・〜そのもの</span><span><b>estuary</b> 河口（の入り江）</span></div>
+<p class="t"><a class="s" id="s4-01" href="01_notes.html#n4-01">Between us there was, as I have already said somewhere, the bond of the sea.</a> <a class="s" id="s4-02" href="01_notes.html#n4-02">Besides holding our hearts together through long periods of separation, it had the effect of making us tolerant of each other’s yarns—and even convictions.</a> <a class="s" id="s4-03" href="01_notes.html#n4-03">The Lawyer—the best of old fellows—had, because of his many years and many virtues, the only cushion on deck, and was lying on the only rug.</a> <a class="s" id="s4-04" href="01_notes.html#n4-04">The Accountant had brought out already a box of dominoes, and was toying architecturally with the bones.</a> <a class="s" id="s4-05" href="01_notes.html#n4-05">Marlow sat cross-legged right aft, leaning against the mizzen-mast.</a> <a class="s" id="s4-06" href="01_notes.html#n4-06">He had sunken cheeks, a yellow complexion, a straight back, an ascetic aspect, and, with his arms dropped, the palms of hands outwards, resembled an idol.</a> <a class="s" id="s4-07" href="01_notes.html#n4-07">The director, satisfied the anchor had good hold, made his way aft and sat down amongst us.</a> <a class="s" id="s4-08" href="01_notes.html#n4-08">We exchanged a few words lazily.</a> <a class="s" id="s4-09" href="01_notes.html#n4-09">Afterwards there was silence on board the yacht.</a> <a class="s" id="s4-10" href="01_notes.html#n4-10">For some reason or other we did not begin that game of dominoes.</a> <a class="s" id="s4-11" href="01_notes.html#n4-11">We felt meditative, and fit for nothing but placid staring.</a> <a class="s" id="s4-12" href="01_notes.html#n4-12">The day was ending in a serenity of still and exquisite brilliance.</a> <a class="s" id="s4-13" href="01_notes.html#n4-13">The water shone pacifically; the sky, without a speck, was a benign immensity of unstained light; the very mist on the Essex marsh was like a gauzy and radiant fabric, hung from the wooded rises inland, and draping the low shores in diaphanous folds.</a> <a class="s" id="s4-14" href="01_notes.html#n4-14">Only the gloom to the west, brooding over the upper reaches, became more sombre every minute, as if angered by the approach of the sun.</a></p><div class="gl"><span><b>bond</b> 絆</span><span><b>tolerant of</b> 〜に寛容な</span><span><b>yarn</b> （船乗りの）ほら話・長話</span><span><b>conviction</b> 信念・信条</span><span><b>fellow</b> 男・やつ</span><span><b>virtue</b> 美徳</span><span><b>rug</b> 敷物</span><span><b>dominoes</b> ドミノ（牌を使うゲーム）</span><span><b>toy with</b> 〜をもてあそぶ</span><span><b>architecturally</b> 建築のように</span><span><b>bones</b> （ここでは）ドミノの牌</span><span><b>cross-legged</b> あぐらをかいて</span><span><b>aft</b> 船尾に</span><span><b>mizzen-mast</b> 後檣（船尾側のマスト）</span><span><b>sunken</b> 落ちくぼんだ</span><span><b>complexion</b> 顔色</span><span><b>ascetic</b> 禁欲的な・苦行者のような</span><span><b>aspect</b> 様子・風貌</span><span><b>idol</b> 偶像・仏像</span><span><b>amongst</b> = among</span><span><b>lazily</b> けだるそうに</span><span><b>meditative</b> 瞑想的な・もの思いにふける</span><span><b>placid</b> 穏やかな</span><span><b>stare</b> じっと見つめる</span><span><b>serenity</b> 静けさ・安らぎ</span><span><b>exquisite</b> この上なく美しい</span><span><b>brilliance</b> 輝き</span><span><b>pacifically</b> 穏やかに</span><span><b>speck</b> 小さな点・しみ</span><span><b>benign</b> 慈悲深い・穏やかな</span><span><b>immensity</b> 広大さ</span><span><b>unstained</b> 汚れのない</span><span><b>marsh</b> 湿地</span><span><b>gauzy</b> 紗のように薄い</span><span><b>radiant</b> 輝く</span><span><b>rises</b> （土地の）高まり・丘</span><span><b>drape</b> （布で）覆う</span><span><b>diaphanous</b> 透きとおるほど薄い</span><span><b>fold</b> 襞（ひだ）</span><span><b>upper reaches</b> 上流域</span><span><b>sombre</b> （英）暗い・陰気な（米 somber）</span></div>
+<figure class="haze"><img src="img/monet_charing.jpg" width="594" height="469" alt="Charing Cross Bridge, Fog" loading="lazy"><p class="cr">Claude Monet, <i>Charing Cross Bridge, Fog</i>, 1903／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Claude%20Monet%20-%20Charing%20Cross%20Bridge%2C%20Fog.jpg">Commons</a></p></figure>
+</div>
+<section class="line"><div class="kick">RECITE · III</div><blockquote><a class="rl" id="r4-12" href="01_notes.html#n4-12">The day was ending in a serenity of still and exquisite brilliance.</a></blockquote></section>
+<div class="col">
+<figure class="haze"><img src="img/monet_parl.jpg" width="1600" height="1413" alt="The Houses of Parliament, Sunset" loading="lazy"><p class="cr">Claude Monet, <i>The Houses of Parliament, Sunset</i>, 1904／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Claude%20Monet%20-%20The%20Houses%20of%20Parliament%2C%20Sunset.jpg">Commons</a></p></figure>
+<p class="t"><a class="s" id="s5-01" href="01_notes.html#n5-01">And at last, in its curved and imperceptible fall, the sun sank low, and from glowing white changed to a dull red without rays and without heat, as if about to go out suddenly, stricken to death by the touch of that gloom brooding over a crowd of men.</a></p><div class="gl"><span><b>imperceptible</b> 気づかないほどの</span><span><b>ray</b> 光線</span><span><b>go out</b> （火・光が）消える</span><span><b>stricken</b> （打撃を）受けた</span><span><b>brood over</b> 〜の上に垂れこめる</span></div>
+</div>
+<section class="turn" data-to="1"><img src="img/temeraire.jpg" width="1600" height="1188" alt="The Fighting Temeraire" loading="lazy"><p class="cr">J. M. W. Turner, <i>The Fighting Temeraire</i>, 1839／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Turner%2C%20J.%20M.%20W.%20-%20The%20Fighting%20T%C3%A9m%C3%A9raire%20tugged%20to%20her%20last%20Berth%20to%20be%20broken.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s6-01" href="01_notes.html#n6-01">Forthwith a change came over the waters, and the serenity became less brilliant but more profound.</a> <a class="s" id="s6-02" href="01_notes.html#n6-02">The old river in its broad reach rested unruffled at the decline of day, after ages of good service done to the race that peopled its banks, spread out in the tranquil dignity of a waterway leading to the uttermost ends of the earth.</a> <a class="s" id="s6-03" href="01_notes.html#n6-03">We looked at the venerable stream not in the vivid flush of a short day that comes and departs for ever, but in the august light of abiding memories.</a> <a class="s" id="s6-04" href="01_notes.html#n6-04">And indeed nothing is easier for a man who has, as the phrase goes, “followed the sea” with reverence and affection, than to evoke the great spirit of the past upon the lower reaches of the Thames.</a> <a class="s" id="s6-05" href="01_notes.html#n6-05">The tidal current runs to and fro in its unceasing service, crowded with memories of men and ships it had borne to the rest of home or to the battles of the sea.</a> <a class="s" id="s6-06" href="01_notes.html#n6-06">It had known and served all the men of whom the nation is proud, from Sir Francis Drake to Sir John Franklin, knights all, titled and untitled—the great knights-errant of the sea.</a> <a class="s" id="s6-07" href="01_notes.html#n6-07">It had borne all the ships whose names are like jewels flashing in the night of time, from the <i>Golden Hind</i> returning with her rotund flanks full of treasure, to be visited by the Queen’s Highness and thus pass out of the gigantic tale, to the <i>Erebus</i> and <i>Terror</i>, bound on other conquests—and that never returned.</a> <a class="s" id="s6-08" href="01_notes.html#n6-08">It had known the ships and the men.</a> <a class="s" id="s6-09" href="01_notes.html#n6-09">They had sailed from Deptford, from Greenwich, from Erith—the adventurers and the settlers; kings’ ships and the ships of men on ’Change; captains, admirals, the dark “interlopers” of the Eastern trade, and the commissioned “generals” of East India fleets.</a> <a class="s" id="s6-10" href="01_notes.html#n6-10">Hunters for gold or pursuers of fame, they all had gone out on that stream, bearing the sword, and often the torch, messengers of the might within the land, bearers of a spark from the sacred fire.</a> <a class="s" id="s6-11" href="01_notes.html#n6-11">What greatness had not floated on the ebb of that river into the mystery of an unknown earth!...</a> <a class="s" id="s6-12" href="01_notes.html#n6-12">The dreams of men, the seed of commonwealths, the germs of empires.</a></p><div class="gl"><span><b>forthwith</b> ただちに（古風）</span><span><b>profound</b> 深い</span><span><b>reach</b> （川の）見通せる一区間</span><span><b>unruffled</b> 波立たない・平静な</span><span><b>decline</b> 傾き・終わり</span><span><b>race</b> 民族・人種</span><span><b>people</b> （動詞）〜に住む</span><span><b>tranquil</b> 静かな</span><span><b>dignity</b> 威厳</span><span><b>uttermost</b> いちばん遠い</span><span><b>venerable</b> 由緒ある・尊い</span><span><b>vivid</b> 鮮やかな</span><span><b>flush</b> 紅潮・ほてり</span><span><b>august</b> （形容詞・2音節目にアクセント）威厳ある・おごそかな</span><span><b>abiding</b> 永続する</span><span><b>follow the sea</b> 船乗りを職業にする</span><span><b>reverence</b> 畏敬</span><span><b>evoke</b> 呼び起こす</span><span><b>tidal current</b> 潮流</span><span><b>to and fro</b> 行ったり来たり</span><span><b>unceasing</b> 絶え間ない</span><span><b>borne</b> bear（運ぶ）の過去分詞</span><span><b>Sir Francis Drake</b> ドレイク（16世紀、世界周航を果たした英国の航海者）</span><span><b>Sir John Franklin</b> フランクリン（北西航路探検で1845年に出航し、全員消息を絶った）</span><span><b>titled</b> 爵位のある</span><span><b>knight-errant</b> 遍歴の騎士</span><span><b>Golden Hind</b> ゴールデン・ハインド号（ドレイクの船）</span><span><b>rotund</b> 丸々とした</span><span><b>flank</b> （船の）側面・脇腹</span><span><b>the Queen’s Highness</b> 女王陛下（エリザベス1世）</span><span><b>Erebus / Terror</b> フランクリン探検隊の2隻</span><span><b>conquest</b> 征服</span><span><b>Deptford, Greenwich, Erith</b> いずれもテムズ沿いの港・造船の町</span><span><b>settler</b> 入植者</span><span><b>’Change</b> （= Exchange）王立取引所</span><span><b>interloper</b> もぐりの商人・侵入者</span><span><b>commissioned</b> 任命された</span><span><b>fleet</b> 船団・艦隊</span><span><b>pursuer</b> 追う者</span><span><b>torch</b> 松明</span><span><b>might</b> 力・権力</span><span><b>sacred</b> 神聖な</span><span><b>ebb</b> 引き潮</span><span><b>mystery</b> 神秘・謎</span><span><b>commonwealth</b> 国家・共同体</span><span><b>germ</b> 芽・始まり（細菌の意も）</span><span><b>empire</b> 帝国</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · IV</div><blockquote><a class="rl" id="r6-10" href="01_notes.html#n6-10">Hunters for gold or pursuers of fame, they all had gone out on that stream, bearing the sword, and often the torch.</a></blockquote></section>
+<section class="plate fade"><img src="img/erebus.jpg" width="1200" height="780" alt="HMS Erebus in the Ice" loading="lazy"><div class="q"><div class="kick">RECITE · V</div><blockquote><a class="rl" id="r6-12" href="01_notes.html#n6-12">The dreams of men, the seed of commonwealths, the germs of empires.</a></blockquote></div><p class="cr">François Musin, <i>HMS Erebus in the Ice</i>, 1846／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Fran%C3%A7ois%20Etienne%20Musin%20%281820-1888%29%20-%20HMS%20%27Erebus%27%20in%20the%20Ice%2C%201846%20-%20BHC3325%20-%20Royal%20Museums%20Greenwich.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s7-01" href="01_notes.html#n7-01">The sun set; the dusk fell on the stream, and lights began to appear along the shore.</a> <a class="s" id="s7-02" href="01_notes.html#n7-02">The Chapman light-house, a three-legged thing erect on a mud-flat, shone strongly.</a> <a class="s" id="s7-03" href="01_notes.html#n7-03">Lights of ships moved in the fairway—a great stir of lights going up and going down.</a> <a class="s" id="s7-04" href="01_notes.html#n7-04">And farther west on the upper reaches the place of the monstrous town was still marked ominously on the sky, a brooding gloom in sunshine, a lurid glare under the stars.</a></p><div class="gl"><span><b>dusk</b> 夕闇・たそがれ</span><span><b>Chapman light-house</b> チャップマン灯台（テムズ河口の干潟に立つ杭打ち式の灯台）</span><span><b>erect</b> 直立した</span><span><b>mud-flat</b> 干潟</span><span><b>fairway</b> 航路（船の通り道）</span><span><b>stir</b> ざわめき・動き</span><span><b>monstrous</b> 怪物のような・巨大な</span><span><b>ominously</b> 不吉に</span><span><b>lurid</b> ぎらぎらした・毒々しい</span><span><b>glare</b> ぎらつく光</span></div>
+<div class="pair"><div class="a"><img src="img/chapman_pc.jpg" width="442" height="731" alt="The Chapman Lighthouse" loading="lazy"><p class="cr">絵葉書, <i>The Chapman Lighthouse</i>, 20世紀初め／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Early%20Postcard%2CEssex%2C%20Canvey%20Island%2C%20The%20Chapman%20Lighthouse%2C%20Nice%20View%2C%20RP%2C%20%2850607331481%29.jpg">Commons</a></p></div><div class="b"><img src="img/grimshaw.jpg" width="800" height="516" alt="Nightfall on the Thames" loading="lazy"><p class="cr">J. A. Grimshaw, <i>Nightfall on the Thames</i>, 1880／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Grimshaw-NightfallThames.jpg">Commons</a></p></div></div>
+</div>
+<section class="line"><div class="kick">RECITE · VI</div><blockquote><a class="rl" id="r7-01" href="01_notes.html#n7-01">The sun set; the dusk fell on the stream, and lights began to appear along the shore.</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s8-01" href="01_notes.html#n8-01">“And this also,” said Marlow suddenly, “has been one of the dark places of the earth.”</a></p>
+</div>
+<section class="plate"><img src="img/whistler_westminster.jpg" width="1600" height="1204" alt="Nocturne: Grey and Gold – Westminster Bridge" loading="lazy"><div class="q"><div class="kick">RECITE · VII</div><blockquote><a class="rl" id="r8-01" href="01_notes.html#n8-01">“And this also,” said Marlow suddenly, “has been one of the dark places of the earth.”</a></blockquote></div><p class="cr">J. M. Whistler, <i>Nocturne: Grey and Gold – Westminster Bridge</i>, 1871–72／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Whistler%20-%20Nocturne.%20Grey%20and%20Gold%2C%20Westminster%20Bridge%20%281871-1872%29%20y145.jpg">Commons</a></p></section>
+<section class="sheet"><h2>RECITE</h2><div class="ja">暗唱の帳 ── 今回の7つ</div><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><button class="spall" type="button">▶ 通しで聞く</button></div><div class="ja mk">印：<span class="st">強く読む語</span>　<span class="br">/</span> 息継ぎ　<span class="lk">‿</span> 音をつなげる</div><ol><li><span><a class="rl" id="k1-01" href="01_notes.html#n1-01">The <span class="st">Nellie</span>, <span class="br">/</span> a <span class="st">cruising</span> <span class="st">yawl</span>, <span class="br">/</span> <span class="st">swung</span> to her<span class="lk">‿</span><span class="st">anchor</span> <span class="br">/</span> without<span class="lk">‿</span>a <span class="st">flutter</span> of the <span class="st">sails</span>, <span class="br">/</span> and was<span class="lk">‿</span>at <span class="st">rest</span>.</a><button class="sp" type="button" data-t="The Nellie, a cruising yawl, swung to her anchor without a flutter of the sails, and was at rest." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k2-01" href="01_notes.html#n2-01">The <span class="st">sea-reach</span> of the <span class="st">Thames</span> <span class="br">/</span> stretched be<span class="st">fore</span><span class="lk">‿</span>us <span class="br">/</span> like the be<span class="st">gin</span>ning of<span class="lk">‿</span>an in<span class="st">ter</span>minable <span class="st">waterway</span>.</a><button class="sp" type="button" data-t="The sea-reach of the Thames stretched before us like the beginning of an interminable waterway." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k4-12" href="01_notes.html#n4-12">The <span class="st">day</span> was <span class="st">ending</span> <span class="br">/</span> in<span class="lk">‿</span>a se<span class="st">ren</span>ity <span class="br">/</span> of <span class="st">still</span><span class="lk">‿</span>and ex<span class="st">quis</span>ite <span class="st">brilliance</span>.</a><button class="sp" type="button" data-t="The day was ending in a serenity of still and exquisite brilliance." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k6-10" href="01_notes.html#n6-10"><span class="st">Hunters</span> for <span class="st">gold</span> <span class="br">/</span> or pur<span class="st">su</span>ers of <span class="st">fame</span>, <span class="br">/</span> they <span class="st">all</span> had gone <span class="st">out</span><span class="lk">‿</span>on that <span class="st">stream</span>, <span class="br">/</span> <span class="st">bearing</span> the <span class="st">sword</span>, <span class="br">/</span> and <span class="st">often</span> the <span class="st">torch</span>.</a><button class="sp" type="button" data-t="Hunters for gold or pursuers of fame, they all had gone out on that stream, bearing the sword, and often the torch." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k6-12" href="01_notes.html#n6-12">The <span class="st">dreams</span> of <span class="st">men</span>, <span class="br">/</span> the <span class="st">seed</span> of <span class="st">commonwealths</span>, <span class="br">/</span> the <span class="st">germs</span> of <span class="st">empires</span>.</a><button class="sp" type="button" data-t="The dreams of men, the seed of commonwealths, the germs of empires." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k7-01" href="01_notes.html#n7-01">The <span class="st">sun</span> <span class="st">set</span>; <span class="br">/</span> the <span class="st">dusk</span> <span class="st">fell</span><span class="lk">‿</span>on the <span class="st">stream</span>, <span class="br">/</span> and <span class="st">lights</span> be<span class="st">gan</span> to ap<span class="st">pear</span> <span class="br">/</span> a<span class="st">long</span> the <span class="st">shore</span>.</a><button class="sp" type="button" data-t="The sun set; the dusk fell on the stream, and lights began to appear along the shore." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k8-01" href="01_notes.html#n8-01">“And <span class="st">this</span><span class="lk">‿</span><span class="st">also</span>,” <span class="br">/</span> said <span class="st">Marlow</span> <span class="st">suddenly</span>, <span class="br">/</span> “has <span class="st">been</span> <span class="st">one</span><span class="lk">‿</span>of the <span class="st">dark</span> <span class="st">places</span> <span class="br">/</span> of the <span class="st">earth</span>.”</a><button class="sp" type="button" data-t="“And this also,” said Marlow suddenly, “has been one of the dark places of the earth.”" aria-label="読み上げ"></button></span></li></ol></section>
+<nav class="foot ja"><div><span class="off"></span><a href="index.html" style="margin-left:1.2em">目次</a><span class="src">原文：Project Gutenberg #219（公有）／訳・注：本教材の自作</span></div><div><a href="02.html">第2回 →</a></div></nav>
+<script>
+(function(){
+  var KEY='hod-pos:'+location.pathname;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a.s, a.rl'); if(!a) return;
+    try{ history.replaceState(null,'','#'+a.id); }catch(_){}
+    try{ sessionStorage.setItem(KEY,String(window.scrollY)); }catch(_){}
+  });
+  function restore(){
+    var h=location.hash.slice(1), el=h&&document.getElementById(h);
+    document.querySelectorAll('.here').forEach(function(x){x.classList.remove('here')});
+    if(el){ el.classList.add('here'); el.scrollIntoView({block:'center'}); return; }
+    try{ var y=sessionStorage.getItem(KEY); if(y) window.scrollTo(0,+y); }catch(_){}
+  }
+  window.addEventListener('pageshow',function(){ requestAnimationFrame(restore); });
+})();
+</script><script>
+(function(){
+  var T=[{"bg": "#f3ecdd", "ink": "#2a2622", "sub": "#7a7062", "gl": "#8a7f70", "shu": "#a8322a"}, {"bg": "#16161c", "ink": "#e9e3d6", "sub": "#b3aa9b", "gl": "#a39a8b", "shu": "#d0634f"}], R=document.documentElement.style, turns=[].slice.call(document.querySelectorAll('.turn'));
+  function rgb(h){h=h.replace('#','');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+  function ss(e0,e1,x){var t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
+  function upd(){
+    var bg=rgb(T[0].bg), txt=T[0], vh=innerHeight;
+    turns.forEach(function(el){
+      var to=T[+el.dataset.to], rc=el.getBoundingClientRect(), t=(vh*.5-rc.top)/rc.height;
+      if(t<=0) return;
+      var k=ss(.3,.7,t), nb=rgb(to.bg);
+      bg=bg.map(function(v,i){return v+(nb[i]-v)*k});
+      if(t>.5) txt=to;
+    });
+    R.setProperty('--bg',mix(bg,bg,0));
+    ['ink','sub','gl','shu'].forEach(function(n){if(txt[n])R.setProperty('--'+n,txt[n])});
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); addEventListener('pageshow',upd); upd();
+})();
+</script><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

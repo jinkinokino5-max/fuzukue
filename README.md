@@ -10,6 +10,7 @@
 | 電磁気学 | `denjiki/` |
 | 上代文学へのいざない | `jodai/` |
 | 量子力学 | `ryoshi/` |
+| 「闇の奥」を原文で読む | `heart-of-darkness/` |
 
 ## しくみ
 - `docs/` が GitHub Pages の公開ルート（main ブランチ /docs）。

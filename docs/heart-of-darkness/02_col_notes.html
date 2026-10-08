@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Column 2 · Roman Britain 対訳と解説 — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ec;--ink:#2a2723;--sub:#6b645a;--gl:#8a7f70;--shu:#a8322a}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:#f7f4ec;color:#2a2723;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:15px;line-height:1.85}
+.wrap{max-width:980px;margin:0 auto;padding:30px 22px 140px}
+h1{font-family:"Shippori Mincho",serif;font-size:22px;letter-spacing:.06em;border-bottom:1px solid #2a2723;padding-bottom:10px}
+h1 small{display:block;font-family:"Cormorant Garamond",serif;font-size:15px;letter-spacing:.3em;color:#a8322a}
+.lead{color:#6b645a;font-size:13px}
+.n{display:grid;grid-template-columns:52px 1fr 1fr;gap:0 22px;padding:18px 0;border-bottom:1px solid #ddd6c8;scroll-margin-top:20px}
+.n:target{background:#f7f1dc;box-shadow:-12px 0 0 #f7f1dc,12px 0 0 #f7f1dc}
+.id{font-family:"Cormorant Garamond",serif;color:#a8322a;font-size:17px;padding-top:2px}
+.en{font-family:"EB Garamond",Georgia,serif;font-size:19px;line-height:1.6}
+.jp{font-family:"Shippori Mincho",serif;font-size:15.5px;line-height:1.95;color:#3a352e}
+.sub{grid-column:2/4;margin-top:10px}
+.gl{font-size:13px;color:#6b645a} .gl b{font-family:"EB Garamond",serif;font-size:15px;color:#2a2723;font-weight:500}
+.gl span{display:inline-block;margin-right:1.2em}
+.gr{background:#eceff4;border-left:3px solid #4a5f8c;padding:8px 14px;margin-top:10px;font-size:14px}
+.gr .label,.qa .label,.rc .label{font-family:"Shippori Mincho",serif;font-weight:700;display:block;color:#4a5f8c}
+.qa{background:#f7f1dc;border-left:3px solid #c9a43a;padding:8px 14px;margin-top:10px;font-size:14px}
+.qa .label{color:#9a7a1a}
+.pn{background:#f4ece9;border-left:3px solid #a8322a;padding:8px 14px;margin-top:10px;font-size:14px}
+.pn .label{font-family:"Shippori Mincho",serif;font-weight:700;display:block;color:#a8322a}
+.sptop{margin:6px 0 4px;padding:10px 0;border-top:1px solid #ddd6c8;border-bottom:1px solid #ddd6c8}
+.sph{font-size:12px;color:#8a7f70;margin-left:6px}
+.rc{border-left:3px solid #a8322a;padding:6px 14px;margin-top:10px;font-family:"EB Garamond",serif;font-style:italic;font-size:17px}
+.rc .label{color:#a8322a;font-style:normal;font-size:13px}
+.tag{display:inline-block;font-size:11px;letter-spacing:.15em;color:#fff;background:#a8322a;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:sans-serif}
+.back{position:fixed;right:14px;bottom:14px;z-index:9;font-family:"Shippori Mincho",serif;font-size:14px;background:#2a2723;color:#f7f4ec;border:none;padding:12px 18px;cursor:pointer;box-shadow:0 3px 14px rgba(0,0,0,.2)}
+@media (max-width:720px){.wrap{padding:24px 16px 140px}.n{grid-template-columns:1fr}.id{font-size:15px}.sub{grid-column:1}.jp{margin-top:6px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<div class="wrap"><h1><small>Column 2 · Roman Britain</small>対訳と解説</h1><p class="lead">コラムの文をタップするとここに来ます。右下の「本文に戻る」で、読んでいた文に戻ります。英文も訳も本教材の自作です。</p><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><span class="sph">▶ で英文を読み上げます（端末の音声）。</span></div>
+<section class="n" id="n1-01"><div class="id">1-01</div><div class="en">In 55 BC, Julius Caesar crossed the sea from Gaul to Britain.<button class="sp" type="button" data-t="In 55 BC, Julius Caesar crossed the sea from Gaul to Britain." aria-label="読み上げ"></button></div><div class="jp">紀元前55年、ユリウス・カエサルは、ガリアからブリテン島へ海を渡った。</div><div class="sub"><div class="gl"><span><b>BC</b> 紀元前（Before Christ）</span><span><b>Gaul</b> ガリア（今のフランス周辺）</span></div></div></section>
+<section class="n" id="n1-02"><div class="id">1-02</div><div class="en">To the Romans, the island was the edge of the known world: cold, wet, and covered in mist.<button class="sp" type="button" data-t="To the Romans, the island was the edge of the known world: cold, wet, and covered in mist." aria-label="読み上げ"></button></div><div class="jp">ローマ人にとって、この島は知られた世界の果てだった。寒く、湿っていて、霧に覆われていた。</div><div class="sub"><div class="gl"><span><b>the known world</b> （当時）知られていた世界</span><span><b>mist</b> 霧</span></div></div></section>
+<section class="n" id="n1-03"><div class="id">1-03</div><div class="en">Caesar came back the next year with a bigger army and crossed the Thames, but he did not stay.<button class="sp" type="button" data-t="Caesar came back the next year with a bigger army and crossed the Thames, but he did not stay." aria-label="読み上げ"></button></div><div class="jp">カエサルは翌年、より大きな軍を率いて戻り、テムズ川を渡ったが、とどまらなかった。</div><div class="sub"></div></section>
+<section class="n" id="n1-04"><div class="id">1-04</div><div class="en">He took some promises and some hostages, and sailed home.<button class="sp" type="button" data-t="He took some promises and some hostages, and sailed home." aria-label="読み上げ"></button></div><div class="jp">彼はいくつかの約束といくらかの人質を取り、船で帰っていった。</div><div class="sub"><div class="gl"><span><b>hostage</b> 人質</span></div></div></section>
+<section class="n" id="n2-01"><div class="id">2-01</div><div class="en">Almost a hundred years later, in AD 43, the emperor Claudius sent four legions to Britain.<button class="sp" type="button" data-t="Almost a hundred years later, in AD 43, the emperor Claudius sent four legions to Britain." aria-label="読み上げ"></button></div><div class="jp">それからおよそ100年後の紀元43年、皇帝クラウディウスは4個軍団をブリテン島へ送った。</div><div class="sub"><div class="gl"><span><b>AD</b> 紀元（後）</span><span><b>emperor</b> 皇帝</span><span><b>legion</b> （ローマの）軍団。1個軍団は約5,000人</span></div></div></section>
+<section class="n" id="n2-02"><div class="id">2-02</div><div class="en">This time the Romans came to stay.<button class="sp" type="button" data-t="This time the Romans came to stay." aria-label="読み上げ"></button></div><div class="jp">今度は、ローマ人はとどまるために来たのだった。</div><div class="sub"></div></section>
+<section class="n" id="n2-03"><div class="id">2-03</div><div class="en">Their soldiers built roads, forts and harbours, and the south of the island slowly became a Roman province called Britannia.<button class="sp" type="button" data-t="Their soldiers built roads, forts and harbours, and the south of the island slowly became a Roman province called Britannia." aria-label="読み上げ"></button></div><div class="jp">兵士たちは道路や砦や港を築き、島の南部は少しずつ、ブリタンニアと呼ばれるローマの属州になっていった。</div><div class="sub"><div class="gl"><span><b>fort</b> 砦</span><span><b>harbour</b> 港（米 harbor）</span><span><b>province</b> 属州</span></div></div></section>
+<section class="n" id="n3-01"><div class="id">3-01</div><div class="en">A few years after the invasion, around AD 47, the Romans built a wooden bridge over the Thames.<button class="sp" type="button" data-t="A few years after the invasion, around AD 47, the Romans built a wooden bridge over the Thames." aria-label="読み上げ"></button></div><div class="jp">侵攻の数年後、紀元47年ごろ、ローマ人はテムズ川に木の橋を架けた。</div><div class="sub"><div class="gl"><span><b>invasion</b> 侵攻</span></div></div></section>
+<section class="n" id="n3-02"><div class="id">3-02</div><div class="en">They chose a place where the river was narrow enough to bridge, but deep enough for sea-going ships.<button class="sp" type="button" data-t="They chose a place where the river was narrow enough to bridge, but deep enough for sea-going ships." aria-label="読み上げ"></button></div><div class="jp">彼らが選んだのは、橋を架けられるほど川幅が狭く、それでいて海を行く船が入れるほど深い場所だった。</div><div class="sub"><div class="gl"><span><b>bridge</b> （動詞）橋を架ける</span><span><b>sea-going</b> 外洋を行く</span></div><div class="gr"><span class="label">文法の要所</span><b>narrow enough to bridge, but deep enough for ~</b>：<b>形容詞＋enough to ~／for ~</b>「〜できるほど…」を2つ対にしている。</div></div></section>
+<section class="n" id="n3-03"><div class="id">3-03</div><div class="en">A town grew up beside the bridge, and they called it Londinium.<button class="sp" type="button" data-t="A town grew up beside the bridge, and they called it Londinium." aria-label="読み上げ"></button></div><div class="jp">橋のそばに町ができ、彼らはそれをロンディニウムと呼んだ。</div><div class="sub"></div></section>
+<section class="n" id="n3-04"><div class="id">3-04</div><div class="en">This was the beginning of London, the “greatest town on earth” that Conrad describes in the first chapter.<button class="sp" type="button" data-t="This was the beginning of London, the “greatest town on earth” that Conrad describes in the first chapter." aria-label="読み上げ"></button></div><div class="jp">これがロンドンの始まりである。コンラッドが第1章で描く「地上で最も偉大な都」の。</div><div class="sub"></div></section>
+<section class="n" id="n4-01"><div class="id">4-01</div><div class="en">Not everyone welcomed the newcomers.<button class="sp" type="button" data-t="Not everyone welcomed the newcomers." aria-label="読み上げ"></button></div><div class="jp">誰もが新しく来た者たちを歓迎したわけではなかった。</div><div class="sub"><div class="gl"><span><b>welcome</b> 歓迎する</span><span><b>newcomer</b> 新しく来た者</span></div></div></section>
+<section class="n" id="n4-02"><div class="id">4-02</div><div class="en">In AD 60 or 61, Boudica, a queen of the Iceni people, led a great revolt against Roman rule.<button class="sp" type="button" data-t="In AD 60 or 61, Boudica, a queen of the Iceni people, led a great revolt against Roman rule." aria-label="読み上げ"></button></div><div class="jp">紀元60年か61年、イケニ族の女王ブーディカが、ローマの支配に対する大反乱を率いた。</div><div class="sub"><div class="gl"><span><b>revolt</b> 反乱</span><span><b>rule</b> 支配</span></div></div></section>
+<section class="n" id="n4-03"><div class="id">4-03</div><div class="en">Her army burned Londinium to the ground and killed many of the people living there.<button class="sp" type="button" data-t="Her army burned Londinium to the ground and killed many of the people living there." aria-label="読み上げ"></button></div><div class="jp">彼女の軍はロンディニウムを焼き払い、そこに住む多くの人々を殺した。</div><div class="sub"><div class="gl"><span><b>burn ~ to the ground</b> 〜を焼き払う</span></div></div></section>
+<section class="n" id="n4-04"><div class="id">4-04</div><div class="en">The Romans defeated her in the end, and they rebuilt the town.<button class="sp" type="button" data-t="The Romans defeated her in the end, and they rebuilt the town." aria-label="読み上げ"></button></div><div class="jp">ローマ人は最後には彼女を打ち破り、町を建て直した。</div><div class="sub"><div class="gl"><span><b>defeat</b> 打ち負かす</span><span><b>rebuild</b> 建て直す</span></div></div></section>
+<section class="n" id="n5-01"><div class="id">5-01</div><div class="en">The Roman historian Tacitus wrote about these wars.<button class="sp" type="button" data-t="The Roman historian Tacitus wrote about these wars." aria-label="読み上げ"></button></div><div class="jp">ローマの歴史家タキトゥスは、これらの戦いについて書いた。</div><div class="sub"><div class="gl"><span><b>historian</b> 歴史家</span></div></div></section>
+<section class="n" id="n5-02"><div class="id">5-02</div><div class="en">In his book <i>Agricola</i>, he gives a speech to Calgacus, a chief in the far north of Britain, who is about to fight the Romans.<button class="sp" type="button" data-t="In his book Agricola, he gives a speech to Calgacus, a chief in the far north of Britain, who is about to fight the Romans." aria-label="読み上げ"></button></div><div class="jp">著書『アグリコラ』のなかで、彼は、ブリテン島のはるか北の族長カルガクスに演説をさせている。カルガクスは、これからローマ軍と戦おうとしている。</div><div class="sub"><div class="gl"><span><b>chief</b> 族長</span><span><b>be about to ~</b> まさに〜しようとしている</span></div></div></section>
+<section class="n" id="n5-03"><div class="id">5-03</div><div class="en">Calgacus calls the Romans “robbers of the world.”<button class="sp" type="button" data-t="Calgacus calls the Romans “robbers of the world.”" aria-label="読み上げ"></button></div><div class="jp">カルガクスは、ローマ人を「世界の略奪者」と呼ぶ。</div><div class="sub"><div class="gl"><span><b>robber</b> 強盗・略奪者</span></div></div></section>
+<section class="n" id="n5-04"><div class="id">5-04</div><div class="en">Then he says, “They make a desert and call it peace.”<button class="sp" type="button" data-t="Then he says, “They make a desert and call it peace.”" aria-label="読み上げ"></button><span class="tag">暗唱</span></div><div class="jp">そして言う。「彼らは荒野をつくり、それを平和と呼ぶ」と。</div><div class="sub"><div class="gl"><span><b>desert</b> 荒野・無人の地（ラテン語 solitudo の英訳）</span></div><div class="rc"><span class="label">暗唱</span>They make a desert and call it peace.<button class="sp" type="button" data-t="They make a desert and call it peace." aria-label="読み上げ"></button></div></div></section>
+<section class="n" id="n5-05"><div class="id">5-05</div><div class="en">Historians think that Tacitus probably wrote this speech himself.<button class="sp" type="button" data-t="Historians think that Tacitus probably wrote this speech himself." aria-label="読み上げ"></button></div><div class="jp">歴史家たちは、この演説はおそらくタキトゥス自身が書いたものだと考えている。</div><div class="sub"></div></section>
+<section class="n" id="n5-06"><div class="id">5-06</div><div class="en">Even so, it is a Roman writer who puts these hard words about Rome into an enemy’s mouth.<button class="sp" type="button" data-t="Even so, it is a Roman writer who puts these hard words about Rome into an enemy’s mouth." aria-label="読み上げ"></button></div><div class="jp">それでも、ローマについてのこの厳しい言葉を敵の口に語らせているのは、ローマの書き手なのだ。</div><div class="sub"><div class="gl"><span><b>put words into ~’s mouth</b> （自分の考えを）〜に言わせる</span></div><div class="gr"><span class="label">文法の要所</span><b>it is a Roman writer who puts …</b>：強調構文 it is ~ who …「…しているのは〜なのだ」。「敵ではなくローマ人自身が」という点を強めている。</div></div></section>
+<section class="n" id="n6-01"><div class="id">6-01</div><div class="en">Remember what Marlow says about the Romans: “It was just robbery with violence, aggravated murder on a great scale.”<button class="sp" type="button" data-t="Remember what Marlow says about the Romans: “It was just robbery with violence, aggravated murder on a great scale.”" aria-label="読み上げ"></button></div><div class="jp">マーロウがローマ人について言ったことを思い出してほしい。「それはただの暴力をともなう強盗、大規模な凶悪殺人だった」。</div><div class="sub"><div class="gl"><span><b>aggravated murder</b> 凶悪殺人（第2回 4-07）</span></div></div></section>
+<section class="n" id="n6-02"><div class="id">6-02</div><div class="en">Nearly two thousand years apart, the two voices sound very alike.<button class="sp" type="button" data-t="Nearly two thousand years apart, the two voices sound very alike." aria-label="読み上げ"></button></div><div class="jp">二千年近く隔たっているのに、二つの声はとてもよく似て聞こえる。</div><div class="sub"><div class="gl"><span><b>apart</b> 離れて・隔たって</span><span><b>alike</b> 似ている</span></div></div></section>
+<section class="n" id="n6-03"><div class="id">6-03</div><div class="en">Rome stayed in Britain for about four hundred years; by 410 its rule was over.<button class="sp" type="button" data-t="Rome stayed in Britain for about four hundred years; by 410 its rule was over." aria-label="読み上げ"></button></div><div class="jp">ローマはブリテン島に約400年とどまった。410年までには、その支配は終わっていた。</div><div class="sub"></div></section>
+<section class="n" id="n6-04"><div class="id">6-04</div><div class="en">Marlow’s point is simple and uncomfortable: the people who once came to Britain as conquerors were not so different from the Europeans who were now going to Africa.<button class="sp" type="button" data-t="Marlow’s point is simple and uncomfortable: the people who once came to Britain as conquerors were not so different from the Europeans who were now going to Africa." aria-label="読み上げ"></button></div><div class="jp">マーロウの言いたいことは単純で、居心地が悪い。かつて征服者としてブリテン島に来た人々は、今アフリカへ向かっているヨーロッパ人と、それほど違わなかったのだ。</div><div class="sub"><div class="gl"><span><b>uncomfortable</b> 居心地の悪い</span><span><b>conqueror</b> 征服者</span></div><div class="gr"><span class="label">文法の要所</span><b>the people who once came … were not so different from the Europeans who were now going …</b>：主語にも比べる相手にも who 節がつく、長い主語の文。骨組みは the people were not so different from the Europeans。</div></div></section>
+</div><button class="back" onclick="history.length>1?history.back():location.href='02_col.html'">← 本文に戻る</button><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

@@ -1,11 +1,40 @@
 {
   "root": "C:/Users/jinki/ClaudeOS/projects/横目で見てほしい作品たち/講義用",
   "subjects": [
-    { "name": "応用数学Ⅱ",           "slug": "oyo-sugaku-2",   "src": "溜め/応用数学Ⅱ/output" },
-    { "name": "機械力学",             "slug": "kikai-rikigaku", "src": "機械力学/output" },
-    { "name": "「今昔物語集」を読む", "slug": "konjaku",        "src": "「今昔物語集」を読む/output" },
-    { "name": "電磁気学",             "slug": "denjiki",        "src": "電磁気学/output" },
-    { "name": "上代文学へのいざない", "slug": "jodai",          "src": "上代文学へのいざない/output" },
-    { "name": "量子力学",             "slug": "ryoshi",         "src": "量子力学/output" }
+    {
+      "name": "応用数学Ⅱ",
+      "slug": "oyo-sugaku-2",
+      "src": "溜め/応用数学Ⅱ/output"
+    },
+    {
+      "name": "機械力学",
+      "slug": "kikai-rikigaku",
+      "src": "機械力学/output"
+    },
+    {
+      "name": "「今昔物語集」を読む",
+      "slug": "konjaku",
+      "src": "「今昔物語集」を読む/output"
+    },
+    {
+      "name": "電磁気学",
+      "slug": "denjiki",
+      "src": "電磁気学/output"
+    },
+    {
+      "name": "上代文学へのいざない",
+      "slug": "jodai",
+      "src": "上代文学へのいざない/output"
+    },
+    {
+      "name": "量子力学",
+      "slug": "ryoshi",
+      "src": "量子力学/output"
+    },
+    {
+      "name": "「闇の奥」を原文で読む",
+      "slug": "heart-of-darkness",
+      "src": "「Heart of Darkness」/output"
+    }
   ]
 }

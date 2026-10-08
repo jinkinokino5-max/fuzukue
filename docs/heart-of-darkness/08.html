@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8 · The Accountant — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--shu:#a8322a;--gl:#8a7f70}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.75;transition:color .4s}
+.col{max-width:640px;margin:0 auto;padding:0 22px}
+.ja{font-family:"Shippori Mincho","Yu Mincho",serif}
+a.s{color:inherit;text-decoration:none;border-radius:2px;transition:background .2s;-webkit-tap-highlight-color:rgba(168,50,42,.15)}
+a.s:hover{background:rgba(168,50,42,.08)} .here{background:rgba(201,164,58,.28);box-shadow:0 0 0 3px rgba(201,164,58,.28)}
+p.t{margin:0 0 1.1em;text-indent:1.4em} p.t.first,p.t.cont{text-indent:0}
+p.t.first::first-letter{float:left;font-size:4.1em;line-height:.82;padding:.06em .08em 0 0;color:var(--shu)}
+.gl{font-family:"Shippori Mincho",serif;font-size:12.5px;line-height:1.7;color:var(--gl);margin:-.5em 0 2em;padding-top:.5em;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.gl b{font-family:"EB Garamond",serif;font-weight:500;font-size:14px;color:var(--ink);opacity:.8}
+.gl span{margin-right:1.1em;display:inline-block}
+.hero{position:relative;height:92vh;min-height:520px;overflow:hidden;margin-bottom:40px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12vh;text-align:center;padding:0 16px}
+.hero .no{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:16px;letter-spacing:.6em;color:var(--shu)}
+.hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,8vw,96px);letter-spacing:.06em;margin:0;line-height:1}
+.hero .sub{font-family:"Shippori Mincho",serif;font-size:14px;letter-spacing:.3em;color:var(--sub)}
+.hero .home{position:absolute;top:14px;left:16px;font:13px/1 "Shippori Mincho",serif;letter-spacing:.2em;color:#f5efe2;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.map{font-family:"Shippori Mincho",serif;font-size:15px;line-height:2;color:var(--sub);border-left:2px solid var(--shu);padding:2px 0 2px 18px;margin:0 0 56px}
+.map b{display:block;color:var(--shu);letter-spacing:.3em;font-size:12px}
+.map .how{display:block;margin-top:.6em;font-size:13px;opacity:.85}
+/* 霞：本文の地に溶ける画像 */
+.haze{margin:30px -60px 36px;position:relative}
+.haze img{display:block;width:100%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%)}
+.cr{font:11px/1.5 system-ui,sans-serif;color:var(--gl);text-align:right;margin:4px 60px 0} .cr a{color:inherit}
+/* 暗唱プレート：全幅の絵に活字 */
+.plate{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;margin:70px 0;overflow:hidden;color:#f5efe2}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(10,12,18,.55),rgba(10,12,18,.15) 70%)}
+.plate .q{position:relative;z-index:2;max-width:860px;padding:0 28px;text-align:center}
+.kick{font:12px/1 system-ui,sans-serif;letter-spacing:.5em;opacity:.8;margin-bottom:22px}
+.plate blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,4.4vw,52px);line-height:1.3;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+a.rl{color:inherit;text-decoration:none}
+.plate .cr{position:absolute;left:14px;right:14px;bottom:8px;z-index:2;color:rgba(255,255,255,.65);margin:0}
+.plate.fade>img{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+/* 活字だけの暗唱 */
+.line{text-align:center;margin:44px auto 52px;max-width:720px;padding:0 22px}
+.line .kick{color:var(--shu);opacity:1}
+.line blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(25px,3.4vw,36px);line-height:1.35}
+.line::after{content:"";display:block;width:36px;height:1px;background:var(--shu);margin:22px auto 0}
+/* 転換：ここで地の色が変わる */
+.turn{position:relative;height:100vh;margin:60px 0}
+.turn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+.turn .cr{position:absolute;right:14px;bottom:4px;margin:0;color:rgba(255,255,255,.6)}
+.pair{display:grid;grid-template-columns:.62fr 1fr;gap:18px;align-items:end;margin:34px -40px}
+.pair img{width:100%;height:auto;display:block}
+.pair .a img{filter:sepia(.25) brightness(.85);-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.pair .b img{-webkit-mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent);mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent)}
+.pair .cr{text-align:left;margin:4px 0 0}
+/* 暗唱の帳 */
+.sheet{max-width:720px;margin:90px auto 0;padding:0 22px}
+.sheet h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:30px;letter-spacing:.2em;text-align:center;margin:0}
+.sheet .ja{font-size:13px;color:var(--sub);text-align:center;margin:4px 0 30px;letter-spacing:.1em}
+.sheet ol{list-style:none;margin:0;padding:0;counter-reset:r}
+.sheet li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:6px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--gl) 30%,transparent);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:23px;line-height:1.4}
+.sheet .sptop{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin:0 0 14px}
+.sheet .mk{font-size:12.5px;text-align:center;margin:0 0 22px;letter-spacing:0}
+.sheet li .sp{vertical-align:-4px}
+.sheet li::before{content:counter(r,upper-roman);font-style:normal;font-size:14px;color:var(--shu);padding-top:.35em;letter-spacing:.1em}
+.colcard{display:block;max-width:640px;margin:70px auto 0;padding:26px 24px;border:1px solid color-mix(in srgb,var(--shu) 60%,transparent);color:var(--ink);text-decoration:none;text-align:center}
+.colcard:hover{background:color-mix(in srgb,var(--shu) 7%,transparent)}
+.colcard .kick{display:block;color:var(--shu);opacity:1;margin-bottom:12px}
+.colcard .ct{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;line-height:1.2}
+.colcard .cs{display:block;font-size:13px;color:var(--sub);margin-top:8px}
+.srcs{max-width:640px;margin:70px auto 0;padding:0 22px;font-size:13px;line-height:1.8;color:var(--sub)}
+.srcs h3{font-size:13px;letter-spacing:.2em;color:var(--shu);margin:0 0 6px}.srcs ul{margin:0 0 8px;padding-left:1.2em}.srcs a{color:inherit}
+.foot{max-width:640px;margin:80px auto 0;padding:26px 22px 90px;display:flex;justify-content:space-between;gap:12px;font-family:"Shippori Mincho",serif;font-size:14px;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.foot a{color:var(--ink);text-decoration:none} .foot .off{color:var(--gl)}
+.foot .src{display:block;font:11px/1.6 system-ui,sans-serif;color:var(--gl);margin-top:6px}
+@media (max-width:720px){body{font-size:18px}.haze,.pair{margin-left:-16px;margin-right:-16px}.col{padding:0 16px}.cr{margin-right:16px}
+ .pair{grid-template-columns:1fr 1fr;gap:10px}.pair .cr{padding:0 8px}.plate{min-height:78vh}.plate .q{padding:0 18px}.line{padding:0 16px}
+ .sheet{padding:0 16px}.colcard{margin-left:16px;margin-right:16px}.srcs{padding:0 16px}.sheet li{font-size:20px;grid-template-columns:1.9em 1fr}.foot{padding-left:16px;padding-right:16px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<style>:root{--bg:#f2f1ec;--ink:#25262a;--sub:#6c6d70;--gl:#7c7d80;--shu:#a8322a;}</style>
+<header class="hero"><img src="img/hammershoi_motes.jpg" width="1609" height="1890" alt="Dust Motes Dancing in the Sunbeams"><a class="home" href="index.html">← 目次</a>
+<div class="ttl"><div class="no">PART ONE · 8</div><h1>The Accountant</h1><div class="sub">会計主任と、クルツという名</div></div></header>
+<div class="col">
+<div class="map ja"><b>読む前の地図</b>死の木立を出たマーロウは、まるで幻のような白人に出会う。糊のきいた高い襟、白いカフス、雪のようなズボン、ぴかぴかの靴。会社の会計主任だ。荒れはてた土地で身なりを保つこの男を、マーロウは「尊敬した」と言う。彼は板張りの事務所で、病人のうめき声に「計算を間違えそうになる」とこぼしながら、帳簿をつけつづける。そしてこの男の口から、マーロウははじめて「クルツ」という名を聞く。奥地の出張所の長で、「ほかの全員を合わせたのと同じだけの象牙を送ってくる」「とても非凡な人物」。読みどころは、すぐ下の「死の木立」と、帳簿の「完璧に正しい取引」が、50フィートの距離で並んでいること。<span class="how">文をタップすると、その文の対訳と語注へ。戻ると、読んでいた文に戻ります。</span></div>
+<p class="t first"><a class="s" id="s1-01" href="08_notes.html#n1-01">“I didn’t want any more loitering in the shade, and I made haste towards the station.</a> <a class="s" id="s1-02" href="08_notes.html#n1-02">When near the buildings I met a white man, in such an unexpected elegance of get-up that in the first moment I took him for a sort of vision.</a> <a class="s" id="s1-03" href="08_notes.html#n1-03">I saw a high starched collar, white cuffs, a light alpaca jacket, snowy trousers, a clean necktie, and varnished boots.</a> <a class="s" id="s1-04" href="08_notes.html#n1-04">No hat.</a> <a class="s" id="s1-05" href="08_notes.html#n1-05">Hair parted, brushed, oiled, under a green-lined parasol held in a big white hand.</a> <a class="s" id="s1-06" href="08_notes.html#n1-06">He was amazing, and had a penholder behind his ear.</a></p><div class="gl"><span><b>loiter</b> ぐずぐずする・ぶらつく</span><span><b>make haste</b> 急ぐ</span><span><b>elegance</b> 優雅さ</span><span><b>get-up</b> （口語）身なり</span><span><b>take A for B</b> AをBだと思う</span><span><b>vision</b> 幻</span><span><b>starched</b> 糊のきいた</span><span><b>collar</b> 襟</span><span><b>cuffs</b> カフス・袖口</span><span><b>alpaca</b> アルパカ（の毛織物）</span><span><b>snowy</b> 雪のように白い</span><span><b>varnished</b> ニスを塗った・ぴかぴかの</span><span><b>part</b> （髪を）分ける</span><span><b>oil</b> 油で整える</span><span><b>green-lined</b> 裏地が緑の</span><span><b>parasol</b> 日傘</span><span><b>penholder</b> ペン軸</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · I</div><blockquote><a class="rl" id="r1-03" href="08_notes.html#n1-03">I saw a high starched collar, white cuffs, a light alpaca jacket, snowy trousers, a clean necktie, and varnished boots. No hat.</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s2-01" href="08_notes.html#n2-01">“I shook hands with this miracle, and I learned he was the Company’s chief accountant, and that all the book-keeping was done at this station.</a> <a class="s" id="s2-02" href="08_notes.html#n2-02">He had come out for a moment, he said, ‘to get a breath of fresh air.</a> <a class="s" id="s2-03" href="08_notes.html#n2-03">The expression sounded wonderfully odd, with its suggestion of sedentary desk-life.</a> <a class="s" id="s2-04" href="08_notes.html#n2-04">I wouldn’t have mentioned the fellow to you at all, only it was from his lips that I first heard the name of the man who is so indissolubly connected with the memories of that time.</a> <a class="s" id="s2-05" href="08_notes.html#n2-05">Moreover, I respected the fellow.</a> <a class="s" id="s2-06" href="08_notes.html#n2-06">Yes; I respected his collars, his vast cuffs, his brushed hair.</a> <a class="s" id="s2-07" href="08_notes.html#n2-07">His appearance was certainly that of a hairdresser’s dummy; but in the great demoralization of the land he kept up his appearance.</a> <a class="s" id="s2-08" href="08_notes.html#n2-08">That’s backbone.</a> <a class="s" id="s2-09" href="08_notes.html#n2-09">His starched collars and got-up shirt-fronts were achievements of character.</a></p><div class="gl"><span><b>chief accountant</b> 会計主任</span><span><b>book-keeping</b> 帳簿づけ・簿記</span><span><b>suggestion</b> 思わせるもの・連想</span><span><b>sedentary</b> 座りきりの</span><span><b>only</b> （接続詞）ただし・〜でなければ</span><span><b>indissolubly</b> 分かちがたく</span><span><b>hairdresser’s dummy</b> 床屋（美容院）の飾り人形</span><span><b>demoralization</b> 堕落・士気の崩壊</span><span><b>keep up</b> 保つ</span><span><b>appearance</b> 身なり・体裁</span><span><b>backbone</b> 気骨・背骨</span><span><b>got-up</b> 整えた・飾った</span><span><b>shirt-front</b> シャツの胸（糊づけした胸当て）</span><span><b>achievement</b> なしとげたもの</span><span><b>character</b> 人格・気骨</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · II</div><blockquote><a class="rl" id="r2-07" href="08_notes.html#n2-07">His appearance was certainly that of a hairdresser’s dummy; but in the great demoralization of the land he kept up his appearance. That’s backbone.</a></blockquote></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s2-10" href="08_notes.html#n2-10">He had been out nearly three years; and, later, I could not help asking him how he managed to sport such linen.</a> <a class="s" id="s2-11" href="08_notes.html#n2-11">He had just the faintest blush, and said modestly, ‘I’ve been teaching one of the native women about the station.</a> <a class="s" id="s2-12" href="08_notes.html#n2-12">It was difficult.</a> <a class="s" id="s2-13" href="08_notes.html#n2-13">She had a distaste for the work.’</a> <a class="s" id="s2-14" href="08_notes.html#n2-14">Thus this man had verily accomplished something.</a> <a class="s" id="s2-15" href="08_notes.html#n2-15">And he was devoted to his books, which were in apple-pie order.</a></p><div class="gl"><span><b>cannot help ~ing</b> 〜せずにはいられない</span><span><b>manage to ~</b> なんとか〜する</span><span><b>sport</b> （口語）見せびらかして着る</span><span><b>linen</b> （シャツなどの）リネン類</span><span><b>faint</b> かすかな</span><span><b>blush</b> 顔を赤らめること</span><span><b>modestly</b> 控えめに</span><span><b>distaste</b> 嫌悪</span><span><b>verily</b> （古風）まことに</span><span><b>accomplish</b> なしとげる</span><span><b>be devoted to ~</b> 〜に打ちこむ</span><span><b>in apple-pie order</b> きちんと整って</span></div>
+<p class="t"><a class="s" id="s3-01" href="08_notes.html#n3-01">“Everything else in the station was in a muddle—heads, things, buildings.</a> <a class="s" id="s3-02" href="08_notes.html#n3-02">Strings of dusty niggers with splay feet arrived and departed; a stream of manufactured goods, rubbishy cottons, beads, and brass-wire sent into the depths of darkness, and in return came a precious trickle of ivory.</a></p><div class="gl"><span><b>in a muddle</b> めちゃくちゃで</span><span><b>string</b> 列</span><span><b>nigger</b> 黒人への侮蔑語（第3回 7-09 の注を参照）。現在は使ってはならない語</span><span><b>splay feet</b> 外に開いた足・がに股</span><span><b>depart</b> 出発する</span><span><b>manufactured goods</b> （工場の）製品</span><span><b>rubbishy</b> がらくたの・粗悪な</span><span><b>bead</b> ビーズ</span><span><b>brass-wire</b> 真鍮の針金（当時は通貨としても使われた）</span><span><b>in return</b> 見返りに</span><span><b>precious</b> 貴重な</span><span><b>trickle</b> しずく・ちょろちょろ流れ</span></div>
+<p class="t"><a class="s" id="s4-01" href="08_notes.html#n4-01">“I had to wait in the station for ten days—an eternity.</a> <a class="s" id="s4-02" href="08_notes.html#n4-02">I lived in a hut in the yard, but to be out of the chaos I would sometimes get into the accountant’s office.</a> <a class="s" id="s4-03" href="08_notes.html#n4-03">It was built of horizontal planks, and so badly put together that, as he bent over his high desk, he was barred from neck to heels with narrow strips of sunlight.</a> <a class="s" id="s4-04" href="08_notes.html#n4-04">There was no need to open the big shutter to see.</a> <a class="s" id="s4-05" href="08_notes.html#n4-05">It was hot there, too; big flies buzzed fiendishly, and did not sting, but stabbed.</a> <a class="s" id="s4-06" href="08_notes.html#n4-06">I sat generally on the floor, while, of faultless appearance (and even slightly scented), perching on a high stool, he wrote, he wrote.</a> <a class="s" id="s4-07" href="08_notes.html#n4-07">Sometimes he stood up for exercise.</a> <a class="s" id="s4-08" href="08_notes.html#n4-08">When a truckle-bed with a sick man (some invalid agent from upcountry) was put in there, he exhibited a gentle annoyance.</a> <a class="s" id="s4-09" href="08_notes.html#n4-09">‘The groans of this sick person,’ he said, ‘distract my attention.</a> <a class="s" id="s4-10" href="08_notes.html#n4-10">And without that it is extremely difficult to guard against clerical errors in this climate.’</a></p><div class="gl"><span><b>eternity</b> 永遠</span><span><b>hut</b> 小屋</span><span><b>chaos</b> 混沌</span><span><b>horizontal</b> 横の・水平の</span><span><b>plank</b> 板</span><span><b>put together</b> 組み立てる</span><span><b>bar</b> （動詞）縞にする・棒を渡す</span><span><b>strip</b> 細い筋</span><span><b>shutter</b> よろい戸</span><span><b>buzz</b> ぶんぶん飛ぶ</span><span><b>fiendishly</b> 悪魔のように</span><span><b>sting</b> 刺す</span><span><b>stab</b> 突き刺す</span><span><b>faultless</b> 非の打ちどころのない</span><span><b>scented</b> 香りをつけた</span><span><b>perch</b> （鳥のように）とまる・ちょこんと座る</span><span><b>stool</b> （背のない）椅子</span><span><b>truckle-bed</b> （車輪つきの）低い簡易ベッド</span><span><b>invalid</b> 病人の</span><span><b>agent</b> 代理人・駐在員</span><span><b>exhibit</b> 見せる</span><span><b>annoyance</b> 苛立ち</span><span><b>groan</b> うめき声</span><span><b>distract</b> （注意を）そらす</span><span><b>guard against ~</b> 〜を防ぐ</span><span><b>clerical error</b> 記帳の誤り・書き間違い</span><span><b>climate</b> 気候</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · III</div><blockquote><a class="rl" id="r4-06" href="08_notes.html#n4-06">I sat generally on the floor, while, of faultless appearance (and even slightly scented), perching on a high stool, he wrote, he wrote.</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s5-01" href="08_notes.html#n5-01">“One day he remarked, without lifting his head, ‘In the interior you will no doubt meet Mr. Kurtz.’</a> <a class="s" id="s5-02" href="08_notes.html#n5-02">On my asking who Mr. Kurtz was, he said he was a first-class agent; and seeing my disappointment at this information, he added slowly, laying down his pen, ‘He is a very remarkable person.’</a> <a class="s" id="s5-03" href="08_notes.html#n5-03">Further questions elicited from him that Mr. Kurtz was at present in charge of a trading-post, a very important one, in the true ivory-country, at ‘the very bottom of there.</a> <a class="s" id="s5-04" href="08_notes.html#n5-04">Sends in as much ivory as all the others put together...’</a> <a class="s" id="s5-05" href="08_notes.html#n5-05">He began to write again.</a> <a class="s" id="s5-06" href="08_notes.html#n5-06">The sick man was too ill to groan.</a> <a class="s" id="s5-07" href="08_notes.html#n5-07">The flies buzzed in a great peace.</a></p><div class="gl"><span><b>the interior</b> （国の）奥地</span><span><b>no doubt</b> きっと</span><span><b>first-class</b> 一級の</span><span><b>disappointment</b> 失望</span><span><b>remarkable</b> 非凡な・注目すべき</span><span><b>elicit</b> 聞き出す・引き出す</span><span><b>at present</b> 今は</span><span><b>in charge of ~</b> 〜を任されて</span><span><b>trading-post</b> 交易所</span><span><b>put together</b> 合わせた</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · V</div><blockquote><a class="rl" id="r5-06" href="08_notes.html#n5-06">The sick man was too ill to groan. The flies buzzed in a great peace.</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s6-01" href="08_notes.html#n6-01">“Suddenly there was a growing murmur of voices and a great tramping of feet.</a> <a class="s" id="s6-02" href="08_notes.html#n6-02">A caravan had come in.</a> <a class="s" id="s6-03" href="08_notes.html#n6-03">A violent babble of uncouth sounds burst out on the other side of the planks.</a> <a class="s" id="s6-04" href="08_notes.html#n6-04">All the carriers were speaking together, and in the midst of the uproar the lamentable voice of the chief agent was heard ‘giving it up’ tearfully for the twentieth time that day....</a> <a class="s" id="s6-05" href="08_notes.html#n6-05">He rose slowly.</a> <a class="s" id="s6-06" href="08_notes.html#n6-06">‘What a frightful row,’ he said.</a> <a class="s" id="s6-07" href="08_notes.html#n6-07">He crossed the room gently to look at the sick man, and returning, said to me, ‘He does not hear.’</a> <a class="s" id="s6-08" href="08_notes.html#n6-08">‘What!</a> <a class="s" id="s6-09" href="08_notes.html#n6-09">Dead?’</a> <a class="s" id="s6-10" href="08_notes.html#n6-10">I asked, startled.</a> <a class="s" id="s6-11" href="08_notes.html#n6-11">‘No, not yet,’ he answered, with great composure.</a> <a class="s" id="s6-12" href="08_notes.html#n6-12">Then, alluding with a toss of the head to the tumult in the station-yard, ‘When one has got to make correct entries, one comes to hate those savages—hate them to the death.’</a> <a class="s" id="s6-13" href="08_notes.html#n6-13">He remained thoughtful for a moment.</a> <a class="s" id="s6-14" href="08_notes.html#n6-14">‘When you see Mr. Kurtz’ he went on, ‘tell him from me that everything here’—he glanced at the deck—‘is very satisfactory.</a> <a class="s" id="s6-15" href="08_notes.html#n6-15">I don’t like to write to him—with those messengers of ours you never know who may get hold of your letter—at that Central Station.’</a> <a class="s" id="s6-16" href="08_notes.html#n6-16">He stared at me for a moment with his mild, bulging eyes.</a> <a class="s" id="s6-17" href="08_notes.html#n6-17">‘Oh, he will go far, very far,’ he began again.</a> <a class="s" id="s6-18" href="08_notes.html#n6-18">‘He will be a somebody in the Administration before long.</a> <a class="s" id="s6-19" href="08_notes.html#n6-19">They, above—the Council in Europe, you know—mean him to be.’</a></p><div class="gl"><span><b>murmur</b> ざわめき</span><span><b>tramping</b> どしどし歩く音</span><span><b>caravan</b> 隊列</span><span><b>babble</b> がやがや</span><span><b>uncouth</b> 粗野な</span><span><b>burst out</b> わき起こる</span><span><b>carrier</b> 運搬人</span><span><b>in the midst of ~</b> 〜のただ中に</span><span><b>uproar</b> 騒ぎ</span><span><b>lamentable</b> 情けない・嘆かわしい</span><span><b>give it up</b> あきらめる・お手上げだと言う</span><span><b>tearfully</b> 涙声で</span><span><b>frightful</b> ひどい</span><span><b>row</b> 騒ぎ（発音はラウ）</span><span><b>composure</b> 落ち着き</span><span><b>allude to ~</b> 〜をほのめかす・指す</span><span><b>toss</b> （頭を）しゃくること</span><span><b>tumult</b> 騒動</span><span><b>entry</b> 記帳・記入</span><span><b>savage</b> 未開人（当時の語。今は差別語）</span><span><b>to the death</b> 死ぬほど</span><span><b>deck</b> ふつうは「甲板」。版によっては desk（机）で、ここも机のこと</span><span><b>satisfactory</b> 申し分ない</span><span><b>messenger</b> 使いの者</span><span><b>get hold of ~</b> 〜を手に入れる</span><span><b>mild</b> 穏やかな</span><span><b>bulging</b> 出っ張った</span><span><b>go far</b> 出世する</span><span><b>a somebody</b> ひとかどの人物</span><span><b>the Administration</b> （植民地の）行政府</span><span><b>before long</b> じきに</span><span><b>the Council</b> 評議会</span><span><b>mean A to ~</b> Aに〜させるつもりである</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · VI</div><blockquote><a class="rl" id="r6-17" href="08_notes.html#n6-17">‘Oh, he will go far, very far,’ he began again. ‘He will be a somebody in the Administration before long.’</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s7-01" href="08_notes.html#n7-01">“He turned to his work.</a> <a class="s" id="s7-02" href="08_notes.html#n7-02">The noise outside had ceased, and presently in going out I stopped at the door.</a> <a class="s" id="s7-03" href="08_notes.html#n7-03">In the steady buzz of flies the homeward-bound agent was lying finished and insensible; the other, bent over his books, was making correct entries of perfectly correct transactions; and fifty feet below the doorstep I could see the still tree-tops of the grove of death.</a></p><div class="gl"><span><b>cease</b> やむ</span><span><b>presently</b> まもなく</span><span><b>steady</b> 絶え間ない</span><span><b>homeward-bound</b> 帰国の途にある</span><span><b>finished</b> こと切れた・終わった</span><span><b>insensible</b> 意識のない</span><span><b>transaction</b> 取引</span><span><b>doorstep</b> 戸口の踏み段</span></div>
+<p class="t"><a class="s" id="s8-01" href="08_notes.html#n8-01">“Next day I left that station at last, with a caravan of sixty men, for a two-hundred-mile tramp.</a></p><div class="gl"><span><b>tramp</b> 徒歩の長旅</span></div>
+</div>
+<section class="sheet"><h2>RECITE</h2><div class="ja">暗唱の帳 ── 今回の6つ</div><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><button class="spall" type="button">▶ 通しで聞く</button></div><ol><li><span><a class="rl" id="k1-03" href="08_notes.html#n1-03">I saw a high starched collar, white cuffs, a light alpaca jacket, snowy trousers, a clean necktie, and varnished boots. No hat.</a><button class="sp" type="button" data-t="I saw a high starched collar, white cuffs, a light alpaca jacket, snowy trousers, a clean necktie, and varnished boots. No hat." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k2-07" href="08_notes.html#n2-07">His appearance was certainly that of a hairdresser’s dummy; but in the great demoralization of the land he kept up his appearance. That’s backbone.</a><button class="sp" type="button" data-t="His appearance was certainly that of a hairdresser’s dummy; but in the great demoralization of the land he kept up his appearance. That’s backbone." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k4-06" href="08_notes.html#n4-06">I sat generally on the floor, while, of faultless appearance (and even slightly scented), perching on a high stool, he wrote, he wrote.</a><button class="sp" type="button" data-t="I sat generally on the floor, while, of faultless appearance (and even slightly scented), perching on a high stool, he wrote, he wrote." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k5-02" href="08_notes.html#n5-02">On my asking who Mr. Kurtz was, he said he was a first-class agent; and seeing my disappointment at this information, he added slowly, laying down his pen, ‘He is a very remarkable person.’</a><button class="sp" type="button" data-t="On my asking who Mr. Kurtz was, he said he was a first-class agent; and seeing my disappointment at this information, he added slowly, laying down his pen, ‘He is a very remarkable person.’" aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k5-06" href="08_notes.html#n5-06">The sick man was too ill to groan. The flies buzzed in a great peace.</a><button class="sp" type="button" data-t="The sick man was too ill to groan. The flies buzzed in a great peace." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k6-17" href="08_notes.html#n6-17">‘Oh, he will go far, very far,’ he began again. ‘He will be a somebody in the Administration before long.’</a><button class="sp" type="button" data-t="‘Oh, he will go far, very far,’ he began again. ‘He will be a somebody in the Administration before long.’" aria-label="読み上げ"></button></span></li></ol></section>
+<a class="colcard" href="08_col.html"><span class="kick">BACKGROUND · COLUMN</span><span class="ct">The Ivory Trade</span><span class="cs ja">象牙は何になったのか　→ 英文の背景コラムを読む</span></a><nav class="foot ja"><div><a href="07.html">← 第7回</a><a href="index.html" style="margin-left:1.2em">目次</a><span class="src">原文：Project Gutenberg #219（公有）／訳・注：本教材の自作</span></div><div><a href="09.html">第9回 →</a></div></nav>
+<script>
+(function(){
+  var KEY='hod-pos:'+location.pathname;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a.s, a.rl'); if(!a) return;
+    try{ history.replaceState(null,'','#'+a.id); }catch(_){}
+    try{ sessionStorage.setItem(KEY,String(window.scrollY)); }catch(_){}
+  });
+  function restore(){
+    var h=location.hash.slice(1), el=h&&document.getElementById(h);
+    document.querySelectorAll('.here').forEach(function(x){x.classList.remove('here')});
+    if(el){ el.classList.add('here'); el.scrollIntoView({block:'center'}); return; }
+    try{ var y=sessionStorage.getItem(KEY); if(y) window.scrollTo(0,+y); }catch(_){}
+  }
+  window.addEventListener('pageshow',function(){ requestAnimationFrame(restore); });
+})();
+</script><script>
+(function(){
+  var T=[{"bg": "#f2f1ec", "ink": "#25262a", "sub": "#6c6d70", "gl": "#7c7d80", "shu": "#a8322a"}], R=document.documentElement.style, turns=[].slice.call(document.querySelectorAll('.turn'));
+  function rgb(h){h=h.replace('#','');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+  function ss(e0,e1,x){var t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
+  function upd(){
+    var bg=rgb(T[0].bg), txt=T[0], vh=innerHeight;
+    turns.forEach(function(el){
+      var to=T[+el.dataset.to], rc=el.getBoundingClientRect(), t=(vh*.5-rc.top)/rc.height;
+      if(t<=0) return;
+      var k=ss(.3,.7,t), nb=rgb(to.bg);
+      bg=bg.map(function(v,i){return v+(nb[i]-v)*k});
+      if(t>.5) txt=to;
+    });
+    R.setProperty('--bg',mix(bg,bg,0));
+    ['ink','sub','gl','shu'].forEach(function(n){if(txt[n])R.setProperty('--'+n,txt[n])});
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); addEventListener('pageshow',upd); upd();
+})();
+</script><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

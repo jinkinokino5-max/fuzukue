@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 · The Sepulchral City — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--shu:#a8322a;--gl:#8a7f70}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.75;transition:color .4s}
+.col{max-width:640px;margin:0 auto;padding:0 22px}
+.ja{font-family:"Shippori Mincho","Yu Mincho",serif}
+a.s{color:inherit;text-decoration:none;border-radius:2px;transition:background .2s;-webkit-tap-highlight-color:rgba(168,50,42,.15)}
+a.s:hover{background:rgba(168,50,42,.08)} .here{background:rgba(201,164,58,.28);box-shadow:0 0 0 3px rgba(201,164,58,.28)}
+p.t{margin:0 0 1.1em;text-indent:1.4em} p.t.first,p.t.cont{text-indent:0}
+p.t.first::first-letter{float:left;font-size:4.1em;line-height:.82;padding:.06em .08em 0 0;color:var(--shu)}
+.gl{font-family:"Shippori Mincho",serif;font-size:12.5px;line-height:1.7;color:var(--gl);margin:-.5em 0 2em;padding-top:.5em;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.gl b{font-family:"EB Garamond",serif;font-weight:500;font-size:14px;color:var(--ink);opacity:.8}
+.gl span{margin-right:1.1em;display:inline-block}
+.hero{position:relative;height:92vh;min-height:520px;overflow:hidden;margin-bottom:40px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12vh;text-align:center;padding:0 16px}
+.hero .no{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:16px;letter-spacing:.6em;color:var(--shu)}
+.hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,8vw,96px);letter-spacing:.06em;margin:0;line-height:1}
+.hero .sub{font-family:"Shippori Mincho",serif;font-size:14px;letter-spacing:.3em;color:var(--sub)}
+.hero .home{position:absolute;top:14px;left:16px;font:13px/1 "Shippori Mincho",serif;letter-spacing:.2em;color:#f5efe2;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.map{font-family:"Shippori Mincho",serif;font-size:15px;line-height:2;color:var(--sub);border-left:2px solid var(--shu);padding:2px 0 2px 18px;margin:0 0 56px}
+.map b{display:block;color:var(--shu);letter-spacing:.3em;font-size:12px}
+.map .how{display:block;margin-top:.6em;font-size:13px;opacity:.85}
+/* 霞：本文の地に溶ける画像 */
+.haze{margin:30px -60px 36px;position:relative}
+.haze img{display:block;width:100%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%)}
+.cr{font:11px/1.5 system-ui,sans-serif;color:var(--gl);text-align:right;margin:4px 60px 0} .cr a{color:inherit}
+/* 暗唱プレート：全幅の絵に活字 */
+.plate{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;margin:70px 0;overflow:hidden;color:#f5efe2}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(10,12,18,.55),rgba(10,12,18,.15) 70%)}
+.plate .q{position:relative;z-index:2;max-width:860px;padding:0 28px;text-align:center}
+.kick{font:12px/1 system-ui,sans-serif;letter-spacing:.5em;opacity:.8;margin-bottom:22px}
+.plate blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,4.4vw,52px);line-height:1.3;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+a.rl{color:inherit;text-decoration:none}
+.plate .cr{position:absolute;left:14px;right:14px;bottom:8px;z-index:2;color:rgba(255,255,255,.65);margin:0}
+.plate.fade>img{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+/* 活字だけの暗唱 */
+.line{text-align:center;margin:44px auto 52px;max-width:720px;padding:0 22px}
+.line .kick{color:var(--shu);opacity:1}
+.line blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(25px,3.4vw,36px);line-height:1.35}
+.line::after{content:"";display:block;width:36px;height:1px;background:var(--shu);margin:22px auto 0}
+/* 転換：ここで地の色が変わる */
+.turn{position:relative;height:100vh;margin:60px 0}
+.turn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+.turn .cr{position:absolute;right:14px;bottom:4px;margin:0;color:rgba(255,255,255,.6)}
+.pair{display:grid;grid-template-columns:.62fr 1fr;gap:18px;align-items:end;margin:34px -40px}
+.pair img{width:100%;height:auto;display:block}
+.pair .a img{filter:sepia(.25) brightness(.85);-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.pair .b img{-webkit-mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent);mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent)}
+.pair .cr{text-align:left;margin:4px 0 0}
+/* 暗唱の帳 */
+.sheet{max-width:720px;margin:90px auto 0;padding:0 22px}
+.sheet h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:30px;letter-spacing:.2em;text-align:center;margin:0}
+.sheet .ja{font-size:13px;color:var(--sub);text-align:center;margin:4px 0 30px;letter-spacing:.1em}
+.sheet ol{list-style:none;margin:0;padding:0;counter-reset:r}
+.sheet li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:6px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--gl) 30%,transparent);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:23px;line-height:1.4}
+.sheet .sptop{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin:0 0 14px}
+.sheet .mk{font-size:12.5px;text-align:center;margin:0 0 22px;letter-spacing:0}
+.sheet li .sp{vertical-align:-4px}
+.sheet li::before{content:counter(r,upper-roman);font-style:normal;font-size:14px;color:var(--shu);padding-top:.35em;letter-spacing:.1em}
+.colcard{display:block;max-width:640px;margin:70px auto 0;padding:26px 24px;border:1px solid color-mix(in srgb,var(--shu) 60%,transparent);color:var(--ink);text-decoration:none;text-align:center}
+.colcard:hover{background:color-mix(in srgb,var(--shu) 7%,transparent)}
+.colcard .kick{display:block;color:var(--shu);opacity:1;margin-bottom:12px}
+.colcard .ct{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;line-height:1.2}
+.colcard .cs{display:block;font-size:13px;color:var(--sub);margin-top:8px}
+.srcs{max-width:640px;margin:70px auto 0;padding:0 22px;font-size:13px;line-height:1.8;color:var(--sub)}
+.srcs h3{font-size:13px;letter-spacing:.2em;color:var(--shu);margin:0 0 6px}.srcs ul{margin:0 0 8px;padding-left:1.2em}.srcs a{color:inherit}
+.foot{max-width:640px;margin:80px auto 0;padding:26px 22px 90px;display:flex;justify-content:space-between;gap:12px;font-family:"Shippori Mincho",serif;font-size:14px;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.foot a{color:var(--ink);text-decoration:none} .foot .off{color:var(--gl)}
+.foot .src{display:block;font:11px/1.6 system-ui,sans-serif;color:var(--gl);margin-top:6px}
+@media (max-width:720px){body{font-size:18px}.haze,.pair{margin-left:-16px;margin-right:-16px}.col{padding:0 16px}.cr{margin-right:16px}
+ .pair{grid-template-columns:1fr 1fr;gap:10px}.pair .cr{padding:0 8px}.plate{min-height:78vh}.plate .q{padding:0 18px}.line{padding:0 16px}
+ .sheet{padding:0 16px}.colcard{margin-left:16px;margin-right:16px}.srcs{padding:0 16px}.sheet li{font-size:20px;grid-template-columns:1.9em 1fr}.foot{padding-left:16px;padding-right:16px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<style>:root{--bg:#edece7;--ink:#25252a;--sub:#6d6c70;--gl:#7e7c80;--shu:#a8322a;}</style>
+<header class="hero"><img src="img/khnopff_town.jpg" width="1600" height="1780" alt="An Abandoned Town"><a class="home" href="index.html">← 目次</a>
+<div class="ttl"><div class="no">PART ONE · 4</div><h1>The Sepulchral City</h1><div class="sub">墓のような都、編み物の女たち</div></div></header>
+<div class="col">
+<div class="map ja"><b>読む前の地図</b>マーロウは英仏海峡を渡り、会社の本社がある大陸の都へ行く。都の名は書かれていないが、ベルギーのブリュッセルだと読まれている。マーロウには、そこが「白く塗った墓」に見える。静まりかえった通り、半開きの重い扉。待合室では、黒い毛糸を編む二人の女が、来る人を見張っている。壁の地図は色とりどりに塗り分けられ、マーロウが行くのは真ん中の黄色だ。社長との面会は45秒。最後に、医者の診察。老医師はマーロウの頭の寸法を測り、「変化は内側で起こる」と言う。読みどころは、何も恐ろしいことが起きないのに、すべてが不吉に感じられること。編み物の女たちは、運命の糸をつむぐ神話の女神を思わせる。<span class="how">文をタップすると、その文の対訳と語注へ。戻ると、読んでいた文に戻ります。</span></div>
+<p class="t first"><a class="s" id="s1-01" href="04_notes.html#n1-01">“I flew around like mad to get ready, and before forty-eight hours I was crossing the Channel to show myself to my employers, and sign the contract.</a> <a class="s" id="s1-02" href="04_notes.html#n1-02">In a very few hours I arrived in a city that always makes me think of a whited sepulchre.</a> <a class="s" id="s1-03" href="04_notes.html#n1-03">Prejudice no doubt.</a> <a class="s" id="s1-04" href="04_notes.html#n1-04">I had no difficulty in finding the Company’s offices.</a> <a class="s" id="s1-05" href="04_notes.html#n1-05">It was the biggest thing in the town, and everybody I met was full of it.</a> <a class="s" id="s1-06" href="04_notes.html#n1-06">They were going to run an over-sea empire, and make no end of coin by trade.</a></p><div class="gl"><span><b>like mad</b> 狂ったように</span><span><b>the Channel</b> 英仏海峡</span><span><b>employer</b> 雇い主</span><span><b>contract</b> 契約（書）</span><span><b>whited sepulchre</b> 白く塗った墓（新約聖書マタイ伝23章。外は美しく中は腐った偽善のたとえ）</span><span><b>prejudice</b> 偏見</span><span><b>be full of ~</b> 〜の話でもちきりだ</span><span><b>run</b> 経営する・運営する</span><span><b>over-sea</b> 海外の</span><span><b>no end of ~</b> 限りない〜</span><span><b>coin</b> 硬貨・（口語）金</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · I</div><blockquote><a class="rl" id="r1-02" href="04_notes.html#n1-02">I arrived in a city that always makes me think of a whited sepulchre.</a></blockquote></section>
+<div class="col">
+<figure class="haze"><img src="img/palais_justice.jpg" width="1600" height="1191" alt="Bruxelles, Palais de Justice" loading="lazy"><p class="cr">Photoglob Co.（フォトクローム）, <i>Bruxelles, Palais de Justice</i>, 1890–1900年ごろ／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Bruxelles.%20Palais%20de%20Justice%20LCCN2017659130.jpg">Commons</a></p></figure>
+<p class="t"><a class="s" id="s2-01" href="04_notes.html#n2-01">“A narrow and deserted street in deep shadow, high houses, innumerable windows with venetian blinds, a dead silence, grass sprouting between the stones, imposing carriage archways right and left, immense double doors standing ponderously ajar.</a> <a class="s" id="s2-02" href="04_notes.html#n2-02">I slipped through one of these cracks, went up a swept and ungarnished staircase, as arid as a desert, and opened the first door I came to.</a> <a class="s" id="s2-03" href="04_notes.html#n2-03">Two women, one fat and the other slim, sat on straw-bottomed chairs, knitting black wool.</a> <a class="s" id="s2-04" href="04_notes.html#n2-04">The slim one got up and walked straight at me—still knitting with downcast eyes—and only just as I began to think of getting out of her way, as you would for a somnambulist, stood still, and looked up.</a> <a class="s" id="s2-05" href="04_notes.html#n2-05">Her dress was as plain as an umbrella-cover, and she turned round without a word and preceded me into a waiting-room.</a> <a class="s" id="s2-06" href="04_notes.html#n2-06">I gave my name, and looked about.</a></p><div class="gl"><span><b>deserted</b> 人けのない</span><span><b>innumerable</b> 無数の</span><span><b>venetian blind</b> よろい戸（ブラインド）</span><span><b>sprout</b> 芽を出す</span><span><b>imposing</b> 堂々とした・威圧的な</span><span><b>carriage archway</b> 馬車が通るアーチ門</span><span><b>ponderously</b> 重々しく</span><span><b>ajar</b> （扉が）半開きで</span><span><b>slip through</b> すり抜ける</span><span><b>crack</b> 隙間</span><span><b>ungarnished</b> 飾りのない</span><span><b>arid</b> 乾ききった</span><span><b>straw-bottomed</b> 座面が藁編みの</span><span><b>knit</b> 編む</span><span><b>wool</b> 毛糸</span><span><b>downcast</b> （目を）伏せた</span><span><b>somnambulist</b> 夢遊病者</span><span><b>umbrella-cover</b> 傘のカバー</span><span><b>precede</b> 先に立つ</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · II</div><blockquote><a class="rl" id="r2-03" href="04_notes.html#n2-03">Two women, one fat and the other slim, sat on straw-bottomed chairs, knitting black wool.</a></blockquote></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s2-07" href="04_notes.html#n2-07">Deal table in the middle, plain chairs all round the walls, on one end a large shining map, marked with all the colours of a rainbow.</a> <a class="s" id="s2-08" href="04_notes.html#n2-08">There was a vast amount of red—good to see at any time, because one knows that some real work is done in there, a deuce of a lot of blue, a little green, smears of orange, and, on the East Coast, a purple patch, to show where the jolly pioneers of progress drink the jolly lager-beer.</a> <a class="s" id="s2-09" href="04_notes.html#n2-09">However, I wasn’t going into any of these.</a> <a class="s" id="s2-10" href="04_notes.html#n2-10">I was going into the yellow.</a> <a class="s" id="s2-11" href="04_notes.html#n2-11">Dead in the centre.</a> <a class="s" id="s2-12" href="04_notes.html#n2-12">And the river was there—fascinating—deadly—like a snake.</a> <a class="s" id="s2-13" href="04_notes.html#n2-13">Ough!</a></p><div class="gl"><span><b>deal</b> （名詞）樅・松の板材</span><span><b>all round</b> ぐるりと</span><span><b>vast amount of ~</b> 膨大な量の〜</span><span><b>a deuce of a lot of ~</b> （口語）やたらと多くの〜</span><span><b>smear</b> にじみ・しみ</span><span><b>purple patch</b> 紫の区画（「美文」の意も掛ける）</span><span><b>jolly</b> 陽気な</span><span><b>pioneer</b> 開拓者</span><span><b>lager-beer</b> ラガービール（ドイツ風のビール）</span><span><b>deadly</b> 命取りの</span><span><b>Ough!</b> うっ！（嫌悪の声）</span></div>
+<figure class="haze"><img src="img/johnson_africa.jpg" width="1600" height="2146" alt="Johnson’s Africa" loading="lazy"><p class="cr">A. J. Johnson, <i>Johnson’s Africa</i>, 1864／Public domain／<a href="https://commons.wikimedia.org/wiki/File:1864%20Johnson%20Map%20of%20Africa%20-%20Geographicus%20-%20Africa-johnson-1864.jpg">Commons</a></p></figure>
+<p class="t cont"><a class="s" id="s2-14" href="04_notes.html#n2-14">A door opened, a white-haired secretarial head, but wearing a compassionate expression, appeared, and a skinny forefinger beckoned me into the sanctuary.</a> <a class="s" id="s2-15" href="04_notes.html#n2-15">Its light was dim, and a heavy writing-desk squatted in the middle.</a> <a class="s" id="s2-16" href="04_notes.html#n2-16">From behind that structure came out an impression of pale plumpness in a frock-coat.</a> <a class="s" id="s2-17" href="04_notes.html#n2-17">The great man himself.</a> <a class="s" id="s2-18" href="04_notes.html#n2-18">He was five feet six, I should judge, and had his grip on the handle-end of ever so many millions.</a> <a class="s" id="s2-19" href="04_notes.html#n2-19">He shook hands, I fancy, murmured vaguely, was satisfied with my French.</a> <a class="s" id="s2-20" href="04_notes.html#n2-20"><i>Bon Voyage</i>.</a></p><div class="gl"><span><b>secretarial</b> 秘書の</span><span><b>compassionate</b> 同情的な</span><span><b>skinny</b> 骨ばった・やせた</span><span><b>forefinger</b> 人差し指</span><span><b>beckon</b> 手招きする</span><span><b>sanctuary</b> 聖域・奥の院</span><span><b>dim</b> ほの暗い</span><span><b>squat</b> うずくまる</span><span><b>plumpness</b> ふくよかさ・肥満</span><span><b>frock-coat</b> フロックコート（19世紀の男性の礼服）</span><span><b>five feet six</b> 5フィート6インチ（約168cm）</span><span><b>grip</b> 握り</span><span><b>ever so many</b> とても多くの</span><span><b>I fancy</b> たしか〜だったと思う</span><span><b>murmur</b> つぶやく</span><span><b>vaguely</b> ぼんやりと</span><span><b>Bon Voyage</b> （フランス語）よい旅を</span></div>
+<p class="t"><a class="s" id="s3-01" href="04_notes.html#n3-01">“In about forty-five seconds I found myself again in the waiting-room with the compassionate secretary, who, full of desolation and sympathy, made me sign some document.</a> <a class="s" id="s3-02" href="04_notes.html#n3-02">I believe I undertook amongst other things not to disclose any trade secrets.</a> <a class="s" id="s3-03" href="04_notes.html#n3-03">Well, I am not going to.</a></p><div class="gl"><span><b>desolation</b> 悲嘆・わびしさ</span><span><b>sympathy</b> 同情</span><span><b>document</b> 書類</span><span><b>undertake</b> 約束する・引き受ける</span><span><b>disclose</b> もらす・明かす</span><span><b>trade secret</b> 企業秘密</span></div>
+<p class="t"><a class="s" id="s4-01" href="04_notes.html#n4-01">“I began to feel slightly uneasy.</a> <a class="s" id="s4-02" href="04_notes.html#n4-02">You know I am not used to such ceremonies, and there was something ominous in the atmosphere.</a> <a class="s" id="s4-03" href="04_notes.html#n4-03">It was just as though I had been let into some conspiracy—I don’t know—something not quite right; and I was glad to get out.</a> <a class="s" id="s4-04" href="04_notes.html#n4-04">In the outer room the two women knitted black wool feverishly.</a> <a class="s" id="s4-05" href="04_notes.html#n4-05">People were arriving, and the younger one was walking back and forth introducing them.</a> <a class="s" id="s4-06" href="04_notes.html#n4-06">The old one sat on her chair.</a> <a class="s" id="s4-07" href="04_notes.html#n4-07">Her flat cloth slippers were propped up on a foot-warmer, and a cat reposed on her lap.</a> <a class="s" id="s4-08" href="04_notes.html#n4-08">She wore a starched white affair on her head, had a wart on one cheek, and silver-rimmed spectacles hung on the tip of her nose.</a> <a class="s" id="s4-09" href="04_notes.html#n4-09">She glanced at me above the glasses.</a> <a class="s" id="s4-10" href="04_notes.html#n4-10">The swift and indifferent placidity of that look troubled me.</a> <a class="s" id="s4-11" href="04_notes.html#n4-11">Two youths with foolish and cheery countenances were being piloted over, and she threw at them the same quick glance of unconcerned wisdom.</a> <a class="s" id="s4-12" href="04_notes.html#n4-12">She seemed to know all about them and about me, too.</a> <a class="s" id="s4-13" href="04_notes.html#n4-13">An eerie feeling came over me.</a> <a class="s" id="s4-14" href="04_notes.html#n4-14">She seemed uncanny and fateful.</a> <a class="s" id="s4-15" href="04_notes.html#n4-15">Often far away there I thought of these two, guarding the door of Darkness, knitting black wool as for a warm pall, one introducing, introducing continuously to the unknown, the other scrutinizing the cheery and foolish faces with unconcerned old eyes.</a> <a class="s" id="s4-16" href="04_notes.html#n4-16"><i>Ave!</i> Old knitter of black wool.</a> <a class="s" id="s4-17" href="04_notes.html#n4-17"><i>Morituri te salutant</i>.</a> <a class="s" id="s4-18" href="04_notes.html#n4-18">Not many of those she looked at ever saw her again—not half, by a long way.</a></p><div class="gl"><span><b>uneasy</b> 落ち着かない・不安な</span><span><b>ceremony</b> 儀式</span><span><b>ominous</b> 不吉な</span><span><b>let into ~</b> 〜に引き入れる</span><span><b>conspiracy</b> 陰謀</span><span><b>feverishly</b> 熱にうかされたように</span><span><b>slipper</b> 室内履き</span><span><b>prop up</b> 支えて載せる</span><span><b>foot-warmer</b> 足温器</span><span><b>repose</b> くつろぐ・横たわる</span><span><b>lap</b> 膝（座ったときの腿の上）</span><span><b>starched</b> 糊のきいた</span><span><b>affair</b> （口語）もの</span><span><b>wart</b> いぼ</span><span><b>silver-rimmed spectacles</b> 銀縁の眼鏡</span><span><b>indifferent</b> 無関心な</span><span><b>placidity</b> 落ち着き・平静</span><span><b>trouble</b> 不安にさせる</span><span><b>youth</b> 若者</span><span><b>countenance</b> 顔つき</span><span><b>pilot</b> （人を）案内する</span><span><b>unconcerned</b> 無関心な</span><span><b>eerie</b> 不気味な</span><span><b>come over ~</b> （感情が）〜を襲う</span><span><b>uncanny</b> 薄気味悪い</span><span><b>fateful</b> 運命を左右する・宿命的な</span><span><b>guard</b> 守る・見張る</span><span><b>pall</b> 棺を覆う布（棺衣）</span><span><b>continuously</b> 絶え間なく</span><span><b>scrutinize</b> じっくり調べる</span><span><b>Ave</b> （ラテン語）ごきげんよう・万歳</span><span><b>Morituri te salutant</b> （ラテン語）死にゆく者たちがあなたに挨拶する。古代ローマの剣闘士の挨拶として伝わる言葉</span><span><b>not half, by a long way</b> 半分にもとうてい及ばない</span></div>
+</div>
+<section class="plate fade"><img src="img/goya_atropos.jpg" width="1600" height="770" alt="Atropos (The Fates)" loading="lazy"><div class="q"><div class="kick">RECITE · IV</div><blockquote><a class="rl" id="r4-16" href="04_notes.html#n4-16"><i>Ave!</i> Old knitter of black wool. <i>Morituri te salutant</i>. Not many of those she looked at ever saw her again—not half, by a long way.</a></blockquote></div><p class="cr">Francisco de Goya, <i>Atropos (The Fates)</i>, 1819–23／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Francisco%20de%20Goya%20y%20Lucientes%20-%20Atropos%20%28The%20Fates%29%20-%20WGA10101.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s5-01" href="04_notes.html#n5-01">“There was yet a visit to the doctor.</a> <a class="s" id="s5-02" href="04_notes.html#n5-02">‘A simple formality,’ assured me the secretary, with an air of taking an immense part in all my sorrows.</a> <a class="s" id="s5-03" href="04_notes.html#n5-03">Accordingly a young chap wearing his hat over the left eyebrow, some clerk I suppose—there must have been clerks in the business, though the house was as still as a house in a city of the dead—came from somewhere up-stairs, and led me forth.</a> <a class="s" id="s5-04" href="04_notes.html#n5-04">He was shabby and careless, with inkstains on the sleeves of his jacket, and his cravat was large and billowy, under a chin shaped like the toe of an old boot.</a> <a class="s" id="s5-05" href="04_notes.html#n5-05">It was a little too early for the doctor, so I proposed a drink, and thereupon he developed a vein of joviality.</a> <a class="s" id="s5-06" href="04_notes.html#n5-06">As we sat over our vermouths he glorified the Company’s business, and by and by I expressed casually my surprise at him not going out there.</a> <a class="s" id="s5-07" href="04_notes.html#n5-07">He became very cool and collected all at once.</a> <a class="s" id="s5-08" href="04_notes.html#n5-08">‘I am not such a fool as I look, quoth Plato to his disciples,’ he said sententiously, emptied his glass with great resolution, and we rose.</a></p><div class="gl"><span><b>formality</b> 形式（だけのこと）</span><span><b>assure</b> 請け合う・保証する</span><span><b>accordingly</b> それに応じて</span><span><b>clerk</b> 事務員</span><span><b>lead forth</b> 外へ連れ出す</span><span><b>shabby</b> みすぼらしい</span><span><b>careless</b> だらしない</span><span><b>inkstain</b> インクのしみ</span><span><b>cravat</b> （古風な）ネクタイ</span><span><b>billowy</b> 波打つ</span><span><b>propose</b> 提案する</span><span><b>thereupon</b> するとすぐに</span><span><b>vein</b> （性質の）一面・気味</span><span><b>joviality</b> 陽気さ</span><span><b>vermouth</b> ベルモット（薬草で香りをつけたワイン）</span><span><b>glorify</b> ほめたたえる</span><span><b>casually</b> 何気なく</span><span><b>cool and collected</b> 冷静で落ち着いた</span><span><b>all at once</b> 突然</span><span><b>quoth</b> （古語）言った（= said、主語の前に置く）</span><span><b>disciple</b> 弟子</span><span><b>sententiously</b> もったいぶって</span><span><b>resolution</b> 決意</span></div>
+<p class="t"><a class="s" id="s6-01" href="04_notes.html#n6-01">“The old doctor felt my pulse, evidently thinking of something else the while.</a> <a class="s" id="s6-02" href="04_notes.html#n6-02">‘Good, good for there,’ he mumbled, and then with a certain eagerness asked me whether I would let him measure my head.</a> <a class="s" id="s6-03" href="04_notes.html#n6-03">Rather surprised, I said Yes, when he produced a thing like calipers and got the dimensions back and front and every way, taking notes carefully.</a> <a class="s" id="s6-04" href="04_notes.html#n6-04">He was an unshaven little man in a threadbare coat like a gaberdine, with his feet in slippers, and I thought him a harmless fool.</a> <a class="s" id="s6-05" href="04_notes.html#n6-05">‘I always ask leave, in the interests of science, to measure the crania of those going out there,’ he said.</a> <a class="s" id="s6-06" href="04_notes.html#n6-06">‘And when they come back, too?’</a> <a class="s" id="s6-07" href="04_notes.html#n6-07">I asked.</a> <a class="s" id="s6-08" href="04_notes.html#n6-08">‘Oh, I never see them,’ he remarked; ‘and, moreover, the changes take place inside, you know.’</a> <a class="s" id="s6-09" href="04_notes.html#n6-09">He smiled, as if at some quiet joke.</a> <a class="s" id="s6-10" href="04_notes.html#n6-10">‘So you are going out there.</a> <a class="s" id="s6-11" href="04_notes.html#n6-11">Famous.</a> <a class="s" id="s6-12" href="04_notes.html#n6-12">Interesting, too.’</a> <a class="s" id="s6-13" href="04_notes.html#n6-13">He gave me a searching glance, and made another note.</a> <a class="s" id="s6-14" href="04_notes.html#n6-14">‘Ever any madness in your family?’ he asked, in a matter-of-fact tone.</a> <a class="s" id="s6-15" href="04_notes.html#n6-15">I felt very annoyed.</a> <a class="s" id="s6-16" href="04_notes.html#n6-16">‘Is that question in the interests of science, too?’</a> <a class="s" id="s6-17" href="04_notes.html#n6-17">‘It would be,’ he said, without taking notice of my irritation, ‘interesting for science to watch the mental changes of individuals, on the spot, but...’</a> <a class="s" id="s6-18" href="04_notes.html#n6-18">‘Are you an alienist?’</a> <a class="s" id="s6-19" href="04_notes.html#n6-19">I interrupted.</a> <a class="s" id="s6-20" href="04_notes.html#n6-20">‘Every doctor should be—a little,’ answered that original, imperturbably.</a> <a class="s" id="s6-21" href="04_notes.html#n6-21">‘I have a little theory which you messieurs who go out there must help me to prove.</a> <a class="s" id="s6-22" href="04_notes.html#n6-22">This is my share in the advantages my country shall reap from the possession of such a magnificent dependency.</a> <a class="s" id="s6-23" href="04_notes.html#n6-23">The mere wealth I leave to others.</a> <a class="s" id="s6-24" href="04_notes.html#n6-24">Pardon my questions, but you are the first Englishman coming under my observation...’</a> <a class="s" id="s6-25" href="04_notes.html#n6-25">I hastened to assure him I was not in the least typical.</a> <a class="s" id="s6-26" href="04_notes.html#n6-26">‘If I were,’ said I, ‘I wouldn’t be talking like this with you.’</a> <a class="s" id="s6-27" href="04_notes.html#n6-27">‘What you say is rather profound, and probably erroneous,’ he said, with a laugh.</a> <a class="s" id="s6-28" href="04_notes.html#n6-28">‘Avoid irritation more than exposure to the sun.</a> <a class="s" id="s6-29" href="04_notes.html#n6-29"><i>Adieu</i>.</a> <a class="s" id="s6-30" href="04_notes.html#n6-30">How do you English say, eh?</a> <a class="s" id="s6-31" href="04_notes.html#n6-31">Good-bye.</a> <a class="s" id="s6-32" href="04_notes.html#n6-32">Ah!</a> <a class="s" id="s6-33" href="04_notes.html#n6-33">Good-bye.</a> <a class="s" id="s6-34" href="04_notes.html#n6-34"><i>Adieu</i>.</a> <a class="s" id="s6-35" href="04_notes.html#n6-35">In the tropics one must before everything keep calm.’...</a> <a class="s" id="s6-36" href="04_notes.html#n6-36">He lifted a warning forefinger....</a> <a class="s" id="s6-37" href="04_notes.html#n6-37">‘<i>Du calme, du calme</i>.’</a></p><div class="gl"><span><b>pulse</b> 脈</span><span><b>the while</b> （古風）そのあいだ</span><span><b>mumble</b> つぶやく</span><span><b>eagerness</b> 熱心さ</span><span><b>produce</b> 取り出す</span><span><b>calipers</b> カリパス（厚さや径を測る器具）</span><span><b>dimension</b> 寸法</span><span><b>unshaven</b> ひげを剃っていない</span><span><b>threadbare</b> すり切れた</span><span><b>gaberdine</b> ギャバジン（ゆったりした上着・その布地）</span><span><b>harmless</b> 害のない</span><span><b>ask leave</b> 許可を求める</span><span><b>in the interests of ~</b> 〜のために</span><span><b>crania</b> 頭蓋骨（cranium の複数）</span><span><b>moreover</b> そのうえ</span><span><b>take place</b> 起こる</span><span><b>Famous</b> （ここでは）けっこう・すばらしい（フランス語 fameux の直訳風）</span><span><b>searching</b> 探るような</span><span><b>madness</b> 狂気</span><span><b>matter-of-fact</b> 事務的な・淡々とした</span><span><b>annoyed</b> むっとした</span><span><b>take notice of ~</b> 〜に気づく・注意を払う</span><span><b>irritation</b> 苛立ち</span><span><b>mental</b> 精神の</span><span><b>individual</b> 個人</span><span><b>on the spot</b> その場で・現地で</span><span><b>alienist</b> （古い語）精神科医</span><span><b>interrupt</b> （話を）さえぎる</span><span><b>original</b> （名詞）変わり者</span><span><b>imperturbably</b> 平然と</span><span><b>messieurs</b> （フランス語）みなさん（monsieur の複数）</span><span><b>share</b> 取り分</span><span><b>reap</b> （利益を）得る・刈り取る</span><span><b>possession</b> 所有</span><span><b>dependency</b> 属領・属国</span><span><b>mere</b> 単なる</span><span><b>observation</b> 観察</span><span><b>hasten to ~</b> 急いで〜する</span><span><b>typical</b> 典型的な</span><span><b>profound</b> 深遠な</span><span><b>erroneous</b> 間違った</span><span><b>exposure to ~</b> 〜にさらされること</span><span><b>Adieu</b> （フランス語）さようなら</span><span><b>the tropics</b> 熱帯</span><span><b>before everything</b> 何よりもまず</span><span><b>warning</b> 警告の</span><span><b>Du calme</b> （フランス語）落ち着いて</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · VI</div><blockquote><a class="rl" id="r6-35" href="04_notes.html#n6-35">‘In the tropics one must before everything keep calm.’ He lifted a warning forefinger. ‘<i>Du calme, du calme</i>.’</a></blockquote></section>
+<section class="sheet"><h2>RECITE</h2><div class="ja">暗唱の帳 ── 今回の6つ</div><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><button class="spall" type="button">▶ 通しで聞く</button></div><ol><li><span><a class="rl" id="k1-02" href="04_notes.html#n1-02">I arrived in a city that always makes me think of a whited sepulchre.</a><button class="sp" type="button" data-t="I arrived in a city that always makes me think of a whited sepulchre." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k2-03" href="04_notes.html#n2-03">Two women, one fat and the other slim, sat on straw-bottomed chairs, knitting black wool.</a><button class="sp" type="button" data-t="Two women, one fat and the other slim, sat on straw-bottomed chairs, knitting black wool." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k2-09" href="04_notes.html#n2-09">However, I wasn’t going into any of these. I was going into the yellow. Dead in the centre. And the river was there—fascinating—deadly—like a snake.</a><button class="sp" type="button" data-t="However, I wasn’t going into any of these. I was going into the yellow. Dead in the centre. And the river was there—fascinating—deadly—like a snake." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k4-16" href="04_notes.html#n4-16"><i>Ave!</i> Old knitter of black wool. <i>Morituri te salutant</i>. Not many of those she looked at ever saw her again—not half, by a long way.</a><button class="sp" type="button" data-t="Ave! Old knitter of black wool. Morituri te salutant. Not many of those she looked at ever saw her again—not half, by a long way." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k6-08" href="04_notes.html#n6-08">‘Oh, I never see them,’ he remarked; ‘and, moreover, the changes take place inside, you know.’</a><button class="sp" type="button" data-t="‘Oh, I never see them,’ he remarked; ‘and, moreover, the changes take place inside, you know.’" aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k6-35" href="04_notes.html#n6-35">‘In the tropics one must before everything keep calm.’ He lifted a warning forefinger. ‘<i>Du calme, du calme</i>.’</a><button class="sp" type="button" data-t="‘In the tropics one must before everything keep calm.’ He lifted a warning forefinger. ‘Du calme, du calme.’" aria-label="読み上げ"></button></span></li></ol></section>
+<a class="colcard" href="04_col.html"><span class="kick">BACKGROUND · COLUMN</span><span class="ct">Conrad’s Own Voyage, 1890</span><span class="cs ja">作者自身のコンゴ行　→ 英文の背景コラムを読む</span></a><nav class="foot ja"><div><a href="03.html">← 第3回</a><a href="index.html" style="margin-left:1.2em">目次</a><span class="src">原文：Project Gutenberg #219（公有）／訳・注：本教材の自作</span></div><div><a href="05.html">第5回 →</a></div></nav>
+<script>
+(function(){
+  var KEY='hod-pos:'+location.pathname;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a.s, a.rl'); if(!a) return;
+    try{ history.replaceState(null,'','#'+a.id); }catch(_){}
+    try{ sessionStorage.setItem(KEY,String(window.scrollY)); }catch(_){}
+  });
+  function restore(){
+    var h=location.hash.slice(1), el=h&&document.getElementById(h);
+    document.querySelectorAll('.here').forEach(function(x){x.classList.remove('here')});
+    if(el){ el.classList.add('here'); el.scrollIntoView({block:'center'}); return; }
+    try{ var y=sessionStorage.getItem(KEY); if(y) window.scrollTo(0,+y); }catch(_){}
+  }
+  window.addEventListener('pageshow',function(){ requestAnimationFrame(restore); });
+})();
+</script><script>
+(function(){
+  var T=[{"bg": "#edece7", "ink": "#25252a", "sub": "#6d6c70", "gl": "#7e7c80", "shu": "#a8322a"}], R=document.documentElement.style, turns=[].slice.call(document.querySelectorAll('.turn'));
+  function rgb(h){h=h.replace('#','');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+  function ss(e0,e1,x){var t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
+  function upd(){
+    var bg=rgb(T[0].bg), txt=T[0], vh=innerHeight;
+    turns.forEach(function(el){
+      var to=T[+el.dataset.to], rc=el.getBoundingClientRect(), t=(vh*.5-rc.top)/rc.height;
+      if(t<=0) return;
+      var k=ss(.3,.7,t), nb=rgb(to.bg);
+      bg=bg.map(function(v,i){return v+(nb[i]-v)*k});
+      if(t>.5) txt=to;
+    });
+    R.setProperty('--bg',mix(bg,bg,0));
+    ['ink','sub','gl','shu'].forEach(function(n){if(txt[n])R.setProperty('--'+n,txt[n])});
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); addEventListener('pageshow',upd); upd();
+})();
+</script><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

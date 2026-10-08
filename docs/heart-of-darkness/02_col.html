@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2 · Roman Britain — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--shu:#a8322a;--gl:#8a7f70}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.75;transition:color .4s}
+.col{max-width:640px;margin:0 auto;padding:0 22px}
+.ja{font-family:"Shippori Mincho","Yu Mincho",serif}
+a.s{color:inherit;text-decoration:none;border-radius:2px;transition:background .2s;-webkit-tap-highlight-color:rgba(168,50,42,.15)}
+a.s:hover{background:rgba(168,50,42,.08)} .here{background:rgba(201,164,58,.28);box-shadow:0 0 0 3px rgba(201,164,58,.28)}
+p.t{margin:0 0 1.1em;text-indent:1.4em} p.t.first,p.t.cont{text-indent:0}
+p.t.first::first-letter{float:left;font-size:4.1em;line-height:.82;padding:.06em .08em 0 0;color:var(--shu)}
+.gl{font-family:"Shippori Mincho",serif;font-size:12.5px;line-height:1.7;color:var(--gl);margin:-.5em 0 2em;padding-top:.5em;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.gl b{font-family:"EB Garamond",serif;font-weight:500;font-size:14px;color:var(--ink);opacity:.8}
+.gl span{margin-right:1.1em;display:inline-block}
+.hero{position:relative;height:92vh;min-height:520px;overflow:hidden;margin-bottom:40px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12vh;text-align:center;padding:0 16px}
+.hero .no{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:16px;letter-spacing:.6em;color:var(--shu)}
+.hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,8vw,96px);letter-spacing:.06em;margin:0;line-height:1}
+.hero .sub{font-family:"Shippori Mincho",serif;font-size:14px;letter-spacing:.3em;color:var(--sub)}
+.hero .home{position:absolute;top:14px;left:16px;font:13px/1 "Shippori Mincho",serif;letter-spacing:.2em;color:#f5efe2;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.map{font-family:"Shippori Mincho",serif;font-size:15px;line-height:2;color:var(--sub);border-left:2px solid var(--shu);padding:2px 0 2px 18px;margin:0 0 56px}
+.map b{display:block;color:var(--shu);letter-spacing:.3em;font-size:12px}
+.map .how{display:block;margin-top:.6em;font-size:13px;opacity:.85}
+/* 霞：本文の地に溶ける画像 */
+.haze{margin:30px -60px 36px;position:relative}
+.haze img{display:block;width:100%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%)}
+.cr{font:11px/1.5 system-ui,sans-serif;color:var(--gl);text-align:right;margin:4px 60px 0} .cr a{color:inherit}
+/* 暗唱プレート：全幅の絵に活字 */
+.plate{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;margin:70px 0;overflow:hidden;color:#f5efe2}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(10,12,18,.55),rgba(10,12,18,.15) 70%)}
+.plate .q{position:relative;z-index:2;max-width:860px;padding:0 28px;text-align:center}
+.kick{font:12px/1 system-ui,sans-serif;letter-spacing:.5em;opacity:.8;margin-bottom:22px}
+.plate blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,4.4vw,52px);line-height:1.3;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+a.rl{color:inherit;text-decoration:none}
+.plate .cr{position:absolute;left:14px;right:14px;bottom:8px;z-index:2;color:rgba(255,255,255,.65);margin:0}
+.plate.fade>img{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+/* 活字だけの暗唱 */
+.line{text-align:center;margin:44px auto 52px;max-width:720px;padding:0 22px}
+.line .kick{color:var(--shu);opacity:1}
+.line blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(25px,3.4vw,36px);line-height:1.35}
+.line::after{content:"";display:block;width:36px;height:1px;background:var(--shu);margin:22px auto 0}
+/* 転換：ここで地の色が変わる */
+.turn{position:relative;height:100vh;margin:60px 0}
+.turn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+.turn .cr{position:absolute;right:14px;bottom:4px;margin:0;color:rgba(255,255,255,.6)}
+.pair{display:grid;grid-template-columns:.62fr 1fr;gap:18px;align-items:end;margin:34px -40px}
+.pair img{width:100%;height:auto;display:block}
+.pair .a img{filter:sepia(.25) brightness(.85);-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.pair .b img{-webkit-mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent);mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent)}
+.pair .cr{text-align:left;margin:4px 0 0}
+/* 暗唱の帳 */
+.sheet{max-width:720px;margin:90px auto 0;padding:0 22px}
+.sheet h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:30px;letter-spacing:.2em;text-align:center;margin:0}
+.sheet .ja{font-size:13px;color:var(--sub);text-align:center;margin:4px 0 30px;letter-spacing:.1em}
+.sheet ol{list-style:none;margin:0;padding:0;counter-reset:r}
+.sheet li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:6px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--gl) 30%,transparent);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:23px;line-height:1.4}
+.sheet .sptop{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin:0 0 14px}
+.sheet .mk{font-size:12.5px;text-align:center;margin:0 0 22px;letter-spacing:0}
+.sheet li .sp{vertical-align:-4px}
+.sheet li::before{content:counter(r,upper-roman);font-style:normal;font-size:14px;color:var(--shu);padding-top:.35em;letter-spacing:.1em}
+.colcard{display:block;max-width:640px;margin:70px auto 0;padding:26px 24px;border:1px solid color-mix(in srgb,var(--shu) 60%,transparent);color:var(--ink);text-decoration:none;text-align:center}
+.colcard:hover{background:color-mix(in srgb,var(--shu) 7%,transparent)}
+.colcard .kick{display:block;color:var(--shu);opacity:1;margin-bottom:12px}
+.colcard .ct{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;line-height:1.2}
+.colcard .cs{display:block;font-size:13px;color:var(--sub);margin-top:8px}
+.srcs{max-width:640px;margin:70px auto 0;padding:0 22px;font-size:13px;line-height:1.8;color:var(--sub)}
+.srcs h3{font-size:13px;letter-spacing:.2em;color:var(--shu);margin:0 0 6px}.srcs ul{margin:0 0 8px;padding-left:1.2em}.srcs a{color:inherit}
+.foot{max-width:640px;margin:80px auto 0;padding:26px 22px 90px;display:flex;justify-content:space-between;gap:12px;font-family:"Shippori Mincho",serif;font-size:14px;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.foot a{color:var(--ink);text-decoration:none} .foot .off{color:var(--gl)}
+.foot .src{display:block;font:11px/1.6 system-ui,sans-serif;color:var(--gl);margin-top:6px}
+@media (max-width:720px){body{font-size:18px}.haze,.pair{margin-left:-16px;margin-right:-16px}.col{padding:0 16px}.cr{margin-right:16px}
+ .pair{grid-template-columns:1fr 1fr;gap:10px}.pair .cr{padding:0 8px}.plate{min-height:78vh}.plate .q{padding:0 18px}.line{padding:0 16px}
+ .sheet{padding:0 16px}.colcard{margin-left:16px;margin-right:16px}.srcs{padding:0 16px}.sheet li{font-size:20px;grid-template-columns:1.9em 1fr}.foot{padding-left:16px;padding-right:16px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<style>:root{--bg:#efe9dc;--ink:#29262a;--sub:#6f6a62;--gl:#857e73;--shu:#a8322a;}</style>
+<header class="hero"><img src="img/johnson_roman.jpg" width="1600" height="987" alt="Johnson’s Roman Empire"><a class="home" href="index.html">← 目次</a>
+<div class="ttl"><div class="no">BACKGROUND · 2</div><h1>Roman Britain</h1><div class="sub">ローマ人の見たブリテン島</div></div></header>
+<div class="col">
+<div class="map ja"><b>このコラムについて</b>第2回でマーロウが想像した「ローマ人のテムズ」は、本当はどうだったのか。易しい英語で、ローマがブリテン島に来てから去るまでを短くたどる。最後に、ローマの歴史家タキトゥスが書いた有名な一文を読む。マーロウの「征服とは暴力をともなう強盗だ」という言葉と、驚くほどよく似ている。約370語。<span class="how">文をタップすると、その文の対訳と語注へ。戻ると、読んでいた文に戻ります。</span></div>
+<p class="t first"><a class="s" id="s1-01" href="02_col_notes.html#n1-01">In 55 BC, Julius Caesar crossed the sea from Gaul to Britain.</a> <a class="s" id="s1-02" href="02_col_notes.html#n1-02">To the Romans, the island was the edge of the known world: cold, wet, and covered in mist.</a> <a class="s" id="s1-03" href="02_col_notes.html#n1-03">Caesar came back the next year with a bigger army and crossed the Thames, but he did not stay.</a> <a class="s" id="s1-04" href="02_col_notes.html#n1-04">He took some promises and some hostages, and sailed home.</a></p><div class="gl"><span><b>BC</b> 紀元前（Before Christ）</span><span><b>Gaul</b> ガリア（今のフランス周辺）</span><span><b>the known world</b> （当時）知られていた世界</span><span><b>mist</b> 霧</span><span><b>hostage</b> 人質</span></div>
+<p class="t"><a class="s" id="s2-01" href="02_col_notes.html#n2-01">Almost a hundred years later, in AD 43, the emperor Claudius sent four legions to Britain.</a> <a class="s" id="s2-02" href="02_col_notes.html#n2-02">This time the Romans came to stay.</a> <a class="s" id="s2-03" href="02_col_notes.html#n2-03">Their soldiers built roads, forts and harbours, and the south of the island slowly became a Roman province called Britannia.</a></p><div class="gl"><span><b>AD</b> 紀元（後）</span><span><b>emperor</b> 皇帝</span><span><b>legion</b> （ローマの）軍団。1個軍団は約5,000人</span><span><b>fort</b> 砦</span><span><b>harbour</b> 港（米 harbor）</span><span><b>province</b> 属州</span></div>
+<p class="t"><a class="s" id="s3-01" href="02_col_notes.html#n3-01">A few years after the invasion, around AD 47, the Romans built a wooden bridge over the Thames.</a> <a class="s" id="s3-02" href="02_col_notes.html#n3-02">They chose a place where the river was narrow enough to bridge, but deep enough for sea-going ships.</a> <a class="s" id="s3-03" href="02_col_notes.html#n3-03">A town grew up beside the bridge, and they called it Londinium.</a> <a class="s" id="s3-04" href="02_col_notes.html#n3-04">This was the beginning of London, the “greatest town on earth” that Conrad describes in the first chapter.</a></p><div class="gl"><span><b>invasion</b> 侵攻</span><span><b>bridge</b> （動詞）橋を架ける</span><span><b>sea-going</b> 外洋を行く</span></div>
+<figure class="haze"><img src="img/romtrireme.jpg" width="1600" height="1109" alt="Roman ship" loading="lazy"><p class="cr">ローマ時代のモザイク（チュニジア）, <i>Roman ship</i>／写真 Mathiasrex／CC BY 2.5／<a href="https://commons.wikimedia.org/wiki/File:Romtrireme.jpg">Commons</a></p></figure>
+<p class="t"><a class="s" id="s4-01" href="02_col_notes.html#n4-01">Not everyone welcomed the newcomers.</a> <a class="s" id="s4-02" href="02_col_notes.html#n4-02">In AD 60 or 61, Boudica, a queen of the Iceni people, led a great revolt against Roman rule.</a> <a class="s" id="s4-03" href="02_col_notes.html#n4-03">Her army burned Londinium to the ground and killed many of the people living there.</a> <a class="s" id="s4-04" href="02_col_notes.html#n4-04">The Romans defeated her in the end, and they rebuilt the town.</a></p><div class="gl"><span><b>welcome</b> 歓迎する</span><span><b>newcomer</b> 新しく来た者</span><span><b>revolt</b> 反乱</span><span><b>rule</b> 支配</span><span><b>burn ~ to the ground</b> 〜を焼き払う</span><span><b>defeat</b> 打ち負かす</span><span><b>rebuild</b> 建て直す</span></div>
+<p class="t"><a class="s" id="s5-01" href="02_col_notes.html#n5-01">The Roman historian Tacitus wrote about these wars.</a> <a class="s" id="s5-02" href="02_col_notes.html#n5-02">In his book <i>Agricola</i>, he gives a speech to Calgacus, a chief in the far north of Britain, who is about to fight the Romans.</a> <a class="s" id="s5-03" href="02_col_notes.html#n5-03">Calgacus calls the Romans “robbers of the world.”</a> <a class="s" id="s5-04" href="02_col_notes.html#n5-04">Then he says, “They make a desert and call it peace.”</a> <a class="s" id="s5-05" href="02_col_notes.html#n5-05">Historians think that Tacitus probably wrote this speech himself.</a> <a class="s" id="s5-06" href="02_col_notes.html#n5-06">Even so, it is a Roman writer who puts these hard words about Rome into an enemy’s mouth.</a></p><div class="gl"><span><b>historian</b> 歴史家</span><span><b>chief</b> 族長</span><span><b>be about to ~</b> まさに〜しようとしている</span><span><b>robber</b> 強盗・略奪者</span><span><b>desert</b> 荒野・無人の地（ラテン語 solitudo の英訳）</span><span><b>put words into ~’s mouth</b> （自分の考えを）〜に言わせる</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · I</div><blockquote><a class="rl" id="r5-04" href="02_col_notes.html#n5-04">They make a desert and call it peace.</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s6-01" href="02_col_notes.html#n6-01">Remember what Marlow says about the Romans: “It was just robbery with violence, aggravated murder on a great scale.”</a> <a class="s" id="s6-02" href="02_col_notes.html#n6-02">Nearly two thousand years apart, the two voices sound very alike.</a> <a class="s" id="s6-03" href="02_col_notes.html#n6-03">Rome stayed in Britain for about four hundred years; by 410 its rule was over.</a> <a class="s" id="s6-04" href="02_col_notes.html#n6-04">Marlow’s point is simple and uncomfortable: the people who once came to Britain as conquerors were not so different from the Europeans who were now going to Africa.</a></p><div class="gl"><span><b>aggravated murder</b> 凶悪殺人（第2回 4-07）</span><span><b>apart</b> 離れて・隔たって</span><span><b>alike</b> 似ている</span><span><b>uncomfortable</b> 居心地の悪い</span><span><b>conqueror</b> 征服者</span></div>
+</div>
+<section class="sheet"><h2>RECITE</h2><div class="ja">暗唱の帳 ── 今回の1つ</div><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><button class="spall" type="button">▶ 通しで聞く</button></div><ol><li><span><a class="rl" id="k5-04" href="02_col_notes.html#n5-04">They make a desert and call it peace.</a><button class="sp" type="button" data-t="They make a desert and call it peace." aria-label="読み上げ"></button></span></li></ol></section>
+<section class="srcs ja"><h3>このコラムの典拠</h3><ul><li><a href="https://www.londonmuseum.org.uk/collections/london-stories/timeline-roman-london-londinium/">London Museum, “A timeline of Roman London”</a>（ロンディニウムの成立、ブーディカの反乱）</li><li><a href="https://en.wikipedia.org/wiki/Roman_Britain">Wikipedia, “Roman Britain”</a>（カエサルの遠征、クラウディウスの侵攻、410年）</li><li><a href="https://faculty.uml.edu/ethan_Spanier/Teaching/documents/calgac1.pdf">Tacitus, <i>Agricola</i> 30（カルガクスの演説の英訳）</a>／演説がタキトゥスの創作と考えられていることは <a href="https://en.wikipedia.org/wiki/Calgacus">Wikipedia, “Calgacus”</a></li></ul><p>英文と訳は本教材の自作です。年や数は上の資料で確かめました。</p></section><nav class="foot ja"><div><a href="02.html">← 第2回の本文へ</a><a href="index.html" style="margin-left:1.2em">目次</a></div><div><a href="03.html">第3回 →</a></div></nav>
+<script>
+(function(){
+  var KEY='hod-pos:'+location.pathname;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a.s, a.rl'); if(!a) return;
+    try{ history.replaceState(null,'','#'+a.id); }catch(_){}
+    try{ sessionStorage.setItem(KEY,String(window.scrollY)); }catch(_){}
+  });
+  function restore(){
+    var h=location.hash.slice(1), el=h&&document.getElementById(h);
+    document.querySelectorAll('.here').forEach(function(x){x.classList.remove('here')});
+    if(el){ el.classList.add('here'); el.scrollIntoView({block:'center'}); return; }
+    try{ var y=sessionStorage.getItem(KEY); if(y) window.scrollTo(0,+y); }catch(_){}
+  }
+  window.addEventListener('pageshow',function(){ requestAnimationFrame(restore); });
+})();
+</script><script>
+(function(){
+  var T=[{"bg": "#efe9dc", "ink": "#29262a", "sub": "#6f6a62", "gl": "#857e73", "shu": "#a8322a"}], R=document.documentElement.style, turns=[].slice.call(document.querySelectorAll('.turn'));
+  function rgb(h){h=h.replace('#','');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+  function ss(e0,e1,x){var t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
+  function upd(){
+    var bg=rgb(T[0].bg), txt=T[0], vh=innerHeight;
+    turns.forEach(function(el){
+      var to=T[+el.dataset.to], rc=el.getBoundingClientRect(), t=(vh*.5-rc.top)/rc.height;
+      if(t<=0) return;
+      var k=ss(.3,.7,t), nb=rgb(to.bg);
+      bg=bg.map(function(v,i){return v+(nb[i]-v)*k});
+      if(t>.5) txt=to;
+    });
+    R.setProperty('--bg',mix(bg,bg,0));
+    ['ink','sub','gl','shu'].forEach(function(n){if(txt[n])R.setProperty('--'+n,txt[n])});
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); addEventListener('pageshow',upd); upd();
+})();
+</script><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

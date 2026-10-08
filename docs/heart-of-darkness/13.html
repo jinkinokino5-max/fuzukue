@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13 · We Live as We Dream — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--shu:#a8322a;--gl:#8a7f70}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.75;transition:color .4s}
+.col{max-width:640px;margin:0 auto;padding:0 22px}
+.ja{font-family:"Shippori Mincho","Yu Mincho",serif}
+a.s{color:inherit;text-decoration:none;border-radius:2px;transition:background .2s;-webkit-tap-highlight-color:rgba(168,50,42,.15)}
+a.s:hover{background:rgba(168,50,42,.08)} .here{background:rgba(201,164,58,.28);box-shadow:0 0 0 3px rgba(201,164,58,.28)}
+p.t{margin:0 0 1.1em;text-indent:1.4em} p.t.first,p.t.cont{text-indent:0}
+p.t.first::first-letter{float:left;font-size:4.1em;line-height:.82;padding:.06em .08em 0 0;color:var(--shu)}
+.gl{font-family:"Shippori Mincho",serif;font-size:12.5px;line-height:1.7;color:var(--gl);margin:-.5em 0 2em;padding-top:.5em;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.gl b{font-family:"EB Garamond",serif;font-weight:500;font-size:14px;color:var(--ink);opacity:.8}
+.gl span{margin-right:1.1em;display:inline-block}
+.hero{position:relative;height:92vh;min-height:520px;overflow:hidden;margin-bottom:40px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12vh;text-align:center;padding:0 16px}
+.hero .no{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:16px;letter-spacing:.6em;color:var(--shu)}
+.hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,8vw,96px);letter-spacing:.06em;margin:0;line-height:1}
+.hero .sub{font-family:"Shippori Mincho",serif;font-size:14px;letter-spacing:.3em;color:var(--sub)}
+.hero .home{position:absolute;top:14px;left:16px;font:13px/1 "Shippori Mincho",serif;letter-spacing:.2em;color:#f5efe2;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.map{font-family:"Shippori Mincho",serif;font-size:15px;line-height:2;color:var(--sub);border-left:2px solid var(--shu);padding:2px 0 2px 18px;margin:0 0 56px}
+.map b{display:block;color:var(--shu);letter-spacing:.3em;font-size:12px}
+.map .how{display:block;margin-top:.6em;font-size:13px;opacity:.85}
+/* 霞：本文の地に溶ける画像 */
+.haze{margin:30px -60px 36px;position:relative}
+.haze img{display:block;width:100%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%)}
+.cr{font:11px/1.5 system-ui,sans-serif;color:var(--gl);text-align:right;margin:4px 60px 0} .cr a{color:inherit}
+/* 暗唱プレート：全幅の絵に活字 */
+.plate{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;margin:70px 0;overflow:hidden;color:#f5efe2}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(10,12,18,.55),rgba(10,12,18,.15) 70%)}
+.plate .q{position:relative;z-index:2;max-width:860px;padding:0 28px;text-align:center}
+.kick{font:12px/1 system-ui,sans-serif;letter-spacing:.5em;opacity:.8;margin-bottom:22px}
+.plate blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,4.4vw,52px);line-height:1.3;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+a.rl{color:inherit;text-decoration:none}
+.plate .cr{position:absolute;left:14px;right:14px;bottom:8px;z-index:2;color:rgba(255,255,255,.65);margin:0}
+.plate.fade>img{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+/* 活字だけの暗唱 */
+.line{text-align:center;margin:44px auto 52px;max-width:720px;padding:0 22px}
+.line .kick{color:var(--shu);opacity:1}
+.line blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(25px,3.4vw,36px);line-height:1.35}
+.line::after{content:"";display:block;width:36px;height:1px;background:var(--shu);margin:22px auto 0}
+/* 転換：ここで地の色が変わる */
+.turn{position:relative;height:100vh;margin:60px 0}
+.turn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+.turn .cr{position:absolute;right:14px;bottom:4px;margin:0;color:rgba(255,255,255,.6)}
+.pair{display:grid;grid-template-columns:.62fr 1fr;gap:18px;align-items:end;margin:34px -40px}
+.pair img{width:100%;height:auto;display:block}
+.pair .a img{filter:sepia(.25) brightness(.85);-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.pair .b img{-webkit-mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent);mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent)}
+.pair .cr{text-align:left;margin:4px 0 0}
+/* 暗唱の帳 */
+.sheet{max-width:720px;margin:90px auto 0;padding:0 22px}
+.sheet h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:30px;letter-spacing:.2em;text-align:center;margin:0}
+.sheet .ja{font-size:13px;color:var(--sub);text-align:center;margin:4px 0 30px;letter-spacing:.1em}
+.sheet ol{list-style:none;margin:0;padding:0;counter-reset:r}
+.sheet li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:6px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--gl) 30%,transparent);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:23px;line-height:1.4}
+.sheet .sptop{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin:0 0 14px}
+.sheet .mk{font-size:12.5px;text-align:center;margin:0 0 22px;letter-spacing:0}
+.sheet li .sp{vertical-align:-4px}
+.sheet li::before{content:counter(r,upper-roman);font-style:normal;font-size:14px;color:var(--shu);padding-top:.35em;letter-spacing:.1em}
+.colcard{display:block;max-width:640px;margin:70px auto 0;padding:26px 24px;border:1px solid color-mix(in srgb,var(--shu) 60%,transparent);color:var(--ink);text-decoration:none;text-align:center}
+.colcard:hover{background:color-mix(in srgb,var(--shu) 7%,transparent)}
+.colcard .kick{display:block;color:var(--shu);opacity:1;margin-bottom:12px}
+.colcard .ct{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;line-height:1.2}
+.colcard .cs{display:block;font-size:13px;color:var(--sub);margin-top:8px}
+.srcs{max-width:640px;margin:70px auto 0;padding:0 22px;font-size:13px;line-height:1.8;color:var(--sub)}
+.srcs h3{font-size:13px;letter-spacing:.2em;color:var(--shu);margin:0 0 6px}.srcs ul{margin:0 0 8px;padding-left:1.2em}.srcs a{color:inherit}
+.foot{max-width:640px;margin:80px auto 0;padding:26px 22px 90px;display:flex;justify-content:space-between;gap:12px;font-family:"Shippori Mincho",serif;font-size:14px;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.foot a{color:var(--ink);text-decoration:none} .foot .off{color:var(--gl)}
+.foot .src{display:block;font:11px/1.6 system-ui,sans-serif;color:var(--gl);margin-top:6px}
+@media (max-width:720px){body{font-size:18px}.haze,.pair{margin-left:-16px;margin-right:-16px}.col{padding:0 16px}.cr{margin-right:16px}
+ .pair{grid-template-columns:1fr 1fr;gap:10px}.pair .cr{padding:0 8px}.plate{min-height:78vh}.plate .q{padding:0 18px}.line{padding:0 16px}
+ .sheet{padding:0 16px}.colcard{margin-left:16px;margin-right:16px}.srcs{padding:0 16px}.sheet li{font-size:20px;grid-template-columns:1.9em 1fr}.foot{padding-left:16px;padding-right:16px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<style>:root{--bg:#0f1013;--ink:#e2ded5;--sub:#a39e94;--gl:#948f86;--shu:#d0634f;}</style>
+<header class="hero"><img src="img/whistler_battersea.jpg" width="1920" height="2576" alt="Nocturne: Blue and Gold – Old Battersea Bridge"><a class="home" href="index.html">← 目次</a>
+<div class="ttl"><div class="no">PART ONE · 13</div><h1>We Live as We Dream</h1><div class="sub">夢を見るように、ひとりで</div></div></header>
+<div class="col">
+<div class="map ja"><b>読む前の地図</b>マーロウは語りを止める。「ある時期の生の感覚を伝えるのは不可能だ。ぼくたちは、夢を見るように生きている――ひとりで」。ここで場面は、テムズ河口のネリー号に戻る。あたりは真っ暗で、聞き手たちには、マーロウはもう声でしかない。語り手の「私」は、この話の落ち着かなさの手がかりを探して、耳をすませている。話はまた中央出張所の月夜へ。マーロウが本当に欲しいのは、汽船の穴をふさぐ「鋲（リベット）」だ。海岸には箱ごと転がっているのに、ここには一本もない。最後の読みどころは、仕事についての有名な一節。「仕事は好きじゃない。だが、仕事の中にあるものは好きだ――自分を見つける機会が」。<span class="how">文をタップすると、その文の対訳と語注へ。戻ると、読んでいた文に戻ります。</span></div>
+<p class="t first"><a class="s" id="s1-01" href="13_notes.html#n1-01">He was silent for a while.</a></p>
+<p class="t"><a class="s" id="s2-01" href="13_notes.html#n2-01">“...</a> <a class="s" id="s2-02" href="13_notes.html#n2-02">No, it is impossible; it is impossible to convey the life-sensation of any given epoch of one’s existence—that which makes its truth, its meaning—its subtle and penetrating essence.</a> <a class="s" id="s2-03" href="13_notes.html#n2-03">It is impossible.</a> <a class="s" id="s2-04" href="13_notes.html#n2-04">We live, as we dream—alone....”</a></p><div class="gl"><span><b>convey</b> 伝える</span><span><b>life-sensation</b> 生の感覚</span><span><b>given</b> ある特定の</span><span><b>epoch</b> 時期・時代</span><span><b>existence</b> 生・存在</span><span><b>subtle</b> 微妙な</span><span><b>penetrating</b> しみとおる・鋭い</span><span><b>essence</b> 本質</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · I</div><blockquote><a class="rl" id="r2-02" href="13_notes.html#n2-02">No, it is impossible; it is impossible to convey the life-sensation of any given epoch of one’s existence—that which makes its truth, its meaning—its subtle and penetrating essence. It is impossible. We live, as we dream—alone....</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s3-01" href="13_notes.html#n3-01">He paused again as if reflecting, then added:</a></p><div class="gl"><span><b>pause</b> 間をおく</span><span><b>reflect</b> 考えこむ</span></div>
+<p class="t"><a class="s" id="s4-01" href="13_notes.html#n4-01">“Of course in this you fellows see more than I could then.</a> <a class="s" id="s4-02" href="13_notes.html#n4-02">You see me, whom you know....”</a></p>
+<p class="t"><a class="s" id="s5-01" href="13_notes.html#n5-01">It had become so pitch dark that we listeners could hardly see one another.</a> <a class="s" id="s5-02" href="13_notes.html#n5-02">For a long time already he, sitting apart, had been no more to us than a voice.</a> <a class="s" id="s5-03" href="13_notes.html#n5-03">There was not a word from anybody.</a> <a class="s" id="s5-04" href="13_notes.html#n5-04">The others might have been asleep, but I was awake.</a> <a class="s" id="s5-05" href="13_notes.html#n5-05">I listened, I listened on the watch for the sentence, for the word, that would give me the clue to the faint uneasiness inspired by this narrative that seemed to shape itself without human lips in the heavy night-air of the river.</a></p><div class="gl"><span><b>pitch dark</b> 真っ暗な</span><span><b>apart</b> 離れて</span><span><b>no more than ~</b> 〜にすぎない</span><span><b>on the watch for ~</b> 〜を待ちかまえて</span><span><b>clue</b> 手がかり</span><span><b>uneasiness</b> 落ち着かなさ</span><span><b>inspire</b> 呼びおこす</span><span><b>narrative</b> 物語</span><span><b>shape itself</b> ひとりでに形をなす</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · II</div><blockquote><a class="rl" id="r5-02" href="13_notes.html#n5-02">For a long time already he, sitting apart, had been no more to us than a voice. There was not a word from anybody.</a></blockquote></section>
+<section class="turn" data-to="1"><img src="img/grimshaw_thames_moon.jpg" width="1200" height="773" alt="Thames Moonlight" loading="lazy"><p class="cr">J. A. Grimshaw, <i>Thames Moonlight</i>／Public domain／<a href="https://commons.wikimedia.org/wiki/File:John%20Atkinson%20Grimshaw%20%281836-1893%29%20-%20Thames%20Moonlight%20-%20LEEUA%202009.025%20-%20Stanley%20%5E%20Audrey%20Burton%20Gallery.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s6-01" href="13_notes.html#n6-01">“...</a> <a class="s" id="s6-02" href="13_notes.html#n6-02">Yes—I let him run on,” Marlow began again, “and think what he pleased about the powers that were behind me.</a> <a class="s" id="s6-03" href="13_notes.html#n6-03">I did!</a> <a class="s" id="s6-04" href="13_notes.html#n6-04">And there was nothing behind me!</a> <a class="s" id="s6-05" href="13_notes.html#n6-05">There was nothing but that wretched, old, mangled steamboat I was leaning against, while he talked fluently about ‘the necessity for every man to get on.’</a> <a class="s" id="s6-06" href="13_notes.html#n6-06">‘And when one comes out here, you conceive, it is not to gaze at the moon.’</a> <a class="s" id="s6-07" href="13_notes.html#n6-07">Mr. Kurtz was a ‘universal genius,’ but even a genius would find it easier to work with ‘adequate tools—intelligent men.’</a> <a class="s" id="s6-08" href="13_notes.html#n6-08">He did not make bricks—why, there was a physical impossibility in the way—as I was well aware; and if he did secretarial work for the manager, it was because ‘no sensible man rejects wantonly the confidence of his superiors.’</a> <a class="s" id="s6-09" href="13_notes.html#n6-09">Did I see it?</a> <a class="s" id="s6-10" href="13_notes.html#n6-10">I saw it.</a> <a class="s" id="s6-11" href="13_notes.html#n6-11">What more did I want?</a></p><div class="gl"><span><b>run on</b> しゃべり続ける</span><span><b>the powers</b> （背後の）力・権力者</span><span><b>wretched</b> みじめな</span><span><b>mangled</b> めちゃくちゃに壊れた</span><span><b>lean against ~</b> 〜にもたれる</span><span><b>fluently</b> すらすらと</span><span><b>get on</b> 出世する</span><span><b>conceive</b> （you conceive で）お分かりでしょう</span><span><b>gaze at ~</b> 〜を眺める</span><span><b>universal</b> 万能の</span><span><b>adequate</b> 十分な</span><span><b>tool</b> 道具</span><span><b>physical</b> 物理的な</span><span><b>be aware</b> 知っている</span><span><b>secretarial</b> 秘書の</span><span><b>sensible</b> 分別のある</span><span><b>reject</b> 拒む</span><span><b>wantonly</b> むやみに</span><span><b>confidence</b> 信頼</span><span><b>superior</b> 上役</span></div>
+<p class="t cont"><a class="s" id="s6-12" href="13_notes.html#n6-12">What I really wanted was rivets, by heaven!</a> <a class="s" id="s6-13" href="13_notes.html#n6-13">Rivets.</a> <a class="s" id="s6-14" href="13_notes.html#n6-14">To get on with the work—to stop the hole.</a> <a class="s" id="s6-15" href="13_notes.html#n6-15">Rivets I wanted.</a> <a class="s" id="s6-16" href="13_notes.html#n6-16">There were cases of them down at the coast—cases—piled up—burst—split!</a> <a class="s" id="s6-17" href="13_notes.html#n6-17">You kicked a loose rivet at every second step in that station-yard on the hillside.</a> <a class="s" id="s6-18" href="13_notes.html#n6-18">Rivets had rolled into the grove of death.</a> <a class="s" id="s6-19" href="13_notes.html#n6-19">You could fill your pockets with rivets for the trouble of stooping down—and there wasn’t one rivet to be found where it was wanted.</a> <a class="s" id="s6-20" href="13_notes.html#n6-20">We had plates that would do, but nothing to fasten them with.</a> <a class="s" id="s6-21" href="13_notes.html#n6-21">And every week the messenger, a long negro, letter-bag on shoulder and staff in hand, left our station for the coast.</a> <a class="s" id="s6-22" href="13_notes.html#n6-22">And several times a week a coast caravan came in with trade goods—ghastly glazed calico that made you shudder only to look at it, glass beads value about a penny a quart, confounded spotted cotton handkerchiefs.</a> <a class="s" id="s6-23" href="13_notes.html#n6-23">And no rivets.</a> <a class="s" id="s6-24" href="13_notes.html#n6-24">Three carriers could have brought all that was wanted to set that steamboat afloat.</a></p><div class="gl"><span><b>rivet</b> 鋲・リベット（鉄板どうしを留める金具）</span><span><b>by heaven!</b> まったく・誓って</span><span><b>get on with ~</b> 〜を進める</span><span><b>case</b> 箱</span><span><b>pile up</b> 積み上げる</span><span><b>burst</b> 破れた</span><span><b>split</b> 裂けた</span><span><b>loose</b> 転がっている・ばらばらの</span><span><b>for the trouble of ~ing</b> 〜する手間をかけるだけで</span><span><b>stoop</b> かがむ</span><span><b>plate</b> （鉄の）板</span><span><b>do</b> 間に合う・役に立つ</span><span><b>fasten</b> 留める</span><span><b>messenger</b> 使いの者</span><span><b>letter-bag</b> 郵便袋</span><span><b>staff</b> 杖</span><span><b>trade goods</b> 交易品</span><span><b>ghastly</b> ぞっとする</span><span><b>glazed</b> つや出しした</span><span><b>calico</b> キャラコ</span><span><b>shudder</b> 身ぶるいする</span><span><b>bead</b> ガラス玉・ビーズ</span><span><b>quart</b> クォート</span><span><b>confounded</b> いまいましい</span><span><b>spotted</b> 水玉模様の</span><span><b>carrier</b> 運搬人</span><span><b>set ~ afloat</b> 〜を浮かべる</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · III</div><blockquote><a class="rl" id="r6-12" href="13_notes.html#n6-12">What I really wanted was rivets, by heaven! Rivets. To get on with the work—to stop the hole. Rivets I wanted.</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s7-01" href="13_notes.html#n7-01">“He was becoming confidential now, but I fancy my unresponsive attitude must have exasperated him at last, for he judged it necessary to inform me he feared neither God nor devil, let alone any mere man.</a> <a class="s" id="s7-02" href="13_notes.html#n7-02">I said I could see that very well, but what I wanted was a certain quantity of rivets—and rivets were what really Mr. Kurtz wanted, if he had only known it.</a> <a class="s" id="s7-03" href="13_notes.html#n7-03">Now letters went to the coast every week....</a> <a class="s" id="s7-04" href="13_notes.html#n7-04">‘My dear sir,’ he cried, ‘I write from dictation.’</a> <a class="s" id="s7-05" href="13_notes.html#n7-05">I demanded rivets.</a> <a class="s" id="s7-06" href="13_notes.html#n7-06">There was a way—for an intelligent man.</a> <a class="s" id="s7-07" href="13_notes.html#n7-07">He changed his manner; became very cold, and suddenly began to talk about a hippopotamus; wondered whether sleeping on board the steamer (I stuck to my salvage night and day) I wasn’t disturbed.</a> <a class="s" id="s7-08" href="13_notes.html#n7-08">There was an old hippo that had the bad habit of getting out on the bank and roaming at night over the station grounds.</a> <a class="s" id="s7-09" href="13_notes.html#n7-09">The pilgrims used to turn out in a body and empty every rifle they could lay hands on at him.</a> <a class="s" id="s7-10" href="13_notes.html#n7-10">Some even had sat up o’ nights for him.</a> <a class="s" id="s7-11" href="13_notes.html#n7-11">All this energy was wasted, though.</a> <a class="s" id="s7-12" href="13_notes.html#n7-12">‘That animal has a charmed life,’ he said; ‘but you can say this only of brutes in this country.</a> <a class="s" id="s7-13" href="13_notes.html#n7-13">No man—you apprehend me?—no man here bears a charmed life.’</a> <a class="s" id="s7-14" href="13_notes.html#n7-14">He stood there for a moment in the moonlight with his delicate hooked nose set a little askew, and his mica eyes glittering without a wink, then, with a curt Good-night, he strode off.</a> <a class="s" id="s7-15" href="13_notes.html#n7-15">I could see he was disturbed and considerably puzzled, which made me feel more hopeful than I had been for days.</a></p><div class="gl"><span><b>confidential</b> 打ち明け話をする</span><span><b>unresponsive</b> 気のない・反応の鈍い</span><span><b>exasperate</b> いらだたせる</span><span><b>let alone ~</b> ましてや〜は</span><span><b>mere</b> ただの</span><span><b>quantity</b> 量</span><span><b>dictation</b> 口述（筆記）</span><span><b>demand</b> 要求する</span><span><b>manner</b> 態度</span><span><b>hippopotamus</b> カバ</span><span><b>stick to ~</b> 〜から離れない（過去形 stuck）</span><span><b>salvage</b> 引き揚げたもの（船）</span><span><b>disturb</b> 邪魔する</span><span><b>hippo</b> カバ（hippopotamus の略）</span><span><b>roam</b> うろつく</span><span><b>grounds</b> 敷地</span><span><b>turn out</b> 繰り出す</span><span><b>in a body</b> 総出で</span><span><b>empty a rifle at ~</b> 〜に向けて銃を撃ち尽くす</span><span><b>lay hands on ~</b> 〜を手に入れる</span><span><b>sit up</b> 寝ずに起きている</span><span><b>o’ nights</b> （古風）夜な夜な</span><span><b>waste</b> むだにする</span><span><b>have a charmed life</b> 不死身である・不思議と命拾いする</span><span><b>brute</b> 獣</span><span><b>apprehend</b> 理解する</span><span><b>delicate</b> 繊細な</span><span><b>askew</b> ゆがんで</span><span><b>mica</b> 雲母</span><span><b>wink</b> まばたき</span><span><b>curt</b> そっけない</span><span><b>stride off</b> 大股で立ち去る（過去形 strode）</span><span><b>disturbed</b> 動揺した</span><span><b>considerably</b> かなり</span><span><b>puzzled</b> 当惑した</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · V</div><blockquote><a class="rl" id="r7-12" href="13_notes.html#n7-12">‘That animal has a charmed life,’ he said; ‘but you can say this only of brutes in this country. No man—you apprehend me?—no man here bears a charmed life.’</a></blockquote></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s7-16" href="13_notes.html#n7-16">It was a great comfort to turn from that chap to my influential friend, the battered, twisted, ruined, tin-pot steamboat.</a> <a class="s" id="s7-17" href="13_notes.html#n7-17">I clambered on board.</a> <a class="s" id="s7-18" href="13_notes.html#n7-18">She rang under my feet like an empty Huntley &amp; Palmer biscuit-tin kicked along a gutter; she was nothing so solid in make, and rather less pretty in shape, but I had expended enough hard work on her to make me love her.</a> <a class="s" id="s7-19" href="13_notes.html#n7-19">No influential friend would have served me better.</a> <a class="s" id="s7-20" href="13_notes.html#n7-20">She had given me a chance to come out a bit—to find out what I could do.</a> <a class="s" id="s7-21" href="13_notes.html#n7-21">No, I don’t like work.</a> <a class="s" id="s7-22" href="13_notes.html#n7-22">I had rather laze about and think of all the fine things that can be done.</a> <a class="s" id="s7-23" href="13_notes.html#n7-23">I don’t like work—no man does—but I like what is in the work—the chance to find yourself.</a> <a class="s" id="s7-24" href="13_notes.html#n7-24">Your own reality—for yourself, not for others—what no other man can ever know.</a> <a class="s" id="s7-25" href="13_notes.html#n7-25">They can only see the mere show, and never can tell what it really means.</a></p><div class="gl"><span><b>comfort</b> 慰め</span><span><b>influential</b> 有力な</span><span><b>battered</b> 傷だらけの</span><span><b>twisted</b> ねじ曲がった</span><span><b>tin-pot</b> ブリキ製の・安っぽい</span><span><b>clamber</b> 這い上がる</span><span><b>Huntley &amp; Palmer</b> ハントリー＆パーマー（英国の有名なビスケット会社）</span><span><b>biscuit-tin</b> ビスケット缶</span><span><b>gutter</b> どぶ・側溝</span><span><b>solid</b> 頑丈な</span><span><b>make</b> 造り</span><span><b>expend</b> 費やす</span><span><b>serve</b> 役に立つ</span><span><b>had rather ~</b> むしろ〜したい（= would rather）</span><span><b>laze about</b> ぶらぶらする</span><span><b>reality</b> 現実</span><span><b>mere</b> ただの</span><span><b>show</b> 見かけ</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · VI</div><blockquote><a class="rl" id="r7-23" href="13_notes.html#n7-23">I don’t like work—no man does—but I like what is in the work—the chance to find yourself. Your own reality—for yourself, not for others—what no other man can ever know.</a></blockquote></section>
+<section class="sheet"><h2>RECITE</h2><div class="ja">暗唱の帳 ── 今回の6つ</div><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><button class="spall" type="button">▶ 通しで聞く</button></div><ol><li><span><a class="rl" id="k2-02" href="13_notes.html#n2-02">No, it is impossible; it is impossible to convey the life-sensation of any given epoch of one’s existence—that which makes its truth, its meaning—its subtle and penetrating essence. It is impossible. We live, as we dream—alone....</a><button class="sp" type="button" data-t="No, it is impossible; it is impossible to convey the life-sensation of any given epoch of one’s existence—that which makes its truth, its meaning—its subtle and penetrating essence. It is impossible. We live, as we dream—alone...." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k5-02" href="13_notes.html#n5-02">For a long time already he, sitting apart, had been no more to us than a voice. There was not a word from anybody.</a><button class="sp" type="button" data-t="For a long time already he, sitting apart, had been no more to us than a voice. There was not a word from anybody." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k6-12" href="13_notes.html#n6-12">What I really wanted was rivets, by heaven! Rivets. To get on with the work—to stop the hole. Rivets I wanted.</a><button class="sp" type="button" data-t="What I really wanted was rivets, by heaven! Rivets. To get on with the work—to stop the hole. Rivets I wanted." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k6-19" href="13_notes.html#n6-19">You could fill your pockets with rivets for the trouble of stooping down—and there wasn’t one rivet to be found where it was wanted.</a><button class="sp" type="button" data-t="You could fill your pockets with rivets for the trouble of stooping down—and there wasn’t one rivet to be found where it was wanted." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k7-12" href="13_notes.html#n7-12">‘That animal has a charmed life,’ he said; ‘but you can say this only of brutes in this country. No man—you apprehend me?—no man here bears a charmed life.’</a><button class="sp" type="button" data-t="‘That animal has a charmed life,’ he said; ‘but you can say this only of brutes in this country. No man—you apprehend me?—no man here bears a charmed life.’" aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k7-23" href="13_notes.html#n7-23">I don’t like work—no man does—but I like what is in the work—the chance to find yourself. Your own reality—for yourself, not for others—what no other man can ever know.</a><button class="sp" type="button" data-t="I don’t like work—no man does—but I like what is in the work—the chance to find yourself. Your own reality—for yourself, not for others—what no other man can ever know." aria-label="読み上げ"></button></span></li></ol></section>
+<nav class="foot ja"><div><a href="12.html">← 第12回</a><a href="index.html" style="margin-left:1.2em">目次</a><span class="src">原文：Project Gutenberg #219（公有）／訳・注：本教材の自作</span></div><div><a href="14.html">第14回 →</a></div></nav>
+<script>
+(function(){
+  var KEY='hod-pos:'+location.pathname;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a.s, a.rl'); if(!a) return;
+    try{ history.replaceState(null,'','#'+a.id); }catch(_){}
+    try{ sessionStorage.setItem(KEY,String(window.scrollY)); }catch(_){}
+  });
+  function restore(){
+    var h=location.hash.slice(1), el=h&&document.getElementById(h);
+    document.querySelectorAll('.here').forEach(function(x){x.classList.remove('here')});
+    if(el){ el.classList.add('here'); el.scrollIntoView({block:'center'}); return; }
+    try{ var y=sessionStorage.getItem(KEY); if(y) window.scrollTo(0,+y); }catch(_){}
+  }
+  window.addEventListener('pageshow',function(){ requestAnimationFrame(restore); });
+})();
+</script><script>
+(function(){
+  var T=[{"bg": "#0f1013", "ink": "#e2ded5", "sub": "#a39e94", "gl": "#948f86", "shu": "#d0634f"}, {"bg": "#1a1e28", "ink": "#e4e3dc", "sub": "#a9abb0", "gl": "#9a9ca2", "shu": "#d0634f"}], R=document.documentElement.style, turns=[].slice.call(document.querySelectorAll('.turn'));
+  function rgb(h){h=h.replace('#','');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+  function ss(e0,e1,x){var t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
+  function upd(){
+    var bg=rgb(T[0].bg), txt=T[0], vh=innerHeight;
+    turns.forEach(function(el){
+      var to=T[+el.dataset.to], rc=el.getBoundingClientRect(), t=(vh*.5-rc.top)/rc.height;
+      if(t<=0) return;
+      var k=ss(.3,.7,t), nb=rgb(to.bg);
+      bg=bg.map(function(v,i){return v+(nb[i]-v)*k});
+      if(t>.5) txt=to;
+    });
+    R.setProperty('--bg',mix(bg,bg,0));
+    ['ink','sub','gl','shu'].forEach(function(n){if(txt[n])R.setProperty('--'+n,txt[n])});
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); addEventListener('pageshow',upd); upd();
+})();
+</script><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

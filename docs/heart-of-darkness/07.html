@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 · The Grove of Death — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--shu:#a8322a;--gl:#8a7f70}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.75;transition:color .4s}
+.col{max-width:640px;margin:0 auto;padding:0 22px}
+.ja{font-family:"Shippori Mincho","Yu Mincho",serif}
+a.s{color:inherit;text-decoration:none;border-radius:2px;transition:background .2s;-webkit-tap-highlight-color:rgba(168,50,42,.15)}
+a.s:hover{background:rgba(168,50,42,.08)} .here{background:rgba(201,164,58,.28);box-shadow:0 0 0 3px rgba(201,164,58,.28)}
+p.t{margin:0 0 1.1em;text-indent:1.4em} p.t.first,p.t.cont{text-indent:0}
+p.t.first::first-letter{float:left;font-size:4.1em;line-height:.82;padding:.06em .08em 0 0;color:var(--shu)}
+.gl{font-family:"Shippori Mincho",serif;font-size:12.5px;line-height:1.7;color:var(--gl);margin:-.5em 0 2em;padding-top:.5em;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.gl b{font-family:"EB Garamond",serif;font-weight:500;font-size:14px;color:var(--ink);opacity:.8}
+.gl span{margin-right:1.1em;display:inline-block}
+.hero{position:relative;height:92vh;min-height:520px;overflow:hidden;margin-bottom:40px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12vh;text-align:center;padding:0 16px}
+.hero .no{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:16px;letter-spacing:.6em;color:var(--shu)}
+.hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,8vw,96px);letter-spacing:.06em;margin:0;line-height:1}
+.hero .sub{font-family:"Shippori Mincho",serif;font-size:14px;letter-spacing:.3em;color:var(--sub)}
+.hero .home{position:absolute;top:14px;left:16px;font:13px/1 "Shippori Mincho",serif;letter-spacing:.2em;color:#f5efe2;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.map{font-family:"Shippori Mincho",serif;font-size:15px;line-height:2;color:var(--sub);border-left:2px solid var(--shu);padding:2px 0 2px 18px;margin:0 0 56px}
+.map b{display:block;color:var(--shu);letter-spacing:.3em;font-size:12px}
+.map .how{display:block;margin-top:.6em;font-size:13px;opacity:.85}
+/* 霞：本文の地に溶ける画像 */
+.haze{margin:30px -60px 36px;position:relative}
+.haze img{display:block;width:100%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%)}
+.cr{font:11px/1.5 system-ui,sans-serif;color:var(--gl);text-align:right;margin:4px 60px 0} .cr a{color:inherit}
+/* 暗唱プレート：全幅の絵に活字 */
+.plate{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;margin:70px 0;overflow:hidden;color:#f5efe2}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(10,12,18,.55),rgba(10,12,18,.15) 70%)}
+.plate .q{position:relative;z-index:2;max-width:860px;padding:0 28px;text-align:center}
+.kick{font:12px/1 system-ui,sans-serif;letter-spacing:.5em;opacity:.8;margin-bottom:22px}
+.plate blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,4.4vw,52px);line-height:1.3;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+a.rl{color:inherit;text-decoration:none}
+.plate .cr{position:absolute;left:14px;right:14px;bottom:8px;z-index:2;color:rgba(255,255,255,.65);margin:0}
+.plate.fade>img{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+/* 活字だけの暗唱 */
+.line{text-align:center;margin:44px auto 52px;max-width:720px;padding:0 22px}
+.line .kick{color:var(--shu);opacity:1}
+.line blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(25px,3.4vw,36px);line-height:1.35}
+.line::after{content:"";display:block;width:36px;height:1px;background:var(--shu);margin:22px auto 0}
+/* 転換：ここで地の色が変わる */
+.turn{position:relative;height:100vh;margin:60px 0}
+.turn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+.turn .cr{position:absolute;right:14px;bottom:4px;margin:0;color:rgba(255,255,255,.6)}
+.pair{display:grid;grid-template-columns:.62fr 1fr;gap:18px;align-items:end;margin:34px -40px}
+.pair img{width:100%;height:auto;display:block}
+.pair .a img{filter:sepia(.25) brightness(.85);-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.pair .b img{-webkit-mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent);mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent)}
+.pair .cr{text-align:left;margin:4px 0 0}
+/* 暗唱の帳 */
+.sheet{max-width:720px;margin:90px auto 0;padding:0 22px}
+.sheet h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:30px;letter-spacing:.2em;text-align:center;margin:0}
+.sheet .ja{font-size:13px;color:var(--sub);text-align:center;margin:4px 0 30px;letter-spacing:.1em}
+.sheet ol{list-style:none;margin:0;padding:0;counter-reset:r}
+.sheet li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:6px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--gl) 30%,transparent);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:23px;line-height:1.4}
+.sheet .sptop{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin:0 0 14px}
+.sheet .mk{font-size:12.5px;text-align:center;margin:0 0 22px;letter-spacing:0}
+.sheet li .sp{vertical-align:-4px}
+.sheet li::before{content:counter(r,upper-roman);font-style:normal;font-size:14px;color:var(--shu);padding-top:.35em;letter-spacing:.1em}
+.colcard{display:block;max-width:640px;margin:70px auto 0;padding:26px 24px;border:1px solid color-mix(in srgb,var(--shu) 60%,transparent);color:var(--ink);text-decoration:none;text-align:center}
+.colcard:hover{background:color-mix(in srgb,var(--shu) 7%,transparent)}
+.colcard .kick{display:block;color:var(--shu);opacity:1;margin-bottom:12px}
+.colcard .ct{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;line-height:1.2}
+.colcard .cs{display:block;font-size:13px;color:var(--sub);margin-top:8px}
+.srcs{max-width:640px;margin:70px auto 0;padding:0 22px;font-size:13px;line-height:1.8;color:var(--sub)}
+.srcs h3{font-size:13px;letter-spacing:.2em;color:var(--shu);margin:0 0 6px}.srcs ul{margin:0 0 8px;padding-left:1.2em}.srcs a{color:inherit}
+.foot{max-width:640px;margin:80px auto 0;padding:26px 22px 90px;display:flex;justify-content:space-between;gap:12px;font-family:"Shippori Mincho",serif;font-size:14px;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.foot a{color:var(--ink);text-decoration:none} .foot .off{color:var(--gl)}
+.foot .src{display:block;font:11px/1.6 system-ui,sans-serif;color:var(--gl);margin-top:6px}
+@media (max-width:720px){body{font-size:18px}.haze,.pair{margin-left:-16px;margin-right:-16px}.col{padding:0 16px}.cr{margin-right:16px}
+ .pair{grid-template-columns:1fr 1fr;gap:10px}.pair .cr{padding:0 8px}.plate{min-height:78vh}.plate .q{padding:0 18px}.line{padding:0 16px}
+ .sheet{padding:0 16px}.colcard{margin-left:16px;margin-right:16px}.srcs{padding:0 16px}.sheet li{font-size:20px;grid-template-columns:1.9em 1fr}.foot{padding-left:16px;padding-right:16px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<style>:root{--bg:#f0ead6;--ink:#28251f;--sub:#6f6856;--gl:#807763;--shu:#a8322a;}</style>
+<header class="hero"><img src="img/dore_forest.jpg" width="1843" height="2183" alt="Inferno, Canto I（I found myself within a forest dark）"><a class="home" href="index.html">← 目次</a>
+<div class="ttl"><div class="no">PART ONE · 7</div><h1>The Grove of Death</h1><div class="sub">死の木立</div></div></header>
+<div class="col">
+<div class="map ja"><b>読む前の地図</b>鎖の列をやり過ごそうと、マーロウは坂を左へ下り、木陰へ入る。そこは、使いものにならなくなった労働者たちが「死ぬために退いた」場所だった。契約で海岸じゅうから集められ、慣れない土地と食べ物で病み、働けなくなると、這って行って休むことを「許された」人々。マーロウは、首に白い毛糸を巻いた少年のような男に、ポケットのビスケットを差し出すことしかできない。この作品でもっとも重い場面の一つ。マーロウは「暴力の悪魔」「強欲の悪魔」は知っていたが、ここで出会うのは「ぶよぶよした、見せかけだけの、目の弱い悪魔」――貪欲で無慈悲な愚かさだと言う。読むのがつらければ、地図と暗唱だけ読んで、次の回へ進んでもかまわない。<span class="how">文をタップすると、その文の対訳と語注へ。戻ると、読んでいた文に戻ります。</span></div>
+<p class="t first"><a class="s" id="s1-01" href="07_notes.html#n1-01">“Instead of going up, I turned and descended to the left.</a> <a class="s" id="s1-02" href="07_notes.html#n1-02">My idea was to let that chain-gang get out of sight before I climbed the hill.</a> <a class="s" id="s1-03" href="07_notes.html#n1-03">You know I am not particularly tender; I’ve had to strike and to fend off.</a> <a class="s" id="s1-04" href="07_notes.html#n1-04">I’ve had to resist and to attack sometimes—that’s only one way of resisting—without counting the exact cost, according to the demands of such sort of life as I had blundered into.</a> <a class="s" id="s1-05" href="07_notes.html#n1-05">I’ve seen the devil of violence, and the devil of greed, and the devil of hot desire; but, by all the stars! these were strong, lusty, red-eyed devils, that swayed and drove men—men, I tell you.</a></p><div class="gl"><span><b>descend</b> 下りる</span><span><b>chain-gang</b> 鎖でつながれた囚人の列</span><span><b>get out of sight</b> 見えなくなる</span><span><b>tender</b> 心のやさしい</span><span><b>strike</b> 殴る・打つ</span><span><b>fend off</b> （攻撃を）かわす・身を守る</span><span><b>resist</b> 抵抗する</span><span><b>count</b> 勘定に入れる</span><span><b>demand</b> 求め・要求</span><span><b>blunder into ~</b> うっかり〜に入りこむ</span><span><b>greed</b> 強欲</span><span><b>by all the stars!</b> 誓って・まったく！</span><span><b>lusty</b> たくましい・精力的な</span><span><b>sway</b> 揺さぶる・支配する</span><span><b>drive</b> 駆り立てる（過去形 drove）</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · I</div><blockquote><a class="rl" id="r1-05" href="07_notes.html#n1-05">I’ve seen the devil of violence, and the devil of greed, and the devil of hot desire.</a></blockquote></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s1-06" href="07_notes.html#n1-06">But as I stood on this hillside, I foresaw that in the blinding sunshine of that land I would become acquainted with a flabby, pretending, weak-eyed devil of a rapacious and pitiless folly.</a> <a class="s" id="s1-07" href="07_notes.html#n1-07">How insidious he could be, too, I was only to find out several months later and a thousand miles farther.</a> <a class="s" id="s1-08" href="07_notes.html#n1-08">For a moment I stood appalled, as though by a warning.</a> <a class="s" id="s1-09" href="07_notes.html#n1-09">Finally I descended the hill, obliquely, towards the trees I had seen.</a></p><div class="gl"><span><b>foresee</b> 予感する（過去形 foresaw）</span><span><b>become acquainted with ~</b> 〜と知り合いになる</span><span><b>flabby</b> ぶよぶよした・締まりのない</span><span><b>pretending</b> 見せかけの</span><span><b>rapacious</b> 貪欲な</span><span><b>pitiless</b> 無慈悲な</span><span><b>folly</b> 愚かさ</span><span><b>insidious</b> 陰険な・じわじわ害をなす</span><span><b>appalled</b> ぞっとした</span><span><b>obliquely</b> 斜めに</span></div>
+<p class="t"><a class="s" id="s2-01" href="07_notes.html#n2-01">“I avoided a vast artificial hole somebody had been digging on the slope, the purpose of which I found it impossible to divine.</a> <a class="s" id="s2-02" href="07_notes.html#n2-02">It wasn’t a quarry or a sandpit, anyhow.</a> <a class="s" id="s2-03" href="07_notes.html#n2-03">It was just a hole.</a> <a class="s" id="s2-04" href="07_notes.html#n2-04">It might have been connected with the philanthropic desire of giving the criminals something to do.</a> <a class="s" id="s2-05" href="07_notes.html#n2-05">I don’t know.</a> <a class="s" id="s2-06" href="07_notes.html#n2-06">Then I nearly fell into a very narrow ravine, almost no more than a scar in the hillside.</a> <a class="s" id="s2-07" href="07_notes.html#n2-07">I discovered that a lot of imported drainage-pipes for the settlement had been tumbled in there.</a> <a class="s" id="s2-08" href="07_notes.html#n2-08">There wasn’t one that was not broken.</a> <a class="s" id="s2-09" href="07_notes.html#n2-09">It was a wanton smash-up.</a> <a class="s" id="s2-10" href="07_notes.html#n2-10">At last I got under the trees.</a></p><div class="gl"><span><b>artificial</b> 人工の</span><span><b>divine</b> （動詞）見抜く・推測する</span><span><b>quarry</b> 石切り場</span><span><b>sandpit</b> 砂取り場</span><span><b>anyhow</b> とにかく</span><span><b>philanthropic</b> 慈善の・博愛の</span><span><b>ravine</b> （小さな）谷間・峡谷</span><span><b>scar</b> 傷あと</span><span><b>imported</b> 輸入された</span><span><b>drainage-pipe</b> 排水管</span><span><b>settlement</b> 居留地</span><span><b>tumble</b> 転げ落とす</span><span><b>wanton</b> でたらめな・理由のない</span><span><b>smash-up</b> 壊しっぷり・大破</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · II</div><blockquote><a class="rl" id="r2-02" href="07_notes.html#n2-02">It wasn’t a quarry or a sandpit, anyhow. It was just a hole.</a></blockquote></section>
+<section class="turn" data-to="1"><img src="img/dore_canto3.jpg" width="960" height="681" alt="Inferno, Canto III（All hope abandon, ye who enter here）" loading="lazy"><p class="cr">Gustave Doré, <i>Inferno, Canto III（All hope abandon, ye who enter here）</i>, 1861／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Inferno%20Canto%203%20line%209.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s2-11" href="07_notes.html#n2-11">My purpose was to stroll into the shade for a moment; but no sooner within than it seemed to me I had stepped into the gloomy circle of some Inferno.</a> <a class="s" id="s2-12" href="07_notes.html#n2-12">The rapids were near, and an uninterrupted, uniform, headlong, rushing noise filled the mournful stillness of the grove, where not a breath stirred, not a leaf moved, with a mysterious sound—as though the tearing pace of the launched earth had suddenly become audible.</a></p><div class="gl"><span><b>stroll</b> ぶらつく</span><span><b>no sooner ~ than …</b> 〜するとすぐに…</span><span><b>gloomy</b> 陰気な</span><span><b>Inferno</b> 地獄（ダンテ『神曲』地獄篇。地獄は何層もの「圏 circle」に分かれる）</span><span><b>uninterrupted</b> 途切れない</span><span><b>headlong</b> まっしぐらの</span><span><b>mournful</b> 悲しげな</span><span><b>grove</b> 木立</span><span><b>stir</b> そよぐ・動く</span><span><b>tearing</b> 猛烈な</span><span><b>launch</b> 放つ・発射する</span><span><b>audible</b> 聞こえる</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · III</div><blockquote><a class="rl" id="r2-11" href="07_notes.html#n2-11">It seemed to me I had stepped into the gloomy circle of some Inferno.</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s3-01" href="07_notes.html#n3-01">“Black shapes crouched, lay, sat between the trees leaning against the trunks, clinging to the earth, half coming out, half effaced within the dim light, in all the attitudes of pain, abandonment, and despair.</a> <a class="s" id="s3-02" href="07_notes.html#n3-02">Another mine on the cliff went off, followed by a slight shudder of the soil under my feet.</a> <a class="s" id="s3-03" href="07_notes.html#n3-03">The work was going on.</a> <a class="s" id="s3-04" href="07_notes.html#n3-04">The work!</a> <a class="s" id="s3-05" href="07_notes.html#n3-05">And this was the place where some of the helpers had withdrawn to die.</a></p><div class="gl"><span><b>crouch</b> うずくまる</span><span><b>trunk</b> （木の）幹</span><span><b>cling to ~</b> 〜にしがみつく</span><span><b>efface</b> 消す</span><span><b>dim</b> ほの暗い</span><span><b>attitude</b> 姿勢</span><span><b>abandonment</b> 見捨てられること</span><span><b>mine</b> 爆薬・地雷</span><span><b>go off</b> 爆発する</span><span><b>shudder</b> 震え</span><span><b>soil</b> 土</span><span><b>withdraw</b> 退く（過去分詞 withdrawn）</span></div>
+<p class="t"><a class="s" id="s4-01" href="07_notes.html#n4-01">“They were dying slowly—it was very clear.</a> <a class="s" id="s4-02" href="07_notes.html#n4-02">They were not enemies, they were not criminals, they were nothing earthly now—nothing but black shadows of disease and starvation, lying confusedly in the greenish gloom.</a> <a class="s" id="s4-03" href="07_notes.html#n4-03">Brought from all the recesses of the coast in all the legality of time contracts, lost in uncongenial surroundings, fed on unfamiliar food, they sickened, became inefficient, and were then allowed to crawl away and rest.</a> <a class="s" id="s4-04" href="07_notes.html#n4-04">These moribund shapes were free as air—and nearly as thin.</a></p><div class="gl"><span><b>earthly</b> この世の</span><span><b>disease</b> 病気</span><span><b>starvation</b> 飢え</span><span><b>confusedly</b> ばらばらに・乱雑に</span><span><b>gloom</b> 薄暗がり</span><span><b>recess</b> 奥まった所・奥地</span><span><b>legality</b> 合法性</span><span><b>time contract</b> 期限つきの契約</span><span><b>uncongenial</b> なじめない・性に合わない</span><span><b>surroundings</b> 環境</span><span><b>sicken</b> 病気になる</span><span><b>inefficient</b> 役に立たない・能率の悪い</span><span><b>crawl</b> 這う</span><span><b>moribund</b> 死にかけた</span></div>
+</div>
+<section class="plate fade"><img src="img/bocklin_isle.jpg" width="1920" height="1369" alt="Isle of the Dead (first version)" loading="lazy"><div class="q"><div class="kick">RECITE · V</div><blockquote><a class="rl" id="r4-04" href="07_notes.html#n4-04">These moribund shapes were free as air—and nearly as thin.</a></blockquote></div><p class="cr">Arnold Böcklin, <i>Isle of the Dead (first version)</i>, 1880／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Arnold%20B%C3%B6cklin%20-%20Die%20Toteninsel%20I%20%28Basel%2C%20Kunstmuseum%29.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s4-05" href="07_notes.html#n4-05">I began to distinguish the gleam of the eyes under the trees.</a> <a class="s" id="s4-06" href="07_notes.html#n4-06">Then, glancing down, I saw a face near my hand.</a> <a class="s" id="s4-07" href="07_notes.html#n4-07">The black bones reclined at full length with one shoulder against the tree, and slowly the eyelids rose and the sunken eyes looked up at me, enormous and vacant, a kind of blind, white flicker in the depths of the orbs, which died out slowly.</a> <a class="s" id="s4-08" href="07_notes.html#n4-08">The man seemed young—almost a boy—but you know with them it’s hard to tell.</a> <a class="s" id="s4-09" href="07_notes.html#n4-09">I found nothing else to do but to offer him one of my good Swede’s ship’s biscuits I had in my pocket.</a> <a class="s" id="s4-10" href="07_notes.html#n4-10">The fingers closed slowly on it and held—there was no other movement and no other glance.</a> <a class="s" id="s4-11" href="07_notes.html#n4-11">He had tied a bit of white worsted round his neck—Why?</a> <a class="s" id="s4-12" href="07_notes.html#n4-12">Where did he get it?</a> <a class="s" id="s4-13" href="07_notes.html#n4-13">Was it a badge—an ornament—a charm—a propitiatory act?</a> <a class="s" id="s4-14" href="07_notes.html#n4-14">Was there any idea at all connected with it?</a> <a class="s" id="s4-15" href="07_notes.html#n4-15">It looked startling round his black neck, this bit of white thread from beyond the seas.</a></p><div class="gl"><span><b>distinguish</b> 見分ける</span><span><b>gleam</b> かすかな光</span><span><b>recline</b> 横たわる・もたれる</span><span><b>at full length</b> 体をいっぱいに伸ばして</span><span><b>eyelid</b> まぶた</span><span><b>sunken</b> 落ちくぼんだ</span><span><b>vacant</b> うつろな</span><span><b>flicker</b> ゆらめき</span><span><b>orb</b> 眼球（文語）</span><span><b>die out</b> 消えていく</span><span><b>biscuit</b> ビスケット・堅パン（船の保存食）</span><span><b>worsted</b> 毛糸・梳毛糸</span><span><b>badge</b> 記章</span><span><b>ornament</b> 飾り</span><span><b>charm</b> お守り</span><span><b>propitiatory</b> （神や霊を）なだめるための</span><span><b>startling</b> はっとさせる</span><span><b>thread</b> 糸</span></div>
+<p class="t"><a class="s" id="s5-01" href="07_notes.html#n5-01">“Near the same tree two more bundles of acute angles sat with their legs drawn up.</a> <a class="s" id="s5-02" href="07_notes.html#n5-02">One, with his chin propped on his knees, stared at nothing, in an intolerable and appalling manner: his brother phantom rested its forehead, as if overcome with a great weariness; and all about others were scattered in every pose of contorted collapse, as in some picture of a massacre or a pestilence.</a> <a class="s" id="s5-03" href="07_notes.html#n5-03">While I stood horror-struck, one of these creatures rose to his hands and knees, and went off on all-fours towards the river to drink.</a> <a class="s" id="s5-04" href="07_notes.html#n5-04">He lapped out of his hand, then sat up in the sunlight, crossing his shins in front of him, and after a time let his woolly head fall on his breastbone.</a></p><div class="gl"><span><b>bundle</b> 包み・束</span><span><b>acute angle</b> 鋭角</span><span><b>draw up</b> 引き寄せる</span><span><b>prop</b> 支える・載せる</span><span><b>intolerable</b> 耐えがたい</span><span><b>appalling</b> ぞっとする</span><span><b>phantom</b> 亡霊</span><span><b>overcome</b> 打ちひしがれた</span><span><b>weariness</b> 疲れ</span><span><b>scatter</b> 散らばらせる</span><span><b>contorted</b> ねじれた</span><span><b>collapse</b> 崩れ落ちること</span><span><b>massacre</b> 虐殺</span><span><b>pestilence</b> 疫病</span><span><b>horror-struck</b> 恐怖に打たれた</span><span><b>on all-fours</b> 四つんばいで</span><span><b>lap</b> （舌で）なめて飲む</span><span><b>shin</b> すね</span><span><b>woolly</b> 縮れた・羊毛のような</span><span><b>breastbone</b> 胸骨</span></div>
+</div>
+<section class="sheet"><h2>RECITE</h2><div class="ja">暗唱の帳 ── 今回の5つ</div><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><button class="spall" type="button">▶ 通しで聞く</button></div><ol><li><span><a class="rl" id="k1-05" href="07_notes.html#n1-05">I’ve seen the devil of violence, and the devil of greed, and the devil of hot desire.</a><button class="sp" type="button" data-t="I’ve seen the devil of violence, and the devil of greed, and the devil of hot desire." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k2-02" href="07_notes.html#n2-02">It wasn’t a quarry or a sandpit, anyhow. It was just a hole.</a><button class="sp" type="button" data-t="It wasn’t a quarry or a sandpit, anyhow. It was just a hole." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k2-11" href="07_notes.html#n2-11">It seemed to me I had stepped into the gloomy circle of some Inferno.</a><button class="sp" type="button" data-t="It seemed to me I had stepped into the gloomy circle of some Inferno." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k3-02" href="07_notes.html#n3-02">Another mine on the cliff went off, followed by a slight shudder of the soil under my feet. The work was going on. The work!</a><button class="sp" type="button" data-t="Another mine on the cliff went off, followed by a slight shudder of the soil under my feet. The work was going on. The work!" aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k4-04" href="07_notes.html#n4-04">These moribund shapes were free as air—and nearly as thin.</a><button class="sp" type="button" data-t="These moribund shapes were free as air—and nearly as thin." aria-label="読み上げ"></button></span></li></ol></section>
+<nav class="foot ja"><div><a href="06.html">← 第6回</a><a href="index.html" style="margin-left:1.2em">目次</a><span class="src">原文：Project Gutenberg #219（公有）／訳・注：本教材の自作</span></div><div><a href="08.html">第8回 →</a></div></nav>
+<script>
+(function(){
+  var KEY='hod-pos:'+location.pathname;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a.s, a.rl'); if(!a) return;
+    try{ history.replaceState(null,'','#'+a.id); }catch(_){}
+    try{ sessionStorage.setItem(KEY,String(window.scrollY)); }catch(_){}
+  });
+  function restore(){
+    var h=location.hash.slice(1), el=h&&document.getElementById(h);
+    document.querySelectorAll('.here').forEach(function(x){x.classList.remove('here')});
+    if(el){ el.classList.add('here'); el.scrollIntoView({block:'center'}); return; }
+    try{ var y=sessionStorage.getItem(KEY); if(y) window.scrollTo(0,+y); }catch(_){}
+  }
+  window.addEventListener('pageshow',function(){ requestAnimationFrame(restore); });
+})();
+</script><script>
+(function(){
+  var T=[{"bg": "#f0ead6", "ink": "#28251f", "sub": "#6f6856", "gl": "#807763", "shu": "#a8322a"}, {"bg": "#18201b", "ink": "#dfe2d8", "sub": "#a4ab9d", "gl": "#959c8e", "shu": "#cf6a52"}], R=document.documentElement.style, turns=[].slice.call(document.querySelectorAll('.turn'));
+  function rgb(h){h=h.replace('#','');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+  function ss(e0,e1,x){var t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
+  function upd(){
+    var bg=rgb(T[0].bg), txt=T[0], vh=innerHeight;
+    turns.forEach(function(el){
+      var to=T[+el.dataset.to], rc=el.getBoundingClientRect(), t=(vh*.5-rc.top)/rc.height;
+      if(t<=0) return;
+      var k=ss(.3,.7,t), nb=rgb(to.bg);
+      bg=bg.map(function(v,i){return v+(nb[i]-v)*k});
+      if(t>.5) txt=to;
+    });
+    R.setProperty('--bg',mix(bg,bg,0));
+    ['ink','sub','gl','shu'].forEach(function(n){if(txt[n])R.setProperty('--'+n,txt[n])});
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); addEventListener('pageshow',upd); upd();
+})();
+</script><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 · The Manager — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3ecdd;--ink:#2a2622;--sub:#7a7062;--shu:#a8322a;--gl:#8a7f70}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.75;transition:color .4s}
+.col{max-width:640px;margin:0 auto;padding:0 22px}
+.ja{font-family:"Shippori Mincho","Yu Mincho",serif}
+a.s{color:inherit;text-decoration:none;border-radius:2px;transition:background .2s;-webkit-tap-highlight-color:rgba(168,50,42,.15)}
+a.s:hover{background:rgba(168,50,42,.08)} .here{background:rgba(201,164,58,.28);box-shadow:0 0 0 3px rgba(201,164,58,.28)}
+p.t{margin:0 0 1.1em;text-indent:1.4em} p.t.first,p.t.cont{text-indent:0}
+p.t.first::first-letter{float:left;font-size:4.1em;line-height:.82;padding:.06em .08em 0 0;color:var(--shu)}
+.gl{font-family:"Shippori Mincho",serif;font-size:12.5px;line-height:1.7;color:var(--gl);margin:-.5em 0 2em;padding-top:.5em;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.gl b{font-family:"EB Garamond",serif;font-weight:500;font-size:14px;color:var(--ink);opacity:.8}
+.gl span{margin-right:1.1em;display:inline-block}
+.hero{position:relative;height:92vh;min-height:520px;overflow:hidden;margin-bottom:40px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12vh;text-align:center;padding:0 16px}
+.hero .no{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:16px;letter-spacing:.6em;color:var(--shu)}
+.hero h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,8vw,96px);letter-spacing:.06em;margin:0;line-height:1}
+.hero .sub{font-family:"Shippori Mincho",serif;font-size:14px;letter-spacing:.3em;color:var(--sub)}
+.hero .home{position:absolute;top:14px;left:16px;font:13px/1 "Shippori Mincho",serif;letter-spacing:.2em;color:#f5efe2;text-decoration:none;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.map{font-family:"Shippori Mincho",serif;font-size:15px;line-height:2;color:var(--sub);border-left:2px solid var(--shu);padding:2px 0 2px 18px;margin:0 0 56px}
+.map b{display:block;color:var(--shu);letter-spacing:.3em;font-size:12px}
+.map .how{display:block;margin-top:.6em;font-size:13px;opacity:.85}
+/* 霞：本文の地に溶ける画像 */
+.haze{margin:30px -60px 36px;position:relative}
+.haze img{display:block;width:100%;height:auto;-webkit-mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 65% at 50% 50%,#000 45%,transparent 100%)}
+.cr{font:11px/1.5 system-ui,sans-serif;color:var(--gl);text-align:right;margin:4px 60px 0} .cr a{color:inherit}
+/* 暗唱プレート：全幅の絵に活字 */
+.plate{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;margin:70px 0;overflow:hidden;color:#f5efe2}
+.plate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(10,12,18,.55),rgba(10,12,18,.15) 70%)}
+.plate .q{position:relative;z-index:2;max-width:860px;padding:0 28px;text-align:center}
+.kick{font:12px/1 system-ui,sans-serif;letter-spacing:.5em;opacity:.8;margin-bottom:22px}
+.plate blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,4.4vw,52px);line-height:1.3;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+a.rl{color:inherit;text-decoration:none}
+.plate .cr{position:absolute;left:14px;right:14px;bottom:8px;z-index:2;color:rgba(255,255,255,.65);margin:0}
+.plate.fade>img{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+/* 活字だけの暗唱 */
+.line{text-align:center;margin:44px auto 52px;max-width:720px;padding:0 22px}
+.line .kick{color:var(--shu);opacity:1}
+.line blockquote{margin:0;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(25px,3.4vw,36px);line-height:1.35}
+.line::after{content:"";display:block;width:36px;height:1px;background:var(--shu);margin:22px auto 0}
+/* 転換：ここで地の色が変わる */
+.turn{position:relative;height:100vh;margin:60px 0}
+.turn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+.turn .cr{position:absolute;right:14px;bottom:4px;margin:0;color:rgba(255,255,255,.6)}
+.pair{display:grid;grid-template-columns:.62fr 1fr;gap:18px;align-items:end;margin:34px -40px}
+.pair img{width:100%;height:auto;display:block}
+.pair .a img{filter:sepia(.25) brightness(.85);-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
+.pair .b img{-webkit-mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent);mask-image:radial-gradient(ellipse 75% 70%,#000 50%,transparent)}
+.pair .cr{text-align:left;margin:4px 0 0}
+/* 暗唱の帳 */
+.sheet{max-width:720px;margin:90px auto 0;padding:0 22px}
+.sheet h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:30px;letter-spacing:.2em;text-align:center;margin:0}
+.sheet .ja{font-size:13px;color:var(--sub);text-align:center;margin:4px 0 30px;letter-spacing:.1em}
+.sheet ol{list-style:none;margin:0;padding:0;counter-reset:r}
+.sheet li{counter-increment:r;display:grid;grid-template-columns:2.2em 1fr;gap:6px;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--gl) 30%,transparent);font-family:"Cormorant Garamond",serif;font-style:italic;font-size:23px;line-height:1.4}
+.sheet .sptop{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 16px;margin:0 0 14px}
+.sheet .mk{font-size:12.5px;text-align:center;margin:0 0 22px;letter-spacing:0}
+.sheet li .sp{vertical-align:-4px}
+.sheet li::before{content:counter(r,upper-roman);font-style:normal;font-size:14px;color:var(--shu);padding-top:.35em;letter-spacing:.1em}
+.colcard{display:block;max-width:640px;margin:70px auto 0;padding:26px 24px;border:1px solid color-mix(in srgb,var(--shu) 60%,transparent);color:var(--ink);text-decoration:none;text-align:center}
+.colcard:hover{background:color-mix(in srgb,var(--shu) 7%,transparent)}
+.colcard .kick{display:block;color:var(--shu);opacity:1;margin-bottom:12px}
+.colcard .ct{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;line-height:1.2}
+.colcard .cs{display:block;font-size:13px;color:var(--sub);margin-top:8px}
+.srcs{max-width:640px;margin:70px auto 0;padding:0 22px;font-size:13px;line-height:1.8;color:var(--sub)}
+.srcs h3{font-size:13px;letter-spacing:.2em;color:var(--shu);margin:0 0 6px}.srcs ul{margin:0 0 8px;padding-left:1.2em}.srcs a{color:inherit}
+.foot{max-width:640px;margin:80px auto 0;padding:26px 22px 90px;display:flex;justify-content:space-between;gap:12px;font-family:"Shippori Mincho",serif;font-size:14px;border-top:1px solid color-mix(in srgb,var(--gl) 35%,transparent)}
+.foot a{color:var(--ink);text-decoration:none} .foot .off{color:var(--gl)}
+.foot .src{display:block;font:11px/1.6 system-ui,sans-serif;color:var(--gl);margin-top:6px}
+@media (max-width:720px){body{font-size:18px}.haze,.pair{margin-left:-16px;margin-right:-16px}.col{padding:0 16px}.cr{margin-right:16px}
+ .pair{grid-template-columns:1fr 1fr;gap:10px}.pair .cr{padding:0 8px}.plate{min-height:78vh}.plate .q{padding:0 18px}.line{padding:0 16px}
+ .sheet{padding:0 16px}.colcard{margin-left:16px;margin-right:16px}.srcs{padding:0 16px}.sheet li{font-size:20px;grid-template-columns:1.9em 1fr}.foot{padding-left:16px;padding-right:16px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<style>:root{--bg:#e7e6df;--ink:#28292a;--sub:#6b6d6a;--gl:#7b7d79;--shu:#a03026;}</style>
+<header class="hero"><img src="img/rousseau_jungle.jpg" width="1920" height="2086" alt="The Equatorial Jungle"><a class="home" href="index.html">← 目次</a>
+<div class="ttl"><div class="no">PART ONE · 10</div><h1>The Manager</h1><div class="sub">支配人</div></div></header>
+<div class="col">
+<div class="map ja"><b>読む前の地図</b>中央出張所の支配人は、顔も声も物腰も、どこまでも平凡な男だ。才能も学もない。ただ一度も病気にならない。人に愛も恐れも尊敬も起こさず、ただ「落ち着かなさ」を起こさせる。唇には、笑みとも言えない笑みが浮かぶ。彼は「事態は非常に重大だ」と言い、奥地のクルツが病気らしいと口にする。汽船の修理には「3か月」と見積もる。あとでマーロウは、その見積もりがおそろしく正確だったことに気づく。最後は出張所の光景。長い杖を持ってうろつく白人たちが「象牙」という言葉を祈るようにささやき、そのまわりで、沈黙した原野が、この侵入が過ぎ去るのを辛抱強く待っている。読みどころは、「何も持たない男」の不気味さを描く人物描写の技。<span class="how">文をタップすると、その文の対訳と語注へ。戻ると、読んでいた文に戻ります。</span></div>
+<p class="t first"><a class="s" id="s1-01" href="10_notes.html#n1-01">“My first interview with the manager was curious.</a> <a class="s" id="s1-02" href="10_notes.html#n1-02">He did not ask me to sit down after my twenty-mile walk that morning.</a> <a class="s" id="s1-03" href="10_notes.html#n1-03">He was commonplace in complexion, in features, in manners, and in voice.</a> <a class="s" id="s1-04" href="10_notes.html#n1-04">He was of middle size and of ordinary build.</a> <a class="s" id="s1-05" href="10_notes.html#n1-05">His eyes, of the usual blue, were perhaps remarkably cold, and he certainly could make his glance fall on one as trenchant and heavy as an axe.</a> <a class="s" id="s1-06" href="10_notes.html#n1-06">But even at these times the rest of his person seemed to disclaim the intention.</a> <a class="s" id="s1-07" href="10_notes.html#n1-07">Otherwise there was only an indefinable, faint expression of his lips, something stealthy—a smile—not a smile—I remember it, but I can’t explain.</a> <a class="s" id="s1-08" href="10_notes.html#n1-08">It was unconscious, this smile was, though just after he had said something it got intensified for an instant.</a> <a class="s" id="s1-09" href="10_notes.html#n1-09">It came at the end of his speeches like a seal applied on the words to make the meaning of the commonest phrase appear absolutely inscrutable.</a></p><div class="gl"><span><b>interview</b> 面会</span><span><b>curious</b> 奇妙な</span><span><b>commonplace</b> 平凡な</span><span><b>complexion</b> 顔色</span><span><b>features</b> 目鼻立ち</span><span><b>manners</b> 物腰</span><span><b>build</b> 体格</span><span><b>remarkably</b> きわだって</span><span><b>trenchant</b> 鋭い・痛烈な</span><span><b>axe</b> 斧（米 ax）</span><span><b>person</b> （ここでは）体・身なり</span><span><b>disclaim</b> 否認する・打ち消す</span><span><b>intention</b> 意図</span><span><b>indefinable</b> 何とも言いようのない</span><span><b>stealthy</b> こっそりした</span><span><b>unconscious</b> 無意識の</span><span><b>intensify</b> 強める</span><span><b>seal</b> 封印</span><span><b>apply</b> （印などを）押す</span><span><b>inscrutable</b> 測り知れない・不可解な</span></div>
+<p class="t cont"><a class="s" id="s1-10" href="10_notes.html#n1-10">He was a common trader, from his youth up employed in these parts—nothing more.</a> <a class="s" id="s1-11" href="10_notes.html#n1-11">He was obeyed, yet he inspired neither love nor fear, nor even respect.</a> <a class="s" id="s1-12" href="10_notes.html#n1-12">He inspired uneasiness.</a> <a class="s" id="s1-13" href="10_notes.html#n1-13">That was it!</a> <a class="s" id="s1-14" href="10_notes.html#n1-14">Uneasiness.</a> <a class="s" id="s1-15" href="10_notes.html#n1-15">Not a definite mistrust—just uneasiness—nothing more.</a> <a class="s" id="s1-16" href="10_notes.html#n1-16">You have no idea how effective such a... a... faculty can be.</a></p><div class="gl"><span><b>from one’s youth up</b> 若いころから</span><span><b>in these parts</b> このあたりで</span><span><b>obey</b> 従う</span><span><b>inspire</b> （感情を）起こさせる</span><span><b>uneasiness</b> 落ち着かなさ・不安</span><span><b>definite</b> はっきりした</span><span><b>mistrust</b> 不信</span><span><b>effective</b> 効き目のある</span><span><b>faculty</b> 能力</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · I</div><blockquote><a class="rl" id="r1-11" href="10_notes.html#n1-11">He was obeyed, yet he inspired neither love nor fear, nor even respect. He inspired uneasiness. That was it! Uneasiness.</a></blockquote></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s1-17" href="10_notes.html#n1-17">He had no genius for organizing, for initiative, or for order even.</a> <a class="s" id="s1-18" href="10_notes.html#n1-18">That was evident in such things as the deplorable state of the station.</a> <a class="s" id="s1-19" href="10_notes.html#n1-19">He had no learning, and no intelligence.</a> <a class="s" id="s1-20" href="10_notes.html#n1-20">His position had come to him—why?</a> <a class="s" id="s1-21" href="10_notes.html#n1-21">Perhaps because he was never ill...</a> <a class="s" id="s1-22" href="10_notes.html#n1-22">He had served three terms of three years out there...</a> <a class="s" id="s1-23" href="10_notes.html#n1-23">Because triumphant health in the general rout of constitutions is a kind of power in itself.</a></p><div class="gl"><span><b>genius</b> 才能</span><span><b>initiative</b> 主導・自分から始める力</span><span><b>evident</b> 明らかな</span><span><b>deplorable</b> 嘆かわしい</span><span><b>learning</b> 学問・学識</span><span><b>term</b> 任期</span><span><b>triumphant</b> 勝ち誇った</span><span><b>rout</b> 総崩れ・敗走</span><span><b>constitution</b> 体質・体力</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · II</div><blockquote><a class="rl" id="r1-23" href="10_notes.html#n1-23">Because triumphant health in the general rout of constitutions is a kind of power in itself.</a></blockquote></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s1-24" href="10_notes.html#n1-24">When he went home on leave he rioted on a large scale—pompously.</a> <a class="s" id="s1-25" href="10_notes.html#n1-25">Jack ashore—with a difference—in externals only.</a> <a class="s" id="s1-26" href="10_notes.html#n1-26">This one could gather from his casual talk.</a> <a class="s" id="s1-27" href="10_notes.html#n1-27">He originated nothing, he could keep the routine going—that’s all.</a> <a class="s" id="s1-28" href="10_notes.html#n1-28">But he was great.</a> <a class="s" id="s1-29" href="10_notes.html#n1-29">He was great by this little thing that it was impossible to tell what could control such a man.</a> <a class="s" id="s1-30" href="10_notes.html#n1-30">He never gave that secret away.</a> <a class="s" id="s1-31" href="10_notes.html#n1-31">Perhaps there was nothing within him.</a> <a class="s" id="s1-32" href="10_notes.html#n1-32">Such a suspicion made one pause—for out there there were no external checks.</a></p><div class="gl"><span><b>on leave</b> 休暇で</span><span><b>riot</b> 羽目をはずす・浮かれ騒ぐ</span><span><b>pompously</b> 仰々しく</span><span><b>Jack ashore</b> 陸に上がった水夫（給料を使って騒ぐ船乗りの典型）</span><span><b>externals</b> 外見・見かけ</span><span><b>casual</b> 何気ない</span><span><b>originate</b> 生み出す・始める</span><span><b>routine</b> 決まりごと</span><span><b>control</b> 抑える・制御する</span><span><b>give away</b> （秘密を）明かす</span><span><b>suspicion</b> 疑い</span><span><b>pause</b> 立ち止まる・ためらう</span><span><b>check</b> 歯止め</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · III</div><blockquote><a class="rl" id="r1-29" href="10_notes.html#n1-29">He was great by this little thing that it was impossible to tell what could control such a man. He never gave that secret away. Perhaps there was nothing within him.</a></blockquote></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s1-33" href="10_notes.html#n1-33">Once when various tropical diseases had laid low almost every ‘agent’ in the station, he was heard to say, ‘Men who come out here should have no entrails.’</a> <a class="s" id="s1-34" href="10_notes.html#n1-34">He sealed the utterance with that smile of his, as though it had been a door opening into a darkness he had in his keeping.</a> <a class="s" id="s1-35" href="10_notes.html#n1-35">You fancied you had seen things—but the seal was on.</a> <a class="s" id="s1-36" href="10_notes.html#n1-36">When annoyed at meal-times by the constant quarrels of the white men about precedence, he ordered an immense round table to be made, for which a special house had to be built.</a> <a class="s" id="s1-37" href="10_notes.html#n1-37">This was the station’s mess-room.</a> <a class="s" id="s1-38" href="10_notes.html#n1-38">Where he sat was the first place—the rest were nowhere.</a> <a class="s" id="s1-39" href="10_notes.html#n1-39">One felt this to be his unalterable conviction.</a> <a class="s" id="s1-40" href="10_notes.html#n1-40">He was neither civil nor uncivil.</a> <a class="s" id="s1-41" href="10_notes.html#n1-41">He was quiet.</a> <a class="s" id="s1-42" href="10_notes.html#n1-42">He allowed his ‘boy’—an overfed young negro from the coast—to treat the white men, under his very eyes, with provoking insolence.</a></p><div class="gl"><span><b>lay low</b> 倒す・寝こませる</span><span><b>entrails</b> はらわた・内臓</span><span><b>utterance</b> 発言</span><span><b>in one’s keeping</b> 預かって・管理して</span><span><b>fancy</b> 思いこむ</span><span><b>quarrel</b> 口論</span><span><b>precedence</b> （席の）上下・優先順位</span><span><b>immense</b> 巨大な</span><span><b>mess-room</b> （船や軍の）食堂</span><span><b>unalterable</b> 揺るがない</span><span><b>conviction</b> 信念</span><span><b>civil</b> 礼儀正しい</span><span><b>overfed</b> 太りすぎの・食べすぎの</span><span><b>under one’s very eyes</b> まさに〜の目の前で</span><span><b>provoking</b> しゃくにさわる</span><span><b>insolence</b> 横柄さ</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · IV</div><blockquote><a class="rl" id="r1-33" href="10_notes.html#n1-33">Once when various tropical diseases had laid low almost every ‘agent’ in the station, he was heard to say, ‘Men who come out here should have no entrails.’</a></blockquote></section>
+<div class="col">
+<p class="t"><a class="s" id="s2-01" href="10_notes.html#n2-01">“He began to speak as soon as he saw me.</a> <a class="s" id="s2-02" href="10_notes.html#n2-02">I had been very long on the road.</a> <a class="s" id="s2-03" href="10_notes.html#n2-03">He could not wait.</a> <a class="s" id="s2-04" href="10_notes.html#n2-04">Had to start without me.</a> <a class="s" id="s2-05" href="10_notes.html#n2-05">The up-river stations had to be relieved.</a> <a class="s" id="s2-06" href="10_notes.html#n2-06">There had been so many delays already that he did not know who was dead and who was alive, and how they got on—and so on, and so on.</a> <a class="s" id="s2-07" href="10_notes.html#n2-07">He paid no attention to my explanations, and, playing with a stick of sealing-wax, repeated several times that the situation was ‘very grave, very grave.’</a> <a class="s" id="s2-08" href="10_notes.html#n2-08">There were rumours that a very important station was in jeopardy, and its chief, Mr. Kurtz, was ill.</a> <a class="s" id="s2-09" href="10_notes.html#n2-09">Hoped it was not true.</a> <a class="s" id="s2-10" href="10_notes.html#n2-10">Mr. Kurtz was...</a> <a class="s" id="s2-11" href="10_notes.html#n2-11">I felt weary and irritable.</a> <a class="s" id="s2-12" href="10_notes.html#n2-12">Hang Kurtz, I thought.</a> <a class="s" id="s2-13" href="10_notes.html#n2-13">I interrupted him by saying I had heard of Mr. Kurtz on the coast.</a> <a class="s" id="s2-14" href="10_notes.html#n2-14">‘Ah!</a> <a class="s" id="s2-15" href="10_notes.html#n2-15">So they talk of him down there,’ he murmured to himself.</a> <a class="s" id="s2-16" href="10_notes.html#n2-16">Then he began again, assuring me Mr. Kurtz was the best agent he had, an exceptional man, of the greatest importance to the Company; therefore I could understand his anxiety.</a> <a class="s" id="s2-17" href="10_notes.html#n2-17">He was, he said, ‘very, very uneasy.’</a> <a class="s" id="s2-18" href="10_notes.html#n2-18">Certainly he fidgeted on his chair a good deal, exclaimed, ‘Ah, Mr. Kurtz!’ broke the stick of sealing-wax and seemed dumfounded by the accident.</a> <a class="s" id="s2-19" href="10_notes.html#n2-19">Next thing he wanted to know ‘how long it would take to’...</a> <a class="s" id="s2-20" href="10_notes.html#n2-20">I interrupted him again.</a> <a class="s" id="s2-21" href="10_notes.html#n2-21">Being hungry, you know, and kept on my feet too.</a> <a class="s" id="s2-22" href="10_notes.html#n2-22">I was getting savage.</a> <a class="s" id="s2-23" href="10_notes.html#n2-23">‘How can I tell?’</a> <a class="s" id="s2-24" href="10_notes.html#n2-24">I said.</a> <a class="s" id="s2-25" href="10_notes.html#n2-25">‘I haven’t even seen the wreck yet—some months, no doubt.’</a> <a class="s" id="s2-26" href="10_notes.html#n2-26">All this talk seemed to me so futile.</a> <a class="s" id="s2-27" href="10_notes.html#n2-27">‘Some months,’ he said.</a> <a class="s" id="s2-28" href="10_notes.html#n2-28">‘Well, let us say three months before we can make a start.</a> <a class="s" id="s2-29" href="10_notes.html#n2-29">Yes.</a> <a class="s" id="s2-30" href="10_notes.html#n2-30">That ought to do the affair.’</a> <a class="s" id="s2-31" href="10_notes.html#n2-31">I flung out of his hut (he lived all alone in a clay hut with a sort of verandah) muttering to myself my opinion of him.</a> <a class="s" id="s2-32" href="10_notes.html#n2-32">He was a chattering idiot.</a> <a class="s" id="s2-33" href="10_notes.html#n2-33">Afterwards I took it back when it was borne in upon me startlingly with what extreme nicety he had estimated the time requisite for the ‘affair.’</a></p><div class="gl"><span><b>relieve</b> 救援する・交代要員を送る</span><span><b>delay</b> 遅れ</span><span><b>get on</b> （うまく）やっていく</span><span><b>pay attention to ~</b> 〜に注意を払う</span><span><b>sealing-wax</b> 封蝋（手紙に封をする蝋）</span><span><b>grave</b> 重大な</span><span><b>rumour</b> 噂（米 rumor）</span><span><b>in jeopardy</b> 危険にさらされて</span><span><b>weary</b> 疲れた</span><span><b>irritable</b> 苛立った</span><span><b>Hang ~</b> 〜なんかくそくらえ</span><span><b>murmur</b> つぶやく</span><span><b>assure</b> 請け合う</span><span><b>exceptional</b> 並はずれた</span><span><b>anxiety</b> 心配</span><span><b>fidget</b> もじもじする</span><span><b>a good deal</b> さんざん</span><span><b>dumfounded</b> 呆然とした（dumbfounded とも綴る）</span><span><b>keep ~ on one’s feet</b> 〜を立たせたままにする</span><span><b>savage</b> （ここでは）荒っぽい・ひどく不機嫌な</span><span><b>wreck</b> 残骸</span><span><b>futile</b> 無益な</span><span><b>do</b> （ここでは）間に合う・片づける</span><span><b>affair</b> 件</span><span><b>fling out of ~</b> 〜から飛び出す（過去形 flung）</span><span><b>clay</b> 粘土</span><span><b>verandah</b> ベランダ</span><span><b>mutter</b> ぶつぶつ言う</span><span><b>chattering</b> べらべらしゃべる</span><span><b>idiot</b> 間抜け</span><span><b>take back</b> （言葉を）取り消す</span><span><b>be borne in upon ~</b> 〜に思い知らされる</span><span><b>nicety</b> 精密さ</span><span><b>estimate</b> 見積もる</span><span><b>requisite</b> 必要な</span></div>
+</div>
+<section class="turn" data-to="1"><img src="img/matadi_106.jpg" width="1219" height="962" alt="Matadi" loading="lazy"><p class="cr">Jean Malvaux（写真製版）, <i>Matadi</i>／Public domain／<a href="https://commons.wikimedia.org/wiki/File:106%20Matadi.jpg">Commons</a></p></section>
+<div class="col">
+<p class="t"><a class="s" id="s3-01" href="10_notes.html#n3-01">“I went to work the next day, turning, so to speak, my back on that station.</a> <a class="s" id="s3-02" href="10_notes.html#n3-02">In that way only it seemed to me I could keep my hold on the redeeming facts of life.</a> <a class="s" id="s3-03" href="10_notes.html#n3-03">Still, one must look about sometimes; and then I saw this station, these men strolling aimlessly about in the sunshine of the yard.</a> <a class="s" id="s3-04" href="10_notes.html#n3-04">I asked myself sometimes what it all meant.</a> <a class="s" id="s3-05" href="10_notes.html#n3-05">They wandered here and there with their absurd long staves in their hands, like a lot of faithless pilgrims bewitched inside a rotten fence.</a></p><div class="gl"><span><b>so to speak</b> いわば</span><span><b>keep one’s hold on ~</b> 〜を手放さずにいる</span><span><b>redeeming</b> 救いとなる</span><span><b>aimlessly</b> 当てもなく</span><span><b>yard</b> 中庭</span><span><b>absurd</b> ばかげた</span><span><b>stave</b> 杖・棒</span><span><b>faithless</b> 信仰のない・不実な</span><span><b>pilgrim</b> 巡礼</span><span><b>bewitched</b> 魔法にかけられた</span><span><b>rotten</b> 腐った</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · V</div><blockquote><a class="rl" id="r3-06" href="10_notes.html#n3-06">The word ‘ivory’ rang in the air, was whispered, was sighed. You would think they were praying to it.</a></blockquote></section>
+<div class="col">
+<p class="t cont"><a class="s" id="s3-06" href="10_notes.html#n3-06">The word ‘ivory’ rang in the air, was whispered, was sighed.</a> <a class="s" id="s3-07" href="10_notes.html#n3-07">You would think they were praying to it.</a> <a class="s" id="s3-08" href="10_notes.html#n3-08">A taint of imbecile rapacity blew through it all, like a whiff from some corpse.</a> <a class="s" id="s3-09" href="10_notes.html#n3-09">By Jove!</a> <a class="s" id="s3-10" href="10_notes.html#n3-10">I’ve never seen anything so unreal in my life.</a> <a class="s" id="s3-11" href="10_notes.html#n3-11">And outside, the silent wilderness surrounding this cleared speck on the earth struck me as something great and invincible, like evil or truth, waiting patiently for the passing away of this fantastic invasion.</a></p><div class="gl"><span><b>ring</b> 鳴り響く（過去形 rang）</span><span><b>sigh</b> ため息とともに言う</span><span><b>pray to ~</b> 〜に祈る</span><span><b>taint</b> 汚れ・汚染</span><span><b>imbecile</b> 愚かしい</span><span><b>rapacity</b> 貪欲</span><span><b>whiff</b> ひと吹きの臭い</span><span><b>corpse</b> 死体</span><span><b>By Jove!</b> まったく！・おやまあ！（驚きを表す）</span><span><b>wilderness</b> 原野・荒野</span><span><b>cleared</b> 切り開かれた</span><span><b>speck</b> 小さな点</span><span><b>strike A as B</b> AにBという印象を与える</span><span><b>invincible</b> 打ち負かしがたい</span><span><b>invasion</b> 侵入</span></div>
+</div>
+<section class="line"><div class="kick">RECITE · VI</div><blockquote><a class="rl" id="r3-11" href="10_notes.html#n3-11">And outside, the silent wilderness surrounding this cleared speck on the earth struck me as something great and invincible, like evil or truth, waiting patiently for the passing away of this fantastic invasion.</a></blockquote></section>
+<section class="sheet"><h2>RECITE</h2><div class="ja">暗唱の帳 ── 今回の6つ</div><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><button class="spall" type="button">▶ 通しで聞く</button></div><ol><li><span><a class="rl" id="k1-11" href="10_notes.html#n1-11">He was obeyed, yet he inspired neither love nor fear, nor even respect. He inspired uneasiness. That was it! Uneasiness.</a><button class="sp" type="button" data-t="He was obeyed, yet he inspired neither love nor fear, nor even respect. He inspired uneasiness. That was it! Uneasiness." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k1-23" href="10_notes.html#n1-23">Because triumphant health in the general rout of constitutions is a kind of power in itself.</a><button class="sp" type="button" data-t="Because triumphant health in the general rout of constitutions is a kind of power in itself." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k1-29" href="10_notes.html#n1-29">He was great by this little thing that it was impossible to tell what could control such a man. He never gave that secret away. Perhaps there was nothing within him.</a><button class="sp" type="button" data-t="He was great by this little thing that it was impossible to tell what could control such a man. He never gave that secret away. Perhaps there was nothing within him." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k1-33" href="10_notes.html#n1-33">Once when various tropical diseases had laid low almost every ‘agent’ in the station, he was heard to say, ‘Men who come out here should have no entrails.’</a><button class="sp" type="button" data-t="Once when various tropical diseases had laid low almost every ‘agent’ in the station, he was heard to say, ‘Men who come out here should have no entrails.’" aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k3-06" href="10_notes.html#n3-06">The word ‘ivory’ rang in the air, was whispered, was sighed. You would think they were praying to it.</a><button class="sp" type="button" data-t="The word ‘ivory’ rang in the air, was whispered, was sighed. You would think they were praying to it." aria-label="読み上げ"></button></span></li><li><span><a class="rl" id="k3-11" href="10_notes.html#n3-11">And outside, the silent wilderness surrounding this cleared speck on the earth struck me as something great and invincible, like evil or truth, waiting patiently for the passing away of this fantastic invasion.</a><button class="sp" type="button" data-t="And outside, the silent wilderness surrounding this cleared speck on the earth struck me as something great and invincible, like evil or truth, waiting patiently for the passing away of this fantastic invasion." aria-label="読み上げ"></button></span></li></ol></section>
+<nav class="foot ja"><div><a href="09.html">← 第9回</a><a href="index.html" style="margin-left:1.2em">目次</a><span class="src">原文：Project Gutenberg #219（公有）／訳・注：本教材の自作</span></div><div><a href="11.html">第11回 →</a></div></nav>
+<script>
+(function(){
+  var KEY='hod-pos:'+location.pathname;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a.s, a.rl'); if(!a) return;
+    try{ history.replaceState(null,'','#'+a.id); }catch(_){}
+    try{ sessionStorage.setItem(KEY,String(window.scrollY)); }catch(_){}
+  });
+  function restore(){
+    var h=location.hash.slice(1), el=h&&document.getElementById(h);
+    document.querySelectorAll('.here').forEach(function(x){x.classList.remove('here')});
+    if(el){ el.classList.add('here'); el.scrollIntoView({block:'center'}); return; }
+    try{ var y=sessionStorage.getItem(KEY); if(y) window.scrollTo(0,+y); }catch(_){}
+  }
+  window.addEventListener('pageshow',function(){ requestAnimationFrame(restore); });
+})();
+</script><script>
+(function(){
+  var T=[{"bg": "#e7e6df", "ink": "#28292a", "sub": "#6b6d6a", "gl": "#7b7d79", "shu": "#a03026"}, {"bg": "#dfe3d8", "ink": "#232822", "sub": "#636c60", "gl": "#747c70", "shu": "#9c3024"}], R=document.documentElement.style, turns=[].slice.call(document.querySelectorAll('.turn'));
+  function rgb(h){h=h.replace('#','');return [0,2,4].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(',')+')'}
+  function ss(e0,e1,x){var t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t)}
+  function upd(){
+    var bg=rgb(T[0].bg), txt=T[0], vh=innerHeight;
+    turns.forEach(function(el){
+      var to=T[+el.dataset.to], rc=el.getBoundingClientRect(), t=(vh*.5-rc.top)/rc.height;
+      if(t<=0) return;
+      var k=ss(.3,.7,t), nb=rgb(to.bg);
+      bg=bg.map(function(v,i){return v+(nb[i]-v)*k});
+      if(t>.5) txt=to;
+    });
+    R.setProperty('--bg',mix(bg,bg,0));
+    ['ink','sub','gl','shu'].forEach(function(n){if(txt[n])R.setProperty('--'+n,txt[n])});
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); addEventListener('pageshow',upd); upd();
+})();
+</script><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>

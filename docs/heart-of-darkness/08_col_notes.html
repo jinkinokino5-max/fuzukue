@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Column 8 · The Ivory Trade 対訳と解説 — Heart of Darkness</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ec;--ink:#2a2723;--sub:#6b645a;--gl:#8a7f70;--shu:#a8322a}
+*{box-sizing:border-box} html{overflow-x:clip}
+body{margin:0;background:#f7f4ec;color:#2a2723;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:15px;line-height:1.85}
+.wrap{max-width:980px;margin:0 auto;padding:30px 22px 140px}
+h1{font-family:"Shippori Mincho",serif;font-size:22px;letter-spacing:.06em;border-bottom:1px solid #2a2723;padding-bottom:10px}
+h1 small{display:block;font-family:"Cormorant Garamond",serif;font-size:15px;letter-spacing:.3em;color:#a8322a}
+.lead{color:#6b645a;font-size:13px}
+.n{display:grid;grid-template-columns:52px 1fr 1fr;gap:0 22px;padding:18px 0;border-bottom:1px solid #ddd6c8;scroll-margin-top:20px}
+.n:target{background:#f7f1dc;box-shadow:-12px 0 0 #f7f1dc,12px 0 0 #f7f1dc}
+.id{font-family:"Cormorant Garamond",serif;color:#a8322a;font-size:17px;padding-top:2px}
+.en{font-family:"EB Garamond",Georgia,serif;font-size:19px;line-height:1.6}
+.jp{font-family:"Shippori Mincho",serif;font-size:15.5px;line-height:1.95;color:#3a352e}
+.sub{grid-column:2/4;margin-top:10px}
+.gl{font-size:13px;color:#6b645a} .gl b{font-family:"EB Garamond",serif;font-size:15px;color:#2a2723;font-weight:500}
+.gl span{display:inline-block;margin-right:1.2em}
+.gr{background:#eceff4;border-left:3px solid #4a5f8c;padding:8px 14px;margin-top:10px;font-size:14px}
+.gr .label,.qa .label,.rc .label{font-family:"Shippori Mincho",serif;font-weight:700;display:block;color:#4a5f8c}
+.qa{background:#f7f1dc;border-left:3px solid #c9a43a;padding:8px 14px;margin-top:10px;font-size:14px}
+.qa .label{color:#9a7a1a}
+.pn{background:#f4ece9;border-left:3px solid #a8322a;padding:8px 14px;margin-top:10px;font-size:14px}
+.pn .label{font-family:"Shippori Mincho",serif;font-weight:700;display:block;color:#a8322a}
+.sptop{margin:6px 0 4px;padding:10px 0;border-top:1px solid #ddd6c8;border-bottom:1px solid #ddd6c8}
+.sph{font-size:12px;color:#8a7f70;margin-left:6px}
+.rc{border-left:3px solid #a8322a;padding:6px 14px;margin-top:10px;font-family:"EB Garamond",serif;font-style:italic;font-size:17px}
+.rc .label{color:#a8322a;font-style:normal;font-size:13px}
+.tag{display:inline-block;font-size:11px;letter-spacing:.15em;color:#fff;background:#a8322a;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:sans-serif}
+.back{position:fixed;right:14px;bottom:14px;z-index:9;font-family:"Shippori Mincho",serif;font-size:14px;background:#2a2723;color:#f7f4ec;border:none;padding:12px 18px;cursor:pointer;box-shadow:0 3px 14px rgba(0,0,0,.2)}
+@media (max-width:720px){.wrap{padding:24px 16px 140px}.n{grid-template-columns:1fr}.id{font-size:15px}.sub{grid-column:1}.jp{margin-top:6px}}
+
+.nosp .sp,.nosp .spbar,.nosp .spall{display:none!important}
+.sp{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0 0 0 .3em;padding:0;vertical-align:-6px;border:1px solid color-mix(in srgb,var(--shu) 55%,transparent);border-radius:50%;background:transparent;color:var(--shu);cursor:pointer;font:12px/1 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.sp::before{content:"";border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent currentColor;margin-left:3px}
+.sp.on{background:var(--shu);color:var(--bg)} .sp.on::before{border-width:0;width:9px;height:9px;background:currentColor;margin:0}
+.spbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12.5px;color:var(--sub)}
+.spbar .spl{margin-right:4px;letter-spacing:.1em}
+.spr{font:12.5px/1 "Shippori Mincho",serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:7px 10px;cursor:pointer}
+.spr.on{color:var(--shu);border-color:var(--shu)}
+.spv{max-width:14em;font:12px system-ui,sans-serif;color:var(--sub);background:transparent;border:1px solid color-mix(in srgb,var(--gl) 45%,transparent);padding:6px 4px}
+.spall{font:13px/1 "Shippori Mincho",serif;letter-spacing:.1em;color:var(--shu);background:transparent;border:1px solid var(--shu);padding:9px 16px;cursor:pointer}
+.spall.on{background:var(--shu);color:var(--bg)}
+/* 読み方の印：強く読む語・息継ぎ・つながる音 */
+.st{text-decoration:underline dotted var(--shu);text-decoration-thickness:2px;text-underline-offset:.22em}
+.br{color:var(--shu);opacity:.75;font-style:normal;margin:0 .15em}
+.lk{color:var(--shu);font-style:normal;margin:0 -.08em}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:.9em;color:var(--shu);opacity:.85;margin-right:.3em}
+</style></head><body>
+<div class="wrap"><h1><small>Column 8 · The Ivory Trade</small>対訳と解説</h1><p class="lead">コラムの文をタップするとここに来ます。右下の「本文に戻る」で、読んでいた文に戻ります。英文も訳も本教材の自作です。</p><div class="sptop"><div class="spbar ja"><span class="spl">読み上げの速さ</span><button class="spr" type="button" data-r="0.7">ゆっくり</button><button class="spr" type="button" data-r="0.85">ふつう</button><button class="spr" type="button" data-r="1.0">速め</button><select class="spv" aria-label="声" hidden></select></div><span class="sph">▶ で英文を読み上げます（端末の音声）。</span></div>
+<section class="n" id="n1-01"><div class="id">1-01</div><div class="en">In the nineteenth century, ivory was a little like plastic today.<button class="sp" type="button" data-t="In the nineteenth century, ivory was a little like plastic today." aria-label="読み上げ"></button></div><div class="jp">19世紀、象牙は、今日のプラスチックに少し似ていた。</div><div class="sub"><div class="gr"><span class="label">文法の要所</span><b>a little like plastic today</b>：<b>like</b> は前置詞「〜に似た」。過去のものを今のものにたとえて、身近にする書き方。</div></div></section>
+<section class="n" id="n1-02"><div class="id">1-02</div><div class="en">It was hard but easy to carve, it was smooth and white, and it did not break easily.<button class="sp" type="button" data-t="It was hard but easy to carve, it was smooth and white, and it did not break easily." aria-label="読み上げ"></button></div><div class="jp">硬いのに彫りやすく、なめらかで白く、簡単には割れなかった。</div><div class="sub"><div class="gl"><span><b>carve</b> 彫る</span><span><b>smooth</b> なめらかな</span></div><div class="gr"><span class="label">文法の要所</span><b>It was hard but easy to carve</b>：<b>easy to ~</b>「〜しやすい」。<b>hard</b>（硬い）と <b>easy</b>（やさしい）を but でつなぐ。hard は「難しい」ではなく「硬い」の意味。</div></div></section>
+<section class="n" id="n1-03"><div class="id">1-03</div><div class="en">Europeans and Americans used it for combs, knife handles, and many small objects in their homes.<button class="sp" type="button" data-t="Europeans and Americans used it for combs, knife handles, and many small objects in their homes." aria-label="読み上げ"></button></div><div class="jp">ヨーロッパやアメリカの人々は、それを櫛やナイフの柄、家の中のたくさんの小物に使った。</div><div class="sub"><div class="gl"><span><b>comb</b> 櫛</span><span><b>handle</b> 柄・取っ手</span><span><b>object</b> 物・品</span></div></div></section>
+<section class="n" id="n2-01"><div class="id">2-01</div><div class="en">Two products used more African ivory than any others: piano keys and billiard balls.<button class="sp" type="button" data-t="Two products used more African ivory than any others: piano keys and billiard balls." aria-label="読み上げ"></button></div><div class="jp">アフリカの象牙をほかの何よりも多く使った製品が二つある。ピアノの鍵盤と、ビリヤードの球である。</div><div class="sub"><div class="gl"><span><b>product</b> 製品</span><span><b>piano key</b> ピアノの鍵盤</span><span><b>billiard ball</b> ビリヤードの球</span></div><div class="gr"><span class="label">文法の要所</span><b>more African ivory than any others</b>：比較級＋than any other(s)「ほかのどれよりも〜」＝実質的に最上級。</div></div></section>
+<section class="n" id="n2-02"><div class="id">2-02</div><div class="en">Both were signs of a comfortable middle-class life.<button class="sp" type="button" data-t="Both were signs of a comfortable middle-class life." aria-label="読み上げ"></button></div><div class="jp">どちらも、ゆとりある中流階級の暮らしのしるしだった。</div><div class="sub"><div class="gl"><span><b>sign</b> しるし</span><span><b>middle-class</b> 中流階級の</span></div></div></section>
+<section class="n" id="n2-03"><div class="id">2-03</div><div class="en">A family that played the piano in the evening, or a man who played billiards at his club, probably never thought about where the white material came from.<button class="sp" type="button" data-t="A family that played the piano in the evening, or a man who played billiards at his club, probably never thought about where the white material came from." aria-label="読み上げ"></button></div><div class="jp">夜にピアノを弾く家族も、クラブでビリヤードをする男も、その白い材料がどこから来たのかなど、たぶん考えたこともなかっただろう。</div><div class="sub"><div class="gl"><span><b>club</b> （紳士の社交）クラブ</span><span><b>material</b> 材料</span></div><div class="gr"><span class="label">文法の要所</span>主語が長い文：<b>A family that …, or a man who …</b>（どちらも関係代名詞節つき）＋動詞 <b>probably never thought</b>。<b>where the white material came from</b> は間接疑問。</div></div></section>
+<section class="n" id="n3-01"><div class="id">3-01</div><div class="en">It came from elephants, and many of them.<button class="sp" type="button" data-t="It came from elephants, and many of them." aria-label="読み上げ"></button><span class="tag">暗唱</span></div><div class="jp">それは象から来た。それも、たくさんの象から。</div><div class="sub"><div class="gr"><span class="label">文法の要所</span><b>and many of them</b>「それも、たくさんの」：<b>and</b> で情報を後から付け足して強める。</div><div class="rc"><span class="label">暗唱</span>It came from elephants, and many of them. At the height of the trade, about 65,000 elephants were killed every year in tropical Africa.<button class="sp" type="button" data-t="It came from elephants, and many of them. At the height of the trade, about 65,000 elephants were killed every year in tropical Africa." aria-label="読み上げ"></button></div></div></section>
+<section class="n" id="n3-02"><div class="id">3-02</div><div class="en">At the height of the trade, about 65,000 elephants were killed every year in tropical Africa.<button class="sp" type="button" data-t="At the height of the trade, about 65,000 elephants were killed every year in tropical Africa." aria-label="読み上げ"></button></div><div class="jp">交易の最盛期には、熱帯アフリカで、毎年およそ6万5千頭の象が殺された。</div><div class="sub"><div class="gl"><span><b>at the height of ~</b> 〜の最盛期に</span><span><b>tropical</b> 熱帯の</span></div></div></section>
+<section class="n" id="n3-03"><div class="id">3-03</div><div class="en">Guns made the killing much faster than before.<button class="sp" type="button" data-t="Guns made the killing much faster than before." aria-label="読み上げ"></button></div><div class="jp">銃が、殺すことを以前よりずっと速くした。</div><div class="sub"></div></section>
+<section class="n" id="n4-01"><div class="id">4-01</div><div class="en">Europeans did not usually hunt the elephants themselves.<button class="sp" type="button" data-t="Europeans did not usually hunt the elephants themselves." aria-label="読み上げ"></button></div><div class="jp">ヨーロッパ人は、たいてい自分で象を狩りはしなかった。</div><div class="sub"></div></section>
+<section class="n" id="n4-02"><div class="id">4-02</div><div class="en">They bought the tusks from African hunters and traders, and paid with cheap goods: cotton cloth, beads, knives and brass rods.<button class="sp" type="button" data-t="They bought the tusks from African hunters and traders, and paid with cheap goods: cotton cloth, beads, knives and brass rods." aria-label="読み上げ"></button></div><div class="jp">彼らはアフリカ人の狩人や商人から牙を買い、安物で支払った。綿布、ビーズ、ナイフ、真鍮の棒である。</div><div class="sub"><div class="gl"><span><b>tusk</b> （象の）牙</span><span><b>trader</b> 商人</span><span><b>brass rod</b> 真鍮の棒（通貨としても使われた）</span></div></div></section>
+<section class="n" id="n4-03"><div class="id">4-03</div><div class="en">These are the “rubbishy cottons, beads, and brass-wire” that Marlow sees going “into the depths of darkness.”<button class="sp" type="button" data-t="These are the “rubbishy cottons, beads, and brass-wire” that Marlow sees going “into the depths of darkness.”" aria-label="読み上げ"></button></div><div class="jp">これが、マーロウが「闇の奥へ」送りこまれていくのを見た、「粗悪な綿布、ビーズ、真鍮の針金」である。</div><div class="sub"><div class="gl"><span><b>rubbishy</b> 粗悪な</span><span><b>depths</b> 奥・深み</span></div></div></section>
+<section class="n" id="n4-04"><div class="id">4-04</div><div class="en">Then the tusks were carried to the coast by porters on foot, each man carrying a heavy tusk.<button class="sp" type="button" data-t="Then the tusks were carried to the coast by porters on foot, each man carrying a heavy tusk." aria-label="読み上げ"></button></div><div class="jp">それから牙は、運搬人の足で海岸まで運ばれた。一人が一本ずつ、重い牙をかついで。</div><div class="sub"><div class="gl"><span><b>porter</b> 運搬人</span><span><b>on foot</b> 徒歩で</span></div><div class="gr"><span class="label">文法の要所</span><b>each man carrying a heavy tusk</b>：独立分詞構文（主語 each man 付き）で、様子を付け加える。</div></div></section>
+<section class="n" id="n5-01"><div class="id">5-01</div><div class="en">Some African artists carved scenes on tusks and sold them to European traders.<button class="sp" type="button" data-t="Some African artists carved scenes on tusks and sold them to European traders." aria-label="読み上げ"></button></div><div class="jp">アフリカの芸術家のなかには、牙に場面を彫り、ヨーロッパの商人に売る者もいた。</div><div class="sub"></div></section>
+<section class="n" id="n5-02"><div class="id">5-02</div><div class="en">On one tusk from Loango, near the mouth of the Congo, a long line of small figures climbs around the ivory in a spiral: traders, sailors, prisoners tied together with rope, and people bringing ivory for sale.<button class="sp" type="button" data-t="On one tusk from Loango, near the mouth of the Congo, a long line of small figures climbs around the ivory in a spiral: traders, sailors, prisoners tied together with rope, and people bringing ivory for sale." aria-label="読み上げ"></button></div><div class="jp">コンゴ川の河口に近いロアンゴから来たある牙では、小さな人物たちが長い列をなして、らせんを描きながら象牙を上っていく。商人、船乗り、縄でつながれた捕虜、そして売るための象牙を運んでくる人々。</div><div class="sub"><div class="gl"><span><b>figure</b> （彫刻の）人物像</span><span><b>spiral</b> らせん</span><span><b>prisoner</b> 捕虜・囚人</span><span><b>tie</b> 縛る</span></div><div class="gr"><span class="label">文法の要所</span><b>a long line of small figures climbs around the ivory</b>：主語の中心は line（単数）なので、動詞は climbs。コロン（:）のあとで、列に並ぶ人物を具体的に並べる。</div></div></section>
+<section class="n" id="n5-03"><div class="id">5-03</div><div class="en">The ivory itself, carried away to Europe, tells the story of the trade that took it there.<button class="sp" type="button" data-t="The ivory itself, carried away to Europe, tells the story of the trade that took it there." aria-label="読み上げ"></button><span class="tag">暗唱</span></div><div class="jp">ヨーロッパへ運び去られた象牙そのものが、それをそこへ運んだ交易の物語を語っているのだ。</div><div class="sub"></div></section>
+<section class="n" id="n6-01"><div class="id">6-01</div><div class="en">In <i>Heart of Darkness</i>, ivory is the only thing that really matters to the Company.<button class="sp" type="button" data-t="In Heart of Darkness, ivory is the only thing that really matters to the Company." aria-label="読み上げ"></button></div><div class="jp">『闇の奥』では、会社にとって本当に大事なものは、象牙だけである。</div><div class="sub"><div class="gl"><span><b>matter</b> （動詞）重要である</span></div></div></section>
+<section class="n" id="n6-02"><div class="id">6-02</div><div class="en">The word “ivory” is everywhere in the story, and Marlow says the pilgrims whisper it as if they were praying to it.<button class="sp" type="button" data-t="The word “ivory” is everywhere in the story, and Marlow says the pilgrims whisper it as if they were praying to it." aria-label="読み上げ"></button></div><div class="jp">「象牙」という言葉は物語のいたるところにあり、マーロウは、巡礼たち（会社の白人社員）が、まるでそれに祈りをささげるかのように、その言葉をささやくと言う。</div><div class="sub"><div class="gl"><span><b>pilgrim</b> 巡礼（作中では会社の白人社員をこう呼ぶ）</span><span><b>whisper</b> ささやく</span><span><b>pray</b> 祈る</span></div><div class="gr"><span class="label">文法の要所</span><b>as if they were praying to it</b>：<b>as if＋仮定法過去</b>「まるで〜しているかのように」。</div></div></section>
+<section class="n" id="n6-03"><div class="id">6-03</div><div class="en">Keep this in mind when you meet Kurtz.<button class="sp" type="button" data-t="Keep this in mind when you meet Kurtz." aria-label="読み上げ"></button></div><div class="jp">クルツに会うときには、このことを心にとめておいてほしい。</div><div class="sub"><div class="gl"><span><b>keep ~ in mind</b> 〜を心にとめておく</span></div></div></section>
+</div><button class="back" onclick="history.length>1?history.back():location.href='08_col.html'">← 本文に戻る</button><script>
+(function(){
+  var S=window.speechSynthesis, D=document.documentElement;
+  if(!S||!window.SpeechSynthesisUtterance){D.classList.add('nosp');return;}
+  var K='hod-speech', st={rate:.85,voice:''};
+  try{var o=JSON.parse(localStorage.getItem(K)||'{}'); if(o.rate)st.rate=+o.rate; if(o.voice)st.voice=o.voice;}catch(_){}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(_){}}
+  var voices=[];
+  function load(){
+    voices=S.getVoices().filter(function(v){return /^en[-_]/i.test(v.lang)})
+      .sort(function(a,b){return (/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name)});
+    document.querySelectorAll('select.spv').forEach(function(sel){
+      sel.innerHTML=voices.map(function(v){return '<option>'+v.name.replace(/</g,'&lt;')+'</option>'}).join('');
+      var p=pick(); if(p) sel.value=p.name; sel.hidden=!voices.length;
+    });
+  }
+  // 選んだ声 → 既定の Microsoft David（本人の指定、Windows のみ） → 英国英語 → 最初の英語の声
+  function pick(){
+    function f(t){return voices.filter(t)[0]}
+    return f(function(v){return v.name===st.voice})||f(function(v){return /Microsoft David/i.test(v.name)})
+      ||f(function(v){return /GB/i.test(v.lang)})||voices[0]||null;
+  }
+  load(); if('onvoiceschanged' in S) S.addEventListener('voiceschanged',load);
+  function mark(){
+    document.querySelectorAll('.spr').forEach(function(b){b.classList.toggle('on',+b.dataset.r===st.rate)});
+  }
+  mark();
+  var gen=0, keep=null;
+  function stop(){gen++; clearInterval(keep); S.cancel(); document.querySelectorAll('.sp.on,.spall.on').forEach(function(b){b.classList.remove('on')});}
+  // Chrome のネットワーク音声は長い文の途中で黙ることがあるので、ときどき pause/resume で起こす
+  function say(btn,g,next){
+    var u=new SpeechSynthesisUtterance(btn.dataset.t), v=pick();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';
+    u.rate=st.rate; btn.classList.add('on');
+    u.onend=u.onerror=function(){btn.classList.remove('on'); if(g===gen&&next) next(); else if(g===gen) clearInterval(keep);};
+    S.speak(u);
+    clearInterval(keep);
+    if(v&&!v.localService) keep=setInterval(function(){if(S.speaking&&!S.paused){S.pause();S.resume();}},10000);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.sp,.spall,.spr'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(b.classList.contains('spr')){st.rate=+b.dataset.r; save(); mark(); return;}
+    var was=b.classList.contains('on'); stop(); if(was) return;
+    var g=gen;
+    if(b.classList.contains('sp')){ setTimeout(function(){if(g===gen) say(b,g)},60); return; }
+    var list=[].slice.call(b.closest('.sheet').querySelectorAll('.sp')), i=0;
+    b.classList.add('on');
+    (function step(){
+      if(g!==gen) return;
+      if(i>=list.length){b.classList.remove('on'); clearInterval(keep); return;}
+      var x=list[i++]; x.scrollIntoView({block:'center',behavior:'smooth'});
+      say(x,g,function(){setTimeout(step,1200)});
+    })();
+  },true);
+  document.addEventListener('change',function(e){
+    if(!e.target.matches('select.spv')) return;
+    st.voice=e.target.value; save();
+    document.querySelectorAll('select.spv').forEach(function(s){s.value=st.voice});
+  });
+  addEventListener('pagehide',stop);
+})();
+</script></body></html>
