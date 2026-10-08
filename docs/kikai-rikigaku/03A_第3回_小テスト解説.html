@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第3回 小テスト解説（課題3A）</title>
+<title>第3回 小テスト解説（課題3A・3B）</title>
 <script>
   MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
 </script>
@@ -108,16 +108,16 @@
 <body>
 <header style="padding-top:48px">
 <p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第3回・小テスト解説</p>
-<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">課題 3A の解き方</h1>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">課題 3A・3B の解き方</h1>
 </header>
-<p class="lead">2026/10/8／第3回「3次元の力とモーメント」の Moodle 小テスト（課題 3A〔必修〕全3問）。各問を、教材の解き方の手順①〜⑥（教材 7.1節の3次元版）で解き直したもの。</p>
+<p class="lead">2026/10/8／第3回「3次元の力とモーメント」の Moodle 小テスト（課題 3A〔必修〕全3問＋<a href="#3B">課題 3B〔任意〕</a>全3問）。各問を、教材の解き方の手順①〜⑥（教材 7.1節の3次元版）で解き直したもの。</p>
 
 <div class="navi">
 <strong>3問に共通する道具</strong>：外積の成分の式（教材 式3.1）→ 点まわりのモーメント $\boldsymbol M=\boldsymbol r\times\boldsymbol F$（教材 式2.53・2.54）→ 軸まわりのモーメント $\tau=\boldsymbol u\cdot\boldsymbol M$（教材 式2.60）→ 複数の力とモーメントを1点に集める $\boldsymbol F=\sum\boldsymbol F_i$、$\boldsymbol M=\sum\boldsymbol r_i\times\boldsymbol F_i+\sum\boldsymbol M_j$（教材 式2.58・2.59）→ 基準点を移す式 $\boldsymbol M_Q=\boldsymbol M_P+\overrightarrow{\mathrm{QP}}\times\boldsymbol F$（教材 式6.1）。<br>
 <strong>いちばん大事な約束</strong>：$\boldsymbol r$ は<strong>基準点 → 着力点</strong>のベクトル。外積は順番を入れ替えると符号が逆になる（$\boldsymbol r\times\boldsymbol F=-\boldsymbol F\times\boldsymbol r$、教材 3.3節）ので、必ず $\boldsymbol r\times\boldsymbol F$ の順に書く。
 </div>
 
-<div class="warn"><span class="label">この解説の位置づけ</span>問題文と図は Moodle の画面（reference/講義資料/第3回小テスト.pdf）から転載した。解答は<strong>自作</strong>であり、公式の解答とはまだ照合していない。数値は Python（draft/check_quiz03.py）で、別の計算方法も含めて検算した。3A-3 の力の向きは図から読み取ったもので、読み取りの前提はその問に書いておく。</div>
+<div class="warn"><span class="label">この解説の位置づけ</span>問題文と図は Moodle の画面（reference/講義資料/第3回小テスト.pdf、同 第3回小テスト続き.pdf）から転載した。解答は<strong>自作</strong>であり、公式の解答とはまだ照合していない。数値は Python（draft/check_quiz03.py）で、別の計算方法も含めて検算した。3A-3・3B-2・3B-4 の力の向きは図から読み取ったもので、読み取りの前提はその問に書いておく。</div>
 
 <!-- ============================================================ -->
 <h2><span class="no">1</span>3A-1　点まわり・軸まわりのモーメント</h2>
@@ -228,6 +228,97 @@ A 点　合力 $-50\boldsymbol i+80\boldsymbol j-100\boldsymbol k$ N、合モー
 <div class="why"><span class="label">直感：A に集めると、なぜこんなに簡単になるのか</span>3本のうち2本が A に働いているので、A を基準にするとそれらの腕は 0 になり、残るのは 100 N の1本だけになる。基準点は「多くの力が通る点」を選ぶと計算が減る。ただし O は壁の固定点なので、<strong>壁が支えなければならない</strong>モーメントを知りたいときは O の値（$-200\boldsymbol i+100\boldsymbol j+100\boldsymbol k$）が要る。次回（第4回 釣合い）では、壁の反力がちょうどこれを打ち消す、と考える。</div>
 
 <!-- ============================================================ -->
+<h2 id="3B" style="border-top:3px double var(--ink)">課題 3B（任意）</h2>
+<p class="lead" style="margin-top:0">課題 3A の続き（3B-1・3B-2・3B-4 の全3問。Moodle の画面に 3B-3 は無い）。3A と同じ道具で、力の向きを「2点を結ぶ線」から作る作業（教材 1.2節の単位ベクトル）と、3次元の偶力（教材 6.1節）が加わる。</p>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>3B-1　2つの力と純粋モーメントを原点に集める</h2>
+<div class="ex"><span class="label">3B-1〔A〕</span>
+<p>Two forces $\boldsymbol F_1=20\boldsymbol i-10\boldsymbol j+60\boldsymbol k$ N and $\boldsymbol F_2=30\boldsymbol i+20\boldsymbol j-40\boldsymbol k$ N are acting at $(0,-1,1)$ and $(-1,-1,-1)$, respectively, and a pure moment of −80 Nm is acting in the $xy$-plane. Determine the resultant force-moment system at the origin. Coordinates are in meters.</p>
+<p class="note">（訳：2つの力 $\boldsymbol F_1$、$\boldsymbol F_2$ がそれぞれ点 $(0,-1,1)$、$(-1,-1,-1)$ に働き、さらに $xy$ 平面内で −80 Nm の純粋モーメントが働く。原点における合力と合モーメントを求めよ。座標の単位は m。）解答欄：合力・合モーメントとも $\square\,\boldsymbol i+\square\,\boldsymbol j+\square\,\boldsymbol k$。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：2本の力と1つの純粋モーメントを、原点 O に集める（式 2.58・2.59）。</p>
+<p>② <strong>座標軸</strong>：問題の $x,y,z$（右手系）。</p>
+<p>③ <strong>成分で書く</strong>：$\boldsymbol r_1=(0,-1,1)$、$\boldsymbol F_1=(20,-10,60)$；$\boldsymbol r_2=(-1,-1,-1)$、$\boldsymbol F_2=(30,20,-40)$。<br>
+純粋モーメントは「$xy$ 平面内で回す」もの。$xy$ 平面内の回転の軸は $z$ 軸なので、ベクトルは $z$ 方向：$\boldsymbol M_0=-80\boldsymbol k=(0,\ 0,\ -80)$ Nm（教材 2.2節：モーメントベクトルは回転面に垂直）。</p>
+<p>④ <strong>式を立てる</strong>：
+$$\boldsymbol F_R=\boldsymbol F_1+\boldsymbol F_2,\qquad \boldsymbol M_O=\boldsymbol r_1\times\boldsymbol F_1+\boldsymbol r_2\times\boldsymbol F_2+\boldsymbol M_0$$</p>
+<p>⑤ <strong>解く</strong>：<br>
+・合力：$\boldsymbol F_R=(20+30,\ -10+20,\ 60-40)=(50,\ 10,\ 20)$ N。<br>
+・$\boldsymbol r_1\times\boldsymbol F_1$（式 2.54）：<br>
+　$x$：$F_zr_y-F_yr_z=60(-1)-(-10)(1)=-60+10=-50$<br>
+　$y$：$F_xr_z-F_zr_x=20(1)-60(0)=20$<br>
+　$z$：$F_yr_x-F_xr_y=(-10)(0)-20(-1)=20$　→ $(-50,\ 20,\ 20)$<br>
+・$\boldsymbol r_2\times\boldsymbol F_2$：<br>
+　$x$：$(-40)(-1)-20(-1)=40+20=60$<br>
+　$y$：$30(-1)-(-40)(-1)=-30-40=-70$<br>
+　$z$：$20(-1)-30(-1)=-20+30=10$　→ $(60,\ -70,\ 10)$<br>
+・合計：
+$$\boldsymbol M_O=(-50+60+0,\ 20-70+0,\ 20+10-80)=(10,\ -50,\ -50)\ \mathrm{Nm}$$</p>
+<p>⑥ <strong>確かめ</strong>：外積は両方のベクトルに垂直になる（教材 3.3節）ので、$(\boldsymbol r_1\times\boldsymbol F_1)\cdot\boldsymbol F_1=(-50)(20)+(20)(-10)+(20)(60)=-1000-200+1200=0$、$(\boldsymbol r_2\times\boldsymbol F_2)\cdot\boldsymbol F_2=(60)(30)+(-70)(20)+(10)(-40)=1800-1400-400=0$ で、どちらも 0。計算ミスがあるとたいていここで 0 にならない。単位は N と Nm。</p>
+<p><strong>答え：合力 $50\boldsymbol i+10\boldsymbol j+20\boldsymbol k$ N、合モーメント $10\boldsymbol i-50\boldsymbol j-50\boldsymbol k$ Nm</strong></p></div>
+<div class="warn"><span class="label">よくある誤り：「$xy$ 平面内のモーメント」の向き</span>「$xy$ 平面内に働く」を「$x$ か $y$ の成分」と読んで $-80\boldsymbol i$ などとしてしまう誤り。モーメントベクトルは<strong>回転面に垂直</strong>な向き（右ねじが進む向き）なので、$xy$ 平面内の回転は $\boldsymbol k$ 方向になる。符号は、$z$ 軸の正の側から見て反時計回りが＋なので、−80 は「上から見て時計回り」を意味する（本解説の解釈。問題文に図は無い）。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>3B-2　2点を結ぶ線に沿う力を含む3力を点Oに集める</h2>
+<div class="ex"><span class="label">3B-2〔B〕</span>
+<p>Determine the resultant force and moment of the three forces at the point O. Coordinates are in meters.</p>
+<p class="note">（訳：3つの力の、点 O における合力と合モーメントを求めよ。座標の単位は m。）解答欄：合力・合モーメントとも $\square\,\boldsymbol i+\square\,\boldsymbol j+\square\,\boldsymbol k$。</p>
+<figure class="slide"><img src="img/quiz03/q3b2.png" alt="原点Oから x 方向に2000 N、y 方向に3000 N。点(0, 6, 4)から点(−6, 10, 6)へ向かう1000 N" loading="lazy" style="width:420px;max-width:95%;height:auto;background:#fff"><figcaption>3B-2 の図。出典：第3回小テスト（Moodle 課題 3B 問題2）</figcaption></figure>
+<p><strong>図の読み取り（本解説の前提）</strong>：2000 N は O から $+x$ 向き、3000 N は O から $+y$ 向き（どちらも着力点は O）。1000 N は点 Q(0, 6, 4) に働き、点 E(−6, 10, 6) へ向かう（破線がその延長）。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：3本の力を点 O に集める。</p>
+<p>② <strong>座標軸</strong>：図の $x,y,z$。</p>
+<p>③ <strong>成分で書く</strong>：1000 N の向きは $\overrightarrow{\mathrm{QE}}$ で決まる（教材 1.2節：大きさ × 単位ベクトル）。<br>
+・$\overrightarrow{\mathrm{QE}}=\mathrm E-\mathrm Q=(-6-0,\ 10-6,\ 6-4)=(-6,\ 4,\ 2)$ m<br>
+・長さ：$|\overrightarrow{\mathrm{QE}}|=\sqrt{36+16+4}=\sqrt{56}=7.483$ m<br>
+・$\boldsymbol F_3=1000\times\dfrac{(-6,\ 4,\ 2)}{\sqrt{56}}=133.6\times(-6,\ 4,\ 2)=(-801.8,\ 534.5,\ 267.3)$ N<br>
+・$\boldsymbol F_1=(2000,\ 0,\ 0)$、$\boldsymbol F_2=(0,\ 3000,\ 0)$（着力点 O）</p>
+<p>④ <strong>式を立てる</strong>：
+$$\boldsymbol F_R=\boldsymbol F_1+\boldsymbol F_2+\boldsymbol F_3,\qquad \boldsymbol M_O=\boldsymbol 0\times\boldsymbol F_1+\boldsymbol 0\times\boldsymbol F_2+\overrightarrow{\mathrm{OQ}}\times\boldsymbol F_3$$
+2000 N と 3000 N は O に働くので腕が $\boldsymbol 0$、モーメントは 0。</p>
+<p>⑤ <strong>解く</strong>：<br>
+・合力：$\boldsymbol F_R=(2000-801.8,\ 3000+534.5,\ 0+267.3)=(1198,\ 3535,\ 267.3)$ N。<br>
+・モーメント：係数 $c=1000/\sqrt{56}=133.6$ を外に出し、整数のまま外積を計算する（数値の丸めを最後の1回にするため）。$(0,6,4)\times(-6,4,2)$ は<br>
+　$x$：$2\times6-4\times4=12-16=-4$<br>
+　$y$：$(-6)\times4-2\times0=-24$<br>
+　$z$：$4\times0-(-6)\times6=36$<br>
+$$\boldsymbol M_O=c\,(-4,\ -24,\ 36)=(-534.5,\ -3207,\ 4811)\ \mathrm{Nm}$$</p>
+<p>⑥ <strong>確かめ</strong>：(i) 着力点を作用線上の別の点 E に取り直しても、$\overrightarrow{\mathrm{OE}}\times\boldsymbol F_3$ は同じ値になる（教材 4.3節：作用線上で力を滑らせてもモーメントは変わらない。Python で検算）。(ii) $|\boldsymbol F_3|=133.6\times\sqrt{56}=1000$ N に戻る。(iii) $(-4,-24,36)\cdot(-6,4,2)=24-96+72=0$ で、モーメントは $\boldsymbol F_3$ に垂直。</p>
+<p><strong>答え：合力 $1198\boldsymbol i+3535\boldsymbol j+267.3\boldsymbol k$ N（1198.2, 3534.5, 267.26）、合モーメント $-534.5\boldsymbol i-3207\boldsymbol j+4811\boldsymbol k$ Nm（−534.52, −3207.1, 4810.7）</strong></p></div>
+<div class="warn"><span class="label">よくある誤り</span>(1) $\boldsymbol F_3$ を $1000\times(-6,4,2)$ としてしまう：方向ベクトルは長さ $\sqrt{56}$ なので、単位ベクトルに直してから大きさを掛ける。(2) 着力点を E にして $\overrightarrow{\mathrm{QE}}$ を位置ベクトルに使う：$\boldsymbol r$ は<strong>基準点 O から</strong>作用線上の点へのベクトル（$\overrightarrow{\mathrm{OQ}}$ か $\overrightarrow{\mathrm{OE}}$）で、力の向きを表す $\overrightarrow{\mathrm{QE}}$ とは別物。(3) 2000 N・3000 N のモーメントを足そうとする：O に働く力は O まわりのモーメントを持たない。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>3B-4　直方体の対角線に沿う2力の、各軸まわりのモーメント</h2>
+<div class="ex"><span class="label">3B-4〔B〕</span>
+<p>Determine the moments of the two forces shown in the figure about the $x$, $y$ and $z$ axis.</p>
+<p class="note">（訳：図の2つの力の、$x$ 軸・$y$ 軸・$z$ 軸まわりのモーメントを求めよ。）解答欄：$x$ 軸まわり・$y$ 軸まわり・$z$ 軸まわり（各 Nm）。</p>
+<figure class="slide"><img src="img/quiz03/q3b4.jpeg" alt="直方体の一部。O原点、x方向に3 m（点B）、y方向に4 m、高さ2 m（点A・D）。AからBへ向かう220 N、CからDへ向かう220 N" loading="lazy" style="width:380px;max-width:85%;height:auto;background:#fff"><figcaption>3B-4 の図。出典：第3回小テスト（Moodle 課題 3B 問題3〔番号は 3B-4〕）</figcaption></figure>
+<p><strong>図の読み取り（本解説の前提）</strong>：直方体の寸法は $x$ 方向 3 m、$y$ 方向 4 m、高さ 2 m。各点の座標は<br>
+$\mathrm A=(0,\ 0,\ 2)$、$\mathrm B=(3,\ 0,\ 0)$、$\mathrm C=(3,\ 4,\ 0)$、$\mathrm D=(0,\ 4,\ 2)$ m。<br>
+一方の 220 N は辺 AB に沿って A → B 向き（矢印が B 側へ下る）、もう一方は CD に沿って C → D 向き（矢印が D 側へ上る）。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：2本の力。基準は $x$・$y$・$z$ 軸で、3本とも原点 O を通る。</p>
+<p>② <strong>座標軸</strong>：図の $x,y,z$。</p>
+<p>③ <strong>成分で書く</strong>：<br>
+・$\overrightarrow{\mathrm{AB}}=(3,\ 0,\ -2)$、長さ $\sqrt{9+0+4}=\sqrt{13}=3.606$ m。<br>
+・$\overrightarrow{\mathrm{CD}}=(0-3,\ 4-4,\ 2-0)=(-3,\ 0,\ 2)$、長さも $\sqrt{13}$。<br>
+・係数 $f=220/\sqrt{13}=61.02$ N/m として
+$$\boldsymbol F_{AB}=f\,(3,\ 0,\ -2)=(183.1,\ 0,\ -122.0),\qquad \boldsymbol F_{CD}=f\,(-3,\ 0,\ 2)=(-183.1,\ 0,\ 122.0)\ \mathrm N$$</p>
+<p>④ <strong>式を立てる</strong>：3本の軸はどれも O を通るので、まず O まわりのモーメント $\boldsymbol M_O$ を出し、各軸の単位ベクトル $\boldsymbol i,\boldsymbol j,\boldsymbol k$ との内積をとる（式 2.60）。$\boldsymbol i\cdot\boldsymbol M_O=M_{Ox}$ なので、<strong>各軸まわりのモーメント＝$\boldsymbol M_O$ の各成分</strong>（教材 2.3節）。
+$$\boldsymbol M_O=\overrightarrow{\mathrm{OA}}\times\boldsymbol F_{AB}+\overrightarrow{\mathrm{OC}}\times\boldsymbol F_{CD}$$</p>
+<p>⑤ <strong>解く</strong>（$f$ を外に出して整数で計算）：<br>
+・$(0,0,2)\times(3,0,-2)$：$x$：$(-2)(0)-0\cdot2=0$、$y$：$3\cdot2-(-2)\cdot0=6$、$z$：$0\cdot0-3\cdot0=0$　→ $(0,\ 6,\ 0)$<br>
+・$(3,4,0)\times(-3,0,2)$：$x$：$2\cdot4-0\cdot0=8$、$y$：$(-3)\cdot0-2\cdot3=-6$、$z$：$0\cdot3-(-3)\cdot4=12$　→ $(8,\ -6,\ 12)$<br>
+$$\boldsymbol M_O=f\,(0+8,\ 6-6,\ 0+12)=61.02\times(8,\ 0,\ 12)=(488.1,\ 0,\ 732.2)\ \mathrm{Nm}$$</p>
+<p>⑥ <strong>確かめ（偶力として見る）</strong>：2本は大きさが等しく向きが逆（$\boldsymbol F_{CD}=-\boldsymbol F_{AB}$）で、作用線 AB と CD は平行なので<strong>偶力</strong>である（教材 6.1節）。偶力のモーメントは基準点によらず、一方の作用線からもう一方の作用線へのベクトル（例えば $\overrightarrow{\mathrm{AD}}=(0,4,0)$）を使って
+$$\overrightarrow{\mathrm{AD}}\times\boldsymbol F_{CD}=f\,(0,4,0)\times(-3,0,2)=f\,\big(2\cdot4-0,\ 0-2\cdot0,\ 0-(-3)\cdot4\big)=f\,(8,\ 0,\ 12)$$
+で一致する。合力は $\boldsymbol 0$。大きさは $f\sqrt{64+144}=61.02\times14.42=880$ N·m で、これは「力 220 N × 2本の作用線の間隔 4 m」に等しい（AD は両方の作用線に垂直なので、間隔そのもの）。</p>
+<p><strong>答え：$x$ 軸まわり 488.1 Nm（$1760/\sqrt{13}$）、$y$ 軸まわり 0 Nm、$z$ 軸まわり 732.2 Nm（$2640/\sqrt{13}$）</strong></p></div>
+<div class="why"><span class="label">直感：$y$ 軸まわりが 0 になる理由</span>2本の力は、どちらも $xz$ 平面に平行（$y$ 成分 0）で、$y$ 方向に 4 m 離れて逆向きに押し合っている。この偶力は、$y$ 方向に並んだ2本の力が直方体を「ねじる」働きで、回す面は2本の作用線を含む平面（面 ABCD）になる。その面に垂直な向きが $(8,0,12)$、つまり $(2,0,3)$ 方向で、$y$ 成分を持たない。だから $y$ 軸を回す働きはない。</div>
+<div class="warn"><span class="label">注意：図の読み取り</span>3 m の寸法は C から $y$ 軸の端までの辺（$x$ 方向）、4 m は BC（$y$ 方向）、2 m は高さと読んだ。力の向き（A→B、C→D）を片方でも逆に読むと偶力にならず、答えがまったく変わる。また Moodle の問題番号は 3B-3 が無く 3B-4 になっている（画面のまま）。いずれも公式の解答とは未照合。</div>
+
+<!-- ============================================================ -->
 <h2>まとめ・チェックリスト</h2>
 <div class="box"><ul>
 <li>□ 3次元の力の大きさを $\sqrt{F_x^2+F_y^2+F_z^2}$ で出せる（3A-1(a)）。</li>
@@ -237,14 +328,19 @@ A 点　合力 $-50\boldsymbol i+80\boldsymbol j-100\boldsymbol k$ N、合モー
 <li>□ 符号の向き（A→B を右ねじの進む向き）を、$\overrightarrow{\mathrm{AB}}=\mathrm B-\mathrm A$ の取り方に反映できる。</li>
 <li>□ 純粋モーメントは腕を掛けずにそのまま足すと説明できる（3A-2）。</li>
 <li>□ 「$z$ 軸まわり」は $z$ 成分だけを取り出すことだと分かる（3A-2(b)）。</li>
-<li>□ 斜投影の図から、力と棒の向きを平行線を頼りに読み取れる（3A-3）。</li>
+<li>□ 斜投影の図から、力と棒の向きを平行線を頼りに読み取れる（3A-3・3B-4）。</li>
+<li>□ 「$xy$ 平面内のモーメント」は $oldsymbol k$ 方向のベクトルだと分かる（3B-1）。</li>
+<li>□ 2点を結ぶ線に沿う力を「大きさ × 単位ベクトル」で成分に直せる（3B-2・3B-4）。</li>
+<li>□ 外積の結果が $oldsymbol r$・$oldsymbol F$ の両方に垂直か（内積 0）で検算できる（3B-1・3B-2）。</li>
+<li>□ 原点を通る軸まわりのモーメントは $oldsymbol M_O$ の成分そのものだと使える（3B-4）。</li>
+<li>□ 等しく逆向きで平行な2力を偶力と見抜き、間隔のベクトルで一度に計算できる（3B-4）。</li>
 </ul></div>
 
 <div class="navi">
 <a href="index.html">← 目次へ</a>　｜　<a href="03_第3回_3次元の力とモーメント.html">教材：第3回 3次元の力とモーメント</a>
 </div>
 
-<p class="meta">出典：問題文と図は第3回小テスト（Moodle 課題 3A）の画面より転載（個人の学習用）。解答・解説は自作で、公式解答とは未照合。数値は Python（draft/check_quiz03.py）で検算済み。</p>
+<p class="meta">出典：問題文と図は第3回小テスト（Moodle 課題 3A・3B）の画面より転載（個人の学習用）。解答・解説は自作で、公式解答とは未照合。数値は Python（draft/check_quiz03.py）で検算済み。</p>
 
 <nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="03_第3回_3次元の力とモーメント.html"><small>LESSON</small>← 教材：第3回 3次元の力とモーメント</a></nav>
 </body>
