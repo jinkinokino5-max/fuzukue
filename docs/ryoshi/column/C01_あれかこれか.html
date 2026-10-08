@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あれか、これか</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<div class="backlink">量子力学 自習教材 ｜ 第1回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../01_第1回_二重スリットと光の粒.html">第1回 二重スリットと光の粒</a>（§4.3「穴1か穴2を通った」とは言えない）</div>
+
+<figure class="hero">
+  <img src="img/hero_taijitu.jpg" alt="寺院の天井に彫られた太極図。赤と黒の勾玉形が組み合わさり、周囲を動物や松の木彫が囲む">
+  <div class="ttl" style="background:rgba(250,247,240,.88);padding:16px 12px">あれか、<br>これか<small>排中律・四句・相補性</small></div>
+  <figcaption>台北・慈祐宮の天井に嵌められた太極図（部分）　Zairon, CC BY-SA 4.0</figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第一回</div>
+  <p class="lede">電子は穴1を通ったのか、穴2を通ったのか。この問いには答えがない、と講義は言う。答えがないのは電子のせいなのか、それとも「か」という問いの形のほうに無理があるのか。二千年あまりの論理の歴史をさかのぼって、「か」の正体を確かめに行く。</p>
+  <div class="keys"><span>ウサギとアヒル</span><span>アリストテレスの排中律</span><span>キルケゴール</span><span>龍樹の四句分別</span><span>ボーアの紋章</span></div>
+</header>
+
+<article>
+
+<h2><span class="no">序</span>一枚の絵は、同時に二つにはならない</h2>
+<p>1892年10月、ミュンヘンの絵入り雑誌『フリーゲンデ・ブレッター』に小さな戯画が載った。添えられた問いは「どの動物とどの動物がいちばん似ているか」。答えは「ウサギとアヒル」である。左に突き出した二本の突起は、アヒルのくちばしにも、ウサギの耳にも見える。その数年後、アメリカの心理学者ジョゼフ・ジャストローがこの図を論文に引き、さらに半世紀ののち、ウィトゲンシュタインが『哲学探究』で「として見る」ことの例に使ったことで、この落書きのような絵は哲学の古典になった。</p>
+<figure><img src="img/duck_rabbit.jpg" alt="ウサギにもアヒルにも見える横顔の線画。上にドイツ語の問い、下に「Kaninchen und Ente」"><figcaption><b>「ウサギとアヒル」</b>『フリーゲンデ・ブレッター』1892年10月23日号。作者不詳, via Wikimedia Commons, Public domain</figcaption></figure>
+<p>この絵の不思議は、二つの見え方が両方とも紙の上にあるのに、<strong>同時には見えない</strong>ことにある。アヒルを見ているあいだ、ウサギはどこかへ退いている。ウサギに切り替えた瞬間、アヒルが消える。線は一本も変わっていない。変わったのは、見る側が「これはどちらか」と決めたことだけである。</p>
+<p>第1回の講義の二重スリットにも、これとよく似た場面があった。電子がどちらの穴を通ったかを光で見分けると、検出面の縞が消える。見分けるのをやめると、縞が戻る。もちろん、だまし絵の切り替えは心の働きであり、電子の縞が消えるのは光子が電子を蹴るという物理の出来事であって、両者は同じものではない。だが「どちらかに決めようとすると、もう一方の姿が退く」という型は共通している。このコラムは、その「どちらか」という言葉、つまり<strong>「か」</strong>の一文字を追いかける。</p>
+
+<h2><span class="no">一</span>「か」は、西洋の論理の背骨である</h2>
+<p>「AかAでないか、そのどちらかだ」。あまりに当たり前に聞こえるこの原則を、はっきり言葉にしたのはアリストテレスである。『形而上学』第四巻で、彼は「矛盾するものどうしのあいだに、中間のものはありえない。一つの主語について、どんな述語も肯定するか否定するかのどちらかでなければならない」と書いた（筆者訳）。後世これを<strong>排中律</strong>と呼ぶ。真ん中は排除される。灰色はない。</p>
+<div class="pair">
+<figure><img src="img/aristotle.jpg" alt="アリストテレスの大理石の胸像"><figcaption><b>アリストテレス像</b>リュシッポスの原作（前330年頃）に基づくローマ時代の模刻、ローマ国立博物館アルテンプス宮。via Wikimedia Commons, Public domain</figcaption></figure>
+<figure><img src="img/enten_eller.jpg" alt="キルケゴール『あれか、これか』初版の扉。Enten — Eller と大きく印刷されている"><figcaption><b>『あれか、これか（Enten — Eller）』初版扉</b>コペンハーゲン、1843年。編者名は偽名ヴィクトル・エレミタ。via Wikimedia Commons, Public domain</figcaption></figure>
+</div>
+<p>この原則は、講義の (a) ボールの議論でそのまま働いている。ボールは穴1を通ったか、通らなかったか。通らなかったなら穴2を通った。中間はない。だから穴1経由の数と穴2経由の数を足せば全部になり、P₁₂ = P₁ + P₂ が出る。確率の足し算とは、排中律を数で書いたものだと言ってよい。「か」が成り立つ世界では、確率は足し算になる。足し算が成り立たないなら、どこかで「か」が破れている。</p>
+<p>「か」は論理学の教科書の中だけの話ではない。1843年、デンマークの思想家キルケゴールは、二巻の大著に『あれか、これか』という題をつけた。人生を美的に生きるか、倫理的に生きるか。両方を少しずつ、という逃げ道を、この題は最初から塞いでいる。キルケゴールにとって「か」は、人間を決断の前に立たせる刃であった。選ばないことも、一つの選択として数えられてしまう。</p>
+<p>ここで一度、転回しておく。排中律は、世界がどうなっているかを述べた法則なのか。それとも、言葉で世界を語るときの<strong>文法</strong>なのか。アリストテレス自身は、これを「存在」についての最も確かな原理として掲げた。だが、文法が世界の側の性質だという保証は、どこにもない。電子は、この問いを実験室に持ち込んだ。</p>
+<p>皮肉なことに、講義が「穴1か穴2のどちらかを通った」を退けるときに使った武器は、<strong>背理法</strong>であった。仮定を置き、そこから実験と食い違う帰結を導き、ゆえに仮定は偽である、と結ぶ。この「ゆえに偽」の一歩は、「仮定は真か偽かのどちらかだ」という排中律に支えられている。つまり講義は、「か」の論理を使って、電子についての「か」を打ち倒したことになる。これは自己矛盾ではない。退けられたのは「電子の通り道について、穴1か穴2かという二択が立つ」という<strong>物理的な主張</strong>であり、命題が真か偽かという<strong>論理の道具</strong>のほうは、最後まで無傷で働いている。「か」には少なくとも二つの層がある。言葉を運ぶ層と、世界を切り分ける層である。電子が破ったのは後者だけだった。</p>
+
+<h2><span class="no">二</span>龍樹は、四つとも否定した</h2>
+<p>アリストテレスから五百年ほどのち、南インドに龍樹（ナーガールジュナ、2〜3世紀頃）という仏教の論師が現れる。彼の主著『中論』は、ある独特の論法で埋め尽くされている。物事について言えることを、四つに分けて並べるのである。</p>
+<blockquote>「Aである」「Aでない」「Aであり、かつAでない」「Aでもなく、Aでないのでもない」<span class="src">四句分別（テトラレンマ）の型</span></blockquote>
+<p>アリストテレスの論理は、このうち最初の二つしか認めない。三つ目は矛盾律に、四つ目は排中律に反するからである。ところがインドの論争の伝統は、四つすべてを、検討すべき候補として机に並べた。そして龍樹は多くの場面で、<strong>四つともを否定する</strong>。鳩摩羅什の漢訳では、『中論』観因縁品の偈が、物がどう生じるかについて「諸法は自ら生ぜず、亦た他より生ぜず、共ならず、無因ならず」と、四つの可能性を一つずつ退けている。</p>
+<figure><img src="img/nagarjuna.jpg" alt="チベットのタンカに描かれた龍樹。橙の衣で蓮台に座り、背後に蛇の頭が光背のように広がる"><figcaption><b>龍樹（ナーガールジュナ）を描いたタンカ</b>チベット、清代（1644–1911年）、四川博物院。Daderot, via Wikimedia Commons, Public domain</figcaption></figure>
+<p>この型を、二重スリットの電子に当ててみる。問いは「電子はどの穴を通ったか」である。</p>
+<figure class="map">
+<svg viewBox="0 0 720 300" role="img" aria-label="電子の通り道についての四つの言明と、それぞれが実験で否定される理由">
+<g font-family="Yu Gothic, sans-serif" font-size="14" fill="#1c1c22">
+<rect x="10" y="10" width="340" height="130" fill="#fbfaf7" stroke="#2b3a67"/>
+<rect x="370" y="10" width="340" height="130" fill="#fbfaf7" stroke="#2b3a67"/>
+<rect x="10" y="160" width="340" height="130" fill="#fbfaf7" stroke="#2b3a67"/>
+<rect x="370" y="160" width="340" height="130" fill="#fbfaf7" stroke="#2b3a67"/>
+<text x="26" y="40" font-weight="bold" fill="#2b3a67">一　穴1を通った</text>
+<text x="386" y="40" font-weight="bold" fill="#2b3a67">二　穴2を通った</text>
+<text x="26" y="190" font-weight="bold" fill="#2b3a67">三　両方を通った</text>
+<text x="386" y="190" font-weight="bold" fill="#2b3a67">四　どちらも通らなかった</text>
+<text x="26" y="72">「一か二のどちらか」なら</text>
+<text x="26" y="94">確率は足し算になり、縞は出ない。</text>
+<text x="386" y="72">同上。どちらか一方に決めると</text>
+<text x="386" y="94">縞が説明できない。</text>
+<text x="26" y="222">検出器は毎回、電子を丸ごと1個</text>
+<text x="26" y="244">数える。半分ずつには割れない。</text>
+<text x="386" y="222">どちらかの穴を塞ぐと分布が</text>
+<text x="386" y="244">変わる。穴と無関係ではない。</text>
+<g fill="#a8322a" font-size="40" font-family="serif"><text x="300" y="120">×</text><text x="660" y="120">×</text><text x="300" y="270">×</text><text x="660" y="270">×</text></g>
+</g></svg>
+<figcaption>電子の通り道についての四句。日常の言葉で言える四つの答えが、どれも実験に合わない（講義 §4.3 の背理法を四句に広げたもの。四つ目と三つ目の退け方は筆者による整理）。</figcaption>
+</figure>
+<p>四つとも退けられる。ここで二つの限定を入れておく。第一に、龍樹が問題にしたのは物理ではなく、あらゆるものには固定した本性（自性）がない、という<strong>空</strong>の思想であり、彼が電子を予見していたわけではない。第二に、物理学者は四句を否定したまま黙りはしない。言葉の四つの箱がすべて外れたとき、物理学は<strong>箱の外に、計算の規則を一つ</strong>置いた。それが確率振幅である。</p>
+<p>それでも、型の一致には目を留めてよい。二つの選択肢を前にして「どちらか」と問うのは、問いがすでに答えの形を決めてしまっているということである。龍樹の否定は、答えを拒むためというより、<strong>問いの形そのものを点検する</strong>ための手続きであった。京都学派の哲学者・山内得立は1974年の『ロゴスとレンマ』で、西洋の論理（ロゴス）が排中律の上に立つのに対し、東洋の思考はこの四句のような「レンマ」の論理を育てたと論じている。二重スリットは、ロゴスの国の実験室に、レンマの問いを持ち込んだと言えなくもない。</p>
+
+<h2><span class="no">三</span>ボーアは、反対を盾に描いた</h2>
+<p>二重スリットの謎を前にして、量子力学の建設者たちのなかで最も長く「か」と格闘したのは、デンマークのニールス・ボーアであろう。1927年9月、イタリアのコモで開かれたヴォルタ記念の学会で、ボーアは<strong>相補性</strong>という考えを初めて公に語った。電子や光は、ある実験では粒として、別の実験では波として現れる。二つの描像は互いに排除し合い、同時には使えない。しかし両方を合わせなければ、対象の全体は語れない。</p>
+<p>これは排中律の「か」とは違う。「粒か波か、どちらかが正しい」とは言わない。かといって、龍樹のように四つを退けて沈黙するのでもない。「粒の言葉と波の言葉は、同じ一枚の紙に同時には書けないが、どちらも要る」。ウサギとアヒルの絵を思い出せば、近い。二つの見え方は同時に成り立たないが、どちらかが錯覚だというわけでもない。</p>
+<p>この考えにいちばん執拗に挑んだのはアインシュタインである。ボーアが1949年に書いた回想「アインシュタインとの議論」によれば、二人は二重スリットそのものを論争の舞台にした。アインシュタインの案はこうである。二重スリットの手前に置く、穴が一つだけの板を固定せず、ばねで吊って動けるようにしておく。電子がそこから穴1の方へ曲がれば板は一方へ、穴2の方へ曲がれば別の方へ、わずかに反動で押される。その反動を測れば、縞を乱さずに通り道が分かるのではないか。ボーアの答えは、板そのものも量子力学に従う、というものであった。反動を見分けられるほど板の運動量を正確に知ろうとすれば、不確定性関係によって板の位置がぼやけ、そのぼやけがちょうど縞を塗りつぶすのに足りる。通り道を知る手段を工夫するたびに、別の場所から「か」の代価が取り立てられる。ボーアはこの論争を通じて、相補性を思想ではなく、装置の勘定として示そうとした。</p>
+<figure><img src="img/bohr_arms.jpg" alt="フレデリクスボー城の礼拝堂に掲げられたボーアの紋章。赤と黒の太極図の盾の上に、CONTRARIA SUNT COMPLEMENTA の銘"><figcaption><b>ニールス・ボーアの紋章</b>フレデリクスボー城礼拝堂（デンマーク）。1947年のエレファント勲章叙勲に際して作られた。Kim Bach, via Wikimedia Commons, CC BY-SA 4.0</figcaption></figure>
+<p>1947年、ボーアはデンマーク最高位のエレファント勲章を授けられた。王族や国家元首でない人物への授与は異例で、受勲者は紋章を作ることになっている。ボーアが盾の中央に選んだのは、赤と黒の<strong>太極図</strong>であった。添えた銘はラテン語で「Contraria sunt complementa」、すなわち「対立するものは相補う」。ボーアは十年前の1937年に日本と中国を訪れており、中国の陰陽の思想に強い印象を受けていたと伝えられる（太極図を勧めたのは中国思想に通じた知人だったとする記録もある）。</p>
+<p>太極図をよく見ると、黒の中に赤い点があり、赤の中に黒い点がある。陰の極みに陽が芽生え、陽の極みに陰が宿る。白黒をはっきり分けた図でありながら、どちらも純粋ではない。排中律の図解を描こうとすれば、円を一本の直線で二つに割ればすむ。太極図はその直線を、わざわざS字に曲げ、さらに互いの中に相手の種を置いた。もちろん、陰陽思想は物理の理論ではなく、ボーアの相補性も陰陽の焼き直しではない。だが二十世紀の物理学者が自分の盾に、直線ではなくS字を選んだことは、「か」の時代の終わりを告げる一つの身振りとして読める。</p>
+
+<h2><span class="no">四</span>「か」を、「と」に書きかえる</h2>
+<p>では、物理学は「か」の代わりに何を置いたのか。答えは講義の式の中にある。</p>
+<div class="physics"><b>講義では</b>　電子の到達確率を、確率振幅 <code>φ</code> を使って <code>P₁₂ = |φ₁ + φ₂|²</code> と書いた（第1回 §4.4、式 (4.2)）。足しているのは確率ではなく振幅であり、2乗するのは足したあとである。展開すると <code>|φ₁|² + |φ₂|²</code> に干渉項 <code>2√(P₁P₂) cos δ</code> が加わる。この最後の項が、「穴1か穴2か」の足し算には存在しない部分である。→ <a href="../01_第1回_二重スリットと光の粒.html">第1回 二重スリットと光の粒</a></div>
+<p>ここで起きていることを言葉にすれば、こうなる。確率の世界では、「穴1を通った<strong>か</strong>、穴2を通った<strong>か</strong>」という選言（または）が、足し算 P₁ + P₂ に対応していた。振幅の世界では、それが「穴1を通る状態<strong>と</strong>、穴2を通る状態の、重ね合わせ」に置きかわる。φ₁+φ₂ の「＋」は、「または」ではなく「と」なのである。二つの可能性が、どちらかに決まる前の段階で、互いに打ち消したり強め合ったりする余地を残したまま、一つの数の中に同居している。</p>
+<p>ファインマンは講義録の第三巻を、まさにこの実験から始め、それを「古典的な仕方では絶対に説明できない現象」であり、「量子力学の唯一の謎を含んでいる」と書いた（筆者訳）。謎は消えていない。ただ、謎の在りかは移った。電子が「本当は」どちらを通ったのか、という問いの代わりに、なぜ自然は「か」ではなく「と」で計算されるのか、という問いが立つ。そして、見分けようとした瞬間に「と」が「か」に戻り、干渉項が平均して消える。序のだまし絵で言えば、ウサギでもアヒルでもある線画が、見る者が決めた瞬間に、どちらか一方になる。</p>
+<p>ただし、ここで「と」を「半分ずつ」と読み違えてはいけない。あの線画は、上半分がウサギで下半分がアヒル、という合成ではない。一本一本の線が、まるごとウサギの線であり、まるごとアヒルの線である。電子も同じで、穴1に半分、穴2に半分と割れて進むのではない。検出器はいつも、電子を丸ごと1個数える。「と」は量を分け合う言葉ではなく、<strong>可能性を重ねて持つ</strong>言葉である。</p>
+<p>しかも量子力学の「と」は、ただ二つを並べるだけの曖昧な接続ではない。φ₁ と φ₂ はそれぞれ複素数で、大きさのほかに<strong>位相</strong>という角度を持っている。二つを足すとき、その角度の差 δ によって、強め合うか、打ち消し合うか、そのあいだのどこかになるかが、きっちり決まる。講義の例題では、片方ずつなら100個ずつ届く場所に、両方を開けると400個届く所と、1個も届かない所ができた。日常の「と」には、この角度がない。「AとB」と言えば、AもBも同じ重さで並ぶだけである。量子力学は、「と」に角度をつけて数える方法を発明した、と言ってもよい。曖昧さに見えたものは、実は精密さの別の形だった。教材の注意書きが「電子が二つに割れるのではない」とわざわざ念を押しているのは、日本語の「と」が「分け合う」とも「重ねる」とも読めてしまうからでもある。</p>
+<p>日本語の「と」には、もう一つ面白い性質がある。「AとB」は二つを並べるだけで、AとBのどちらが先かも、どちらが主かも決めない。英語の and のように論理記号として固まりきってもいない。「あれか、これか」の刃の鋭さに比べると、「あれと、これと」はいかにも締まりがない。だが量子力学が最初に教えるのは、自然がこの締まりのない「と」の形で振る舞い、こちらが鋭い「か」を突きつけたときにだけ、一つの答えを返すということである。</p>
+
+<h2><span class="no">結</span>問いの形が、答えの形を決める</h2>
+<p>アリストテレスは「か」を存在の原理とし、キルケゴールは「か」を生き方の刃とした。龍樹は四つの「か」をすべて退けて、問いの形そのものを疑った。ボーアは盾の上で直線をS字に曲げた。そして講義の黒板では、確率の足し算が振幅の足し算に書きかえられた。二千年あまりのあいだに起きたのは、「か」が誤りだと分かったことではない。「か」が<strong>問う側の道具</strong>であって、世界の側の性質とは限らない、と分かったことである。</p>
+<p>第1回の後半、講義は話を光に移し、波だと思っていた光が粒（光子）として来ることを見た。電子は粒なのに波のように縞をつくり、光は波なのに粒として電子を叩き出す。ここでも「粒か波か」と問えば、答えは割れる。次の第2回では、レジュメの「量子力学の基本命題」の三つ目として、この「と」が<strong>重ね合わせの原理</strong> ψ = αψ₁ + βψ₂ という形で、正式に法則の座に就く。</p>
+<p class="coda">「か」と問うたびに、<br>「と」は姿を隠す。</p>
+
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+<h3>参照した本 ── 本文が依拠した原典</h3>
+<ul>
+  <li><span class="bk">アリストテレス『形而上学』第四巻（Γ）第7章</span> <span class="pub">前4世紀</span><span class="why">排中律の定式化。英訳（W. D. Ross 訳）のオンライン版で該当箇所を確認した。</span></li>
+  <li><span class="bk">龍樹『中論』観因縁品（鳩摩羅什 漢訳）</span> <span class="pub">2〜3世紀成立、漢訳5世紀初頭</span><span class="why">「諸法不自生 亦不従他生 不共不無因」の偈。ウィキソース等の漢訳本文で確認した。</span></li>
+  <li><span class="bk">R. P. ファインマン他『ファインマン物理学 量子力学』第1章</span> <span class="pub">原著1965年</span><span class="why">二重スリットを「唯一の謎」と呼んだ箇所。講義のレジュメの参考文献でもある。原文はカリフォルニア工科大学の公開版で読める。</span></li>
+  <li><span class="bk">N. ボーア「原子物理学における認識論上の問題をめぐるアインシュタインとの議論」</span> <span class="pub">1949年</span><span class="why">反動するスリットをめぐる論争。第三章で使った。</span></li>
+</ul>
+<p class="note">※原典はいずれも通読したものではなく、オンライン資料で該当箇所を確認した。</p>
+<h3>参考図書 ── さらに読むために</h3>
+<ul>
+  <li><span class="bk">山内得立『ロゴスとレンマ』</span> <span class="pub">岩波書店、1974年</span><span class="why">排中律の論理（ロゴス）と、四句分別の論理（レンマ）を正面から対比した本。第二章の背景にある。</span></li>
+  <li><span class="bk">S. キルケゴール『あれか、これか』</span> <span class="pub">原著1843年。邦訳は複数</span><span class="why">「か」を生き方の問題として突きつけた書。題名だけでも、このコラムの半分を語っている。</span></li>
+  <li><span class="bk">L. ウィトゲンシュタイン『哲学探究』</span> <span class="pub">原著1953年。邦訳は複数</span><span class="why">ウサギとアヒルの図を使って「として見る」ことを論じた箇所（第二部）がある。</span></li>
+  <li><span class="bk">外村彰『量子力学を見る ― 電子線ホログラフィーの挑戦』</span> <span class="pub">岩波書店（岩波科学ライブラリー）、1995年</span><span class="why">電子を1個ずつ打って干渉縞を浮かびあがらせた実験の当事者による解説。教材の写真の実験である。</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。分野をまたぐ結びつけ（見立て）は筆者の解釈であり、学説として確立したものではありません。</div>
+  <h3>図版の出典</h3>
+  <ul>
+    <li>扉：<a href="https://commons.wikimedia.org/wiki/File:Taipeh_Ciyou_Temple_Hinterer_Tempel_14.jpg">File:Taipeh Ciyou Temple Hinterer Tempel 14.jpg</a>（Zairon、CC BY-SA 4.0。太極図の周辺を切り抜いて縮小）</li>
+    <li>ウサギとアヒル：<a href="https://commons.wikimedia.org/wiki/File:Kaninchen_und_Ente.png">File:Kaninchen und Ente.png</a>（Public domain。縮小のみ）</li>
+    <li>アリストテレス像：<a href="https://commons.wikimedia.org/wiki/File:Aristotle_Altemps_Inv8575.jpg">File:Aristotle Altemps Inv8575.jpg</a>（Public domain。縮小のみ）</li>
+    <li>『あれか、これか』初版扉：<a href="https://commons.wikimedia.org/wiki/File:Kierkegaard_Enten-Eller.jpg">File:Kierkegaard Enten-Eller.jpg</a>（Public domain）</li>
+    <li>龍樹のタンカ：<a href="https://commons.wikimedia.org/wiki/File:Nagarjuna,_Tibet,_1644-1911_AD_-_Sichuan_Provincial_Museum_-_Chengdu,_China_-_DSC04486.jpg">File:Nagarjuna, Tibet, 1644-1911 AD - Sichuan Provincial Museum</a>（Daderot、Public domain。縮小のみ）</li>
+    <li>ボーアの紋章：<a href="https://commons.wikimedia.org/wiki/File:Niels_David_Henrik_Bohr_-_Coat_of_arms_in_Frederiksborg_Castle_Church.jpg">File:Niels David Henrik Bohr - Coat of arms in Frederiksborg Castle Church.jpg</a>（Kim Bach、CC BY-SA 4.0。縮小のみ）</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://en.wikipedia.org/wiki/Niels_Bohr">Niels Bohr（英語版ウィキペディア）</a>：1947年のエレファント勲章、紋章の太極図と銘、1927年コモでの相補性の発表</li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/27884402/">Process and Impact of Niels Bohr's Visit to Japan and China in 1937</a>（Endeavour誌の論文要旨）：1937年の日本・中国訪問</li>
+    <li><a href="https://www.iwanami.co.jp/book/b264826.html">岩波書店『ロゴスとレンマ』書誌ページ</a>：山内得立の著書の書誌</li>
+    <li><a href="https://zh.wikisource.org/zh-hant/%E4%B8%AD%E8%AB%96_(%E4%BD%9B%E6%95%99)/01">中論 観因縁品（維基文庫）</a>：鳩摩羅什訳の偈</li>
+    <li><a href="https://www.marxists.org/reference/subject/philosophy/works/dk/bohr.htm">N. Bohr, "Discussions with Einstein on Epistemological Problems in Atomic Physics"（1949）</a>：反動するスリットの思考実験とボーアの応答</li>
+    <li><a href="https://www.feynmanlectures.caltech.edu/III_01.html">The Feynman Lectures on Physics, Vol. III, Ch. 1</a>：「the only mystery」の原文</li>
+    <li>ウサギとアヒル図の初出（1892年10月23日『フリーゲンデ・ブレッター』）とジャストロー（1899年）、ウィトゲンシュタインによる引用：Wikimedia Commons の各ファイル説明、および英語版ウィキペディア「Rabbit–duck illusion」</li>
+  </ul>
+</div>
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../01_第1回_二重スリットと光の粒.html"><small>LESSON 1</small>← 教材：第1回 二重スリットと光の粒</a></nav>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量子力学 自習教材 目次</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 目次：教材ページと同じ書籍風デザイン。各回は「教材｜読み物」を対で載せる */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.85; margin:0 auto; padding:56px 28px 60px; max-width:860px; font-size:15px; letter-spacing:.02em; }
+  a{ color:inherit; }
+  .mast{ border-bottom:1px solid var(--ink); padding-bottom:18px; margin-bottom:18px; }
+  .mast .en{ font-family:var(--num); font-weight:300; font-size:20px; letter-spacing:.3em; color:var(--shu); margin:0; }
+  .mast h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(30px,5vw,44px); letter-spacing:.1em; margin:2px 0 6px; line-height:1.3; }
+  .mast .lead{ color:var(--sub); margin:0; font-size:14.5px; }
+  .spine{ font-size:14px; color:var(--sub); border-left:3px solid var(--line); padding:4px 0 4px 14px; margin:20px 0 8px; }
+  .spine strong{ color:var(--ink); }
+  h2{ font-family:var(--mincho); font-weight:700; font-size:17px; letter-spacing:.08em; margin:48px 0 4px; display:flex; align-items:baseline; gap:12px; }
+  h2 small{ font-family:inherit; font-weight:500; font-size:13px; color:var(--sub); letter-spacing:.04em; }
+
+  /* 1回分の行：番号｜題｜教材・読み物 */
+  .row{ display:grid; grid-template-columns:72px 1fr auto; gap:6px 18px; align-items:center; padding:16px 0; border-bottom:1px solid var(--line); }
+  .row .no{ font-family:var(--num); font-weight:300; font-size:46px; line-height:1; color:var(--shu); text-align:center;
+            font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  .row .tt{ font-family:var(--mincho); font-weight:700; font-size:18px; letter-spacing:.05em; margin:0; line-height:1.5; }
+  .row .tt a{ text-decoration:none; } .row .tt a:hover{ color:var(--accent); }
+  .row .dt{ font-size:12px; color:var(--sub); letter-spacing:.1em; margin:0; }
+  .row .ds{ font-size:13px; color:var(--sub); margin:2px 0 0; }
+  .row .go{ display:flex; flex-direction:column; gap:6px; min-width:200px; }
+  .go a,.go span{ display:block; font-size:12.5px; padding:6px 12px; text-decoration:none; border:1px solid var(--ink); line-height:1.4; }
+  .go a small,.go span small{ display:block; font-size:10px; letter-spacing:.2em; color:var(--sub); }
+  .go a.les{ background:var(--ink); color:var(--paper); } .go a.les small{ color:#c9c2b4; }
+  .go a.col{ border-color:var(--shu); color:var(--shu); font-family:var(--mincho); }
+  .go a:hover{ opacity:.85; }
+  .go span{ border-style:dashed; border-color:var(--line); color:#a59d90; }
+  .row.todo .no{ color:#cfc6b6; } .row.todo .tt{ color:#a59d90; }
+  .row.test .no{ font-size:15px; letter-spacing:.1em; font-family:var(--mincho); font-weight:700; color:#a06a32; }
+  .other{ margin-top:48px; font-size:14px; }
+  .meta{ font-size:12.5px; color:var(--sub); margin-top:36px; border-top:1px solid var(--line); padding-top:12px; }
+  @media (max-width:640px){
+    body{ padding:36px 16px 40px; }
+    .row{ grid-template-columns:52px 1fr; }
+    .row .no{ font-size:36px; }
+    .row .go{ grid-column:1 / -1; flex-direction:row; min-width:0; }
+    .go a,.go span{ flex:1; }
+  }
+</style>
+</head>
+<body>
+<!--fzk-back--><p style="margin:0 0 18px;font-size:12px;letter-spacing:.2em;line-height:1.6"><a href="../index.html" style="color:#a8322a;text-decoration:none">← 文机 FUZUKUE</a></p>
+<header class="mast">
+<p class="en">QUANTUM MECHANICS</p>
+<h1>量子力学</h1>
+<p class="lead">2026年度 第二学期 自習教材。各回は、導出の筋道を省かずに説明し直した<strong>教材</strong>と、そこから遠くまで連れていく<strong>読み物</strong>の二冊で一組。講義は毎週木曜の3・4限で、教材は1コマにつき1回分。</p>
+</header>
+
+<p class="spine"><strong>全体の骨格</strong>：二重スリットと光電効果（粒と波）→ 波動関数と確率・重ね合わせ → 演算子と固有値・不確定性 → シュレディンガー方程式を解く（自由粒子・無限井戸）→【中間】→ 3次元・極座標 → 水素原子（球面調和関数・動径分布）→ 量子数とスピン →【期末】</p>
+
+<h2>前半：粒と波から、シュレディンガー方程式へ <small>10/2〜10/16</small></h2>
+
+<div class="row">
+  <div class="no">1</div>
+  <div><p class="dt">第1回・10/2 3限</p><p class="tt"><a href="01_第1回_二重スリットと光の粒.html">二重スリットと光の粒</a></p>
+  <p class="ds">二重スリット／確率振幅と干渉／平面波／光電効果／E=hν, p=h/λ</p></div>
+  <div class="go"><a class="les" href="01_第1回_二重スリットと光の粒.html"><small>LESSON</small>教材を読む</a>
+  <a class="col" href="column/C01_あれかこれか.html"><small>READING</small>あれか、これか</a></div>
+</div>
+<div class="row">
+  <div class="no">2</div>
+  <div><p class="dt">第2回・10/2 4限</p><p class="tt"><a href="02_第2回_電子の波と波動関数.html">電子の波と波動関数</a></p>
+  <p class="ds">ド・ブロイ波長 λ=h/p／群速度／デイヴィソン＝ガーマー／基本命題 I〜III（波動関数・確率密度・重ね合わせ）／平面波の束と不確定性</p></div>
+  <div class="go"><a class="les" href="02_第2回_電子の波と波動関数.html"><small>LESSON</small>教材を読む</a>
+  <a class="col" href="column/C02_原子のうなり.html"><small>READING</small>原子のうなり</a></div>
+</div>
+<div class="row">
+  <div class="no">3</div>
+  <div><p class="dt">第3回・10/9 3限</p><p class="tt"><a href="03_第3回_δ関数とフーリエ展開.html">δ関数とフーリエ展開</a></p>
+  <p class="ds">期待値と不確かさ（標準偏差）／δ関数と ∫e^{ikx}dk=2πδ(x)／フーリエ展開とパーセバルの等式／関数の直交（ベクトルとの類比）／運動量演算子 p̂=−iħ∂ₓ の導出／ガウス波束で ΔxΔk=1/2</p></div>
+  <div class="go"><a class="les" href="03_第3回_δ関数とフーリエ展開.html"><small>LESSON</small>教材を読む</a>
+  <a class="col" href="column/C03_マレーの線.html"><small>READING</small>マレーの線</a></div>
+</div>
+<div class="row">
+  <div class="no">4</div>
+  <div><p class="dt">第4回・10/9 4限</p><p class="tt"><a href="04_第4回_固有値と測定の規則.html">固有値と測定の規則</a></p>
+  <p class="ds">行列の固有値（数学準備）／線形演算子／p̂・x̂・Ĥ の固有関数（調和振動子の零点エネルギー）／エルミート演算子：実固有値と直交／基本命題 IV〜VI（展開・確率・収縮・期待値）／シュレディンガー方程式と確率の保存／[x̂, p̂] = iħ</p></div>
+  <div class="go"><a class="les" href="04_第4回_固有値と測定の規則.html"><small>LESSON</small>教材を読む</a>
+  <a class="col" href="column/C04_封の中の籤.html"><small>READING</small>封の中の籤</a></div>
+</div>
+<div class="row todo"><div class="no">5</div><div><p class="dt">第5回・10/16 3限</p><p class="tt">交換関係とHeisenberg不確定性，縮退，定常状態と非定常状態</p><p class="ds">資料あり（レジュメ第3回）・作成予定</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">6</div><div><p class="dt">第6回・10/16 4限</p><p class="tt">シュレディンガー方程式の解法II（自由粒子，無限井戸）</p><p class="ds">資料あり（レジュメ第3回）・作成予定</p></div><div class="go"></div></div>
+<div class="row test"><div class="no">中間</div><div><p class="dt">10/23 3限</p><p class="tt">中間試験</p><p class="ds">範囲は第1〜6回と推定</p></div><div class="go"><span><small>EXAM</small>予想問題（作成予定）</span></div></div>
+
+<h2>後半：3次元と水素原子 <small>10/30〜11/13（担当教員が交代）</small></h2>
+<div class="row todo"><div class="no">7</div><div><p class="dt">第7回・10/30 3限</p><p class="tt">3次元のシュレディンガー方程式と波動関数</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">8</div><div><p class="dt">第8回・10/30 4限</p><p class="tt">極座標表示のシュレディンガー方程式</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">9</div><div><p class="dt">第9回・11/6 3限</p><p class="tt">水素原子・球面調和関数（1）</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">10</div><div><p class="dt">第10回・11/6 4限</p><p class="tt">水素原子・球面調和関数（2）</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">11</div><div><p class="dt">第11回・11/13 3限</p><p class="tt">水素原子・動径分布関数</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row todo"><div class="no">12</div><div><p class="dt">第12回・11/13 4限</p><p class="tt">量子数，電子，スピン</p><p class="ds">資料待ち</p></div><div class="go"></div></div>
+<div class="row test"><div class="no">期末</div><div><p class="dt">11/20 3限</p><p class="tt">期末試験</p><p class="ds">範囲は第7〜12回と推定</p></div><div class="go"><span><small>EXAM</small>予想問題（作成予定）</span></div></div>
+
+<p class="other"><a href="はじめに_使い方ガイド.html">はじめに：このフォルダの使い方</a> ― 分からないところは質問すれば教材に追記される（ティーチングモード）。</p>
+<p class="meta">例題・演習・読み物は自作であり、実際の出題を保証するものではない。日程は講義スケジュール（予定）による。</p>
+
+</body>
+</html>

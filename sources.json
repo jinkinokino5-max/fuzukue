@@ -5,6 +5,7 @@
     { "name": "機械力学",             "slug": "kikai-rikigaku", "src": "機械力学/output" },
     { "name": "「今昔物語集」を読む", "slug": "konjaku",        "src": "「今昔物語集」を読む/output" },
     { "name": "電磁気学",             "slug": "denjiki",        "src": "電磁気学/output" },
-    { "name": "上代文学へのいざない", "slug": "jodai",          "src": "上代文学へのいざない/output" }
+    { "name": "上代文学へのいざない", "slug": "jodai",          "src": "上代文学へのいざない/output" },
+    { "name": "量子力学",             "slug": "ryoshi",         "src": "量子力学/output" }
   ]
 }

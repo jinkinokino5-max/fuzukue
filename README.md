@@ -9,6 +9,7 @@
 | 「今昔物語集」を読む | `konjaku/` |
 | 電磁気学 | `denjiki/` |
 | 上代文学へのいざない | `jodai/` |
+| 量子力学 | `ryoshi/` |
 
 ## しくみ
 - `docs/` が GitHub Pages の公開ルート（main ブランチ /docs）。

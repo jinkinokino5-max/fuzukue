@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>封の中の籤</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<div class="backlink">量子力学 自習教材 ｜ 第4回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../04_第4回_固有値と測定の規則.html">第4回 固有値と測定の規則</a>（§5.2・§6.5・§7.2）</div>
+
+<figure class="hero">
+  <img src="img/hero_04_yoshinori.jpg" alt="足利義教像。黒い烏帽子に白い直垂の男が、扇を手に上畳の上に座っている。茶色の絹地">
+  <div class="ttl">封の中の<br>籤<small>封・初筮・偏光板</small></div>
+  <figcaption>「足利義教像」（妙興寺蔵、部分。賛は長禄二年＝1458）</figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第四回</div>
+  <p class="lede">応永三十五年の正月、室町幕府の世継ぎは、封をした籤の中にあった。籤は前の日に引かれ、開けられたのは将軍が息を引き取った後だったと伝わる。封の中の答えは、いつ決まったのか。</p>
+  <div class="keys"><span>籤</span><span>封</span><span>初筮</span><span>丁半の壺</span><span>偏光板</span></div>
+</header>
+
+<article>
+
+<h2><span class="no">序</span>封は、なぜ死後に切られたか</h2>
+<p>応永三十五年（1428）正月、四代将軍足利義持は死の床にあって、なお後継を名指さなかった。五代義量は三年前、数え十九で没している。三宝院満済や管領畠山満家らは評議を重ね、義持の弟四人――梶井門跡義承、大覚寺門跡義昭、相国寺の虎山永隆、青蓮院門跡義円――の名を籤にかけ、石清水八幡宮の神前で引かせた。籤は十七日に引かれ、封をしたまま置かれ、十八日、義持の死を待って開けられた。名の出たのは義円で、還俗して義教となる。</p>
+<figure><img src="img/c04_iwashimizu.jpg" alt="石垣の上に建つ朱塗りの楼門と回廊。石段と石灯籠が並び、人はいない"><figcaption><b>石清水八幡宮の楼門</b>京都府八幡市、男山の上。籤はこの社の神前で引かれた。663highland（2006）, via Wikimedia Commons, CC BY 2.5</figcaption></figure>
+<p>十七日に引かれ、十八日に開けられた。そのあいだの一日、答えはもう決まっていて、誰も知らなかっただけなのか。それとも、開けるまで決まっていなかったのか。</p>
+<p>開封を延ばした理由として、こんな話が伝わる。義量の早世ののち、義持は同じ八幡の神前で籤を引き、男子が生まれるという答えを得ていた。弟から世継ぎを選ぶ籤を生きているうちに開ければ、八幡は「子が生まれる」と言い、同時に「弟が継ぐ」と言うことになる。神の答えが二つ並んで食い違うのを、義持は避けたのだという（籤引きを誰が言い出したかさえ、満済の日記と万里小路時房の『建内記』とでは書きぶりが違い、どこまで信じてよいかは決めにくい）。</p>
+<p>二つの籤は、同じことを二度たずねたのではない。一つ目は「子が生まれるか」、二つ目は「弟の誰か」。義持が恐れたのは、問いを重ねることだった、と読める。</p>
+
+<h2><span class="no">一</span>初筮は告ぐ</h2>
+<p>易は偶然を呼び込む書である。四十九本の筮竹を二つに分け、一本を指に挟み、四本ずつ数えて余りを除く。これを三度くり返して、ようやく一本の爻が得られる。その易が、自分の経文の中に二度目の禁止を書き込んでいる。蒙卦の卦辞に、「初筮は告ぐ。再三すれば瀆る。瀆るれば則ち告げず」。はじめの占いには答える。同じことを二度三度と問うのは占いを汚すことで、汚せばもう答えない。</p>
+<figure style="max-width:600px;margin:2em auto"><img src="img/c04_ekisha.jpg" alt="大正期の日本の路上の易者。白ひげの老人が筮竹の束を手に持ち、「周易」と書いた看板の前で、赤子を背負った女性と向かい合っている"><figcaption><b>路上の易者</b>1914〜18年頃、日本。老人の手に筮竹の束、脇に「周易」の看板。Elstner Hilton 撮影（A. Davey 所蔵）, via Wikimedia Commons, CC BY 2.0</figcaption></figure>
+<p>この一句を読むかぎり、易がより手間をかけているのは、偶然を一回に限ることのほうだ。一回に限るから、出た卦は引き直せない。凶が出た者は、その凶を抱えて帰る。</p>
+<p>答えの出やすさにも偏りがある。筮竹の手順では、変わらない陰が 7/16、変わらない陽が 5/16、変わる陰が 1/16、変わる陽が 3/16。同じ易でも硬貨三枚で占えば 1/8 と 3/8 に変わるから、この重みは筮竹の数え方が持っている。講義の例題 5-1 の 2/3、1/6、1/6 は、測る道具を替えても変わらない。量子の重み |c<sub>a</sub>|² は、状態が持っている。</p>
+<p>変わる爻が出たときは、その爻を反転させた卦（之卦）も合わせて読む。一回の筮が、いまの卦と、その行き先の卦を一度に告げる。量子力学の測定は、答えだけを告げる。測った直後の状態は出た値の固有関数で、そこから先の行き先は、測定ではなくシュレディンガー方程式が決める。だから講義は命題 V の帰結に「直後に」と添える。直後にもう一度測れば同じ値が出るが、時間がたてば、状態はもう動いているかもしれない。</p>
+
+<h2><span class="no">二</span>別の問いを挟む</h2>
+<p>縦向きの偏光板を二枚並べる。一枚目を通った光は、二枚目を一つ残らず通り抜ける。光子一個ずつで数えても同じで、一枚目を通った光子が二枚目で止められる確率は 0 である。ここで易と量子はすれ違う。易は二度目に答えることを拒む。偏光板は拒まない。ただ、一度目をそのまま写して返す。</p>
+<p>その二枚のあいだに、四十五度傾けた板を差し込む。四十五度の板を通るのは、縦の光の半分。通った光を最後の縦の板に当てると、また半分しか残らない。cos²45° = 1/2 が二度かかり、三枚すべてを抜けるのは一枚目を通った光の四分の一になる。一枚目を通ったのだから縦だったはずの光子が、最後の縦の板で半分止められる。</p>
+<figure style="max-width:600px;margin:2em auto"><img src="img/c04_polarizer.jpg" alt="ノートパソコンの液晶画面の上に、偏光シートが何枚か角度を変えて重ねてある。シートの向きによって、画面が透けて見えたり、半ば暗くなったり、真っ黒になったりしている"><figcaption><b>液晶画面に重ねた偏光シート</b>液晶画面の光はすでに一つの向きに偏っている。シートの向きが合えば透け、直角なら真っ黒になる。Pieter Kuiper（2008）, via Wikimedia Commons, Public domain</figcaption></figure>
+<figure class="map"><svg viewBox="0 0 640 300" width="640" role="img" aria-label="偏光板の並べ方と、残る光の割合">
+<defs><marker id="c04-arw" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a8322a"/></marker></defs>
+<g font-family="serif" font-size="14" fill="#2b2b2b">
+<text x="10" y="60">縦 → 縦</text>
+<line x1="150" y1="55" x2="440" y2="55" stroke="#a8322a" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#c04-arw)"/>
+<ellipse cx="200" cy="55" rx="16" ry="30" fill="#e8e1d2" stroke="#2b3a67" stroke-width="1.5"/><line x1="200.0" y1="77.0" x2="200.0" y2="33.0" stroke="#2b3a67" stroke-width="3"/>
+<text x="226" y="41" font-size="13" fill="#a8322a" stroke="#fbfaf7" stroke-width="3" paint-order="stroke">1</text>
+<ellipse cx="350" cy="55" rx="16" ry="30" fill="#e8e1d2" stroke="#2b3a67" stroke-width="1.5"/><line x1="350.0" y1="77.0" x2="350.0" y2="33.0" stroke="#2b3a67" stroke-width="3"/>
+<text x="376" y="41" font-size="13" fill="#a8322a" stroke="#fbfaf7" stroke-width="3" paint-order="stroke">1</text>
+<text x="10" y="155">縦 → 横</text>
+<line x1="150" y1="150" x2="440" y2="150" stroke="#a8322a" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#c04-arw)"/>
+<ellipse cx="200" cy="150" rx="16" ry="30" fill="#e8e1d2" stroke="#2b3a67" stroke-width="1.5"/><line x1="200.0" y1="172.0" x2="200.0" y2="128.0" stroke="#2b3a67" stroke-width="3"/>
+<text x="226" y="136" font-size="13" fill="#a8322a" stroke="#fbfaf7" stroke-width="3" paint-order="stroke">1</text>
+<ellipse cx="350" cy="150" rx="16" ry="30" fill="#e8e1d2" stroke="#2b3a67" stroke-width="1.5"/><line x1="328.0" y1="150.0" x2="372.0" y2="150.0" stroke="#2b3a67" stroke-width="3"/>
+<text x="376" y="136" font-size="13" fill="#a8322a" stroke="#fbfaf7" stroke-width="3" paint-order="stroke">0</text>
+<text x="10" y="250">縦 → 45° → 縦</text>
+<line x1="150" y1="245" x2="590" y2="245" stroke="#a8322a" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#c04-arw)"/>
+<ellipse cx="200" cy="245" rx="16" ry="30" fill="#e8e1d2" stroke="#2b3a67" stroke-width="1.5"/><line x1="200.0" y1="267.0" x2="200.0" y2="223.0" stroke="#2b3a67" stroke-width="3"/>
+<text x="226" y="231" font-size="13" fill="#a8322a" stroke="#fbfaf7" stroke-width="3" paint-order="stroke">1</text>
+<ellipse cx="350" cy="245" rx="16" ry="30" fill="#e8e1d2" stroke="#2b3a67" stroke-width="1.5"/><line x1="334.4" y1="260.6" x2="365.6" y2="229.4" stroke="#a8322a" stroke-width="3"/>
+<text x="376" y="231" font-size="13" fill="#a8322a" stroke="#fbfaf7" stroke-width="3" paint-order="stroke">1/2</text>
+<ellipse cx="500" cy="245" rx="16" ry="30" fill="#e8e1d2" stroke="#2b3a67" stroke-width="1.5"/><line x1="500.0" y1="267.0" x2="500.0" y2="223.0" stroke="#2b3a67" stroke-width="3"/>
+<text x="526" y="231" font-size="13" fill="#a8322a" stroke="#fbfaf7" stroke-width="3" paint-order="stroke">1/4</text>
+</g></svg><figcaption>偏光板の三つの並べ方。数字は、一枚目を通った光を 1 としたときに残る割合（理想的な偏光板として計算）。</figcaption></figure>
+<p>四十五度の板にとって、縦か横かは問いの外にある。「斜めか」と問われて「斜め」と答えた光子は、その代わりに「縦」を手放す。一枚目の結果が間違っていたのではない。別の問いが、それを消したのである。</p>
+<div class="physics"><b>講義では</b>　同じ出来事を位置と運動量で起こすのが、<a href="../04_第4回_固有値と測定の規則.html">第4回</a> §7.2 の [x̂, p̂] = iħ である。理想化した測定で位置を測り、続けて運動量を測ると、状態は平面波に変わり、さっきの位置はもう残っていない。同じ問いを重ねるのは安全で、危ないのは交換しない別の問いを挟むことだ。第5回で、ここから Δx·Δp ≥ ħ/2 を導く。</div>
+<p>義持の恐れは、偏光板の最後の一枚に似ている。「子は生まれるか」と「弟の誰が継ぐか」は、同時には答えられない問いだったのかもしれない。義持は二つ目の封を、自分がもう何も確かめなくてよくなる時まで、切らせなかった。</p>
+
+<h2><span class="no">結</span>封の中には、目が無い</h2>
+<p>丁半の壺の中では、サイコロの目はもう出ている。壺を伏せた瞬間に決まっていて、開ける前は誰も知らないだけだ。古典の世界では、封の中の籤もこの壺と同じである。量子の測定に固有なのは、封の中にまだ目が無いことだ。測る前の状態は重ね合わせ Σ c<sub>a</sub>ψ<sub>a</sub> で、そこには「縦」とも「斜め」とも書かれていない。書かれているのは、それぞれの目の重み |c<sub>a</sub>|² だけである。一度目の測定が値を作り、二度目はそれを写す。</p>
+<p>1926年12月4日、アインシュタインはボルンに宛てて、この理論は多くをもたらすが「老人（des Alten）の秘密」にはほとんど近づけない、と書き、「いずれにせよ私は、あの方がサイコロを振らないと確信している」と続けた（筆者訳）。九年後の1935年、ポドルスキー、ローゼンとの共著論文で彼が問うたのは、量子力学による物理的実在の記述は完全と見なせるか、だった。彼が引っかかり続けたのは、偶然よりも、測る前の値について理論が黙っていることである。</p>
+<p>封の中の答えは、いつ決まったのか。量子力学の講義は、この問いに答えずに先へ進む。命題 V は「いつ」も「何が」も言わない。封の一日は、その黙っているところを、問いの形で見せる。</p>
+<p class="coda">籤は、開けるまでは無く、開けてからは戻らない。</p>
+
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+<h3>参照した本 ── 本文が依拠した原典</h3>
+<ul>
+  <li><span class="bk">『易経』蒙卦 卦辞</span> <span class="pub">―</span><span class="why">「初筮告、再三瀆、瀆則不告」。訓読は通行の読みによる</span></li>
+  <li><span class="bk">A. Einstein, M. Born, <i>Briefwechsel 1916–1955</i>（ボルン宛書簡、1926年12月4日）</span> <span class="pub">―</span><span class="why">"Die Theorie liefert viel, aber dem Geheimnis des Alten bringt sie uns kaum näher. Jedenfalls bin ich überzeugt, daß der nicht würfelt."</span></li>
+  <li><span class="bk">A. Einstein, B. Podolsky, N. Rosen, "Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?", Phys. Rev. 47, 777</span> <span class="pub">1935</span><span class="why">結の「完全と見なせるか」</span></li>
+</ul>
+<p class="note">※書簡と『満済准后日記』『建内記』は通読していない。書簡の文言は引用を載せた解説・辞典類で、籤引きの経緯は日本語版 Wikipedia「足利義教」（同記事が挙げる両日記の記述）で確認した。</p>
+<h3>参考図書 ── さらに読むために</h3>
+<ul>
+  <li><span class="bk">今谷明『籤引き将軍足利義教』</span> <span class="pub">講談社選書メチエ, 2003</span><span class="why">籤による選出から、義教の専制と嘉吉の変までを一冊で追える（本コラムの筆者は未読。書誌は版元で確認）</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。義持が開封を延ばした理由は伝承として紹介したもので、史料の記述には食い違いがあります。籤と量子の測定の結びつけ（見立て）は筆者の解釈であり、学説として確立したものではありません。筮竹法の確率（7/16, 5/16, 1/16, 3/16）と偏光板の割合（1/4）は本教材で検算しました。</div>
+  <h3>図版の出典</h3>
+  <ul>
+    <li>扉：「足利義教像」（妙興寺蔵）：<a href="https://commons.wikimedia.org/wiki/File:Ashikaga_Yoshinori_cropped.jpg">File:Ashikaga Yoshinori cropped.jpg</a>（Public domain。左右に地の色の余白を足して横長にした）</li>
+    <li>序：石清水八幡宮の楼門：<a href="https://commons.wikimedia.org/wiki/File:Iwashimizu_hachimangu02s3200.jpg">File:Iwashimizu hachimangu02s3200.jpg</a>（663highland、CC BY 2.5。縮小のみ）</li>
+    <li>一：路上の易者：<a href="https://commons.wikimedia.org/wiki/File:Fortune_Teller_on_the_street_of_Japan_%281914_by_Elstner_Hilton%29.jpg">File:Fortune Teller on the street of Japan (1914 by Elstner Hilton).jpg</a>（CC BY 2.0。縮小のみ）</li>
+    <li>二：液晶画面と偏光シート：<a href="https://commons.wikimedia.org/wiki/File:LCD_polarization.JPG">File:LCD polarization.JPG</a>（Pieter Kuiper、Public domain。縮小のみ）</li>
+    <li>二：偏光板の図：本コラムで作成（理想的な偏光板として計算）</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://ja.wikipedia.org/wiki/%E8%B6%B3%E5%88%A9%E7%BE%A9%E6%95%99">足利義教（Wikipedia 日本語版）</a>：籤引きの日付（17日に引き18日に開封）、候補4人、義持の先の籤の話（注）、『満済准后日記』と『建内記』の記述の違い</li>
+    <li><a href="https://www.kodansha.co.jp/book/products/0000195227">講談社：今谷明『籤引き将軍足利義教』</a>：書誌</li>
+    <li><a href="https://en.wikipedia.org/wiki/I_Ching_divination">I Ching divination（Wikipedia）</a>、<a href="https://russellcottrell.com/VirtualYarrowStalks/dynamicEnergies.htm">russellcottrell.com</a>：筮竹法と硬貨法の確率</li>
+    <li>ボルン宛書簡（1926年12月4日）の原文：<a href="https://www.spektrum.de/magazin/der-zufall-im-kosmos/1368111">Spektrum der Wissenschaft</a> ほかの引用で照合</li>
+  </ul>
+</div>
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../04_第4回_固有値と測定の規則.html"><small>LESSON 4</small>← 教材：第4回 固有値と測定の規則</a></nav>
+
+</body>
+</html>
