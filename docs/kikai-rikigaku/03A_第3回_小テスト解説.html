@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3回 小テスト解説（課題3A）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<header style="padding-top:48px">
+<p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第3回・小テスト解説</p>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">課題 3A の解き方</h1>
+</header>
+<p class="lead">2026/10/8／第3回「3次元の力とモーメント」の Moodle 小テスト（課題 3A〔必修〕全3問）。各問を、教材の解き方の手順①〜⑥（教材 7.1節の3次元版）で解き直したもの。</p>
+
+<div class="navi">
+<strong>3問に共通する道具</strong>：外積の成分の式（教材 式3.1）→ 点まわりのモーメント $\boldsymbol M=\boldsymbol r\times\boldsymbol F$（教材 式2.53・2.54）→ 軸まわりのモーメント $\tau=\boldsymbol u\cdot\boldsymbol M$（教材 式2.60）→ 複数の力とモーメントを1点に集める $\boldsymbol F=\sum\boldsymbol F_i$、$\boldsymbol M=\sum\boldsymbol r_i\times\boldsymbol F_i+\sum\boldsymbol M_j$（教材 式2.58・2.59）→ 基準点を移す式 $\boldsymbol M_Q=\boldsymbol M_P+\overrightarrow{\mathrm{QP}}\times\boldsymbol F$（教材 式6.1）。<br>
+<strong>いちばん大事な約束</strong>：$\boldsymbol r$ は<strong>基準点 → 着力点</strong>のベクトル。外積は順番を入れ替えると符号が逆になる（$\boldsymbol r\times\boldsymbol F=-\boldsymbol F\times\boldsymbol r$、教材 3.3節）ので、必ず $\boldsymbol r\times\boldsymbol F$ の順に書く。
+</div>
+
+<div class="warn"><span class="label">この解説の位置づけ</span>問題文と図は Moodle の画面（reference/講義資料/第3回小テスト.pdf）から転載した。解答は<strong>自作</strong>であり、公式の解答とはまだ照合していない。数値は Python（draft/check_quiz03.py）で、別の計算方法も含めて検算した。3A-3 の力の向きは図から読み取ったもので、読み取りの前提はその問に書いておく。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>3A-1　点まわり・軸まわりのモーメント</h2>
+<div class="ex"><span class="label">3A-1〔A〜B〕</span>
+<p>ある物体内の3点 A(4, 3, 2), B(−1, 2, 5), P(5, 7, 0) を考える（長さの単位はメートルとする）。点 P に力 $\boldsymbol F=\begin{bmatrix}20\\15\\25\end{bmatrix}$ N が作用しているとき、以下の問いに答えなさい。<br>
+(a) 力 $\boldsymbol F$ の大きさを求めなさい。<br>
+(b) 力 $\boldsymbol F$ による、原点 O まわりのモーメントベクトル $\boldsymbol M_O$ を求めなさい。<br>
+(c) 力 $\boldsymbol F$ による、点 A まわりのモーメントベクトル $\boldsymbol M_A$ を求めなさい。<br>
+(d) 力 $\boldsymbol F$ による、軸 AB まわりのモーメントの大きさを求めなさい。</p>
+<p class="note">解答欄：(a) $F$ [N]、(b)(c) $[\ \square\ \ \square\ \ \square\ ]^{\mathsf T}$ Nm、(d) 大きさ [Nm]（A から B へ右ねじが進むときのねじの回転方向を正として、符号つきで入力）。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：力は1本（着力点 P）。基準は (b) 点 O、(c) 点 A、(d) 軸 AB。</p>
+<p>② <strong>座標軸</strong>：問題の $x,y,z$（右手系）をそのまま使う。</p>
+<p>③ <strong>成分で書く</strong>：$\boldsymbol F=(20,\ 15,\ 25)$ N。位置ベクトルは「基準点 → 着力点」で、<br>
+・O まわり：$\boldsymbol r_{OP}=(5,\ 7,\ 0)$ m<br>
+・A まわり：$\boldsymbol r_{AP}=\mathrm P-\mathrm A=(5-4,\ 7-3,\ 0-2)=(1,\ 4,\ -2)$ m</p>
+
+<p><strong>(a) 大きさ</strong>：3次元の三平方の定理（教材 1.2節）で
+$$F=\sqrt{F_x^2+F_y^2+F_z^2}=\sqrt{20^2+15^2+25^2}=\sqrt{400+225+625}=\sqrt{1250}=25\sqrt2=35.36\ \mathrm N$$</p>
+
+<p><strong>(b) O まわり</strong>：④ 式 (2.54) $\boldsymbol M=\begin{bmatrix}F_zr_y-F_yr_z\\F_xr_z-F_zr_x\\F_yr_x-F_xr_y\end{bmatrix}$ に、$\boldsymbol r=(5,7,0)$、$\boldsymbol F=(20,15,25)$ を入れる。⑤ 成分ごとに1行ずつ：<br>
+・$x$ 成分：$F_zr_y-F_yr_z=25\times7-15\times0=175-0=175$<br>
+・$y$ 成分：$F_xr_z-F_zr_x=20\times0-25\times5=0-125=-125$<br>
+・$z$ 成分：$F_yr_x-F_xr_y=15\times5-20\times7=75-140=-65$
+$$\boldsymbol M_O=[\,175\ \ -125\ \ -65\,]^{\mathsf T}\ \mathrm{Nm}$$
+<span class="note">（覚え方：$x$ 成分は「$y$ と $z$ のたすき掛け」、$y$ 成分は「$z$ と $x$」、$z$ 成分は「$x$ と $y$」。$x\to y\to z\to x$ と巡回させると、前に来るほうの文字が $F$ 側につく。$z$ 成分は第2回の2次元の式 $F_yr_x-F_xr_y$ そのものである。）</span></p>
+
+<p><strong>(c) A まわり</strong>：④ 同じ式に $\boldsymbol r_{AP}=(1,4,-2)$ を入れる。⑤<br>
+・$x$：$F_zr_y-F_yr_z=25\times4-15\times(-2)=100+30=130$<br>
+・$y$：$F_xr_z-F_zr_x=20\times(-2)-25\times1=-40-25=-65$<br>
+・$z$：$F_yr_x-F_xr_y=15\times1-20\times4=15-80=-65$
+$$\boldsymbol M_A=[\,130\ \ -65\ \ -65\,]^{\mathsf T}\ \mathrm{Nm}$$
+⑥ <strong>確かめ（基準点を移す式 6.1）</strong>：$\boldsymbol M_A=\boldsymbol M_O+\overrightarrow{\mathrm{AO}}\times\boldsymbol F$ で、$\overrightarrow{\mathrm{AO}}=(-4,-3,-2)$。<br>
+$$\begin{aligned}\overrightarrow{\mathrm{AO}}\times\boldsymbol F&=\big(25(-3)-15(-2),\ 20(-2)-25(-4),\ 15(-4)-20(-3)\big)\\&=(-75+30,\ -40+100,\ -60+60)=(-45,\ 60,\ 0)\\ \boldsymbol M_O+(-45,\ 60,\ 0)&=(175-45,\ -125+60,\ -65+0)=(130,\ -65,\ -65)\end{aligned}$$
+で一致する。</p>
+
+<p><strong>(d) 軸 AB まわり</strong>：④ 軸上の点 A まわりの $\boldsymbol M_A$ を、軸の単位ベクトル $\boldsymbol u$ に射影する（式 2.60）。<br>
+<span class="note">（なぜ A を使うか：軸まわりのモーメントは、<strong>軸上の点</strong>まわりのモーメントから作る。軸上の点ならどれでも同じ値になる（教材 5.3節）。A は (c) で計算済みなので使い回せる。）</span><br>
+・軸の向き：問題が「A から B へ右ねじが進む向きを正」と指定しているので、$\overrightarrow{\mathrm{AB}}=\mathrm B-\mathrm A=(-1-4,\ 2-3,\ 5-2)=(-5,\ -1,\ 3)$ m。<br>
+・長さ：$|\overrightarrow{\mathrm{AB}}|=\sqrt{25+1+9}=\sqrt{35}=5.916$ m。<br>
+・単位ベクトル：$\boldsymbol u=\dfrac{1}{\sqrt{35}}(-5,\ -1,\ 3)$。</p>
+<p>⑤ 内積を計算する：
+$$\tau_{AB}=\boldsymbol u\cdot\boldsymbol M_A=\frac{(-5)(130)+(-1)(-65)+(3)(-65)}{\sqrt{35}}=\frac{-650+65-195}{\sqrt{35}}=\frac{-780}{5.916}=-131.8\ \mathrm{Nm}$$</p>
+<p>⑥ <strong>確かめ</strong>：(i) 軸上のもう一つの点 B を基準にして $\boldsymbol u\cdot(\boldsymbol r_{BP}\times\boldsymbol F)$ を計算しても −131.8 になる（教材 5.3節の主張どおり）。(ii) 三重積の行列式（教材 5.6節）$\tau=\dfrac{1}{|\overrightarrow{\mathrm{AB}}|}\begin{vmatrix}-5&-1&3\\1&4&-2\\20&15&25\end{vmatrix}=\dfrac{-780}{\sqrt{35}}$ でも一致（Python で検算）。(iii) 単位は m × N = Nm。$|\tau|=131.8\le|\boldsymbol M_A|=\sqrt{130^2+65^2+65^2}=159.2$ で、射影が元のベクトルより大きくならないことも合っている。</p>
+<p><strong>答え：(a) 35.36 N（$25\sqrt2$）　(b) $\boldsymbol M_O=[175\ \ -125\ \ -65]^{\mathsf T}$ Nm　(c) $\boldsymbol M_A=[130\ \ -65\ \ -65]^{\mathsf T}$ Nm　(d) −131.8 Nm（$-780/\sqrt{35}$）</strong></p></div>
+<div class="warn"><span class="label">よくある誤り</span>(1) (c) で $\boldsymbol r$ を「A → P」ではなく原点からの $(5,7,0)$ のまま使う：基準点が変われば $\boldsymbol r$ も変わる。(2) (d) で $\boldsymbol u$ を割り忘れて $-780$ と答える：$\overrightarrow{\mathrm{AB}}$ は長さ $\sqrt{35}$ なので、そのまま内積をとると $\sqrt{35}$ 倍の値になる。(3) (d) で $\boldsymbol M_O$（原点まわり）を射影してしまう：O は軸 AB 上にないので、値が変わる（教材 5.5節）。実際 $\boldsymbol u\cdot\boldsymbol M_O=(-875+125-195)/\sqrt{35}=-159.7$ で、正しい値と違う。(4) 符号：負は「A から B へ進む右ねじと逆向きに回す」という意味。大きさの欄でも、指示どおり符号つきで入れる。</div>
+<div class="why"><span class="label">直感：(d) の符号が負になる意味</span>右手の親指を $\overrightarrow{\mathrm{AB}}$ の向き（だいたい $-x$ 向き）に向けると、残りの指が曲がる向きが正。$\boldsymbol F$ はこの軸を、指と<strong>逆向き</strong>に回そうとしている。もし軸 AB に蝶番（ちょうつがい）があれば、扉は「B から A へ進む右ねじ」の向きに回り始める。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>3A-2　純粋モーメントを加える</h2>
+<div class="ex"><span class="label">3A-2〔A〜B〕</span>
+<p>3A-1 と同じ系を考える。すなわち、ある物体内の3点 A(4, 3, 2), B(−1, 2, 5), P(5, 7, 0) の、点 P に力 $\boldsymbol F=\begin{bmatrix}20\\15\\25\end{bmatrix}$ N が作用している。この物体に、さらに純粋モーメント $\boldsymbol M=\begin{bmatrix}122\\165\\80\end{bmatrix}$ Nm を加えたとき、以下の問いに答えなさい。<br>
+(a) 原点 O まわりに作用するモーメントベクトル $\boldsymbol M_{O'}$ を求めなさい。<br>
+(b) $z$ 軸まわりに作用するモーメントベクトル $\boldsymbol M_z$ を求めなさい。<br>
+(c) 軸 AB まわりに作用するモーメントの大きさを求めなさい。</p>
+<p class="note">解答欄：(a)(b) $[\ \square\ \ \square\ \ \square\ ]^{\mathsf T}$ Nm、(c) 大きさ [Nm]（A から B へ右ねじが進む向きを正として符号つき）。問題文の「原点 O まわりの<u>に</u>作用する」は、「原点 O まわりに作用する」の誤植と思われる。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：物体に働くのは、P の力 $\boldsymbol F$ と純粋モーメント $\boldsymbol M$ の2つ。</p>
+<p>② <strong>座標軸</strong>：3A-1 と同じ。</p>
+<p>③ <strong>成分</strong>：3A-1 の結果 $\boldsymbol M_O=(175,-125,-65)$、$\boldsymbol M_A=(130,-65,-65)$ をそのまま使う。</p>
+<p>④ <strong>式を立てる</strong>：合モーメントの式 (2.59) $\boldsymbol M=\sum\boldsymbol r_i\times\boldsymbol F_i+\sum\boldsymbol M_j$。純粋モーメントは<strong>腕を掛けず、そのまま足す</strong>（3次元の偶力のモーメントは基準点によらない、教材 6.1節）。</p>
+<p><strong>(a)</strong> ⑤ 成分ごとに足す：
+$$\boldsymbol M_{O'}=\boldsymbol M_O+\boldsymbol M=(175+122,\ -125+165,\ -65+80)=[\,297\ \ 40\ \ 15\,]^{\mathsf T}\ \mathrm{Nm}$$</p>
+<p><strong>(b)</strong> $z$ 軸は原点 O を通り、単位ベクトルは $\boldsymbol k=(0,0,1)$。軸まわりのモーメントの大きさは $\tau_z=\boldsymbol k\cdot\boldsymbol M_{O'}=15$ Nm（$\boldsymbol M_{O'}$ の $z$ 成分そのもの。教材 2.3節「成分は各軸まわりのモーメント」）。これを<strong>ベクトル</strong>として書くと、軸の向き $\boldsymbol k$ を掛けて
+$$\boldsymbol M_z=\tau_z\,\boldsymbol k=[\,0\ \ 0\ \ 15\,]^{\mathsf T}\ \mathrm{Nm}$$</p>
+<p><strong>(c)</strong> 軸上の点 A まわりの合モーメントは $\boldsymbol M_{A'}=\boldsymbol M_A+\boldsymbol M=(130+122,\ -65+165,\ -65+80)=(252,\ 100,\ 15)$。これを $\boldsymbol u=(-5,-1,3)/\sqrt{35}$ に射影する：
+$$\tau_{AB}=\frac{(-5)(252)+(-1)(100)+(3)(15)}{\sqrt{35}}=\frac{-1260-100+45}{\sqrt{35}}=\frac{-1315}{5.916}=-222.3\ \mathrm{Nm}$$</p>
+<p>⑥ <strong>確かめ（分けて足す）</strong>：内積は足し算に分配できるので、$\tau_{AB}=\boldsymbol u\cdot\boldsymbol M_A+\boldsymbol u\cdot\boldsymbol M$。前半は 3A-1(d) の $-131.8$、後半は $\dfrac{(-5)(122)+(-1)(165)+(3)(80)}{\sqrt{35}}=\dfrac{-610-165+240}{\sqrt{35}}=\dfrac{-535}{\sqrt{35}}=-90.43$。和は $-131.84-90.43=-222.3$ で一致する。</p>
+<p><strong>答え：(a) $\boldsymbol M_{O'}=[297\ \ 40\ \ 15]^{\mathsf T}$ Nm　(b) $\boldsymbol M_z=[0\ \ 0\ \ 15]^{\mathsf T}$ Nm　(c) −222.3 Nm（$-1315/\sqrt{35}$）</strong></p></div>
+<div class="warn"><span class="label">よくある誤り</span>(1) 純粋モーメントに $\boldsymbol r\times$ を掛けてしまう：$\boldsymbol M$ は「力」ではないので、どの点に集めても値はそのまま。(c) でも A に移すために何かを掛ける必要はない。(2) (b) で $[297\ \ 40\ \ 15]$ をそのまま答える：「$z$ 軸まわり」は $z$ 方向の成分だけを取り出したもの。$x$・$y$ 成分は $z$ 軸を回す働きをしない（$z$ 軸に垂直な軸を回す働き）。(3) (b) で $[0\ \ 0\ \ -65]$（力だけのぶん）にしてしまう：問題は「さらに純粋モーメントを加えたとき」なので、$\boldsymbol M$ の $z$ 成分 80 も含める。</div>
+<div class="warn"><span class="label">注意：(b) の答え方</span>「$z$ 軸まわりのモーメント」はふつうスカラー（15 Nm）で答えるが、この問題は解答欄が3成分のベクトルなので、$\tau_z\boldsymbol k=[0\ 0\ 15]^{\mathsf T}$ と書いた。Moodle の正解がこの形であることは未確認。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>3A-3　L字の棒に働く3力を点O・点Aに集める</h2>
+<div class="ex"><span class="label">3A-3〔B〕</span>
+<p>Replace the three forces by a single resultant force at the point O and a moment. Then, solve the same problem at the point A.</p>
+<p class="note">（訳：3つの力を、点 O における1つの合力とモーメントに置き換えよ。次に、点 A について同じ問題を解け。）解答欄：O点・A点それぞれの合力 $\square\,\boldsymbol i+\square\,\boldsymbol j+\square\,\boldsymbol k$ (N)、合モーメント $\square\,\boldsymbol i+\square\,\boldsymbol j+\square\,\boldsymbol k$ (Nm)。</p>
+<figure class="slide"><img src="img/quiz03/q3.jpeg" alt="壁に固定されたL字の棒。壁の点Oからy軸に沿って2 mの点A。Aから x 軸方向に1 mの棒が伸び、その先端に下向き100 N。Aには y 方向に80 N、x 軸と逆向きに50 N" loading="lazy" style="width:460px;max-width:95%;height:auto;background:#fff"><figcaption>3A-3 の図。出典：第3回小テスト（Moodle 課題 3A 問題3）</figcaption></figure>
+<p><strong>図の読み取り（本解説の前提）</strong>：<br>
+・O は原点。$y$ 軸は O から A への棒に沿い、$\mathrm A=(0,\ 2,\ 0)$ m。<br>
+・A から 1 m の棒は、図で $x$ 軸（左下へ向かう矢印）と<strong>平行</strong>に左下へ伸びているので、$+x$ 向き。先端を C とすると $\mathrm C=(1,\ 2,\ 0)$ m。<br>
+・80 N：A で棒の延長方向（右）＝ $+y$ 向き。$\boldsymbol F_1=(0,\ 80,\ 0)$。<br>
+・50 N：A で右上へ。図の $x$ 軸の矢印と平行で逆向きなので $-x$ 向き。$\boldsymbol F_2=(-50,\ 0,\ 0)$。<br>
+・100 N：C で真下＝ $-z$ 向き。$\boldsymbol F_3=(0,\ 0,\ -100)$。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：L字の棒全体。3本の力を点 O（次に点 A）に集める（式 2.58・2.59）。</p>
+<p>② <strong>座標軸</strong>：図の $x,y,z$（右手系：$\boldsymbol i\times\boldsymbol j=\boldsymbol k$ で、$x$ 手前・$y$ 右・$z$ 上）。</p>
+<p>③ <strong>成分で書く</strong>：上の読み取りのとおり。</p>
+<p>④ <strong>式を立てる</strong>：
+$$\boldsymbol F_R=\boldsymbol F_1+\boldsymbol F_2+\boldsymbol F_3,\qquad \boldsymbol M_O=\boldsymbol r_A\times\boldsymbol F_1+\boldsymbol r_A\times\boldsymbol F_2+\boldsymbol r_C\times\boldsymbol F_3$$</p>
+<p>⑤ <strong>解く</strong>（O 点）：</p>
+<p>・合力：$\boldsymbol F_R=(0-50+0,\ 80+0+0,\ 0+0-100)=(-50,\ 80,\ -100)$ N。</p>
+<table class="tb"><tr><th>力</th><th>$\boldsymbol r$（O → 着力点）[m]</th><th>$\boldsymbol F$ [N]</th><th>$\boldsymbol r\times\boldsymbol F$ [Nm]（式 2.54）</th></tr>
+<tr><td>80 N</td><td>(0, 2, 0)</td><td>(0, 80, 0)</td><td>$(0,\ 0,\ 0)$　$\boldsymbol r\parallel\boldsymbol F$</td></tr>
+<tr><td>50 N</td><td>(0, 2, 0)</td><td>(−50, 0, 0)</td><td>$z$：$0\cdot0-(-50)\cdot2=100$、他は 0<br>$=(0,\ 0,\ 100)$</td></tr>
+<tr><td>100 N</td><td>(1, 2, 0)</td><td>(0, 0, −100)</td><td>$x$：$(-100)\cdot2-0\cdot0=-200$<br>$y$：$0\cdot0-(-100)\cdot1=100$<br>$z$：$0\cdot1-0\cdot2=0$</td></tr>
+<tr><td><strong>合計</strong></td><td></td><td><strong>(−50, 80, −100)</strong></td><td><strong>(−200, 100, 100)</strong></td></tr></table>
+<p>⑤′ <strong>A 点</strong>：A から見た着力点は、80 N と 50 N が $\boldsymbol r=\boldsymbol 0$（A そのもの）、100 N が $\overrightarrow{\mathrm{AC}}=(1,\ 0,\ 0)$。<br>
+・80 N・50 N：腕が $\boldsymbol 0$ なのでモーメント 0。<br>
+・100 N：$$(1,0,0)\times(0,0,-100)=\big(0\cdot0-(-100)\cdot0,\ 0\cdot0-(-100)\cdot1,\ 0\cdot0-0\cdot1\big)=(0,\ 100,\ 0)$$
+・合力は基準点によらず同じ $(-50,\ 80,\ -100)$ N。</p>
+<p>⑥ <strong>確かめ</strong>：(i) 基準点を移す式 (6.1)：$\boldsymbol M_A=\boldsymbol M_O+\overrightarrow{\mathrm{AO}}\times\boldsymbol F_R$、$\overrightarrow{\mathrm{AO}}=(0,-2,0)$。$$\begin{aligned}(0,-2,0)\times(-50,80,-100)&=\big((-100)(-2)-80\cdot0,\ (-50)\cdot0-(-100)\cdot0,\ 80\cdot0-(-50)(-2)\big)\\&=(200,\ 0,\ -100)\\ \boldsymbol M_O+(200,\ 0,\ -100)&=(-200+200,\ 100+0,\ 100-100)=(0,\ 100,\ 0)\end{aligned}$$
+で一致する。<br>
+(ii) 図の感覚：100 N の重りは O から見て $y$ 方向に 2 m、$x$ 方向に 1 m 離れて下向きに引くので、$x$ 軸まわりに $-200$（$y$ 方向の腕 2 m）、$y$ 軸まわりに $+100$（$x$ 方向の腕 1 m）。50 N は A を $-x$ へ押し、$z$ 軸まわりに $+100$（腕 2 m）。80 N は作用線が $y$ 軸そのものなので O を通り、0。各軸まわりの値が各成分になっている（教材 2.3節）。</p>
+<p><strong>答え：O 点　合力 $-50\boldsymbol i+80\boldsymbol j-100\boldsymbol k$ N、合モーメント $-200\boldsymbol i+100\boldsymbol j+100\boldsymbol k$ Nm<br>
+A 点　合力 $-50\boldsymbol i+80\boldsymbol j-100\boldsymbol k$ N、合モーメント $0\boldsymbol i+100\boldsymbol j+0\boldsymbol k$ Nm</strong></p></div>
+<div class="warn"><span class="label">注意：図の読み取りに答えが左右される</span>この問題は、斜投影の図から向きを読み取る部分がいちばん間違えやすい。(1) 50 N は「右上」に描かれているが、$y$ 方向でも $z$ 方向でもなく、$x$ 軸の矢印（左下）と平行で逆向き＝ $-x$ である（50 N の矢印と 1 m の棒、$x$ 軸の3本が平行に描かれている）。(2) 1 m の棒は $+x$ 向き（手前）。これを $-x$ と読むと、100 N のモーメントの $y$ 成分の符号が逆になる。本解説の読み取りは図の平行線からの判断で、Moodle の正解とは未照合。</div>
+<div class="why"><span class="label">直感：A に集めると、なぜこんなに簡単になるのか</span>3本のうち2本が A に働いているので、A を基準にするとそれらの腕は 0 になり、残るのは 100 N の1本だけになる。基準点は「多くの力が通る点」を選ぶと計算が減る。ただし O は壁の固定点なので、<strong>壁が支えなければならない</strong>モーメントを知りたいときは O の値（$-200\boldsymbol i+100\boldsymbol j+100\boldsymbol k$）が要る。次回（第4回 釣合い）では、壁の反力がちょうどこれを打ち消す、と考える。</div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 3次元の力の大きさを $\sqrt{F_x^2+F_y^2+F_z^2}$ で出せる（3A-1(a)）。</li>
+<li>□ 式 (2.54) で $\boldsymbol r\times\boldsymbol F$ を1成分ずつ、符号まで正しく計算できる（3A-1(b)(c)・3A-3）。</li>
+<li>□ 基準点が変わると $\boldsymbol r$ が変わり、モーメントも変わることを、式 (6.1) で確かめられる（3A-1(c)・3A-3）。</li>
+<li>□ 軸まわりのモーメントは「軸上の点まわりの $\boldsymbol M$」を「軸の<strong>単位</strong>ベクトル」に射影して出す、と説明できる（3A-1(d)・3A-2(c)）。</li>
+<li>□ 符号の向き（A→B を右ねじの進む向き）を、$\overrightarrow{\mathrm{AB}}=\mathrm B-\mathrm A$ の取り方に反映できる。</li>
+<li>□ 純粋モーメントは腕を掛けずにそのまま足すと説明できる（3A-2）。</li>
+<li>□ 「$z$ 軸まわり」は $z$ 成分だけを取り出すことだと分かる（3A-2(b)）。</li>
+<li>□ 斜投影の図から、力と棒の向きを平行線を頼りに読み取れる（3A-3）。</li>
+</ul></div>
+
+<div class="navi">
+<a href="index.html">← 目次へ</a>　｜　<a href="03_第3回_3次元の力とモーメント.html">教材：第3回 3次元の力とモーメント</a>
+</div>
+
+<p class="meta">出典：問題文と図は第3回小テスト（Moodle 課題 3A）の画面より転載（個人の学習用）。解答・解説は自作で、公式解答とは未照合。数値は Python（draft/check_quiz03.py）で検算済み。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="03_第3回_3次元の力とモーメント.html"><small>LESSON</small>← 教材：第3回 3次元の力とモーメント</a></nav>
+</body>
+</html>
