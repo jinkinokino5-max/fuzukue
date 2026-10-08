@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3回 3次元の力とモーメント｜機械力学</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 第3回（2026-10-08）講義資料「第3回.pdf」対応（CLAUDE.md §8【最重要2】：順序と説明を組み直した）。設計：draft/03_設計.md。読み物コラムはなし（ユーザー指示）。 -->
+<figure class="hero">
+<img src="img/hero_03.jpg" alt="ジョゼフ・ライト・オブ・ダービー《太陽系儀について講義する哲学者》（イェール所蔵版）。暗い部屋でランプの太陽を囲む太陽系儀に、傾きの違う輪が何本もかかり、子どもと大人がのぞき込んでいる">
+<div class="ttl" style="right:3%;top:4%;background:rgba(247,244,236,.86);padding:12px 22px 14px"><p class="vol">第3回</p><h1>3次元の力とモーメント</h1></div>
+<figcaption><p class="cap">輪はそれぞれ違う向きに傾いていて、どの輪にも、それが回るための見えない軸が通っている。</p><p class="cr">Joseph Wright of Derby／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Joseph_Wright_of_Derby_-_Philosopher_giving_a_lecture_on_the_orrery_-_Google_Art_Project.jpg">Wikimedia Commons</a>（《太陽系儀について講義する哲学者》1768年頃の版、イェール英国美術研究センター B1981.25.719）</p></figcaption>
+</figure>
+<p class="lead">2026-10-08／講義資料「第3回」（教科書 2.3節 p.19–23）の範囲。第2回の「反時計回りを＋」は、じつは<strong>紙面から手前へ向く $z$ 軸のまわり</strong>の回転だった。3次元では回転の軸がどの向きにもとれるので、モーメントは「大きさ・回転軸・向き」をもつ<strong>ベクトル</strong> $\boldsymbol M=\boldsymbol r\times\boldsymbol F$ になる。そのうち、決まった軸を回す働きだけを取り出すのが $\tau=\boldsymbol u\cdot\boldsymbol M$ である。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：<br>
+【準備】右手系。3次元の力は成分3つのベクトル。分解は三元連立方程式（1章）<br>
+→ 【動機】3次元の回転には軸がある。大きさ・軸・向きをまとめて<strong>モーメントベクトル</strong>で表す（2章）<br>
+→ 【数学準備】<strong>3次元の外積</strong>を成分で定義し、垂直・$ab\sin\theta$・右ねじを導く。行列式、スカラー三重積（3章）<br>
+→ 【定理】点まわりのモーメント $\boldsymbol M=\boldsymbol r\times\boldsymbol F$（式2.53・2.54）。$z$ 成分が第2回の式（4章）<br>
+→ 【定理】軸まわりのモーメント $\tau=\boldsymbol u\cdot\boldsymbol M=\boldsymbol u\cdot(\boldsymbol r\times\boldsymbol F)$（式2.60）。軸上の点ならどこでも同じ（5章）<br>
+→ 【合成】3次元の偶力、力の移動、力とモーメントの合成（式2.58・2.59）（6章）<br>
+→ 【運用】同じ手順①〜⑥で、例題2・9 とロボットの関節の問題を解く（7章）
+</div>
+
+<div class="box"><span class="label">この回で使う前提</span>
+<ul>
+<li><strong>仮定する</strong>：第1回（ベクトルの成分、2点を結ぶベクトル＝終点−始点、単位ベクトル、内積 $\boldsymbol a\cdot\boldsymbol b=ab\cos\theta$、二元連立方程式による力の分解）と第2回（$M=FL$、反時計回り＋、2次元の外積 $a_xb_y-a_yb_x$、バリニオンの定理、偶力、力の移動）。</li>
+<li><strong>この回で一から説明する</strong>：右手系、三元連立方程式の解き方、3×3 の行列式、3次元の外積とその性質、スカラー三重積、歪対称行列（1・3章）。</li>
+<li><strong>後回しにする</strong>：3次元の釣合い（第4回）。</li>
+</ul></div>
+
+<div class="box"><span class="label">この教材の作り方について</span>講義スライドは穴埋め式で、今回も空欄の答えはすべてスライドのPDFに残っていた。それを本文にふつうの文章として入れた。最後のロボットの例題には答えが載っていないので、本教材で解いた（「自作の解答」と明記）。スライドの誤植と思われる箇所には「注意」と書いた。説明の順序は講義資料どおりではなく組み直した（対応は末尾の「講義資料との対応」）。<strong>試験では講義資料の書き方（式2.54・2.60 など）で答えられるよう</strong>、記号は講義資料に合わせている。</div>
+
+<h2>序　この回の問い</h2>
+<p>授業の共通の題材「小型移動マニピュレータ」が、今回は3次元で登場する。腕の先端の関節 $J_4$ に、斜めの力 $\boldsymbol F$ がかかる。</p>
+<figure class="slide"><img src="img/slide03/ex_robot3d.jpg" alt="台車の上のロボットアーム。関節J1からJ4、リンクL1からL3、先端J4に斜め上向きの力F、左下にx,y,z軸" loading="lazy" style="width:440px;max-width:96%;height:auto;background:#fff"><figcaption>講義資料の例題の図。$x$ 軸は右手前、$y$ 軸は右奥、$z$ 軸は上。出典：講義資料 第3回 p.23</figcaption></figure>
+<div class="def"><span class="label">この回の問い（講義資料の例題）</span>関節 $J_4$ に力 $\boldsymbol F=[-8.0\ \ 5.0\ \ 7.0]^T$ N が作用しているとき、この力が関節 $J_1$ 軸（鉛直）、および関節 $J_3$ 軸まわりに与えるモーメントをそれぞれ求めよ。ただし、ロボットアームは $xz$ 平面内にあり、リンク $L_2$ の傾き $\theta_2=45^\circ$、リンク $L_3$ は水平とする。$L_2=0.4$ m、$L_3=0.3$ m。</div>
+<p>第2回の道具は、すべての力が1枚の平面にあることを前提にしていた。ところがこの力は $x,y,z$ の3成分をもち、2つの関節の軸は鉛直と水平で、向きが違う。<strong>同じ1本の力が、軸ごとに違う大きさの「回す働き」を与える</strong>。それを1つの手順で計算できるようにするのがこの回の目標である。答えは 7.3 節で出す。</p>
+<p>講義資料が挙げた「今日のポイント」は次の3つ。</p>
+<ol><li>モーメントは<strong>ベクトル</strong>である（2章・4章）</li><li><strong>"点"</strong>まわりの力のモーメントの計算方法（4章）</li><li>特定の<strong>"軸"</strong>まわりの力のモーメントの計算方法（5章）</li></ol>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>3次元の座標系と力</h2>
+
+<h3><span class="no">1.1</span>右手系と左手系</h3>
+<p><strong>動機</strong>：平面では「$x$ を右、$y$ を上」と決めれば座標は1通りだった。空間では $x,y$ を決めても、$z$ 軸を「手前」と「奥」のどちらに向けるかで2通りの座標系ができる。この2つは回転させても重ならない（右手と左手のように鏡に映した関係）。どちらを使うか決めておかないと、4章で出てくるモーメントの向きが人によって逆になる。</p>
+<figure class="slide"><img src="img/slide03/coord.jpg" alt="2つの座標系。左は手前にx、右にy、上にz。右は手前にy、右にx、上にz。それぞれz軸のまわりに赤い回転の矢印" loading="lazy" style="width:440px;max-width:96%;height:auto;background:#fff"><figcaption>座標系の種類。左が<strong>右手系</strong>、右が<strong>左手系</strong>。出典：講義資料 第3回 p.4</figcaption></figure>
+<div class="def"><span class="label">定義（右手系）</span>$x$ 軸の向きを $y$ 軸の向きへ（90° の側に）回すとき、<strong>右ねじが進む向き</strong>に $z$ 軸をとった座標系を<strong>右手系</strong>という。逆向きにとったものを<strong>左手系</strong>という。<strong>通常は右手系を用いる</strong>（本教材も講義資料も教科書も、以後すべて右手系）。</div>
+<figure><svg viewBox="0 0 560 260" width="560" role="img" aria-label="右手系と巡回の順">
+<g transform="translate(0,0)"><svg viewBox="0 0 300 260" width="300" role="img" aria-label="右手系：x 軸を y 軸へ回す右ねじは z 軸の向きへ進む">
+<defs><marker id="rhs-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="rhs-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="rhs-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="rhs-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="rhs-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="rhs-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="124.0" y1="160.0" x2="63.1" y2="202.7" stroke="#2a2723" stroke-width="1.6" marker-end="url(#rhs-k)"/>
+<text x="58.2" y="208.5" fill="#2a2723" text-anchor="middle" font-size="13">x</text>
+<line x1="124.0" y1="160.0" x2="235.5" y2="183.7" stroke="#2a2723" stroke-width="1.6" marker-end="url(#rhs-k)"/>
+<text x="244.4" y="188.0" fill="#2a2723" text-anchor="middle" font-size="13">y</text>
+<line x1="124.0" y1="160.0" x2="124.0" y2="40.0" stroke="#2a2723" stroke-width="1.6" marker-end="url(#rhs-k)"/>
+<text x="124.0" y="25.6" fill="#2a2723" text-anchor="middle" font-size="13">z</text>
+<path d="M158.8,86.0 L156.9,84.9 L154.6,83.8 L152.1,82.8 L149.4,81.9 L146.5,81.0 L143.4,80.3 L140.1,79.7 L136.8,79.2 L133.3,78.8 L129.8,78.6 L126.2,78.4 L122.6,78.4 L119.0,78.5 L115.4,78.7 L111.9,79.1 L108.5,79.5 L105.2,80.1 L102.1,80.8 L99.2,81.6 L96.4,82.5 L93.9,83.4 L91.6,84.5 L89.5,85.6 L87.8,86.8 L86.3,88.1 L85.1,89.4 L84.2,90.7 L83.6,92.1 L83.3,93.5 L83.4,94.9 L83.8,96.2 L84.5,97.6 L85.5,98.9 L86.8,100.2 L88.4,101.5 L90.3,102.7 L92.5,103.8 L94.9,104.8 L97.5,105.8 L100.3,106.6 L103.4,107.4 L106.5,108.1 L109.9,108.6 L113.3,109.0 L116.8,109.4 L120.4,109.5 L124.0,109.6 L127.6,109.6 L131.2,109.4 L134.7,109.1 L138.1,108.7 L141.5,108.2 L144.6,107.5 L147.7,106.8 L150.5,105.9 L153.1,105.0 L155.5,103.9 L157.7,102.8 L159.6,101.7" fill="none" stroke="#a8322a" stroke-width="1.8" marker-end="url(#rhs-r)"/>
+<text x="167.2" y="88.0" fill="#a8322a" text-anchor="start" font-size="11">回す向き</text>
+<text x="16.0" y="234.4" fill="#2a2723" text-anchor="start" font-size="12">x → y と回す右ねじは z へ進む</text>
+</g></svg></g>
+<g transform="translate(300,0)"><svg viewBox="0 0 260 260" width="260" role="img" aria-label="巡回の順 x→y→z→x">
+<defs><marker id="cyc-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="cyc-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="cyc-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="cyc-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="cyc-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="cyc-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<text x="130.0" y="55.4" fill="#2a2723" text-anchor="middle" font-size="18">x</text>
+<text x="200.5" y="177.6" fill="#2a2723" text-anchor="middle" font-size="18">y</text>
+<text x="59.5" y="177.6" fill="#2a2723" text-anchor="middle" font-size="18">z</text>
+<path d="M144.1,49.8 L148.9,50.8 L153.7,52.1 L158.3,53.7 L162.9,55.5 L167.3,57.6 L171.6,60.0 L175.7,62.6 L179.7,65.5 L183.5,68.6 L187.1,71.9 L190.4,75.4 L193.6,79.2 L196.6,83.1 L199.3,87.2 L201.7,91.4 L203.9,95.8 L205.8,100.3 L207.5,104.9 L208.8,109.6 L209.9,114.4 L210.7,119.2 L211.2,124.1 L211.4,129.0 L211.3,133.9 L211.0,138.8 L210.3,143.7 L209.3,148.5 L208.1,153.2 L206.5,157.9" fill="none" stroke="#a8322a" stroke-width="1.8" marker-end="url(#cyc-r)"/>
+<path d="M192.4,182.3 L189.1,186.0 L185.6,189.5 L182.0,192.7 L178.1,195.7 L174.1,198.5 L169.9,201.0 L165.5,203.3 L161.0,205.3 L156.5,207.0 L151.8,208.5 L147.0,209.6 L142.2,210.5 L137.3,211.1 L132.4,211.4 L127.6,211.4 L122.7,211.1 L117.8,210.5 L113.0,209.6 L108.2,208.5 L103.5,207.0 L99.0,205.3 L94.5,203.3 L90.1,201.0 L85.9,198.5 L81.9,195.7 L78.0,192.7 L74.4,189.5 L70.9,186.0 L67.6,182.3" fill="none" stroke="#a8322a" stroke-width="1.8" marker-end="url(#cyc-r)"/>
+<path d="M53.5,157.9 L51.9,153.2 L50.7,148.5 L49.7,143.7 L49.0,138.8 L48.7,133.9 L48.6,129.0 L48.8,124.1 L49.3,119.2 L50.1,114.4 L51.2,109.6 L52.5,104.9 L54.2,100.3 L56.1,95.8 L58.3,91.4 L60.7,87.2 L63.4,83.1 L66.4,79.2 L69.6,75.4 L72.9,71.9 L76.5,68.6 L80.3,65.5 L84.3,62.6 L88.4,60.0 L92.7,57.6 L97.1,55.5 L101.7,53.7 L106.3,52.1 L111.1,50.8 L115.9,49.8" fill="none" stroke="#a8322a" stroke-width="1.8" marker-end="url(#cyc-r)"/>
+<text x="130.0" y="119.7" fill="#2a2723" text-anchor="middle" font-size="13">i × j = k</text>
+<text x="130.0" y="140.3" fill="#2a2723" text-anchor="middle" font-size="13">j × k = i</text>
+<text x="130.0" y="160.9" fill="#2a2723" text-anchor="middle" font-size="13">k × i = j</text>
+</g></svg></g>
+</svg>
+<figcaption>図1.1　右手系。$x\to y$ と回す右ねじは $z$ へ進む。同じことは $y\to z$ なら $x$ へ、$z\to x$ なら $y$ へ、と巡回の順にずらしても成り立つ（右の図。3章で外積 $\boldsymbol i\times\boldsymbol j=\boldsymbol k$ などとして使う）。</figcaption></figure>
+<div class="why"><span class="label">直感：右手で確かめる</span>右手の親指を $x$、人さし指を $y$ に向けると、中指を両方に垂直に立てた向きが $z$ になる（フレミングの法則と同じ形）。あるいは、右手を軽く握って4本の指を $x\to y$ の向きに曲げると、立てた親指が $z$ を向く。どちらで覚えてもよいが、<strong>左手でやると逆になる</strong>ことだけ注意。</div>
+<p>右手系で $z$ 軸の正の側から $xy$ 平面を見下ろすと、$x\to y$ は<strong>反時計回り</strong>に見える。第2回で「反時計回りを＋」と約束したのは、<strong>紙面から手前へ向く $z$ 軸のまわりの回転を右ねじで＋とする</strong>ことと同じだった（2.1 節で使う）。</p>
+
+<h3><span class="no">1.2</span>3次元のベクトル：成分・大きさ・単位ベクトル</h3>
+<p>力は<strong>ベクトル</strong>で表せる。これは3次元でも同じである。$x,y,z$ 軸の向きの単位ベクトルを $\boldsymbol i,\boldsymbol j,\boldsymbol k$ とすると、</p>
+$$\boldsymbol F=F_x\boldsymbol i+F_y\boldsymbol j+F_z\boldsymbol k=\begin{bmatrix}F_x\\F_y\\F_z\end{bmatrix}\qquad(1.1)$$
+<p>と書ける（講義資料は縦に並べる書き方を使う。本文では場所をとらないよう $(F_x,\,F_y,\,F_z)$ とも書く。同じもの）。</p>
+<div class="thm"><span class="label">大きさ（3次元のピタゴラスの定理）</span>$$F=|\boldsymbol F|=\sqrt{F_x^2+F_y^2+F_z^2}\qquad(1.2)$$</div>
+<div class="proof"><span class="label">導出</span>
+<p>① $\boldsymbol F$ を、$xy$ 平面への影 $(F_x,F_y,0)$ と、$z$ 方向の部分 $(0,0,F_z)$ に分ける。<span class="note">← 2次元のピタゴラスの定理を2回使える形にするため。</span></p>
+<p>② 影の長さは、平面の中のピタゴラスの定理で $\sqrt{F_x^2+F_y^2}$。</p>
+<p>③ 影と $z$ 方向の部分は直交する（影は $xy$ 平面内、もう一方は $z$ 軸に平行）。この2つを2辺とする直角三角形の斜辺が $\boldsymbol F$ なので、もう一度ピタゴラスの定理を使って $F^2=\left(\sqrt{F_x^2+F_y^2}\right)^2+F_z^2=F_x^2+F_y^2+F_z^2$。</p>
+<p>④ 確かめ：$F_z=0$ なら第1回の2次元の式 $\sqrt{F_x^2+F_y^2}$ に戻る。内積で書けば $F^2=\boldsymbol F\cdot\boldsymbol F$（内積の成分の式 $\boldsymbol a\cdot\boldsymbol b=a_xb_x+a_yb_y+a_zb_z$ は3次元でも同じ形）。</p></div>
+<p>力の向きは「2点を結ぶ向き」で与えられることが多い（ケーブルが点 A から点 B へ張られている、など）。第1回と同じく、<strong>向きを単位ベクトルで表し、大きさを掛ける</strong>。</p>
+<div class="thm"><span class="label">2点の向きに働く力</span>点 A から点 B の向きに大きさ $F$ の力：$$\boldsymbol u=\frac{\overrightarrow{\mathrm{AB}}}{|\overrightarrow{\mathrm{AB}}|},\qquad \boldsymbol F=F\boldsymbol u\qquad(1.3)$$</div>
+<div class="ex"><span class="label">例題1〔A｜自作〕2点を結ぶ向きの力</span>
+<p>点 A$(2,\,0,\,0)$ m から点 B$(0,\,3,\,6)$ m の向きに、大きさ 300 N の力が働く。この力を成分で表せ。</p>
+<p><strong>解答</strong></p>
+<p>① $\overrightarrow{\mathrm{AB}}=$ 終点−始点 $=(0-2,\ 3-0,\ 6-0)=(-2,\ 3,\ 6)$ m。</p>
+<p>② 長さ (1.2)：$\sqrt{(-2)^2+3^2+6^2}=\sqrt{4+9+36}=\sqrt{49}=7$ m。単位ベクトル $\boldsymbol u=(-2,\ 3,\ 6)/7$。</p>
+<p>③ $\boldsymbol F=300\boldsymbol u=(-85.71,\ 128.6,\ 257.1)$ N。</p>
+<p>④ 確かめ：$\sqrt{85.71^2+128.6^2+257.1^2}=300.0$ N。各成分の符号は $\overrightarrow{\mathrm{AB}}$ と同じ（$x$ は負の向き、$y,z$ は正の向き）。</p></div>
+<div class="box"><span class="label">補足：方向余弦</span>単位ベクトルの成分 $(u_x,u_y,u_z)$ は、$\boldsymbol F$ と $x,y,z$ 軸のなす角を $\alpha,\beta,\gamma$ として $(\cos\alpha,\ \cos\beta,\ \cos\gamma)$ に等しい（$u_x=\boldsymbol u\cdot\boldsymbol i=1\cdot1\cdot\cos\alpha$。内積の定義そのもの）。これを<strong>方向余弦</strong>とよび、$\cos^2\alpha+\cos^2\beta+\cos^2\gamma=1$（$|\boldsymbol u|=1$ を言い換えたもの）を満たす。</div>
+
+<h3><span class="no">1.3</span>力の合成：成分ごとに足す</h3>
+<p>力の合成は基本的に2次元と同じで、ベクトルの<strong>和</strong>で求められる（教科書 図2.44）。2つの力 $\boldsymbol F_1,\boldsymbol F_2$ の合力は</p>
+$$\boldsymbol R=\boldsymbol F_1+\boldsymbol F_2,\qquad \begin{bmatrix}R_x\\R_y\\R_z\end{bmatrix}=\begin{bmatrix}F_{1x}+F_{2x}\\F_{1y}+F_{2y}\\F_{1z}+F_{2z}\end{bmatrix}\qquad(1.4)$$
+<figure class="slide"><img src="img/slide03/fig2_44.jpg" alt="教科書 図2.44 3次元の力の合成。原点Oから出るF1とF2を2辺とする平行四辺形の対角線がR=F1+F2" loading="lazy" style="width:300px;max-width:62%;height:auto;background:#fff"><figcaption>教科書 図2.44（3次元の力の合成）。$\boldsymbol F_1,\boldsymbol F_2$ を2辺とする平行四辺形の対角線が合力。出典：講義資料 第3回 p.5</figcaption></figure>
+<p><strong>なぜ成分ごとに足してよいか</strong>：$\boldsymbol F_1=F_{1x}\boldsymbol i+F_{1y}\boldsymbol j+F_{1z}\boldsymbol k$、$\boldsymbol F_2$ も同様に書いて足すと、ベクトルの和は順序を入れ替えてまとめてよい（交換・結合法則）ので $(F_{1x}+F_{2x})\boldsymbol i+(F_{1y}+F_{2y})\boldsymbol j+(F_{1z}+F_{2z})\boldsymbol k$ になる。平行四辺形の作図（図2.44）と同じものを、数で行っているだけである。</p>
+<div class="ex"><span class="label">例題2〔A｜自作〕2力の合成</span>
+<p>$\boldsymbol F_1=(10,\ -20,\ 15)$ N、$\boldsymbol F_2=(-4,\ 8,\ 10)$ N の合力とその大きさを求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (1.4)：$\boldsymbol R=(10-4,\ -20+8,\ 15+10)=(6,\ -12,\ 25)$ N。</p>
+<p>② (1.2)：$R=\sqrt{36+144+625}=\sqrt{805}=28.37$ N。</p>
+<p>③ 確かめ：$F_1=\sqrt{725}=26.93$ N、$F_2=\sqrt{180}=13.42$ N で、$R=28.37\le F_1+F_2=40.34$ N（丸める前の値で足した。三角形の2辺の和は他の1辺より長い）を満たす。</p></div>
+
+<h3><span class="no">1.4</span>力の分解：三元連立方程式</h3>
+<p><strong>動機</strong>：三脚や3本のワイヤで物を支えるとき、1つの力 $\boldsymbol F$ を、決まった3つの向きの力に分けたい。第1回の2次元では2つの向きに分けて二元連立方程式を解いた。3次元では3つの向きが要る（2つの向きでは1枚の平面の中の力しか作れないため）。</p>
+<p>力 $\boldsymbol F$ を、単位ベクトル $\boldsymbol u_1,\boldsymbol u_2,\boldsymbol u_3$ の向きの3つの力 $\boldsymbol F_1,\boldsymbol F_2,\boldsymbol F_3$ に分解する（教科書 図2.45）。それぞれは向きが決まっていて大きさだけが未知なので</p>
+$$\boldsymbol F_1=F_1\boldsymbol u_1,\quad \boldsymbol F_2=F_2\boldsymbol u_2,\quad \boldsymbol F_3=F_3\boldsymbol u_3$$
+<p>と書ける。これらの合力が $\boldsymbol F$ なので</p>
+$$F_1\boldsymbol u_1+F_2\boldsymbol u_2+F_3\boldsymbol u_3=\boldsymbol F\qquad(2.49)$$
+<p>これを $F_1,F_2,F_3$ について解けばよい。ベクトルの式は「$x,y,z$ 成分がそれぞれ等しい」ことと同じなので、成分ごとに書くと</p>
+$$\begin{aligned}u_{1x}F_1+u_{2x}F_2+u_{3x}F_3&=F_x\\u_{1y}F_1+u_{2y}F_2+u_{3y}F_3&=F_y\\u_{1z}F_1+u_{2z}F_2+u_{3z}F_3&=F_z\end{aligned}\qquad(2.50)$$
+<p>または行列で</p>
+$$\begin{bmatrix}u_{1x}&u_{2x}&u_{3x}\\u_{1y}&u_{2y}&u_{3y}\\u_{1z}&u_{2z}&u_{3z}\end{bmatrix}\begin{bmatrix}F_1\\F_2\\F_3\end{bmatrix}=\begin{bmatrix}F_x\\F_y\\F_z\end{bmatrix}$$
+<p>となる。未知数3つ・式3つの<strong>三元連立方程式</strong>である。行列の列が $\boldsymbol u_1,\boldsymbol u_2,\boldsymbol u_3$ を縦に並べたものになっていることに注意（行列とベクトルの積は「1行目と縦ベクトルの内積が1つ目の成分…」と計算するので、上の連立方程式と同じになる）。</p>
+<figure class="slide"><img src="img/slide03/fig2_45.jpg" alt="教科書 図2.45 3次元の力の分解。原点Oから出る力Fを、u1,u2,u3方向の3つの力F1,F2,F3に分解した図" loading="lazy" style="width:320px;max-width:66%;height:auto;background:#fff"><figcaption>教科書 図2.45（3次元の力の分解）。出典：講義資料 第3回 p.6</figcaption></figure>
+<div class="box"><span class="label">数学準備：三元連立方程式の解き方（消去法）</span>
+<p>やることは二元のときと同じで、<strong>1つの式を使って未知数を1つ消し、未知数の少ない式を作る</strong>ことを繰り返す。</p>
+<ol><li>どれか1つの式を「ある未知数＝…」の形に直す（係数が 0 の項がある式を選ぶと楽）。</li>
+<li>それを残りの2式に代入する → 未知数2つ・式2つ（二元連立方程式）になる。</li>
+<li>二元連立方程式を解き、最後に1. の式に戻して残りの未知数を求める。</li>
+<li>求めた値を<strong>3つの式すべてに</strong>代入して確かめる。</li></ol>
+<p>解がちょうど1組に決まるのは、$\boldsymbol u_1,\boldsymbol u_2,\boldsymbol u_3$ が<strong>同じ平面に乗っていない</strong>ときである（同じ平面にあると、その平面から外れた力は作れない）。これを式で判定する方法（行列式）は 3.6 節で出す。</p></div>
+<figure><svg viewBox="0 0 440 360" width="440" role="img" aria-label="力 F を3方向 u1,u2,u3 の力に分解する">
+<defs><marker id="dec-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="dec-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="dec-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="dec-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="dec-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="dec-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="117.4" y1="287.4" x2="71.9" y2="319.2" stroke="#968d80" stroke-width="1.2" marker-end="url(#dec-s)"/>
+<text x="68.3" y="323.5" fill="#968d80" text-anchor="middle" font-size="13">x</text>
+<line x1="117.4" y1="287.4" x2="200.5" y2="305.0" stroke="#968d80" stroke-width="1.2" marker-end="url(#dec-s)"/>
+<text x="207.2" y="308.2" fill="#968d80" text-anchor="middle" font-size="13">y</text>
+<line x1="117.4" y1="287.4" x2="117.4" y2="197.9" stroke="#968d80" stroke-width="1.2" marker-end="url(#dec-s)"/>
+<text x="117.4" y="187.2" fill="#968d80" text-anchor="middle" font-size="13">z</text>
+<path d="M125.8,309.9 L188.2,233.7 L137.1,135.3" fill="none" stroke="#968d80" stroke-width="1.0" stroke-dasharray="4 3" opacity="1"/>
+<line x1="117.4" y1="287.4" x2="125.8" y2="309.9" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#dec-b)"/>
+<line x1="125.8" y1="309.9" x2="188.2" y2="233.7" stroke="#4f7a4a" stroke-width="2.4" marker-end="url(#dec-g)"/>
+<line x1="188.2" y1="233.7" x2="137.1" y2="135.3" stroke="#a06a32" stroke-width="2.4" marker-end="url(#dec-o)"/>
+<line x1="117.4" y1="287.4" x2="137.1" y2="135.3" stroke="#a8322a" stroke-width="2.8" marker-end="url(#dec-r)"/>
+<text x="121.6" y="313.8" fill="#2b3a67" text-anchor="middle" font-size="12">F₁u₁ (10 N)</text>
+<text x="164.2" y="271.8" fill="#4f7a4a" text-anchor="start" font-size="12">F₂u₂ (20 N)</text>
+<text x="169.8" y="184.5" fill="#a06a32" text-anchor="start" font-size="12">F₃u₃ (30 N)</text>
+<text x="132.6" y="129.9" fill="#a8322a" text-anchor="end" font-size="13">F = (26, 18, 40) N</text>
+</g></svg>
+<figcaption>図1.2　例題3 の分解を数値どおりに描いたもの。3つの向きの力を順につなぐと $\boldsymbol F$ の先端に届く。3つの向きは互いに直交していない。</figcaption></figure>
+<div class="ex"><span class="label">例題3〔B｜自作〕直交しない3方向への分解</span>
+<p>力 $\boldsymbol F=(26,\ 18,\ 40)$ N を、$\boldsymbol u_1=(0.8,\ 0.6,\ 0)$、$\boldsymbol u_2=(0,\ 0.6,\ 0.8)$、$\boldsymbol u_3=(0.6,\ 0,\ 0.8)$ の向きの3つの力に分解せよ。</p>
+<p><strong>解答</strong></p>
+<p>① 単位ベクトルか確かめる：$0.8^2+0.6^2=1$ など、どれも長さ 1。</p>
+<p>② (2.50) を書く：<br>
+$0.8F_1+0\cdot F_2+0.6F_3=26$ …(i)<br>
+$0.6F_1+0.6F_2+0\cdot F_3=18$ …(ii)<br>
+$0\cdot F_1+0.8F_2+0.8F_3=40$ …(iii)</p>
+<p>③ (ii) を 0.6 で割ると $F_1+F_2=30$、よって $F_1=30-F_2$。(iii) を 0.8 で割ると $F_2+F_3=50$、よって $F_3=50-F_2$。<span class="note">← 係数 0 のある式から、$F_1$ と $F_3$ を $F_2$ で表した。</span></p>
+<p>④ (i) に代入：$0.8(30-F_2)+0.6(50-F_2)=26$ → $24-0.8F_2+30-0.6F_2=26$ → $54-1.4F_2=26$ → $1.4F_2=28$ → $F_2=20$ N。</p>
+<p>⑤ ③ に戻して $F_1=30-20=10$ N、$F_3=50-20=30$ N。</p>
+<p>⑥ 確かめ（3式すべて）：(i) $8+18=26$ ✓、(ii) $6+12=18$ ✓、(iii) $16+24=40$ ✓。答え：$F_1=10$ N、$F_2=20$ N、$F_3=30$ N（どれも正なので、$\boldsymbol u$ と同じ向き）。</p></div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/03_a1_fleming.jpg" alt="フレミングの右手の法則の図。人さし指が上で磁束、親指が右で運動、中指が手前で電流の向き。下に3本の軸の図" loading="lazy"></div>
+<p class="cap">三つの向きを互いに直角に開いた右手は、1902年の教科書では、それ自体が一つの座標系として描かれている。</p>
+<p class="cr">J. A. Fleming／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Fleming%27s_right_hand_rule.png">Wikimedia Commons</a>（<i>Magnets and Electric Currents</i>, 1902 より）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/03_b1_chambord.jpg" alt="シャンボール城の二重らせん階段。白い石の柱のまわりに手すりつきの段が巻き上がり、開口部から上り下りする見学者が見える" loading="lazy"></div>
+<p class="cap">二本の階段は同じ向きにねじれながら一本の柱を巻き、上る人と下りる人を、すれ違わせたまま一度も出会わせない。</p>
+<p class="cr">Thesupermat／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Ch%C3%A2teau_de_Chambord_-_l%27escalier_%C3%A0_double_r%C3%A9volution_-_001.jpg">Wikimedia Commons</a>（シャンボール城の二重らせん階段、2016年）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>モーメントはベクトルである</h2>
+
+<h3><span class="no">2.1</span>動機：3次元の回転には「軸」がある</h3>
+<p>第2回のモーメントは「反時計回り＋、時計回り−」という符号つきの数（スカラー）だった。平面の中の回転は、紙面に垂直な軸のまわりの回転しかなく、向きが2通りしかないから、それで足りた。</p>
+<p>3次元の物体はどうか。教科書 図2.46 のように、立方体はさまざまな軸のまわりに回る。飛行機の姿勢も、機体の前後軸まわりのロール、左右軸まわりのピッチ、上下軸まわりのヨーの3つで表す。</p>
+<figure class="slide"><img src="img/slide03/fig2_46.jpg" alt="教科書 図2.46 3次元の回転。3つの立方体がそれぞれ違う向きの軸のまわりに回っている" loading="lazy" style="width:300px;max-width:62%;height:auto;background:#fff"><img src="img/slide03/airplane.jpg" alt="飛行機の3つの回転軸。前後軸まわりのロール、左右軸まわりのピッチ、上下軸まわりのヨー" loading="lazy" style="width:300px;max-width:62%;height:auto;background:#fff"><figcaption>左：教科書 図2.46（3次元の回転）。右：飛行機のロール・ピッチ・ヨー。出典：講義資料 第3回 p.8</figcaption></figure>
+<p>講義資料は次のようにまとめている。</p>
+<ul><li>3次元空間内の物体の回転は、ある瞬間には<strong>一つの</strong>回転軸を持つ。</li>
+<li>それは<strong>3つ</strong>の回転軸（$x,y,z$ 軸）まわりの回転の合成とみなせる。</li>
+<li>だから回す働きは、<strong>3個</strong>の成分をもつ<strong>ベクトル量</strong>として扱う。つまり、<strong>モーメントはベクトルである</strong>。</li></ul>
+<p>「回す働き」を伝えるには、<strong>どれだけ強く</strong>（大きさ）、<strong>どの直線のまわりに</strong>（回転軸）、<strong>どちら回りに</strong>（向き）の3つが要る。軸の向きを決めるだけで2つの数（球面上の1点）が要り、それに大きさを加えると数が3つ。ちょうどベクトルの成分の数と同じである。</p>
+
+<h3><span class="no">2.2</span>モーメントベクトルが表すもの</h3>
+<div class="def"><span class="label">定義（モーメントベクトル）</span>モーメントベクトル $\boldsymbol M$ は、回転作用の<strong>大きさ・回転軸・回転の向き</strong>を<strong>1つのベクトル</strong>で表現したものである。
+<ul><li>ベクトルの大きさ（長さ）＝<strong>モーメントの大きさ</strong></li>
+<li>ベクトルを含む直線＝モーメントによる<strong>回転軸</strong></li>
+<li>ベクトルの向きを進行方向として右ねじを回す向き＝モーメントによる回転作用の<strong>向き</strong></li></ul></div>
+<figure class="slide"><img src="img/slide03/fig2_47.jpg" alt="教科書 図2.47 3次元のモーメント。ドライバーでねじを回すと、ねじは回転軸の向きに進む。モーメントベクトルの大きさはモーメントの大きさ、向きは回転軸方向でねじの進む向き" loading="lazy" style="width:300px;max-width:62%;height:auto;background:#fff"><figcaption>教科書 図2.47（3次元のモーメント）。ドライバーを回す向きと、右ねじが進む向き。出典：講義資料 第3回 p.9</figcaption></figure>
+<div class="why"><span class="label">直感：なぜ「右ねじ」なのか</span>回転の向き（ぐるりと回る向き）は、そのままでは矢印1本で描けない。そこで「その向きに右ねじを回したら、ねじはどちらへ進むか」で、回転の向きを軸に沿った1本の矢印に置き換える。1.1 節の右手系と同じ約束なので、<strong>$z$ 軸の向きのモーメント＝$z$ 軸の正の側から見て反時計回り</strong>になり、第2回の「反時計回り＋」とぴったり重なる。</div>
+<div class="ex"><span class="label">例題4〔A｜自作〕モーメントベクトルを読む</span>
+<p>$\boldsymbol M=(3,\ -4,\ 12)$ N·m が表す回転作用の大きさ・回転軸・向きを述べよ。</p>
+<p><strong>解答</strong></p>
+<p>① 大きさ：$|\boldsymbol M|=\sqrt{9+16+144}=\sqrt{169}=13$ N·m。</p>
+<p>② 回転軸：基準点を通り、単位ベクトル $\boldsymbol M/|\boldsymbol M|=(3,\ -4,\ 12)/13=(0.231,\ -0.308,\ 0.923)$ の向きの直線（ほぼ鉛直で、少し傾いている）。</p>
+<p>③ 向き：その単位ベクトルの先の側から見下ろして、反時計回り（右ねじがその向きへ進む回し方）。</p></div>
+
+<h3><span class="no">2.3</span>成分は「各軸まわりのモーメント」</h3>
+<p>モーメントベクトルを成分で書くと</p>
+$$\boldsymbol M=\begin{bmatrix}M_x\\M_y\\M_z\end{bmatrix}=M_x\boldsymbol i+M_y\boldsymbol j+M_z\boldsymbol k=\begin{bmatrix}M_x\\0\\0\end{bmatrix}+\begin{bmatrix}0\\M_y\\0\end{bmatrix}+\begin{bmatrix}0\\0\\M_z\end{bmatrix}$$
+<p>モーメントの $x,y,z$ 成分は、それぞれを<strong>ベクトル</strong> $\boldsymbol M_x=M_x\boldsymbol i$、$\boldsymbol M_y=M_y\boldsymbol j$、$\boldsymbol M_z=M_z\boldsymbol k$ として表すことができる。2.2 節の読み方を当てはめると、$\boldsymbol M_x$ は $x$ 軸の向きのモーメント、つまり<strong>$x$（に平行な）軸まわり</strong>のモーメントを表す。$\boldsymbol M_y,\boldsymbol M_z$ も同じ。それらの<strong>合成</strong>が、物体に作用するモーメントである：</p>
+$$\boldsymbol M=\boldsymbol M_x+\boldsymbol M_y+\boldsymbol M_z$$
+<figure class="slide"><img src="img/slide03/fig2_48.jpg" alt="教科書 図2.48 モーメントベクトルの成分。直方体の対角線がM、各辺がMx,My,Mz、それぞれの軸まわりに回転の矢印" loading="lazy" style="width:280px;max-width:60%;height:auto;background:#fff"><figcaption>教科書 図2.48（モーメントベクトルの成分）。出典：講義資料 第3回 p.10</figcaption></figure>
+<div class="warn"><span class="label">よくある誤解：「回転」はいつでもベクトルとして足せるか</span>
+<p>ここで足しているのは<strong>モーメント（回す働き）</strong>であって、<strong>物体を実際に何度か回した結果（有限の回転）</strong>ではない。本を「$x$ 軸まわりに 90° → $y$ 軸まわりに 90°」と回した姿勢と、「$y$ 軸まわりに 90° → $x$ 軸まわりに 90°」と回した姿勢は一致しない（試してみるとよい）。有限の回転は順序で結果が変わるので、ベクトルのように足せない。</p>
+<p>一方、モーメントが足せることは、4章で $\boldsymbol M=\boldsymbol r\times\boldsymbol F$ が力について<strong>足し算を保つ</strong>（分配法則）ことから示される。「回転の合成」という講義資料の言い方は、「ある瞬間の回る働き（や回る速さ）の合成」と読むこと。</p></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>数学準備：外積と行列式</h2>
+<p>モーメントベクトルを力と位置から計算する道具が<strong>外積</strong>（ベクトル積）である。第2回の2次元の外積 $a_xb_y-a_yb_x$ は数（符号つき面積）だったが、3次元の外積は<strong>ベクトル</strong>になる。この章では、成分で定義してから、その幾何学的な意味（垂直・大きさ・右ねじ）を一つずつ導く。</p>
+
+<h3><span class="no">3.1</span>定義：成分で書いた外積</h3>
+<div class="def"><span class="label">定義（外積、教科書 p.23）</span>$\boldsymbol a=(a_x,a_y,a_z)$、$\boldsymbol b=(b_x,b_y,b_z)$ に対して
+$$\boldsymbol a\times\boldsymbol b=\begin{bmatrix}a_yb_z-a_zb_y\\a_zb_x-a_xb_z\\a_xb_y-a_yb_x\end{bmatrix}\qquad(3.1)$$</div>
+<div class="why"><span class="label">覚え方：添字の巡回</span>
+<p>$x$ 成分は「$y,z$」、$y$ 成分は「$z,x$」、$z$ 成分は「$x,y$」で作る。どれも「$x\to y\to z\to x$ の順に次の2つ」を取り、<strong>（前の $a$ × 後の $b$）−（後の $a$ × 前の $b$）</strong>と書く。たとえば $y$ 成分は「$z,x$」なので $a_zb_x-a_xb_z$。</p>
+<p>$z$ 成分 $a_xb_y-a_yb_x$ は第2回の2次元の外積そのものである。$x$ 成分は「$yz$ 平面の2次元の外積」、$y$ 成分は「$zx$ 平面の2次元の外積」になっている（4.2 節でモーメントの意味として使う）。</p></div>
+
+<h3><span class="no">3.2</span>基本ベクトルどうしの外積</h3>
+<p>(3.1) に $\boldsymbol i=(1,0,0)$、$\boldsymbol j=(0,1,0)$ を入れると、$\boldsymbol i\times\boldsymbol j=(0\cdot0-0\cdot1,\ 0\cdot0-1\cdot0,\ 1\cdot1-0\cdot0)=(0,0,1)=\boldsymbol k$。同様に計算して</p>
+$$\boldsymbol i\times\boldsymbol j=\boldsymbol k,\quad \boldsymbol j\times\boldsymbol k=\boldsymbol i,\quad \boldsymbol k\times\boldsymbol i=\boldsymbol j,\qquad \boldsymbol j\times\boldsymbol i=-\boldsymbol k,\ \ldots,\qquad \boldsymbol i\times\boldsymbol i=\boldsymbol j\times\boldsymbol j=\boldsymbol k\times\boldsymbol k=\boldsymbol 0\qquad(3.2)$$
+<p>$\boldsymbol i\times\boldsymbol j=\boldsymbol k$ は「$x$ を $y$ へ回す右ねじは $z$ へ進む」（右手系の定義、1.1 節）とちょうど一致する。<strong>(3.1) は右手系に合わせて作られた式</strong>である。</p>
+
+<h3><span class="no">3.3</span>性質を導く：垂直・大きさ・右ねじ・反交換・分配</h3>
+<div class="thm"><span class="label">定理（外積の性質）</span>
+<ol><li><strong>垂直</strong>：$\boldsymbol a\cdot(\boldsymbol a\times\boldsymbol b)=0$、$\boldsymbol b\cdot(\boldsymbol a\times\boldsymbol b)=0$。つまり $\boldsymbol a\times\boldsymbol b$ は $\boldsymbol a$ と $\boldsymbol b$ を含む平面に垂直。</li>
+<li><strong>大きさ</strong>：$|\boldsymbol a\times\boldsymbol b|=ab\sin\theta$（$\theta$ は $\boldsymbol a,\boldsymbol b$ のなす角、$0\le\theta\le180^\circ$）＝ $\boldsymbol a,\boldsymbol b$ を辺とする平行四辺形の面積。</li>
+<li><strong>向き</strong>：$\boldsymbol a$ を $\boldsymbol b$ へ<strong>小さい</strong>角度の方へ回転させたとき、右ねじの進む向き。</li>
+<li><strong>反交換</strong>：$\boldsymbol b\times\boldsymbol a=-\boldsymbol a\times\boldsymbol b$。とくに $\boldsymbol a\times\boldsymbol a=\boldsymbol 0$、平行なら $\boldsymbol 0$。</li>
+<li><strong>分配法則</strong>：$\boldsymbol a\times(\boldsymbol b+\boldsymbol c)=\boldsymbol a\times\boldsymbol b+\boldsymbol a\times\boldsymbol c$、$(k\boldsymbol a)\times\boldsymbol b=k(\boldsymbol a\times\boldsymbol b)$。</li></ol></div>
+<figure class="slide"><img src="img/slide03/cross.jpg" alt="外積の図。aとbを辺とする平行四辺形の面積ab sinθが外積の大きさ、向きはaをbへ回す右ねじの進む向き" loading="lazy" style="width:320px;max-width:66%;height:auto;background:#fff"><figcaption>外積の大きさ（平行四辺形の面積 $ab\sin\theta$）と向き（右ねじ）。出典：講義資料 第3回 p.11（教科書 p.23 の図）</figcaption></figure>
+<div class="proof"><span class="label">証明</span>
+<p><strong>1. 垂直</strong>：内積の成分の式で展開する。
+$$\boldsymbol a\cdot(\boldsymbol a\times\boldsymbol b)=a_x(a_yb_z-a_zb_y)+a_y(a_zb_x-a_xb_z)+a_z(a_xb_y-a_yb_x)$$
+かっこを外すと $a_xa_yb_z-a_xa_zb_y+a_ya_zb_x-a_ya_xb_z+a_za_xb_y-a_za_yb_x$。1項目と4項目（$a_xa_yb_z$）、2項目と5項目（$a_xa_zb_y$）、3項目と6項目（$a_ya_zb_x$）がそれぞれ打ち消し合い、0。$\boldsymbol b$ についても同様。<span class="note">← 内積が 0 ⇔ 垂直（第1回）。</span></p>
+<p><strong>2. 大きさ</strong>：次の<strong>ラグランジュの恒等式</strong>を示す。
+$$|\boldsymbol a\times\boldsymbol b|^2=a^2b^2-(\boldsymbol a\cdot\boldsymbol b)^2\qquad(3.3)$$
+<span class="note">← $\boldsymbol a\cdot\boldsymbol b=ab\cos\theta$ を知っているので、それと結びつければ $\sin\theta$ が出るはず、という見通し。</span><br>
+左辺は $(a_yb_z-a_zb_y)^2+(a_zb_x-a_xb_z)^2+(a_xb_y-a_yb_x)^2$。1つ目を展開すると $a_y^2b_z^2-2a_ya_zb_yb_z+a_z^2b_y^2$。3つとも同じ形なので、
+$$\text{左辺}=\underbrace{(a_y^2b_z^2+a_z^2b_y^2+a_z^2b_x^2+a_x^2b_z^2+a_x^2b_y^2+a_y^2b_x^2)}_{\text{添字の違う2乗の積 6項}}-2(a_ya_zb_yb_z+a_za_xb_zb_x+a_xa_yb_xb_y)$$
+右辺の $a^2b^2=(a_x^2+a_y^2+a_z^2)(b_x^2+b_y^2+b_z^2)$ を展開すると9項：添字が同じ3項 $a_x^2b_x^2+a_y^2b_y^2+a_z^2b_z^2$ と、上の「添字の違う6項」。<br>
+$(\boldsymbol a\cdot\boldsymbol b)^2=(a_xb_x+a_yb_y+a_zb_z)^2$ を展開すると、同じ3項 $a_x^2b_x^2+a_y^2b_y^2+a_z^2b_z^2$ と、$+2(a_xb_xa_yb_y+a_yb_ya_zb_z+a_zb_za_xb_x)$。<br>
+引き算すると添字が同じ3項は消え、右辺 $=$（添字の違う6項）$-2(\cdots)$ となって左辺と一致する。<br>
+これに $\boldsymbol a\cdot\boldsymbol b=ab\cos\theta$ を入れると
+$$|\boldsymbol a\times\boldsymbol b|^2=a^2b^2-a^2b^2\cos^2\theta=a^2b^2(1-\cos^2\theta)=a^2b^2\sin^2\theta$$
+（最後は $\sin^2\theta+\cos^2\theta=1$、単位円の上の点 $(\cos\theta,\sin\theta)$ と原点の距離が1であることから）。$0\le\theta\le180^\circ$ では $\sin\theta\ge0$ なので、平方根をとって $|\boldsymbol a\times\boldsymbol b|=ab\sin\theta$。平行四辺形の面積は「底辺 $a$ × 高さ $b\sin\theta$」なので、これは面積に等しい。</p>
+<p><strong>3. 向き</strong>：1・2 で、$\boldsymbol a\times\boldsymbol b$ は平面に垂直で長さが決まることが分かった。残るのは「垂直な2つの向きのどちらか」だけである。$\boldsymbol a=\boldsymbol i$、$\boldsymbol b=\boldsymbol j$ では $\boldsymbol k$ で、右ねじの向き (3.2)。一般の $\boldsymbol a,\boldsymbol b$（平行でないもの）は、平行にならないまま $\boldsymbol i,\boldsymbol j$ から連続的に動かして作れる。その間 $\boldsymbol a\times\boldsymbol b$ は成分の式なので連続的に変わり、長さは $ab\sin\theta&gt;0$ で 0 にならないので、途中で反対向きに飛び移ることはできない。したがっていつも右ねじの向き。<span class="note">← 厳密には「連続的に動かせる」ことの説明が要るが、ここでは図で納得すれば十分。</span></p>
+<p><strong>4. 反交換</strong>：(3.1) で $\boldsymbol a$ と $\boldsymbol b$ を入れ替えると、各成分の2つの項が入れ替わって符号が逆になる（例：$z$ 成分 $b_xa_y-b_ya_x=-(a_xb_y-a_yb_x)$）。$\boldsymbol b=\boldsymbol a$ とすれば $\boldsymbol a\times\boldsymbol a=-\boldsymbol a\times\boldsymbol a$ なので $\boldsymbol 0$。</p>
+<p><strong>5. 分配法則</strong>：(3.1) の各成分は $\boldsymbol b$ の成分について1次式（$b$ を2つ掛けた項がない）なので、$\boldsymbol b+\boldsymbol c$ を入れると $\boldsymbol b$ の分と $\boldsymbol c$ の分に分かれる。例：$x$ 成分 $a_y(b_z+c_z)-a_z(b_y+c_y)=(a_yb_z-a_zb_y)+(a_yc_z-a_zc_y)$。定数倍も同様。</p></div>
+<figure><svg viewBox="0 0 440 330" width="440" role="img" aria-label="a×b は a と b を辺とする平行四辺形に垂直で、長さは面積">
+<defs><marker id="crs-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="crs-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="crs-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="crs-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="crs-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="crs-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="165.0" y1="242.5" x2="125.6" y2="270.1" stroke="#968d80" stroke-width="1.2" marker-end="url(#crs-s)"/>
+<text x="122.5" y="274.8" fill="#968d80" text-anchor="middle" font-size="13">x</text>
+<line x1="165.0" y1="242.5" x2="237.0" y2="257.8" stroke="#968d80" stroke-width="1.2" marker-end="url(#crs-s)"/>
+<text x="242.8" y="261.6" fill="#968d80" text-anchor="middle" font-size="13">y</text>
+<line x1="165.0" y1="242.5" x2="165.0" y2="165.0" stroke="#968d80" stroke-width="1.2" marker-end="url(#crs-s)"/>
+<text x="165.0" y="153.6" fill="#968d80" text-anchor="middle" font-size="13">z</text>
+<path d="M165.0,242.5 L89.6,223.7 L142.0,291.5 L217.3,310.3 z" fill="#e8d9b8" stroke="#968d80" opacity="0.85"/>
+<line x1="165.0" y1="242.5" x2="89.6" y2="223.7" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#crs-b)"/>
+<line x1="165.0" y1="242.5" x2="217.3" y2="310.3" stroke="#4f7a4a" stroke-width="2.4" marker-end="url(#crs-g)"/>
+<line x1="165.0" y1="242.5" x2="292.7" y2="57.9" stroke="#a8322a" stroke-width="2.6" marker-end="url(#crs-r)"/>
+<text x="83.2" y="223.7" fill="#2b3a67" text-anchor="end" font-size="12">a = (2, −1, 1)</text>
+<text x="223.8" y="310.3" fill="#4f7a4a" text-anchor="start" font-size="12">b = (1, 2, −1)</text>
+<text x="299.2" y="57.9" fill="#a8322a" text-anchor="start" font-size="12">a × b = (−1, 3, 5)</text>
+<text x="159.9" y="282.5" fill="#2a2723" text-anchor="start" font-size="11">面積 √35 ≈ 5.92</text>
+</g></svg>
+<figcaption>図3.1　例題5 の数値どおりに描いた外積。$\boldsymbol a\times\boldsymbol b$ は平行四辺形（$\boldsymbol a,\boldsymbol b$ を辺とする）に垂直で、長さは面積 $\sqrt{35}$。</figcaption></figure>
+<div class="ex"><span class="label">例題5〔A｜自作〕外積の計算と性質の確かめ</span>
+<p>$\boldsymbol a=(2,\ -1,\ 1)$、$\boldsymbol b=(1,\ 2,\ -1)$ のとき、$\boldsymbol a\times\boldsymbol b$ を求め、定理の1・2 を数値で確かめよ。</p>
+<p><strong>解答</strong></p>
+<p>① (3.1)：$x$ 成分 $a_yb_z-a_zb_y=(-1)(-1)-(1)(2)=1-2=-1$。$y$ 成分 $a_zb_x-a_xb_z=(1)(1)-(2)(-1)=1+2=3$。$z$ 成分 $a_xb_y-a_yb_x=(2)(2)-(-1)(1)=4+1=5$。$\boldsymbol a\times\boldsymbol b=(-1,\ 3,\ 5)$。</p>
+<p>② 垂直：$\boldsymbol a\cdot(\boldsymbol a\times\boldsymbol b)=-2-3+5=0$、$\boldsymbol b\cdot(\boldsymbol a\times\boldsymbol b)=-1+6-5=0$ ✓。</p>
+<p>③ 大きさ：$|\boldsymbol a\times\boldsymbol b|=\sqrt{1+9+25}=\sqrt{35}=5.916$。一方 $a=b=\sqrt6$、$\boldsymbol a\cdot\boldsymbol b=2-2-1=-1$ なので (3.3) の右辺 $=6\cdot6-(-1)^2=35$ ✓。</p>
+<p>④ なす角：$\cos\theta=-1/6$ より $\theta=99.59^\circ$、$ab\sin\theta=6\times0.9860=5.916$ ✓。</p></div>
+<div class="warn"><span class="label">よくある誤り</span>
+<ul><li><strong>順序を入れ替える</strong>：$\boldsymbol b\times\boldsymbol a=-\boldsymbol a\times\boldsymbol b$。掛け算のつもりで順序を気にしないと、向きが逆になる。</li>
+<li><strong>$y$ 成分の符号</strong>：$a_zb_x-a_xb_z$ を $a_xb_z-a_zb_x$ と書いてしまう誤りが最も多い。3.4 節の行列式で書くと、$y$ 成分にだけ「−」がつく形になるので、そちらで確かめるとよい。</li>
+<li><strong>結合法則は成り立たない</strong>：$(\boldsymbol i\times\boldsymbol i)\times\boldsymbol j=\boldsymbol 0$ だが $\boldsymbol i\times(\boldsymbol i\times\boldsymbol j)=\boldsymbol i\times\boldsymbol k=-\boldsymbol j$。</li></ul></div>
+
+<h3><span class="no">3.4</span>3×3 の行列式で書く</h3>
+<div class="def"><span class="label">定義（3×3 の行列式、1行目での展開）</span>
+$$\begin{vmatrix}p_1&p_2&p_3\\q_1&q_2&q_3\\s_1&s_2&s_3\end{vmatrix}=p_1\begin{vmatrix}q_2&q_3\\s_2&s_3\end{vmatrix}-p_2\begin{vmatrix}q_1&q_3\\s_1&s_3\end{vmatrix}+p_3\begin{vmatrix}q_1&q_2\\s_1&s_2\end{vmatrix},\qquad \begin{vmatrix}a&b\\c&d\end{vmatrix}=ad-bc\qquad(3.4)$$
+1行目の各成分に、「その成分の行と列を消して残る 2×2 の行列式」を掛け、<strong>＋ − ＋</strong> の符号で足す（余因子展開）。</div>
+<p>1行目に $\boldsymbol i,\boldsymbol j,\boldsymbol k$、2行目に $\boldsymbol a$、3行目に $\boldsymbol b$ を書いて (3.4) のとおりに展開すると</p>
+$$\begin{vmatrix}\boldsymbol i&\boldsymbol j&\boldsymbol k\\a_x&a_y&a_z\\b_x&b_y&b_z\end{vmatrix}=\boldsymbol i(a_yb_z-a_zb_y)-\boldsymbol j(a_xb_z-a_zb_x)+\boldsymbol k(a_xb_y-a_yb_x)$$
+<p>真ん中の $-\boldsymbol j(a_xb_z-a_zb_x)=\boldsymbol j(a_zb_x-a_xb_z)$ なので、(3.1) と一致する。<strong>外積は「1行目が基本ベクトルの行列式」として覚えてよい</strong>（講義資料の式2.54 もこの形）。成分に数が入っていない「記号の」行列式だが、展開の手順は同じ。</p>
+<div class="box"><span class="label">補足：サラスの方法（3×3 だけで使える覚え方）</span>(3.4) を全部展開すると $p_1q_2s_3+p_2q_3s_1+p_3q_1s_2-p_3q_2s_1-p_1q_3s_2-p_2q_1s_3$ になる。左上から右下への斜め3本（＋）と、右上から左下への斜め3本（−）。4×4 以上では使えないので、余因子展開も使えるようにしておく。</div>
+
+<h3><span class="no">3.5</span>歪対称行列で書く（行列の積としての外積）</h3>
+<p>(3.1) は $\boldsymbol b$ について1次式なので、「行列 × $\boldsymbol b$」の形に書ける。講義資料 p.14 の形：</p>
+$$[\boldsymbol a]_\times=\begin{bmatrix}0&-a_z&a_y\\a_z&0&-a_x\\-a_y&a_x&0\end{bmatrix},\qquad \boldsymbol a\times\boldsymbol b=[\boldsymbol a]_\times\boldsymbol b=\begin{bmatrix}0&-a_z&a_y\\a_z&0&-a_x\\-a_y&a_x&0\end{bmatrix}\begin{bmatrix}b_x\\b_y\\b_z\end{bmatrix}\qquad(3.5)$$
+<p>確かめ：1行目と $\boldsymbol b$ の内積は $0\cdot b_x-a_zb_y+a_yb_z=a_yb_z-a_zb_y$ で (3.1) の $x$ 成分。2行目 $a_zb_x-a_xb_z$、3行目 $-a_yb_x+a_xb_y$ も一致。行列を転置（行と列を入れ替え）すると符号だけが逆になる（$[\boldsymbol a]_\times^T=-[\boldsymbol a]_\times$）ので、この形の行列を<strong>歪対称行列</strong>（交代行列）という。<strong>ベクトル積を行列の積として計算できる</strong>ので、プログラムで多くの力のモーメントを計算するときに便利である（ロボット工学で多用する）。</p>
+<div class="warn"><span class="label">注意：講義資料の表記</span>講義資料 p.14 の見出しは「歪対象行列」だが、数学の用語としては「<strong>歪対称行列</strong>」（skew-symmetric matrix）と書く。変換ミスによる誤植と思われる（内容に影響はない）。</div>
+
+<h3><span class="no">3.6</span>スカラー三重積：平行六面体の体積</h3>
+<p>5章で、モーメントベクトルと軸の単位ベクトルの内積 $\boldsymbol u\cdot(\boldsymbol r\times\boldsymbol F)$ が出てくる。この形をまとめておく。</p>
+<div class="thm"><span class="label">定理（スカラー三重積）</span>
+$$\boldsymbol c\cdot(\boldsymbol a\times\boldsymbol b)=\begin{vmatrix}c_x&c_y&c_z\\a_x&a_y&a_z\\b_x&b_y&b_z\end{vmatrix}\qquad(3.6)$$
+絶対値は $\boldsymbol c,\boldsymbol a,\boldsymbol b$ を3辺とする平行六面体の体積。3つのベクトルを<strong>巡回させても値は同じ</strong>（$\boldsymbol c\cdot(\boldsymbol a\times\boldsymbol b)=\boldsymbol a\cdot(\boldsymbol b\times\boldsymbol c)=\boldsymbol b\cdot(\boldsymbol c\times\boldsymbol a)$）で、2つを入れ替えると符号が逆。3つが同じ平面にあるとき、またそのときに限り 0。</div>
+<div class="proof"><span class="label">証明</span>
+<p>① 行列式の式：$\boldsymbol c\cdot(\boldsymbol a\times\boldsymbol b)=c_x(a_yb_z-a_zb_y)+c_y(a_zb_x-a_xb_z)+c_z(a_xb_y-a_yb_x)$。3.4 節の $\boldsymbol i,\boldsymbol j,\boldsymbol k$ の行列式の1行目を $c_x,c_y,c_z$ に置き換えたものと、展開が1項ずつ一致する。</p>
+<p>② 体積：平行六面体の底面を $\boldsymbol a,\boldsymbol b$ の平行四辺形とすると、面積は $|\boldsymbol a\times\boldsymbol b|$（3.3 節の2）。高さは $\boldsymbol c$ の、底面に垂直な向き（＝$\boldsymbol a\times\boldsymbol b$ の向き）の成分で、$|\boldsymbol c|\,|\cos\phi|$（$\phi$ は $\boldsymbol c$ と $\boldsymbol a\times\boldsymbol b$ のなす角）。体積＝面積×高さ＝$|\boldsymbol a\times\boldsymbol b|\,|\boldsymbol c|\,|\cos\phi|=|\boldsymbol c\cdot(\boldsymbol a\times\boldsymbol b)|$。</p>
+<p>③ 巡回：体積はどの面を底にしても同じなので絶対値は等しい。符号まで等しいことは、(3.6) の行列式を展開して6項を比べると確かめられる（サラスの方法で、行を巡回させると＋の3本と−の3本がそれぞれ入れ替わるだけ）。2行を入れ替えると＋と−の組が入れ替わって符号が逆。</p>
+<p>④ 0 になる条件：体積が 0 ⇔ 平行六面体がつぶれている ⇔ 3つのベクトルが同じ平面にある。</p></div>
+
+<h3><span class="no">3.7</span>応用：分解の連立方程式を外積で解く</h3>
+<p>1.4 節の (2.49) $F_1\boldsymbol u_1+F_2\boldsymbol u_2+F_3\boldsymbol u_3=\boldsymbol F$ は、外積と内積を使うと<strong>未知数を1つずつ取り出せる</strong>。</p>
+<div class="proof"><span class="label">導出</span>
+<p>① 両辺と $\boldsymbol u_2\times\boldsymbol u_3$ の内積をとる。<span class="note">← $\boldsymbol u_2\times\boldsymbol u_3$ は $\boldsymbol u_2$ にも $\boldsymbol u_3$ にも垂直なので、$F_2,F_3$ の項が消えるはず。</span></p>
+<p>② $F_1\,\boldsymbol u_1\cdot(\boldsymbol u_2\times\boldsymbol u_3)+F_2\,\underbrace{\boldsymbol u_2\cdot(\boldsymbol u_2\times\boldsymbol u_3)}_{0}+F_3\,\underbrace{\boldsymbol u_3\cdot(\boldsymbol u_2\times\boldsymbol u_3)}_{0}=\boldsymbol F\cdot(\boldsymbol u_2\times\boldsymbol u_3)$（0 は 3.3 節の1）。</p>
+<p>③ よって、$D=\boldsymbol u_1\cdot(\boldsymbol u_2\times\boldsymbol u_3)\ne0$ なら
+$$F_1=\frac{\boldsymbol F\cdot(\boldsymbol u_2\times\boldsymbol u_3)}{D},\quad F_2=\frac{\boldsymbol F\cdot(\boldsymbol u_3\times\boldsymbol u_1)}{D},\quad F_3=\frac{\boldsymbol F\cdot(\boldsymbol u_1\times\boldsymbol u_2)}{D}\qquad(3.7)$$
+（$F_2,F_3$ も同様に、残りの2つの外積との内積をとる。分母が同じ $D$ になるのは三重積の巡回の性質による。）</p>
+<p>④ 1.4 節の「解がちょうど1組に決まるのは $\boldsymbol u_1,\boldsymbol u_2,\boldsymbol u_3$ が同じ平面にないとき」は、$D\ne0$ と同じこと（3.6 節の④）。これは線形代数で習う<strong>クラメルの公式</strong>を、ベクトルの言葉で書いたものである。</p></div>
+<div class="ex"><span class="label">例題6〔B｜自作〕例題3 を外積で解き直す</span>
+<p>例題3 の分解を (3.7) で解け。</p>
+<p><strong>解答</strong></p>
+<p>① $\boldsymbol u_2\times\boldsymbol u_3=(0.6\cdot0.8-0.8\cdot0,\ 0.8\cdot0.6-0\cdot0.8,\ 0\cdot0-0.6\cdot0.6)=(0.48,\ 0.48,\ -0.36)$。</p>
+<p>② $D=\boldsymbol u_1\cdot(\boldsymbol u_2\times\boldsymbol u_3)=0.8\times0.48+0.6\times0.48+0=0.672$（≠0 なので解は1組）。</p>
+<p>③ $F_1=\boldsymbol F\cdot(0.48,0.48,-0.36)/D=(12.48+8.64-14.40)/0.672=6.72/0.672=10.0$ N。</p>
+<p>④ $\boldsymbol u_3\times\boldsymbol u_1=(0\cdot0-0.8\cdot0.6,\ 0.8\cdot0.8-0.6\cdot0,\ 0.6\cdot0.6-0\cdot0.8)=(-0.48,\ 0.64,\ 0.36)$、$F_2=(-12.48+11.52+14.40)/0.672=13.44/0.672=20.0$ N。</p>
+<p>⑤ $\boldsymbol u_1\times\boldsymbol u_2=(0.6\cdot0.8-0\cdot0.6,\ 0\cdot0-0.8\cdot0.8,\ 0.8\cdot0.6-0.6\cdot0)=(0.48,\ -0.64,\ 0.48)$、$F_3=(12.48-11.52+19.20)/0.672=20.16/0.672=30.0$ N。</p>
+<p>⑥ 例題3 と一致 ✓。消去法は「その場の工夫」が要るが、(3.7) は機械的に計算できる。</p></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>点まわりのモーメント $\boldsymbol M=\boldsymbol r\times\boldsymbol F$</h2>
+
+<h3><span class="no">4.1</span>導出：$\boldsymbol r$ と $\boldsymbol F$ を含む平面で考える</h3>
+<p>物体上の点に作用する力 $\boldsymbol F$ が、点 P に与えるモーメントを求める。$\boldsymbol r$ を<strong>点 P から力の作用点へのベクトル</strong>とする。</p>
+<figure class="slide"><img src="img/slide03/fig2_49.jpg" alt="教科書 図2.49 3次元の力によるモーメント。物体上の点Pと、rとFを含む平面、面積S=FLの平行四辺形、モーメントベクトルMの向きは平面に垂直で右ねじの進む向き" loading="lazy" style="width:320px;max-width:66%;height:auto;background:#fff"><figcaption>教科書 図2.49（3次元の力によるモーメント）。出典：講義資料 第3回 p.12</figcaption></figure>
+<div class="proof"><span class="label">導出（講義資料 p.12 の筋道）</span>
+<p>① <strong>平面を1枚選ぶ</strong>：点 P、ベクトル $\boldsymbol r$、力 $\boldsymbol F$ は1枚の平面に乗る（$\boldsymbol r$ と $\boldsymbol F$ が平行でなければ、それらを含む平面がちょうど1枚ある）。<span class="note">← 平面の中なら第2回の結果がそのまま使えるから。</span></p>
+<p>② <strong>大きさ</strong>：その平面の中では<strong>2次元のモーメントと同じ</strong>。腕は P から作用線への垂線で $L=r\sin\theta$（$\theta$ は $\boldsymbol r$ と $\boldsymbol F$ のなす角。第2回 3.1 節）なので、大きさは $FL=rF\sin\theta$。</p>
+<p>③ <strong>回転軸</strong>：平面の中の回転なので、軸は P を通り<strong>$\boldsymbol r$ と $\boldsymbol F$ を含む平面に垂直</strong>。</p>
+<p>④ <strong>回転の向き</strong>：力は P のまわりを「$\boldsymbol r$ の向きから $\boldsymbol F$ の向きへ」回そうとする。<strong>$\boldsymbol r$ から $\boldsymbol F$ へ小さいほうの角度へ右ねじを回転させる</strong>と、ねじの進む向きとモーメントベクトルの向きが一致する（2.2 節の約束）。</p>
+<p>⑤ <strong>外積と比べる</strong>：大きさ $rF\sin\theta$、平面に垂直、$\boldsymbol r$ から $\boldsymbol F$ へ回す右ねじの向き――この3つは 3.3 節の定理1〜3 で示した $\boldsymbol r\times\boldsymbol F$ の性質と<strong>完全に一致</strong>する。長さ・直線・向きが同じベクトルは等しいので、</p></div>
+<div class="thm"><span class="label">定理（点まわりのモーメント）</span>$$\boldsymbol M=\boldsymbol r\times\boldsymbol F\qquad(2.53)$$
+$\boldsymbol r$：点 P から力の作用点へのベクトル。$\boldsymbol r$ と $\boldsymbol F$ が平行（作用線が P を通る）なら $\boldsymbol M=\boldsymbol 0$。</div>
+
+<h3><span class="no">4.2</span>成分の式と、各成分の意味</h3>
+<p>$\boldsymbol r=(r_x,r_y,r_z)$、$\boldsymbol F=(F_x,F_y,F_z)$ のとき、(3.1)・3.4 節より</p>
+<div class="thm"><span class="label">点まわりのモーメントの計算方法（講義資料の形）</span>
+$$\boldsymbol M=\boldsymbol r\times\boldsymbol F=\begin{vmatrix}\boldsymbol i&\boldsymbol j&\boldsymbol k\\r_x&r_y&r_z\\F_x&F_y&F_z\end{vmatrix}=\begin{bmatrix}F_zr_y-F_yr_z\\F_xr_z-F_zr_x\\F_yr_x-F_xr_y\end{bmatrix}\qquad(2.54)$$</div>
+<p>講義資料は力を先に書いている（$F_zr_y$ は $r_yF_z$ と同じ）。</p>
+<p><strong>各成分は「その軸から見た2次元のモーメント」</strong>：$z$ 成分 $F_yr_x-F_xr_y$ は、第2回の式2.30′ そのものである。つまり<strong>$z$ 軸の正の側から見下ろして、$xy$ 平面に映った $\boldsymbol r$ と $\boldsymbol F$ で計算した2次元のモーメント</strong>。同じように、$x$ 成分 $F_zr_y-F_yr_z$ は、$x$ 軸の正の側から $yz$ 平面を見て、「$y$ を横軸・$z$ を縦軸」とした2次元の式（第2回の式で $x\to y$、$y\to z$ と読み替えたもの）。右手系では $x$ 軸の正の側から見ると $y\to z$ が反時計回りなので、符号の約束も第2回と同じになる。$y$ 成分も「$z$ を横軸・$x$ を縦軸」として同様。これが 2.3 節の「成分＝各軸まわりのモーメント」の中身である。</p>
+<div class="warn"><span class="label">注意！ 順序</span>$$\boldsymbol F\times\boldsymbol r=-\boldsymbol r\times\boldsymbol F\ (\ne\boldsymbol r\times\boldsymbol F)$$モーメントの計算時は <strong>$\boldsymbol r$ と $\boldsymbol F$ の順序</strong>を間違えないこと。さらに $\boldsymbol r$ は「<strong>基準点 → 作用点</strong>」の向き。どちらを逆にしても答えの符号が逆になる（両方逆にすると元に戻るが、偶然に頼らないこと）。</div>
+
+<h3><span class="no">4.3</span>確かめ：平面の問題・作用線上の移動・バリニオン</h3>
+<ul>
+<li><strong>平面の問題に戻る</strong>：$\boldsymbol r$、$\boldsymbol F$ がともに $xy$ 平面内（$r_z=F_z=0$）なら、(2.54) は $(0,\ 0,\ F_yr_x-F_xr_y)$。$z$ 軸の向きのベクトルで、その成分が第2回のモーメント（反時計回り＋）に一致する。</li>
+<li><strong>作用線上でずらしても同じ</strong>：作用点を作用線に沿って $\lambda\boldsymbol F$ だけずらすと、$(\boldsymbol r+\lambda\boldsymbol F)\times\boldsymbol F=\boldsymbol r\times\boldsymbol F+\lambda\,\boldsymbol F\times\boldsymbol F=\boldsymbol r\times\boldsymbol F$（分配法則と $\boldsymbol F\times\boldsymbol F=\boldsymbol 0$）。だから $\boldsymbol r$ は「P から<strong>作用線上のどの点</strong>へのベクトル」でもよい。</li>
+<li><strong>バリニオンの定理（3次元）</strong>：同じ点に働く力 $\boldsymbol F_1,\boldsymbol F_2,\ldots$ について $\boldsymbol r\times(\boldsymbol F_1+\boldsymbol F_2+\cdots)=\boldsymbol r\times\boldsymbol F_1+\boldsymbol r\times\boldsymbol F_2+\cdots$（分配法則）。合力のモーメント＝分力のモーメントの和。とくに $\boldsymbol F=F_x\boldsymbol i+F_y\boldsymbol j+F_z\boldsymbol k$ と分けて1成分ずつ計算してもよい。2.3 節の「足してよい」の根拠はこれである。</li>
+<li><strong>垂直性</strong>：$\boldsymbol M\cdot\boldsymbol r=0$、$\boldsymbol M\cdot\boldsymbol F=0$（3.3 節の1）。計算ミスの検査に使える。</li>
+</ul>
+
+<h3><span class="no">4.4</span>例</h3>
+<div class="ex"><span class="label">例題7〔A｜自作〕水平な腕の先の重さ</span>
+<p>点 P（原点）から $x$ 軸に沿って水平に伸びる腕の先 $(0.5,\ 0,\ 0)$ m に、重さ 100 N（下向き）が働く。P まわりのモーメントベクトルを求め、向きの意味を説明せよ。</p>
+<p><strong>解答</strong></p>
+<p>① $\boldsymbol r=(0.5,\ 0,\ 0)$ m、$\boldsymbol F=(0,\ 0,\ -100)$ N。</p>
+<p>② (2.54)：$x$ 成分 $F_zr_y-F_yr_z=(-100)(0)-0=0$、$y$ 成分 $F_xr_z-F_zr_x=0-(-100)(0.5)=50$、$z$ 成分 $F_yr_x-F_xr_y=0$。$\boldsymbol M=(0,\ 50,\ 0)$ N·m。</p>
+<p>③ 向き：$+y$ 向き。$+y$ 軸の先から見ると、$z\to x$ の向き（右手系で $\boldsymbol k\times\boldsymbol i=\boldsymbol j$）が反時計回り。$z$ 軸（上）を $x$ 軸（腕の先）へ倒す向き、つまり<strong>腕の先が下がる向き</strong>で、直感どおり。</p>
+<p>④ 確かめ：大きさ $50=FL=100\times0.5$（腕は水平距離 0.5 m）。</p></div>
+<figure><svg viewBox="0 0 440 360" width="440" role="img" aria-label="柱の頂点 A に働くケーブルの張力が O のまわりに与えるモーメント">
+<defs><marker id="cab-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="cab-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="cab-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="cab-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="cab-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="cab-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="130.4" y1="272.1" x2="90.8" y2="299.8" stroke="#968d80" stroke-width="1.2" marker-end="url(#cab-s)"/>
+<text x="87.7" y="302.7" fill="#968d80" text-anchor="middle" font-size="13">x</text>
+<line x1="130.4" y1="272.1" x2="202.8" y2="287.5" stroke="#968d80" stroke-width="1.2" marker-end="url(#cab-s)"/>
+<text x="208.6" y="289.4" fill="#968d80" text-anchor="middle" font-size="13">y</text>
+<line x1="130.4" y1="272.1" x2="130.4" y2="194.2" stroke="#968d80" stroke-width="1.2" marker-end="url(#cab-s)"/>
+<text x="130.4" y="186.5" fill="#968d80" text-anchor="middle" font-size="13">z</text>
+<path d="M130.4,272.1 L130.4,59.6" fill="none" stroke="#2a2723" stroke-width="5" opacity="1"/>
+<path d="M130.4,59.6 L10.6,295.9" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="5 4" opacity="1"/>
+<line x1="130.4" y1="59.6" x2="97.8" y2="123.9" stroke="#a8322a" stroke-width="2.6" marker-end="url(#cab-r)"/>
+<line x1="130.4" y1="272.1" x2="130.4" y2="59.6" stroke="#2b3a67" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#cab-b)"/>
+<line x1="130.4" y1="272.1" x2="193.2" y2="318.3" stroke="#a06a32" stroke-width="3.0" marker-end="url(#cab-o)"/>
+<circle cx="130.4" cy="59.6" r="3.5" fill="#2a2723"/>
+<circle cx="10.6" cy="295.9" r="3.5" fill="#2a2723"/>
+<circle cx="130.4" cy="272.1" r="3.5" fill="#2a2723"/>
+<text x="125.1" y="59.6" fill="#2a2723" text-anchor="end" font-size="12">A (0, 0, 6)</text>
+<text x="14.2" y="304.7" fill="#2a2723" text-anchor="start" font-size="12">B (3, −2, 0)</text>
+<text x="125.1" y="277.4" fill="#2a2723" text-anchor="end" font-size="13">O</text>
+<text x="89.0" y="123.9" fill="#a8322a" text-anchor="end" font-size="12">T = 700 N</text>
+<text x="126.2" y="165.8" fill="#2b3a67" text-anchor="end" font-size="13">r</text>
+<text x="196.7" y="321.8" fill="#a06a32" text-anchor="start" font-size="12">M_O = (1200, 1800, 0) N·m</text>
+</g></svg>
+<figcaption>図4.1　例題8 の数値どおりの図。柱の頂点 A のケーブル張力が O のまわりに与えるモーメント $\boldsymbol M_O$ は水平（$z$ 成分 0）で、柱を倒そうとする向き。</figcaption></figure>
+<div class="ex"><span class="label">例題8〔B｜自作〕柱とケーブル</span>
+<p>地面の点 O（原点）に立つ高さ 6 m の柱の頂点 A$(0,\ 0,\ 6)$ m から、地面の点 B$(3,\ -2,\ 0)$ m へケーブルを張り、張力 $T=700$ N がかかっている。張力が柱に与える、O まわりのモーメントを求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 系：柱。A に、A から B の向きの力 $\boldsymbol T$ が働く。</p>
+<p>② 座標：問題のとおり（O 原点、$z$ 上向き）。</p>
+<p>③ 力を成分で (1.3)：$\overrightarrow{\mathrm{AB}}=(3,\ -2,\ -6)$、長さ $\sqrt{9+4+36}=7$ m。$\boldsymbol T=700\times(3,\ -2,\ -6)/7=(300,\ -200,\ -600)$ N。$\boldsymbol r=\overrightarrow{\mathrm{OA}}=(0,\ 0,\ 6)$ m。</p>
+<p>④ (2.54)：$x$ 成分 $T_zr_y-T_yr_z=(-600)(0)-(-200)(6)=1200$、$y$ 成分 $T_xr_z-T_zr_x=(300)(6)-(-600)(0)=1800$、$z$ 成分 $T_yr_x-T_xr_y=0$。$\boldsymbol M_O=(1200,\ 1800,\ 0)$ N·m、大きさ $\sqrt{1200^2+1800^2}=2163$ N·m。</p>
+<p>⑤ 確かめ1（作用線上でずらす、4.3 節）：$\boldsymbol r=\overrightarrow{\mathrm{OB}}=(3,\ -2,\ 0)$ で計算しても $x$：$(-600)(-2)-(-200)(0)=1200$、$y$：$(300)(0)-(-600)(3)=1800$、$z$：$(-200)(3)-(300)(-2)=0$ で同じ ✓。</p>
+<p>⑥ 確かめ2：$\boldsymbol M_O\cdot\boldsymbol T=360000-360000+0=0$ ✓。$z$ 成分が 0 なのは、鉛直な柱を「ねじる」働きがないことを表す（張力の作用線が柱の軸 $z$ と交わるので、5章の言葉では $z$ 軸まわりのモーメントが 0）。</p></div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/03_a2_gyroscope.jpg" alt="フーコーのジャイロスコープの実物。真鍮の台に半円の枠が立ち、入れ子の2重の輪の中に重い円盤と軸が収まっている" loading="lazy"></div>
+<p class="cap">入れ子の輪に吊られた円盤の軸は、台をどう傾けても、宇宙の中の同じ向きを指し続けようとする。</p>
+<p class="cr">Rama／<a href="https://creativecommons.org/licenses/by-sa/3.0/fr/deed.en">CC BY-SA 3.0 fr</a>／<a href="https://commons.wikimedia.org/wiki/File:Foucault_gyroscope-CnAM_7688-IMG_5422-gradient.jpg">Wikimedia Commons</a>（フーコーのジャイロスコープ、パリ工芸博物館 7688）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/03_b2_chardin.jpg" alt="シャルダン《独楽を回す少年》。かつらの少年が、机の上で回る小さな独楽を見下ろしている。机には羽ペンを差したインク壺と本" loading="lazy"></div>
+<p class="cap">羽ペンと本は脇へ押しやられ、少年の目は、机の上に立った一本の細い軸に注がれている。</p>
+<p class="cr">Jean-Siméon Chardin／Public domain／<a href="https://commons.wikimedia.org/wiki/File:L%27Enfant_au_toton_-_Jean_Baptiste_Sim%C3%A9on_Chardin_-_Mus%C3%A9e_du_Louvre_Peintures_RF_1705.jpg">Wikimedia Commons</a>（《独楽を回す少年》1738年、ルーヴル美術館 RF 1705）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>特定の軸まわりのモーメント $\tau=\boldsymbol u\cdot\boldsymbol M$</h2>
+
+<h3><span class="no">5.1</span>動機：回転軸が決まっているとき</h3>
+<p>扉は蝶番の軸のまわりにしか回れない。ロボットの関節も、それぞれ決まった1本の軸のまわりにしか回らない。このとき知りたいのは「力がその軸を回そうとする働き」であって、4章の $\boldsymbol M$（どの向きの軸にも回れるとしたときの回す働き）全部ではない。</p>
+<p>扉の取っ手を、扉に垂直に押せば扉は開く。しかし、<strong>蝶番に向かって押しても</strong>、<strong>真上に引き上げても</strong>扉は回らない。これらの力も蝶番の上の点のまわりにはモーメントをもつ（4章の式で計算すれば 0 でない）が、その働きは蝶番の金具が受け止めてしまう。<strong>軸の向きの成分だけが、軸を回す</strong>。</p>
+
+<h3><span class="no">5.2</span>考え方（講義資料 p.15）</h3>
+<ol><li>求めたい軸上の<strong>（任意の）点</strong>に作用するモーメントベクトル $\boldsymbol M$ を計算する。⇐ その点まわりに自由に回転できるときのモーメント</li>
+<li>$\boldsymbol M$ の、求めたい<strong>軸方向の成分</strong> $\tau$ を求める。⇐ 1. の状態で、回転軸が制限されたときのモーメント</li>
+<li>$\tau$ が、求めたい軸まわりのモーメント（の大きさ）を表す。</li></ol>
+<p>軸の向きの単位ベクトルを $\boldsymbol u$ とすると、ベクトルの $\boldsymbol u$ 方向の成分は内積で取り出せる（第1回：$\boldsymbol u\cdot\boldsymbol M=|\boldsymbol M|\cos\phi$ は $\boldsymbol M$ の $\boldsymbol u$ への正射影の長さ）ので</p>
+<div class="thm"><span class="label">定理（軸まわりのモーメント）</span>$$\tau=\boldsymbol u\cdot\boldsymbol M=u_xM_x+u_yM_y+u_zM_z\qquad(2.60)$$
+$\boldsymbol M$ は<strong>軸上</strong>の点まわりのモーメント。$\tau$ の符号は、$\boldsymbol u$ の向きに進む右ねじの回し方を＋とする。軸まわりのモーメントをベクトルで書くときは $\boldsymbol M_a=\tau\boldsymbol u$。</div>
+<figure class="slide"><img src="img/slide03/axis.jpg" alt="回転軸の上の点まわりのモーメントM=r×Fと、その軸方向の成分τ=u·M" loading="lazy" style="width:300px;max-width:62%;height:auto;background:#fff"><figcaption>回転軸の上の点まわりのモーメント $\boldsymbol M=\boldsymbol r\times\boldsymbol F$ と、その軸方向の成分 $\tau=\boldsymbol u\cdot\boldsymbol M$。出典：講義資料 第3回 p.15</figcaption></figure>
+<p>以下の3節で、この「考え方」がなぜ正しいのかを確かめる。講義資料は結論だけを述べているので、本教材で補った。</p>
+
+<h3><span class="no">5.3</span>軸上の点なら、どれを選んでも同じ</h3>
+<div class="proof"><span class="label">証明</span>
+<p>① 軸上の2点 P、Q を選ぶ。どちらも軸上なので、$\overrightarrow{\mathrm{PQ}}=s\boldsymbol u$（$s$ は数）と書ける。</p>
+<p>② 作用点を A とすると $\overrightarrow{\mathrm{QA}}=\overrightarrow{\mathrm{PA}}-\overrightarrow{\mathrm{PQ}}=\boldsymbol r_P-s\boldsymbol u$。</p>
+<p>③ $\boldsymbol M_Q=(\boldsymbol r_P-s\boldsymbol u)\times\boldsymbol F=\boldsymbol M_P-s\,\boldsymbol u\times\boldsymbol F$（分配法則）。<span class="note">← 2点のモーメントの差は「基準点のずれ×力」。6.4 節の一般の式の特別な場合。</span></p>
+<p>④ $\boldsymbol u$ との内積：$\boldsymbol u\cdot\boldsymbol M_Q=\boldsymbol u\cdot\boldsymbol M_P-s\,\underbrace{\boldsymbol u\cdot(\boldsymbol u\times\boldsymbol F)}_{0}=\boldsymbol u\cdot\boldsymbol M_P$（0 は外積の垂直性、3.3 節の1）。</p>
+<p>⑤ よって $\tau$ は軸上の点の選び方によらない。$\boldsymbol M_P$ と $\boldsymbol M_Q$ そのものは違ってよい（違うのは軸に垂直な部分だけ）。だから講義資料の手順では、<strong>計算が楽な点を「適当に」選んでよい</strong>。</p></div>
+
+<h3><span class="no">5.4</span>意味：軸に垂直な面で見た2次元のモーメント</h3>
+<p>$\tau$ が本当に「軸を回す働き」であることを、力と位置を分解して確かめる。</p>
+<div class="proof"><span class="label">証明</span>
+<p>① P を軸上の点とし、$\boldsymbol r$（P→作用点）と $\boldsymbol F$ を、<strong>軸に平行な部分と軸に垂直な部分</strong>に分ける：$\boldsymbol r=\boldsymbol r_\parallel+\boldsymbol r_\perp$、$\boldsymbol F=\boldsymbol F_\parallel+\boldsymbol F_\perp$（$\boldsymbol r_\parallel=(\boldsymbol u\cdot\boldsymbol r)\boldsymbol u$、$\boldsymbol r_\perp=\boldsymbol r-\boldsymbol r_\parallel$。$\boldsymbol F$ も同じ）。</p>
+<p>② 分配法則で4つに分ける：$\boldsymbol r\times\boldsymbol F=\boldsymbol r_\parallel\times\boldsymbol F_\parallel+\boldsymbol r_\parallel\times\boldsymbol F_\perp+\boldsymbol r_\perp\times\boldsymbol F_\parallel+\boldsymbol r_\perp\times\boldsymbol F_\perp$。</p>
+<p>③ $\boldsymbol u$ との内積をとる。1項目：$\boldsymbol r_\parallel$ と $\boldsymbol F_\parallel$ はどちらも $\boldsymbol u$ に平行なので外積は $\boldsymbol 0$。2項目と3項目：どちらも $\boldsymbol u$ に平行なベクトルとの外積なので、$\boldsymbol u$ に垂直（3.3 節の1）→ 内積 0。残るのは</p>
+$$\tau=\boldsymbol u\cdot(\boldsymbol r_\perp\times\boldsymbol F_\perp)$$
+<p>④ $\boldsymbol r_\perp$ も $\boldsymbol F_\perp$ も軸に垂直な平面の中にあるので、その外積は軸に平行で、$\boldsymbol u$ との内積は「平面の中の2次元のモーメント（$\boldsymbol u$ の側から見て反時計回り＋）」になる（4.1 節の②〜④）。大きさは $F_\perp\times d$（$d$ は軸と $\boldsymbol F$ の作用線の、軸に垂直な面での距離）。</p>
+<p>⑤ 結論：<strong>軸まわりのモーメント＝軸の正の側から見下ろした図で、力の「軸に垂直な成分」が作る2次元のモーメント</strong>。力の軸方向の成分 $\boldsymbol F_\parallel$ と、作用点の軸方向の位置 $\boldsymbol r_\parallel$ は答えに入らない。5.1 節の「真上に引いても回らない」「どの高さを押しても同じ」がこれである。残りの $\boldsymbol M-\tau\boldsymbol u$（軸に垂直な部分）は、軸を傾けようとする働きで、軸受（蝶番の金具）が受け止める。</p></div>
+<figure><svg viewBox="0 0 460 360" width="460" role="img" aria-label="扉の蝶番まわりのモーメント">
+<defs><marker id="door-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="door-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="door-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="door-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="door-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="door-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M62.8,297.2 L162.0,311.2 L162.0,76.7 L62.8,62.8 z" fill="#ece6d8" stroke="#968d80" opacity="1"/>
+<path d="M62.8,320.7 L62.8,27.6" fill="none" stroke="#a8322a" stroke-width="1.4" stroke-dasharray="8 3 2 3" opacity="1"/>
+<text x="68.6" y="27.6" fill="#a8322a" text-anchor="start" font-size="12">蝶番の軸（z 軸）</text>
+<line x1="62.8" y1="297.2" x2="117.9" y2="305.0" stroke="#968d80" stroke-width="1.2" marker-end="url(#door-s)"/>
+<text x="122.3" y="308.0" fill="#968d80" text-anchor="middle" font-size="13">x</text>
+<line x1="62.8" y1="297.2" x2="89.2" y2="278.7" stroke="#968d80" stroke-width="1.2" marker-end="url(#door-s)"/>
+<text x="91.3" y="279.6" fill="#968d80" text-anchor="middle" font-size="13">y</text>
+<line x1="62.8" y1="297.2" x2="62.8" y2="238.6" stroke="#968d80" stroke-width="1.2" marker-end="url(#door-s)"/>
+<text x="62.8" y="229.2" fill="#968d80" text-anchor="middle" font-size="13">z</text>
+<path d="M62.8,180.0 L151.0,192.4" fill="none" stroke="#2b3a67" stroke-width="1.2" stroke-dasharray="4 3" opacity="1"/>
+<text x="101.4" y="177.2" fill="#2b3a67" text-anchor="middle" font-size="11">r_x = 0.8 m</text>
+<circle cx="151.0" cy="192.4" r="3.5" fill="#2a2723"/>
+<line x1="151.0" y1="192.4" x2="192.7" y2="163.2" stroke="#4f7a4a" stroke-width="2.6" marker-end="url(#door-g)"/>
+<text x="198.6" y="169.1" fill="#4f7a4a" text-anchor="start" font-size="12">F_y = 30 N（効く）</text>
+<line x1="151.0" y1="192.4" x2="92.9" y2="184.2" stroke="#968d80" stroke-width="2.2" marker-end="url(#door-s)"/>
+<text x="92.9" y="219.4" fill="#968d80" text-anchor="middle" font-size="11">F_x = −20 N（軸へ向かう）</text>
+<line x1="151.0" y1="192.4" x2="151.0" y2="146.1" stroke="#968d80" stroke-width="2.2" marker-end="url(#door-s)"/>
+<text x="155.7" y="140.3" fill="#968d80" text-anchor="start" font-size="11">F_z = 15 N（軸に平行）</text>
+<path d="M47.7,85.0 L45.8,85.5 L44.0,86.1 L42.3,86.7 L40.9,87.3 L39.6,88.0 L38.5,88.7 L37.5,89.4 L36.8,90.2 L36.3,90.9 L36.0,91.7 L35.9,92.5 L36.0,93.3 L36.3,94.1 L36.8,94.8 L37.5,95.5 L38.5,96.3 L39.6,96.9 L40.9,97.6 L42.4,98.1 L44.0,98.7 L45.8,99.2 L47.7,99.6 L49.7,100.0 L51.9,100.3 L54.1,100.6 L56.4,100.7 L58.7,100.8 L61.1,100.9 L63.5,100.9 L65.9,100.8 L68.2,100.6 L70.5,100.4 L72.8,100.1 L75.0,99.7 L77.0,99.3 L79.0,98.8 L80.8,98.3 L82.5,97.7 L84.1,97.1 L85.4,96.4 L86.6,95.7 L87.6,95.0 L88.4,94.3 L89.1,93.5 L89.5,92.7 L89.6,91.9 L89.6,91.2 L89.4,90.4 L88.9,89.6 L88.3,88.9 L87.4,88.2 L86.4,87.5 L85.2,86.8 L83.8,86.2 L82.2,85.7 L80.5,85.1 L78.6,84.7 L76.6,84.3 L74.5,84.0" fill="none" stroke="#a8322a" stroke-width="1.6" marker-end="url(#door-r)"/>
+<text x="55.7" y="304.3" fill="#2a2723" text-anchor="end" font-size="12">O</text>
+</g></svg>
+<figcaption>図5.1　例題9 の扉。取っ手の力 $\boldsymbol F=(-20,\ 30,\ 15)$ N の3成分のうち、蝶番の軸（$z$ 軸）を回すのは扉に垂直な $F_y$ だけ。$F_x$（軸へ向かう）と $F_z$（軸に平行）は回さない。</figcaption></figure>
+<div class="ex"><span class="label">例題9〔B｜自作〕扉の蝶番</span>
+<p>扉が $xz$ 平面にあり、蝶番の軸は $z$ 軸である。取っ手の点 $(0.8,\ 0,\ 1.0)$ m に力 $\boldsymbol F=(-20,\ 30,\ 15)$ N が働く。(1) 原点 O まわりのモーメントベクトル、(2) 蝶番の軸まわりのモーメントを求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (1) $\boldsymbol r=(0.8,\ 0,\ 1.0)$。(2.54)：$x$ 成分 $F_zr_y-F_yr_z=15\cdot0-30\cdot1.0=-30$、$y$ 成分 $F_xr_z-F_zr_x=(-20)(1.0)-15(0.8)=-32$、$z$ 成分 $F_yr_x-F_xr_y=30(0.8)-(-20)(0)=24$。$\boldsymbol M_O=(-30,\ -32,\ 24)$ N·m、大きさ $\sqrt{900+1024+576}=50$ N·m。</p>
+<p>② (2) 軸の単位ベクトル $\boldsymbol u=\boldsymbol k=(0,0,1)$、O は軸上。(2.60)：$\tau=0\cdot(-30)+0\cdot(-32)+1\cdot24=24$ N·m（$+z$ の側から見て反時計回り＝扉が $+y$ の側へ開く向き）。</p>
+<p>③ 確かめ（5.4 節）：$+z$ 側から見下ろすと、$xy$ 平面に映った作用点は $(0.8,\ 0)$、力は $(F_x,F_y)=(-20,\ 30)$。2次元の式 $F_yr_x-F_xr_y=30\times0.8-0=24$ ✓。$F_x$ は作用線が軸を通る（腕 0）、$F_z$ は軸に平行で、どちらも効かない。</p>
+<p>④ 50 N·m のうち軸を回すのは 24 N·m だけで、残りの $(-30,\ -32,\ 0)$ N·m は蝶番の金具が受ける（扉を傾けようとする働き）。</p></div>
+
+<h3><span class="no">5.5</span>軸上でない点を選ぶと、なぜだめか</h3>
+<p>講義資料 p.16 の注意「$\boldsymbol M$ は<strong>軸上</strong>の点まわりでなければならない」の理由を、反例で確かめる。5.3 節の証明の ④ で $\boldsymbol u\cdot(\boldsymbol u\times\boldsymbol F)=0$ が使えたのは、2点のずれが $\boldsymbol u$ に平行だったからである。軸から外れた点 Q では、ずれ $\overrightarrow{\mathrm{PQ}}$ が $\boldsymbol u$ に平行でないので、$\boldsymbol u\cdot(\overrightarrow{\mathrm{PQ}}\times\boldsymbol F)$ が一般に 0 にならない。</p>
+<div class="ex"><span class="label">例題10〔B｜自作〕斜めの軸と、軸上でない点の反例</span>
+<p>原点 O と点 C$(2,\ 2,\ 1)$ m を通る軸がある。点 D$(1,\ 0,\ 2)$ m に力 $\boldsymbol F=(10,\ -20,\ 30)$ N が働く。(1) この軸まわりのモーメントを、O を使って求めよ。(2) C を使って求め、一致を確かめよ。(3) 軸上にない点 E$(1,\ 0,\ 0)$ を使うと違う値になることを確かめよ。</p>
+<p><strong>解答</strong></p>
+<p>① 軸の向き：$\overrightarrow{\mathrm{OC}}=(2,2,1)$、長さ 3。$\boldsymbol u=(2,\ 2,\ 1)/3$。</p>
+<p>② (1) $\boldsymbol r=\overrightarrow{\mathrm{OD}}=(1,0,2)$。$\boldsymbol M_O$：$x$ $(30)(0)-(-20)(2)=40$、$y$ $(10)(2)-(30)(1)=-10$、$z$ $(-20)(1)-(10)(0)=-20$ → $(40,\ -10,\ -20)$。$\tau=(2\cdot40+2\cdot(-10)+1\cdot(-20))/3=40/3=13.33$ N·m。</p>
+<p>③ (2) $\boldsymbol r=\overrightarrow{\mathrm{CD}}=(-1,\ -2,\ 1)$。$\boldsymbol M_C$：$x$ $(30)(-2)-(-20)(1)=-40$、$y$ $(10)(1)-(30)(-1)=40$、$z$ $(-20)(-1)-(10)(-2)=40$ → $(-40,\ 40,\ 40)$。$\boldsymbol M_C\ne\boldsymbol M_O$ だが、$\tau=(-80+80+40)/3=13.33$ N·m で一致 ✓（5.3 節）。</p>
+<p>④ (3) $\boldsymbol r=\overrightarrow{\mathrm{ED}}=(0,0,2)$。$\boldsymbol M_E$：$x$ $(30)(0)-(-20)(2)=40$、$y$ $(10)(2)-(30)(0)=20$、$z$ $0$ → $(40,\ 20,\ 0)$。$\boldsymbol u\cdot\boldsymbol M_E=(80+40)/3=40.0$ N·m で、<strong>正しい値 13.33 と違う</strong>。E は軸上にないので、この 40.0 は「E を通り $\boldsymbol u$ に平行な、別の軸」まわりのモーメントである。</p></div>
+
+<h3><span class="no">5.6</span>三重積の形で一気に計算する</h3>
+<p>(2.54) と (2.60) をまとめると、講義資料 p.17 の式になる。</p>
+<div class="proof"><span class="label">導出（講義資料 p.17）</span>
+<p>① (2.54) を基本ベクトルで書く：$\boldsymbol M=\boldsymbol r\times\boldsymbol F=(F_zr_y-F_yr_z)\boldsymbol i+(F_xr_z-F_zr_x)\boldsymbol j+(F_yr_x-F_xr_y)\boldsymbol k$。</p>
+<p>② (2.60) に入れる：$\tau=\boldsymbol u\cdot\boldsymbol M=u_x(F_zr_y-F_yr_z)+u_y(F_xr_z-F_zr_x)+u_z(F_yr_x-F_xr_y)$。</p>
+<p>③ これは、3.4 節の $\boldsymbol i,\boldsymbol j,\boldsymbol k$ の行列式の1行目を $u_x,u_y,u_z$ に置き換えて展開したものと1項ずつ同じ（3.6 節のスカラー三重積）。よって</p></div>
+<div class="thm"><span class="label">軸まわりのモーメントの計算式</span>$$\tau=\boldsymbol u\cdot\boldsymbol M=\boldsymbol u\cdot(\boldsymbol r\times\boldsymbol F)=\begin{vmatrix}u_x&u_y&u_z\\r_x&r_y&r_z\\F_x&F_y&F_z\end{vmatrix}$$
+行の順序は <strong>$\boldsymbol u,\ \boldsymbol r,\ \boldsymbol F$</strong>（2行を入れ替えると符号が逆）。</div>
+<p>例題10 (1) で確かめる（1行目で展開）：</p>
+$$\begin{aligned}\begin{vmatrix}2/3&2/3&1/3\\1&0&2\\10&-20&30\end{vmatrix}&=\tfrac23\bigl(0\cdot30-2\cdot(-20)\bigr)-\tfrac23\bigl(1\cdot30-2\cdot10\bigr)+\tfrac13\bigl(1\cdot(-20)-0\cdot10\bigr)\\&=\tfrac{80}{3}-\tfrac{20}{3}-\tfrac{20}{3}=\tfrac{40}{3}\quad✓\end{aligned}$$
+
+<h3><span class="no">5.7</span>計算手順と、点まわりとの比較</h3>
+<div class="def"><span class="label">特定の軸まわりのモーメントの計算手順（講義資料 p.16）</span>
+<ol><li>軸の方向ベクトル $\boldsymbol u$ を計算する（単位ベクトルにする）。</li>
+<li>軸上の点を適当に選ぶ（座標が簡単な点、0 の多い点）。</li>
+<li>選んだ点まわりのモーメントベクトル $\boldsymbol M$ を計算する。</li>
+<li>$\boldsymbol M$ の $\boldsymbol u$ 方向成分を求める。</li></ol>
+3・4 は三重積の行列式で一度に計算してもよい。<strong>注意：$\boldsymbol M$ は軸上の点まわりでなければならない。</strong></div>
+<div class="box"><span class="label">まとめ（講義資料 p.18）</span>
+<table class="tb"><tr><th></th><th>点まわりのモーメント</th><th>軸まわりのモーメント</th></tr>
+<tr><td>回転軸</td><td>後で決まる（$\boldsymbol M$ の向きが軸）</td><td>決まっている（$\boldsymbol u$）</td></tr>
+<tr><td>式</td><td>$\boldsymbol M=\boldsymbol r\times\boldsymbol F$（ベクトル）</td><td>$\tau=\boldsymbol u\cdot\boldsymbol M$（数）、$\boldsymbol M_a=\tau\boldsymbol u$</td></tr>
+<tr><td>基準</td><td>点 P（どの点でもよいが、値は点で変わる）</td><td>軸上の任意の点（値は点によらない）</td></tr>
+<tr><td>意味</td><td>その点のまわりに自由に回れるときの回す働き</td><td>点まわりのモーメントの軸方向成分</td></tr></table></div>
+<figure><svg viewBox="0 0 560 290" width="560" role="img" aria-label="軸と M のなす角 φ と、軸まわりのモーメント τ">
+<defs><marker id="tau-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tau-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tau-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tau-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tau-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tau-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="165.0" y1="34.0" x2="165.0" y2="255.0" stroke="#e2dccf"/>
+<line x1="270.0" y1="34.0" x2="270.0" y2="255.0" stroke="#e2dccf"/>
+<line x1="375.0" y1="34.0" x2="375.0" y2="255.0" stroke="#e2dccf"/>
+<line x1="480.0" y1="34.0" x2="480.0" y2="255.0" stroke="#e2dccf"/>
+<line x1="60.0" y1="245.0" x2="480.0" y2="245.0" stroke="#e2dccf"/>
+<line x1="60.0" y1="194.7" x2="480.0" y2="194.7" stroke="#e2dccf"/>
+<line x1="60.0" y1="94.3" x2="480.0" y2="94.3" stroke="#e2dccf"/>
+<line x1="60.0" y1="44.0" x2="480.0" y2="44.0" stroke="#e2dccf"/>
+<line x1="56" y1="144.5" x2="494" y2="144.5" stroke="#2a2723" marker-end="url(#tau-k)"/>
+<line x1="60.0" y1="259" x2="60.0" y2="20" stroke="#2a2723" marker-end="url(#tau-k)"/>
+<text x="498" y="148.5">φ（度）</text>
+<text x="66.0" y="20">τ（N·m）</text>
+<line x1="60.0" y1="144.5" x2="60.0" y2="148.5" stroke="#2a2723"/>
+<text x="60.0" y="161.5" text-anchor="middle" font-size="11">0</text>
+<line x1="165.0" y1="144.5" x2="165.0" y2="148.5" stroke="#2a2723"/>
+<text x="165.0" y="161.5" text-anchor="middle" font-size="11">45</text>
+<line x1="270.0" y1="144.5" x2="270.0" y2="148.5" stroke="#2a2723"/>
+<text x="270.0" y="161.5" text-anchor="middle" font-size="11">90</text>
+<line x1="375.0" y1="144.5" x2="375.0" y2="148.5" stroke="#2a2723"/>
+<text x="375.0" y="161.5" text-anchor="middle" font-size="11">135</text>
+<line x1="480.0" y1="144.5" x2="480.0" y2="148.5" stroke="#2a2723"/>
+<text x="480.0" y="161.5" text-anchor="middle" font-size="11">180</text>
+<line x1="56.0" y1="245.0" x2="60.0" y2="245.0" stroke="#2a2723"/>
+<text x="53.0" y="249.0" text-anchor="end" font-size="11">−50</text>
+<line x1="56.0" y1="194.7" x2="60.0" y2="194.7" stroke="#2a2723"/>
+<text x="53.0" y="198.7" text-anchor="end" font-size="11">−25</text>
+<line x1="56.0" y1="144.5" x2="60.0" y2="144.5" stroke="#2a2723"/>
+<text x="53.0" y="148.5" text-anchor="end" font-size="11">0</text>
+<line x1="56.0" y1="94.3" x2="60.0" y2="94.3" stroke="#2a2723"/>
+<text x="53.0" y="98.3" text-anchor="end" font-size="11">25</text>
+<line x1="56.0" y1="44.0" x2="60.0" y2="44.0" stroke="#2a2723"/>
+<text x="53.0" y="48.0" text-anchor="end" font-size="11">50</text>
+<path d="M60.0,44.0 L62.3,44.1 L64.7,44.1 L67.0,44.2 L69.3,44.3 L71.7,44.4 L74.0,44.6 L76.3,44.8 L78.7,45.0 L81.0,45.3 L83.3,45.6 L85.7,45.9 L88.0,46.2 L90.3,46.6 L92.7,47.0 L95.0,47.5 L97.3,47.9 L99.7,48.4 L102.0,49.0 L104.3,49.5 L106.7,50.1 L109.0,50.7 L111.3,51.4 L113.7,52.0 L116.0,52.7 L118.3,53.5 L120.7,54.2 L123.0,55.0 L125.3,55.8 L127.7,56.6 L130.0,57.5 L132.3,58.4 L134.7,59.3 L137.0,60.3 L139.3,61.2 L141.7,62.2 L144.0,63.2 L146.3,64.3 L148.7,65.3 L151.0,66.4 L153.3,67.5 L155.7,68.7 L158.0,69.8 L160.3,71.0 L162.7,72.2 L165.0,73.5 L167.3,74.7 L169.7,76.0 L172.0,77.3 L174.3,78.6 L176.7,79.9 L179.0,81.3 L181.3,82.7 L183.7,84.0 L186.0,85.5 L188.3,86.9 L190.7,88.3 L193.0,89.8 L195.3,91.3 L197.7,92.8 L200.0,94.3 L202.3,95.8 L204.7,97.3 L207.0,98.9 L209.3,100.5 L211.7,102.0 L214.0,103.6 L216.3,105.2 L218.7,106.9 L221.0,108.5 L223.3,110.1 L225.7,111.8 L228.0,113.5 L230.3,115.1 L232.7,116.8 L235.0,118.5 L237.3,120.2 L239.7,121.9 L242.0,123.6 L244.3,125.3 L246.7,127.1 L249.0,128.8 L251.3,130.5 L253.7,132.3 L256.0,134.0 L258.3,135.7 L260.7,137.5 L263.0,139.2 L265.3,141.0 L267.7,142.7 L270.0,144.5 L272.3,146.3 L274.7,148.0 L277.0,149.8 L279.3,151.5 L281.7,153.3 L284.0,155.0 L286.3,156.7 L288.7,158.5 L291.0,160.2 L293.3,161.9 L295.7,163.7 L298.0,165.4 L300.3,167.1 L302.7,168.8 L305.0,170.5 L307.3,172.2 L309.7,173.9 L312.0,175.5 L314.3,177.2 L316.7,178.9 L319.0,180.5 L321.3,182.1 L323.7,183.8 L326.0,185.4 L328.3,187.0 L330.7,188.5 L333.0,190.1 L335.3,191.7 L337.7,193.2 L340.0,194.7 L342.3,196.2 L344.7,197.7 L347.0,199.2 L349.3,200.7 L351.7,202.1 L354.0,203.5 L356.3,205.0 L358.7,206.3 L361.0,207.7 L363.3,209.1 L365.7,210.4 L368.0,211.7 L370.3,213.0 L372.7,214.3 L375.0,215.5 L377.3,216.8 L379.7,218.0 L382.0,219.2 L384.3,220.3 L386.7,221.5 L389.0,222.6 L391.3,223.7 L393.7,224.7 L396.0,225.8 L398.3,226.8 L400.7,227.8 L403.0,228.7 L405.3,229.7 L407.7,230.6 L410.0,231.5 L412.3,232.4 L414.7,233.2 L417.0,234.0 L419.3,234.8 L421.7,235.5 L424.0,236.3 L426.3,237.0 L428.7,237.6 L431.0,238.3 L433.3,238.9 L435.7,239.5 L438.0,240.0 L440.3,240.6 L442.7,241.1 L445.0,241.5 L447.3,242.0 L449.7,242.4 L452.0,242.8 L454.3,243.1 L456.7,243.4 L459.0,243.7 L461.3,244.0 L463.7,244.2 L466.0,244.4 L468.3,244.6 L470.7,244.7 L473.0,244.8 L475.3,244.9 L477.7,244.9 L480.0,245.0" fill="none" stroke="#a8322a" stroke-width="2.2" opacity="1"/>
+<circle cx="60.0" cy="44.0" r="3.5" fill="#a8322a"/>
+<text x="67.0" y="40.0" fill="#a8322a" text-anchor="start" font-size="12">u が M と同じ向き：τ = |M| = 50</text>
+<circle cx="203.1" cy="96.3" r="3.5" fill="#2b3a67"/>
+<text x="210.1" y="90.3" fill="#2b3a67" text-anchor="start" font-size="12">蝶番の軸 u = k：φ = 61.3°, τ = 24</text>
+<circle cx="270.0" cy="144.5" r="3.5" fill="#2a2723"/>
+<text x="274.7" y="136.5" fill="#2a2723" text-anchor="start" font-size="12">u ⊥ M：τ = 0</text>
+</g></svg>
+<figcaption>図5.2　例題9 の点 O を通る軸の向き $\boldsymbol u$ を変えていったときの $\tau=\boldsymbol u\cdot\boldsymbol M_O=|\boldsymbol M_O|\cos\phi$（$\phi$ は $\boldsymbol u$ と $\boldsymbol M_O$ のなす角）。<strong>点まわりのモーメントの大きさは、その点を通る軸まわりのモーメントの最大値</strong>で、その最大を与える軸が $\boldsymbol M_O$ の向きである。2.2 節の「ベクトルを含む直線＝回転軸」はこの意味。</figcaption></figure>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/03_a3_brace.jpg" alt="大工の手回し錐（ブレースとビット）。木製のU字形の柄に真鍮の象嵌、左端に尖ったビット、右端に押さえの丸いノブ" loading="lazy"></div>
+<p class="cap">丸いノブを押す力は穴を深くするだけで、錐を回すのは、曲がった柄の握りを軸のまわりに押す力だけである。</p>
+<p class="cr">Auckland Museum／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Brace_and_bit_(51360050073).jpg">Wikimedia Commons</a>（手回し錐、1850年代イギリス製、オークランド博物館 1963.190）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/03_b3_zhuanlunzang.jpg" alt="浙江省の高麗寺にある木造の転輪蔵を見上げた写真。八角形の二重屋根に組物が密に並び、浮彫のパネルと金色の格子扉" loading="lazy"></div>
+<p class="cap">経を納めた八角の蔵は、中心の一本の柱のまわりにだけ回るように作られていて、どこを押しても、回るのは軸に沿った向きの分だけである。</p>
+<p class="cr">钉钉／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Zhuanlunzang_-_Gaoli_Temple.jpg">Wikimedia Commons</a>（高麗寺の転輪蔵、浙江省、2021年）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>3次元の偶力と、力とモーメントの合成</h2>
+<p>第2回の 4・5 章（偶力、力の移動、合成）は、2次元の外積を3次元の外積に置き換えるだけで、<strong>そのまま3次元でも成り立つ</strong>。証明で使ったのは分配法則と反交換だけで、どちらも 3.3 節で3次元でも示したからである。</p>
+
+<h3><span class="no">6.1</span>3次元の偶力</h3>
+<p>図の2つの力 $\boldsymbol F$（点 A）、$-\boldsymbol F$（点 B）が、任意の点 P のまわりに与えるモーメントを求める。</p>
+<figure class="slide"><img src="img/slide03/couple3d.jpg" alt="3次元の偶力。点AにF、点Bに-F。左は点PからA,Bへのベクトル、右はBからAへのベクトルr_BA" loading="lazy" style="width:340px;max-width:70%;height:auto;background:#fff"><figcaption>3次元の偶力のモーメント。出典：講義資料 第3回 p.20</figcaption></figure>
+<div class="proof"><span class="label">導出（講義資料 p.20）</span>
+<p>① $\boldsymbol F$ によるモーメント：$\boldsymbol M_A=\boldsymbol r_{PA}\times\boldsymbol F$。</p>
+<p>② $-\boldsymbol F$ によるモーメント：$\boldsymbol M_B=\boldsymbol r_{PB}\times(-\boldsymbol F)=-\boldsymbol r_{PB}\times\boldsymbol F$。</p>
+<p>③ 点 P に働く全モーメント（分配法則で $\boldsymbol F$ をくくり出す）：$$\boldsymbol M=\boldsymbol M_A+\boldsymbol M_B=(\boldsymbol r_{PA}-\boldsymbol r_{PB})\times\boldsymbol F=\boldsymbol r_{BA}\times\boldsymbol F$$
+（$\boldsymbol r_{PA}-\boldsymbol r_{PB}=\overrightarrow{\mathrm{PA}}-\overrightarrow{\mathrm{PB}}=\overrightarrow{\mathrm{BA}}$：終点−始点の形で、P が消える）。</p>
+<p>④ 結果に P の位置が入っていない → 点 P の位置に無関係。<strong>偶力はどの点まわりにも同じモーメントを与える（＝純粋モーメント）</strong>。向きは2本の力を含む平面に垂直。</p></div>
+<div class="warn"><span class="label">注意：講義資料の誤植と思われる箇所</span>講義資料 p.20 では、$-\boldsymbol F$ によるモーメントも「$\boldsymbol M_A=\boldsymbol r_{PB}\times(-\boldsymbol F)$」と書かれているが、直後の式が $\boldsymbol M_A+\boldsymbol M_B$ なので、<strong>$\boldsymbol M_B$</strong> の誤植と思われる。本教材では $\boldsymbol M_B$ と書いた。</div>
+<div class="ex"><span class="label">例題11〔B｜自作〕箱に働く偶力</span>
+<p>点 A$(0.4,\ 0,\ 0)$ m に $\boldsymbol F=(0,\ 0,\ 50)$ N、点 B$(0,\ 0.3,\ 0)$ m に $-\boldsymbol F$ が働く。偶力のモーメントを求め、原点と点 P$(1,\ 1,\ 1)$ のまわりで直接計算しても同じになることを確かめよ。</p>
+<p><strong>解答</strong></p>
+<p>① $\boldsymbol r_{BA}=(0.4,\ -0.3,\ 0)$。$\boldsymbol M=\boldsymbol r_{BA}\times\boldsymbol F$：$x$ $(50)(-0.3)-0\cdot0=-15$、$y$ $0\cdot0-(50)(0.4)=-20$、$z$ $0$ → $(-15,\ -20,\ 0)$ N·m、大きさ 25 N·m（$=F\times$ 2本の作用線の距離 0.5 m）。</p>
+<p>② 原点まわり：A の力 $(0.4,0,0)\times(0,0,50)=(0,\ -20,\ 0)$、B の力 $(0,0.3,0)\times(0,0,-50)=(-15,\ 0,\ 0)$、和 $(-15,\ -20,\ 0)$ ✓。</p>
+<p>③ P まわり：$\overrightarrow{\mathrm{PA}}=(-0.6,-1,-1)$、$(-0.6,-1,-1)\times(0,0,50)=(-50,\ 30,\ 0)$。$\overrightarrow{\mathrm{PB}}=(-1,-0.7,-1)$、$(-1,-0.7,-1)\times(0,0,-50)=(35,\ -50,\ 0)$。和 $(-15,\ -20,\ 0)$ ✓。</p></div>
+
+<h3><span class="no">6.2</span>力を別の点へ移す</h3>
+<p>点 A に力 $\boldsymbol F$ が作用しているとき、点 P への作用はどうなるか。第2回 5.1 節と同じ4ステップで考える。</p>
+<figure class="slide"><img src="img/slide03/transfer.jpg" alt="力の移動。点AのFは、点Pに力Fと純粋モーメントM=r×Fを置いたものと等価" loading="lazy" style="width:420px;max-width:90%;height:auto;background:#fff"><figcaption>3次元の物体に働く力の移動。出典：講義資料 第3回 p.21–22</figcaption></figure>
+<ol><li>点 P に $\boldsymbol F$ と $-\boldsymbol F$ を追加する（和が 0 なので、初期状態と等価）。</li>
+<li>点 A の $\boldsymbol F$ と点 P の $-\boldsymbol F$ をペアと考える ⇒ 偶力。</li>
+<li>偶力 ⇔ 純粋モーメント：$\boldsymbol M=\boldsymbol r\times\boldsymbol F$（6.1 節で $\boldsymbol r_{BA}$ にあたるのは、$-\boldsymbol F$ 側の P から $\boldsymbol F$ 側の A へのベクトル $\boldsymbol r=\overrightarrow{\mathrm{PA}}$）。</li>
+<li>点 P に力 $\boldsymbol F$ が残る。</li></ol>
+<div class="thm"><span class="label">力の移動</span>点 A に力 $\boldsymbol F$ が作用 ＝ 点 P に力 $\boldsymbol F$ が作用 ＋ 純粋モーメント $\boldsymbol M=\boldsymbol r\times\boldsymbol F$（$\boldsymbol r=\overrightarrow{\mathrm{PA}}$）が作用</div>
+
+<h3><span class="no">6.3</span>複数の力とモーメントを1点に集める</h3>
+<p>物体上の $n$ 個の点に力 $\boldsymbol F_1,\ldots,\boldsymbol F_n$、$m$ 個の点に純粋モーメント $\boldsymbol M_1,\ldots,\boldsymbol M_m$ が作用しているとする（講義資料 p.19）。6.2 節で各力を点 P へ移し、純粋モーメントはどこでも同じ（6.1 節）なのでそのまま P へ持ってくると、点 P に与える力 $\boldsymbol F$ とモーメント $\boldsymbol M$ は</p>
+<div class="thm"><span class="label">力とモーメントの合成</span>$$\boldsymbol F=\sum_{i=1}^{n}\boldsymbol F_i\qquad(2.58)$$$$\boldsymbol M=\sum_{i=1}^{n}\boldsymbol r_i\times\boldsymbol F_i+\sum_{j=1}^{m}\boldsymbol M_j\qquad(2.59)$$
+$\boldsymbol r_i$：点 P から $\boldsymbol F_i$ の作用点へのベクトル。</div>
+<figure class="slide"><img src="img/slide03/resultant.jpg" alt="物体上の複数の点に力F1..Fnと純粋モーメントM1..Mmが働き、点Pから各作用点へのベクトルr1,r2" loading="lazy" style="width:300px;max-width:62%;height:auto;background:#fff"><figcaption>複数の力と純粋モーメント。出典：講義資料 第3回 p.19</figcaption></figure>
+
+<h3><span class="no">6.4</span>基準点を移す式</h3>
+<p>点 P で $\boldsymbol F,\boldsymbol M_P$ と求めた後、別の点 Q での値が欲しくなることがある。(2.59) を Q でやり直すと、$\boldsymbol r_i$ が $\overrightarrow{\mathrm{QP}}+\boldsymbol r_i$ に変わるだけなので、分配法則で</p>
+$$\boldsymbol M_Q=\sum(\overrightarrow{\mathrm{QP}}+\boldsymbol r_i)\times\boldsymbol F_i+\sum\boldsymbol M_j=\boldsymbol M_P+\overrightarrow{\mathrm{QP}}\times\boldsymbol F\qquad(6.1)$$
+<p>（第2回 5.5 節の3次元版。5.3 節の証明の ③ はこの特別な場合）。力の和 $\boldsymbol F$ は基準点によらない。</p>
+<div class="ex"><span class="label">例題12〔B｜自作〕力・偶力系を1点に集め、別の点へ移す</span>
+<p>$\boldsymbol F_1=(0,\ 0,\ -200)$ N が点 $(0.5,\ 0.2,\ 0)$ m に、$\boldsymbol F_2=(100,\ 0,\ 0)$ N が点 $(0,\ 0.3,\ 0.4)$ m に、純粋モーメント $\boldsymbol M_3=(0,\ 0,\ 30)$ N·m が働く。(1) 原点 O に集めた力とモーメント、(2) 点 Q$(1,\ 0,\ 0)$ m でのモーメントを (6.1) で求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (2.58)：$\boldsymbol F=(100,\ 0,\ -200)$ N。</p>
+<p>② $\boldsymbol r_1\times\boldsymbol F_1=(0.5,0.2,0)\times(0,0,-200)$：$x$ $(-200)(0.2)-0=-40$、$y$ $0-(-200)(0.5)=100$、$z$ $0$ → $(-40,\ 100,\ 0)$。</p>
+<p>③ $\boldsymbol r_2\times\boldsymbol F_2=(0,0.3,0.4)\times(100,0,0)$：$x$ $0\cdot0.3-0\cdot0.4=0$、$y$ $(100)(0.4)-0=40$、$z$ $0-(100)(0.3)=-30$ → $(0,\ 40,\ -30)$。</p>
+<p>④ (2.59)：$\boldsymbol M_O=(-40,100,0)+(0,40,-30)+(0,0,30)=(-40,\ 140,\ 0)$ N·m。</p>
+<p>⑤ (2) $\overrightarrow{\mathrm{QO}}=(-1,0,0)$。$\overrightarrow{\mathrm{QO}}\times\boldsymbol F=(-1,0,0)\times(100,0,-200)$：$x$ $(-200)(0)-0\cdot0=0$、$y$ $(100)(0)-(-200)(-1)=-200$、$z$ $0\cdot(-1)-(100)(0)=0$ → $(0,\ -200,\ 0)$。$\boldsymbol M_Q=(-40,\ -60,\ 0)$ N·m。</p>
+<p>⑥ 確かめ：Q から直接 (2.59) で計算すると、$(-0.5,0.2,0)\times(0,0,-200)=(-40,\ -100,\ 0)$、$(-1,0.3,0.4)\times(100,0,0)=(0,\ 40,\ -30)$、＋$(0,0,30)$ で $(-40,\ -60,\ 0)$ ✓。</p></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">7</span>実際の問題に使う</h2>
+
+<h3><span class="no">7.1</span>解き方の手順①〜⑥（3次元版）</h3>
+<div class="def"><span class="label">手順（毎回これで解く）</span>
+<ol><li><strong>系と基準を決める</strong>：どの物体に働くどの力か。求めるのは「点まわり」か「軸まわり」か。軸まわりなら、軸上の点を1つ選ぶ（計算が楽な点）。</li>
+<li><strong>座標軸を決める</strong>（右手系）。軸まわりなら、軸の単位ベクトル $\boldsymbol u$ を作る。</li>
+<li><strong>ベクトルを成分で書く</strong>：$\boldsymbol r$（<strong>基準点 → 作用点</strong>、終点−始点）と $\boldsymbol F$（2点で向きが与えられたら単位ベクトル×大きさ）。</li>
+<li><strong>式を立てる</strong>：$\boldsymbol M=\boldsymbol r\times\boldsymbol F$（2.54）。軸まわりなら $\tau=\boldsymbol u\cdot\boldsymbol M$（2.60）、または三重積の行列式。複数なら (2.58)・(2.59)。</li>
+<li><strong>解く</strong>：成分を1つずつ。$y$ 成分の符号に注意。</li>
+<li><strong>確かめる</strong>：$\boldsymbol M\cdot\boldsymbol r=0$、$\boldsymbol M\cdot\boldsymbol F=0$。軸まわりなら別の軸上の点で再計算するか、軸の側から見た2次元の図で確かめる（5.4 節）。向き（右ねじ）が直感と合うか。単位 N·m、有効数字 3〜4 桁。</li></ol></div>
+
+<h3><span class="no">7.2</span>教科書 例題2・9：軸 a、b まわりのモーメント</h3>
+<div class="ex"><span class="label">例題13〔B｜教科書 例題2・9（p.21）〕椅子に働く力の、軸 a・b まわりのモーメント</span>
+<p>力 $\boldsymbol F$ が軸 a、b まわりに与えるモーメントを求めよ。着力点 P$(-0.45,\ 0.25,\ 1.1)$ m、$\boldsymbol F=(-8,\ -5,\ 7)$ N。軸 a は原点 A を通る鉛直な軸（$z$ 方向）、軸 b は点 B$(-0.2,\ 0,\ 0.5)$ m を通る $y$ 方向の軸。</p>
+<figure class="slide"><img src="img/slide03/fig2_53.jpg" alt="教科書 図2.53 例題2・9。回転椅子の背もたれの点Pに力F、座の下の軸aと、座面の高さの軸b" loading="lazy" style="width:400px;max-width:86%;height:auto;background:#fff"><img src="img/slide03/ex29_vec.jpg" alt="例題2・9のベクトル図。原点Aから点Pへのr_a、点BからPへのr_b、軸の単位ベクトルu_a（z方向）とu_b（y方向）" loading="lazy" style="width:220px;max-width:48%;height:auto;background:#fff"><figcaption>教科書 図2.53（例題2・9）と、ベクトルの図。出典：講義資料 第3回 p.24–25</figcaption></figure>
+<p><strong>解答</strong>（講義資料の方針：1. 軸 a、b 上にある適当な点を選ぶ → 2. それぞれの点まわりのモーメントを求める → 3. 求めたモーメントの軸 a、b 方向成分を求める）</p>
+<p>① 系と基準：椅子に働く力 $\boldsymbol F$。軸 a 上の点として A$(0,\ 0,\ 0)$、軸 b 上の点として B$(-0.2,\ 0,\ 0.5)$ を選ぶ。</p>
+<p>② 軸の単位ベクトル：$\boldsymbol u_a=(0,\ 0,\ 1)$、$\boldsymbol u_b=(0,\ 1,\ 0)$。</p>
+<p>③ 位置ベクトル（終点−始点）：$\boldsymbol r_a=\overrightarrow{\mathrm{AP}}=(-0.45-0,\ 0.25-0,\ 1.1-0)=(-0.45,\ 0.25,\ 1.1)$ m、$\boldsymbol r_b=\overrightarrow{\mathrm{BP}}=(-0.45-(-0.2),\ 0.25-0,\ 1.1-0.5)=(-0.25,\ 0.25,\ 0.6)$ m。</p>
+<p>④ 点 A まわり (2.54)：<br>
+$x$ 成分 $F_zr_y-F_yr_z=(7)(0.25)-(-5)(1.1)=1.75+5.5=7.25$<br>
+$y$ 成分 $F_xr_z-F_zr_x=(-8)(1.1)-(7)(-0.45)=-8.8+3.15=-5.65$<br>
+$z$ 成分 $F_yr_x-F_xr_y=(-5)(-0.45)-(-8)(0.25)=2.25+2=4.25$<br>
+$\boldsymbol M_A=\boldsymbol r_a\times\boldsymbol F=(7.25,\ -5.65,\ 4.25)$ Nm　(2.61)′<br>
+軸 a まわり (2.60)：$\tau_a=\boldsymbol u_a\cdot\boldsymbol M_A=0+0+4.25=\mathbf{4.25}$ <strong>Nm</strong>　(2.62)′、ベクトルでは $\boldsymbol M_a=\tau_a\boldsymbol u_a=(0,\ 0,\ 4.25)$ Nm。</p>
+<p>⑤ 点 B まわり：<br>
+$x$ 成分 $(7)(0.25)-(-5)(0.6)=1.75+3=4.75$<br>
+$y$ 成分 $(-8)(0.6)-(7)(-0.25)=-4.8+1.75=-3.05$<br>
+$z$ 成分 $(-5)(-0.25)-(-8)(0.25)=1.25+2=3.25$<br>
+$\boldsymbol M_B=\boldsymbol r_b\times\boldsymbol F=(4.75,\ -3.05,\ 3.25)$ Nm　(2.63)′<br>
+軸 b まわり：$\tau_b=\boldsymbol u_b\cdot\boldsymbol M_B=\mathbf{-3.05}$ <strong>Nm</strong>　(2.64)′、$\boldsymbol M_b=(0,\ -3.05,\ 0)$ Nm。</p>
+<p>⑥ 確かめ：<br>
+・垂直性：$\boldsymbol M_A\cdot\boldsymbol r_a=-3.2625-1.4125+4.675=0$ ✓、$\boldsymbol M_B\cdot\boldsymbol F=-38+15.25+22.75=0$ ✓。<br>
+・軸 a を真上から見た2次元の図（5.4 節）：作用点の影 $(-0.45,\ 0.25)$、力の影 $(-8,\ -5)$ で $F_yr_x-F_xr_y=4.25$ ✓（$F_z=7$ と高さ 1.1 m は効かない）。<br>
+・軸 b 上の別の点 $(-0.2,\ 1,\ 0.5)$ を使っても、$y$ 成分 $F_xr_z-F_zr_x$ は $r_y$ を含まないので同じ $-3.05$ ✓。<br>
+・符号の意味：$\tau_b\lt0$ は、$+y$ 側から見て時計回り。背もたれの上部を $-x$ 側へ引く $F_x=-8$ N が、座面の高さの軸 b のまわりに背もたれを倒す向きの働きが勝っている。</p></div>
+
+<h3><span class="no">7.3</span>序の問いに答える：ロボットの関節 $J_1$・$J_3$</h3>
+<figure class="slide"><img src="img/slide03/ex_robot2d.jpg" alt="ロボットの例題の模式図。台車の上のJ1、その真上のJ2から角度θ2で斜めにL2がJ3まで伸び、J3から水平にL3がJ4まで伸びる" loading="lazy" style="width:220px;max-width:48%;height:auto;background:#fff"><figcaption>例題の模式図（$xz$ 平面）。出典：講義資料 第3回 p.23</figcaption></figure>
+<figure><svg viewBox="0 0 480 380" width="480" role="img" aria-label="ロボットの腕と J1 軸・J3 軸">
+<defs><marker id="rob-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="rob-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="rob-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="rob-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="rob-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="rob-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="38.4" y1="352.0" x2="99.5" y2="360.6" stroke="#968d80" stroke-width="1.2" marker-end="url(#rob-s)"/>
+<text x="104.4" y="367.2" fill="#968d80" text-anchor="middle" font-size="13">x</text>
+<line x1="38.4" y1="352.0" x2="67.7" y2="331.5" stroke="#968d80" stroke-width="1.2" marker-end="url(#rob-s)"/>
+<text x="70.0" y="335.8" fill="#968d80" text-anchor="middle" font-size="13">y</text>
+<line x1="38.4" y1="352.0" x2="38.4" y2="287.1" stroke="#968d80" stroke-width="1.2" marker-end="url(#rob-s)"/>
+<text x="38.4" y="270.1" fill="#968d80" text-anchor="middle" font-size="13">z</text>
+<path d="M113.3,340.5 L113.3,24.8" fill="none" stroke="#a8322a" stroke-width="1.3" stroke-dasharray="8 3 2 3" opacity="1"/>
+<text x="113.3" y="15.9" fill="#a8322a" text-anchor="middle" font-size="12">J₁ 軸（鉛直）</text>
+<path d="M151.9,201.6 L258.3,127.1" fill="none" stroke="#2b3a67" stroke-width="1.3" stroke-dasharray="8 3 2 3" opacity="1"/>
+<text x="267.1" y="121.2" fill="#2b3a67" text-anchor="start" font-size="12">J₃ 軸（y 方向）</text>
+<path d="M113.3,299.2 L113.3,246.1" fill="none" stroke="#2a2723" stroke-width="5" opacity="1"/>
+<path d="M113.3,246.1 L191.8,173.6" fill="none" stroke="#4f7a4a" stroke-width="6" opacity="1"/>
+<path d="M191.8,173.6 L275.1,185.3" fill="none" stroke="#4f7a4a" stroke-width="6" opacity="1"/>
+<circle cx="113.3" cy="246.1" r="6" fill="#f7f4ec"/>
+
+<circle cx="113.3" cy="246.1" r="3" fill="#2a2723"/>
+<text x="104.4" y="234.3" fill="#a06a32" text-anchor="end" font-size="13">J₂</text>
+<circle cx="191.8" cy="173.6" r="6" fill="#f7f4ec"/>
+
+<circle cx="191.8" cy="173.6" r="3" fill="#2a2723"/>
+<text x="182.9" y="161.8" fill="#a06a32" text-anchor="end" font-size="13">J₃</text>
+<circle cx="275.1" cy="185.3" r="6" fill="#f7f4ec"/>
+
+<circle cx="275.1" cy="185.3" r="3" fill="#2a2723"/>
+<text x="283.9" y="200.1" fill="#a06a32" text-anchor="start" font-size="13">J₄</text>
+<text x="104.4" y="299.2" fill="#a06a32" text-anchor="end" font-size="13">J₁</text>
+<line x1="275.1" y1="185.3" x2="236.2" y2="114.3" stroke="#a8322a" stroke-width="2.8" marker-end="url(#rob-r)"/>
+<text x="236.2" y="105.4" fill="#a8322a" text-anchor="middle" font-size="12">F = (−8.0, 5.0, 7.0) N</text>
+<text x="164.3" y="218.7" fill="#4f7a4a" text-anchor="start" font-size="11">L₂ = 0.4 m</text>
+<text x="233.4" y="200.1" fill="#4f7a4a" text-anchor="middle" font-size="11">L₃ = 0.3 m</text>
+<path d="M113.3,246.1 L174.4,254.6" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="3 3" opacity="1"/>
+<text x="168.8" y="245.0" fill="#968d80" text-anchor="start" font-size="11">45°</text>
+<path d="M99.5,62.6 L97.7,63.0 L96.1,63.5 L94.6,64.1 L93.3,64.7 L92.1,65.3 L91.0,65.9 L90.2,66.6 L89.5,67.3 L89.0,68.0 L88.8,68.7 L88.7,69.4 L88.8,70.1 L89.0,70.8 L89.5,71.5 L90.2,72.2 L91.0,72.8 L92.1,73.5 L93.3,74.0 L94.6,74.6 L96.1,75.1 L97.7,75.5 L99.5,75.9 L101.4,76.3 L103.3,76.6 L105.3,76.8 L107.4,76.9 L109.6,77.1 L111.8,77.1 L113.9,77.1 L116.1,77.0 L118.3,76.8 L120.4,76.6 L122.5,76.4 L124.4,76.0 L126.3,75.6 L128.1,75.2 L129.8,74.7 L131.4,74.2 L132.8,73.6 L134.0,73.0 L135.1,72.4 L136.1,71.7 L136.8,71.0 L137.3,70.3 L137.7,69.6 L137.9,68.9 L137.9,68.2 L137.7,67.5 L137.2,66.8 L136.7,66.1 L135.9,65.4 L134.9,64.8 L133.8,64.2 L132.5,63.7 L131.1,63.1 L129.5,62.7 L127.8,62.3 L126.0,61.9 L124.0,61.6" fill="none" stroke="#a8322a" stroke-width="1.4" marker-end="url(#rob-r)"/>
+<path d="M257.8,146.9 L257.2,148.3 L256.5,149.5 L255.7,150.7 L254.7,151.8 L253.7,152.8 L252.6,153.6 L251.4,154.4 L250.1,155.0 L248.8,155.5 L247.4,155.8 L246.0,156.1 L244.5,156.1 L243.0,156.1 L241.6,155.8 L240.1,155.5 L238.6,155.0 L237.2,154.4 L235.8,153.7 L234.5,152.8 L233.2,151.8 L232.0,150.7 L230.9,149.5 L229.9,148.3 L228.9,146.9 L228.1,145.5 L227.4,144.0 L226.8,142.5 L226.3,141.0 L226.0,139.4 L225.8,137.8 L225.7,136.2 L225.7,134.7 L225.9,133.1 L226.2,131.6 L226.6,130.2 L227.2,128.8 L227.8,127.5 L228.6,126.3 L229.5,125.1 L230.5,124.1 L231.6,123.2 L232.8,122.4 L234.0,121.8 L235.3,121.2 L236.7,120.8 L238.1,120.5 L239.5,120.4 L241.0,120.4 L242.5,120.6 L244.0,120.9 L245.4,121.3 L246.9,121.9 L248.3,122.6 L249.6,123.4 L250.9,124.3 L252.1,125.4 L253.3,126.5 L254.4,127.7 L255.3,129.1" fill="none" stroke="#2b3a67" stroke-width="1.4" marker-end="url(#rob-b)"/>
+</g></svg>
+<figcaption>図7.1　問題の数値どおりに描いた腕（$J_2$ を原点とし、腕は $+x$ の側へ伸びるとした）と、$J_1$ 軸（鉛直）、$J_3$ 軸（$y$ 方向）、力 $\boldsymbol F$（1/40 の縮尺）。</figcaption></figure>
+<div class="ex"><span class="label">例題14〔B｜講義資料 p.23・自作の解答〕関節 $J_4$ の力が $J_1$ 軸・$J_3$ 軸まわりに与えるモーメント</span>
+<p>問題は序に掲げた（$\boldsymbol F=(-8.0,\ 5.0,\ 7.0)$ N、$L_2=0.4$ m、$\theta_2=45^\circ$、$L_3=0.3$ m 水平、腕は $xz$ 平面）。</p>
+<p><strong>解答</strong>（自作）</p>
+<p>① 系と基準：腕に働く力 $\boldsymbol F$（作用点 $J_4$）。$J_1$ 軸は鉛直で、模式図では $J_2$ の真下にある → <strong>$J_2$ は $J_1$ 軸上の点</strong>なので、$J_1$ 軸の基準点に $J_2$ を選ぶ（$L_1$ の長さが分からなくても解ける）。$J_3$ 軸の基準点は $J_3$ そのもの。</p>
+<p>② 座標：$J_2$ を原点とし、腕は $+x$ の側へ伸びるとする（下の注意）。$\boldsymbol u_{J1}=(0,\ 0,\ 1)$。$J_3$ 軸は腕の平面（$xz$ 平面）に垂直なので $y$ 方向、$\boldsymbol u_{J3}=(0,\ 1,\ 0)$ とする。</p>
+<p>③ 位置：$J_3=(L_2\cos45^\circ,\ 0,\ L_2\sin45^\circ)=(0.2828,\ 0,\ 0.2828)$ m、$J_4=J_3+(L_3,\ 0,\ 0)=(0.5828,\ 0,\ 0.2828)$ m。$\boldsymbol r_1=\overrightarrow{J_2J_4}=(0.5828,\ 0,\ 0.2828)$、$\boldsymbol r_3=\overrightarrow{J_3J_4}=(0.3,\ 0,\ 0)$。</p>
+<p>④ $J_1$ 軸：三重積の行列式で
+$$\begin{aligned}\tau_{J1}&=\begin{vmatrix}0&0&1\\0.5828&0&0.2828\\-8.0&5.0&7.0\end{vmatrix}=1\times\begin{vmatrix}0.5828&0\\-8.0&5.0\end{vmatrix}\\&=0.5828\times5.0-0\times(-8.0)=2.914\end{aligned}$$
+（1行目の 0 の項は消える。残るのは $z$ 成分 $F_yr_x-F_xr_y$ だけ）。</p>
+<p>⑤ $J_3$ 軸：$\boldsymbol M_{J3}=\boldsymbol r_3\times\boldsymbol F$：$x$ $(7.0)(0)-(5.0)(0)=0$、$y$ $(-8.0)(0)-(7.0)(0.3)=-2.10$、$z$ $(5.0)(0.3)-(-8.0)(0)=1.50$ → $(0,\ -2.10,\ 1.50)$。$\tau_{J3}=\boldsymbol u_{J3}\cdot\boldsymbol M_{J3}=-2.10$ N·m。</p>
+<p>⑥ 確かめと答え：<br>
+・$J_1$ 軸を真上から見ると、$J_4$ の影は軸から $x$ 方向に 0.5828 m、力の影は $(-8.0,\ 5.0)$。軸を回すのは腕に垂直な $F_y=5.0$ N だけで、$2.914$ ✓（$F_x$ は軸へ向かう成分、$F_z$ は軸に平行）。<br>
+・$J_3$ 軸を $+y$ 側から見ると、$J_4$ は軸から水平に 0.3 m、効くのは腕に垂直な $F_z=7.0$ N だけで大きさ $0.3\times7.0=2.10$ ✓。符号が負なのは、$+y$ 軸まわりの正の向き（$z\to x$）と逆、つまり <strong>$F_z$ が腕の先を持ち上げる向き</strong>だから。<br>
+・答え：<strong>$J_1$ 軸まわり 2.91 N·m</strong>（上から見て反時計回り＝先端を $+y$ 側へ振る向き）、<strong>$J_3$ 軸まわり −2.10 N·m</strong>（$\boldsymbol u=+\boldsymbol j$ として。大きさ 2.10 N·m、先端を持ち上げる向き）。</p></div>
+<div class="warn"><span class="label">注意：解答の前提（推定）</span>
+<ul><li>問題文は「アームは $xz$ 平面内」とだけ述べ、腕が $+x$ と $-x$ のどちらへ伸びるかは書いていない。講義資料の図（右手前が $+x$）と、力 $\boldsymbol F$ の矢印の向きから $+x$ 側と読んだ。$-x$ 側なら $\boldsymbol r$ の $x$ 成分の符号が逆になり、$\tau_{J1}=-2.91$ N·m、$\tau_{J3}=+2.10$ N·m（$\boldsymbol u=+\boldsymbol j$）と、どちらも符号が逆になる（大きさは同じ）。</li>
+<li>$J_3$ 軸の単位ベクトルを $-\boldsymbol j$ にとれば、$\tau_{J3}=+2.10$ N·m になる。<strong>軸まわりのモーメントの符号は、$\boldsymbol u$ の向きを書いて初めて意味をもつ</strong>。答案には必ず $\boldsymbol u$ を書くこと。</li>
+<li>講義資料には答えがない。上の数値は本教材の自作の解答（Python で検算済み）。</li>
+<li>例題2・9 の力 $(-8,\ -5,\ 7)$ とこの問題の力 $(-8.0,\ 5.0,\ 7.0)$ は $y$ 成分の符号が違うが、別の問題なので誤植ではない。混同しないこと。</li></ul></div>
+<div class="box"><span class="label">発展：$J_2$ 軸まわりは？</span>$J_2$ の軸も $y$ 方向である（模式図）。$J_2$ を基準に $\boldsymbol M_{J2}=\boldsymbol r_1\times\boldsymbol F=(-1.414,\ -6.343,\ 2.914)$ N·m なので、$\tau_{J2}=-6.34$ N·m（$\boldsymbol u=+\boldsymbol j$）。$J_3$ より腕の根元に近い $J_2$ のほうが、同じ力でも大きなトルクを受ける（腕が長い）。同じ1本の力でも、<strong>どの軸か</strong>で答えが 2.91、−2.10、−6.34 N·m と変わる――序の問いの意味はこれだった。</div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/03_a4_unimate.jpg" alt="白黒写真。初期の産業用ロボット Unimate の腕がガラスのポットを傾け、女性の持つカップにコーヒーを注いでいる" loading="lazy"></div>
+<p class="cap">1.5トンを超える腕が、関節ごとのトルクを加減して、カップ一杯の重さだけを傾けてみせた。</p>
+<p class="cr">Frank Q. Brown（Los Angeles Times）／<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Unimate_pouring_coffee_for_a_woman_at_Biltmore_Hotel,_1967.jpg">Wikimedia Commons</a>（ロサンゼルス、ビルトモア・ホテル、1967年。UCLA 図書館）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/03_b4_karakuri.jpg" alt="からくり人形。髷を結った頭に朱の着物と袴、両手に茶托と茶碗を載せている" loading="lazy"></div>
+<p class="cap">茶碗を受け取れば止まり、空にして戻せば向きを変えて帰る――人形の中の歯車は、碗の重さを合図に動いている。</p>
+<p class="cr">PHGCOM／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:KarakuriBritishMuseum.jpg">Wikimedia Commons</a>（からくり人形（茶運び人形とみられる）、1800年頃、大英博物館で撮影）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">8</span>章末例題</h2>
+<p>外部の問題は、問題文の原文（英語）を添えて和訳した。図は原図をそのまま転載した。座標の取り方が講義資料と違う（$y$ 軸が鉛直）ものがあるが、どれも右手系である。</p>
+
+<div class="ex"><span class="label">例題15〔B｜Engineering Statics 例題4.4.3〕板を引くケーブルの、点 O まわりのモーメント</span>
+<p>$xy$ 平面にある薄い板 OABC を、ケーブル BD が張力 2 kN で引いている（ケーブルは点 D の摩擦のない輪を通る）。張力が点 O のまわりに与えるモーメントを求めよ。（座標は m で、B$=(-0.9,\ 1.1,\ 0)$、D$=(0.4,\ 0,\ 1.0)$。$y$ 軸が上、$x$ 軸が右、$z$ 軸が手前。）</p>
+<p class="note">原文：A thin plate OABC sits in the xy plane. Cable BD pulls with a tension of 2 kN through a frictionless ring at point D. Find the moment caused by the tension force around point O.</p>
+<figure class="slide"><img src="img/ext03/es443_prob.png" alt="xy平面の長方形の板OABC。左上の角Bからケーブルが手前下の点Dの輪へ伸び、Dから先を2 kNで引く" loading="lazy" style="width:340px;max-width:72%;height:auto;background:#fff"><figcaption>原図（Engineering Statics, Example 4.4.3）。</figcaption></figure>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics: Open and Interactive</i>, §4.4, Example 4.4.3（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/Chapter_04-moments-in-three-dimensions.html">https://engineeringstatics.org/Chapter_04-moments-in-three-dimensions.html</a>。和訳と（ ）内の座標の書き起こしは本教材。公式解答 $\boldsymbol M_O=(1.114,\ 0.911,\ -0.446)$ kN·m と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 系：板。ケーブルは板の点 B を、B から D の向きに引く（輪で向きが変わる先は関係ない）。基準点 O。</p>
+<p>② 座標は問題のとおり（右手系：$x$ 右・$y$ 上・$z$ 手前）。</p>
+<p>③ $\overrightarrow{\mathrm{BD}}=(0.4-(-0.9),\ 0-1.1,\ 1.0-0)=(1.3,\ -1.1,\ 1.0)$、長さ $\sqrt{1.69+1.21+1.00}=\sqrt{3.90}=1.975$ m。$\boldsymbol F=2\times(1.3,\ -1.1,\ 1.0)/1.975=(1.317,\ -1.114,\ 1.013)$ kN。$\boldsymbol r=\overrightarrow{\mathrm{OB}}=(-0.9,\ 1.1,\ 0)$ m。</p>
+<p>④ (2.54)：$x$ $F_zr_y-F_yr_z=1.013\times1.1-0=1.114$。$y$ $F_xr_z-F_zr_x=0-1.013\times(-0.9)=0.911$。$z$ $F_yr_x-F_xr_y=(-1.114)(-0.9)-1.317\times1.1=1.003-1.448=-0.446$。</p>
+<p>⑤ $\boldsymbol M_O=(1.114,\ 0.911,\ -0.446)$ kN·m、大きさ 1.507 kN·m。</p>
+<p>⑥ 確かめ（作用線上の別の点）：$\boldsymbol r=\overrightarrow{\mathrm{OD}}=(0.4,\ 0,\ 1.0)$ でも、$x$ $1.013\times0-(-1.114)(1.0)=1.114$、$y$ $1.317\times1.0-1.013\times0.4=0.911$、$z$ $(-1.114)(0.4)-0=-0.446$ で一致 ✓。<strong>D の座標のほうが 0 を含むので計算が楽</strong>――作用線上のどの点を選んでもよい（4.3 節）ことの使いどころ。</p></div>
+
+<div class="ex"><span class="label">例題16〔B｜Engineering Statics 例題4.4.6〕箱を回すパイプ BG まわりのモーメント</span>
+<p>1辺 2 ft の立方体の箱が、固定されたパイプ BG に摩擦のない蝶番 B、G で取り付けられている。箱に $P_1=30$ lb、$P_2=25$ lb の2力が働く。(a) $P_1$ が線 BG のまわりに与えるモーメントの大きさ、(b) $P_2$ が線 BG のまわりに与えるモーメントの大きさを求めよ。（座標は ft で、A$=(2,0,0)$、B$=(2,2,0)$、G$=(0,2,2)$、H$=(0,0,2)$、D$=(2,0,2)$。$P_1$ は B に $-y$ 向き（A の向き）、$P_2$ は H に $+x$ 向き（D の向き）。）</p>
+<p class="note">原文：A 2 ft per side square box is attached to fixed pipe BG by two frictionless hinges B and G. There are two forces applied to the box, P1 = 30 lb and P2 = 25 lb. (a) Find the magnitude of the moment caused by force P1 about line BG. (b) Find the magnitude of the moment caused by force P2 about line BG.</p>
+<figure class="slide"><img src="img/ext03/es446_prob.png" alt="立方体の箱。対角の辺BGに沿って斜めのパイプが通り、Bの角に左向きのP1、上面のHにDへ向かうP2" loading="lazy" style="width:340px;max-width:72%;height:auto;background:#fff"><figcaption>原図（Engineering Statics, Example 4.4.6）。</figcaption></figure>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics</i>, §4.4, Example 4.4.6（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/Chapter_04-moments-in-three-dimensions.html">https://engineeringstatics.org/Chapter_04-moments-in-three-dimensions.html</a>。和訳と（ ）内の座標の書き起こしは本教材（ウェブページの問題文の冒頭には、例題4.4.3 の文が誤って入っているので除いた）。公式解答 (a) 0、(b) 35.355 ft·lb と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 系：箱。求めるのは軸 BG まわり。軸上の点として B を選ぶ。</p>
+<p>② $\overrightarrow{\mathrm{BG}}=(-2,\ 0,\ 2)$、長さ $2\sqrt2$。$\boldsymbol u=(-1,\ 0,\ 1)/\sqrt2$。</p>
+<p>③ (a) $P_1$ は B（軸上の点）に働くので、B からの $\boldsymbol r=\boldsymbol 0$。$\boldsymbol M_B=\boldsymbol 0$ で、<strong>$\tau=0$</strong>。作用線が軸と交わる力は、その軸を回さない（5.4 節：軸に垂直な面で見ると腕が 0）。</p>
+<p>④ (b) $\boldsymbol P_2=(25,\ 0,\ 0)$、$\boldsymbol r=\overrightarrow{\mathrm{BH}}=(-2,\ -2,\ 2)$。三重積の行列式で
+$$\begin{aligned}\tau&=\begin{vmatrix}-1/\sqrt2&0&1/\sqrt2\\-2&-2&2\\25&0&0\end{vmatrix}\\&=-\tfrac{1}{\sqrt2}\bigl((-2)(0)-2\cdot0\bigr)-0+\tfrac{1}{\sqrt2}\bigl((-2)(0)-(-2)(25)\bigr)\\&=\frac{50}{\sqrt2}=35.36\ \mathrm{ft\cdot lb}\end{aligned}$$</p>
+<p>⑤ 確かめ（軸上の別の点 G、作用線上の別の点 D）：$\boldsymbol r=\overrightarrow{\mathrm{GD}}=(2,\ -2,\ 0)$ で $\boldsymbol M_G=(0,\ 0,\ 50)$、$\boldsymbol u\cdot\boldsymbol M_G=50/\sqrt2=35.36$ ✓。</p>
+<p>⑥ 答え：(a) 0、(b) <strong>35.4 ft·lb</strong>（$\boldsymbol u$ を B→G にとると正）。</p></div>
+
+<div class="ex"><span class="label">例題17〔C｜Mechanics Map 3.5 問2〕原点を通らない斜めの軸まわりのモーメント</span>
+<p>大きさ 100 lb の力が、点 O と点 A を結ぶ線に沿って（O から A の向きに）働く。この力が、点 B と点 C を結ぶ軸のまわりに与えるモーメントを求めよ。（座標は ft で、O$=(0,0,0)$、A$=(6,\ 3,\ 4)$、B$=(0,\ 0,\ 4)$、C$=(6,\ 0,\ 0)$。6×3×4 ft の箱の頂点。）</p>
+<p class="note">原文：A 100 lb force acts along the line connecting points O and A in the diagram below. What moment does this force exert about the axis connecting points B and C?</p>
+<figure class="slide"><img src="img/ext03/mm35_q2_box.png" alt="破線の直方体。原点Oから対角の頂点Aへ100 lbの力、z軸上の点Bとx軸上の点Cを結ぶ線" loading="lazy" style="width:380px;max-width:82%;height:auto;background:#fff"><figcaption>原図（Mechanics Map, 3.5 Moment about an Axis, Question 2）。</figcaption></figure>
+<p class="cr">出典：Jacob Moore ほか, <i>Mechanics Map</i>, 3.5 “Moment about an Axis”, Question 2（Creative Commons 表示-継承。版の記載なし）<a href="https://mechanicsmap.org/websites/3_equilibrium_rigid_body/3-5_moment_about_an_axis/momentaboutanaxis.html">https://mechanicsmap.org/websites/3_equilibrium_rigid_body/3-5_moment_about_an_axis/momentaboutanaxis.html</a>。和訳と座標の書き起こしは本教材。公式解答 $3600/\sqrt{793}=127.8$ ft·lb と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 系と基準：力の作用線は O を通る。軸 BC 上の点として C を選ぶ（B でもよい。⑥で確かめる）。<span class="note">← 力の作用線上の点 O を作用点に使うと、$\boldsymbol r$ が簡単になる。</span></p>
+<p>② $\overrightarrow{\mathrm{BC}}=(6,\ 0,\ -4)$、長さ $\sqrt{52}$。$\boldsymbol u=(6,\ 0,\ -4)/\sqrt{52}$。</p>
+<p>③ $\boldsymbol F=100\times(6,\ 3,\ 4)/\sqrt{61}=(76.82,\ 38.41,\ 51.21)$ lb。$\boldsymbol r=\overrightarrow{\mathrm{CO}}=(-6,\ 0,\ 0)$ ft（C から作用線上の点 O へ）。</p>
+<p>④ $\boldsymbol M_C=\boldsymbol r\times\boldsymbol F$：$x$ $F_zr_y-F_yr_z=0$、$y$ $F_xr_z-F_zr_x=0-51.21\times(-6)=307.3$、$z$ $F_yr_x-F_xr_y=38.41\times(-6)-0=-230.5$。$\boldsymbol M_C=(0,\ 307.3,\ -230.5)$ ft·lb。</p>
+<p>⑤ (2.60)：$\tau=\boldsymbol u\cdot\boldsymbol M_C=(6\times0+0\times307.3+(-4)(-230.5))/\sqrt{52}=922.0/7.211=127.8$ ft·lb。</p>
+<p>⑥ 確かめ（軸上の別の点 B）：$\boldsymbol r=\overrightarrow{\mathrm{BO}}=(0,0,-4)$、$\boldsymbol M_B=(-F_y(-4),\ F_x(-4),\ 0)=(153.6,\ -307.3,\ 0)$、$\tau=6\times153.6/\sqrt{52}=127.8$ ✓。$\boldsymbol M_B\ne\boldsymbol M_C$ でも軸成分は同じ（5.3 節）。答え：<strong>127.8 ft·lb</strong>（$\boldsymbol u$ を B→C にとると正）。</p></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">9</span>演習問題</h2>
+
+<div class="box"><span class="label">問1〔A｜OpenStax UP1 10章 問83〕原点まわりのトルク</span>位置 $\boldsymbol r=(-2.0\,\boldsymbol i+4.0\,\boldsymbol j)$ m の点に加えた力 $(5.0\,\boldsymbol i-2.0\,\boldsymbol j+1.0\,\boldsymbol k)$ N の、原点まわりのトルクを求めよ。
+<p class="note">原文：What is the torque about the origin of the force (5.0 i − 2.0 j + 1.0 k) N if it is applied at the point whose position is r = (−2.0 i + 4.0 j) m?</p>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 10 Problems, Problem 83（CC BY 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/10-problems">https://openstax.org/books/university-physics-volume-1/pages/10-problems</a>。和訳は本教材。公式解答 $4.0\boldsymbol i+2.0\boldsymbol j-16.0\boldsymbol k$ N·m と照合済み。</p>
+<details><summary>解答</summary>
+<p>① $\boldsymbol r=(-2,\ 4,\ 0)$、$\boldsymbol F=(5,\ -2,\ 1)$。</p>
+<p>② (2.54)：$x$ $F_zr_y-F_yr_z=1\times4-0=4$、$y$ $F_xr_z-F_zr_x=0-1\times(-2)=2$、$z$ $F_yr_x-F_xr_y=(-2)(-2)-5\times4=4-20=-16$。</p>
+<p>③ $\boldsymbol M=(4.0,\ 2.0,\ -16.0)$ N·m。確かめ：$\boldsymbol M\cdot\boldsymbol r=-8+8+0=0$ ✓、$\boldsymbol M\cdot\boldsymbol F=20-4-16=0$ ✓。</p></details></div>
+
+<div class="box"><span class="label">問2〔A｜Engineering Statics 例題2.5.5〕指定した向きの力の成分</span>点 A に働く 5 kN の力 $\boldsymbol F$ が、A から B へ向かう線の向きであるとき、$\boldsymbol F$ の成分を求めよ。A$=(2,\ 3,\ -2.1)$ m、B$=(-2.5,\ 1.5,\ 2.2)$ m。
+<p class="note">原文：Determine the components of a 5 kN force F acting at point A, in the direction of a line from A to B.</p>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics</i>, §2.5, Example 2.5.5（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/Chapter_02-unit-vectors.html">https://engineeringstatics.org/Chapter_02-unit-vectors.html</a>。和訳は本教材。公式解答 $(-3.51,\ -1.17,\ 3.36)$ kN と照合済み。</p>
+<details><summary>解答</summary>
+<p>① $\overrightarrow{\mathrm{AB}}=(-4.5,\ -1.5,\ 4.3)$、長さ $\sqrt{20.25+2.25+18.49}=\sqrt{40.99}=6.402$ m。</p>
+<p>② (1.3)：$\boldsymbol F=5\times(-4.5,\ -1.5,\ 4.3)/6.402=(-3.51,\ -1.17,\ 3.36)$ kN。</p>
+<p>③ 確かめ：$\sqrt{3.514^2+1.171^2+3.358^2}=5.00$ kN ✓。</p></details></div>
+
+<div class="box"><span class="label">問3〔A｜自作〕外積の順序</span>$\boldsymbol r=(0.2,\ 0,\ 0.1)$ m、$\boldsymbol F=(0,\ 40,\ 0)$ N のとき、$\boldsymbol r\times\boldsymbol F$ と $\boldsymbol F\times\boldsymbol r$ を求めよ。点まわりのモーメントはどちらか。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① $\boldsymbol r\times\boldsymbol F$：$x$ $F_zr_y-F_yr_z=0-40\times0.1=-4$、$y$ $F_xr_z-F_zr_x=0$、$z$ $F_yr_x-F_xr_y=40\times0.2=8$ → $(-4,\ 0,\ 8)$ N·m。</p>
+<p>② $\boldsymbol F\times\boldsymbol r=-\boldsymbol r\times\boldsymbol F=(4,\ 0,\ -8)$。</p>
+<p>③ モーメントは $\boldsymbol r\times\boldsymbol F$（$\boldsymbol r$ が先、4.4 節）＝$(-4,\ 0,\ 8)$ N·m。$z$ 成分 8 は「$+z$ 側から見て、$x$ 方向 0.2 m の点を $+y$ 向きに押す」反時計回りで、直感と合う。</p></details></div>
+
+<div class="box"><span class="label">問4〔B｜Engineering Statics 例題3.5.3〕気球を引く力を3本のケーブルの向きに分ける</span>地上 30 ft の熱気球が、図のように3本のケーブルでつながれている。気球が 900 lb の力で上へ引くとき、3本のケーブルの張力はそれぞれいくらか。地面の格子の間隔は 10 ft。（$y$ 軸が鉛直。D$=(0,\ 30,\ 0)$、A$=(-20,\ 0,\ 0)$、B$=(30,\ 0,\ 20)$、C$=(0,\ 0,\ -20)$ ft。）
+<p class="note">原文：A hot air balloon 30 ft above the ground is tethered by three cables as shown in the diagram. If the balloon is pulling upwards with a force of 900 lb, what is the tension in each of the three cables? The grid lines on the ground plane are spaced 10 ft apart.</p>
+<figure class="slide"><img src="img/ext03/es353_balloon.png" alt="地上30 ftの熱気球の下の点Dから、地面の3点A、B、Cへケーブルが張られている" loading="lazy" style="width:320px;max-width:70%;height:auto;background:#fff"><figcaption>原図（Engineering Statics, Example 3.5.3）。</figcaption></figure>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics</i>, §3.5, Example 3.5.3（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/ch3-3d-particles.html">https://engineeringstatics.org/ch3-3d-particles.html</a>。和訳と（ ）内の座標の書き起こしは本教材（ウェブページの画像の代替テキストは B の $z$ 座標を −20 としているが、図と公式解答は +20 で一致する）。公式解答 A 464 lb、B 402 lb、C 309 lb と照合済み。</p>
+<details><summary>解答</summary>
+<p>① 考え方：点 D では、上向き 900 lb と3本の張力（D から A、B、C の向き）がつり合う。言い換えると、<strong>下向き 900 lb の力 $(0,\ -900,\ 0)$ を、3本のケーブルの向きの力に分解する</strong>（1.4 節）。（釣合いの考え方は第4回で詳しく扱う。）</p>
+<p>② 単位ベクトル：$\overrightarrow{\mathrm{DA}}=(-20,-30,0)$、長さ 36.06 → $(-0.5547,\ -0.8321,\ 0)$。$\overrightarrow{\mathrm{DB}}=(30,-30,20)$、長さ 46.90 → $(0.6396,\ -0.6396,\ 0.4264)$。$\overrightarrow{\mathrm{DC}}=(0,-30,-20)$、長さ 36.06 → $(0,\ -0.8321,\ -0.5547)$。</p>
+<p>③ (2.50)：$x$：$-0.5547T_A+0.6396T_B=0$、$z$：$0.4264T_B-0.5547T_C=0$、$y$：$-0.8321T_A-0.6396T_B-0.8321T_C=-900$。</p>
+<p>④ $x$ の式から $T_A=1.1531T_B$、$z$ の式から $T_C=0.7687T_B$。$y$ の式に代入：$(0.9595+0.6396+0.6396)T_B=2.2387T_B=900$ → $T_B=402.0$ lb。$T_A=463.6$ lb、$T_C=309.0$ lb。</p>
+<p>⑤ 確かめ：3式に戻すと $x$：$-257.2+257.1\approx0$、$z$：$171.4-171.4=0$、$y$：$-385.7-257.1-257.2=-900.0$ ✓。答え：A <strong>464 lb</strong>、B <strong>402 lb</strong>、C <strong>309 lb</strong>。</p></details></div>
+
+<div class="box"><span class="label">問5〔B｜Mechanics Map 3.4 問4〕ポールの根元まわりのモーメントベクトル</span>図のようにポールの頂点に付けたケーブルに、3000 lb の張力がかかっている。これがポールの根元のまわりに与えるモーメントベクトルと、その大きさを求めよ。（$y$ 軸が鉛直。ポールの高さ 15 ft、ケーブルの地面の端は、根元から $x$ 方向に 3 ft、$-z$ 方向（奥）に 15 ft。）
+<p class="note">原文：A cable attached to the top of a pole as shown below carries a 3000 lb tension force. What is the moment vector this causes about the base of the pole? What is the overall magnitude of the moment about the base of the pole?</p>
+<figure class="slide"><img src="img/ext03/mm34_q4_pole.png" alt="高さ15 ftのポールの頂点から地面のアンカーへケーブル、張力3000 lbs。アンカーは根元からx方向3 ft、奥へ15 ft" loading="lazy" style="width:360px;max-width:78%;height:auto;background:#fff"><figcaption>原図（Mechanics Map, 3.4 Moment Vector, Question 4）。</figcaption></figure>
+<p class="cr">出典：Jacob Moore ほか, <i>Mechanics Map</i>, 3.4 “Moment Vector”, Question 4（Creative Commons 表示-継承。版の記載なし）<a href="https://mechanicsmap.org/websites/3_equilibrium_rigid_body/3-4_moment_vector/momentvector.html">https://mechanicsmap.org/websites/3_equilibrium_rigid_body/3-4_moment_vector/momentvector.html</a>。和訳と（ ）内の寸法の書き起こしは本教材。公式解答 $\boldsymbol M=(-31506,\ 0,\ -6301)$ ft·lb、32,130 ft·lb と照合済み。</p>
+<details><summary>解答</summary>
+<p>① 根元 O を原点。頂点 $(0,\ 15,\ 0)$、アンカー $(3,\ 0,\ -15)$。ケーブルの向き（頂点→アンカー）$(3,\ -15,\ -15)$、長さ $\sqrt{459}=21.42$ ft。</p>
+<p>② $\boldsymbol T=3000\times(3,\ -15,\ -15)/21.42=(420.1,\ -2100.4,\ -2100.4)$ lb、$\boldsymbol r=(0,\ 15,\ 0)$ ft。</p>
+<p>③ (2.54)：$x$ $T_zr_y-T_yr_z=(-2100.4)(15)-0=-31506$、$y$ $T_xr_z-T_zr_x=0$、$z$ $T_yr_x-T_xr_y=0-420.1\times15=-6301$。</p>
+<p>④ $\boldsymbol M_O=(-31506,\ 0,\ -6301)$ ft·lb、大きさ $\sqrt{31506^2+6301^2}=32{,}130$ ft·lb。$y$ 成分（鉛直なポールの軸まわり）が 0 なのは、例題8 と同じく、作用線がポールの軸と交わるから。</p></details></div>
+
+<div class="box"><span class="label">問6〔B｜Mechanics Map 3.5 問1〕軸に付いたアームを回す力</span>$y$-$z$ 平面内の 5 kN の力が、図のようにアームの先端に働く。この力が中心のシャフト（$y$ 軸）のまわりに与えるモーメントを求めよ。（先端の位置 $(-0.3,\ 0.4,\ 0)$ m。力は $+z$ 向き（手前）から 30° 下に傾いた向き：$\boldsymbol F=(0,\ -5\sin30^\circ,\ 5\cos30^\circ)$ kN。）
+<p class="note">原文：A 5kN force in the y-z plane is exerted at the end of an arm as shown below. What is the moment that this force exerts about the central shaft (the y axis)?</p>
+<figure class="slide"><img src="img/ext03/mm35_q1_arm.png" alt="鉛直なシャフトの上の水平なアーム。左端に、手前の破線から30度下へ傾いた5 kNの力" loading="lazy" style="width:340px;max-width:72%;height:auto;background:#fff"><figcaption>原図（Mechanics Map, 3.5 Moment about an Axis, Question 1）。</figcaption></figure>
+<p class="cr">出典：Jacob Moore ほか, <i>Mechanics Map</i>, 3.5 “Moment about an Axis”, Question 1（Creative Commons 表示-継承。版の記載なし）<a href="https://mechanicsmap.org/websites/3_equilibrium_rigid_body/3-5_moment_about_an_axis/momentaboutanaxis.html">https://mechanicsmap.org/websites/3_equilibrium_rigid_body/3-5_moment_about_an_axis/momentaboutanaxis.html</a>。和訳と（ ）内の書き起こしは本教材。公式解答 $M_y=1.30$ kN·m と照合済み。</p>
+<details><summary>解答</summary>
+<p>① シャフトの軸は $y$ 軸、$\boldsymbol u=\boldsymbol j$。軸上の点として原点 O。</p>
+<p>② $\boldsymbol F=(0,\ -2.5,\ 4.330)$ kN、$\boldsymbol r=(-0.3,\ 0.4,\ 0)$ m。</p>
+<p>③ $\boldsymbol M_O$：$x$ $F_zr_y-F_yr_z=4.330\times0.4=1.732$、$y$ $F_xr_z-F_zr_x=0-4.330\times(-0.3)=1.299$、$z$ $F_yr_x-F_xr_y=(-2.5)(-0.3)=0.750$。</p>
+<p>④ $\tau=\boldsymbol j\cdot\boldsymbol M_O=$ <strong>1.30 kN·m</strong>。確かめ（5.4 節）：$+y$ 側から見下ろすと、軸から 0.3 m の点に、アームに垂直な $F_z=4.33$ kN が働く：$0.3\times4.33=1.30$ ✓。下向きの成分 $F_y$ は軸に平行で効かない。</p></details></div>
+
+<div class="box"><span class="label">問7〔C｜Engineering Statics 例題5.5.1（第3回の範囲に読み替え）〕曲げた棒の固定端に集めた力・偶力系</span>図の曲げた棒は、C で固定されて水平面内に保たれ、ケーブル AB が点 A を 500 lb で引いている。A$=(4,\ 4,\ 5)$、B$=(6,\ 0,\ 4)$、C$=(0,\ 4,\ 0)$ ft（$y$ 軸が鉛直）。ケーブルの力を点 C に集めた力 $\boldsymbol R$ とモーメント $\boldsymbol M_C$ を求めよ。
+<p class="note">原文（原題は釣合いの問題）：The bent bar shown is held in a horizontal plane by a fixed connection at C while cable AB exerts a 500 lb force on point A. Given A=(4,4,5), B=(6,0,4) and C=(0,4,0). Find the reaction force C and concentrated moment M with components Mx, My and Mz required to hold the bar in this position under this condition.</p>
+<figure class="slide"><img src="img/ext03/es551_bentbar.png" alt="壁に固定された点Cから水平に曲げた棒が伸び、先端AからケーブルABが地面の点Bへ張られている" loading="lazy" style="width:320px;max-width:70%;height:auto;background:#fff"><figcaption>原図（Engineering Statics, Example 5.5.1）。</figcaption></figure>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics</i>, §5.5, Example 5.5.1（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/Chapter_05-3d-rigid-body-equilibrium.html">https://engineeringstatics.org/Chapter_05-3d-rigid-body-equilibrium.html</a>。和訳と、問いを「力・偶力系」に読み替えたのは本教材。公式解答（$\boldsymbol F=(218,\ -436,\ -109)$ lb、$\boldsymbol r_{CA}\times\boldsymbol F=(2182,\ 1528,\ -1746)$ ft·lb）と照合済み。</p>
+<details><summary>解答</summary>
+<p>① $\overrightarrow{\mathrm{AB}}=(2,\ -4,\ -1)$、長さ $\sqrt{21}=4.583$ ft。$\boldsymbol F=500\times(2,\ -4,\ -1)/4.583=(218.2,\ -436.4,\ -109.1)$ lb。</p>
+<p>② 6.2 節：C に集めると $\boldsymbol R=\boldsymbol F=(218.2,\ -436.4,\ -109.1)$ lb。</p>
+<p>③ $\boldsymbol r=\overrightarrow{\mathrm{CA}}=(4,\ 0,\ 5)$ ft。$\boldsymbol M_C=\boldsymbol r\times\boldsymbol F$：$x$ $F_zr_y-F_yr_z=0-(-436.4)(5)=2182$、$y$ $F_xr_z-F_zr_x=218.2\times5-(-109.1)(4)=1091+436.4=1527$、$z$ $F_yr_x-F_xr_y=(-436.4)(4)-0=-1746$。$\boldsymbol M_C=(2182,\ 1527,\ -1746)$ ft·lb、大きさ 3185 ft·lb。</p>
+<p>④ 第4回への橋渡し：棒が止まっているには、固定端 C が<strong>逆向き</strong>の力 $(-218,\ 436,\ 109)$ lb とモーメント $(-2182,\ -1527,\ 1746)$ ft·lb を棒に与えればよい（原題の答え）。和が 0 になるようにする――これが釣合いである。</p></details></div>
+
+<div class="box"><span class="label">問8〔C｜Engineering Statics 例題3.5.4〕スカイカムを支える3本のケーブル</span>スタンフォード大学のスタジアムのスカイカム（質量 20 kg）が、3本のケーブルで支えられている。釣り合っているとして、各ケーブルの張力を求めよ。（$y$ 軸が鉛直、重さ $W=196.2$ N。ケーブルの向きの単位ベクトルは $\hat{\boldsymbol A}=(\cos35^\circ,\ \cos55^\circ,\ 0)$、$\hat{\boldsymbol B}=(-\cos15^\circ\cos30^\circ,\ \cos75^\circ,\ -\cos15^\circ\cos60^\circ)$、$\hat{\boldsymbol C}=(0,\ \cos70^\circ,\ \cos20^\circ)$。原典の図は操作できる 3D 図のため転載しない。）
+<p class="note">原文：The skycam at Stanford University Stadium has a mass of 20 kg and is supported by three cables as shown. Assuming that it is currently in equilibrium, find the tension in each of the three supporting cables.</p>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics</i>, §3.5, Example 3.5.4（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/ch3-3d-particles.html">https://engineeringstatics.org/ch3-3d-particles.html</a>。和訳と（ ）内の単位ベクトルの書き起こしは本教材。公式解答 A 196.4 N、B 192.2 N、C 98.5 N と照合した（C の差は下の解答⑤）。</p>
+<details><summary>解答</summary>
+<p>① 重さ $(0,\ -196.2,\ 0)$ N を打ち消す上向き $(0,\ 196.2,\ 0)$ を、3本のケーブルの向きに分解する：$T_A\hat{\boldsymbol A}+T_B\hat{\boldsymbol B}+T_C\hat{\boldsymbol C}=(0,\ 196.2,\ 0)$。</p>
+<p>② 数値：$\hat{\boldsymbol A}=(0.8192,\ 0.5736,\ 0)$、$\hat{\boldsymbol B}=(-0.8365,\ 0.2588,\ -0.4830)$、$\hat{\boldsymbol C}=(0,\ 0.3420,\ 0.9397)$（どれも長さ 1 を確かめる）。</p>
+<p>③ $x$：$0.8192T_A-0.8365T_B=0$ → $T_A=1.0211T_B$。$z$：$-0.4830T_B+0.9397T_C=0$ → $T_C=0.5140T_B$。</p>
+<p>④ $y$：$0.5736(1.0211T_B)+0.2588T_B+0.3420(0.5140T_B)=(0.5857+0.2588+0.1758)T_B=1.0203T_B=196.2$ → $T_B=192.3$ N、$T_A=196.4$ N、$T_C=98.8$ N。</p>
+<p>⑤ 公式解答の $T_C=98.5$ N との差：公式解答は途中の係数を丸めた（$-0.4830$ を $-0.482$ とした）行列で解いており、丸めた係数で解き直すと 98.5 N になる。丸めない計算では 98.8 N（Python で確認）。<strong>3つの向きがかなり傾いているとき、係数の丸めが答えに効く</strong>例でもある。</p></details></div>
+
+<div class="box"><span class="label">問9〔C｜自作（例題16 の箱を使用）〕3次元の偶力と軸成分</span>例題16 の箱で、点 H に $\boldsymbol P=(25,\ 0,\ 0)$ lb、点 B に $-\boldsymbol P$ が働くとする。(1) この偶力のモーメントを求め、(2) 点 G のまわりで直接計算しても同じになることを確かめよ。(3) その軸 BG 方向の成分を求め、例題16 (b) の答えと同じになる理由を説明せよ。
+<p class="cr">出典：本教材の自作（3次元の偶力の良問が公開教材に見つからなかったため、例題16 の幾何を借りた）。</p>
+<details><summary>解答</summary>
+<p>① (1) 6.1 節：$-\boldsymbol P$ 側の B から $\boldsymbol P$ 側の H へ $\boldsymbol r_{BH}=(-2,\ -2,\ 2)$。$\boldsymbol M=\boldsymbol r_{BH}\times\boldsymbol P$：$x$ $0\cdot(-2)-0\cdot2=0$、$y$ $25\times2-0\times(-2)=50$、$z$ $0\times(-2)-25\times(-2)=50$ → $(0,\ 50,\ 50)$ ft·lb、大きさ 70.7 ft·lb。</p>
+<p>② (2) G$=(0,2,2)$ まわり：$\overrightarrow{\mathrm{GH}}=(0,-2,0)$、$(0,-2,0)\times(25,0,0)=(0,\ 0,\ 50)$。$\overrightarrow{\mathrm{GB}}=(2,0,-2)$、$(2,0,-2)\times(-25,0,0)=(0,\ 50,\ 0)$。和 $(0,\ 50,\ 50)$ ✓（偶力はどの点まわりでも同じ）。</p>
+<p>③ (3) $\boldsymbol u=(-1,0,1)/\sqrt2$、$\tau=(0+0+50)/\sqrt2=35.4$ ft·lb。例題16 (b)（H の $\boldsymbol P$ だけ）と同じになるのは、B の $-\boldsymbol P$ が<strong>軸 BG 上の点 B に働き、軸まわりのモーメントが 0</strong>だから（例題16 (a) と同じ理由）。</p></details></div>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 右手系を定義でき、$\boldsymbol i\times\boldsymbol j=\boldsymbol k$、$\boldsymbol j\times\boldsymbol k=\boldsymbol i$、$\boldsymbol k\times\boldsymbol i=\boldsymbol j$ を言える。</li>
+<li>□ 2点の座標から力を成分で書け（単位ベクトル×大きさ）、3次元の力を成分ごとに合成できる。</li>
+<li>□ 力を3方向に分解する式2.49・2.50（三元連立方程式）を立てて、消去法で解ける。三重積の式 (3.7) でも解ける。</li>
+<li>□ モーメントがベクトルである理由（大きさ・回転軸・向き）を説明でき、成分を「各軸まわりのモーメント」として読める。有限の回転とは違うことを言える。</li>
+<li>□ 外積を成分 (3.1)・行列式・歪対称行列の3通りで計算でき、垂直・$ab\sin\theta$・右ねじ・反交換・分配法則を導ける。</li>
+<li>□ $\boldsymbol M=\boldsymbol r\times\boldsymbol F$（式2.53・2.54）を2次元のモーメントから導け、$\boldsymbol r$（基準点→作用点）と $\boldsymbol F$ の順序を守って計算できる。$z$ 成分が第2回の式2.30′ であることを言える。</li>
+<li>□ $\tau=\boldsymbol u\cdot\boldsymbol M$（式2.60）を使え、軸上の点ならどれでも同じこと、軸上でない点ではだめなこと、軸に垂直な面での2次元のモーメントと同じことを示せる。</li>
+<li>□ 三重積の行列式 $\begin{vmatrix}\boldsymbol u\\\boldsymbol r\\\boldsymbol F\end{vmatrix}$ で軸まわりのモーメントを一度に計算できる。答えに $\boldsymbol u$ の向きを書く。</li>
+<li>□ 3次元の偶力が基準点によらないことを導け、力の移動、式2.58・2.59、基準点を移す式 (6.1) を使える。</li>
+<li>□ 手順①〜⑥で、例題2・9 とロボットの関節の問題を解ける。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第4回・10/13）</strong>：力の釣合い（教科書 3.1）。この回で、物体に働く力とモーメントは1点に集めると「力 $\boldsymbol F$ ＋モーメント $\boldsymbol M$」になることを見た（式2.58・2.59）。物体が止まっているのは、その両方が 0 のとき：$\sum\boldsymbol F=\boldsymbol 0$、$\sum\boldsymbol M=\boldsymbol 0$。演習問題7・8 は、その予告になっている。<br>
+<a href="index.html">← 目次へ</a>
+</div>
+
+<div class="box"><span class="label">講義資料との対応（どこで扱ったか）</span>
+<table class="tb">
+<tr><th>講義資料</th><th>本教材</th></tr>
+<tr><td>p.1–3 マニピュレータの図、今日のポイント</td><td>序</td></tr>
+<tr><td>p.4 座標系（右手系・左手系）</td><td>1.1</td></tr>
+<tr><td>p.5 2・3・1 3次元の力・合成（図2.44）</td><td>1.2、1.3</td></tr>
+<tr><td>p.6–7 力の分解（式2.49・2.50、図2.45）</td><td>1.4、3.7</td></tr>
+<tr><td>p.8–10 2・3・2 3次元のモーメント、ベクトルが表すもの、成分（図2.46–2.48）</td><td>2章</td></tr>
+<tr><td>p.11 外積（教科書 p.23）</td><td>3.1–3.4</td></tr>
+<tr><td>p.12–13 点まわりのモーメント（式2.53・2.54、図2.49、順序の注意）</td><td>4章</td></tr>
+<tr><td>p.14 歪対称行列とベクトル積</td><td>3.5</td></tr>
+<tr><td>p.15–17 軸まわりのモーメント（式2.60、手順、三重積の証明）</td><td>5.2、5.6、5.7（5.3–5.5 は本教材の追加）</td></tr>
+<tr><td>p.18 まとめ（点まわり／軸まわり）</td><td>5.7</td></tr>
+<tr><td>p.19 力とモーメントの合成（式2.58・2.59）</td><td>6.3（6.4 は本教材の追加）</td></tr>
+<tr><td>p.20 3次元の偶力のモーメント</td><td>6.1</td></tr>
+<tr><td>p.21–22 力の移動</td><td>6.2</td></tr>
+<tr><td>p.23 例題（ロボットの関節 $J_1$・$J_3$）</td><td>序、7.3</td></tr>
+<tr><td>p.24–28 例題2・9</td><td>7.2</td></tr>
+</table></div>
+
+<p class="meta">出典：講義資料「第3回」（PDF）と教科書『機械工学のための力学』（日本機械学会）2.3節の範囲を、本教材の方針（説明の順序を組み直し、導出を省かない）で書き直したもの。例題の解答の書き方、ロボットの例題の解答、自作の例題・演習・補足・写真の見立ては本教材による。外部の問題は各問題の下に出典を書いた（Baker &amp; Haynes <i>Engineering Statics: Open and Interactive</i>（CC BY-NC-SA 4.0）、OpenStax <i>University Physics Volume 1</i>（CC BY 4.0）、Jacob Moore ほか <i>Mechanics Map</i>（Creative Commons 表示-継承）。原図はそのまま転載し、和訳・解答は本教材）。教科書の図（図2.44–2.49・2.53）と講義資料の図は、講義資料のPDFから切り出して<strong>個人の学習用</strong>に転載したもので、転載・再配布はしないこと。グラフと作図は Python で計算して描いた。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="column/C03_右は配れるか.html"><small>READING</small>読み物：右は配れるか →</a></nav>
+
+</body>
+</html>

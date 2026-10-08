@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>右は配れるか｜機械力学 読み物 第3回</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1c1c22; --sub:#5d5d6b; --paper:#fbfaf7; --indigo:#2b3a67; --red:#a8322a; --rule:#d9d6cc; --note:#f1efe8; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif; font-size:16.5px; line-height:2.0; }
+  a{ color:var(--red); }
+  .backlink{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; color:var(--sub); padding:10px 16px; border-bottom:1px solid var(--rule); }
+  /* 扉：主題写真＋題字 */
+  .hero{ position:relative; margin:0; background:#e9e4d8; overflow:hidden; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; right:5%; top:8%; writing-mode:vertical-rl; font-family:"Shippori Mincho",serif; font-weight:800; color:#1c1c22; font-size:clamp(22px,4.6vw,44px); letter-spacing:.18em; line-height:1.5; text-shadow:0 0 12px rgba(250,247,240,.9); }
+  .hero .ttl small{ display:block; font-size:.42em; font-weight:600; color:var(--red); letter-spacing:.3em; margin-left:.6em; }
+  .hero figcaption{ position:absolute; left:12px; bottom:8px; font-family:"Yu Gothic",sans-serif; font-size:11px; color:#4b463d; background:rgba(250,247,240,.75); padding:2px 8px; }
+  header{ max-width:760px; margin:0 auto; padding:30px 20px 6px; }
+  .kicker{ font-family:"Yu Gothic",sans-serif; font-size:12px; letter-spacing:.3em; color:var(--red); }
+  .lede{ font-family:"Shippori Mincho",serif; font-size:17.5px; line-height:2; color:var(--indigo); margin:12px 0 16px; }
+  .keys{ font-family:"Yu Gothic",sans-serif; font-size:12.5px; color:var(--sub); border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:8px 0; }
+  .keys span{ display:inline-block; margin:2px 10px 2px 0; }
+  .keys span::before{ content:"◇"; color:var(--red); margin-right:3px; }
+  article{ max-width:760px; margin:0 auto; padding:10px 20px 50px; }
+  article p{ margin:0 0 1.1em; text-indent:1em; text-align:justify; }
+  article p.noindent{ text-indent:0; }
+  h2{ font-family:"Shippori Mincho",serif; font-size:20px; font-weight:800; color:var(--indigo); margin:2.6em 0 .9em; line-height:1.6; }
+  h2 .no{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:#fff; background:var(--red); padding:2px 8px; margin-right:10px; vertical-align:middle; letter-spacing:.1em; }
+  blockquote{ margin:1.4em 0; padding:10px 18px; border-left:3px solid var(--indigo); background:var(--note); font-size:15px; line-height:1.9; }
+  blockquote .src{ display:block; text-align:right; font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:6px; }
+  figure{ margin:2em 0; }
+  figure img{ display:block; width:100%; height:auto; }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; }
+  figcaption{ font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif; font-size:12.5px; line-height:1.7; color:var(--sub); margin-top:8px; }
+  figcaption b{ color:var(--ink); }
+  .kanji{ float:right; margin:.2em 0 .6em 1.2em; width:150px; text-align:center; border:1px solid var(--rule); background:#fff; padding:10px 6px 8px; }
+  .kanji .ch{ font-family:"Shippori Mincho",serif; font-size:84px; line-height:1.1; color:var(--indigo); }
+  .kanji .cap{ font-family:"Yu Gothic",sans-serif; font-size:11px; color:var(--sub); line-height:1.6; }
+  .physics{ font-family:"Yu Gothic",sans-serif; font-size:13.5px; line-height:1.85; border:1px solid var(--rule); background:#fff; padding:12px 16px; margin:1.6em 0; clear:both; }
+  .physics b{ color:var(--indigo); }
+  .physics code{ font-family:"Cambria Math","Times New Roman",serif; font-size:15px; }
+  .map{ background:#fff; border:1px solid var(--rule); padding:10px; }
+  .map svg{ display:block; width:100%; height:auto; }
+  .coda{ font-family:"Shippori Mincho",serif; font-size:21px; line-height:1.8; color:var(--indigo); text-align:center; margin:2.2em 0; font-weight:600; }
+  .shelf{ margin:2.6em 0 1em; border-top:3px double var(--indigo); padding-top:1em; }
+  .shelf h2{ margin:.4em 0 .6em; }
+  .shelf h3{ font-family:"Shippori Mincho",serif; font-size:16px; color:var(--indigo); margin:1.4em 0 .5em; }
+  .shelf ul{ list-style:none; padding:0; margin:0; }
+  .shelf li{ padding:8px 0 8px 14px; border-bottom:1px dotted var(--rule); position:relative; }
+  .shelf li::before{ content:""; position:absolute; left:0; top:15px; width:6px; height:6px; background:var(--red); }
+  .shelf .bk{ font-weight:600; }
+  .shelf .pub{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); }
+  .shelf .why{ display:block; font-size:14px; line-height:1.8; color:#3d3d48; margin-top:2px; }
+  .shelf .note{ font-family:"Yu Gothic",sans-serif; font-size:12px; color:var(--sub); margin-top:.6em; text-indent:0; }
+  .colophon{ font-family:"Yu Gothic",sans-serif; font-size:12px; line-height:1.8; color:var(--sub); border-top:1px solid var(--rule); margin-top:2.5em; padding-top:1em; clear:both; }
+  .colophon h3{ font-size:12.5px; margin:1em 0 .3em; color:var(--ink); }
+  .colophon ul{ margin:0; padding-left:1.3em; }
+  .meta{ background:#fff4e5; border-left:4px solid #e0a96d; padding:8px 12px; margin:1em 0; }
+  @media (max-width:560px){ .pair{ grid-template-columns:1fr; } body{ font-size:15.5px; } .kanji{ width:110px; } .kanji .ch{ font-size:60px; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+<!-- 読み物コラム C03（第3回に対応）。書き方は templates/コラムの作り方.md、途中の稿と講評は draft/column/C03_work/ -->
+
+<div class="backlink">機械力学 自習教材 ｜ 第3回の読み物コラム（松岡正剛の方法に倣って） ｜ 本文に戻る → <a href="../03_第3回_3次元の力とモーメント.html">第3回 3次元の力とモーメント</a>（§1・§2・§4）</div>
+
+<figure class="hero">
+  <img src="img/c03_hero_gloves.jpg" alt="灰色の地に、白っぽい革の手袋が左右一対、指を上にして鏡に映したように並ぶ。手首には花模様を織り出した長い袖口と銀糸のレース">
+  <div class="ttl">右は配れるか<small>詔・手袋・コバルト60</small></div>
+  <figcaption>手袋一対　17世紀前半　イギリス　メトロポリタン美術館（左右に地の色を付け足した）</figcaption>
+</figure>
+
+<header>
+  <div class="kicker">異分野編集コラム　第三回</div>
+  <p class="lede">第3回の講義資料は、座標系の種類を図で示したあと、一行で済ませた。通常は右手系を用いる。外積の $\boldsymbol i\times\boldsymbol j=\boldsymbol k$ も、モーメントの矢印も、この一行の上に立っている。律令国家は詔で右を一語で配り、カントは右を指さし、マクスウェルは腕に覚えさせた。言葉だけで右が遠くへ届いたのは、1956年の冬、コバルト60を冷やした実験室が最初である。</p>
+  <div class="keys"><span>右京</span><span>右襟の詔</span><span>カントの手袋</span><span>マクスウェルの腕</span><span>マッハの磁針</span><span>オズマ問題</span></div>
+</header>
+
+<article>
+<h2><span class="no">序</span>右京は左にある</h2>
+<p>扉の手袋は、十七世紀前半のイギリスで作られた一対である。指の形も、袖口の花の配置も、左右を返しただけで同じだ。どちらが右手用かは、指の並びだけでは決まらない。掌の側を見ているのか、甲の側を見ているのかを、先に決めなければならない。華やかな袖口が見えているから甲の側だろう、と見当はつく。ただしそれは、飾りは人に見せる側に付ける、という作り手と見る者のあいだの約束に頼った推理である。</p>
+<p>電話の向こうの相手に、指もささず、図も描かずに「右」を教えてみるとよい。「時計の針の回る向き」と言えば時計を、「心臓のない側」と言えば人の体を、相手と共有していることを当てにしている。隣に立っていれば、右手を挙げてみせるだけで一瞬で済むのに。</p>
+<p>平城京の地図を、いつものように北を上にして開く。右京は西にあり、地図の左側に来る。都の左右は、地図を見る者の右左ではなく、宮の奥から南を向いて座る天皇の身体から測られていた。左京が東になり、左大臣が右大臣より上座に置かれたのも、この身体の左である。</p>
+<p>その平城京で、養老3年2月3日（719年）、一つの詔が出た。『続日本紀』は記す。「初令天下百姓右襟」――はじめて天下の百姓に、襟を右にさせた。この日の記事は、官人に笏を持たせることも定めている。唐の服制に合わせ、衽を左に合わせる風をやめさせたものと解されている。『論語』憲問篇で孔子は、管仲がいなければ「吾其被髪左衽矣」、われわれは髪を結わず衽を左にしていただろう、と言った。左衽は、文明の外にいる者の印だった。</p>
+<figure style="max-width:380px;margin-left:auto;margin-right:auto"><img src="img/c03_utamaro.jpg" alt="喜多川歌麿《当時三美人》。島田髷の三人の女の大首絵。右の女は黒地に白い絣の着物で、襟が向かって y の字に重なっている" loading="lazy"><figcaption><b>喜多川歌麿《当時三美人》</b>　1793年ごろ、錦絵。三人とも右前に着ている（右の女の黒い襟がわかりやすい）。Kitagawa Utamaro, via Wikimedia Commons, Public domain</figcaption></figure>
+<p>国家は、右を一語で配った。だがその一語は、千三百年たったいまも取り違えられる。右前とは、右の身頃が上に来ることではない。着る人の右の身頃を先に体に当て、その上に左を重ねることをいう。「前」は「先」の意である。一語で配られた右は、着る人の身体の上で、もう一度組み立て直される。</p>
+<p>右は配れるのか。それとも、手から手へ渡すしかないのか。</p>
+<h2><span class="no">一</span>指さすしかない</h2>
+<figure style="max-width:300px;margin-left:auto;margin-right:auto"><img src="img/c03_kant.jpg" alt="イマヌエル・カントの肖像。白い巻き毛のかつら、茶色の上着、右下で冊子を手にしている" loading="lazy"><figcaption><b>ヨハン・ゴットリープ・ベッカー《カントの肖像》</b>　1768年。Johann Gottlieb Becker, via Wikimedia Commons, Public domain</figcaption></figure>
+<p>1768年、カントは短い論文「空間における方位の区別の第一根拠について」で、一対の手を持ち出した。右手と左手は、指の長さも関節の並びも、部分どうしの関係はすべて同じでありうる。それなのに、一方を他方の場所に重ねることはできない。カントはこれを「不一致対称物」と名づけ、思考実験を添えた。宇宙で最初に創られたものが一本の手だったとすれば、それは右か左か、どちらかでなければならない。部分の関係だけで空間が決まるのなら、その手は人体のどちら側にも合うことになるが、それはありえない。ゆえに空間は、物の関係から独立した絶対的なものだ――これが1768年の結論だった。</p>
+<p>十五年後の『プロレゴメナ』§13で、カントは同じ手を、反対の結論のために使う。鏡のなかの手ほど、元の手に似て、あらゆる点で等しいものはない。それでも鏡の手を元の手の場所に置くことはできない。一方の手の手袋は、他方の手には使えない。ここからカントは、空間は物そのものの性質ではなく、外から物を直観するときの形式だと論じた。</p>
+<p>結論は反対を向いたのに、手は残った。§13には、左右についての決定的な一文がある。逆向きに巻いた巻貝のような、相似で等しいが重ならないものの違いは、「どんな概念によってもわからせることはできず（durch keinen einzigen Begriff）」、ただ右手と左手への関係――直観に直接かかわる関係――によってしかできない。</p>
+<p>右は定義できない。指さすことしかできない。指さすには、さす身体と見る身体が、同じ場所に要る。</p>
+<p>1768年の論文は、自然の巻き方にも触れていた。「ホップはすべて支柱に左から右へ巻きつく。豆は逆に巻く」。このホップは、百年後にもう一度出てくる。</p>
+<h2><span class="no">二</span>腕で覚えよ</h2>
+<p>1873年、マクスウェルは『電磁気論』の序論で右ねじを言葉で定義し、そのあと脚注で、言葉より腕を信じよと書いた。右手の甲を外へ返しながら手を前へ突き出すとき、その腕の筋肉の働きは「どんな言葉による定義よりも（than any verbal definition）」しっかりと右ねじの運動を記憶に刻むだろう。ふつうのコルク抜きを、その物的な象徴にしてもよい。</p>
+<p>脚注は続く。ブドウの巻きひげは右ねじ、ホップの巻きひげは左ねじだから、二つの系を「ブドウの系」「ホップの系」と呼んではどうかとミラー教授が提案した。ところがド・カンドルは、そのホップの巻きひげを最初に「右巻き」と呼んだ。カントは「左から右へ」と書いた。同じ植物の同じ巻きが、右とも、左とも、左から右へとも呼ばれた。巻きの名は、植物ではなく、眺める者の立ち位置についている。</p>
+<p>マクスウェルは、自分たちが採るブドウの系はリンネのものであり、「日本を除くすべての文明国のねじ職人」のものだ、とも書いた。この一文が伝えるのは、右ねじが規格や教科書より先に、職人の手の慣行だったということである（日本についての記述の当否は確かめられていない）。その節でマクスウェルは、右手系はトムソンとテイトの『自然哲学』が採っている系であり、ハミルトンの四元数は逆の左手系を採っている、とも記した。外積の祖先を作った当人は、左で書いていたのである。</p>
+<p>教科書とは、職人の手渡しを一行の配布に変える装置だった。「通常は右手系を用いる」という講義資料の一行は、その末裔である。</p>
+<h2><span class="no">三</span>驚きはどこにあったか</h2>
+<p>1820年7月、コペンハーゲンのエルステッドは、ラテン語の小冊子を各国の学者に送った。南北を向いて静止した磁針の上に、導線を平行に張り、電流を流す。磁針は導線に沿ったままではいなかった。決まった一方へ振れた。</p>
+<p>半世紀あまり後、マッハは『力学』（1883年）でこの実験を振り返った。アルキメデスが使った対称性の原理ほど論理の力の強い本能的な知識でさえ、人を誤らせることがある。磁気子午線に沿った磁針が、上に平行に張った導線の電流で、決まった向きにそれると初めて聞いたときの「知的な衝撃（geistige Erschütterung）」を、読者の多くは覚えているだろう、と。</p>
+<p>衝撃の理由は単純だ。導線と磁針を含む鉛直な面を考えると、配置はこの面について左右対称に見える。対称な原因からは対称な結果しか出ないはずだから、磁針は動くとしても、この面の中だけだろう。ところが磁針は面の外へ、片側へ出ていく。</p>
+<p>マッハは別の本で、アンペールの「泳ぐ人」に自分を重ねてこの向きを覚えた。電流の中を泳ぎ、磁針を見ている自分の左へ、北極が振れる。自分の身体を実験の中に入れなければ、向きを言い表せない。その脚注では、時計は針の回る向きによって、自分が日時計の子孫であり、北半球で発明されたことを告げている、と書いた。天皇が南を向いて座るのも、北半球で日が南中する側を正面にとる古い礼の考え方だとされる。そうだとすれば、都の左右と時計の右回りは、同じ太陽の下で測られたことになる。</p>
+<p>対称を破っていたのは、電流ではない。磁針のほうが、はじめから巻いていた。アンペール以来の描き方では、磁石の北と南の区別は、内部をぐるりと回る小さな電流の向きの区別として表される。巻いたものを鏡に映せば巻きは逆になり、北と南が入れ替わる。対称な面の中に、はじめから巻いた物が置かれていた。それを一本の矢印と見ていたのは、見る側の思い込みだった。</p>
+<div class="physics"><b>講義では</b>　モーメント $\boldsymbol M=\boldsymbol r\times\boldsymbol F$ も、磁場と同じく「巻き」を矢印に置き換えた量である（軸性ベクトル）。鏡の国の住人が左ねじの約束で外積を定義すれば $\boldsymbol i\times\boldsymbol j=-\boldsymbol k$ となり、モーメントの矢印はすべて逆を向く。それでも、物体がどちらに回るかという予言は一つも変わらない。矢印を立てるときに一度、矢印から回る向きを読み戻すときにもう一度、同じ約束を使うので、打ち消し合う。（<a href="../03_第3回_3次元の力とモーメント.html">第3回</a> 2.2・3.2・4.4 節）</div>
+<figure class="map"><svg viewBox="0 0 560 330" width="560" role="img" aria-label="回る円盤と、その鏡像。矢印は食い違うが、回り方は食い違わない">
+<defs><marker id="c03m-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="c03m-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="c03m-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#8a8578"/></marker></defs>
+<g font-family="Yu Gothic, sans-serif" font-size="12.5" fill="#1c1c22" style="paint-order:stroke;stroke:#fbfaf7;stroke-width:3px">
+<line x1="280" y1="30" x2="280" y2="300" stroke="#8a8578" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="280" y="22" text-anchor="middle" fill="#8a8578">鏡</text>
+<ellipse cx="140" cy="190" rx="70" ry="22" fill="#efe9dc" stroke="#1c1c22"/><path d="M62.4,198.9 L67.1,202.2 L73.2,205.3 L80.6,208.0 L89.1,210.5 L98.7,212.5 L109.1,214.1 L120.0,215.2 L131.4,215.8 L142.9,215.9 L154.3,215.6 L165.5,214.7 L176.2,213.3 L186.2,211.5 L195.3,209.3 L203.3,206.7 L210.0,203.8 L215.5,200.6 L219.4,197.2 L221.8,193.6 L222.6,190.0 L221.8,186.4 L219.4,182.8 L215.5,179.4 L210.0,176.2 L203.3,173.3 L195.3,170.7 L186.2,168.5 L176.2,166.7 L165.5,165.3 L154.3,164.4 L142.9,164.1 L131.4,164.2 L120.0,164.8 L109.1,165.9 L98.7,167.5 L89.1,169.5 L80.6,172.0 L73.2,174.7 L67.1,177.8 L62.4,181.1" fill="none" stroke="#a8322a" stroke-width="2" marker-end="url(#c03m-r)"/>
+<ellipse cx="420" cy="190" rx="70" ry="22" fill="#efe9dc" stroke="#1c1c22"/><path d="M342.4,181.1 L347.1,177.8 L353.2,174.7 L360.6,172.0 L369.1,169.5 L378.7,167.5 L389.1,165.9 L400.0,164.8 L411.4,164.2 L422.9,164.1 L434.3,164.4 L445.5,165.3 L456.2,166.7 L466.2,168.5 L475.3,170.7 L483.3,173.3 L490.0,176.2 L495.5,179.4 L499.4,182.8 L501.8,186.4 L502.6,190.0 L501.8,193.6 L499.4,197.2 L495.5,200.6 L490.0,203.8 L483.3,206.7 L475.3,209.3 L466.2,211.5 L456.2,213.3 L445.5,214.7 L434.3,215.6 L422.9,215.9 L411.4,215.8 L400.0,215.2 L389.1,214.1 L378.7,212.5 L369.1,210.5 L360.6,208.0 L353.2,205.3 L347.1,202.2 L342.4,198.9" fill="none" stroke="#a8322a" stroke-width="2" marker-end="url(#c03m-r)"/>
+<line x1="140" y1="190" x2="140" y2="70" stroke="#2b3a67" stroke-width="3" marker-end="url(#c03m-b)"/>
+<text x="150" y="80" fill="#2b3a67">右ねじで描いた矢印</text>
+<line x1="410" y1="190" x2="410" y2="70" stroke="#8a8578" stroke-width="2.4" stroke-dasharray="5 4" marker-end="url(#c03m-g)"/>
+<text x="420" y="62" fill="#8a8578">矢印をそのまま映すと：上</text>
+<line x1="432" y1="190" x2="432" y2="300" stroke="#2b3a67" stroke-width="3" marker-end="url(#c03m-b)"/>
+<text x="442" y="290" fill="#2b3a67">右ねじで描き直すと：下</text>
+<text x="140" y="250" text-anchor="middle" fill="#a8322a">上から見て反時計回り</text>
+<text x="420" y="250" text-anchor="middle" fill="#a8322a">上から見て時計回り</text>
+</g></svg><figcaption>回る円盤を鏡に映すと、回り方は「反時計回り」から「時計回り」へ、そのまま映る。食い違うのは矢印だけで、矢印をそのまま映したもの（上）と、映った回転から右ねじで描き直したもの（下）が逆を向く。モーメントの矢印は、回転そのものではなく、回転に右ねじの約束を掛けて作った記号である。</figcaption></figure>
+<p>重力と電磁気と、原子核を結びつける強い力。そのどの法則を使っても、右を言葉だけで送ることはできない。右手系の右は、法則のなかにはない。</p>
+<h2><span class="no">四</span>配れる右</h2>
+<p>1964年、マーティン・ガードナーは『自然界における左と右』で、この難問に名前をつけた。オズマ問題である。電波でしか交信できず、互いに一つも共通の物を見ることができない遠い星の相手に、「左」の意味を伝えられるか。名前は、1960年にグリーンバンクの電波望遠鏡で二つの恒星に耳を澄ませたドレイクの「オズマ計画」から来ている。カントの手も、マクスウェルの腕も、マッハの時計も、電波には載らない。</p>
+<figure style="max-width:360px;margin-left:auto;margin-right:auto"><img src="img/c03_wu.jpg" alt="黒板の前で男性たちに囲まれて立つ呉健雄。竹の葉の地紋の黒い旗袍に真珠のネックレス、胸に Dr. Wu の名札" loading="lazy"><figcaption><b>呉健雄（1958年）</b>　科学フェアでの一枚。旗袍の打ち合わせは、本人の右脇へ向かって開く右衽である。Smithsonian Institution Archives, via Wikimedia Commons, No known copyright restrictions</figcaption></figure>
+<p>答えは、ガードナーの本より先に、ワシントンの低温研究室で出ていた。1956年、リーとヤンは、弱い相互作用で左右の対称性（パリティ）が保たれているという実験の証拠はまだない、と論文で指摘し、確かめる実験を提案した。その年の暮れ、クリスマスから年末にかけて、コロンビア大学の呉健雄は米国国立標準局の研究者たちとともに、コバルト60を含む結晶を絶対零度の上0.003度ほどまで冷やし、磁場で原子核の向きをそろえ、ベータ崩壊で飛び出す電子を数えた。電子は、そろえた向きの片側に多く出た。</p>
+<p>年が明けた1957年1月17日、パウリはチューリッヒからワイスコップに書いている。「だが私は、神さまが弱い左利きだとは思わない（Ich glaube aber nicht, daß der Herrgott ein schwacher Linkshänder ist）」。「弱い」は弱い相互作用に掛けた洒落で、実験は左右対称に出るほうに大金を賭けてもよい、と続けた。十日ほどのち、パウリは「賭けをしなくてよかった」と書いた。</p>
+<p>この実験で、右は初めて配れるものになった。ただし、手順を書くときに「原子核のスピンの向き」と言ってはならない。スピンの向き自体が、右ねじの約束で決めた矢印だからだ。約束を使わずに書くと、こうなる。コバルト60を含む結晶をコイルの中に置いて、ごく低い温度まで冷やし、コイルに電流を流す。電子がより多く飛んでくる側からコイルをのぞくと、導線の中を電子がある向きに回っている。その向きを「反時計回り」と呼べ。――時計を一度も見たことのない相手にも、時計回りが渡る。</p>
+<p>それでも、最後の前提が一つ残る。相手の星が反物質でできていれば、同じ手順から逆の向きが届く。言葉だけで配れるようになった右は、「相手も同じ物質でできている」という、電波では確かめようのない前提に支えられていた。その前提も、1964年に中性K中間子で見つかった別の破れによって揺らぎはじめる。右の配布は、手渡しを消すのではなく、手渡しの要る場所を一段ずつ奥へ押しやってきた。</p>
+<h2><span class="no">結</span>右手は二度使う</h2>
+<p>719年の詔は右を一語で配り、受け取った人々は自分の身頃の上でそれを組み立て直した。カントは右を指さし、マクスウェルは腕に覚えさせ、マッハは自分を電流の中で泳がせた。コバルト60は右を電波に載せたが、相手の物質が同じだという前提だけは、手渡しのように残した。</p>
+<p>講義の外積の定義 $\boldsymbol i\times\boldsymbol j=\boldsymbol k$ は、配られた一行である。三章で見た二度の約束を、答案の上で引き受けるのは、計算する者の手だ。教材が、軸まわりのモーメントの符号は $\boldsymbol u$ の向きを書いて初めて意味をもつ、と念を押したのは、配られた式に、自分の手で向きを添えよということである。</p>
+<p class="coda">右は配られる。そして受け取るたびに、手で確かめ直される。</p>
+<section class="shelf">
+<h2><span class="no">本棚</span>このコラムの書架</h2>
+<h3>参照した本 ── 本文が依拠した原典</h3>
+<ul>
+  <li><span class="bk">『続日本紀』巻第八　養老三年二月壬戌条</span> <span class="pub">797年撰進</span><span class="why">「初令天下百姓右襟」と、同じ日の笏の制（序）。</span></li>
+  <li><span class="bk">『論語』憲問篇</span> <span class="pub">春秋〜戦国</span><span class="why">「微管仲、吾其被髪左衽矣」（序）。</span></li>
+  <li><span class="bk">カント「空間における方位の区別の第一根拠について」（<i>Von dem ersten Grunde des Unterschiedes der Gegenden im Raume</i>）</span> <span class="pub">1768年。アカデミー版 第2巻 375–383頁</span><span class="why">不一致対称物、最初に創られた一本の手、ホップと豆の巻き方（一）。</span></li>
+  <li><span class="bk">カント『プロレゴメナ』§13</span> <span class="pub">1783年。アカデミー版 第4巻 285–286頁</span><span class="why">鏡の手と手袋、「どんな概念によってもわからせることはできず」（一）。</span></li>
+  <li><span class="bk">J. C. マクスウェル <i>A Treatise on Electricity and Magnetism</i> 序論 第23節と脚注</span> <span class="pub">1873年（初版）</span><span class="why">腕とコルク抜き、ブドウとホップ、ねじ職人、トムソン＝テイトとハミルトン（二）。</span></li>
+  <li><span class="bk">E. マッハ <i>Die Mechanik in ihrer Entwickelung</i></span> <span class="pub">1883年、26–27頁（英訳 <i>The Science of Mechanics</i>、1919年、27頁）</span><span class="why">「知的な衝撃」（三）。</span></li>
+  <li><span class="bk">E. マッハ <i>The Analysis of Sensations</i>（『感覚の分析』英訳）</span> <span class="pub">Open Court、1914年、338–339頁</span><span class="why">アンペールの泳ぐ人、時計は日時計の子孫（三）。</span></li>
+  <li><span class="bk">T. D. Lee &amp; C. N. Yang, “Question of Parity Conservation in Weak Interactions”</span> <span class="pub"><i>Phys. Rev.</i> 104, 254（1956年）</span><span class="why">四。</span></li>
+  <li><span class="bk">C. S. Wu ほか, “Experimental Test of Parity Conservation in Beta Decay”</span> <span class="pub"><i>Phys. Rev.</i> 105, 1413（1957年）</span><span class="why">コバルト60の実験（四）。</span></li>
+  <li><span class="bk">W. パウリ『学術書簡集』第4巻 第4部A（<i>Wissenschaftlicher Briefwechsel</i>, Bd. IV/IV A）</span> <span class="pub">Springer。書簡 [2455]（1957年1月17日）、[2476]（1月27/28日）</span><span class="why">「神さまが弱い左利きだとは思わない」「賭けをしなくてよかった」（四）。</span></li>
+</ul>
+<p class="note">※原典はいずれも通読していない。該当箇所は、原文（アカデミー版・初版の電子版）、英訳、研究機関の公式史（下の「事実確認に用いた資料」）で確認した。</p>
+<h3>参考図書 ── さらに読むために</h3>
+<ul>
+  <li><span class="bk">マーティン・ガードナー『新版 自然界における左と右』上・下（坪井忠二・藤井昭彦ほか訳）</span> <span class="pub">ちくま学芸文庫、2021年</span><span class="why">四章のオズマ問題の出どころ。鏡、巻貝、分子、パリティ、反物質まで、左右の話を一冊で見渡せる。</span></li>
+  <li><span class="bk">ヘルマン・ワイル『シンメトリー』（冨永星訳）</span> <span class="pub">ちくま学芸文庫、2022年</span><span class="why">左右対称の講義で、マッハの磁針の驚きにも触れる数学者の古典（本コラムでは原文を確認できなかったため引用していない）。</span></li>
+  <li><span class="bk">カント『プロレゴメナ』（篠田英雄訳）</span> <span class="pub">岩波文庫</span><span class="why">§13 の手袋の一節を、前後の文脈ごと読める。</span></li>
+</ul>
+</section>
+
+<div class="colophon">
+  <div class="meta">このコラムは学習教材の一部として Claude が書いた<strong>自作</strong>の文章です。松岡正剛氏の著作ではなく、氏の「編集」の方法に倣った<strong>習作</strong>です。氏の文章の引用や再現は含みません。分野をまたぐ結びつけ（見立て）は筆者の解釈です。天子南面と北半球の太陽、時計回りと日時計の結びつきは通説・マッハの見解として紹介しています。外国語の引用の訳はすべて筆者訳です。四章の「スピンを使わない手順」は、実験の結果（電子は原子核のスピンと逆向きに多く出る）とコバルト60の磁気モーメントが正であることから、筆者が組み立て直したものです。</div>
+  <h3>図版の出典</h3>
+  <ul>
+    <li>手袋一対（扉）：<a href="https://commons.wikimedia.org/wiki/File:Pair_of_gloves_MET_DP151909.jpg">File:Pair of gloves MET DP151909.jpg</a>（メトロポリタン美術館、CC0。左右に地の色を付け足した）</li>
+    <li>喜多川歌麿《当時三美人》：<a href="https://commons.wikimedia.org/wiki/File:Kitagawa_Utamaro_-_Toji_san_bijin_(Three_Beauties_of_the_Present_Day)From_Bijin-ga_(Pictures_of_Beautiful_Women),_published_by_Tsutaya_Juzaburo_-_Google_Art_Project.jpg">Wikimedia Commons</a>（Public domain）</li>
+    <li>J. G. ベッカー《カントの肖像》：<a href="https://commons.wikimedia.org/wiki/File:Immanuel_Kant_-_Gemaelde_1.jpg">File:Immanuel Kant - Gemaelde 1.jpg</a>（Public domain）</li>
+    <li>呉健雄（1958年）：<a href="https://commons.wikimedia.org/wiki/File:Chien-Shiung_Wu_(1912-1997)_in_1958.jpg">File:Chien-Shiung Wu (1912-1997) in 1958.jpg</a>（Smithsonian Institution Archives、No known copyright restrictions）</li>
+    <li>鏡に映した回転の図：筆者作成</li>
+  </ul>
+  <h3>事実確認に用いた資料</h3>
+  <ul>
+    <li><a href="https://zh.wikisource.org/wiki/%E7%BA%8C%E6%97%A5%E6%9C%AC%E7%B4%80/%E5%8D%B7%E7%AC%AC%E5%85%AB">維基文庫「續日本紀/卷第八」</a>：養老三年二月壬戌条</li>
+    <li><a href="https://www.weblio.jp/content/%E5%B7%A6%E5%89%8D">デジタル大辞泉「左前」</a>・コトバンク「右前」：右前・左前の定義</li>
+    <li><a href="https://www.korpora.org/kant/aa02/382.html">Kant, AA II 377–383</a>・<a href="https://www.korpora.org/kant/aa04/286.html">AA IV 285–286</a>（korpora.org）</li>
+    <li>Maxwell, <i>Treatise</i> 初版（1873）・第3版（1892）序論 §23（archive.org）</li>
+    <li>Mach, <i>Die Mechanik</i>（1883、archive.org bub_gb_x9Q2AAAAMAAJ）、<i>The Analysis of Sensations</i>（1914、archive.org analysisofsensat00machuoft）</li>
+    <li><a href="https://aps.org/apsnews/2008/07/1820-oersted-electromagnetism">APS News “July 1820: Oersted &amp; Electromagnetism”</a>：小冊子の日付と配置</li>
+    <li><a href="https://nvlpubs.nist.gov/nistpubs/sp958-lide/111-115.pdf">NIST SP 958 “Reversal of the Parity Conservation Law in Nuclear Physics”</a>・<a href="https://www.aps.org/apsnews/2001/12/fall-parity-conservation-1956">APS News (2001)</a>：実験の場所・温度・時期・結果</li>
+    <li><a href="https://archives.cern.ch/index.php/letter-2455">CERN Pauli Archive, letter 2455</a>：パウリの手紙の日付と宛先</li>
+    <li><a href="https://archive.seti.org/project-ozma">SETI Institute “Project Ozma”</a>：オズマ計画</li>
+    <li><a href="https://www.chikumashobo.co.jp/product/9784480510167/">筑摩書房『新版 自然界における左と右』</a>・<a href="https://chikumashobo.co.jp/product/9784480511386/">『シンメトリー』</a>：参考図書の書誌</li>
+  </ul>
+</div>
+
+</article>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../03_第3回_3次元の力とモーメント.html"><small>LESSON 3</small>← 教材：第3回 3次元の力とモーメント</a></nav>
+</body>
+</html>
