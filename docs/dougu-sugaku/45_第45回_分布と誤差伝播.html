@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第45回</p><h1>分布と誤差伝播</h1></div>
+<figure class="hero">
+<img src="img/45_hero_stupa.jpg" alt="青空と白い雲の下、円い屋根の煉瓦色の塔。頂に小さな四角い飾り、周りに低い柵、左に木">
+<div class="ttl" style="left:4%;top:auto;bottom:6%"><p class="vol">第45回</p><h1>分布と誤差伝播</h1></div>
+<figcaption><p class="cap">赤褐色の石を積んだ半球の塔が、低い柵に囲まれて立っている。</p><p class="cr">Suyash Dwivedi（2013年、サーンチーの塔）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Great_Sanchi_Stupa_(3).jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
 </figure>
 <p class="lead">測定値は毎回ばらつく。そのばらつきが、足し合わせると<strong>正規分布</strong>という山形に近づくこと（<strong>中心極限定理</strong>）と、何度も平均すれば真の値に近づくこと（<strong>大数の法則</strong>）を、独立な確率変数の分散の足し算から導く。さらに、測った量から計算した量の誤差が、<strong>全微分</strong>を使ってどれだけに膨らむかを式にする（<strong>誤差の伝播</strong>）。</p>
 <div class="navi">
@@ -170,6 +172,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>独立な確率変数と大数の法則</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/45_a1_roulette.jpg" alt="赤・黒・緑の数字の溝が並ぶ円盤、中央に金属の飾り、溝に白い玉" loading="lazy"></div>
+<p class="cap">赤と黒に塗り分けた数字の溝の上を、白い玉が回っている。</p>
+<p class="cr">Ralf Roletschek（2013年、ヴィースバーデンのカジノのルーレット）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:13-02-27-spielbank-wiesbaden-by-RalfR-093.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/45_b1_washi.jpg" alt="木枠の水槽に張られた黄色い簀と、前かがみで両手で枠を持つ作業着の人" loading="lazy"></div>
+<p class="cap">木の槽の水面の上で、青い服の職人が簀桁を手に前かがみになっている。</p>
+<p class="cr">TR15336300101（2019年、福井県越前市の卯立の工芸館での紙漉き見学）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Japanese_paper_making_03.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>動機：同じ量を何度も測って平均する理由</h3>
 <p>棒の長さをノギスで1回測ると $10.02$ mm だった。もう一度測ると $10.01$ mm、その次は $10.03$ mm。このとき私たちは「何回か測って平均をとれば、1回の値よりも信用できる」と感じる。この感覚を、式で言い直したい。</p>
 <p>言い直すために、次の2つの問いに答える必要がある。</p>
@@ -879,6 +891,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>正規分布</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/45_a2_natinh.jpg" alt="白地に黒の活字で NATURAL INHERITANCE、BY FRANCIS GALTON, F.R.S.、下に MACMILLAN AND CO. と 1889" loading="lazy"></div>
+<p class="cap">「自然的遺伝　フランシス・ゴルトン著　ロンドン　マクミラン社　1889年」と印刷された扉である。</p>
+<p class="cr">Francis Galton『Natural Inheritance』の扉（Wellcome Collection）／<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:"Natural_inheritance",_Francis_Galton,_1889_Wellcome_L0000523EB.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/45_b2_daibutsu.jpg" alt="緑青をふいた青銅の坐像。後ろに木々と青空、前に石畳と大きな香炉" loading="lazy"></div>
+<p class="cap">青銅の大仏が、石の台の上で手を組んで座っている。</p>
+<p class="cr">Dirk Beyer（2005年、鎌倉の大仏）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Kamakura_Budda_Daibutsu_front_1885.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>動機：測定誤差の「形」を決めたい</h3>
 <p>1章までで、誤差の<strong>大きさ</strong>（標準偏差 $\sigma$）と、平均したときの縮み方（$\frac1{\sqrt n}$）は分かった。しかし、「測定値が $\mu\pm2\sigma$ の中に入る確率はいくつか」には、まだ答えられない。それには、分布の<strong>形</strong>を決めなければならない。</p>
 <p>測定誤差の分布は、ほとんどの場合、次のような形をしている。（i）真の値のまわりに集まる、（ii）左右ほぼ対称、（iii）大きくずれるほど急速にまれになる。この性質をもつ代表が<strong>正規分布</strong>（ガウス分布）である。なぜ誤差がこの形になるのかは、3章（中心極限定理）で答える。ここではまず、この分布そのものを、1行ずつ作る。</p>
@@ -1815,6 +1837,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-4"><span class="no">4</span>誤差の伝播：全微分から導く</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/45_a4_surveyors.jpg" alt="色摺りの絵。入江を見下ろす丘で、旗つきの竿を持つ人、かがんで竿を当てる人、三脚の円い器械を囲む人、帳面を持つ人が描かれ、左上に文章" loading="lazy"></div>
+<p class="cap">旗を立てた竿のあいだで、人々が縄や竿を地面に伸ばし、三脚の器械をのぞいている。</p>
+<p class="cr">葛飾北斎「地方測量之図」（Commons の記載は1848年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Land-Surveyors-Edo-Period-Katsushika-Hokusai.png">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/45_b4_tiger.jpg" alt="曇り空の下、木立の向こうに多層の塔。手前に石畳と低い木" loading="lazy"></div>
+<p class="cap">緑の木々の上に、屋根を重ねた塔が1本立っている。</p>
+<p class="cr">Chainwit.（2024年、蘇州の虎丘塔）／<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:2024-Apr_Suzhou_-_Tiger_Hill_Pagoda_虎丘塔_(Huqiu_Ta)_-_img_01.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-4-1"><span class="no">4.1</span>動機：測った量から計算した量の誤差</h3>
 <p>研究室では、直接測れない量を、測れる量から計算することが多い。長方形の板の面積 $A$ を求めるには、縦と横の長さを測って掛ける：$A=ab$。電気抵抗は電圧 $V$ と電流 $I$ を測って $R=V/I$、重力加速度は振り子の長さ $L$ と周期 $T$ を測って $g=4\pi^2L/T^2$。</p>
 <p><strong>最小の具体例</strong>：板の縦を $a=20.0$ mm、横を $b=30.0$ mm と測った。それぞれの測定の標準偏差は $\sigma_a=0.1$ mm、$\sigma_b=0.2$ mm とする。面積は $A=ab=20.0\times30.0=600$ mm$^2$。では、この $600$ の<strong>誤差</strong>はどれだけか。単位が mm$^2$ なので、$0.1$ や $0.2$ をそのまま使えないことは分かる。必要なのは、「$a$ の誤差が $A$ にどれだけ伝わるか」を決める式である。これが<strong>誤差の伝播</strong>である。</p>
@@ -1997,6 +2029,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-5"><span class="no">5</span>誤差の伝播を使う前に：確かめと限界</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/45_a5_buffon.jpg" alt="白地に4本の水平線と、数十本の短い斜めの線" loading="lazy"></div>
+<p class="cap">平行な線の上に、長さのそろった針が向きばらばらに散らばっている。</p>
+<p class="cr">Александр Шмидт（2006年、ビュフォンの針の図。原寸のまま）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Buffon_Pi.JPG">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/45_b5_jingoji.jpg" alt="開いた巻物。藍染の紙に金・銀の泥で縦書きの経文、右側に仏の説法図。巻物の両端に金属の軸" loading="lazy"></div>
+<p class="cap">紺色の紙に、金の文字が縦に書き連ねられ、右に仏と二人の僧の絵がある。</p>
+<p class="cr">神護寺経（一切経）の巻子（Commons の記載は鳥羽・後白河、1150〜1185年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Illustrated_Sutra_(Jingoji).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-5-1"><span class="no">5.1</span>乱数で確かめる</h3>
 <p>公式は近似である。本当に合っているかを、4.1 の長方形で乱数を使って確かめる。$a\sim\mathcal N(20.0,\ 0.1^2)$、$b\sim\mathcal N(30.0,\ 0.2^2)$ を独立に 20000 組作り、$A=ab$ を計算してヒストグラムを描く（乱数の種は固定）。公式の予測は $\mu_A\approx600$、$\sigma_A=5$。</p>
 <p>図5.1 を見る。ヒストグラムの幅は、公式の予測（点線の正規分布）とよく重なっている。</p>

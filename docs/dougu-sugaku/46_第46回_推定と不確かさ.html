@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第46回</p><h1>推定と不確かさ</h1></div>
+<figure class="hero">
+<img src="img/46_hero_kikizake.jpg" alt="白い布をかけた細長い机に青や緑の酒瓶と白い杯が並び、左右から人々が身を乗り出して杯や冊子を手にしている">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第46回</p><h1>推定と不確かさ</h1></div>
+<figcaption><p class="cap">細長い机に並んだ酒の瓶と小さな杯を、人々が左右から取り囲んでいる。</p><p class="cr">Asacyan（2013年3月23日、京都市伏見区の利き酒会）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Hushimi_kikizake_01.JPG">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
 </figure>
 <p class="lead">手元の少数のデータから、見えない「本当の値」を言い当てる道具。標本平均 $\bar x$ が毎回ゆれること、そのゆれの大きさ（標準誤差 $s/\sqrt n$）、ゆれを見込んだ幅つきの答え（信頼区間）を順に導き、最後に工学実験の<strong>測定の不確かさ</strong>（タイプA・タイプB）へつなげる。</p>
 <div class="navi">
@@ -166,6 +168,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>母集団と標本：見えない値を、見える数から推し量る</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/46_a1_census.jpg" alt="白黒の縦長のビラ。上に鐘の絵と、渦巻く帯状に並ぶ細かい文章。下に大きく「國勢調査」の文字" loading="lazy"></div>
+<p class="cap">「國勢調査」の大きな字と、鐘の絵、細かい説明の文字が刷られたビラである。</p>
+<p class="cr">大正期（1912〜1926年）の国勢調査のビラ、作者不詳（Commons の記載）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:1st_Census_poster_in_Japan.JPG">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/46_b1_yosegi.jpg" alt="白い展示台に、名札を貼った細長い木片が十数本、色の違う順に並ぶ。奥に英文の説明板、左に木の名前の一覧表" loading="lazy"></div>
+<p class="cap">色も木目も違う細長い木片が、名札をつけて一列に並んでいる。</p>
+<p class="cr">Daderot（2016年9月3日、箱根関所資料館の箱根寄木細工の展示）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Hakone_Yosegi_Zaiku_display_-_Hakone_Checkpoint_Exhibition_Hall_-_Hakone_no_Seki_(barrier_station)_-_Hakone,_Japan_-_DSC06050.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>動機：本当の値は、どこにも書いていない</h3>
 <p>ノギスで金属棒の長さを5回測ったら、$12.34,\ 12.31,\ 12.36,\ 12.33,\ 12.32$ mm になった。毎回少し違う。ここで知りたいのは「この棒の本当の長さ」だが、それはどの測定値でもない。第44回では、「分布の平均 $\mu$ と散らばり $\sigma$ が<strong>分かっている</strong>」ところから出発して、データの振る舞いを論じた。この回は<strong>向きが逆</strong>である。</p>
 <ul>
@@ -340,6 +352,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>標本平均と標準誤差</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/46_a2_pyx.jpg" alt="灰青の銅版画。窓とシャンデリアのある広間に、黒い服の男たちが集まって立つ。下に「TRIAL OF THE PIX」の小さな文字" loading="lazy"></div>
+<p class="cap">シャンデリアの下の広間で、黒い服の人々が集まって立っている版画である。</p>
+<p class="cr">William H. Prior の版画「Trial of the Pix」（Commons の記載は1873年、1887年の複製）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:ONL_(1887)_1.355_-_Trial_of_the_Pix.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/46_b2_rakan.jpg" alt="緑の苔におおわれた小さな石像が、岩の間と木立の斜面にいくつも座っている" loading="lazy"></div>
+<p class="cap">苔むした石の坐像が、木立の斜面に数えきれないほど並んでいる。</p>
+<p class="cr">STA3816（2013年6月17日、福岡県みやま市の清水寺の五百羅漢）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:500_Rakan_at_Kiyomizu-dera_01.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>定義：標本平均 $\bar X$ と $\bar x$</h3>
 <div class="def" id="sym-sample-mean"><span class="label">記号：標本平均 $\bar X$、$\bar x$</span>
 <p><strong>①読み方</strong>：「エックス・バー」（大文字・小文字とも）。「ひょうほんへいきん」。</p>
@@ -967,6 +989,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-5"><span class="no">5</span>信頼区間：幅つきで答える</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/46_a5_gosset.jpg" alt="モノクロの半身像。丸い眼鏡に口ひげの男が、上着とベストの姿でこちらを見ている" loading="lazy"></div>
+<p class="cap">丸い眼鏡に口ひげの男が、上着とベストの姿でこちらを見ている。</p>
+<p class="cr">William Sealy Gosset の肖像（Commons の記載は1908年撮影。Annals of Eugenics の追悼記事から取り込み）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:William_Sealy_Gosset.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/46_b5_tarashikomi.jpg" alt="金地に、赤茶色の岩の形が青い顔料に溶け込み、下に細い線の波が重なる" loading="lazy"></div>
+<p class="cap">岩の形に、赤茶と青の顔料がにじんで溜まり、下に波の線が引かれている。</p>
+<p class="cr">俵屋宗達『松島図屏風』のたらし込みの部分（Commons の記載は1629年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:MatsushimaTarashikomi.png">Wikimedia Commons</a></p></div>
+</figure>
 <h3 id="sec-5-1"><span class="no">5.1</span>動機：1つの数では、どれだけ当てになるかが伝わらない</h3>
 <p>「長さは $12.332$ mm」とだけ書いても、それが $\pm0.001$ で正しいのか $\pm0.1$ で正しいのかが分からない。標準誤差が「ゆれの大きさ」を教えてくれるので、これを使って<strong>幅つきの答え</strong>を作る。</p>
 
@@ -1289,6 +1321,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-6"><span class="no">6</span>測定の不確かさ：工学実験での使い方</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 6｜現実</p>
+<div class="ph"><img src="img/46_a6_ipk.jpg" alt="黒背景の上、台の上に重なる3つのガラスの鐘。いちばん内側に小さな金属の円柱が納められている" loading="lazy"></div>
+<p class="cap">重ねたガラスの覆いの中に、小さな金属の塊が納められている。</p>
+<p class="cr">BIPM（2019年9月3日、国際キログラム原器）／<a href="https://creativecommons.org/licenses/by-sa/3.0/igo/">CC BY-SA 3.0 IGO</a>／<a href="https://commons.wikimedia.org/wiki/File:International_prototype_of_the_kilogram_aka_Le_Grand_K.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 6｜見立て</p>
+<div class="ph"><img src="img/46_b6_masu.jpg" alt="薄い色の木で組んだ四角い升。側面に「2005 2006」と Deutschland in Japan、日本語の文字が焼かれ、手前に鉛筆がある" loading="lazy"></div>
+<p class="cap">木を組んだ四角い升の側面に、「2005 2006」の文字が焼かれている。</p>
+<p class="cr">Fraxinus2（2012年2月20日、1合の木の升）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:1_Go.jpg">Wikimedia Commons</a></p></div>
+</figure>
 <h3 id="sec-6-1"><span class="no">6.1</span>誤差と不確かさ、標準不確かさ $u$</h3>
 <p>工学実験のレポートでは「測定値 ± 不確かさ」を書く。ここで<strong>誤差</strong>（測定値 − 真値）と<strong>不確かさ</strong>は別物である。誤差は真値が見えない以上、値を知りえない。不確かさは「測定値の確からしさを表す、疑いの幅」という、計算できる量である。国際的な指針（『計測における不確かさの表現のガイド』GUM、ISO/IEC Guide 98-3）では、不確かさを<strong>標準偏差の形</strong>で表すことを基本とする。ここでは、その考え方の骨組みを、この回までの道具で組み立てる。</p>
 <div class="def" id="sym-uncertainty"><span class="label">記号：標準不確かさ $u$</span>

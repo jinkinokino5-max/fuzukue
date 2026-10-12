@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第47回</p><h1>最小二乗法</h1></div>
+<figure class="hero">
+<img src="img/47_hero_cradle.jpg" alt="赤茶の幕を背に、左右の人差し指で糸を張った2つの手。糸は指の間で交差して編み目をつくり、橙の光に照らされる">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第47回</p><h1>最小二乗法</h1></div>
+<figcaption><p class="cap">暗い幕の前に、糸を張った2つの手が浮かんでいる。</p><p class="cr">Sgerbic（2011年、あやとりをする手の展示）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:MJT_cats_cradle.jpg">Wikimedia Commons</a>（上の手と糸の部分を横長に切り出した）</p></figcaption>
 </figure>
 <p class="lead">測定点が一直線に並ばないとき、「いちばんよく合う直線」をどう決めるか。ずれ（残差）を2乗して足した量 $S$ を最小にする、という決め方が<strong>最小二乗法</strong>である。その答えは、微分で求めても、行列の勾配で求めても、「残差が各列に直交する」という幾何で求めても、同じ連立方程式 $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$（<strong>正規方程式</strong>）に行き着く。第19回の射影と第22回の特異値分解がここで合流し、第36回で予告したフーリエ級数の部分和の性質もこの回で回収する。記号は1つずつ、途中の式変形は1行1操作で追う。</p>
 <div class="navi">
@@ -170,6 +172,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>「いちばんよく合う」を式にする</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/47_a1_gauss.jpg" alt="薄黄の紙に黒い活字で THEORIA MOTUS CORPORUM COELESTIUM、AUCTORE CAROLO FRIDERICO GAUSS と並び、下に出版地と年号 1809" loading="lazy"></div>
+<p class="cap">「円錐曲線で太陽をめぐる天体の運動の理論　ガウス著　1809年」と印刷された扉である。</p>
+<p class="cr">Carl Friedrich Gauss『Theoria motus corporum coelestium in sectionibus conicis solem ambientium』の扉（扉の年号は1809年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Gauss,_Carl_Friedrich_–_Theoria_motus_corporum_coelestium_in_sectionibus_conicis_solem_ambientium_–_BEIC_12217180.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/47_b1_kintsugi.jpg" alt="淡い背景に、黒灰の碗。内側と縁に金の線がのびる" loading="lazy"></div>
+<p class="cap">灰色の碗の割れ目に、金色が一筋走っている。</p>
+<p class="cr">martinjhoward2（2019年、金継ぎで修復した碗を描いた作品。作者 Martin Howard）／<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Kintsugi_art.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>動機：ぴったりの解がない連立方程式</h3>
 <p>理科の実験で、次の3つの測定をしたとする。ある量 $x$ を $0,1,2$ と変えたとき、測れた値 $y$ は $1,2,2$ だった。測定には必ず誤差があるが、「$y$ は $x$ の一次式 $y=a+bx$ に従う」と考えて、傾き $b$ と切片 $a$ を決めたい。</p>
 <p>3点を式にすると、次の3本になる。</p>
@@ -667,6 +679,16 @@ $$ \hat{\boldsymbol x}=(A^{\mathsf T}A)^{-1}A^{\mathsf T}\boldsymbol b $$
 <!-- ============================================================ -->
 <h2 id="sec-4"><span class="no">4</span>射影として見る：幾何の意味</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/47_a4_monge.jpg" alt="白地の線画。x・y・z の軸と面があり、点 A と A1、A2 を点線で結ぶ" loading="lazy"></div>
+<p class="cap">座標軸の中で、点 A から面に下ろした点 A1 と A2 が点線でつながれている。</p>
+<p class="cr">Pvpetkov（2015年、点のモンジュ式射影の図）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Monge_projections_of_a_dot.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/47_b4_karagoz.jpg" alt="白い幕を背に、緑の模様の蛙の体に黄・緑・赤の帽子をかぶった橙の横顔" loading="lazy"></div>
+<p class="cap">緑の蛙の体と橙の顔をもつ、色つきの革の人形である。</p>
+<p class="cr">Daderot（2014年、リスボン東洋博物館のカラギョズ人形。蛙に変身する場面）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Karagoz_transformed_into_a_frog,_Karagoz,_Turkey_-_Museu_do_Oriente_-_Lisbon,_Portugal_-_DSC06821.JPG">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-4-1"><span class="no">4.1</span>残差は、$A$ の像に直交する</h3>
 <p>正規方程式 $A^{\mathsf T}A\hat{\boldsymbol x}=A^{\mathsf T}\boldsymbol b$ の右辺を左へ移し、$A^{\mathsf T}$ でくくる。</p>
 $$ \begin{aligned} A^{\mathsf T}A\hat{\boldsymbol x}-A^{\mathsf T}\boldsymbol b&=\boldsymbol 0 &&\text{（右辺を左へ移す）}\\ A^{\mathsf T}(A\hat{\boldsymbol x}-\boldsymbol b)&=\boldsymbol 0 &&\text{（}A^{\mathsf T}\text{ でくくる）}\\ A^{\mathsf T}(\boldsymbol b-A\hat{\boldsymbol x})&=\boldsymbol 0 &&\text{（両辺に }-1\text{ を掛ける）} \end{aligned} $$
@@ -873,6 +895,16 @@ $$ A^{\mathsf T}A=\begin{pmatrix}4&0&0\\0&2&0\\0&0&2\end{pmatrix} $$
 <!-- ============================================================ -->
 <h2 id="sec-5"><span class="no">5</span>回帰：統計の言葉と応用</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/47_a5_hubble.jpg" alt="白地のグラフ。黒丸と白丸が散らばり、左下から右上へ実線と破線がのびる" loading="lazy"></div>
+<p class="cap">横軸に距離、縦軸に速度をとった点の群れを、実線と破線の2本の直線が通っている。</p>
+<p class="cr">Edwin Hubble（1929年、速度と距離の関係の図）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Edwin_Hubble_velocity-distance_relation_1929.png">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/47_b5_uranometria.jpg" alt="薄茶の紙に細い線の銅版画。右腕を上げて棍棒を持つ人物と、散らばる星の印" loading="lazy"></div>
+<p class="cap">棍棒を振り上げた人物の姿が、星の点の上に重ねて描かれている。</p>
+<p class="cr">Johann Bayer『Uranometria』のオリオン座の銅版画（Commons の記載は1661年版）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Uranometria_orion.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-5-1"><span class="no">5.1</span>直線回帰の公式：重心を通る</h3>
 <p>$m$ 点への直線 $y=a+bx$ の当てはめを、統計では<strong>単回帰</strong>と呼ぶ。2.3 の一般の連立方程式
 $$ \begin{cases} m\,a+\Bigl(\displaystyle\sum x_i\Bigr)b=\displaystyle\sum y_i\\[2mm] \Bigl(\displaystyle\sum x_i\Bigr)a+\Bigl(\displaystyle\sum x_i^2\Bigr)b=\displaystyle\sum x_iy_i \end{cases} $$
