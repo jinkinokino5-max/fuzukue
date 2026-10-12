@@ -35,6 +35,11 @@
       "name": "「闇の奥」を原文で読む",
       "slug": "heart-of-darkness",
       "src": "「Heart of Darkness」/output"
+    },
+    {
+      "name": "道具としての数学",
+      "slug": "dougu-sugaku",
+      "src": "道具としての数学/output"
     }
   ]
 }

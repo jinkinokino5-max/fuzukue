@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第21回 対角化と二次形式</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="img/21_hero_gion.jpg" alt="両側に木造の町家と竹垣が並び、石畳の路地が奥へ細くのびる。上に青空が見える">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第21回</p><h1>対角化と二次形式</h1></div>
+<figcaption><p class="cap">まっすぐな路地の線が、遠くの一点へ寄っていく。</p><p class="cr">Basile Morin（2019年、京都・祇園の路地）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Wooden_and_bamboo_facades_of_dwellings_with_sudare_in_a_cobbled_street_of_Gion,_perspective_effect_with_vanishing_point,_Kyoto,_Japan.jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
+</figure>
+<p class="lead">第20回で見つけた固有ベクトルを<strong>並べて座標軸にする</strong>と、行列は固有値を対角に並べただけの行列に書き換わる。これが<strong>対角化</strong> $P^{-1}AP=D$ である。対称行列に限っては、固有ベクトルを<strong>直交</strong>にとれて $Q^{\mathsf T}AQ=\Lambda$ となり、そこから<strong>二次形式</strong> $\boldsymbol x^{\mathsf T}A\boldsymbol x$ が平方の和に直り、<strong>正定値</strong>かどうかが固有値の符号で決まる。式変形を1行ずつ追う。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：固有ベクトルは「$A$ が数倍にしか働かない方向」（第20回）→ それを $n$ 本<strong>一次独立</strong>にそろえて列に並べた行列を $P$ とすると、$AP=PD$（$D$ は固有値を並べた対角行列）→ $P$ は逆行列をもつので $P^{-1}AP=D$、すなわち<strong>対角化</strong> → $A^k=PD^kP^{-1}$ で累乗が一気に計算できる → ただし対角化できない行列もある（せん断）→ <strong>対称行列</strong> $A=A^{\mathsf T}$ なら、異なる固有値の固有ベクトルは<strong>直交</strong>し、固有値はすべて実数で、直交行列 $Q$ により $Q^{\mathsf T}AQ=\Lambda$ と<strong>必ず</strong>対角化できる（スペクトル定理）→ 逆行列の代わりに転置でよい → 実数の2変数・$n$ 変数の2次式 $q(\boldsymbol x)=\boldsymbol x^{\mathsf T}A\boldsymbol x$（<strong>二次形式</strong>）は、$Q$ で座標を回すと $\lambda_1y_1^2+\cdots+\lambda_ny_n^2$ になる → すべての固有値が正なら「どの向きにも正」＝<strong>正定値</strong>（$A\succ0$）→ 判定法（固有値の符号、主小行列式）と、最大値・最小値（レイリー商）。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>第1回から続く約束どおり、新しい記号は緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。この回の中心の省略は<strong>「$P$ の列が $A$ の固有ベクトルで $P$ は逆行列をもつ、というときの $A$ の姿」を $P^{-1}AP=D$ の一行にした</strong>ことなので、<a href="#abbr-diag">1.2 の省略の段階</a>で S0 から S3 まで1段ずつ並べる。以後この箱にリンクして使う。</p>
+<p>この回は、第20回の<a href="20_第20回_固有値と固有ベクトル.html#sym-eigen">固有値・固有ベクトル</a>と、第19回の<a href="19_第19回_内積・直交・射影.html#sym-orthogonal-matrix">直交行列</a>・<a href="19_第19回_内積・直交・射影.html#sym-gram-schmidt">グラム・シュミット</a>を<strong>合わせて使う回</strong>である。使うたびにリンクを張るので、忘れていても元の説明に戻れる。式変形は1行に1操作だけ進め、理由を右（または下）に書く。すべての計算は<strong>数値で一度手を動かして</strong>から文字の式に進む。</p>
+<p>なお、対角化できない行列も含め<strong>任意の行列</strong>を分解する特異値分解は第22回、連立の微分方程式への応用は第31回、多変数の極値判定（ヘッセ行列）の本格的な扱いは第51回で行う。この回ではそれぞれ<strong>予告だけ</strong>にする。第18回（行列式）は並行して作成中なので、そこへのリンクは、その回で付ける記号の名前に合わせてある。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で<strong>新しく説明する記号</strong>と、<strong>前の回で説明済みの記号</strong>を分けて並べる。右の列の「→」で説明のある場所へ飛べる。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$\operatorname{diag}(d_1,\dots,d_n)$（対角行列）</td><td>ダイアグ</td><td>対角成分だけが $d_1,\dots,d_n$ で、ほかは全部 $0$ の行列</td><td><a href="#sym-diag-matrix">→1.2</a></td></tr>
+<tr><td>$P^{-1}AP=D$（対角化、対角化可能）</td><td>ピー・インバース・エー・ピー・イコール・ディー</td><td>固有ベクトルを並べた $P$ で座標をとり替えると、$A$ が対角行列 $D$ になる</td><td><a href="#sym-diagonalizable">→1.2</a>、<a href="#abbr-diag">→1.2</a></td></tr>
+<tr><td>$A\sim B$（相似）</td><td>エー・そうじ・ビー</td><td>$B=P^{-1}AP$ となる可逆な $P$ がある（同じ写像を別の座標で見たもの）</td><td><a href="#sym-similar">→1.6</a></td></tr>
+<tr><td>$A=A^{\mathsf T}$（対称行列）</td><td>たいしょうぎょうれつ</td><td>対角線で折り返すと重なる行列（$A_{ij}=A_{ji}$）</td><td><a href="#sym-symmetric">→2.1</a></td></tr>
+<tr><td>$\bar z$（複素共役）</td><td>ゼット・バー</td><td>$a+bi$ の $i$ の符号を変えた $a-bi$</td><td><a href="#sym-conjugate">→2.2</a></td></tr>
+<tr><td>$Q^{\mathsf T}AQ=\Lambda$（直交対角化）、$\Lambda$</td><td>キュー・トランスポーズ・エー・キュー・イコール・ラムダ（大文字）</td><td>直交行列で対角化すること。$\Lambda$ は固有値を並べた対角行列</td><td><a href="#sym-orth-diag">→2.3</a></td></tr>
+<tr><td>$A=\sum\lambda_i\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$（スペクトル分解）</td><td>スペクトルぶんかい</td><td>$A$ を、固有ベクトルの方向への射影行列に固有値を掛けて足したもの</td><td><a href="#sym-spectral">→2.5</a></td></tr>
+<tr><td>$q(\boldsymbol x)=\boldsymbol x^{\mathsf T}A\boldsymbol x$（二次形式）</td><td>にじけいしき</td><td>変数の2次の項だけでできた式を、対称行列 $A$ で表したもの</td><td><a href="#sym-quadratic-form">→3.1</a></td></tr>
+<tr><td>$A\succ0$、$A\succeq0$（正定値、半正定値）</td><td>エー・ぱっつ・ゼロ（正定値）</td><td>$\boldsymbol 0$ でないどの $\boldsymbol x$ でも $\boldsymbol x^{\mathsf T}A\boldsymbol x$ が正（半正定値は $0$ 以上）</td><td><a href="#sym-pos-def">→3.3</a></td></tr>
+<tr><td>$\Delta_k$（主小行列式）</td><td>デルタ・ケー</td><td>左上 $k\times k$ の部分の行列式</td><td><a href="#sym-leading-minor">→3.4</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出た記号（リンクで戻れる）</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>初出</th></tr>
+<tr><td>$=$、$:=$</td><td>等しい／左の名前を右の式で決める</td><td><a href="01_第1回_数式を文として読む.html#sym-equal">第1回 2.1</a>、<a href="01_第1回_数式を文として読む.html#sym-defeq">第1回 2.2</a></td></tr>
+<tr><td>$\in$、$\mathbb R$、$\forall$、$\exists$、$\Rightarrow$、$\Leftrightarrow$</td><td>要素である／実数全体／すべての／存在する／ならば／同値</td><td><a href="02_第2回_集合と論理.html#sym-in">第2回</a>、<a href="02_第2回_集合と論理.html#sym-numsets">第2回</a>、<a href="02_第2回_集合と論理.html#sym-forall">第2回</a>、<a href="02_第2回_集合と論理.html#sym-exists">第2回</a>、<a href="02_第2回_集合と論理.html#sym-implies">第2回</a>、<a href="02_第2回_集合と論理.html#sym-iff">第2回</a></td></tr>
+<tr><td>$\displaystyle\sum$（総和）</td><td>足し合わせ</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a></td></tr>
+<tr><td>太字 $\boldsymbol v$（ベクトル）、$\boldsymbol 0$、$A\in\mathbb R^{n\times n}$、$A_{ij}$、$I$</td><td>数の組／零ベクトル／$n$ 行 $n$ 列の行列／成分／単位行列</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-vector">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-zero-vector">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix-entry">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-identity">第5回</a></td></tr>
+<tr><td>$A^{\mathsf T}$（転置）</td><td>行と列を入れ替えた行列</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">第5回</a></td></tr>
+<tr><td>一次結合、一次独立、基底、$\dim$、座標、基底を並べた表 $P$</td><td>定数倍の和／冗長がない／座標軸の役目をする組／基底の本数／基底での数の組／基底を列に並べた行列</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-linear-combination">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-linear-independent">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-basis">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-dim">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-coordinates">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-transition">第15回</a></td></tr>
+<tr><td>$A\boldsymbol x$、線形写像、$AB$、$A^{-1}$、$A^k$</td><td>列の一次結合／写像／合成／逆の写像／繰り返し</td><td><a href="16_第16回_行列は線形写像.html#sym-matvec">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-linear-map">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-matmul">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-inverse-matrix">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-matrix-power">第16回</a></td></tr>
+<tr><td>$\operatorname{rank}A$、$\ker A$</td><td>主成分の数／$A\boldsymbol x=\boldsymbol 0$ の解全体</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-rank">第17回</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-ker">第17回</a></td></tr>
+<tr><td>$\det A$（行列式）</td><td>符号つきの拡大率</td><td><a href="18_第18回_行列式.html#sym-det">第18回</a></td></tr>
+<tr><td>$\langle\boldsymbol u,\boldsymbol v\rangle$（内積）、$\|\boldsymbol v\|$、$\perp$（直交）</td><td>2本から数を作る規則／長さ／内積が0</td><td><a href="19_第19回_内積・直交・射影.html#sym-inner-product">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-norm-induced">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-orthogonal">第19回</a></td></tr>
+<tr><td>正規直交基底、直交行列 $Q$（$Q^{\mathsf T}Q=I$）、射影行列、グラム・シュミット</td><td>直交で長さ1の基底／列が正規直交の行列／射影の行列／直交化の手順</td><td><a href="19_第19回_内積・直交・射影.html#sym-orthonormal">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-orthogonal-matrix">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-proj-matrix">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-gram-schmidt">第19回</a></td></tr>
+<tr><td>固有値 $\lambda$、固有ベクトル、固有空間 $E_\lambda$、$\operatorname{tr}A$、特性多項式 $p_A$、重複度、$i$</td><td>向きを変えない方向と倍率／その直線全体／対角和／固有値を決める式／根の重なりと独立な本数／虚数単位</td><td><a href="20_第20回_固有値と固有ベクトル.html#sym-eigen">第20回</a>、<a href="20_第20回_固有値と固有ベクトル.html#sym-eigenspace">第20回</a>、<a href="20_第20回_固有値と固有ベクトル.html#sym-trace">第20回</a>、<a href="20_第20回_固有値と固有ベクトル.html#sym-char-poly">第20回</a>、<a href="20_第20回_固有値と固有ベクトル.html#sym-alg-mult">第20回</a>、<a href="20_第20回_固有値と固有ベクトル.html#sym-imag-unit">第20回</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>対角化：固有ベクトルを座標軸にする</h2>
+
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：固有ベクトルの方向では、行列が「ただの数倍」になる</h3>
+<p><a href="20_第20回_固有値と固有ベクトル.html#sec-5-1">第20回 5.1</a> で、$A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ の固有ベクトル $\boldsymbol v_1=(1,1)^{\mathsf T}$（固有値 $3$）と $\boldsymbol v_2=(1,-1)^{\mathsf T}$（固有値 $1$）を使うと、$A^k\boldsymbol x$ が簡単に求まることを見た。そのとき、$\boldsymbol x$ を $\boldsymbol v_1,\boldsymbol v_2$ の一次結合に直すという手間を毎回かけていた。この回では、その手間を<strong>行列の積の形</strong>にまとめて、「$A$ そのものが簡単な行列に書き換わる」と言えるようにする。</p>
+<p>考え方は、座標軸をとり替えることである。普通の座標軸（$x$ 軸、$y$ 軸）は私たちが勝手に選んだ軸にすぎない。$A$ にとって都合のよい軸は、$A$ が<strong>数倍にしか働かない方向</strong>、つまり固有ベクトルの方向である。<a href="15_第15回_ベクトル空間と基底.html#sym-basis">基底</a>を固有ベクトルに選べば、その基底に関する座標では、$A$ は「第1座標を $3$ 倍、第2座標を $1$ 倍」とするだけの写像に見える。</p>
+<p>図1.1 を見る。$\boldsymbol v_1,\boldsymbol v_2$ を2辺とする平行四辺形が、$A$ を掛けると、$\boldsymbol v_1$ の方向に $3$ 倍に伸び、$\boldsymbol v_2$ の方向には変わらない。ずれも回転も起きない。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 402" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="固有ベクトルを2辺とする平行四辺形が A でどう変わるか" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>固有ベクトルを2辺とする平行四辺形が A でどう変わるか</title>
+<rect x="0" y="0" width="440" height="402" fill="#fffdf7"/>
+<line x1="40.0" y1="239.2" x2="422.0" y2="239.2" stroke="#2a2723" stroke-width="1.3"/><path d="M415.7 242.2 L422.0 239.2 L415.7 236.2" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="89.6" y1="338.4" x2="89.6" y2="6.0" stroke="#2a2723" stroke-width="1.3"/><path d="M92.6 12.3 L89.6 6.0 L86.6 12.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="151.6" y1="235.2" x2="151.6" y2="243.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="151.6" y="259.2" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="213.6" y1="235.2" x2="213.6" y2="243.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="213.6" y="259.2" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="275.6" y1="235.2" x2="275.6" y2="243.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="275.6" y="259.2" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="337.6" y1="235.2" x2="337.6" y2="243.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="337.6" y="259.2" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="399.6" y1="235.2" x2="399.6" y2="243.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="399.6" y="259.2" font-size="14" fill="#6b645a" text-anchor="middle">5</text>
+<line x1="85.6" y1="301.2" x2="93.6" y2="301.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="81.6" y="306.2" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="85.6" y1="177.2" x2="93.6" y2="177.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="81.6" y="182.2" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="85.6" y1="115.2" x2="93.6" y2="115.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="81.6" y="120.2" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="85.6" y1="53.2" x2="93.6" y2="53.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="81.6" y="58.2" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="426.0" y="261.2" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="103.6" y="12.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="-59.5" y1="388.3" x2="238.7" y2="90.1" stroke="#c9c2b2" stroke-width="1.3" stroke-dasharray="6 4"/>
+<line x1="19.5" y1="169.1" x2="159.7" y2="309.3" stroke="#c9c2b2" stroke-width="1.3" stroke-dasharray="6 4"/>
+<polyline points="89.6,239.2 151.6,177.2 213.6,239.2 151.6,301.2 89.6,239.2" fill="rgba(43,58,103,0.10)" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="89.6,239.2 275.6,53.2 337.6,115.2 151.6,301.2 89.6,239.2" fill="rgba(168,50,42,0.08)" stroke="#a8322a" stroke-width="2.4" stroke-dasharray="7 4" stroke-linejoin="round"/>
+<line x1="89.6" y1="239.2" x2="151.6" y2="177.2" stroke="#2b3a67" stroke-width="3"/><path d="M148.3 186.6 L151.6 177.2 L142.2 180.5" fill="none" stroke="#2b3a67" stroke-width="3"/>
+<line x1="89.6" y1="239.2" x2="151.6" y2="301.2" stroke="#2b3a67" stroke-width="3"/><path d="M142.2 297.9 L151.6 301.2 L148.3 291.8" fill="none" stroke="#2b3a67" stroke-width="3"/>
+<line x1="89.6" y1="239.2" x2="275.6" y2="53.2" stroke="#a8322a" stroke-width="2.6"/><path d="M272.3 62.6 L275.6 53.2 L266.2 56.5" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<rect x="96.6" y="158.2" width="84.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="99.6" y="173.2" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">v₁=(1,1)</text>
+<rect x="156.6" y="306.2" width="99.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="159.6" y="321.2" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">v₂=(1,−1)</text>
+<rect x="206.6" y="32.2" width="81.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="209.6" y="47.2" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">3v₁=Av₁</text>
+<text x="14.0" y="366.0" font-size="14" fill="#2b3a67" text-anchor="start">藍の実線：v₁, v₂ を2辺とする平行四辺形</text>
+<text x="14.0" y="388.0" font-size="14" fill="#a8322a" text-anchor="start">朱の点線：A を掛けた後。v₁ 方向だけ 3 倍、v₂ 方向はそのまま</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　固有ベクトル $\boldsymbol v_1,\boldsymbol v_2$ を2辺とする平行四辺形（藍）は、$A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ を掛けると $\boldsymbol v_1$ の方向に $3$ 倍に伸び、$\boldsymbol v_2$ の方向はそのまま（朱の点線）。辺が傾いたり、ずれたりしない。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>固有ベクトルの向きに軸をとれば、$A$ の働きは「軸ごとの伸び縮み」だけになる。これを行列の式で書くのが対角化である。</div>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>定義と導出：$AP=PD$ から $P^{-1}AP=D$ へ</h3>
+<p>まず、右辺に現れる「対角成分だけの行列」に名前をつける。高校・1年で習っているはずだが、記号を仮定せず書いておく（知っている人は飛ばしてよい）。</p>
+
+<div class="def" id="sym-diag-matrix"><span class="label">記号：対角行列 $\operatorname{diag}(d_1,\dots,d_n)$</span>
+<p><strong>①読み方</strong>：「ダイアグ・ディー・イチ、ディー・ニ、…、ディー・エヌ」。日本語で「対角行列（たいかくぎょうれつ）」。</p>
+<p><strong>②日本語での意味</strong>：左上から右下への斜めの線（<strong>対角線</strong>）の上にだけ数 $d_1,\dots,d_n$ が並び、それ以外の成分はすべて $0$ の正方行列。</p>
+<p><strong>③省略していない書き方</strong>：$n\times n$ 行列 $D$ で、$D_{ij}=d_i$（$i=j$ のとき）、$D_{ij}=0$（$i\neq j$ のとき）となるもの。たとえば $n=3$ なら
+$$ \operatorname{diag}(d_1,d_2,d_3)=\begin{pmatrix}d_1&0&0\\0&d_2&0\\0&0&d_3\end{pmatrix}. $$
+（成分の記号 $D_{ij}$ は<a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix-entry">第5回</a>。）</p>
+<p><strong>④どこで出会うか</strong>：対角化（この回）、特異値分解（第22回）、連立微分方程式の分離（第31回）、慣性モーメントの主軸（機械力学）。</p>
+</div>
+
+<p>対角行列 $D=\operatorname{diag}(d_1,\dots,d_n)$ の大事な性質は2つ。<strong>(D1)</strong> $D\boldsymbol y=(d_1y_1,\dots,d_ny_n)^{\mathsf T}$（各成分を別々に $d_i$ 倍するだけ）。<strong>(D2)</strong> $D^k=\operatorname{diag}(d_1^k,\dots,d_n^k)$（各成分を別々に $k$ 乗するだけ）。(D2) の理由：$D$ を2回掛けると、$(DD)\boldsymbol y=D(D\boldsymbol y)$ の第 $i$ 成分は $d_i(d_iy_i)=d_i^2y_i$。これを $k$ 回繰り返せば $d_i^k$。</p>
+
+<p><strong>最小の具体例</strong>：1.1 の $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ と、固有ベクトル $\boldsymbol v_1=(1,1)^{\mathsf T}$（固有値 $\lambda_1=3$）、$\boldsymbol v_2=(1,-1)^{\mathsf T}$（固有値 $\lambda_2=1$）。固有ベクトルを<strong>列として左から順に並べた</strong>行列を $P$、固有値を<strong>同じ順に</strong>並べた対角行列を $D$ とする：
+$$ P=\begin{pmatrix}\boldsymbol v_1&\boldsymbol v_2\end{pmatrix}=\begin{pmatrix}1&1\\1&-1\end{pmatrix},\qquad D=\operatorname{diag}(\lambda_1,\lambda_2)=\begin{pmatrix}3&0\\0&1\end{pmatrix}. $$
+（$P$ の作り方は<a href="15_第15回_ベクトル空間と基底.html#sym-transition">第15回の基底を並べた表</a>と同じ。）このとき $AP$ と $PD$ を別々に計算する。</p>
+<p>① $AP$ の第1列は $A\boldsymbol v_1=\begin{pmatrix}2\cdot1+1\cdot1\\1\cdot1+2\cdot1\end{pmatrix}=\begin{pmatrix}3\\3\end{pmatrix}$、第2列は $A\boldsymbol v_2=\begin{pmatrix}2\cdot1+1\cdot(-1)\\1\cdot1+2\cdot(-1)\end{pmatrix}=\begin{pmatrix}1\\-1\end{pmatrix}$。よって $AP=\begin{pmatrix}3&1\\3&-1\end{pmatrix}$。　<span class="meta">積 $AB$ の第 $j$ 列は「$A$ 掛ける $B$ の第 $j$ 列」（<a href="16_第16回_行列は線形写像.html#sym-matmul">第16回</a>）</span></p>
+<p>② $PD$ の第1列は $P\begin{pmatrix}3\\0\end{pmatrix}=3\boldsymbol v_1=\begin{pmatrix}3\\3\end{pmatrix}$、第2列は $P\begin{pmatrix}0\\1\end{pmatrix}=1\cdot\boldsymbol v_2=\begin{pmatrix}1\\-1\end{pmatrix}$。よって $PD=\begin{pmatrix}3&1\\3&-1\end{pmatrix}$。　<span class="meta">$D$ の第 $j$ 列は $\lambda_j\boldsymbol e_j$（$\boldsymbol e_j$ は第 $j$ 成分だけ $1$）。$P\boldsymbol e_j=\boldsymbol v_j$ は $P$ の第 $j$ 列を取り出す操作</span></p>
+<p>③ 両者は<strong>等しい</strong>：$AP=PD$。</p>
+<p>図1.2 に、この「列ごとに見る」考え方を描く。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 440 466" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="AP = PD を列ごとに見る" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>AP = PD を列ごとに見る</title>
+<rect x="0" y="0" width="440" height="466" fill="#fffdf7"/>
+<rect x="10" y="8" width="420" height="124" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/>
+<text x="24.0" y="32.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan font-style="italic">P</tspan><tspan> の第 </tspan><tspan font-style="italic">j</tspan><tspan> 列は </tspan><tspan font-style="italic">A</tspan><tspan> を </tspan><tspan font-style="italic">v</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan><tspan dy="-4.2"> に掛けたもの</tspan></text>
+<text x="24.0" y="92.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">AP =</text>
+<rect x="90" y="60" width="150" height="46" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="165.0" y="89.3" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">1</tspan></text>
+<rect x="250" y="60" width="150" height="46" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.8"/>
+<text x="325.0" y="89.3" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">2</tspan></text>
+<text x="90.0" y="54.0" font-size="14" fill="#6b645a" text-anchor="start">第1列</text>
+<text x="250.0" y="54.0" font-size="14" fill="#6b645a" text-anchor="start">第2列</text>
+<rect x="10" y="142" width="420" height="124" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/>
+<text x="24.0" y="166.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan><tspan dy="-4.2"> は固有ベクトルだから </tspan><tspan font-style="italic">A</tspan><tspan font-style="italic">v</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan><tspan dy="-4.2"> = </tspan><tspan font-style="italic">λ</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan><tspan dy="-4.2" font-style="italic">v</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan></text>
+<text x="24.0" y="226.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">AP =</text>
+<rect x="90" y="194" width="150" height="46" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="165.0" y="223.3" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan><tspan font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">1</tspan></text>
+<rect x="250" y="194" width="150" height="46" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.8"/>
+<text x="325.0" y="223.3" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1·</tspan><tspan font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">2</tspan></text>
+<text x="90.0" y="188.0" font-size="14" fill="#6b645a" text-anchor="start">第1列</text>
+<text x="250.0" y="188.0" font-size="14" fill="#6b645a" text-anchor="start">第2列</text>
+<text x="90.0" y="258.0" font-size="14" fill="#6b645a" text-anchor="start">数値：(3, 3) と (1, −1)</text>
+<rect x="10" y="276" width="420" height="124" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/>
+<text x="24.0" y="300.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">P</tspan><tspan font-style="italic">D</tspan><tspan> の第 </tspan><tspan font-style="italic">j</tspan><tspan> 列も </tspan><tspan font-style="italic">λ</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan><tspan dy="-4.2" font-style="italic">v</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan><tspan dy="-4.2">（</tspan><tspan font-style="italic">D</tspan><tspan> の第 </tspan><tspan font-style="italic">j</tspan><tspan> 列は </tspan><tspan font-style="italic">λ</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan><tspan dy="-4.2" font-style="italic">e</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">j</tspan><tspan dy="-4.2">）</tspan></text>
+<text x="24.0" y="360.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">PD =</text>
+<rect x="90" y="328" width="150" height="46" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="165.0" y="357.3" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan><tspan font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">1</tspan></text>
+<rect x="250" y="328" width="150" height="46" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.8"/>
+<text x="325.0" y="357.3" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1·</tspan><tspan font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">2</tspan></text>
+<text x="90.0" y="322.0" font-size="14" fill="#6b645a" text-anchor="start">第1列</text>
+<text x="250.0" y="322.0" font-size="14" fill="#6b645a" text-anchor="start">第2列</text>
+<text x="90.0" y="392.0" font-size="14" fill="#6b645a" text-anchor="start">数値：(3, 3) と (1, −1)</text>
+<line x1="220.0" y1="132.0" x2="220.0" y2="142.0" stroke="#6b645a" stroke-width="1.5"/><path d="M217.4 136.6 L220.0 142.0 L222.6 136.6" fill="none" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="220.0" y1="266.0" x2="220.0" y2="276.0" stroke="#6b645a" stroke-width="1.5"/><path d="M217.4 270.6 L220.0 276.0 L222.6 270.6" fill="none" stroke="#6b645a" stroke-width="1.5"/>
+<rect x="10" y="416" width="420" height="40" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="220.0" y="442.0" font-size="19" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>列がぜんぶ同じ  ⇒  </tspan><tspan font-style="italic">A</tspan><tspan font-style="italic">P</tspan><tspan> = </tspan><tspan font-style="italic">P</tspan><tspan font-style="italic">D</tspan></text>
+</svg>
+<figcaption><strong>図 1.2</strong>　積の第 $j$ 列は「左の行列を右の行列の第 $j$ 列に掛けたもの」。$AP$ の列は $A\boldsymbol v_j$、$PD$ の列は $\lambda_j\boldsymbol v_j$。固有ベクトルの定義 $A\boldsymbol v_j=\lambda_j\boldsymbol v_j$ が、列ごとの等式 $AP=PD$ そのものになる。</figcaption>
+</figure>
+
+<p><strong>一般の導出</strong>。$A\in\mathbb R^{n\times n}$ が、固有対 $(\lambda_1,\boldsymbol v_1),\dots,(\lambda_n,\boldsymbol v_n)$ をもつとする。$P:=(\boldsymbol v_1\ \cdots\ \boldsymbol v_n)$、$D:=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$ とおく。</p>
+<p>① $AP=(A\boldsymbol v_1\ \cdots\ A\boldsymbol v_n)$。　<span class="meta">積の第 $j$ 列は $A$ 掛ける $P$ の第 $j$ 列（第16回）</span></p>
+<p>② $=(\lambda_1\boldsymbol v_1\ \cdots\ \lambda_n\boldsymbol v_n)$。　<span class="meta">各列が固有ベクトルなので $A\boldsymbol v_j=\lambda_j\boldsymbol v_j$（<a href="20_第20回_固有値と固有ベクトル.html#sym-eigen">第20回の定義</a>）</span></p>
+<p>③ $PD$ の第 $j$ 列は $P(\lambda_j\boldsymbol e_j)=\lambda_jP\boldsymbol e_j=\lambda_j\boldsymbol v_j$。　<span class="meta">定数倍は外に出せる。$P\boldsymbol e_j$ は $P$ の第 $j$ 列</span></p>
+<p>④ ② と ③ の列がすべて一致するから、<strong>$AP=PD$</strong>。</p>
+<p>⑤ もし $P$ が<a href="16_第16回_行列は線形写像.html#sym-inverse-matrix">逆行列</a>をもつなら、④ の両辺に左から $P^{-1}$ を掛けて $P^{-1}AP=P^{-1}PD=ID=D$。　<span class="meta">$P^{-1}P=I$、$ID=D$</span></p>
+<p>$P$ が逆行列をもつかどうかは、$P$ の列＝固有ベクトルが<a href="15_第15回_ベクトル空間と基底.html#sym-linear-independent">一次独立</a>かどうかで決まる（<a href="17_第17回_連立一次方程式とランク.html#sec-6">第17回の定理6.1</a>：$n\times n$ 行列が逆行列をもつ ⇔ 列が一次独立）。</p>
+
+<div class="def" id="sym-diagonalizable"><span class="label">記号：対角化 $P^{-1}AP=D$、対角化可能</span>
+<p><strong>①読み方</strong>：$P^{-1}AP=D$ は「ピー・インバース・エー・ピー・イコール・ディー」。日本語で「対角化（たいかくか）」。そうできる行列を「対角化可能（たいかくか・かのう）」という。</p>
+<p><strong>②日本語での意味</strong>：座標軸を適当にとり替えると、行列 $A$ が対角行列 $D$ に書き換わること。つまり $A$ の働きが「軸ごとの伸び縮み」だけになること。</p>
+<p><strong>③省略していない書き方</strong>：$A\in\mathbb R^{n\times n}$ が<strong>対角化可能</strong>であるとは、次の2つを満たす行列 $P\in\mathbb R^{n\times n}$ と対角行列 $D\in\mathbb R^{n\times n}$ が存在することである。(i) $P$ は逆行列 $P^{-1}$ をもつ。(ii) $P^{-1}AP=D$。このとき $P$ の第 $j$ 列は $A$ の固有ベクトル、$D$ の第 $j$ 対角成分はその固有値になっている（定理1.1）。</p>
+<p><strong>④どこで出会うか</strong>：行列の累乗 $A^k$（1.5）、対称行列の主軸変換（2章・3章）、連立微分方程式 $\dot{\boldsymbol x}=A\boldsymbol x$ の解（第31回）、振動の固有モード（機械力学）。</p>
+</div>
+
+<div class="box" id="abbr-diag"><span class="label">省略の段階：対角化 $P^{-1}AP=D$</span>
+<table class="tb">
+<tr><th>段</th><th>書き方</th><th>この段で省いたもの</th><th>省いても誤解が起きない理由</th></tr>
+<tr><td>S0</td><td>「$A$ の固有ベクトル $\boldsymbol v_1,\dots,\boldsymbol v_n$ が一次独立で、それを左から順に列として並べた行列 $P$ をつくり、対応する固有値を同じ順に対角に並べた行列 $D$ をつくると、$P$ は逆行列をもち、その逆行列を左から、$P$ を右から $A$ に掛けた行列が $D$ に等しい」</td><td>（なし）</td><td>—</td></tr>
+<tr><td>S1</td><td>$P=(\boldsymbol v_1\ \cdots\ \boldsymbol v_n)$（$\boldsymbol v_j$ は一次独立な固有ベクトル）、$D=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$、$P^{-1}AP=D$</td><td>「並べた」「掛けた」という言葉</td><td>式の中身が言葉と1対1に対応する。$P$ の列の並べ順と $D$ の対角成分の並べ順が同じであることは、添字 $j$ が同じであることで分かる</td></tr>
+<tr><td>S2</td><td>$P^{-1}AP=D$（$P$ は可逆、$D$ は対角）</td><td>$P$ の列が固有ベクトルであること、$D$ の成分が固有値であること</td><td>$AP=PD$ を列ごとに読めば（上の導出 ①〜④）自動的に分かる。ただし<strong>「$P$ が可逆」は省けない</strong>（省くと $P=O$ でも $AO=OD$ が成り立ってしまう）</td></tr>
+<tr><td>S3</td><td>$A$ は対角化可能</td><td>式そのものを名前にまとめた</td><td>名前から S2 に戻れる。使うときは「$P$ をどう作るか」（固有ベクトルを並べる）を覚えておく</td></tr>
+</table>
+<p>落とし穴：S2 の「$P$ は可逆」を落とすと、定義が空っぽになる。固有ベクトルの<strong>数が足りない</strong>行列（1.4）は、可逆な $P$ が作れないので S2 を満たさない。</p>
+</div>
+
+<p><strong>確かめ（数値）</strong>：$P=\begin{pmatrix}1&1\\1&-1\end{pmatrix}$ の逆行列は、2×2 の公式（<a href="18_第18回_行列式.html#sym-det">第18回</a>：$\det P=1\cdot(-1)-1\cdot1=-2\neq0$ なので存在する）で $P^{-1}=\dfrac{1}{-2}\begin{pmatrix}-1&-1\\-1&1\end{pmatrix}=\dfrac12\begin{pmatrix}1&1\\1&-1\end{pmatrix}$。$PP^{-1}=\dfrac12\begin{pmatrix}1+1&1-1\\1-1&1+1\end{pmatrix}=I$ ✓。</p>
+<p>① $P^{-1}(AP)=\dfrac12\begin{pmatrix}1&1\\1&-1\end{pmatrix}\begin{pmatrix}3&1\\3&-1\end{pmatrix}$。　<span class="meta">$AP$ は上の ①</span></p>
+<p>② $=\dfrac12\begin{pmatrix}1\cdot3+1\cdot3&1\cdot1+1\cdot(-1)\\1\cdot3+(-1)\cdot3&1\cdot1+(-1)(-1)\end{pmatrix}=\dfrac12\begin{pmatrix}6&0\\0&2\end{pmatrix}=\begin{pmatrix}3&0\\0&1\end{pmatrix}=D$ ✓。　<span class="meta">行と列の成分を掛けて足す</span></p>
+<figure class="fig" id="fig-1-3">
+<svg viewBox="0 0 440 406" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="P⁻¹AP = D を数値で確かめる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>P⁻¹AP = D を数値で確かめる</title>
+<rect x="0" y="0" width="440" height="406" fill="#fffdf7"/>
+<text x="14.0" y="24.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">① AP：A を P の各列に掛ける</text>
+<text x="37.0" y="71.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="67.0" y="71.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="37.0" y="101.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="67.0" y="101.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<path d="M23.0 48 L17.0 48 L17.0 112 L23.0 112" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M81.0 48 L87.0 48 L87.0 112 L81.0 112" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="119.0" y="71.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="149.0" y="71.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="119.0" y="101.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="149.0" y="101.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<path d="M105.0 48 L99.0 48 L99.0 112 L105.0 112" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M163.0 48 L169.0 48 L169.0 112 L163.0 112" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="193.0" y="80.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>=</tspan></text>
+<text x="231.0" y="71.6" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="261.0" y="71.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="231.0" y="101.6" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="261.0" y="101.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<path d="M217.0 48 L211.0 48 L211.0 112 L217.0 112" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M275.0 48 L281.0 48 L281.0 112 L275.0 112" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="14.0" y="140.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">② PD：P の各列を λⱼ 倍する</text>
+<text x="37.0" y="187.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="67.0" y="187.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="37.0" y="217.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="67.0" y="217.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<path d="M23.0 164 L17.0 164 L17.0 228 L23.0 228" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M81.0 164 L87.0 164 L87.0 228 L81.0 228" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="119.0" y="187.6" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="149.0" y="187.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="119.0" y="217.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="149.0" y="217.6" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<path d="M105.0 164 L99.0 164 L99.0 228 L105.0 228" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M163.0 164 L169.0 164 L169.0 228 L163.0 228" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="193.0" y="196.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>=</tspan></text>
+<text x="231.0" y="187.6" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="261.0" y="187.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="231.0" y="217.6" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="261.0" y="217.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<path d="M217.0 164 L211.0 164 L211.0 228 L217.0 228" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M275.0 164 L281.0 164 L281.0 228 L275.0 228" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="14.0" y="256.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">③ 左から P⁻¹ = ½(1 1; 1 −1) を掛ける</text>
+<text x="23.0" y="312.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>½</tspan></text>
+<text x="55.0" y="303.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="85.0" y="303.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="55.0" y="333.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="85.0" y="333.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<path d="M41.0 280 L35.0 280 L35.0 344 L41.0 344" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M99.0 280 L105.0 280 L105.0 344 L99.0 344" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="137.0" y="303.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="167.0" y="303.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="137.0" y="333.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="167.0" y="333.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<path d="M123.0 280 L117.0 280 L117.0 344 L123.0 344" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M181.0 280 L187.0 280 L187.0 344 L181.0 344" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="211.0" y="312.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>=</tspan></text>
+<text x="249.0" y="303.6" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="279.0" y="303.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="249.0" y="333.6" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="279.0" y="333.6" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<path d="M235.0 280 L229.0 280 L229.0 344 L235.0 344" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M293.0 280 L299.0 280 L299.0 344 L293.0 344" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<rect x="10" y="352" width="420" height="40" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="220.0" y="378.0" font-size="19" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">P</tspan><tspan>⁻¹</tspan><tspan font-style="italic">A</tspan><tspan font-style="italic">P</tspan><tspan> = </tspan><tspan font-style="italic">D</tspan><tspan> = </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">i</tspan><tspan font-style="italic">a</tspan><tspan font-style="italic">g</tspan><tspan>(3, 1)</tspan></text>
+</svg>
+<figcaption><strong>図 1.3</strong>　①② で $AP$ と $PD$ は同じ $\begin{pmatrix}3&1\\3&-1\end{pmatrix}$。③ で、その左から $P^{-1}=\tfrac12\begin{pmatrix}1&1\\1&-1\end{pmatrix}$ を掛けると対角行列 $\operatorname{diag}(3,1)$ になる。朱の数字が固有値。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>固有ベクトルを列に並べた $P$ と、固有値を対角に並べた $D$ について $AP=PD$（列ごとに読めば $A\boldsymbol v_j=\lambda_j\boldsymbol v_j$ そのもの）。$P$ が可逆なら $P^{-1}AP=D$。</div>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>$P^{-1}AP=D$ が言っていること：3段階の分解</h3>
+<p>$P^{-1}AP=D$ の両辺に左から $P$、右から $P^{-1}$ を掛けると
+$$ A=PDP^{-1}. $$
+（理由：$P(P^{-1}AP)P^{-1}=(PP^{-1})A(PP^{-1})=IAI=A$、右辺は $PDP^{-1}$。）これを<a href="16_第16回_行列は線形写像.html#sym-matmul">積は合成</a>（右から順に働く）と読む。$A\boldsymbol x=P(D(P^{-1}\boldsymbol x))$ は、次の3段階である。</p>
+<ul>
+<li>(a) $\boldsymbol y:=P^{-1}\boldsymbol x$：$\boldsymbol x$ を、基底 $\{\boldsymbol v_1,\dots,\boldsymbol v_n\}$ に関する<a href="15_第15回_ベクトル空間と基底.html#sym-coordinates">座標</a> $\boldsymbol y$ に直す。（$\boldsymbol x=P\boldsymbol y=y_1\boldsymbol v_1+\cdots+y_n\boldsymbol v_n$ だから、$\boldsymbol y=P^{-1}\boldsymbol x$。）</li>
+<li>(b) $D\boldsymbol y=(\lambda_1y_1,\dots,\lambda_ny_n)^{\mathsf T}$：各座標を<strong>別々に</strong> $\lambda_j$ 倍する。（(D1)）</li>
+<li>(c) $P(D\boldsymbol y)$：座標 $D\boldsymbol y$ を、もとの普通の座標に戻す。</li>
+</ul>
+<p>図1.4 に、この3段階（座標をとり替える → 伸び縮み → 座標を戻す）を四角形で描く。左上から右上へ直接 $A$ で進む道と、下をまわって $P^{-1}$、$D$、$P$ で進む道が、同じ場所に着く。</p>
+<figure class="fig" id="fig-1-4">
+<svg viewBox="0 0 440 400" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="A = P D P⁻¹ の3段階" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>A = P D P⁻¹ の3段階</title>
+<rect x="0" y="0" width="440" height="400" fill="#fffdf7"/>
+<rect x="30" y="40" width="160" height="78" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="110.0" y="68.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="110.0" y="90.0" font-size="13.5" fill="#6b645a" text-anchor="middle">普通の座標</text>
+<text x="110.0" y="110.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">(3, 1)</text>
+<rect x="250" y="40" width="160" height="78" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="330.0" y="68.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan font-style="italic">x</tspan></text>
+<text x="330.0" y="90.0" font-size="13.5" fill="#6b645a" text-anchor="middle">A を掛けた結果</text>
+<text x="330.0" y="110.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">(7, 5)</text>
+<rect x="30" y="230" width="160" height="78" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2"/>
+<text x="110.0" y="258.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan><tspan> = </tspan><tspan font-style="italic">P</tspan><tspan>⁻¹</tspan><tspan font-style="italic">x</tspan></text>
+<text x="110.0" y="280.0" font-size="13.5" fill="#6b645a" text-anchor="middle">固有ベクトルの座標</text>
+<text x="110.0" y="300.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">(2, 1)</text>
+<rect x="250" y="230" width="160" height="78" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2"/>
+<text x="330.0" y="258.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">D</tspan><tspan font-style="italic">y</tspan></text>
+<text x="330.0" y="280.0" font-size="13.5" fill="#6b645a" text-anchor="middle">軸ごとに伸び縮み</text>
+<text x="330.0" y="300.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">(6, 1)</text>
+<line x1="190.0" y1="79.0" x2="250.0" y2="79.0" stroke="#a8322a" stroke-width="3"/><path d="M240.1 83.8 L250.0 79.0 L240.1 74.2" fill="none" stroke="#a8322a" stroke-width="3"/>
+<text x="220.0" y="66.0" font-size="19" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan></text>
+<line x1="110.0" y1="118.0" x2="110.0" y2="230.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M105.7 221.0 L110.0 230.0 L114.3 221.0" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<text x="58.0" y="178.0" font-size="18" fill="#2b3a67" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">P</tspan><tspan>⁻¹</tspan></text>
+<line x1="190.0" y1="269.0" x2="250.0" y2="269.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M241.0 273.3 L250.0 269.0 L241.0 264.7" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<text x="220.0" y="256.0" font-size="19" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">D</tspan></text>
+<line x1="330.0" y1="230.0" x2="330.0" y2="118.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M334.3 127.0 L330.0 118.0 L325.7 127.0" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<text x="386.0" y="178.0" font-size="18" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">P</tspan></text>
+<text x="14.0" y="346.0" font-size="14" fill="#2a2723" text-anchor="start">近道（朱）：A を直接掛ける。</text>
+<text x="14.0" y="366.0" font-size="14" fill="#2a2723" text-anchor="start">遠回り（藍）：座標を替える → 伸び縮み → 戻す。</text>
+<text x="14.0" y="386.0" font-size="14" fill="#2a2723" text-anchor="start">どちらの道でも (3, 1) は (7, 5) に着く。</text>
+</svg>
+<figcaption><strong>図 1.4</strong>　$A\boldsymbol x$ を求める道は2つ。左上から右上へ直接 $A$ で進む道と、下へ回って $P^{-1}$（座標を固有ベクトルの基底に直す）、$D$（各座標を別々に $\lambda_j$ 倍）、$P$（もとの座標に戻す）で進む道。同じ点に着く。</figcaption>
+</figure>
+<p><strong>数値で一度</strong>：$\boldsymbol x=(3,1)^{\mathsf T}$。(a) $\boldsymbol y=P^{-1}\boldsymbol x=\dfrac12\begin{pmatrix}1\cdot3+1\cdot1\\1\cdot3-1\cdot1\end{pmatrix}=\begin{pmatrix}2\\1\end{pmatrix}$（第20回 5.1 の $c_1=2,c_2=1$ と一致）。(b) $D\boldsymbol y=(3\cdot2,\ 1\cdot1)^{\mathsf T}=(6,1)^{\mathsf T}$。(c) $P\begin{pmatrix}6\\1\end{pmatrix}=\begin{pmatrix}6+1\\6-1\end{pmatrix}=\begin{pmatrix}7\\5\end{pmatrix}$。直接 $A\boldsymbol x=(2\cdot3+1,\ 3+2\cdot1)^{\mathsf T}=(7,5)^{\mathsf T}$ ✓。</p>
+
+<h3 id="sec-1-4"><span class="no">1.4</span>いつ対角化できるか</h3>
+<p>1.2 の導出は、矢印がすべて両向きである。したがって次が言える。</p>
+<div class="thm"><span class="label">定理1.1（対角化可能の条件）</span>
+<p>$A\in\mathbb R^{n\times n}$ について、次の2つは同じことである。</p>
+<ul>
+<li>(a) $A$ は対角化可能（実数の可逆行列 $P$ と実数の対角行列 $D$ で $P^{-1}AP=D$）。</li>
+<li>(b) $\mathbb R^n$ の中に、$A$ の固有ベクトルだけでできた<a href="15_第15回_ベクトル空間と基底.html#sym-basis">基底</a>がある（一次独立な固有ベクトルが $n$ 本とれる）。</li>
+</ul>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>(b) ⇒ (a)：$n$ 本の一次独立な固有ベクトル $\boldsymbol v_1,\dots,\boldsymbol v_n$（固有値 $\lambda_1,\dots,\lambda_n$）をとり、$P:=(\boldsymbol v_1\ \cdots\ \boldsymbol v_n)$ とする。列が一次独立な $n\times n$ 行列は逆行列をもつ（第17回の定理6.1）。1.2 の導出 ①〜⑤ より $P^{-1}AP=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$。</p>
+<p>(a) ⇒ (b)：$P^{-1}AP=D=\operatorname{diag}(d_1,\dots,d_n)$ とする。両辺に左から $P$ を掛けて $AP=PD$。両辺の第 $j$ 列を比べると（1.2 の ①〜④ と同じ計算）、$P$ の第 $j$ 列を $\boldsymbol p_j$ として $A\boldsymbol p_j=d_j\boldsymbol p_j$。$P$ は可逆なので列は一次独立（第17回の定理6.1）、とくに $\boldsymbol p_j\neq\boldsymbol 0$。よって $\boldsymbol p_j$ は固有値 $d_j$ の固有ベクトルで、$\boldsymbol p_1,\dots,\boldsymbol p_n$ が求める基底。□</p>
+</div>
+<p>この定理から、次の2つの<strong>使える結論</strong>が出る。</p>
+<div class="thm"><span class="label">系1.2（十分条件）</span>
+<p>$n\times n$ 行列が、<strong>互いに異なる実数の固有値を $n$ 個</strong>もてば、対角化可能。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>各固有値の固有ベクトルを1本ずつとると、<a href="20_第20回_固有値と固有ベクトル.html#sec-4-4">第20回の定理4.3</a>（異なる固有値の固有ベクトルは一次独立）により、$n$ 本は一次独立。定理1.1 (b) が成り立つ。□</p>
+</div>
+<div class="thm"><span class="label">系1.3（必要条件）</span>
+<p>対角化可能な行列では、どの固有値についても、<a href="20_第20回_固有値と固有ベクトル.html#sym-geo-mult">幾何的重複度</a> ＝ <a href="20_第20回_固有値と固有ベクトル.html#sym-alg-mult">代数的重複度</a>（固有値はすべて実数）。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$\lambda_1,\dots,\lambda_m$ を $A$ の異なる固有値、$g_k$、$a_k$ をそれぞれの幾何的・代数的重複度とする。定理1.1 の $n$ 本の一次独立な固有ベクトルは、どれかの固有空間 $E_{\lambda_k}$ に入っている。$E_{\lambda_k}$ の中の一次独立なベクトルは $\dim E_{\lambda_k}=g_k$ 本までしかとれないから、$n\le g_1+\cdots+g_m$。一方、<a href="20_第20回_固有値と固有ベクトル.html#sec-3-1">第20回の定理3.1</a>より $g_k\le a_k$、また特性多項式は $n$ 次式なので根の重なりの合計は $a_1+\cdots+a_m\le n$。まとめると $n\le\sum g_k\le\sum a_k\le n$。すべて等号だから、各 $k$ で $g_k=a_k$。□</p>
+</div>
+<p><strong>反例</strong>：<a href="20_第20回_固有値と固有ベクトル.html#sec-3-1">第20回 3.1</a> のせん断 $S=\begin{pmatrix}1&1\\0&1\end{pmatrix}$ は、固有値 $1$ の代数的重複度が $2$、幾何的重複度が $1$。系1.3 より対角化できない。ほんとうに $P^{-1}SP=D$ となる可逆な $P$ がないことは、次のようにも確かめられる：もしあれば $D=\operatorname{diag}(d_1,d_2)$ の対角成分は $S$ の固有値なので $d_1=d_2=1$、$D=I$。すると $P^{-1}SP=I$ の両辺に左から $P$ を掛けて右から $P^{-1}$ を掛けると $S=PIP^{-1}=I$ となり、$S\neq I$ に矛盾する。</p>
+<p>図1.5 に、対角化できるかどうかを調べる流れを描く。</p>
+<figure class="fig" id="fig-1-5">
+<svg viewBox="0 0 440 438" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="対角化できるかどうかを調べる流れ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>対角化できるかどうかを調べる流れ</title>
+<rect x="0" y="0" width="440" height="438" fill="#fffdf7"/>
+<rect x="20" y="14" width="400" height="46" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="220.0" y="43.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">固有値を求める（det(λI − A) = 0）</text>
+<rect x="20" y="84" width="400" height="46" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="220.0" y="113.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">各 λ で固有空間の次元（幾何的重複度）を求める</text>
+<rect x="20" y="154" width="400" height="46" rx="8" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2"/>
+<text x="220.0" y="183.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">独立な固有ベクトルの合計は n 本か？</text>
+<line x1="220.0" y1="60.0" x2="220.0" y2="84.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 75.9 L220.0 84.0 L223.9 75.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<line x1="220.0" y1="130.0" x2="220.0" y2="154.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 145.9 L220.0 154.0 L223.9 145.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<line x1="120.0" y1="200.0" x2="120.0" y2="236.0" stroke="#5f7f4f" stroke-width="2.4"/><path d="M115.7 227.0 L120.0 236.0 L124.3 227.0" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<text x="128.0" y="224.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">はい</text>
+<line x1="320.0" y1="200.0" x2="320.0" y2="236.0" stroke="#a8322a" stroke-width="2.4"/><path d="M315.7 227.0 L320.0 236.0 L324.3 227.0" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<text x="328.0" y="224.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">いいえ</text>
+<rect x="20" y="238" width="200" height="96" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2"/>
+<text x="120.0" y="262.0" font-size="16" fill="#5f7f4f" text-anchor="middle" font-weight="bold">対角化できる</text>
+<text x="120.0" y="286.0" font-size="13.5" fill="#2a2723" text-anchor="middle">固有ベクトルを列に並べて P</text>
+<text x="120.0" y="306.0" font-size="13.5" fill="#2a2723" text-anchor="middle">固有値を同じ順に並べて D</text>
+<rect x="230" y="238" width="190" height="96" rx="8" fill="#f6e4e1" stroke="#a8322a" stroke-width="2"/>
+<text x="325.0" y="262.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">対角化できない</text>
+<text x="325.0" y="286.0" font-size="13" fill="#2a2723" text-anchor="middle">幾何的 &lt; 代数的が1つでもある</text>
+<text x="325.0" y="306.0" font-size="13" fill="#2a2723" text-anchor="middle">例：せん断 (1 1; 0 1)</text>
+<rect x="20" y="350" width="400" height="72" rx="8" fill="#fff" stroke="#ddd6c8" stroke-width="1.4"/>
+<text x="32.0" y="374.0" font-size="14" fill="#6b645a" text-anchor="start" font-weight="bold">近道（調べずに分かる場合）</text>
+<text x="32.0" y="396.0" font-size="14" fill="#2a2723" text-anchor="start">・異なる固有値が n 個 → 必ず対角化できる</text>
+<text x="32.0" y="416.0" font-size="14" fill="#2a2723" text-anchor="start">・対称行列 → 必ず直交行列で対角化できる（2章）</text>
+</svg>
+<figcaption><strong>図 1.5</strong>　固有ベクトルが足りるかどうかだけが問題になる。重根でも足りていれば（単位行列など）対角化できる。足りないとき（せん断）はできない。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<ul>
+<li>「固有値が重なる（重根）と対角化できない」は<strong>誤り</strong>。単位行列 $I$ は固有値 $1$ が $n$ 重根だが、すでに対角行列で対角化可能（幾何的重複度も $n$）。問題になるのは、重根のとき<strong>固有ベクトルが足りない</strong>場合だけ。</li>
+<li>「固有値が全部異なれば対角化できる」は正しい（系1.2）が、<strong>逆は誤り</strong>。固有値が重なっていても、$I$ のように対角化できる行列はある。</li>
+<li>「$P$ は一意に決まる」は<strong>誤り</strong>。固有ベクトルは定数倍できる（<a href="20_第20回_固有値と固有ベクトル.html#sec-1-3">第20回 1.3</a>）し、列の並べ順を替えれば $D$ の並べ順も替わる。決まるのは $D$ の対角成分の<strong>集まり</strong>（固有値の多重集合）だけ。</li>
+<li>実数の範囲では対角化できない行列（回転）も、複素数まで許せば対角化できる場合がある（<a href="20_第20回_固有値と固有ベクトル.html#sec-3-3">第20回 3.3</a>、複素数の扱いは第34回）。この回は実数の $P$ だけを考える。</li>
+</ul>
+</div>
+
+<h3 id="sec-1-5"><span class="no">1.5</span>応用：行列の累乗 $A^k=PD^kP^{-1}$</h3>
+<p>対角化の最大の利点は、累乗が一気に計算できることである。$A=PDP^{-1}$ を $A^k$ に入れて、1行ずつ確かめる。</p>
+<p>① $A^2=(PDP^{-1})(PDP^{-1})$。　<span class="meta">$A=PDP^{-1}$ を2つ並べた</span></p>
+<p>② $=PD(P^{-1}P)DP^{-1}$。　<span class="meta">積の結合法則（かっこの付け替え、<a href="16_第16回_行列は線形写像.html#sym-matmul">第16回</a>）で、真ん中の $P^{-1}P$ をくくり出した</span></p>
+<p>③ $=PDIDP^{-1}=PD^2P^{-1}$。　<span class="meta">$P^{-1}P=I$、$I$ は掛けても何も変えない</span></p>
+<p>④ 同じことを繰り返すと、$A^k=PD^kP^{-1}$。　<span class="meta">$k$ 個の $A$ の間にある $k-1$ 個の $P^{-1}P$ がすべて $I$ になり、内側の $D$ が $k$ 個残る</span></p>
+<p>⑤ そして $D^k=\operatorname{diag}(\lambda_1^k,\dots,\lambda_n^k)$。　<span class="meta">(D2)</span></p>
+<p><strong>数値</strong>：1.2 の $A,P,D,P^{-1}$ で、</p>
+<p>⑥ $A^k=\begin{pmatrix}1&1\\1&-1\end{pmatrix}\begin{pmatrix}3^k&0\\0&1\end{pmatrix}\dfrac12\begin{pmatrix}1&1\\1&-1\end{pmatrix}$。</p>
+<p>⑦ 先に左2つを掛ける：$\begin{pmatrix}1&1\\1&-1\end{pmatrix}\begin{pmatrix}3^k&0\\0&1\end{pmatrix}=\begin{pmatrix}3^k&1\\3^k&-1\end{pmatrix}$。　<span class="meta">第 $j$ 列が $D$ の第 $j$ 対角成分倍される</span></p>
+<p>⑧ 次に右と掛ける：$\dfrac12\begin{pmatrix}3^k&1\\3^k&-1\end{pmatrix}\begin{pmatrix}1&1\\1&-1\end{pmatrix}=\dfrac12\begin{pmatrix}3^k+1&3^k-1\\3^k-1&3^k+1\end{pmatrix}$。</p>
+<p>⑨ 確かめ：$k=1$：$\dfrac12\begin{pmatrix}4&2\\2&4\end{pmatrix}=\begin{pmatrix}2&1\\1&2\end{pmatrix}=A$ ✓。$k=2$：$\dfrac12\begin{pmatrix}10&8\\8&10\end{pmatrix}=\begin{pmatrix}5&4\\4&5\end{pmatrix}$、直接 $A^2=\begin{pmatrix}2\cdot2+1\cdot1&2\cdot1+1\cdot2\\1\cdot2+2\cdot1&1\cdot1+2\cdot2\end{pmatrix}=\begin{pmatrix}5&4\\4&5\end{pmatrix}$ ✓。$k=0$：$\dfrac12\begin{pmatrix}2&0\\0&2\end{pmatrix}=I$ ✓。</p>
+<p>ベクトル $\boldsymbol x=(3,1)^{\mathsf T}$ に掛けると、第1成分は $\dfrac12\bigl(3(3^k+1)+(3^k-1)\bigr)=2\cdot3^k+1$、第2成分は $\dfrac12\bigl(3(3^k-1)+(3^k+1)\bigr)=2\cdot3^k-1$。すなわち $A^k\boldsymbol x=(2\cdot3^k+1,\ 2\cdot3^k-1)^{\mathsf T}$ で、<a href="20_第20回_固有値と固有ベクトル.html#sec-5-1">第20回 5.1</a> の答えと一致する。図1.6 に、$k$ を増やしたときの点の動きを描く。</p>
+<figure class="fig" id="fig-1-6">
+<svg viewBox="0 0 440 358" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="A^k x を 3^k で割った点の動き" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>A^k x を 3^k で割った点の動き</title>
+<rect x="0" y="0" width="440" height="358" fill="#fffdf7"/>
+<line x1="60.0" y1="276.4" x2="330.4" y2="276.4" stroke="#2a2723" stroke-width="1.3"/><path d="M324.1 279.4 L330.4 276.4 L324.1 273.4" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="276.4" x2="60.0" y2="6.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 12.3 L60.0 6.0 L57.0 12.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="122.0" y1="272.4" x2="122.0" y2="280.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="122.0" y="296.4" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="184.0" y1="272.4" x2="184.0" y2="280.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="184.0" y="296.4" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="246.0" y1="272.4" x2="246.0" y2="280.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="246.0" y="296.4" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="308.0" y1="272.4" x2="308.0" y2="280.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="308.0" y="296.4" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="56.0" y1="214.4" x2="64.0" y2="214.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="219.4" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="152.4" x2="64.0" y2="152.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="157.4" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="56.0" y1="90.4" x2="64.0" y2="90.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="95.4" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<line x1="56.0" y1="28.4" x2="64.0" y2="28.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="33.4" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="334.4" y="298.4" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="74.0" y="12.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="-67.1" y1="403.5" x2="187.1" y2="149.3" stroke="#c9c2b2" stroke-width="1.4" stroke-dasharray="6 4"/>
+<line x1="60.0" y1="28.4" x2="308.0" y2="276.4" stroke="#ddd6c8" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="246.0,214.4 204.7,173.1 190.9,159.3 186.3,154.7 184.8,153.2" fill="none" stroke="#6b645a" stroke-width="1.6" stroke-dasharray="4 3" stroke-linejoin="round"/>
+<circle cx="246.0" cy="214.4" r="5.5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="204.7" cy="173.1" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="190.9" cy="159.3" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="186.3" cy="154.7" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="184.8" cy="153.2" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="253.0" y="205.9" width="98.8" height="20.5" fill="#fffdf7" opacity="0.92"/><text x="256.0" y="220.4" font-size="14.5" fill="#2b3a67" text-anchor="start" font-weight="bold">k=0：(3, 1)</text>
+<rect x="211.7" y="180.6" width="133.6" height="20.5" fill="#fffdf7" opacity="0.92"/><text x="214.7" y="195.1" font-size="14.5" fill="#a8322a" text-anchor="start">k=1：(7/3, 5/3)</text>
+<rect x="201.9" y="184.8" width="151.0" height="20.5" fill="#fffdf7" opacity="0.92"/><text x="204.9" y="199.3" font-size="14.5" fill="#a8322a" text-anchor="start">k=2：(19/9, 17/9)</text>
+<circle cx="184.0" cy="152.4" r="8" fill="none" stroke="#5f7f4f" stroke-width="2.2"/>
+<rect x="48.1" y="121.9" width="124.9" height="20.5" fill="#fffdf7" opacity="0.92"/><text x="170.0" y="136.4" font-size="14.5" fill="#5f7f4f" text-anchor="end" font-weight="bold">(2, 2) に近づく</text>
+<text x="14.0" y="340.0" font-size="14" fill="#2a2723" text-anchor="start">点：A^k x を 3^k で割った位置。直線 x + y = 4 の上を動く。</text>
+</svg>
+<figcaption><strong>図 1.6</strong>　$A^k\boldsymbol x=(2\cdot3^k+1,\ 2\cdot3^k-1)^{\mathsf T}$ を $3^k$ で割ると $(2+3^{-k},\ 2-3^{-k})$。$k$ が増えると、最大の固有値の方向（直線 $y=x$）の上の点 $(2,2)$ に近づく。$\boldsymbol v_2$ の成分は $1^k$ のままなので、$3^k$ に比べて目立たなくなる。</figcaption>
+</figure>
+<p>なお $A^{-1}$ も、すべての $\lambda_j\neq0$ なら $A^{-1}=PD^{-1}P^{-1}$、$D^{-1}=\operatorname{diag}(\lambda_1^{-1},\dots,\lambda_n^{-1})$（$(PDP^{-1})(PD^{-1}P^{-1})=PDD^{-1}P^{-1}=PP^{-1}=I$）。多項式 $f(A)=c_0I+c_1A+\cdots+c_mA^m$ も $f(A)=P\operatorname{diag}(f(\lambda_1),\dots,f(\lambda_n))P^{-1}$ になる（各項に ④ を使い、$P$ と $P^{-1}$ をくくり出す）。</p>
+
+<h3 id="sec-1-6"><span class="no">1.6</span>相似：同じ写像を別の座標で見る</h3>
+<p>$P^{-1}AP$ という形は、対角化に限らず現れる。この形に名前をつける。</p>
+<div class="def" id="sym-similar"><span class="label">記号：相似 $A\sim B$</span>
+<p><strong>①読み方</strong>：$A\sim B$ は「エー・そうじ・ビー」（「$A$ と $B$ は相似である」）。英語で similar。</p>
+<p><strong>②日本語での意味</strong>：$B$ は、$A$ と<strong>同じ線形写像を、別の基底（座標）で表した行列</strong>になっている。</p>
+<p><strong>③省略していない書き方</strong>：$A,B\in\mathbb R^{n\times n}$ について、「$A\sim B$」とは、$B=P^{-1}AP$ を満たす逆行列をもつ $P\in\mathbb R^{n\times n}$ が存在すること。（$P$ を使って $A=PBP^{-1}$ と書き換えられるので、$B\sim A$ でもある。）</p>
+<p><strong>④どこで出会うか</strong>：対角化（$A\sim D$）、ジョルダン標準形（上級）、座標変換（機械力学、ロボット工学）。</p>
+</div>
+<p>相似な行列は、<strong>同じ写像の別の姿</strong>なので、写像の本質に関わる量は変わらない。</p>
+<div class="thm"><span class="label">定理1.4（相似で変わらないもの）</span>
+<p>$B=P^{-1}AP$ のとき、(1) $\det B=\det A$。(2) 特性多項式が等しい：$p_B(\lambda)=p_A(\lambda)$（したがって固有値、代数的重複度も等しい）。(3) $\operatorname{tr}B=\operatorname{tr}A$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>(1) ① $\det B=\det(P^{-1}AP)=\det(P^{-1})\det(A)\det(P)$。　<span class="meta">積の行列式は行列式の積（<a href="18_第18回_行列式.html#sym-det">第18回</a>）</span>　② 数の積は順序を入れ替えられるので $=\det(P^{-1})\det(P)\det(A)$。　③ $\det(P^{-1})\det(P)=\det(P^{-1}P)=\det I=1$。　④ よって $\det B=\det A$。</p>
+<p>(2) ① $\lambda I-B=\lambda I-P^{-1}AP=P^{-1}(\lambda I)P-P^{-1}AP$。　<span class="meta">$P^{-1}(\lambda I)P=\lambda P^{-1}P=\lambda I$</span>　② $=P^{-1}(\lambda I-A)P$。　<span class="meta">$P^{-1}$ と $P$ をくくり出した</span>　③ (1) と同じ計算で $\det(\lambda I-B)=\det(\lambda I-A)$。</p>
+<p>(3) (2) より、$A$ と $B$ の固有値（重複の数だけ数える）は等しい。固有値の和がトレースに等しい（<a href="20_第20回_固有値と固有ベクトル.html#sec-4-1">第20回の定理4.1</a>）ので、$\operatorname{tr}B=\operatorname{tr}A$。□</p>
+</div>
+<figure class="fig" id="fig-1-7">
+<svg viewBox="0 0 440 370" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="相似で変わらないもの" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>相似で変わらないもの</title>
+<rect x="0" y="0" width="440" height="370" fill="#fffdf7"/>
+<rect x="14" y="10" width="190" height="120" rx="8" fill="#fff" stroke="#2b3a67" stroke-width="2"/>
+<rect x="236" y="10" width="190" height="120" rx="8" fill="#fff" stroke="#5f7f4f" stroke-width="2"/>
+<text x="109.0" y="38.0" font-size="17" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">C</tspan><tspan> = (4 1; 2 3)</tspan></text>
+<text x="331.0" y="38.0" font-size="17" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">D</tspan><tspan> = </tspan><tspan font-style="italic">P</tspan><tspan>⁻¹</tspan><tspan font-style="italic">C</tspan><tspan font-style="italic">P</tspan></text>
+<text x="109.0" y="70.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>= (4 1; 2 3)</tspan></text>
+<text x="331.0" y="70.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>= </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">i</tspan><tspan font-style="italic">a</tspan><tspan font-style="italic">g</tspan><tspan>(5, 2)</tspan></text>
+<text x="109.0" y="104.0" font-size="14" fill="#6b645a" text-anchor="middle">もとの成分</text>
+<text x="331.0" y="104.0" font-size="14" fill="#6b645a" text-anchor="middle">座標を替えた成分</text>
+<line x1="204.0" y1="70.0" x2="236.0" y2="70.0" stroke="#6b645a" stroke-width="2"/><path d="M228.8 73.5 L236.0 70.0 L228.8 66.5" fill="none" stroke="#6b645a" stroke-width="2"/>
+<text x="220.0" y="60.0" font-size="13" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>相似</tspan></text>
+<rect x="14" y="148" width="412" height="126" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.8"/>
+<text x="30.0" y="174.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">変わらない（写像そのものの量）</text>
+<text x="30.0" y="198.0" font-size="14.5" fill="#2a2723" text-anchor="start">固有値：5 と 2</text>
+<text x="30.0" y="220.0" font-size="14.5" fill="#2a2723" text-anchor="start">トレース：4 + 3 = 7 = 5 + 2</text>
+<text x="30.0" y="242.0" font-size="14.5" fill="#2a2723" text-anchor="start">行列式：4·3 − 1·2 = 10 = 5·2</text>
+<text x="30.0" y="262.0" font-size="14.5" fill="#2a2723" text-anchor="start">特性多項式：λ² − 7λ + 10</text>
+<rect x="14" y="288" width="412" height="70" rx="8" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.8"/>
+<text x="30.0" y="314.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">変わる（座標のとり方に依存する量）</text>
+<text x="30.0" y="338.0" font-size="14.5" fill="#2a2723" text-anchor="start">成分そのもの。固有ベクトルの成分 v ↔ P⁻¹v</text>
+</svg>
+<figcaption><strong>図 1.7</strong>　$C=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ と、それを対角化した $D=\operatorname{diag}(5,2)$ は相似。成分は違うが、固有値・トレース・行列式・特性多項式は等しい。</figcaption>
+</figure>
+<p>これは、固有値が「座標のとり方によらない、写像そのものの量」であることを示している。逆に、$A\sim B$ でも $A\neq B$ の例は多い（$P$ を替えれば別の $B$ になる）。</p>
+<div class="why"><span class="label">ひとことで</span>$A$ が対角化可能 ⇔ 固有ベクトルだけでできた基底がある ⇔ $A\sim$（対角行列）。そのとき $A^k=PD^kP^{-1}$。相似では固有値・行列式・トレースが変わらない。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>対称行列は直交行列で対角化できる</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/21_a2_stress.jpg" alt="黒地に、虹色の縞が広がる、開いた透明なディスクケース" loading="lazy"></div>
+<p class="cap">透明な樹脂の中に残った力の向きが、色の縞になって浮かぶ。</p>
+<p class="cr">Mk2010（2012年、偏光で見たディスクケースの応力）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Birefringence_of_stress_areas_on_a_DVD_jewel_case.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/21_b2_shoji.jpg" alt="紫色に光る障子の格子に、両手を上げた人の黒い影が映っている" loading="lazy"></div>
+<p class="cap">縦横の格子の上に、人の影が映っている。</p>
+<p class="cr">Akiyoshi's Room（障子に映る影）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:障子に映る影Img568.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-2-1"><span class="no">2.1</span>動機：対角化のとき逆行列を求めるのが重い</h3>
+<p>1章の $P^{-1}AP=D$ では、$P^{-1}$ を求める必要があった。2×2 なら公式があるが、$n$ が大きいと連立方程式を解くのと同じ手間がかかり、数値計算では誤差も入り込む。もし $P$ の列が<a href="19_第19回_内積・直交・射影.html#sym-orthonormal">正規直交基底</a>なら、$P$ は<a href="19_第19回_内積・直交・射影.html#sym-orthogonal-matrix">直交行列</a>で、逆行列は転置 $P^{-1}=P^{\mathsf T}$ で済む（第19回 4.3）。さらに、直交行列は長さも角も変えないので、座標をとり替えても図形が歪まない。</p>
+<p>そこで問う。<strong>固有ベクトルを直交にそろえられる行列はどんなものか。</strong>1.1 の $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ では、$\boldsymbol v_1=(1,1)^{\mathsf T}$ と $\boldsymbol v_2=(1,-1)^{\mathsf T}$ の内積が $1\cdot1+1\cdot(-1)=0$ で、直交していた。一方、第20回の例題などに出た $C=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ の固有ベクトル $(1,1)^{\mathsf T}$（固有値 $5$）と $(1,-2)^{\mathsf T}$（固有値 $2$）の内積は $1\cdot1+1\cdot(-2)=-1\neq0$ で、直交しない。違いは、$A$ が<strong>対角線について対称</strong>（$A_{12}=A_{21}=1$）で、$C$ はそうでない（$C_{12}=1\neq2=C_{21}$）ことにある。図2.1 を見る。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 484" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="対称行列と対称でない行列の固有ベクトル" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>対称行列と対称でない行列の固有ベクトル</title>
+<rect x="0" y="0" width="440" height="484" fill="#fffdf7"/>
+<rect x="8" y="6" width="424" height="228" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="26.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">対称 A = (2 1; 1 2)</text>
+<line x1="110.0" y1="141.6" x2="338.8" y2="141.6" stroke="#cfc8b8" stroke-width="1"/>
+<line x1="206.8" y1="247.2" x2="206.8" y2="36.0" stroke="#cfc8b8" stroke-width="1"/>
+<line x1="147.7" y1="200.7" x2="265.9" y2="82.5" stroke="#e2dccd" stroke-width="1.3" stroke-dasharray="6 4"/>
+<line x1="206.8" y1="141.6" x2="253.5" y2="94.9" stroke="#2b3a67" stroke-width="3"/><path d="M250.2 104.4 L253.5 94.9 L244.0 98.2" fill="none" stroke="#2b3a67" stroke-width="3"/>
+<rect x="258.5" y="75.9" width="33.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="261.5" y="90.9" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">λ=3</text>
+<line x1="147.7" y1="82.5" x2="265.9" y2="200.7" stroke="#e2dccd" stroke-width="1.3" stroke-dasharray="6 4"/>
+<line x1="206.8" y1="141.6" x2="253.5" y2="188.3" stroke="#a8322a" stroke-width="3"/><path d="M244.0 185.0 L253.5 188.3 L250.2 178.8" fill="none" stroke="#a8322a" stroke-width="3"/>
+<rect x="258.5" y="189.3" width="33.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="261.5" y="204.3" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">λ=1</text>
+<polyline points="222.4,126.0 237.9,141.6 222.4,157.2" fill="none" stroke="#6b645a" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="300.0" y="76.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">なす角は 90°</text>
+<text x="300.0" y="100.0" font-size="14" fill="#2a2723" text-anchor="start">v₁·v₂ = 1 − 1 = 0</text>
+<rect x="8" y="244" width="424" height="228" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="264.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">対称でない C = (4 1; 2 3)</text>
+<line x1="110.0" y1="379.6" x2="338.8" y2="379.6" stroke="#cfc8b8" stroke-width="1"/>
+<line x1="206.8" y1="485.2" x2="206.8" y2="274.0" stroke="#cfc8b8" stroke-width="1"/>
+<line x1="147.7" y1="438.7" x2="265.9" y2="320.5" stroke="#e2dccd" stroke-width="1.3" stroke-dasharray="6 4"/>
+<line x1="206.8" y1="379.6" x2="253.5" y2="332.9" stroke="#2b3a67" stroke-width="3"/><path d="M250.2 342.4 L253.5 332.9 L244.0 336.2" fill="none" stroke="#2b3a67" stroke-width="3"/>
+<rect x="258.5" y="313.9" width="33.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="261.5" y="328.9" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">λ=5</text>
+<line x1="185.2" y1="336.3" x2="228.4" y2="422.9" stroke="#e2dccd" stroke-width="1.3" stroke-dasharray="6 4"/>
+<line x1="206.8" y1="379.6" x2="236.3" y2="438.6" stroke="#a8322a" stroke-width="3"/><path d="M228.4 432.5 L236.3 438.6 L236.2 428.6" fill="none" stroke="#a8322a" stroke-width="3"/>
+<rect x="241.3" y="439.6" width="33.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="244.3" y="454.6" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">λ=2</text>
+<text x="300.0" y="314.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">なす角は 約 108°</text>
+<text x="300.0" y="338.0" font-size="14" fill="#2a2723" text-anchor="start">v₁·v₂ = 1 − 2 = −1</text>
+<text x="300.0" y="358.0" font-size="14" fill="#2a2723" text-anchor="start">直交しない</text>
+</svg>
+<figcaption><strong>図 2.1</strong>　上の対称行列では2本の固有ベクトルが直角。下の対称でない行列でも固有ベクトルは2本あり、固有値は異なるが、直角にならない。</figcaption>
+</figure>
+
+<div class="def" id="sym-symmetric"><span class="label">記号：対称行列 $A=A^{\mathsf T}$</span>
+<p><strong>①読み方</strong>：「エー・イコール・エー・トランスポーズ」。日本語で「対称行列（たいしょうぎょうれつ）」。</p>
+<p><strong>②日本語での意味</strong>：左上から右下への対角線について<strong>折り返すと重なる</strong>正方行列。第 $i$ 行第 $j$ 列の成分と、第 $j$ 行第 $i$ 列の成分が等しい。</p>
+<p><strong>③省略していない書き方</strong>：$A\in\mathbb R^{n\times n}$ が対称であるとは、$A^{\mathsf T}=A$（<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">転置</a>が自分自身）、すなわちすべての $i,j\in\{1,\dots,n\}$ について $A_{ji}=A_{ij}$ が成り立つこと。たとえば $\begin{pmatrix}2&1\\1&2\end{pmatrix}$ は対称、$\begin{pmatrix}4&1\\2&3\end{pmatrix}$ は対称でない。</p>
+<p><strong>④どこで出会うか</strong>：二次形式（3章）、分散共分散行列（統計）、ヘッセ行列（2階偏微分を並べた行列、<a href="11_第11回_偏微分.html">第11回</a>で名前が出て、第51回で本格的に使う）、慣性テンソル・剛性行列（機械力学）、$B^{\mathsf T}B$ の形の行列すべて。</p>
+</div>
+
+<p>対称行列を扱う道具として、次の等式を先に証明しておく。</p>
+<div class="thm"><span class="label">補題2.1（転置を移す）</span>
+<p>任意の $A\in\mathbb R^{n\times n}$ と $\boldsymbol x,\boldsymbol y\in\mathbb R^n$ について、$\langle A\boldsymbol x,\boldsymbol y\rangle=\langle\boldsymbol x,A^{\mathsf T}\boldsymbol y\rangle$。とくに $A$ が対称なら $\langle A\boldsymbol x,\boldsymbol y\rangle=\langle\boldsymbol x,A\boldsymbol y\rangle$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>① $\langle A\boldsymbol x,\boldsymbol y\rangle=(A\boldsymbol x)^{\mathsf T}\boldsymbol y$。　<span class="meta">標準内積は転置と積で書ける（第19回 4.3 でも使った書き方）</span></p>
+<p>② $=\boldsymbol x^{\mathsf T}A^{\mathsf T}\boldsymbol y$。　<span class="meta">積の転置は順序が逆：$(A\boldsymbol x)^{\mathsf T}=\boldsymbol x^{\mathsf T}A^{\mathsf T}$</span></p>
+<p>③ $=\boldsymbol x^{\mathsf T}(A^{\mathsf T}\boldsymbol y)=\langle\boldsymbol x,A^{\mathsf T}\boldsymbol y\rangle$。□</p>
+</div>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>対称行列の固有ベクトルは直交し、固有値は実数</h3>
+<div class="thm"><span class="label">定理2.2（固有ベクトルの直交）</span>
+<p>$A$ が実対称行列で、$\lambda\neq\mu$ がその固有値、$\boldsymbol v$ が $\lambda$ の、$\boldsymbol w$ が $\mu$ の固有ベクトルなら、$\boldsymbol v\perp\boldsymbol w$（$\langle\boldsymbol v,\boldsymbol w\rangle=0$）。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>① $\lambda\langle\boldsymbol v,\boldsymbol w\rangle=\langle\lambda\boldsymbol v,\boldsymbol w\rangle=\langle A\boldsymbol v,\boldsymbol w\rangle$。　<span class="meta">内積は定数倍を外に出せる（<a href="19_第19回_内積・直交・射影.html#sym-inner-product">第19回の内積の性質</a>）。$A\boldsymbol v=\lambda\boldsymbol v$</span></p>
+<p>② $\langle A\boldsymbol v,\boldsymbol w\rangle=\langle\boldsymbol v,A\boldsymbol w\rangle$。　<span class="meta">補題2.1（$A$ が対称）</span></p>
+<p>③ $\langle\boldsymbol v,A\boldsymbol w\rangle=\langle\boldsymbol v,\mu\boldsymbol w\rangle=\mu\langle\boldsymbol v,\boldsymbol w\rangle$。　<span class="meta">$A\boldsymbol w=\mu\boldsymbol w$、定数倍を外に出す</span></p>
+<p>④ ①〜③ をつなぐと $\lambda\langle\boldsymbol v,\boldsymbol w\rangle=\mu\langle\boldsymbol v,\boldsymbol w\rangle$、すなわち $(\lambda-\mu)\langle\boldsymbol v,\boldsymbol w\rangle=0$。</p>
+<p>⑤ $\lambda-\mu\neq0$ だから $\langle\boldsymbol v,\boldsymbol w\rangle=0$。□</p>
+</div>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 388" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="直交性の証明の流れ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>直交性の証明の流れ</title>
+<rect x="0" y="0" width="440" height="388" fill="#fffdf7"/>
+<rect x="40" y="10" width="360" height="46" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="220.0" y="40.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">λ</tspan><tspan>⟨</tspan><tspan font-style="italic">v</tspan><tspan>, </tspan><tspan font-style="italic">w</tspan><tspan>⟩</tspan></text>
+<text x="54.0" y="82.0" font-size="20" fill="#6b645a" text-anchor="start" font-weight="bold">=</text>
+<line x1="220.0" y1="56.0" x2="220.0" y2="88.0" stroke="#6b645a" stroke-width="2"/><path d="M216.5 80.8 L220.0 88.0 L223.5 80.8" fill="none" stroke="#6b645a" stroke-width="2"/>
+<text x="236.0" y="79.0" font-size="13.5" fill="#6b645a" text-anchor="start"></text>
+<rect x="40" y="88" width="360" height="46" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="220.0" y="118.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>⟨</tspan><tspan font-style="italic">λ</tspan><tspan font-style="italic">v</tspan><tspan>, </tspan><tspan font-style="italic">w</tspan><tspan>⟩ = ⟨</tspan><tspan font-style="italic">A</tspan><tspan font-style="italic">v</tspan><tspan>, </tspan><tspan font-style="italic">w</tspan><tspan>⟩</tspan></text>
+<text x="54.0" y="160.0" font-size="20" fill="#6b645a" text-anchor="start" font-weight="bold">=</text>
+<line x1="220.0" y1="134.0" x2="220.0" y2="166.0" stroke="#6b645a" stroke-width="2"/><path d="M216.5 158.8 L220.0 166.0 L223.5 158.8" fill="none" stroke="#6b645a" stroke-width="2"/>
+<text x="236.0" y="157.0" font-size="13.5" fill="#6b645a" text-anchor="start">定数倍を外に出す。Av = λv</text>
+<rect x="40" y="166" width="360" height="46" rx="8" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2"/>
+<text x="220.0" y="196.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>⟨</tspan><tspan font-style="italic">v</tspan><tspan>, </tspan><tspan font-style="italic">A</tspan><tspan font-style="italic">w</tspan><tspan>⟩</tspan></text>
+<text x="54.0" y="238.0" font-size="20" fill="#6b645a" text-anchor="start" font-weight="bold">=</text>
+<line x1="220.0" y1="212.0" x2="220.0" y2="244.0" stroke="#6b645a" stroke-width="2"/><path d="M216.5 236.8 L220.0 244.0 L223.5 236.8" fill="none" stroke="#6b645a" stroke-width="2"/>
+<text x="236.0" y="235.0" font-size="13.5" fill="#6b645a" text-anchor="start">補題2.1：転置を右へ移す</text>
+<rect x="40" y="244" width="360" height="46" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="220.0" y="274.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>⟨</tspan><tspan font-style="italic">v</tspan><tspan>, </tspan><tspan font-style="italic">μ</tspan><tspan font-style="italic">w</tspan><tspan>⟩ = </tspan><tspan font-style="italic">μ</tspan><tspan>⟨</tspan><tspan font-style="italic">v</tspan><tspan>, </tspan><tspan font-style="italic">w</tspan><tspan>⟩</tspan></text>
+<line x1="220.0" y1="290.0" x2="220.0" y2="322.0" stroke="#a8322a" stroke-width="2.4"/><path d="M216.1 313.9 L220.0 322.0 L223.9 313.9" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<rect x="40" y="326" width="360" height="52" rx="8" fill="#f6e4e1" stroke="#a8322a" stroke-width="2"/>
+<text x="220.0" y="350.0" font-size="19" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">λ</tspan><tspan> − </tspan><tspan font-style="italic">μ</tspan><tspan>)⟨</tspan><tspan font-style="italic">v</tspan><tspan>, </tspan><tspan font-style="italic">w</tspan><tspan>⟩ = 0</tspan></text>
+<text x="220.0" y="370.0" font-size="14.5" fill="#2a2723" text-anchor="middle" font-weight="bold">λ ≠ μ だから ⟨v, w⟩ = 0</text>
+</svg>
+<figcaption><strong>図 2.2</strong>　上の箱から下の箱まで、等号でつないだ値は全部同じ。最初と最後を比べると $\lambda\langle\boldsymbol v,\boldsymbol w\rangle=\mu\langle\boldsymbol v,\boldsymbol w\rangle$。$\lambda\neq\mu$ なら内積が $0$ になるしかない。</figcaption>
+</figure>
+<p><strong>数値で確かめ</strong>：$A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$、$\lambda=3,\boldsymbol v=(1,1)^{\mathsf T}$、$\mu=1,\boldsymbol w=(1,-1)^{\mathsf T}$。$\langle A\boldsymbol v,\boldsymbol w\rangle=\langle(3,3),(1,-1)\rangle=3-3=0$、$\langle\boldsymbol v,A\boldsymbol w\rangle=\langle(1,1),(1,-1)\rangle=1-1=0$ で、補題2.1 の両辺が一致している。</p>
+
+<p>次に、固有値が実数であることを示す。そのために、複素数を成分にもつベクトルが必要になるので、最小限の記号を用意する。複素数そのものは第34回で詳しく扱うが、ここで必要な部分だけ書く。</p>
+<div class="def" id="sym-conjugate"><span class="label">記号：複素共役 $\bar z$</span>
+<p><strong>①読み方</strong>：「ゼット・バー」。日本語で「複素共役（ふくそきょうやく）」。</p>
+<p><strong>②日本語での意味</strong>：複素数 $z=a+bi$ の虚部の符号だけを逆にした数。</p>
+<p><strong>③省略していない書き方</strong>：実数 $a,b$ と<a href="20_第20回_固有値と固有ベクトル.html#sym-imag-unit">虚数単位 $i$</a>（$i^2=-1$）について、$z=a+bi$ のとき $\bar z:=a-bi$。次の2つが成り立つ。(C1) $z\bar z=(a+bi)(a-bi)=a^2-abi+abi-b^2i^2=a^2+b^2\ \ge0$（$z\neq0$ なら $\gt0$）。(C2) $z$ が実数（$b=0$）であることと $\bar z=z$ は同じ。ベクトル $\boldsymbol v=(v_1,\dots,v_n)^{\mathsf T}$ に対しては、成分ごとに共役をとったものを $\bar{\boldsymbol v}$ と書く。実行列 $A$ では $\overline{A\boldsymbol v}=A\bar{\boldsymbol v}$（実数の成分は共役で変わらないので）。</p>
+<p><strong>④どこで出会うか</strong>：複素数の極形式とオイラーの公式（第34回）、フーリエ変換（第35回）、エルミート行列・ユニタリ行列（量子力学）。</p>
+</div>
+
+<div class="thm"><span class="label">定理2.3（対称行列の固有値は実数）</span>
+<p>実対称行列 $A$ の固有値は、複素数まで許して探しても、すべて実数である。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>複素数 $\lambda$ と零でない複素ベクトル $\boldsymbol v\in\mathbb C^n$ について $A\boldsymbol v=\lambda\boldsymbol v$ とする。$s:=\bar{\boldsymbol v}^{\mathsf T}A\boldsymbol v$（1つの複素数）を2通りに計算する。</p>
+<p>① $s=\bar{\boldsymbol v}^{\mathsf T}(\lambda\boldsymbol v)=\lambda\,(\bar{\boldsymbol v}^{\mathsf T}\boldsymbol v)$。　<span class="meta">$A\boldsymbol v=\lambda\boldsymbol v$</span></p>
+<p>② $\bar{\boldsymbol v}^{\mathsf T}\boldsymbol v=\sum_{k=1}^n\bar v_kv_k=\sum_{k=1}^n|v_k|^2\ \gt0$。　<span class="meta">(C1)。$\boldsymbol v\neq\boldsymbol 0$ なので少なくとも1つの $v_k\neq0$</span></p>
+<p>③ $s$ の複素共役：$\bar s=\boldsymbol v^{\mathsf T}A\bar{\boldsymbol v}$。　<span class="meta">積の共役は共役の積。$A$ は実数の成分なので変わらない</span></p>
+<p>④ 1つの数は、その転置（$1\times1$ 行列の転置）と等しい：$\bar s=(\boldsymbol v^{\mathsf T}A\bar{\boldsymbol v})^{\mathsf T}=\bar{\boldsymbol v}^{\mathsf T}A^{\mathsf T}\boldsymbol v$。　<span class="meta">積の転置は順序が逆</span></p>
+<p>⑤ $A^{\mathsf T}=A$ だから $\bar s=\bar{\boldsymbol v}^{\mathsf T}A\boldsymbol v=s$。　<span class="meta">対称行列の仮定。(C2) より $s$ は実数</span></p>
+<p>⑥ ① より $\lambda=s/(\bar{\boldsymbol v}^{\mathsf T}\boldsymbol v)$。分子 $s$ は実数（⑤）、分母は正の実数（②）だから、$\lambda$ は実数。□</p>
+</div>
+<p>固有値 $\lambda$ が実数なら、$A-\lambda I$ は実行列で $\det(A-\lambda I)=0$ なので、<strong>実数の</strong>零でないベクトル $\boldsymbol v$ で $(A-\lambda I)\boldsymbol v=\boldsymbol 0$ となるものがある（実数係数の掃き出し法で零の行が出る）。つまり、実対称行列では固有ベクトルも実数でとれる。第20回の回転行列のように、固有ベクトルが実数の範囲に存在しないことは対称行列では起きない。</p>
+<div class="why"><span class="label">ひとことで</span>実対称行列では、異なる固有値の固有ベクトルは自動的に直交し（補題2.1 が鍵）、固有値は必ず実数になる。</div>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>スペクトル定理：必ず直交行列で対角化できる</h3>
+<div class="def" id="sym-orth-diag"><span class="label">記号：直交対角化 $Q^{\mathsf T}AQ=\Lambda$、$\Lambda$</span>
+<p><strong>①読み方</strong>：$Q^{\mathsf T}AQ=\Lambda$ は「キュー・トランスポーズ・エー・キュー・イコール・ラムダ」。$\Lambda$ はギリシャ文字ラムダの大文字（小文字 $\lambda$ は固有値1つ、大文字 $\Lambda$ は固有値を並べた対角行列）。日本語で「直交対角化（ちょっこうたいかくか）」。</p>
+<p><strong>②日本語での意味</strong>：対角化 $P^{-1}AP=D$ のうち、$P$ を<strong>直交行列</strong> $Q$ にとれるもの。$Q^{-1}=Q^{\mathsf T}$ なので $Q^{-1}AQ$ が $Q^{\mathsf T}AQ$ になる。</p>
+<p><strong>③省略していない書き方</strong>：$A\in\mathbb R^{n\times n}$ が直交対角化可能であるとは、$Q^{\mathsf T}Q=I$ を満たす実行列 $Q$ と、実数 $\lambda_1,\dots,\lambda_n$ を対角に並べた $\Lambda=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$ が存在して $Q^{\mathsf T}AQ=\Lambda$ となること。このとき $Q$ の第 $j$ 列 $\boldsymbol q_j$ は固有値 $\lambda_j$ の固有ベクトルで、$\boldsymbol q_1,\dots,\boldsymbol q_n$ は正規直交基底（1.2 と同じ計算で $AQ=Q\Lambda$、$Q$ の列が正規直交なのは $Q^{\mathsf T}Q=I$ から）。</p>
+<p><strong>④どこで出会うか</strong>：二次形式の主軸変換（3章）、主成分分析（統計・機械学習）、特異値分解（第22回）、振動の固有モード（機械力学）。</p>
+</div>
+<div class="thm"><span class="label">定理2.4（スペクトル定理、実対称行列の場合）</span>
+<p>実対称行列 $A\in\mathbb R^{n\times n}$ に対し、直交行列 $Q$ と対角行列 $\Lambda=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$ が存在して $Q^{\mathsf T}AQ=\Lambda$。逆に、直交対角化可能な実行列は対称である。</p>
+</div>
+<div class="proof"><span class="label">証明（$n$ に関する帰納法）</span>
+<p>$n=1$：$A=(a)$、$Q=(1)$ で $Q^{\mathsf T}AQ=(a)$。成り立つ。</p>
+<p>$n-1$ 次の実対称行列について成り立つと仮定して、$n$ 次の実対称行列 $A$ を考える。</p>
+<p>① 特性多項式 $p_A$ は $n$ 次式なので、複素数の根 $\lambda_1$ をもつ（代数学の基本定理。証明はしない、第34回）。定理2.3 より $\lambda_1$ は実数。上の注意より、実数の固有ベクトルがとれる。長さを $1$ にして $\boldsymbol q_1$ とする。</p>
+<p>② $\boldsymbol q_1$ を含む $\mathbb R^n$ の基底をとり（第15回）、<a href="19_第19回_内積・直交・射影.html#sym-gram-schmidt">グラム・シュミット</a>で正規直交基底 $\boldsymbol q_1,\boldsymbol q_2,\dots,\boldsymbol q_n$ にする（$\boldsymbol q_1$ は最初なので変わらない）。これを列に並べた直交行列を $Q_1$ とする。</p>
+<p>③ $M:=Q_1^{\mathsf T}AQ_1$ とおく。$M^{\mathsf T}=Q_1^{\mathsf T}A^{\mathsf T}Q_1=M$。　<span class="meta">積の転置は順序が逆、$A^{\mathsf T}=A$。$M$ は対称</span></p>
+<p>④ $M$ の第1列は $M\boldsymbol e_1=Q_1^{\mathsf T}AQ_1\boldsymbol e_1=Q_1^{\mathsf T}A\boldsymbol q_1=Q_1^{\mathsf T}(\lambda_1\boldsymbol q_1)=\lambda_1Q_1^{\mathsf T}\boldsymbol q_1=\lambda_1\boldsymbol e_1$。　<span class="meta">$Q_1\boldsymbol e_1=\boldsymbol q_1$。$Q_1^{\mathsf T}\boldsymbol q_1=\boldsymbol e_1$ は、$Q_1^{\mathsf T}Q_1=I$ の第1列</span></p>
+<p>⑤ $M$ は対称なので第1行も $(\lambda_1,0,\dots,0)$。したがって
+$$ M=\begin{pmatrix}\lambda_1&\boldsymbol 0^{\mathsf T}\\\boldsymbol 0&A'\end{pmatrix}\qquad(A'\text{ は }(n-1)\times(n-1)\text{ 行列}). $$
+$M$ が対称なので $A'$ も対称。</p>
+<p>⑥ 帰納法の仮定より、直交行列 $Q'$ で $Q'^{\mathsf T}A'Q'=\Lambda'$（対角）となるものがある。</p>
+<p>⑦ $Q_2:=\begin{pmatrix}1&\boldsymbol 0^{\mathsf T}\\\boldsymbol 0&Q'\end{pmatrix}$ は直交行列。$Q:=Q_1Q_2$ とすると、$Q^{\mathsf T}Q=Q_2^{\mathsf T}Q_1^{\mathsf T}Q_1Q_2=Q_2^{\mathsf T}Q_2=I$ で $Q$ も直交行列。</p>
+<p>⑧ $Q^{\mathsf T}AQ=Q_2^{\mathsf T}(Q_1^{\mathsf T}AQ_1)Q_2=Q_2^{\mathsf T}MQ_2=\begin{pmatrix}\lambda_1&\boldsymbol 0^{\mathsf T}\\\boldsymbol 0&Q'^{\mathsf T}A'Q'\end{pmatrix}=\begin{pmatrix}\lambda_1&\boldsymbol 0^{\mathsf T}\\\boldsymbol 0&\Lambda'\end{pmatrix}$。これは対角行列。</p>
+<p>逆：$Q^{\mathsf T}AQ=\Lambda$ なら $A=Q\Lambda Q^{\mathsf T}$（両辺に左から $Q$、右から $Q^{\mathsf T}$）。$A^{\mathsf T}=(Q^{\mathsf T})^{\mathsf T}\Lambda^{\mathsf T}Q^{\mathsf T}=Q\Lambda Q^{\mathsf T}=A$（対角行列は転置しても同じ）。□</p>
+</div>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 292" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="スペクトル定理の証明（帰納法）のブロック" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>スペクトル定理の証明（帰納法）のブロック</title>
+<rect x="0" y="0" width="440" height="292" fill="#fffdf7"/>
+<text x="100.0" y="32.0" font-size="14.5" fill="#2a2723" text-anchor="middle" font-weight="bold">Q₁ᵀ A Q₁ = M</text>
+<rect x="20" y="40" width="160" height="160" rx="2" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<rect x="20" y="40" width="34" height="34" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="37.0" y="63.0" font-size="15" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">λ</tspan><tspan dy="4.2" font-size="10.5">1</tspan></text>
+<rect x="54" y="40" width="126" height="34" rx="2" fill="#f4f1e8" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="117.0" y="63.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0 … 0</tspan></text>
+<rect x="20" y="74" width="34" height="126" rx="2" fill="#f4f1e8" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="37.0" y="142.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<rect x="54" y="74" width="126" height="126" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="117.0" y="143.0" font-size="20" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan>′</tspan></text>
+<text x="330.0" y="32.0" font-size="14.5" fill="#2a2723" text-anchor="middle" font-weight="bold">Q₂ᵀ M Q₂ = diag(λ₁, Λ′)</text>
+<rect x="250" y="40" width="160" height="160" rx="2" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<rect x="250" y="40" width="34" height="34" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="267.0" y="63.0" font-size="15" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">λ</tspan><tspan dy="4.2" font-size="10.5">1</tspan></text>
+<rect x="284" y="40" width="126" height="34" rx="2" fill="#f4f1e8" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="347.0" y="63.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0 … 0</tspan></text>
+<rect x="250" y="74" width="34" height="126" rx="2" fill="#f4f1e8" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="267.0" y="142.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<rect x="284" y="74" width="126" height="126" rx="2" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="347.0" y="143.0" font-size="20" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>Λ′</tspan></text>
+<circle cx="294.0" cy="84.0" r="2.5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<circle cx="314.0" cy="104.0" r="2.5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<circle cx="334.0" cy="124.0" r="2.5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<line x1="186.0" y1="120.0" x2="244.0" y2="120.0" stroke="#a8322a" stroke-width="3"/><path d="M235.0 124.3 L244.0 120.0 L235.0 115.7" fill="none" stroke="#a8322a" stroke-width="3"/>
+<text x="215.0" y="108.0" font-size="13.5" fill="#a8322a" text-anchor="middle">A′ を</text>
+<text x="215.0" y="142.0" font-size="13.5" fill="#a8322a" text-anchor="middle">対角化</text>
+<text x="14.0" y="232.0" font-size="14" fill="#2a2723" text-anchor="start">朱：第1列は λ₁e₁（固有ベクトルを第1列にしたから）。</text>
+<text x="14.0" y="254.0" font-size="14" fill="#2a2723" text-anchor="start">第1行の 0 は M が対称だから。</text>
+<text x="14.0" y="276.0" font-size="14" fill="#2a2723" text-anchor="start">藍の A′ は (n−1)×(n−1) で対称 → 帰納法の仮定を使える。</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　最初の固有ベクトル $\boldsymbol q_1$ を第1列に入れた正規直交基底で $A$ を書き直すと、左の形になる。残りの $A'$ は1つ小さい対称行列なので、帰納法の仮定で対角化できる（右）。</figcaption>
+</figure>
+<p>この定理が強いのは、<strong>固有値が重なっていても</strong>必ず成り立つ点である。1章の系1.3 では、一般の行列では重根のとき固有ベクトルが足りなくなる場合があった。対称行列では、幾何的重複度と代数的重複度が<strong>つねに一致する</strong>（直交対角化できるので定理1.1 と系1.3 から）。</p>
+<div class="warn"><span class="label">流派の違い：書き方</span>
+<p>$Q^{\mathsf T}AQ=\Lambda$ を、$A=Q\Lambda Q^{\mathsf T}$ と書く教科書も多い（同じ式の両辺に $Q,Q^{\mathsf T}$ を掛けただけ）。対角行列を $D$ と書く本と $\Lambda$ と書く本、転置を $Q^{\mathsf T},\ Q^{t},\ {}^tQ,\ Q'$ と書く本がある（<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">第5回</a>）。意味は同じ。この教材では、直交行列の場合は $Q,\Lambda$、一般の場合は $P,D$ と使い分ける。</p>
+</div>
+<div class="why"><span class="label">ひとことで</span>実対称行列は、正規直交基底（固有ベクトル）で必ず対角になる。$Q^{\mathsf T}AQ=\Lambda$。逆行列は転置で済み、固有値が重なっても使える。</div>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>手順と3×3の例（固有値が重なる場合）</h3>
+<p>手順をまとめる。実対称行列 $A$ を直交対角化する。</p>
+<ul>
+<li>(1) 特性方程式から固有値 $\lambda$ をすべて求める（第20回 2.2）。</li>
+<li>(2) 各固有値 $\lambda$ について、$A-\lambda I$ を掃き出して固有空間の基底を求める（第20回 2.3）。</li>
+<li>(3) 異なる固有値の固有ベクトルは、定理2.2 により<strong>自動的に直交</strong>。同じ固有値の固有空間に基底が2本以上あるときだけ、その中でグラム・シュミットを行って直交化する。</li>
+<li>(4) 全部の長さを $1$ にして列に並べると $Q$。固有値を同じ順に並べると $\Lambda$。</li>
+</ul>
+<p><strong>例</strong>：$L=\begin{pmatrix}2&-1&-1\\-1&2&-1\\-1&-1&2\end{pmatrix}$（対称）。すべての成分が $1$ の行列を $J$ とすると $L=3I-J$（対角は $3-1=2$、それ以外は $-1$）。</p>
+<p>① $\boldsymbol u=(1,1,1)^{\mathsf T}$ では $J\boldsymbol u=(3,3,3)^{\mathsf T}=3\boldsymbol u$。　<span class="meta">各行が $1+1+1$</span></p>
+<p>② よって $L\boldsymbol u=3\boldsymbol u-J\boldsymbol u=3\boldsymbol u-3\boldsymbol u=\boldsymbol 0=0\cdot\boldsymbol u$。固有値 $0$、固有ベクトル $(1,1,1)^{\mathsf T}$。</p>
+<p>③ $x+y+z=0$ を満たす $\boldsymbol x=(x,y,z)^{\mathsf T}$ では $J\boldsymbol x=(x+y+z)(1,1,1)^{\mathsf T}=\boldsymbol 0$。　<span class="meta">$J\boldsymbol x$ の各成分は $x+y+z$</span></p>
+<p>④ よって $L\boldsymbol x=3\boldsymbol x-\boldsymbol 0=3\boldsymbol x$。この平面 $x+y+z=0$ 全体が固有値 $3$ の固有空間 $E_3$（次元 $2$）。　<span class="meta">1つの方程式で3変数なので、自由変数が2つ（第17回）</span></p>
+<p>⑤ 次元を足すと $1+2=3=n$。固有値は $0,3,3$。確かめ：和 $0+3+3=6=\operatorname{tr}L=2+2+2$ ✓（<a href="20_第20回_固有値と固有ベクトル.html#sec-4-1">第20回の定理4.1</a>）。</p>
+<p>⑥ $E_3$ の基底として $\boldsymbol u_1=(1,-1,0)^{\mathsf T}$、$\boldsymbol u_2=(1,0,-1)^{\mathsf T}$（どちらも成分の和が $0$、一次独立）。ところが内積 $\langle\boldsymbol u_1,\boldsymbol u_2\rangle=1\cdot1+(-1)\cdot0+0\cdot(-1)=1\neq0$。<strong>同じ固有空間の中なので、直交は自動では成り立たない</strong>。グラム・シュミットを行う。</p>
+<p>⑦ $\boldsymbol w_1:=\boldsymbol u_1=(1,-1,0)^{\mathsf T}$。　$\boldsymbol w_2:=\boldsymbol u_2-\dfrac{\langle\boldsymbol u_2,\boldsymbol w_1\rangle}{\langle\boldsymbol w_1,\boldsymbol w_1\rangle}\boldsymbol w_1=(1,0,-1)^{\mathsf T}-\dfrac12(1,-1,0)^{\mathsf T}=\left(\tfrac12,\tfrac12,-1\right)^{\mathsf T}$。　<span class="meta">第19回 6.2 の手順。$\langle\boldsymbol u_2,\boldsymbol w_1\rangle=1$、$\langle\boldsymbol w_1,\boldsymbol w_1\rangle=2$</span></p>
+<p>⑧ 長さ：$\|\boldsymbol w_1\|=\sqrt2$、$\|\boldsymbol w_2\|=\sqrt{\tfrac14+\tfrac14+1}=\sqrt{\tfrac32}=\tfrac{\sqrt6}{2}$、$\|(1,1,1)\|=\sqrt3$。単位ベクトルにして、</p>
+$$ \boldsymbol q_1=\tfrac1{\sqrt3}\begin{pmatrix}1\\1\\1\end{pmatrix},\ \ \boldsymbol q_2=\tfrac1{\sqrt2}\begin{pmatrix}1\\-1\\0\end{pmatrix},\ \ \boldsymbol q_3=\tfrac1{\sqrt6}\begin{pmatrix}1\\1\\-2\end{pmatrix}. $$
+<p>⑨ 確かめ：$\langle\boldsymbol q_1,\boldsymbol q_2\rangle\propto1-1+0=0$、$\langle\boldsymbol q_1,\boldsymbol q_3\rangle\propto1+1-2=0$（定理2.2 が予告していた直交）、$\langle\boldsymbol q_2,\boldsymbol q_3\rangle\propto1-1+0=0$（グラム・シュミットで作った直交）。$Q=(\boldsymbol q_1\ \boldsymbol q_2\ \boldsymbol q_3)$ とすると $Q^{\mathsf T}LQ=\operatorname{diag}(0,3,3)$。</p>
+<figure class="fig" id="fig-2-4">
+<svg viewBox="0 0 440 372" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="固有値が重なるときの直交化" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>固有値が重なるときの直交化</title>
+<rect x="0" y="0" width="440" height="372" fill="#fffdf7"/>
+<polyline points="70.0,255.0 300.0,255.0 390.0,165.0 160.0,165.0 70.0,255.0" fill="rgba(95,127,79,0.10)" stroke="#5f7f4f" stroke-width="2" stroke-linejoin="round"/>
+<text x="300.0" y="285.0" font-size="13.5" fill="#5f7f4f" text-anchor="middle">平面 x+y+z=0（固有値 3 の E₃）</text>
+<line x1="220.0" y1="30.0" x2="220.0" y2="330.0" stroke="#c9c2b2" stroke-width="1.4" stroke-dasharray="6 4"/>
+<line x1="220.0" y1="200.0" x2="220.0" y2="60.0" stroke="#2b3a67" stroke-width="3.2"/><path d="M224.8 69.9 L220.0 60.0 L215.2 69.9" fill="none" stroke="#2b3a67" stroke-width="3.2"/>
+<rect x="227.0" y="51.0" width="126.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="230.0" y="66.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">q₁ ∝ (1,1,1)</text>
+<text x="230.0" y="88.0" font-size="13.5" fill="#2b3a67" text-anchor="start">固有値 0</text>
+<line x1="220.0" y1="200.0" x2="320.0" y2="195.0" stroke="#6b645a" stroke-width="2.4"/><path d="M312.1 199.3 L320.0 195.0 L311.7 191.5" fill="none" stroke="#6b645a" stroke-width="2.4"/>
+<line x1="220.0" y1="200.0" x2="260.0" y2="162.0" stroke="#6b645a" stroke-width="2.4"/><path d="M256.8 170.4 L260.0 162.0 L251.4 164.7" fill="none" stroke="#6b645a" stroke-width="2.4"/>
+<rect x="307.0" y="201.0" width="109.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="310.0" y="215.0" font-size="14" fill="#6b645a" text-anchor="start">u₁=(1,−1,0)</text>
+<rect x="261.0" y="132.0" width="109.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="264.0" y="146.0" font-size="14" fill="#6b645a" text-anchor="start">u₂=(1,0,−1)</text>
+<line x1="220.0" y1="200.0" x2="115.0" y2="204.0" stroke="#a8322a" stroke-width="3"/><path d="M124.7 198.8 L115.0 204.0 L125.1 208.4" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="220.0" y1="200.0" x2="230.0" y2="146.0" stroke="#a8322a" stroke-width="3"/><path d="M232.9 156.6 L230.0 146.0 L223.5 154.9" fill="none" stroke="#a8322a" stroke-width="3"/>
+<rect x="105.0" y="210.0" width="132.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="108.0" y="224.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">q₂ ∝ (1,−1,0)</text>
+<rect x="233.0" y="128.0" width="132.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="236.0" y="142.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">q₃ ∝ (1,1,−2)</text>
+<circle cx="220.0" cy="200.0" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="14.0" y="318.0" font-size="14" fill="#2a2723" text-anchor="start">灰：平面の基底 u₁, u₂（内積 1、直交しない）</text>
+<text x="14.0" y="338.0" font-size="14" fill="#2a2723" text-anchor="start">朱：グラム・シュミット後の q₂, q₃（直交）</text>
+<text x="14.0" y="358.0" font-size="14" fill="#2a2723" text-anchor="start">藍：q₁ は平面に垂直（異なる固有値なので自動的に直交）</text>
+</svg>
+<figcaption><strong>図 2.4</strong>　$L=3I-J$ の固有空間は、固有値 $0$ の直線（$(1,1,1)$ の方向）と、固有値 $3$ の平面（$x+y+z=0$）。直線と平面は定理2.2 により垂直。平面の中の2本は、グラム・シュミットで直角にそろえる。図は斜めから見た模式図で、角度や長さは正確ではない。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>異なる固有値の固有ベクトルは放っておいても直交する。同じ固有値の固有空間の中だけ、グラム・シュミットで直交化する。</div>
+
+<h3 id="sec-2-5"><span class="no">2.5</span>スペクトル分解：射影行列の和として見る</h3>
+<p>$A=Q\Lambda Q^{\mathsf T}$ を、列ごとに展開する。</p>
+<div class="def" id="sym-spectral"><span class="label">記号：スペクトル分解 $A=\sum_i\lambda_i\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$</span>
+<p><strong>①読み方</strong>：「エー・イコール・シグマ・ラムダ・アイ・キュー・アイ・キュー・アイ・トランスポーズ」。日本語で「スペクトル分解」。</p>
+<p><strong>②日本語での意味</strong>：対称行列を、「固有ベクトルの方向への射影」を固有値倍して足し合わせたものとして書く表し方。</p>
+<p><strong>③省略していない書き方</strong>：$A=Q\Lambda Q^{\mathsf T}$（$Q$ の列が正規直交の固有ベクトル $\boldsymbol q_1,\dots,\boldsymbol q_n$）のとき、
+$$ A=\lambda_1\boldsymbol q_1\boldsymbol q_1^{\mathsf T}+\lambda_2\boldsymbol q_2\boldsymbol q_2^{\mathsf T}+\cdots+\lambda_n\boldsymbol q_n\boldsymbol q_n^{\mathsf T}=\sum_{i=1}^n\lambda_i\boldsymbol q_i\boldsymbol q_i^{\mathsf T}. $$
+ここで $\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$ は、$n\times1$ 行列と $1\times n$ 行列の積で $n\times n$ 行列になる。</p>
+<p><strong>④どこで出会うか</strong>：特異値分解（第22回）、低ランク近似（第22回）、主成分分析、行列の関数 $\sqrt A,\ e^{A}$（第31回）。</p>
+</div>
+<p><strong>導出</strong>：</p>
+<p>① $Q\Lambda=(\lambda_1\boldsymbol q_1\ \cdots\ \lambda_n\boldsymbol q_n)$。　<span class="meta">右から対角行列を掛けると、第 $j$ 列が $\lambda_j$ 倍される（1.2 の ③ と同じ）</span></p>
+<p>② $(Q\Lambda)Q^{\mathsf T}$ の $(a,b)$ 成分は $\sum_{i=1}^n(\lambda_i\boldsymbol q_i)_a(\boldsymbol q_i)_b$。　<span class="meta">$Q^{\mathsf T}$ の第 $i$ 行は $\boldsymbol q_i^{\mathsf T}$、行列の積の定義（第5回）</span></p>
+<p>③ $(\lambda_i\boldsymbol q_i)_a(\boldsymbol q_i)_b$ は行列 $\lambda_i\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$ の $(a,b)$ 成分そのもの。よって $A=\sum_i\lambda_i\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$。</p>
+<p>ここで $\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$ は、長さ $1$ のベクトル $\boldsymbol q_i$ の方向への<a href="19_第19回_内積・直交・射影.html#sym-proj-matrix">射影行列</a>（第19回 5.3 の $\dfrac{\boldsymbol u\boldsymbol u^{\mathsf T}}{\boldsymbol u^{\mathsf T}\boldsymbol u}$ で $\boldsymbol u=\boldsymbol q_i$、$\boldsymbol q_i^{\mathsf T}\boldsymbol q_i=1$）。したがって
+$$ A\boldsymbol x=\sum_i\lambda_i\,\langle\boldsymbol q_i,\boldsymbol x\rangle\,\boldsymbol q_i, $$
+すなわち「$\boldsymbol x$ を各固有ベクトルの方向の成分に分け、成分ごとに $\lambda_i$ 倍して足す」。<strong>数値</strong>：1.1 の $A$ で $\boldsymbol q_1=\tfrac1{\sqrt2}(1,1)^{\mathsf T}$、$\boldsymbol q_2=\tfrac1{\sqrt2}(1,-1)^{\mathsf T}$。$\boldsymbol q_1\boldsymbol q_1^{\mathsf T}=\tfrac12\begin{pmatrix}1&1\\1&1\end{pmatrix}$、$\boldsymbol q_2\boldsymbol q_2^{\mathsf T}=\tfrac12\begin{pmatrix}1&-1\\-1&1\end{pmatrix}$。$3\cdot\tfrac12\begin{pmatrix}1&1\\1&1\end{pmatrix}+1\cdot\tfrac12\begin{pmatrix}1&-1\\-1&1\end{pmatrix}=\tfrac12\begin{pmatrix}4&2\\2&4\end{pmatrix}=A$ ✓。2.4 の $L$ では $\boldsymbol q_1\boldsymbol q_1^{\mathsf T}=\tfrac13J$ で固有値が $0$ なので消え、$L=3(\boldsymbol q_2\boldsymbol q_2^{\mathsf T}+\boldsymbol q_3\boldsymbol q_3^{\mathsf T})$。実際、$\boldsymbol q_1\boldsymbol q_1^{\mathsf T}+\boldsymbol q_2\boldsymbol q_2^{\mathsf T}+\boldsymbol q_3\boldsymbol q_3^{\mathsf T}=QQ^{\mathsf T}=I$ なので $3(I-\tfrac13J)=3I-J=L$ ✓。</p>
+<figure class="fig" id="fig-2-5">
+<svg viewBox="0 0 440 462" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="スペクトル分解の意味" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>スペクトル分解の意味</title>
+<rect x="0" y="0" width="440" height="462" fill="#fffdf7"/>
+<text x="14.0" y="22.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">A = 3·q₁q₁ᵀ + 1·q₂q₂ᵀ</text>
+<text x="33.0" y="60.2" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="63.0" y="60.2" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="33.0" y="88.2" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="63.0" y="88.2" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<path d="M19.0 38 L13.0 38 L13.0 98 L19.0 98" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M77.0 38 L83.0 38 L83.0 98 L77.0 98" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="94.0" y="78.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>= 3·½</tspan></text>
+<text x="175.0" y="60.2" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="205.0" y="60.2" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="175.0" y="88.2" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="205.0" y="88.2" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<path d="M161.0 38 L155.0 38 L155.0 98 L161.0 98" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M219.0 38 L225.0 38 L225.0 98 L219.0 98" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="236.0" y="78.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>+ 1·½</tspan></text>
+<text x="317.0" y="60.2" font-size="18" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="347.0" y="60.2" font-size="18" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="317.0" y="88.2" font-size="18" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="347.0" y="88.2" font-size="18" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<path d="M303.0 38 L297.0 38 L297.0 98 L303.0 98" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M361.0 38 L367.0 38 L367.0 98 L361.0 98" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="165.0" y="118.0" font-size="13.5" fill="#2b3a67" text-anchor="middle">q₁q₁ᵀ（射影行列）</text>
+<text x="335.0" y="118.0" font-size="13.5" fill="#5f7f4f" text-anchor="middle">q₂q₂ᵀ</text>
+<line x1="40.0" y1="387.6" x2="338.0" y2="387.6" stroke="#2a2723" stroke-width="1.3"/><path d="M331.7 390.6 L338.0 387.6 L331.7 384.6" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="61.6" y1="445.2" x2="61.6" y2="140.0" stroke="#2a2723" stroke-width="1.3"/><path d="M64.6 146.3 L61.6 140.0 L58.6 146.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="133.6" y1="383.6" x2="133.6" y2="391.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="133.6" y="407.6" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="205.6" y1="383.6" x2="205.6" y2="391.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="205.6" y="407.6" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="277.6" y1="383.6" x2="277.6" y2="391.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="277.6" y="407.6" font-size="14" fill="#6b645a" text-anchor="middle">6</text>
+<line x1="57.6" y1="423.6" x2="65.6" y2="423.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="53.6" y="428.6" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="57.6" y1="315.6" x2="65.6" y2="315.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="53.6" y="320.6" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="57.6" y1="243.6" x2="65.6" y2="243.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="53.6" y="248.6" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="342.0" y="409.6" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="75.6" y="146.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="-116.6" y1="565.8" x2="239.8" y2="209.4" stroke="#e2dccd" stroke-width="1.3" stroke-dasharray="6 4"/>
+<line x1="-116.6" y1="209.4" x2="239.8" y2="565.8" stroke="#e2dccd" stroke-width="1.3" stroke-dasharray="6 4"/>
+<line x1="61.6" y1="387.6" x2="169.6" y2="351.6" stroke="#2a2723" stroke-width="2.2"/><path d="M163.1 357.9 L169.6 351.6 L160.7 350.4" fill="none" stroke="#2a2723" stroke-width="2.2"/>
+<rect x="101.8" y="359.6" width="64.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="163.6" y="373.6" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">x=(3,1)</text>
+<line x1="61.6" y1="387.6" x2="133.6" y2="315.6" stroke="#2b3a67" stroke-width="2.6"/><path d="M130.6 324.1 L133.6 315.6 L125.1 318.6" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="61.6" y1="387.6" x2="97.6" y2="423.6" stroke="#5f7f4f" stroke-width="2.6"/><path d="M89.1 420.6 L97.6 423.6 L94.6 415.1" fill="none" stroke="#5f7f4f" stroke-width="2.6"/>
+<line x1="169.6" y1="351.6" x2="133.6" y2="315.6" stroke="#b8b19f" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="169.6" y1="351.6" x2="97.6" y2="423.6" stroke="#b8b19f" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="61.6" y1="387.6" x2="277.6" y2="171.6" stroke="#2b3a67" stroke-width="2.2"/><path d="M274.6 180.1 L277.6 171.6 L269.1 174.6" fill="none" stroke="#2b3a67" stroke-width="2.2"/>
+<line x1="277.6" y1="171.6" x2="313.6" y2="207.6" stroke="#5f7f4f" stroke-width="2.2"/><path d="M305.1 204.6 L313.6 207.6 L310.6 199.1" fill="none" stroke="#5f7f4f" stroke-width="2.2"/>
+<rect x="-1.6" y="292.1" width="130.2" height="19.5" fill="#fffdf7" opacity="0.92"/><text x="125.6" y="305.6" font-size="13.5" fill="#2b3a67" text-anchor="end">(x·q₁)q₁=(2,2)</text>
+<rect x="102.6" y="428.1" width="143.7" height="19.5" fill="#fffdf7" opacity="0.92"/><text x="105.6" y="441.6" font-size="13.5" fill="#5f7f4f" text-anchor="start">(x·q₂)q₂=(1,−1)</text>
+<rect x="161.3" y="152.1" width="111.3" height="19.5" fill="#fffdf7" opacity="0.92"/><text x="269.6" y="165.6" font-size="13.5" fill="#2b3a67" text-anchor="end">3×(2,2)=(6,6)</text>
+<circle cx="313.6" cy="207.6" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="237.4" y="215.6" width="73.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="307.6" y="229.6" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">Ax=(7,5)</text>
+</svg>
+<figcaption><strong>図 2.5</strong>　上：$A$ を、固有ベクトルの方向への射影行列 $\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$ に固有値を掛けて足したものとして書く。下：$\boldsymbol x=(3,1)$ を固有ベクトルの方向の成分 $(2,2)$ と $(1,-1)$ に分け、それぞれ $3$ 倍、$1$ 倍して足すと $A\boldsymbol x=(7,5)$。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<ul>
+<li>「$Q^{\mathsf T}AQ=\Lambda$ はどんな行列でもできる」は<strong>誤り</strong>。直交行列で対角化できるのは<strong>対称行列だけ</strong>（定理2.4 の逆）。対称でない $C=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ は対角化はできる（固有値 $5,2$）が、固有ベクトルが直交しないので、$P^{-1}CP=D$ の $P$ を直交行列にはできない（$P^{-1}\neq P^{\mathsf T}$）。</li>
+<li>「固有ベクトルは長さ $1$ にしなくてもよい」：$P^{-1}AP=D$ だけなら長さは自由だが、$P^{-1}=P^{\mathsf T}$ を使うには<strong>長さ $1$ に正規化</strong>が必要（$Q^{\mathsf T}Q=I$ の対角成分が $\|\boldsymbol q_j\|^2=1$ だから）。</li>
+<li>「固有値が同じなら固有ベクトルも直交」は<strong>誤り</strong>（2.4 の $\boldsymbol u_1,\boldsymbol u_2$）。直交が保証されるのは<strong>異なる</strong>固有値のとき。</li>
+</ul>
+</div>
+<div class="why"><span class="label">ひとことで</span>$A=\sum\lambda_i\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$。対称行列は、直交する方向ごとの「$\lambda_i$ 倍」を足し合わせたものである。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>二次形式と正定値</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/21_a3_chips.jpg" alt="白い皿に、反った形の薄いポテトチップスが積まれ、手前に2枚が立てかけてある" loading="lazy"></div>
+<p class="cap">薄い片が、反った形のまま、積み重なっている。</p>
+<p class="cr">Glane23（2008年）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Pringles_chips.JPG">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/21_b3_raku.jpg" alt="灰色の背景に、赤茶色の釉薬のかかった、丸みのある茶碗が置かれている" loading="lazy"></div>
+<p class="cap">椀の底から、どの向きへ進んでも、縁は高くなっていく。</p>
+<p class="cr">赤楽の茶碗（Commons の題は「Red Raku tea bowl by Sanyū VI」。国立故宮博物院のオープンデータ）／<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Red_Raku_tea_bowl_by_Sanyū_VI.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-3-1"><span class="no">3.1</span>動機と定義：2次の項だけの式を行列で書く</h3>
+<p>工学では「変数の2乗の和」の形の量が何度も現れる。ばねの弾性エネルギー $\tfrac12kx^2$、運動エネルギー $\tfrac12mv^2$、距離の2乗 $x^2+y^2$、最小二乗法の誤差の2乗和（第47回）。変数が複数あると、$x^2$ や $y^2$ に加えて<strong>$xy$ のような交差項</strong>が現れる。たとえば連成した2つのばねのエネルギーは $ax^2+2bxy+cy^2$ の形になる。この形の式を、行列で一括して書く。</p>
+<p>1次の項も定数項もなく、<strong>どの項も次数がちょうど2</strong>の多項式を二次形式という。</p>
+
+<div class="def" id="sym-quadratic-form"><span class="label">記号：二次形式 $q(\boldsymbol x)=\boldsymbol x^{\mathsf T}A\boldsymbol x$</span>
+<p><strong>①読み方</strong>：「キュー・エックス・イコール・エックス・トランスポーズ・エー・エックス」。日本語で「二次形式（にじけいしき）」。</p>
+<p><strong>②日本語での意味</strong>：$n$ 個の変数 $x_1,\dots,x_n$ の、<strong>すべての項が2次</strong>（$x_i^2$ か $x_ix_j$）である式。それを対称行列 $A$ を使って $\boldsymbol x^{\mathsf T}A\boldsymbol x$ と書く。</p>
+<p><strong>③省略していない書き方</strong>：対称行列 $A\in\mathbb R^{n\times n}$ と $\boldsymbol x=(x_1,\dots,x_n)^{\mathsf T}\in\mathbb R^n$ に対し、
+$$ q(\boldsymbol x):=\boldsymbol x^{\mathsf T}A\boldsymbol x=\sum_{i=1}^{n}\sum_{j=1}^{n}A_{ij}\,x_ix_j. $$
+展開すると、$x_i^2$ の係数が $A_{ii}$、$i\neq j$ の組 $x_ix_j$ の係数が $A_{ij}+A_{ji}=2A_{ij}$（$A_{ij}x_ix_j$ と $A_{ji}x_jx_i$ の2つが同じ項になる）。（総和記号は<a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a>。二重の総和は、まず $j$ について足し、その結果を $i$ について足す。）</p>
+<p><strong>④どこで出会うか</strong>：正定値の判定（3.3）、多変数関数の2次近似とヘッセ行列（第51回）、運動エネルギー・位置エネルギー（機械力学）、最小二乗法の目的関数（第47回）、共分散と主成分分析（統計）。</p>
+</div>
+
+<div class="box" id="abbr-quad"><span class="label">省略の段階：二次形式</span>
+<table class="tb">
+<tr><th>段</th><th>書き方</th><th>この段で省いたもの</th><th>省いても誤解が起きない理由</th></tr>
+<tr><td>S0</td><td>$q(x_1,\dots,x_n)=\displaystyle\sum_{i=1}^{n}\sum_{j=1}^{n}A_{ij}x_ix_j$</td><td>（なし）</td><td>—</td></tr>
+<tr><td>S1</td><td>$q(\boldsymbol x)=\boldsymbol x^{\mathsf T}A\boldsymbol x$</td><td>二重の総和と、成分への分解</td><td>行列の積の定義（行 × 列、<a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix">第5回</a>）を2回使うと S0 に戻る。2×2 の展開は下の ①〜③</td></tr>
+<tr><td>S2</td><td>$\boldsymbol x^{\mathsf T}A\boldsymbol x$（$q$ も省略）</td><td>左辺の名前 $q(\boldsymbol x)$</td><td>文脈で「$\boldsymbol x$ の関数」だと分かる。ただし、$A$ が対称であることは省けない（3.1 の最後）</td></tr>
+</table>
+</div>
+
+<p><strong>最小の具体例（2×2 の展開）</strong>：$A=\begin{pmatrix}a&b\\b&c\end{pmatrix}$、$\boldsymbol x=\begin{pmatrix}x\\y\end{pmatrix}$。</p>
+<p>① $A\boldsymbol x=\begin{pmatrix}ax+by\\bx+cy\end{pmatrix}$。　<span class="meta">行列とベクトルの積（第16回）</span></p>
+<p>② $\boldsymbol x^{\mathsf T}(A\boldsymbol x)=x(ax+by)+y(bx+cy)$。　<span class="meta">行ベクトル $(x\ y)$ と列ベクトルの積は、成分どうしを掛けて足す</span></p>
+<p>③ $=ax^2+bxy+bxy+cy^2=ax^2+2bxy+cy^2$。　<span class="meta">$xy$ の項が2つあり、まとめると係数 $2b$</span></p>
+<p>数値：$A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ なら $q(x,y)=2x^2+2xy+2y^2$。$(x,y)=(1,1)$ で $q=2+2+2=6$。直接 $\boldsymbol x^{\mathsf T}A\boldsymbol x=(1\ 1)\begin{pmatrix}3\\3\end{pmatrix}=6$ ✓。</p>
+<p>図3.1 に、どの項が行列のどの成分から来るかを描く。</p>
+<figure class="fig" id="fig-3-1">
+<svg viewBox="0 0 440 356" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="二次形式の各項はどの成分から来るか" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>二次形式の各項はどの成分から来るか</title>
+<rect x="0" y="0" width="440" height="356" fill="#fffdf7"/>
+<text x="46.0" y="69.9" font-size="22" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan></text>
+<text x="90.0" y="69.9" font-size="22" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">b</tspan></text>
+<text x="46.0" y="105.9" font-size="22" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">b</tspan></text>
+<text x="90.0" y="105.9" font-size="22" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">c</tspan></text>
+<path d="M25.0 42 L19.0 42 L19.0 118 L25.0 118" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M111.0 42 L117.0 42 L117.0 118 L111.0 118" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="24.0" y="30.0" font-size="16" fill="#6b645a" text-anchor="start" font-weight="bold">A =</text>
+<text x="130.0" y="24.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">q</tspan><tspan>(</tspan><tspan font-style="italic">x</tspan><tspan>, </tspan><tspan font-style="italic">y</tspan><tspan>) = (</tspan><tspan font-style="italic">x</tspan><tspan>  </tspan><tspan font-style="italic">y</tspan><tspan>)·</tspan><tspan font-style="italic">A</tspan><tspan>·(</tspan><tspan font-style="italic">x</tspan><tspan>  </tspan><tspan font-style="italic">y</tspan><tspan>)ᵀ</tspan></text>
+<text x="130.0" y="56.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>= </tspan><tspan font-style="italic">x</tspan><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan font-style="italic">x</tspan><tspan> + </tspan><tspan font-style="italic">b</tspan><tspan font-style="italic">y</tspan><tspan>) + </tspan><tspan font-style="italic">y</tspan><tspan>(</tspan><tspan font-style="italic">b</tspan><tspan font-style="italic">x</tspan><tspan> + </tspan><tspan font-style="italic">c</tspan><tspan font-style="italic">y</tspan><tspan>)</tspan></text>
+<text x="130.0" y="88.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>= </tspan><tspan font-style="italic">a</tspan><tspan> </tspan><tspan font-style="italic">x</tspan><tspan>² + </tspan><tspan font-style="italic">b</tspan><tspan> </tspan><tspan font-style="italic">x</tspan><tspan font-style="italic">y</tspan><tspan> + </tspan><tspan font-style="italic">b</tspan><tspan> </tspan><tspan font-style="italic">x</tspan><tspan font-style="italic">y</tspan><tspan> + </tspan><tspan font-style="italic">c</tspan><tspan> </tspan><tspan font-style="italic">y</tspan><tspan>²</tspan></text>
+<rect x="14" y="136" width="130" height="110" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="79.0" y="162.0" font-size="13.5" fill="#6b645a" text-anchor="middle">行列の成分</text>
+<text x="79.0" y="186.0" font-size="19" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan></text>
+<line x1="79.0" y1="194.0" x2="79.0" y2="212.0" stroke="#2b3a67" stroke-width="2"/><path d="M75.5 204.8 L79.0 212.0 L82.5 204.8" fill="none" stroke="#2b3a67" stroke-width="2"/>
+<text x="79.0" y="234.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan> </tspan><tspan font-style="italic">x</tspan><tspan>²</tspan></text>
+<rect x="154" y="136" width="144" height="110" rx="8" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.8"/>
+<text x="226.0" y="162.0" font-size="13.5" fill="#6b645a" text-anchor="middle">行列の成分</text>
+<text x="226.0" y="186.0" font-size="19" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">b</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan></text>
+<line x1="226.0" y1="194.0" x2="226.0" y2="212.0" stroke="#a8322a" stroke-width="2"/><path d="M222.5 204.8 L226.0 212.0 L229.5 204.8" fill="none" stroke="#a8322a" stroke-width="2"/>
+<text x="226.0" y="234.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan><tspan font-style="italic">b</tspan><tspan> </tspan><tspan font-style="italic">x</tspan><tspan font-style="italic">y</tspan></text>
+<rect x="308" y="136" width="118" height="110" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.8"/>
+<text x="367.0" y="162.0" font-size="13.5" fill="#6b645a" text-anchor="middle">行列の成分</text>
+<text x="367.0" y="186.0" font-size="19" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">c</tspan></text>
+<line x1="367.0" y1="194.0" x2="367.0" y2="212.0" stroke="#5f7f4f" stroke-width="2"/><path d="M363.5 204.8 L367.0 212.0 L370.5 204.8" fill="none" stroke="#5f7f4f" stroke-width="2"/>
+<text x="367.0" y="234.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">c</tspan><tspan> </tspan><tspan font-style="italic">y</tspan><tspan>²</tspan></text>
+<rect x="14" y="264" width="412" height="80" rx="8" fill="#fff" stroke="#ddd6c8" stroke-width="1.4"/>
+<text x="26.0" y="288.0" font-size="14.5" fill="#2a2723" text-anchor="start" font-weight="bold">数値：A = (2 1; 1 2)</text>
+<text x="26.0" y="314.0" font-size="19" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">q</tspan><tspan> = 2</tspan><tspan font-style="italic">x</tspan><tspan>² + 2</tspan><tspan font-style="italic">x</tspan><tspan font-style="italic">y</tspan><tspan> + 2</tspan><tspan font-style="italic">y</tspan><tspan>²</tspan></text>
+<text x="26.0" y="336.0" font-size="14" fill="#2a2723" text-anchor="start">(x, y) = (1, 1) で q = 6（= xᵀAx = (1 1)(3 3)ᵀ）</text>
+</svg>
+<figcaption><strong>図 3.1</strong>　対角成分（藍・緑）が $x^2,y^2$ の係数。非対角成分（朱）は $A_{12}x y$ と $A_{21}y x$ の2つが同じ $xy$ の項になるので、係数は $2b$。</figcaption>
+</figure>
+
+<p><strong>なぜ $A$ を対称にとるのか</strong>。対称でない行列 $N$ でも $\boldsymbol x^{\mathsf T}N\boldsymbol x$ は計算できるが、同じ値を与える<strong>対称な</strong>行列が必ずある。</p>
+<p>① $\boldsymbol x^{\mathsf T}N\boldsymbol x$ は1つの数（$1\times1$ 行列）で、数は転置しても同じ：$\boldsymbol x^{\mathsf T}N\boldsymbol x=(\boldsymbol x^{\mathsf T}N\boldsymbol x)^{\mathsf T}=\boldsymbol x^{\mathsf T}N^{\mathsf T}\boldsymbol x$。　<span class="meta">積の転置は順序が逆</span></p>
+<p>② 2つの表し方の平均をとる：$\boldsymbol x^{\mathsf T}N\boldsymbol x=\tfrac12\boldsymbol x^{\mathsf T}N\boldsymbol x+\tfrac12\boldsymbol x^{\mathsf T}N^{\mathsf T}\boldsymbol x=\boldsymbol x^{\mathsf T}\Bigl(\tfrac{N+N^{\mathsf T}}2\Bigr)\boldsymbol x$。</p>
+<p>③ $S:=\dfrac{N+N^{\mathsf T}}2$ は対称（$S^{\mathsf T}=\dfrac{N^{\mathsf T}+N}2=S$）。</p>
+<p>数値：$N=\begin{pmatrix}1&3\\-1&2\end{pmatrix}$ では $\boldsymbol x^{\mathsf T}N\boldsymbol x=x(x+3y)+y(-x+2y)=x^2+2xy+2y^2$。$S=\tfrac12\begin{pmatrix}2&2\\2&4\end{pmatrix}=\begin{pmatrix}1&1\\1&2\end{pmatrix}$ で $\boldsymbol x^{\mathsf T}S\boldsymbol x=x(x+y)+y(x+2y)=x^2+2xy+2y^2$ ✓（同じ式）。</p>
+<p>したがって、二次形式の式は<strong>対称な $A$ がただ1つ</strong>対応する（$A_{ii}$ は $x_i^2$ の係数、$A_{ij}$ は $x_ix_j$ の係数の半分）。以後、二次形式の $A$ は必ず対称とする。</p>
+<div class="why"><span class="label">ひとことで</span>二次形式は「2次の項だけの式」を $\boldsymbol x^{\mathsf T}A\boldsymbol x$ と書いたもの。交差項の係数は $A$ の非対角成分の2倍。$A$ は対称にとる。</div>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>主軸変換：平方の和に直す</h3>
+<p>$A$ が対称なら、定理2.4 より $Q^{\mathsf T}AQ=\Lambda$ となる直交行列 $Q$ がある。新しい変数 $\boldsymbol y$ を $\boldsymbol x=Q\boldsymbol y$ （$\boldsymbol y=Q^{\mathsf T}\boldsymbol x$、$y_j=\langle\boldsymbol q_j,\boldsymbol x\rangle$ は $\boldsymbol x$ の $\boldsymbol q_j$ 方向の成分）で導入する。</p>
+<p>① $q(\boldsymbol x)=\boldsymbol x^{\mathsf T}A\boldsymbol x=(Q\boldsymbol y)^{\mathsf T}A(Q\boldsymbol y)$。　<span class="meta">$\boldsymbol x=Q\boldsymbol y$ を代入した</span></p>
+<p>② $=\boldsymbol y^{\mathsf T}Q^{\mathsf T}AQ\,\boldsymbol y$。　<span class="meta">$(Q\boldsymbol y)^{\mathsf T}=\boldsymbol y^{\mathsf T}Q^{\mathsf T}$</span></p>
+<p>③ $=\boldsymbol y^{\mathsf T}\Lambda\boldsymbol y$。　<span class="meta">$Q^{\mathsf T}AQ=\Lambda$</span></p>
+<p>④ $=\lambda_1y_1^2+\lambda_2y_2^2+\cdots+\lambda_ny_n^2$。　<span class="meta">対角行列では $\boldsymbol y^{\mathsf T}\Lambda\boldsymbol y=\sum y_j(\lambda_jy_j)$。交差項が消える</span></p>
+<p>交差項 $y_iy_j$（$i\neq j$）が消え、<strong>平方の和</strong>になった。これを<strong>主軸変換</strong>（座標軸を固有ベクトルの向き＝主軸に回す）という。</p>
+<p><strong>数値</strong>：$q=2x^2+2xy+2y^2$（$A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$）。$\boldsymbol q_1=\tfrac1{\sqrt2}(1,1)^{\mathsf T}$（$\lambda_1=3$）、$\boldsymbol q_2=\tfrac1{\sqrt2}(1,-1)^{\mathsf T}$（$\lambda_2=1$）。$y_1=\dfrac{x+y}{\sqrt2}$、$y_2=\dfrac{x-y}{\sqrt2}$。</p>
+<p>⑤ $3y_1^2+y_2^2=3\cdot\dfrac{(x+y)^2}2+\dfrac{(x-y)^2}2$。　<span class="meta">代入</span></p>
+<p>⑥ $=\dfrac{3x^2+6xy+3y^2+x^2-2xy+y^2}2=\dfrac{4x^2+4xy+4y^2}2=2x^2+2xy+2y^2$ ✓。　<span class="meta">展開して足す</span></p>
+<p>$q(\boldsymbol x)=1$ を満たす点の集まり（<strong>等高線</strong>）を考えると、$3y_1^2+y_2^2=1$、すなわち $\dfrac{y_1^2}{(1/\sqrt3)^2}+\dfrac{y_2^2}{1^2}=1$。$y_1$ 軸（$\boldsymbol q_1$ の方向）の半径が $1/\sqrt3\approx0.577$、$y_2$ 軸（$\boldsymbol q_2$ の方向）の半径が $1$ の楕円である。一般に、固有値 $\lambda_j\gt0$ の軸方向の半径は $1/\sqrt{\lambda_j}$。図3.2 を見る。</p>
+<figure class="fig" id="fig-3-2">
+<svg viewBox="0 0 440 328" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="主軸変換：q = 1 の楕円" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>主軸変換：q = 1 の楕円</title>
+<rect x="0" y="0" width="440" height="328" fill="#fffdf7"/>
+<line x1="64.0" y1="159.6" x2="400.0" y2="159.6" stroke="#e6e0d2" stroke-width="1"/>
+<line x1="232.0" y1="305.2" x2="232.0" y2="14.0" stroke="#e6e0d2" stroke-width="1"/>
+<text x="394.4" y="166.3" font-size="15" fill="#6b645a" text-anchor="end">x</text>
+<text x="238.7" y="19.6" font-size="15" fill="#6b645a" text-anchor="start">y</text>
+<polyline points="277.7,113.9 280.2,116.4 282.6,118.9 285.0,121.5 287.3,124.2 289.5,126.8 291.8,129.5 293.9,132.3 296.0,135.0 298.0,137.8 300.0,140.6 301.8,143.4 303.7,146.2 305.4,149.1 307.1,151.9 308.7,154.8 310.2,157.7 311.7,160.6 313.0,163.4 314.3,166.3 315.5,169.2 316.7,172.0 317.7,174.9 318.7,177.7 319.5,180.5 320.3,183.3 321.0,186.0 321.6,188.8 322.2,191.5 322.6,194.2 322.9,196.8 323.2,199.4 323.4,202.0 323.4,204.5 323.4,207.0 323.3,209.4 323.1,211.8 322.8,214.1 322.5,216.4 322.0,218.6 321.4,220.8 320.8,222.9 320.1,224.9 319.3,226.9 318.4,228.8 317.4,230.7 316.3,232.4 315.1,234.1 313.9,235.8 312.6,237.3 311.2,238.8 309.7,240.2 308.2,241.5 306.5,242.7 304.8,243.9 303.1,245.0 301.2,246.0 299.3,246.9 297.3,247.7 295.3,248.4 293.2,249.0 291.0,249.6 288.8,250.1 286.5,250.4 284.2,250.7 281.8,250.9 279.4,251.0 276.9,251.0 274.4,251.0 271.8,250.8 269.2,250.5 266.6,250.2 263.9,249.8 261.2,249.2 258.4,248.6 255.7,247.9 252.9,247.1 250.1,246.3 247.3,245.3 244.4,244.3 241.6,243.1 238.7,241.9 235.8,240.6 233.0,239.3 230.1,237.8 227.2,236.3 224.3,234.7 221.5,233.0 218.6,231.3 215.8,229.4 213.0,227.6 210.2,225.6 207.4,223.6 204.7,221.5 201.9,219.4 199.2,217.1 196.6,214.9 193.9,212.6 191.3,210.2 188.8,207.8 186.3,205.3 183.8,202.8 181.4,200.3 179.0,197.7 176.7,195.0 174.5,192.4 172.2,189.7 170.1,186.9 168.0,184.2 166.0,181.4 164.0,178.6 162.2,175.8 160.3,173.0 158.6,170.1 156.9,167.3 155.3,164.4 153.8,161.5 152.3,158.6 151.0,155.8 149.7,152.9 148.5,150.0 147.3,147.2 146.3,144.3 145.3,141.5 144.5,138.7 143.7,135.9 143.0,133.2 142.4,130.4 141.8,127.7 141.4,125.0 141.1,122.4 140.8,119.8 140.6,117.2 140.6,114.7 140.6,112.2 140.7,109.8 140.9,107.4 141.2,105.1 141.5,102.8 142.0,100.6 142.6,98.4 143.2,96.3 143.9,94.3 144.7,92.3 145.6,90.4 146.6,88.5 147.7,86.8 148.9,85.1 150.1,83.4 151.4,81.9 152.8,80.4 154.3,79.0 155.8,77.7 157.5,76.5 159.2,75.3 160.9,74.2 162.8,73.2 164.7,72.3 166.7,71.5 168.7,70.8 170.8,70.2 173.0,69.6 175.2,69.1 177.5,68.8 179.8,68.5 182.2,68.3 184.6,68.2 187.1,68.2 189.6,68.2 192.2,68.4 194.8,68.7 197.4,69.0 200.1,69.4 202.8,70.0 205.6,70.6 208.3,71.3 211.1,72.1 213.9,72.9 216.7,73.9 219.6,74.9 222.4,76.1 225.3,77.3 228.2,78.6 231.0,79.9 233.9,81.4 236.8,82.9 239.7,84.5 242.5,86.2 245.4,87.9 248.2,89.8 251.0,91.6 253.8,93.6 256.6,95.6 259.3,97.7 262.1,99.8 264.8,102.1 267.4,104.3 270.1,106.6 272.7,109.0 275.2,111.4 277.7,113.9" fill="rgba(168,50,42,0.07)" stroke="#a8322a" stroke-width="2.8" stroke-linejoin="round"/>
+<line x1="117.2" y1="274.4" x2="346.8" y2="44.8" stroke="#2b3a67" stroke-width="1.8" stroke-dasharray="6 4"/>
+<line x1="129.0" y1="56.6" x2="335.0" y2="262.6" stroke="#5f7f4f" stroke-width="1.8" stroke-dasharray="6 4"/>
+<line x1="232.0" y1="159.6" x2="277.7" y2="113.9" stroke="#2b3a67" stroke-width="3.4"/><path d="M274.4 123.3 L277.7 113.9 L268.3 117.2" fill="none" stroke="#2b3a67" stroke-width="3.4"/>
+<line x1="232.0" y1="159.6" x2="311.2" y2="238.8" stroke="#5f7f4f" stroke-width="3.4"/><path d="M301.8 235.5 L311.2 238.8 L307.9 229.4" fill="none" stroke="#5f7f4f" stroke-width="3.4"/>
+<rect x="252.6" y="27.1" width="182.9" height="20.5" fill="#fffdf7" opacity="0.92"/><text x="344.0" y="41.6" font-size="14.5" fill="#2b3a67" text-anchor="middle" font-weight="bold">y₁ 軸（q₁ 方向、λ=3）</text>
+<rect x="269.8" y="273.5" width="145.2" height="20.5" fill="#fffdf7" opacity="0.92"/><text x="342.4" y="288.0" font-size="14.5" fill="#5f7f4f" text-anchor="middle" font-weight="bold">y₂ 軸（q₂、λ=1）</text>
+<rect x="251.4" y="153.2" width="81.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="254.4" y="167.2" font-size="14" fill="#2b3a67" text-anchor="start">半径 1/√3</text>
+<rect x="291.0" y="199.6" width="50.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="294.0" y="213.6" font-size="14" fill="#5f7f4f" text-anchor="start">半径 1</text>
+<text x="14.0" y="312.0" font-size="14.5" fill="#a8322a" text-anchor="start" font-weight="bold">朱の楕円：2x² + 2xy + 2y² = 1　すなわち 3y₁² + y₂² = 1</text>
+</svg>
+<figcaption><strong>図 3.2</strong>　$q(x,y)=2x^2+2xy+2y^2=1$ の等高線は楕円。軸は固有ベクトルの方向で、半径は $1/\sqrt{\lambda}$（固有値 $3$ の方向が $1/\sqrt3\approx0.58$、固有値 $1$ の方向が $1$）。座標を $y_1,y_2$ に回すと式から $xy$ の項が消えて $3y_1^2+y_2^2=1$。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>第20回 1.4 の楕円（円 $\|\boldsymbol x\|=1$ を $A$ で写した像）は、軸の長さが $3$ と $1$（固有値そのもの）で、ここでの楕円 $q(\boldsymbol x)=1$ は軸の半径が $1/\sqrt3$ と $1$（固有値の平方根の逆数）。<strong>軸の向きは同じ（固有ベクトルの方向）だが、長さの決まり方が違う</strong>。2つの図を混同しない。</p>
+</div>
+<div class="why"><span class="label">ひとことで</span>$\boldsymbol x=Q\boldsymbol y$ で座標を回すと、$q(\boldsymbol x)=\lambda_1y_1^2+\cdots+\lambda_ny_n^2$。交差項が消え、各軸方向の「2乗の係数」が固有値になる。</div>
+
+<h3 id="sec-3-3"><span class="no">3.3</span>正定値：どの向きにも正</h3>
+<p>3.2 の ④ を見ると、$q$ の符号は固有値 $\lambda_j$ の符号で決まりそうである。「$\boldsymbol 0$ でないどんな $\boldsymbol x$ でも $q(\boldsymbol x)$ が正」という性質に名前をつける。</p>
+<div class="def" id="sym-pos-def"><span class="label">記号：正定値 $A\succ0$、半正定値 $A\succeq0$</span>
+<p><strong>①読み方</strong>：$A\succ0$ は「エー・ぱっつ・ゼロ」または「エーは正定値」。$A\succeq0$ は「エーは半正定値（はんせいていち）」。$\prec,\ \preceq$ は負定値・半負定値。英語で positive (semi)definite。</p>
+<p><strong>②日本語での意味</strong>：二次形式 $\boldsymbol x^{\mathsf T}A\boldsymbol x$ が、<strong>零でないどのベクトル $\boldsymbol x$ についても正</strong>（正定値）、または<strong>どのベクトルでも $0$ 以上</strong>（半正定値）であること。</p>
+<p><strong>③省略していない書き方</strong>：$A\in\mathbb R^{n\times n}$ を対称行列とする。</p>
+<ul>
+<li>$A\succ0$ （正定値）：すべての $\boldsymbol x\in\mathbb R^n$ で、$\boldsymbol x\neq\boldsymbol 0$ ならば $\boldsymbol x^{\mathsf T}A\boldsymbol x\gt0$。</li>
+<li>$A\succeq0$ （半正定値）：すべての $\boldsymbol x\in\mathbb R^n$ で $\boldsymbol x^{\mathsf T}A\boldsymbol x\ge0$。</li>
+<li>$A\prec0$、$A\preceq0$：上の不等号を逆にしたもの（負定値、半負定値）。</li>
+<li>どれでもない、つまり正になる $\boldsymbol x$ も負になる $\boldsymbol x$ もあるとき<strong>不定値</strong>。</li>
+</ul>
+<p><strong>④どこで出会うか</strong>：多変数関数の極小の判定（ヘッセ行列、第51回）、凸関数（第51回）、共分散行列は半正定値（統計）、エネルギーが正であること（機械力学）、最小二乗法の解の一意性（第47回）。</p>
+</div>
+
+<div class="thm"><span class="label">定理3.1（固有値による判定）</span>
+<p>対称行列 $A$ の固有値を $\lambda_1,\dots,\lambda_n$ とする。(1) $A\succ0$ ⇔ すべての $\lambda_j\gt0$。(2) $A\succeq0$ ⇔ すべての $\lambda_j\ge0$。(3) $A\prec0$ ⇔ すべての $\lambda_j\lt0$。(4) 不定値 ⇔ 正の固有値も負の固有値もある。</p>
+</div>
+<div class="proof"><span class="label">証明（(1)。(2)(3)(4) も不等号を替えるだけ）</span>
+<p>⇒：固有ベクトル $\boldsymbol q_j$（$\boldsymbol q_j\neq\boldsymbol 0$）を $\boldsymbol x$ に入れる。① $\boldsymbol q_j^{\mathsf T}A\boldsymbol q_j=\boldsymbol q_j^{\mathsf T}(\lambda_j\boldsymbol q_j)=\lambda_j\|\boldsymbol q_j\|^2$。② $A\succ0$ だから左辺は $\gt0$、$\|\boldsymbol q_j\|^2\gt0$ だから $\lambda_j\gt0$。</p>
+<p>⇐：すべての $\lambda_j\gt0$ とする。$\boldsymbol x\neq\boldsymbol 0$ をとり、$\boldsymbol y=Q^{\mathsf T}\boldsymbol x$。① $\boldsymbol y\neq\boldsymbol 0$。　<span class="meta">$\boldsymbol y=\boldsymbol 0$ なら $\boldsymbol x=Q\boldsymbol 0=\boldsymbol 0$</span>　② 3.2 の ④ より $q(\boldsymbol x)=\sum\lambda_jy_j^2$。各項は $\ge0$ で、少なくとも1つの $y_j\neq0$ なので、その項は $\gt0$。よって $q(\boldsymbol x)\gt0$。□</p>
+</div>
+<p>4つの型を、2変数の例で並べる。等高線 $q=1$ の形（図3.3）が、固有値の符号で変わる。</p>
+<table class="tb">
+<tr><th>$A$</th><th>固有値</th><th>$q(x,y)$</th><th>型</th><th>$q=1$ の形</th></tr>
+<tr><td>$\begin{pmatrix}2&1\\1&2\end{pmatrix}$</td><td>$3,\ 1$</td><td>$2x^2+2xy+2y^2$</td><td>正定値</td><td>楕円</td></tr>
+<tr><td>$\begin{pmatrix}1&1\\1&1\end{pmatrix}$</td><td>$2,\ 0$</td><td>$(x+y)^2$</td><td>半正定値（正定値ではない）</td><td>平行な2本の直線 $x+y=\pm1$</td></tr>
+<tr><td>$\begin{pmatrix}1&2\\2&1\end{pmatrix}$</td><td>$3,\ -1$</td><td>$x^2+4xy+y^2$</td><td>不定値</td><td>双曲線</td></tr>
+<tr><td>$\begin{pmatrix}-2&-1\\-1&-2\end{pmatrix}$</td><td>$-3,\ -1$</td><td>$-(2x^2+2xy+2y^2)$</td><td>負定値</td><td>$q=-1$ が楕円（$q=1$ は空集合）</td></tr>
+</table>
+<p>確かめ：半正定値の例は、固有値 $0$ の固有ベクトル $(1,-1)^{\mathsf T}$ で $q(1,-1)=(1-1)^2=0$。零でないベクトルで $q=0$ になるので正定値ではない。不定値の例は $q(1,1)=1+4+1=6\gt0$、$q(1,-1)=1-4+1=-2\lt0$。</p>
+<figure class="fig" id="fig-3-3">
+<svg viewBox="0 0 440 684" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="二次形式の等高線 q = 1" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>二次形式の等高線 q = 1</title>
+<rect x="0" y="0" width="440" height="684" fill="#fffdf7"/>
+<rect x="8" y="6" width="424" height="216" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="26.0" font-size="14.5" fill="#2a2723" text-anchor="start" font-weight="bold">正定値  2x² + 2xy + 2y² = 1（固有値 3, 1）</text>
+<line x1="120.0" y1="126.0" x2="320.0" y2="126.0" stroke="#d6cfbf" stroke-width="1"/>
+<line x1="220.0" y1="216.0" x2="220.0" y2="36.0" stroke="#d6cfbf" stroke-width="1"/>
+<polyline points="240.4,105.6 241.5,106.7 242.6,107.8 243.6,109.0 244.7,110.2 245.7,111.4 246.7,112.6 247.6,113.8 248.6,115.0 249.5,116.3 250.3,117.5 251.2,118.8 252.0,120.0 252.8,121.3 253.5,122.6 254.2,123.9 254.9,125.1 255.6,126.4 256.2,127.7 256.8,129.0 257.3,130.3 257.8,131.5 258.3,132.8 258.7,134.1 259.1,135.3 259.4,136.6 259.7,137.8 260.0,139.0 260.3,140.2 260.4,141.4 260.6,142.6 260.7,143.8 260.8,144.9 260.8,146.0 260.8,147.1 260.8,148.2 260.7,149.3 260.6,150.3 260.4,151.4 260.2,152.4 259.9,153.3 259.6,154.3 259.3,155.2 259.0,156.1 258.6,156.9 258.1,157.7 257.6,158.5 257.1,159.3 256.6,160.0 256.0,160.7 255.4,161.4 254.7,162.0 254.0,162.6 253.3,163.1 252.5,163.6 251.7,164.1 250.9,164.6 250.1,165.0 249.2,165.3 248.3,165.6 247.3,165.9 246.4,166.2 245.4,166.4 244.3,166.6 243.3,166.7 242.2,166.8 241.1,166.8 240.0,166.8 238.9,166.8 237.8,166.7 236.6,166.6 235.4,166.4 234.2,166.3 233.0,166.0 231.8,165.7 230.6,165.4 229.3,165.1 228.1,164.7 226.8,164.3 225.5,163.8 224.3,163.3 223.0,162.8 221.7,162.2 220.4,161.6 219.1,160.9 217.9,160.2 216.6,159.5 215.3,158.8 214.0,158.0 212.8,157.2 211.5,156.3 210.3,155.5 209.0,154.6 207.8,153.6 206.6,152.7 205.4,151.7 204.2,150.7 203.0,149.6 201.8,148.6 200.7,147.5 199.6,146.4 198.5,145.3 197.4,144.2 196.4,143.0 195.3,141.8 194.3,140.6 193.3,139.4 192.4,138.2 191.4,137.0 190.5,135.7 189.7,134.5 188.8,133.2 188.0,132.0 187.2,130.7 186.5,129.4 185.8,128.1 185.1,126.9 184.4,125.6 183.8,124.3 183.2,123.0 182.7,121.7 182.2,120.5 181.7,119.2 181.3,117.9 180.9,116.7 180.6,115.4 180.3,114.2 180.0,113.0 179.7,111.8 179.6,110.6 179.4,109.4 179.3,108.2 179.2,107.1 179.2,106.0 179.2,104.9 179.2,103.8 179.3,102.7 179.4,101.7 179.6,100.6 179.8,99.6 180.1,98.7 180.4,97.7 180.7,96.8 181.0,95.9 181.4,95.1 181.9,94.3 182.4,93.5 182.9,92.7 183.4,92.0 184.0,91.3 184.6,90.6 185.3,90.0 186.0,89.4 186.7,88.9 187.5,88.4 188.3,87.9 189.1,87.4 189.9,87.0 190.8,86.7 191.7,86.4 192.7,86.1 193.6,85.8 194.6,85.6 195.7,85.4 196.7,85.3 197.8,85.2 198.9,85.2 200.0,85.2 201.1,85.2 202.2,85.3 203.4,85.4 204.6,85.6 205.8,85.7 207.0,86.0 208.2,86.3 209.4,86.6 210.7,86.9 211.9,87.3 213.2,87.7 214.5,88.2 215.7,88.7 217.0,89.2 218.3,89.8 219.6,90.4 220.9,91.1 222.1,91.8 223.4,92.5 224.7,93.2 226.0,94.0 227.2,94.8 228.5,95.7 229.7,96.5 231.0,97.4 232.2,98.4 233.4,99.3 234.6,100.3 235.8,101.3 237.0,102.4 238.2,103.4 239.3,104.5 240.4,105.6" fill="rgba(168,50,42,0.08)" stroke="#a8322a" stroke-width="2.8" stroke-linejoin="round"/>
+<text x="330.0" y="196.0" font-size="13" fill="#6b645a" text-anchor="start">x 軸・y 軸は灰</text>
+<rect x="8" y="232" width="424" height="216" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="252.0" font-size="14.5" fill="#2a2723" text-anchor="start" font-weight="bold">半正定値  (x + y)² = 1（固有値 2, 0）</text>
+<line x1="120.0" y1="352.0" x2="320.0" y2="352.0" stroke="#d6cfbf" stroke-width="1"/>
+<line x1="220.0" y1="442.0" x2="220.0" y2="262.0" stroke="#d6cfbf" stroke-width="1"/>
+<line x1="185.0" y1="267.0" x2="320.0" y2="402.0" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="120.0" y1="302.0" x2="255.0" y2="437.0" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="150.0" y1="282.0" x2="290.0" y2="422.0" stroke="#2b3a67" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="270.0" y="404.5" font-size="13.5" fill="#2b3a67" text-anchor="start">(1,−1) 方向は q=0</text>
+<text x="330.0" y="422.0" font-size="13" fill="#6b645a" text-anchor="start">x 軸・y 軸は灰</text>
+<rect x="8" y="458" width="424" height="216" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="478.0" font-size="14.5" fill="#2a2723" text-anchor="start" font-weight="bold">不定値  x² + 4xy + y² = 1（固有値 3, −1）</text>
+<line x1="120.0" y1="578.0" x2="320.0" y2="578.0" stroke="#d6cfbf" stroke-width="1"/>
+<line x1="220.0" y1="668.0" x2="220.0" y2="488.0" stroke="#d6cfbf" stroke-width="1"/>
+<polyline points="204.3,489.6 204.9,491.4 205.6,493.2 206.2,495.0 206.8,496.7 207.5,498.4 208.1,500.1 208.7,501.8 209.3,503.4 209.9,505.0 210.6,506.5 211.2,508.0 211.8,509.5 212.4,511.0 213.0,512.5 213.6,513.9 214.1,515.3 214.7,516.6 215.3,518.0 215.9,519.3 216.5,520.6 217.1,521.9 217.6,523.1 218.2,524.4 218.8,525.6 219.4,526.7 220.0,527.9 220.5,529.1 221.1,530.2 221.7,531.3 222.3,532.4 222.8,533.5 223.4,534.5 224.0,535.5 224.6,536.6 225.2,537.6 225.8,538.5 226.4,539.5 226.9,540.5 227.5,541.4 228.1,542.3 228.7,543.2 229.3,544.1 230.0,545.0 230.6,545.9 231.2,546.8 231.8,547.6 232.4,548.4 233.1,549.3 233.7,550.1 234.3,550.9 235.0,551.6 235.6,552.4 236.3,553.2 237.0,553.9 237.6,554.7 238.3,555.4 239.0,556.2 239.7,556.9 240.4,557.6 241.1,558.3 241.8,559.0 242.6,559.7 243.3,560.4 244.1,561.0 244.8,561.7 245.6,562.4 246.4,563.0 247.1,563.7 247.9,564.3 248.7,564.9 249.6,565.6 250.4,566.2 251.2,566.8 252.1,567.4 253.0,568.0 253.9,568.7 254.8,569.3 255.7,569.9 256.6,570.5 257.5,571.1 258.5,571.6 259.5,572.2 260.4,572.8 261.4,573.4 262.5,574.0 263.5,574.6 264.5,575.2 265.6,575.7 266.7,576.3 267.8,576.9 268.9,577.5 270.1,578.0 271.3,578.6 272.4,579.2 273.6,579.8 274.9,580.4 276.1,580.9 277.4,581.5 278.7,582.1 280.0,582.7 281.4,583.3 282.7,583.9 284.1,584.4 285.5,585.0 287.0,585.6 288.5,586.2 290.0,586.8 291.5,587.4 293.0,588.1 294.6,588.7 296.2,589.3 297.9,589.9 299.6,590.5 301.3,591.2 303.0,591.8 304.8,592.4 306.6,593.1 308.4,593.7 310.3,594.4" fill="none" stroke="#a8322a" stroke-width="2.8" stroke-linejoin="round"/>
+<polyline points="129.7,561.6 131.6,562.3 133.4,562.9 135.2,563.6 137.0,564.2 138.7,564.8 140.4,565.5 142.1,566.1 143.8,566.7 145.4,567.3 147.0,567.9 148.5,568.6 150.0,569.2 151.5,569.8 153.0,570.4 154.5,571.0 155.9,571.6 157.3,572.1 158.6,572.7 160.0,573.3 161.3,573.9 162.6,574.5 163.9,575.1 165.1,575.6 166.4,576.2 167.6,576.8 168.7,577.4 169.9,578.0 171.1,578.5 172.2,579.1 173.3,579.7 174.4,580.3 175.5,580.8 176.5,581.4 177.5,582.0 178.6,582.6 179.6,583.2 180.5,583.8 181.5,584.4 182.5,584.9 183.4,585.5 184.3,586.1 185.2,586.7 186.1,587.3 187.0,588.0 187.9,588.6 188.8,589.2 189.6,589.8 190.4,590.4 191.3,591.1 192.1,591.7 192.9,592.3 193.6,593.0 194.4,593.6 195.2,594.3 195.9,595.0 196.7,595.6 197.4,596.3 198.2,597.0 198.9,597.7 199.6,598.4 200.3,599.1 201.0,599.8 201.7,600.6 202.4,601.3 203.0,602.1 203.7,602.8 204.4,603.6 205.0,604.4 205.7,605.1 206.3,605.9 206.9,606.7 207.6,607.6 208.2,608.4 208.8,609.2 209.4,610.1 210.0,611.0 210.7,611.9 211.3,612.8 211.9,613.7 212.5,614.6 213.1,615.5 213.6,616.5 214.2,617.5 214.8,618.4 215.4,619.4 216.0,620.5 216.6,621.5 217.2,622.5 217.7,623.6 218.3,624.7 218.9,625.8 219.5,626.9 220.0,628.1 220.6,629.3 221.2,630.4 221.8,631.6 222.4,632.9 222.9,634.1 223.5,635.4 224.1,636.7 224.7,638.0 225.3,639.4 225.9,640.7 226.4,642.1 227.0,643.5 227.6,645.0 228.2,646.5 228.8,648.0 229.4,649.5 230.1,651.0 230.7,652.6 231.3,654.2 231.9,655.9 232.5,657.6 233.2,659.3 233.8,661.0 234.4,662.8 235.1,664.6 235.7,666.4" fill="none" stroke="#a8322a" stroke-width="2.8" stroke-linejoin="round"/>
+<line x1="316.6" y1="603.9" x2="123.4" y2="552.1" stroke="#c9c2b2" stroke-width="1.2" stroke-dasharray="5 4"/>
+<line x1="194.1" y1="481.4" x2="245.9" y2="674.6" stroke="#c9c2b2" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="330.0" y="648.0" font-size="13" fill="#6b645a" text-anchor="start">x 軸・y 軸は灰</text>
+</svg>
+<figcaption><strong>図 3.3</strong>　固有値が両方正なら楕円、一方が $0$ なら平行な2直線、符号が混ざると双曲線（灰の破線は漸近線）。半正定値の例では、$q=0$ になる方向 $(1,-1)$ が存在する。負定値では $q=-1$ が楕円になる。</figcaption>
+</figure>
+<p>図3.4 に、固有値の符号の組と型の対応、およびそれぞれの曲面の様子（谷、山、鞍、とい）を並べる。</p>
+<figure class="fig" id="fig-3-4">
+<svg viewBox="0 0 440 390" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="固有値の符号と二次形式の型" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>固有値の符号と二次形式の型</title>
+<rect x="0" y="0" width="440" height="390" fill="#fffdf7"/>
+<rect x="8" y="6" width="424" height="88" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="34.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">正定値</text>
+<text x="20.0" y="58.0" font-size="14.5" fill="#2a2723" text-anchor="start">λ₁&gt;0, λ₂&gt;0</text>
+<text x="20.0" y="80.0" font-size="13.5" fill="#6b645a" text-anchor="start">x≠0 で q&gt;0</text>
+<line x1="205.0" y1="46.0" x2="295.0" y2="46.0" stroke="#cfc8b8" stroke-width="1"/>
+<polyline points="205.0,20.0 207.2,22.5 209.5,24.9 211.8,27.2 214.0,29.4 216.2,31.4 218.5,33.3 220.8,35.0 223.0,36.6 225.2,38.1 227.5,39.5 229.8,40.7 232.0,41.8 234.2,42.8 236.5,43.7 238.8,44.4 241.0,45.0 243.2,45.4 245.5,45.7 247.8,45.9 250.0,46.0 252.2,45.9 254.5,45.7 256.8,45.4 259.0,45.0 261.2,44.4 263.5,43.7 265.8,42.8 268.0,41.8 270.2,40.7 272.5,39.5 274.8,38.1 277.0,36.6 279.2,35.0 281.5,33.3 283.8,31.4 286.0,29.4 288.2,27.2 290.5,24.9 292.8,22.5 295.0,20.0" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="250.0" y="86.0" font-size="13" fill="#6b645a" text-anchor="middle">y₁ 方向の断面</text>
+<line x1="315.0" y1="46.0" x2="405.0" y2="46.0" stroke="#cfc8b8" stroke-width="1"/>
+<polyline points="315.0,20.0 317.2,22.5 319.5,24.9 321.8,27.2 324.0,29.4 326.2,31.4 328.5,33.3 330.8,35.0 333.0,36.6 335.2,38.1 337.5,39.5 339.8,40.7 342.0,41.8 344.2,42.8 346.5,43.7 348.8,44.4 351.0,45.0 353.2,45.4 355.5,45.7 357.8,45.9 360.0,46.0 362.2,45.9 364.5,45.7 366.8,45.4 369.0,45.0 371.2,44.4 373.5,43.7 375.8,42.8 378.0,41.8 380.2,40.7 382.5,39.5 384.8,38.1 387.0,36.6 389.2,35.0 391.5,33.3 393.8,31.4 396.0,29.4 398.2,27.2 400.5,24.9 402.8,22.5 405.0,20.0" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="360.0" y="86.0" font-size="13" fill="#6b645a" text-anchor="middle">y₂ 方向の断面</text>
+<rect x="8" y="102" width="424" height="88" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="130.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">半正定値</text>
+<text x="20.0" y="154.0" font-size="14.5" fill="#2a2723" text-anchor="start">λ₁&gt;0, λ₂=0</text>
+<text x="20.0" y="176.0" font-size="13.5" fill="#6b645a" text-anchor="start">q≥0（q=0 の向きあり）</text>
+<line x1="205.0" y1="142.0" x2="295.0" y2="142.0" stroke="#cfc8b8" stroke-width="1"/>
+<polyline points="205.0,116.0 207.2,118.5 209.5,120.9 211.8,123.2 214.0,125.4 216.2,127.4 218.5,129.3 220.8,131.0 223.0,132.6 225.2,134.1 227.5,135.5 229.8,136.7 232.0,137.8 234.2,138.8 236.5,139.7 238.8,140.4 241.0,141.0 243.2,141.4 245.5,141.7 247.8,141.9 250.0,142.0 252.2,141.9 254.5,141.7 256.8,141.4 259.0,141.0 261.2,140.4 263.5,139.7 265.8,138.8 268.0,137.8 270.2,136.7 272.5,135.5 274.8,134.1 277.0,132.6 279.2,131.0 281.5,129.3 283.8,127.4 286.0,125.4 288.2,123.2 290.5,120.9 292.8,118.5 295.0,116.0" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="250.0" y="182.0" font-size="13" fill="#6b645a" text-anchor="middle">y₁ 方向の断面</text>
+<line x1="315.0" y1="142.0" x2="405.0" y2="142.0" stroke="#cfc8b8" stroke-width="1"/>
+<polyline points="315.0,142.0 317.2,142.0 319.5,142.0 321.8,142.0 324.0,142.0 326.2,142.0 328.5,142.0 330.8,142.0 333.0,142.0 335.2,142.0 337.5,142.0 339.8,142.0 342.0,142.0 344.2,142.0 346.5,142.0 348.8,142.0 351.0,142.0 353.2,142.0 355.5,142.0 357.8,142.0 360.0,142.0 362.2,142.0 364.5,142.0 366.8,142.0 369.0,142.0 371.2,142.0 373.5,142.0 375.8,142.0 378.0,142.0 380.2,142.0 382.5,142.0 384.8,142.0 387.0,142.0 389.2,142.0 391.5,142.0 393.8,142.0 396.0,142.0 398.2,142.0 400.5,142.0 402.8,142.0 405.0,142.0" fill="none" stroke="#6b645a" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="360.0" y="182.0" font-size="13" fill="#6b645a" text-anchor="middle">y₂ 方向の断面</text>
+<rect x="8" y="198" width="424" height="88" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="226.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">不定値</text>
+<text x="20.0" y="250.0" font-size="14.5" fill="#2a2723" text-anchor="start">λ₁&gt;0, λ₂&lt;0</text>
+<text x="20.0" y="272.0" font-size="13.5" fill="#6b645a" text-anchor="start">正にも負にもなる</text>
+<line x1="205.0" y1="238.0" x2="295.0" y2="238.0" stroke="#cfc8b8" stroke-width="1"/>
+<polyline points="205.0,212.0 207.2,214.5 209.5,216.9 211.8,219.2 214.0,221.4 216.2,223.4 218.5,225.3 220.8,227.0 223.0,228.6 225.2,230.1 227.5,231.5 229.8,232.7 232.0,233.8 234.2,234.8 236.5,235.7 238.8,236.4 241.0,237.0 243.2,237.4 245.5,237.7 247.8,237.9 250.0,238.0 252.2,237.9 254.5,237.7 256.8,237.4 259.0,237.0 261.2,236.4 263.5,235.7 265.8,234.8 268.0,233.8 270.2,232.7 272.5,231.5 274.8,230.1 277.0,228.6 279.2,227.0 281.5,225.3 283.8,223.4 286.0,221.4 288.2,219.2 290.5,216.9 292.8,214.5 295.0,212.0" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="250.0" y="278.0" font-size="13" fill="#6b645a" text-anchor="middle">y₁ 方向の断面</text>
+<line x1="315.0" y1="238.0" x2="405.0" y2="238.0" stroke="#cfc8b8" stroke-width="1"/>
+<polyline points="315.0,264.0 317.2,261.5 319.5,259.1 321.8,256.8 324.0,254.6 326.2,252.6 328.5,250.7 330.8,249.0 333.0,247.4 335.2,245.9 337.5,244.5 339.8,243.3 342.0,242.2 344.2,241.2 346.5,240.3 348.8,239.6 351.0,239.0 353.2,238.6 355.5,238.3 357.8,238.1 360.0,238.0 362.2,238.1 364.5,238.3 366.8,238.6 369.0,239.0 371.2,239.6 373.5,240.3 375.8,241.2 378.0,242.2 380.2,243.3 382.5,244.5 384.8,245.9 387.0,247.4 389.2,249.0 391.5,250.7 393.8,252.6 396.0,254.6 398.2,256.8 400.5,259.1 402.8,261.5 405.0,264.0" fill="none" stroke="#a8322a" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="360.0" y="278.0" font-size="13" fill="#6b645a" text-anchor="middle">y₂ 方向の断面</text>
+<rect x="8" y="294" width="424" height="88" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="20.0" y="322.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">負定値</text>
+<text x="20.0" y="346.0" font-size="14.5" fill="#2a2723" text-anchor="start">λ₁&lt;0, λ₂&lt;0</text>
+<text x="20.0" y="368.0" font-size="13.5" fill="#6b645a" text-anchor="start">x≠0 で q&lt;0</text>
+<line x1="205.0" y1="334.0" x2="295.0" y2="334.0" stroke="#cfc8b8" stroke-width="1"/>
+<polyline points="205.0,360.0 207.2,357.5 209.5,355.1 211.8,352.8 214.0,350.6 216.2,348.6 218.5,346.7 220.8,345.0 223.0,343.4 225.2,341.9 227.5,340.5 229.8,339.3 232.0,338.2 234.2,337.2 236.5,336.3 238.8,335.6 241.0,335.0 243.2,334.6 245.5,334.3 247.8,334.1 250.0,334.0 252.2,334.1 254.5,334.3 256.8,334.6 259.0,335.0 261.2,335.6 263.5,336.3 265.8,337.2 268.0,338.2 270.2,339.3 272.5,340.5 274.8,341.9 277.0,343.4 279.2,345.0 281.5,346.7 283.8,348.6 286.0,350.6 288.2,352.8 290.5,355.1 292.8,357.5 295.0,360.0" fill="none" stroke="#a8322a" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="250.0" y="374.0" font-size="13" fill="#6b645a" text-anchor="middle">y₁ 方向の断面</text>
+<line x1="315.0" y1="334.0" x2="405.0" y2="334.0" stroke="#cfc8b8" stroke-width="1"/>
+<polyline points="315.0,360.0 317.2,357.5 319.5,355.1 321.8,352.8 324.0,350.6 326.2,348.6 328.5,346.7 330.8,345.0 333.0,343.4 335.2,341.9 337.5,340.5 339.8,339.3 342.0,338.2 344.2,337.2 346.5,336.3 348.8,335.6 351.0,335.0 353.2,334.6 355.5,334.3 357.8,334.1 360.0,334.0 362.2,334.1 364.5,334.3 366.8,334.6 369.0,335.0 371.2,335.6 373.5,336.3 375.8,337.2 378.0,338.2 380.2,339.3 382.5,340.5 384.8,341.9 387.0,343.4 389.2,345.0 391.5,346.7 393.8,348.6 396.0,350.6 398.2,352.8 400.5,355.1 402.8,357.5 405.0,360.0" fill="none" stroke="#a8322a" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="360.0" y="374.0" font-size="13" fill="#6b645a" text-anchor="middle">y₂ 方向の断面</text>
+</svg>
+<figcaption><strong>図 3.4</strong>　$q=\lambda_1y_1^2+\lambda_2y_2^2$ の、各軸方向に切った断面。正の固有値の方向は上に開いた放物線（谷）、負は下に開いた放物線（山）、$0$ は平ら。両方が上なら谷（お椀）、上下が混ざると鞍の形。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<ul>
+<li>「成分がすべて正なら正定値」は<strong>誤り</strong>。$\begin{pmatrix}1&2\\2&1\end{pmatrix}$ は成分がすべて正だが固有値が $3,-1$ で不定値。</li>
+<li>「成分に負があれば正定値でない」も<strong>誤り</strong>。$\begin{pmatrix}2&-1\\-1&2\end{pmatrix}$ は固有値 $3,1$ で正定値。</li>
+<li>「$A\succ0$」は成分ごとの不等号ではない。$\succ$ は<strong>二次形式が正</strong>という意味の記号である。教科書によっては「$A\gt0$」と書く（流派の違い）。</li>
+<li>半正定値は「正の固有値と $0$ の固有値」で、正定値と違い、零でないベクトルで $q=0$ になる方向がある。</li>
+<li>対称でない行列にも $\boldsymbol x^{\mathsf T}N\boldsymbol x\gt0$ の条件は書けるが、3.1 のとおり対称部分 $(N+N^{\mathsf T})/2$ だけで決まる。この教材では対称行列にだけ「正定値」を使う。</li>
+</ul>
+</div>
+<div class="why"><span class="label">ひとことで</span>$A$ が正定値 ⇔ 固有値がすべて正 ⇔ $\boldsymbol 0$ でないどの向きでも $\boldsymbol x^{\mathsf T}A\boldsymbol x\gt0$。固有値が $0$ を含めば半正定値、符号が混ざれば不定値。</div>
+
+<h3 id="sec-3-4"><span class="no">3.4</span>判定法：固有値を求めずに調べる</h3>
+<p>固有値を実際に求めるのは大変なことが多い。2×2 では、固有値を求めずに判定できる。</p>
+<div class="thm"><span class="label">定理3.2（2×2 の正定値）</span>
+<p>$A=\begin{pmatrix}a&b\\b&c\end{pmatrix}$ について、$A\succ0$ ⇔ $a\gt0$ かつ $ac-b^2\gt0$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>① $a\,q(x,y)=a^2x^2+2abxy+acy^2=(ax+by)^2+(ac-b^2)y^2$。　<span class="meta">右辺を展開すると $a^2x^2+2abxy+b^2y^2+(ac-b^2)y^2$。平方完成</span></p>
+<p>⇐：$a\gt0$、$ac-b^2\gt0$ とする。$(x,y)\neq(0,0)$ をとる。① の右辺は2つの平方の和（係数は正）で、$y\neq0$ なら第2項が $\gt0$、$y=0$ なら $x\neq0$ で第1項 $a^2x^2\gt0$。よって $a\,q\gt0$ で、$a\gt0$ だから $q\gt0$。</p>
+<p>⇒：$A\succ0$ とする。$q(1,0)=a\gt0$。また固有値 $\lambda_1,\lambda_2$ はともに正（定理3.1）で、その積は $\det A=ac-b^2$（<a href="20_第20回_固有値と固有ベクトル.html#sec-4-1">第20回の定理4.1</a>）だから $ac-b^2=\lambda_1\lambda_2\gt0$。□</p>
+</div>
+<figure class="fig" id="fig-3-5">
+<svg viewBox="0 0 440 334" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="2×2 の正定値判定" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>2×2 の正定値判定</title>
+<rect x="0" y="0" width="440" height="334" fill="#fffdf7"/>
+<rect x="24" y="10" width="392" height="46" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="220.0" y="40.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">q</tspan><tspan> = </tspan><tspan font-style="italic">a</tspan><tspan font-style="italic">x</tspan><tspan>² + 2</tspan><tspan font-style="italic">b</tspan><tspan font-style="italic">x</tspan><tspan font-style="italic">y</tspan><tspan> + </tspan><tspan font-style="italic">c</tspan><tspan font-style="italic">y</tspan><tspan>²</tspan></text>
+<line x1="220.0" y1="56.0" x2="220.0" y2="86.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 77.9 L220.0 86.0 L223.9 77.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<rect x="24" y="86" width="392" height="46" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="220.0" y="116.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan>·</tspan><tspan font-style="italic">q</tspan><tspan> = (</tspan><tspan font-style="italic">a</tspan><tspan font-style="italic">x</tspan><tspan> + </tspan><tspan font-style="italic">b</tspan><tspan font-style="italic">y</tspan><tspan>)² + (</tspan><tspan font-style="italic">a</tspan><tspan font-style="italic">c</tspan><tspan> − </tspan><tspan font-style="italic">b</tspan><tspan>²)</tspan><tspan font-style="italic">y</tspan><tspan>²</tspan></text>
+<line x1="220.0" y1="132.0" x2="220.0" y2="162.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 153.9 L220.0 162.0 L223.9 153.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<text x="236.0" y="152.0" font-size="14" fill="#6b645a" text-anchor="start">平方完成</text>
+<rect x="24" y="162" width="392" height="46" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2"/>
+<text x="220.0" y="192.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan> &gt; 0 かつ </tspan><tspan font-style="italic">a</tspan><tspan font-style="italic">c</tspan><tspan> − </tspan><tspan font-style="italic">b</tspan><tspan>² &gt; 0  ならば  </tspan><tspan font-style="italic">q</tspan><tspan> &gt; 0</tspan></text>
+<rect x="24" y="244" width="392" height="80" rx="8" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.8"/>
+<text x="36.0" y="270.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">逆向きも成り立つ（⇒）</text>
+<text x="36.0" y="294.0" font-size="14" fill="#2a2723" text-anchor="start">q(1, 0) = a なので a &gt; 0 は必要。</text>
+<text x="36.0" y="314.0" font-size="14" fill="#2a2723" text-anchor="start">固有値の積 = det = ac − b² &gt; 0 も必要。</text>
+</svg>
+<figcaption><strong>図 3.5</strong>　上の2つの箱は恒等式で、固有値を求めずに符号が読める。$a$ と $ac-b^2$ がどちらも正であることが、正定値であるための必要十分条件。</figcaption>
+</figure>
+<p>$n\times n$ へ一般化するには、左上の部分の行列式を使う。</p>
+<div class="def" id="sym-leading-minor"><span class="label">記号：主小行列式 $\Delta_k$</span>
+<p><strong>①読み方</strong>：「デルタ・ケー」。日本語で「（第 $k$ 次の）主小行列式（しゅしょうぎょうれつしき）」。</p>
+<p><strong>②日本語での意味</strong>：行列の<strong>左上の $k\times k$ の部分だけ</strong>を切り出して、その行列式をとった数。</p>
+<p><strong>③省略していない書き方</strong>：$A\in\mathbb R^{n\times n}$ の第1〜$k$ 行、第1〜$k$ 列を取り出した $k\times k$ 行列を $A_{[k]}$ とし、$\Delta_k:=\det A_{[k]}$（<a href="18_第18回_行列式.html#sym-det">第18回の行列式</a>）。$\Delta_1=A_{11}$、$\Delta_n=\det A$。</p>
+<p><strong>④どこで出会うか</strong>：正定値の判定（定理3.3）、制御・構造解析での安定判別。</p>
+</div>
+<div class="thm"><span class="label">定理3.3（シルベスターの規準）</span>
+<p>対称行列 $A\in\mathbb R^{n\times n}$ について、$A\succ0$ ⇔ $\Delta_1\gt0,\ \Delta_2\gt0,\ \dots,\ \Delta_n\gt0$（左上から順に、すべての主小行列式が正）。</p>
+</div>
+<p>$n=2$ は定理3.2（$\Delta_1=a$、$\Delta_2=ac-b^2$）。一般の $n$ の証明は帰納法で、長いので省略する（標準的な定理で、線形代数の教科書に載っている。本教材では結果だけ使う）。<strong>注意</strong>：この規準は<strong>正定値</strong>だけに使える。半正定値の判定には「$\Delta_k\ge0$」だけでは足りない：$\begin{pmatrix}0&0\\0&-1\end{pmatrix}$ は $\Delta_1=0,\ \Delta_2=0$ だが、$q=-y^2$ は負になる方向があり半正定値ではない。</p>
+<p><strong>数値</strong>：$T=\begin{pmatrix}2&-1&0\\-1&2&-1\\0&-1&2\end{pmatrix}$。$\Delta_1=2$、$\Delta_2=2\cdot2-(-1)(-1)=3$、$\Delta_3=\det T$。第1行で展開して（<a href="18_第18回_行列式.html#sym-cofactor">第18回の余因子展開</a>）$\Delta_3=2\cdot(2\cdot2-(-1)(-1))-(-1)\cdot((-1)\cdot2-(-1)\cdot0)+0=2\cdot3+1\cdot(-2)=4$。$2,3,4$ がすべて正なので $T\succ0$。確かめ：$T$ の固有値は $2,\ 2\pm\sqrt2$（約 $2,\ 3.41,\ 0.59$）、すべて正 ✓。和 $6=\operatorname{tr}T$、積 $2(4-2)=4=\det T$ ✓。</p>
+<figure class="fig" id="fig-3-7">
+<svg viewBox="0 0 440 274" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="左上から順にとる主小行列式" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>左上から順にとる主小行列式</title>
+<rect x="0" y="0" width="440" height="274" fill="#fffdf7"/>
+<rect x="36" y="46" width="60" height="48" fill="rgba(168,50,42,0.10)" stroke="#a8322a" stroke-width="2.2" rx="4"/>
+<rect x="36" y="46" width="112" height="88" fill="rgba(176,122,62,0.10)" stroke="#b07a3e" stroke-width="2.2" rx="4"/>
+<rect x="36" y="46" width="164" height="128" fill="rgba(43,58,103,0.10)" stroke="#2b3a67" stroke-width="2.2" rx="4"/>
+<text x="66.0" y="78.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="118.0" y="78.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="170.0" y="78.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="66.0" y="118.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="118.0" y="118.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="170.0" y="118.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="66.0" y="158.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="118.0" y="158.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="170.0" y="158.8" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<path d="M41.0 48 L35.0 48 L35.0 172 L41.0 172" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M195.0 48 L201.0 48 L201.0 172 L195.0 172" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<rect x="236" y="38" width="192" height="38" rx="6" fill="#fff" stroke="#a8322a" stroke-width="1.8"/>
+<text x="246.0" y="56.0" font-size="13" fill="#6b645a" text-anchor="start">左上 1×1</text>
+<text x="246.0" y="72.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">Δ₁ = 2</text>
+<rect x="236" y="82" width="192" height="38" rx="6" fill="#fff" stroke="#b07a3e" stroke-width="1.8"/>
+<text x="246.0" y="100.0" font-size="13" fill="#6b645a" text-anchor="start">左上 2×2</text>
+<text x="246.0" y="116.0" font-size="14" fill="#b07a3e" text-anchor="start" font-weight="bold">Δ₂ = 4 − 1 = 3</text>
+<rect x="236" y="126" width="192" height="38" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="246.0" y="144.0" font-size="13" fill="#6b645a" text-anchor="start">全体 3×3</text>
+<text x="246.0" y="160.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">Δ₃ = det T = 4</text>
+<text x="14.0" y="218.0" font-size="14.5" fill="#2a2723" text-anchor="start" font-weight="bold">Δ₁, Δ₂, Δ₃ がすべて正 → T は正定値</text>
+<text x="14.0" y="240.0" font-size="14" fill="#2a2723" text-anchor="start">確かめ：固有値は 2、2 ± √2</text>
+<text x="14.0" y="260.0" font-size="14" fill="#2a2723" text-anchor="start">（約 2、3.41、0.59）で全部正</text>
+</svg>
+<figcaption><strong>図 3.7</strong>　左上の $1\times1$、$2\times2$、$3\times3$ の部分を順に囲んで行列式をとる（朱・橙・藍）。すべて正なので正定値。</figcaption>
+</figure>
+<p>もうひとつ、「必ず半正定値になる」行列の型がある。</p>
+<div class="thm"><span class="label">定理3.4（$B^{\mathsf T}B$ は半正定値）</span>
+<p>任意の実行列 $B\in\mathbb R^{m\times n}$ について、$G:=B^{\mathsf T}B$ は対称で $G\succeq0$。さらに、$G\succ0$ ⇔ $B$ の列が一次独立（$\ker B=\{\boldsymbol 0\}$）。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>① $G^{\mathsf T}=(B^{\mathsf T}B)^{\mathsf T}=B^{\mathsf T}(B^{\mathsf T})^{\mathsf T}=B^{\mathsf T}B=G$。　<span class="meta">対称</span></p>
+<p>② $\boldsymbol x^{\mathsf T}G\boldsymbol x=\boldsymbol x^{\mathsf T}B^{\mathsf T}B\boldsymbol x=(B\boldsymbol x)^{\mathsf T}(B\boldsymbol x)=\|B\boldsymbol x\|^2\ \ge0$。　<span class="meta">積の転置。ベクトルの長さの2乗は $0$ 以上</span></p>
+<p>③ 等号 $\|B\boldsymbol x\|^2=0$ は $B\boldsymbol x=\boldsymbol 0$ と同じ。零でない $\boldsymbol x$ で $B\boldsymbol x=\boldsymbol 0$ となるものが<strong>ない</strong>こと（$\ker B=\{\boldsymbol 0\}$）が、$G\succ0$ と同じ。それは $B$ の列が<a href="15_第15回_ベクトル空間と基底.html#sym-linear-independent">一次独立</a>ということ（第17回）。□</p>
+</div>
+<p>数値：$B=\begin{pmatrix}1&2\\0&1\\1&0\end{pmatrix}$（列は一次独立）。$G=B^{\mathsf T}B=\begin{pmatrix}1\cdot1+0+1\cdot1&1\cdot2+0+0\\2&4+1+0\end{pmatrix}=\begin{pmatrix}2&2\\2&5\end{pmatrix}$。$\Delta_1=2\gt0$、$\Delta_2=10-4=6\gt0$ で $G\succ0$ ✓。最小二乗法の正規方程式 $B^{\mathsf T}B\boldsymbol x=B^{\mathsf T}\boldsymbol b$（第47回）の係数行列がこの形で、列が一次独立なら解が1つに決まる理由がここにある。</p>
+<div class="why"><span class="label">ひとことで</span>2×2 は $a\gt0$ かつ $ac-b^2\gt0$。一般には左上から順の主小行列式がすべて正（正定値のみ）。$B^{\mathsf T}B$ は必ず半正定値。</div>
+
+<h3 id="sec-3-5"><span class="no">3.5</span>最大値・最小値：固有値が上限と下限</h3>
+<p>長さ $1$ のベクトル $\|\boldsymbol x\|=1$ だけを動かしたとき、$q(\boldsymbol x)$ のとる値の範囲を調べる。</p>
+<div class="thm"><span class="label">定理3.5（レイリー商の範囲）</span>
+<p>対称行列 $A$ の最小の固有値を $\lambda_{\min}$、最大の固有値を $\lambda_{\max}$ とする。$\|\boldsymbol x\|=1$ のすべての $\boldsymbol x$ について
+$$ \lambda_{\min}\ \le\ \boldsymbol x^{\mathsf T}A\boldsymbol x\ \le\ \lambda_{\max}, $$
+等号は固有ベクトルで成り立つ（$\boldsymbol x=\boldsymbol q_{\max}$ で右、$\boldsymbol q_{\min}$ で左）。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>① $\boldsymbol y=Q^{\mathsf T}\boldsymbol x$ とおくと $\|\boldsymbol y\|=\|\boldsymbol x\|=1$。　<span class="meta">直交行列は長さを変えない（第19回 4.3）</span></p>
+<p>② $q=\sum_j\lambda_jy_j^2$（3.2）。各 $y_j^2\ge0$ で $\sum y_j^2=1$ だから、$\lambda_{\min}\sum y_j^2\le\sum\lambda_jy_j^2\le\lambda_{\max}\sum y_j^2$、すなわち $\lambda_{\min}\le q\le\lambda_{\max}$。　<span class="meta">各項で $\lambda_{\min}\le\lambda_j\le\lambda_{\max}$ に $y_j^2\ge0$ を掛けた</span></p>
+<p>③ $\boldsymbol x=\boldsymbol q_{\max}$ なら $q=\boldsymbol q_{\max}^{\mathsf T}(\lambda_{\max}\boldsymbol q_{\max})=\lambda_{\max}$。□</p>
+</div>
+<p><strong>数値</strong>：$A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ で $\boldsymbol x=(\cos\theta,\sin\theta)^{\mathsf T}$（長さ1）。$q=2\cos^2\theta+2\cos\theta\sin\theta+2\sin^2\theta=2+\sin2\theta$。　<span class="meta">$\cos^2+\sin^2=1$、$2\sin\theta\cos\theta=\sin2\theta$（倍角の公式）</span>　$\sin2\theta$ は $-1$ から $1$ だから、$q$ の範囲は $[1,3]$ で固有値 $1,3$ と一致する。$\theta=45^\circ$（$\boldsymbol x=\boldsymbol q_1$）で最大 $3$、$\theta=135^\circ$（$\boldsymbol x=\boldsymbol q_2$）で最小 $1$。図3.6 を見る。</p>
+<figure class="fig" id="fig-3-6">
+<svg viewBox="0 0 440 306" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="単位ベクトルでの q の値の範囲" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>単位ベクトルでの q の値の範囲</title>
+<rect x="0" y="0" width="440" height="306" fill="#fffdf7"/>
+<line x1="60.0" y1="246.0" x2="400.0" y2="246.0" stroke="#2a2723" stroke-width="1.3"/><path d="M393.7 249.0 L400.0 246.0 L393.7 243.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="246.0" x2="60.0" y2="6.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 12.3 L60.0 6.0 L57.0 12.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="142.5" y1="242.0" x2="142.5" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="142.5" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">45</text>
+<line x1="225.0" y1="242.0" x2="225.0" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="225.0" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">90</text>
+<line x1="307.5" y1="242.0" x2="307.5" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="307.5" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">135</text>
+<line x1="390.0" y1="242.0" x2="390.0" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="390.0" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">180</text>
+<line x1="56.0" y1="182.1" x2="64.0" y2="182.1" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="187.1" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="118.2" x2="64.0" y2="118.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="123.2" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="56.0" y1="54.3" x2="64.0" y2="54.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="59.3" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="404.0" y="268.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>θ°</text>
+<text x="74.0" y="12.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">q</tspan></text>
+<polyline points="60.0,118.2 61.4,116.5 62.8,114.9 64.1,113.2 65.5,111.5 66.9,109.9 68.2,108.2 69.6,106.6 71.0,104.9 72.4,103.3 73.8,101.7 75.1,100.1 76.5,98.5 77.9,96.9 79.2,95.3 80.6,93.8 82.0,92.2 83.4,90.7 84.8,89.2 86.1,87.7 87.5,86.3 88.9,84.8 90.2,83.4 91.6,82.0 93.0,80.7 94.4,79.3 95.8,78.0 97.1,76.7 98.5,75.5 99.9,74.2 101.2,73.0 102.6,71.9 104.0,70.7 105.4,69.6 106.8,68.6 108.1,67.5 109.5,66.5 110.9,65.6 112.2,64.6 113.6,63.7 115.0,62.9 116.4,62.1 117.8,61.3 119.1,60.6 120.5,59.9 121.9,59.2 123.2,58.6 124.6,58.0 126.0,57.5 127.4,57.0 128.8,56.5 130.1,56.1 131.5,55.7 132.9,55.4 134.2,55.1 135.6,54.9 137.0,54.7 138.4,54.5 139.8,54.4 141.1,54.4 142.5,54.3 143.9,54.4 145.2,54.4 146.6,54.5 148.0,54.7 149.4,54.9 150.8,55.1 152.1,55.4 153.5,55.7 154.9,56.1 156.2,56.5 157.6,57.0 159.0,57.5 160.4,58.0 161.8,58.6 163.1,59.2 164.5,59.9 165.9,60.6 167.2,61.3 168.6,62.1 170.0,62.9 171.4,63.7 172.8,64.6 174.1,65.6 175.5,66.5 176.9,67.5 178.2,68.6 179.6,69.6 181.0,70.7 182.4,71.9 183.8,73.0 185.1,74.2 186.5,75.5 187.9,76.7 189.2,78.0 190.6,79.3 192.0,80.7 193.4,82.0 194.8,83.4 196.1,84.8 197.5,86.3 198.9,87.7 200.2,89.2 201.6,90.7 203.0,92.2 204.4,93.8 205.8,95.3 207.1,96.9 208.5,98.5 209.9,100.1 211.2,101.7 212.6,103.3 214.0,104.9 215.4,106.6 216.8,108.2 218.1,109.9 219.5,111.5 220.9,113.2 222.2,114.9 223.6,116.5 225.0,118.2 226.4,119.9 227.8,121.6 229.1,123.2 230.5,124.9 231.9,126.6 233.2,128.2 234.6,129.9 236.0,131.5 237.4,133.1 238.8,134.8 240.1,136.4 241.5,138.0 242.9,139.5 244.2,141.1 245.6,142.7 247.0,144.2 248.4,145.7 249.7,147.2 251.1,148.7 252.5,150.2 253.9,151.6 255.2,153.0 256.6,154.4 258.0,155.8 259.4,157.1 260.8,158.4 262.1,159.7 263.5,161.0 264.9,162.2 266.2,163.4 267.6,164.6 269.0,165.7 270.4,166.8 271.8,167.9 273.1,168.9 274.5,169.9 275.9,170.9 277.2,171.8 278.6,172.7 280.0,173.6 281.4,174.4 282.8,175.1 284.1,175.9 285.5,176.6 286.9,177.2 288.2,177.9 289.6,178.4 291.0,179.0 292.4,179.5 293.8,179.9 295.1,180.3 296.5,180.7 297.9,181.0 299.2,181.3 300.6,181.6 302.0,181.8 303.4,181.9 304.8,182.0 306.1,182.1 307.5,182.1 308.9,182.1 310.2,182.0 311.6,181.9 313.0,181.8 314.4,181.6 315.8,181.3 317.1,181.0 318.5,180.7 319.9,180.3 321.2,179.9 322.6,179.5 324.0,179.0 325.4,178.4 326.8,177.9 328.1,177.2 329.5,176.6 330.9,175.9 332.2,175.1 333.6,174.4 335.0,173.6 336.4,172.7 337.8,171.8 339.1,170.9 340.5,169.9 341.9,168.9 343.2,167.9 344.6,166.8 346.0,165.7 347.4,164.6 348.8,163.4 350.1,162.2 351.5,161.0 352.9,159.7 354.2,158.4 355.6,157.1 357.0,155.8 358.4,154.4 359.8,153.0 361.1,151.6 362.5,150.2 363.9,148.7 365.2,147.2 366.6,145.7 368.0,144.2 369.4,142.7 370.8,141.1 372.1,139.5 373.5,138.0 374.9,136.4 376.2,134.8 377.6,133.1 379.0,131.5 380.4,129.9 381.8,128.2 383.1,126.6 384.5,124.9 385.9,123.2 387.2,121.6 388.6,119.9 390.0,118.2" fill="none" stroke="#2b3a67" stroke-width="2.8" stroke-linejoin="round"/>
+<line x1="60.0" y1="54.3" x2="390.0" y2="54.3" stroke="#a8322a" stroke-width="1.4" stroke-dasharray="6 4"/>
+<rect x="313.4" y="31.8" width="75.6" height="20.5" fill="#fffdf7" opacity="0.92"/><text x="386.0" y="46.3" font-size="14.5" fill="#a8322a" text-anchor="end" font-weight="bold">λmax = 3</text>
+<line x1="60.0" y1="182.1" x2="390.0" y2="182.1" stroke="#a8322a" stroke-width="1.4" stroke-dasharray="6 4"/>
+<rect x="313.4" y="189.6" width="75.6" height="20.5" fill="#fffdf7" opacity="0.92"/><text x="386.0" y="204.1" font-size="14.5" fill="#a8322a" text-anchor="end" font-weight="bold">λmin = 1</text>
+<circle cx="142.5" cy="54.3" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="307.5" cy="182.1" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="149.5" y="30.3" width="101.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="152.5" y="44.3" font-size="14" fill="#a8322a" text-anchor="start">θ=45°：x=q₁</text>
+<rect x="190.9" y="194.1" width="109.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="297.5" y="208.1" font-size="14" fill="#a8322a" text-anchor="end">θ=135°：x=q₂</text>
+<text x="60.0" y="292.0" font-size="16" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">q</tspan><tspan>(</tspan><tspan font-style="italic">θ</tspan><tspan>) = 2</tspan><tspan>cos</tspan><tspan>²</tspan><tspan font-style="italic">θ</tspan><tspan> + 2</tspan><tspan>cos</tspan><tspan font-style="italic">θ</tspan><tspan> </tspan><tspan>sin</tspan><tspan font-style="italic">θ</tspan><tspan> + 2</tspan><tspan>sin</tspan><tspan>²</tspan><tspan font-style="italic">θ</tspan><tspan> = 2 + </tspan><tspan>sin</tspan><tspan> 2</tspan><tspan font-style="italic">θ</tspan></text>
+</svg>
+<figcaption><strong>図 3.6</strong>　$\boldsymbol x=(\cos\theta,\sin\theta)^{\mathsf T}$（長さ $1$）を一周させたときの $q$ の値。$1$ から $3$ の間を動き、最大と最小が固有値で、固有ベクトルの向きでとる。</figcaption>
+</figure>
+<p>この性質は、「長さを決めたうえで $q$ を最大にする向き」＝最大の固有値の固有ベクトル、として、主成分分析（最大分散の方向）や、振動の最小の固有振動数に現れる。</p>
+<p><strong>先の予告（ヘッセ行列）</strong>：多変数関数 $f$ が点 $\boldsymbol a$ で勾配 $\nabla f=\boldsymbol 0$ のとき、$f(\boldsymbol a+\boldsymbol h)\approx f(\boldsymbol a)+\tfrac12\boldsymbol h^{\mathsf T}H\boldsymbol h$（$H$ は2階偏微分を並べた対称行列で<strong>ヘッセ行列</strong>。<a href="09_第9回_テイラー展開.html">第9回</a>の2次の項の多変数版）。したがって $H\succ0$ なら極小、$H\prec0$ なら極大、不定値なら鞍点になる。この結論の導出は第51回で行う（ここでは予告で、証明はしない）。</p>
+<div class="why"><span class="label">ひとことで</span>長さ1のベクトルでの $\boldsymbol x^{\mathsf T}A\boldsymbol x$ は、最小固有値から最大固有値の範囲を動き、両端は固有ベクトルでとる。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>手順のまとめと先の予告</h2>
+<p>この回の計算を、図4.1 の流れにまとめる。</p>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 420" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="対称行列の直交対角化と二次形式の手順" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>対称行列の直交対角化と二次形式の手順</title>
+<rect x="0" y="0" width="440" height="420" fill="#fffdf7"/>
+<rect x="14" y="10" width="412" height="52" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="28.0" y="33.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">① A は対称か？  Aᵀ = A</text>
+<text x="28.0" y="53.0" font-size="14" fill="#6b645a" text-anchor="start">対称でなければ 1 章の対角化（P⁻¹AP）</text>
+<line x1="220.0" y1="62.0" x2="220.0" y2="80.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 71.9 L220.0 80.0 L223.9 71.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<rect x="14" y="80" width="412" height="52" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="28.0" y="103.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">② 固有値を求める（det(λI − A) = 0）</text>
+<text x="28.0" y="123.0" font-size="14" fill="#6b645a" text-anchor="start">すべて実数になる（定理2.3）</text>
+<line x1="220.0" y1="132.0" x2="220.0" y2="150.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 141.9 L220.0 150.0 L223.9 141.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<rect x="14" y="150" width="412" height="52" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="28.0" y="173.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">③ 各固有値で A − λI を掃き出す</text>
+<text x="28.0" y="193.0" font-size="14" fill="#6b645a" text-anchor="start">固有空間の基底</text>
+<line x1="220.0" y1="202.0" x2="220.0" y2="220.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 211.9 L220.0 220.0 L223.9 211.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<rect x="14" y="220" width="412" height="52" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="28.0" y="243.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">④ 同じ固有値の中だけグラム・シュミット</text>
+<text x="28.0" y="263.0" font-size="14" fill="#6b645a" text-anchor="start">異なる固有値の間は自動的に直交</text>
+<line x1="220.0" y1="272.0" x2="220.0" y2="290.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 281.9 L220.0 290.0 L223.9 281.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<rect x="14" y="290" width="412" height="52" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="28.0" y="313.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">⑤ 長さ 1 にして並べる：Q と Λ</text>
+<text x="28.0" y="333.0" font-size="14" fill="#6b645a" text-anchor="start">Qᵀ A Q = Λ</text>
+<line x1="220.0" y1="342.0" x2="220.0" y2="360.0" stroke="#6b645a" stroke-width="2"/><path d="M216.1 351.9 L220.0 360.0 L223.9 351.9" fill="none" stroke="#6b645a" stroke-width="2"/>
+<rect x="14" y="360" width="412" height="52" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.8"/>
+<text x="28.0" y="383.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">⑥ 二次形式：y = Qᵀx で Σ λᵢ yᵢ²</text>
+<text x="28.0" y="403.0" font-size="14" fill="#6b645a" text-anchor="start">固有値がすべて正 ⇒ 正定値</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　例題2 はこの順に進めている。④ が必要なのは固有値が重なる場合だけ（例：2.4 の 3×3）。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解（まとめ）</span>
+<ul>
+<li>「$P^{-1}AP=D$ の $P$ は一意」は誤り（1.4）。</li>
+<li>「重根なら対角化できない」は誤り。固有ベクトルが足りないときだけ（1.4、単位行列）。</li>
+<li>「直交行列で対角化できるのは対称行列だけではない」は誤り。実行列では<strong>対称なものに限る</strong>（定理2.4 の逆）。</li>
+<li>「固有ベクトルは常に直交する」は誤り。対称行列の<strong>異なる</strong>固有値に限る（2.2）。同じ固有値の中はグラム・シュミット（2.4）。</li>
+<li>「正定値は成分が正」は誤り（3.3）。固有値で決まる。</li>
+<li>「$\Delta_k\ge0$ なら半正定値」は誤り（3.4）。</li>
+</ul>
+</div>
+<p>この先でどこに使うか。図4.2 に矢印で示す。</p>
+<figure class="fig" id="fig-4-2">
+<svg viewBox="0 0 440 346" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="この回の道具が使われる回" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>この回の道具が使われる回</title>
+<rect x="0" y="0" width="440" height="346" fill="#fffdf7"/>
+<rect x="14" y="20" width="150" height="90" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2"/>
+<text x="89.0" y="56.0" font-size="14" fill="#6b645a" text-anchor="middle">第21回</text>
+<text x="89.0" y="80.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">対角化・二次形式</text>
+<rect x="200" y="12" width="226" height="66" rx="8" fill="#fff" stroke="#2b3a67" stroke-width="1.8"/>
+<line x1="164.0" y1="65.0" x2="200.0" y2="45.0" stroke="#6b645a" stroke-width="1.8"/><path d="M195.4 51.5 L200.0 45.0 L192.0 45.5" fill="none" stroke="#6b645a" stroke-width="1.8"/>
+<text x="212.0" y="34.0" font-size="13.5" fill="#a8322a" text-anchor="start" font-weight="bold">第22回</text>
+<text x="268.0" y="34.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">特異値分解</text>
+<text x="212.0" y="62.0" font-size="13.5" fill="#6b645a" text-anchor="start">BᵀB の固有値の平方根</text>
+<rect x="200" y="94" width="226" height="66" rx="8" fill="#fff" stroke="#2b3a67" stroke-width="1.8"/>
+<line x1="164.0" y1="65.0" x2="200.0" y2="127.0" stroke="#6b645a" stroke-width="1.8"/><path d="M193.4 122.5 L200.0 127.0 L199.4 119.0" fill="none" stroke="#6b645a" stroke-width="1.8"/>
+<text x="212.0" y="116.0" font-size="13.5" fill="#a8322a" text-anchor="start" font-weight="bold">第31回</text>
+<text x="268.0" y="116.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">連立線形ODE</text>
+<text x="212.0" y="144.0" font-size="13.5" fill="#6b645a" text-anchor="start">e^{At} = P e^{Dt} P⁻¹</text>
+<rect x="200" y="176" width="226" height="66" rx="8" fill="#fff" stroke="#2b3a67" stroke-width="1.8"/>
+<line x1="164.0" y1="65.0" x2="200.0" y2="209.0" stroke="#6b645a" stroke-width="1.8"/><path d="M194.9 202.9 L200.0 209.0 L201.6 201.2" fill="none" stroke="#6b645a" stroke-width="1.8"/>
+<text x="212.0" y="198.0" font-size="13.5" fill="#a8322a" text-anchor="start" font-weight="bold">第47回</text>
+<text x="268.0" y="198.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">最小二乗法</text>
+<text x="212.0" y="226.0" font-size="13.5" fill="#6b645a" text-anchor="start">BᵀB が正定値 → 解が1つ</text>
+<rect x="200" y="258" width="226" height="66" rx="8" fill="#fff" stroke="#2b3a67" stroke-width="1.8"/>
+<line x1="164.0" y1="65.0" x2="200.0" y2="291.0" stroke="#6b645a" stroke-width="1.8"/><path d="M195.4 284.4 L200.0 291.0 L202.3 283.3" fill="none" stroke="#6b645a" stroke-width="1.8"/>
+<text x="212.0" y="280.0" font-size="13.5" fill="#a8322a" text-anchor="start" font-weight="bold">第51回</text>
+<text x="268.0" y="280.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">最適化</text>
+<text x="212.0" y="308.0" font-size="13.5" fill="#6b645a" text-anchor="start">ヘッセ行列の正定値 → 極小</text>
+</svg>
+<figcaption><strong>図 4.2</strong>　固有ベクトルを基底にとるという一つの考えが、行列の分解・微分方程式・最小二乗・最適化のそれぞれで使われる。</figcaption>
+</figure>
+<ul>
+<li><strong>第22回 特異値分解</strong>：正方でも対称でもない任意の行列に、$B^{\mathsf T}B$（半正定値、定理3.4）の固有値の平方根として特異値を定める。直交対角化がその土台。</li>
+<li><strong>第31回 連立線形ODEと行列指数関数</strong>：$\dot{\boldsymbol x}=A\boldsymbol x$ の解 $e^{At}\boldsymbol x_0$ は、$A=PDP^{-1}$ なら $Pe^{Dt}P^{-1}\boldsymbol x_0$（$e^{Dt}$ は対角成分ごとの指数関数）。</li>
+<li><strong>第47回 最小二乗法</strong>：正規方程式の係数 $B^{\mathsf T}B$ が正定値であること。</li>
+<li><strong>第51回 最適化</strong>：ヘッセ行列の正定値性による極小判定、凸性。</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_21.py）。</p>
+
+<div class="ex"><span class="label">例題1（A 確認：対角化して確かめる）</span>
+<p>$C=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ を対角化せよ（$P^{-1}CP=D$ となる $P,D$ を求め、確かめよ）。</p>
+<p>① 第20回 例題4 より、固有値 $5$（固有ベクトル $(1,1)^{\mathsf T}$）と $2$（固有ベクトル $(1,-2)^{\mathsf T}$）。　<span class="meta">$\operatorname{tr}C=7$、$\det C=10$、$\lambda^2-7\lambda+10=(\lambda-2)(\lambda-5)$</span></p>
+<p>② 異なる2つの固有値なので対角化可能（系1.2）。$P=\begin{pmatrix}1&1\\1&-2\end{pmatrix}$、$D=\begin{pmatrix}5&0\\0&2\end{pmatrix}$。　<span class="meta">固有値の並べ順は $P$ の列の順に合わせる</span></p>
+<p>③ $\det P=1\cdot(-2)-1\cdot1=-3$。$P^{-1}=\dfrac1{-3}\begin{pmatrix}-2&-1\\-1&1\end{pmatrix}=\dfrac13\begin{pmatrix}2&1\\1&-1\end{pmatrix}$。</p>
+<p>④ $CP$ を列ごとに計算する：第1列 $C(1,1)^{\mathsf T}=(4+1,\ 2+3)^{\mathsf T}=(5,5)^{\mathsf T}$、第2列 $C(1,-2)^{\mathsf T}=(4-2,\ 2-6)^{\mathsf T}=(2,-4)^{\mathsf T}$。$CP=\begin{pmatrix}5&2\\5&-4\end{pmatrix}$。</p>
+<p>⑤ $P^{-1}(CP)=\dfrac13\begin{pmatrix}2\cdot5+1\cdot5&2\cdot2+1\cdot(-4)\\1\cdot5-1\cdot5&1\cdot2-1\cdot(-4)\end{pmatrix}=\dfrac13\begin{pmatrix}15&0\\0&6\end{pmatrix}=\begin{pmatrix}5&0\\0&2\end{pmatrix}=D$ ✓。</p>
+<p>⑥ 累乗：$C^k=PD^kP^{-1}=\dfrac13\begin{pmatrix}2\cdot5^k+2^k&5^k-2^k\\2\cdot5^k-2\cdot2^k&5^k+2\cdot2^k\end{pmatrix}$。$k=2$：$\dfrac13\begin{pmatrix}54&21\\42&33\end{pmatrix}=\begin{pmatrix}18&7\\14&11\end{pmatrix}$、直接 $C^2=\begin{pmatrix}16+2&4+3\\8+6&2+9\end{pmatrix}=\begin{pmatrix}18&7\\14&11\end{pmatrix}$ ✓。</p>
+</div>
+
+<div class="ex"><span class="label">例題2（B 標準：直交対角化と二次形式）</span>
+<p>$A=\begin{pmatrix}5&-2\\-2&2\end{pmatrix}$ を直交対角化し、二次形式 $q=5x^2-4xy+2y^2$ を平方の和に直せ。$A\succ0$ か。</p>
+<p>① $\operatorname{tr}A=7$、$\det A=10-4=6$。$\lambda^2-7\lambda+6=(\lambda-1)(\lambda-6)$。固有値 $6,1$。　<span class="meta">第20回 2.2</span></p>
+<p>② $\lambda=6$：$A-6I=\begin{pmatrix}-1&-2\\-2&-4\end{pmatrix}$。$R_2\leftarrow R_2-2R_1$：$(0,0)$。$-v_1-2v_2=0$、$v_2=-1$ として $\boldsymbol v=(2,-1)^{\mathsf T}$。</p>
+<p>③ $\lambda=1$：$A-I=\begin{pmatrix}4&-2\\-2&1\end{pmatrix}$。$R_2\leftarrow R_2+\tfrac12R_1$：$(0,0)$。$4v_1-2v_2=0$、$v_1=1$ として $\boldsymbol v=(1,2)^{\mathsf T}$。</p>
+<p>④ 直交の確認：$\langle(2,-1),(1,2)\rangle=2-2=0$ ✓（定理2.2）。長さはどちらも $\sqrt5$。$Q=\dfrac1{\sqrt5}\begin{pmatrix}2&1\\-1&2\end{pmatrix}$、$\Lambda=\operatorname{diag}(6,1)$。</p>
+<p>⑤ $y_1=\dfrac{2x-y}{\sqrt5}$、$y_2=\dfrac{x+2y}{\sqrt5}$（$\boldsymbol y=Q^{\mathsf T}\boldsymbol x$）。$q=6y_1^2+y_2^2$。</p>
+<p>⑥ 確かめ：$6\cdot\dfrac{(2x-y)^2}5+\dfrac{(x+2y)^2}5=\dfrac{6(4x^2-4xy+y^2)+(x^2+4xy+4y^2)}5=\dfrac{25x^2-20xy+10y^2}5=5x^2-4xy+2y^2$ ✓。</p>
+<p>⑦ 固有値 $6,1$ がともに正だから $A\succ0$（定理3.1）。確かめ：定理3.2 で $a=5\gt0$、$ac-b^2=10-4=6\gt0$ ✓。</p>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：正定値の判定）</span>
+<p>$T=\begin{pmatrix}2&-1&0\\-1&2&-1\\0&-1&2\end{pmatrix}$ が正定値であることを示し、二次形式を平方の和で書け。</p>
+<p>① 3.4 のとおり $\Delta_1=2,\ \Delta_2=3,\ \Delta_3=4$、すべて正なので $T\succ0$（定理3.3）。</p>
+<p>② 二次形式：$q=\boldsymbol x^{\mathsf T}T\boldsymbol x=2x^2+2y^2+2z^2-2xy-2yz$。　<span class="meta">対角成分が $x^2,y^2,z^2$ の係数、$A_{12}=A_{21}=-1$ より $xy$ の係数は $2\cdot(-1)$、$A_{23}$ も同じ、$A_{13}=0$</span></p>
+<p>③ 平方の和：$q=x^2+(x-y)^2+(y-z)^2+z^2$。　<span class="meta">展開：$x^2+(x^2-2xy+y^2)+(y^2-2yz+z^2)+z^2=2x^2-2xy+2y^2-2yz+2z^2$ ✓</span></p>
+<p>④ ③ から直接分かること：$q=0$ なら4つの平方がすべて $0$、$x=0$、$x=y$、$y=z$、$z=0$ より $\boldsymbol x=\boldsymbol 0$。よって零でない $\boldsymbol x$ では $q\gt0$（正定値の定義そのもの）。</p>
+</div>
+
+<div class="ex"><span class="label">例題4（C 発展：フィボナッチ数を対角化で求める）</span>
+<p>フィボナッチ数 $F_0=0,\ F_1=1,\ F_{k+1}=F_k+F_{k-1}$ について、$M=\begin{pmatrix}1&1\\1&0\end{pmatrix}$ とおくと $M^k=\begin{pmatrix}F_{k+1}&F_k\\F_k&F_{k-1}\end{pmatrix}$（$k\ge1$）。$M$ を対角化して $F_k$ の一般項を求めよ。</p>
+<p>① 確かめ：$k=1$：$M^1=\begin{pmatrix}F_2&F_1\\F_1&F_0\end{pmatrix}=\begin{pmatrix}1&1\\1&0\end{pmatrix}$ ✓。$M^{k+1}=M^kM=\begin{pmatrix}F_{k+1}+F_k&F_{k+1}\\F_k+F_{k-1}&F_k\end{pmatrix}=\begin{pmatrix}F_{k+2}&F_{k+1}\\F_{k+1}&F_k\end{pmatrix}$。　<span class="meta">帰納法の一歩</span></p>
+<p>② $\operatorname{tr}M=1$、$\det M=-1$。$\lambda^2-\lambda-1=0$、$\lambda=\dfrac{1\pm\sqrt5}2$。$\varphi:=\dfrac{1+\sqrt5}2\approx1.618$、$\psi:=\dfrac{1-\sqrt5}2\approx-0.618$。　<span class="meta">2次方程式の解の公式。$\varphi+\psi=1$、$\varphi\psi=-1$、$\varphi-\psi=\sqrt5$</span></p>
+<p>③ 固有ベクトル：$M\begin{pmatrix}\lambda\\1\end{pmatrix}=\begin{pmatrix}\lambda+1\\\lambda\end{pmatrix}$。$\lambda^2=\lambda+1$ より $\begin{pmatrix}\lambda+1\\\lambda\end{pmatrix}=\lambda\begin{pmatrix}\lambda\\1\end{pmatrix}$。よって $\boldsymbol v_\varphi=(\varphi,1)^{\mathsf T}$、$\boldsymbol v_\psi=(\psi,1)^{\mathsf T}$。　<span class="meta">$\lambda\cdot\lambda=\lambda^2=\lambda+1$、$\lambda\cdot1=\lambda$</span></p>
+<p>④ $M$ は対称なので、固有ベクトルは直交するはず：$\langle\boldsymbol v_\varphi,\boldsymbol v_\psi\rangle=\varphi\psi+1=-1+1=0$ ✓（定理2.2）。</p>
+<p>⑤ $\begin{pmatrix}1\\0\end{pmatrix}=c_1\boldsymbol v_\varphi+c_2\boldsymbol v_\psi$：第2成分 $c_1+c_2=0$、第1成分 $c_1\varphi+c_2\psi=1$。$c_2=-c_1$ を代入して $c_1(\varphi-\psi)=1$、$c_1=\dfrac1{\sqrt5}$、$c_2=-\dfrac1{\sqrt5}$。</p>
+<p>⑥ $M^k\begin{pmatrix}1\\0\end{pmatrix}=c_1\varphi^k\boldsymbol v_\varphi+c_2\psi^k\boldsymbol v_\psi$。　<span class="meta">1.5 と同じ（$M\boldsymbol v=\lambda\boldsymbol v$ を $k$ 回）</span></p>
+<p>⑦ 左辺は $M^k$ の第1列 $=(F_{k+1},F_k)^{\mathsf T}$。右辺の第2成分は $c_1\varphi^k+c_2\psi^k$。よって
+$$ F_k=\frac{\varphi^k-\psi^k}{\sqrt5}. $$
+⑧ 確かめ：$k=1$：$\dfrac{\varphi-\psi}{\sqrt5}=1$ ✓。$k=2$：$\varphi^2-\psi^2=(\varphi-\psi)(\varphi+\psi)=\sqrt5\cdot1$、$F_2=1$ ✓。$k=10$：$\varphi^{10}\approx122.99$、$\psi^{10}\approx0.008$、差を $\sqrt5\approx2.236$ で割ると $55=F_{10}$ ✓。　<span class="meta">$|\psi|\lt1$ なので $\psi^k\to0$。$F_k$ は $\varphi^k/\sqrt5$ に近づく</span></p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>演習問題</h2>
+<p class="meta">A は確認（記号を読める・書き換えられる）、B は標準（定期試験水準）、C は発展。解答は折りたたんである。問9〜11 は Hefferon <em>Linear Algebra</em>（GFDL／CC BY-SA）第5章（Similarity）および MML 第4章の主題に沿って本教材で作った問題で、各書の公式解答とは照合していない（自作の解答）。</p>
+
+<div class="box"><span class="label">問1（A 確認：$P^{-1}AP$ を計算する）</span>$A=\begin{pmatrix}1&2\\0&3\end{pmatrix}$、$P=\begin{pmatrix}1&1\\0&1\end{pmatrix}$ のとき $P^{-1}AP$ を求めよ。
+<details><summary>解答</summary>
+<p>① $\det P=1$、$P^{-1}=\begin{pmatrix}1&-1\\0&1\end{pmatrix}$。　② $AP=\begin{pmatrix}1&1+2\\0&3\end{pmatrix}=\begin{pmatrix}1&3\\0&3\end{pmatrix}$。　③ $P^{-1}(AP)=\begin{pmatrix}1\cdot1+(-1)\cdot0&1\cdot3+(-1)\cdot3\\0&3\end{pmatrix}=\begin{pmatrix}1&0\\0&3\end{pmatrix}$。　<span class="meta">対角に固有値 $1,3$ が並ぶ。$P$ の列 $(1,0),(1,1)$ が固有ベクトル</span></p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認：対角化可能か）</span>次は対角化可能か。理由もいえ。(1) $\begin{pmatrix}2&1\\0&2\end{pmatrix}$　(2) $\begin{pmatrix}2&0\\0&2\end{pmatrix}$　(3) $\begin{pmatrix}1&2\\0&3\end{pmatrix}$
+<details><summary>解答</summary>
+<p>(1) 固有値 $2$（代数的重複度 $2$）。$A-2I=\begin{pmatrix}0&1\\0&0\end{pmatrix}$ のランクは $1$、固有空間の次元は $2-1=1$。幾何 $\lt$ 代数なので<strong>対角化できない</strong>（系1.3）。　(2) すでに対角行列。<strong>できる</strong>（$P=I$）。固有値 $2$ は幾何的重複度も $2$。　(3) 異なる固有値 $1,3$ をもつので<strong>できる</strong>（系1.2）。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認：二次形式の行列）</span>(1) $q=3x^2-4xy+5y^2$ を $\boldsymbol x^{\mathsf T}A\boldsymbol x$ の $A$（対称）で表せ。(2) $A=\begin{pmatrix}1&2\\2&1\end{pmatrix}$ の二次形式を展開せよ。(3) $N=\begin{pmatrix}2&4\\0&1\end{pmatrix}$ の $\boldsymbol x^{\mathsf T}N\boldsymbol x$ と同じ値を与える対称行列を求めよ。
+<details><summary>解答</summary>
+<p>(1) $x^2,y^2$ の係数が対角成分、$xy$ の係数 $-4$ の半分が非対角成分：$A=\begin{pmatrix}3&-2\\-2&5\end{pmatrix}$。　(2) $x^2+4xy+y^2$（非対角 $2$ の2倍が $xy$ の係数）。　(3) $\boldsymbol x^{\mathsf T}N\boldsymbol x=2x^2+4xy+y^2$。$S=\dfrac{N+N^{\mathsf T}}2=\dfrac12\begin{pmatrix}4&4\\4&2\end{pmatrix}=\begin{pmatrix}2&2\\2&1\end{pmatrix}$。確かめ：$\boldsymbol x^{\mathsf T}S\boldsymbol x=2x^2+4xy+y^2$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認：型の判定）</span>次の対称行列は、正定値・半正定値（正定値でない）・不定値・負定値のどれか。固有値を読み取って答えよ。(1) $\operatorname{diag}(2,5)$　(2) $\operatorname{diag}(1,-3)$　(3) $\operatorname{diag}(0,4)$　(4) $\operatorname{diag}(-1,-2)$
+<details><summary>解答</summary>
+<p>対角行列の固有値は対角成分（第20回 4.2）。(1) $2,5$ がともに正：<strong>正定値</strong>。(2) $1$ と $-3$：<strong>不定値</strong>。(3) $0$ と $4$：<strong>半正定値</strong>（$q=4y^2$ は $(1,0)$ で $0$）。(4) $-1,-2$ がともに負：<strong>負定値</strong>。　<span class="meta">定理3.1</span></p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準：累乗の一般式）</span>$C=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ について、例題1 の $P,D$ を使って $C^3$ を求めよ。
+<details><summary>解答</summary>
+<p>例題1 の $C^k$ の式で $k=3$、$5^3=125$、$2^3=8$：$C^3=\dfrac13\begin{pmatrix}2\cdot125+8&125-8\\2\cdot125-2\cdot8&125+2\cdot8\end{pmatrix}=\dfrac13\begin{pmatrix}258&117\\234&141\end{pmatrix}=\begin{pmatrix}86&39\\78&47\end{pmatrix}$。　確かめ：$C^3=C\cdot C^2=\begin{pmatrix}4&1\\2&3\end{pmatrix}\begin{pmatrix}18&7\\14&11\end{pmatrix}=\begin{pmatrix}72+14&28+11\\36+42&14+33\end{pmatrix}=\begin{pmatrix}86&39\\78&47\end{pmatrix}$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準：直交対角化）</span>$A=\begin{pmatrix}1&2\\2&-2\end{pmatrix}$ を直交対角化せよ（$Q^{\mathsf T}AQ=\Lambda$ となる $Q,\Lambda$）。
+<details><summary>解答</summary>
+<p>① $\operatorname{tr}A=-1$、$\det A=-2-4=-6$。$\lambda^2+\lambda-6=(\lambda-2)(\lambda+3)$。固有値 $2,-3$。　② $\lambda=2$：$A-2I=\begin{pmatrix}-1&2\\2&-4\end{pmatrix}$、$R_2\leftarrow R_2+2R_1$：$(0,0)$、$v_1=2v_2$、$\boldsymbol v=(2,1)^{\mathsf T}$。　③ $\lambda=-3$：$A+3I=\begin{pmatrix}4&2\\2&1\end{pmatrix}$、$R_1\leftarrow R_1-2R_2$：$(0,0)$、$2v_1+v_2=0$、$\boldsymbol v=(1,-2)^{\mathsf T}$。　④ 内積 $2-2=0$ ✓、長さはともに $\sqrt5$。　<span class="meta">定理2.2</span></p>
+<p>$Q=\dfrac1{\sqrt5}\begin{pmatrix}2&1\\1&-2\end{pmatrix}$、$\Lambda=\operatorname{diag}(2,-3)$。</p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準：主軸変換）</span>$q=3x^2+2xy+3y^2$ を平方の和に直し、$q=1$ の形と軸の半径を答えよ。
+<details><summary>解答</summary>
+<p>① $A=\begin{pmatrix}3&1\\1&3\end{pmatrix}$、$\operatorname{tr}=6$、$\det=8$、$\lambda^2-6\lambda+8=(\lambda-2)(\lambda-4)$。固有値 $4,2$。　② $\lambda=4$：$\boldsymbol q_1=\tfrac1{\sqrt2}(1,1)^{\mathsf T}$、$\lambda=2$：$\boldsymbol q_2=\tfrac1{\sqrt2}(1,-1)^{\mathsf T}$。　③ $q=4y_1^2+2y_2^2$（$y_1=\frac{x+y}{\sqrt2}$、$y_2=\frac{x-y}{\sqrt2}$）。確かめ：$4\cdot\frac{(x+y)^2}2+2\cdot\frac{(x-y)^2}2=2(x+y)^2+(x-y)^2=3x^2+2xy+3y^2$ ✓。　④ $4y_1^2+2y_2^2=1$ は楕円。$y_1$ 軸方向の半径 $1/\sqrt4=\tfrac12$、$y_2$ 軸方向の半径 $1/\sqrt2\approx0.707$。　<span class="meta">3.2</span></p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準：パラメータつきの正定値）</span>$A=\begin{pmatrix}2&t\\t&2\end{pmatrix}$ が正定値になるような実数 $t$ の範囲を求めよ。$t=2$ のときは何か。
+<details><summary>解答</summary>
+<p>定理3.2：$a=2\gt0$ は常に成り立つ。$ac-b^2=4-t^2\gt0$ ⇔ $-2\lt t\lt2$。よって <strong>$|t|\lt2$</strong>。　$t=2$：固有値は $2\pm t=4,0$（$\operatorname{tr}=4$、$\det=0$）なので<strong>半正定値</strong>（正定値ではない）。$t=-2$ も同じく半正定値。$|t|\gt2$ では固有値 $2-|t|\lt0$ が現れて不定値。</p>
+</details></div>
+
+<div class="box"><span class="label">問9（C 発展：平方根行列）</span>対称行列 $A\succeq0$ に対し、$B^2=A$ となる半正定値の対称行列 $B$ が存在することを、スペクトル分解を使って示せ。$A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ で $B$ を具体的に求めよ。
+<details><summary>解答</summary>
+<p>$A=Q\Lambda Q^{\mathsf T}$、固有値 $\lambda_j\ge0$（定理3.1）。$B:=Q\operatorname{diag}(\sqrt{\lambda_1},\dots,\sqrt{\lambda_n})Q^{\mathsf T}$ とおく。① $B^2=Q\Lambda^{1/2}Q^{\mathsf T}Q\Lambda^{1/2}Q^{\mathsf T}=Q\Lambda^{1/2}\Lambda^{1/2}Q^{\mathsf T}=Q\Lambda Q^{\mathsf T}=A$。　<span class="meta">$Q^{\mathsf T}Q=I$</span>　② $B^{\mathsf T}=B$（定理2.4 の「逆」と同じ計算）で、固有値 $\sqrt{\lambda_j}\ge0$ だから $B\succeq0$。</p>
+<p>具体例：$\lambda=3,1$、$Q$ は例のとおり。$B=\sqrt3\,\boldsymbol q_1\boldsymbol q_1^{\mathsf T}+1\cdot\boldsymbol q_2\boldsymbol q_2^{\mathsf T}=\dfrac{\sqrt3}2\begin{pmatrix}1&1\\1&1\end{pmatrix}+\dfrac12\begin{pmatrix}1&-1\\-1&1\end{pmatrix}=\dfrac12\begin{pmatrix}\sqrt3+1&\sqrt3-1\\\sqrt3-1&\sqrt3+1\end{pmatrix}$。確かめ：$B^2$ の $(1,1)$ 成分は、第1行 $\tfrac12(\sqrt3+1,\ \sqrt3-1)$ と第1列 $\tfrac12(\sqrt3+1,\ \sqrt3-1)^{\mathsf T}$ の積で $\tfrac14\bigl((\sqrt3+1)^2+(\sqrt3-1)^2\bigr)$。$(\sqrt3+1)^2=4+2\sqrt3$、$(\sqrt3-1)^2=4-2\sqrt3$、和は $8$、$\tfrac14\cdot8=2$ ✓。$(1,2)$ 成分は第1行と第2列 $\tfrac12(\sqrt3-1,\ \sqrt3+1)^{\mathsf T}$ の積で $\tfrac14\cdot2(\sqrt3+1)(\sqrt3-1)=\tfrac14\cdot2\cdot2=1$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問10（C 発展：$B^{\mathsf T}B$ の正定値）</span>定理3.4 を、$B=\begin{pmatrix}1&2\\0&1\\1&0\end{pmatrix}$ と $B'=\begin{pmatrix}1&2\\2&4\\0&0\end{pmatrix}$ の2つで確かめよ。
+<details><summary>解答</summary>
+<p>$B$：本文 3.4 のとおり $B^{\mathsf T}B=\begin{pmatrix}2&2\\2&5\end{pmatrix}$、$\Delta_1=2$、$\Delta_2=6$、正定値。列 $(1,0,1),(2,1,0)$ は一次独立 ✓。</p>
+<p>$B'$：第2列は第1列の2倍で一次独立でない（$\ker B'\ni(2,-1)^{\mathsf T}$）。$B'^{\mathsf T}B'=\begin{pmatrix}1+4&2+8\\10&4+16\end{pmatrix}=\begin{pmatrix}5&10\\10&20\end{pmatrix}$、$\Delta_1=5\gt0$、$\Delta_2=100-100=0$。正定値でない。$\boldsymbol x=(2,-1)^{\mathsf T}$：$B'\boldsymbol x=(2-2,\ 4-4,\ 0)^{\mathsf T}=\boldsymbol 0$ なので $q=\|B'\boldsymbol x\|^2=0$。半正定値で、$q$ が $0$ になる方向がある ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問11（C 発展：レイリー商）</span>$A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$、$\boldsymbol x=(\cos\theta,\sin\theta)^{\mathsf T}$ で $q(\theta)=2+\sin2\theta$ を示し、$q$ の最大値・最小値とそれをとる $\boldsymbol x$ を求めよ。
+<details><summary>解答</summary>
+<p>本文 3.5 のとおり $q(\theta)=2+\sin2\theta$。最大値 $3$（$2\theta=90^\circ$、$\theta=45^\circ$、$\boldsymbol x=\tfrac1{\sqrt2}(1,1)$）、最小値 $1$（$2\theta=270^\circ$、$\theta=135^\circ$、$\boldsymbol x=\tfrac1{\sqrt2}(-1,1)$）。固有値 $3,1$、固有ベクトルの方向と一致（定理3.5）。微分で確かめると $q'(\theta)=2\cos2\theta=0$ が $\theta=45^\circ,135^\circ$ のとき。</p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 対角行列と $\operatorname{diag}$、$AP=PD$（列ごとに $A\boldsymbol v_j=\lambda_j\boldsymbol v_j$）から $P^{-1}AP=D$ を導け、省略の段階 S0〜S3（<a href="#abbr-diag">1.2</a>）を言える。</li>
+<li>□ 対角化を「座標を替える → 軸ごとに伸び縮み → 座標を戻す」の3段階で説明できる。</li>
+<li>□ 対角化可能の条件（独立な固有ベクトルが $n$ 本）と、十分条件（異なる固有値が $n$ 個）・必要条件（幾何的 $=$ 代数的重複度）を言える。</li>
+<li>□ $A^k=PD^kP^{-1}$ を、間の $P^{-1}P=I$ が消えることから導ける。</li>
+<li>□ 相似 $B=P^{-1}AP$ で固有値・行列式・トレースが変わらない理由を言える。</li>
+<li>□ 対称行列で、異なる固有値の固有ベクトルが直交する理由（補題2.1）と、固有値が実数である理由を言える。</li>
+<li>□ スペクトル定理 $Q^{\mathsf T}AQ=\Lambda$ の証明の筋（固有ベクトルを1本取り、残りに帰納）を言え、重根のときはグラム・シュミットを使って直交対角化できる。</li>
+<li>□ スペクトル分解 $A=\sum\lambda_i\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$ を書ける。</li>
+<li>□ 二次形式 $\boldsymbol x^{\mathsf T}A\boldsymbol x$ の $A$ を作れ（交差項は非対角成分の2倍）、$\boldsymbol x=Q\boldsymbol y$ で平方の和に直せる。</li>
+<li>□ 正定値・半正定値・不定値を定義で言え、固有値の符号、2×2 の条件、主小行列式で判定できる。</li>
+<li>□ $B^{\mathsf T}B$ が半正定値であること、$\|\boldsymbol x\|=1$ での $\boldsymbol x^{\mathsf T}A\boldsymbol x$ の範囲が $[\lambda_{\min},\lambda_{\max}]$ であることを説明できる。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第22回）</strong>：特異値分解。対称でない、あるいは正方形ですらない行列にも、$B^{\mathsf T}B$（この回の定理3.4 の半正定値行列）の固有値の平方根として<strong>特異値</strong>を定め、$U\Sigma V^{\mathsf T}$ という分解を作る。直交対角化がその土台になる。<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：対角化・相似・固有ベクトルの基底の整理は、Jim Hefferon <em>Linear Algebra</em>（GFDL／CC BY-SA）第5章（Similarity）の順序と主題を、対称行列・二次形式・正定値は Deisenroth, Faisal, Ong <em>Mathematics for Machine Learning</em> 第4章（行列分解）、第3章（内積）の主題を参照し、本教材向けに書き直したもの。定理3.3（シルベスターの規準）の一般の $n$ の証明は省略した。問題は自作で、各書の公式解答とは照合していない。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

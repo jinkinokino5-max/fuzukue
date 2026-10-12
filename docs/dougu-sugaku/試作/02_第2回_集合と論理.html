@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2回 集合と論理</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  figure.fig{margin:22px auto} figure.fig svg{max-width:100%;height:auto;background:#fffdf7;border:1px solid var(--line);border-radius:6px}
+  figure.fig figcaption{font-size:14px;line-height:1.8;margin-top:8px;text-align:left}
+  .hero .ttl{background:rgba(247,244,236,.86);padding:10px 18px}
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="../img/hero02_indra.jpg" alt="因陀羅網の想像図。無数の宝珠が互いを映し合っている">
+<div class="ttl"><p class="vol">第2回</p><h1>集合と論理</h1></div>
+<figcaption><p class="cap">どの宝珠にも、ほかのすべての宝珠が映っている。「すべて」を一言で言うとは、どういうことか。</p><p class="cr">作：Bunyk／<a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Cubic_Indra%27s_net_rendering,_centered_on_a_jewel.jpg">Wikimedia Commons</a>（File:Cubic Indra's net rendering, centered on a jewel.jpg、因陀羅網の想像図）</p></figcaption>
+</figure>
+<p class="lead">第0部「記号と言葉」の2回め。第1回が「あとで説明する」と予告した記号――<strong>集合の記号</strong>と、<strong>かつ・または・否定・ならば・同値・すべての・存在する</strong>――を、数値の例で手を動かしながら一つずつ説明する。最後に、第1回の「≡」「∝」「≤」を、この回の記号で書き直して回収する。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：数学の対象は「ものの集まり（<em>集合</em>）」で表される → 「集まり」について何かを言う文は、<em>かつ・または・否定・ならば</em>で組み立てられる → 「すべての〜について」「〜が存在する」という<em>量</em>の言い方（量化子）が加わると、第1回で省略されていた「折りたたまれた長い文」を、記号で書き戻せる。<br>
+この回は<strong>第1回が前提</strong>（<a href="01_第1回_数式を文として読む.html#sec-1">式と関係式</a>、<a href="01_第1回_数式を文として読む.html#abbr-stages">省略の段階</a>）。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>高校の「集合と論理」で習った内容も、省略せずに一度は書く。覚えている部分は読み飛ばしてよい。ただし、<strong>最後の第3節（すべての・存在する）</strong>は、高校では詳しく扱われないことが多く、大学の数学・工学の本ではそこから先の省略が急に増える。第3節は飛ばさないほうがよい。</p>
+<p>新しい記号は、緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。全部の記号は <a href="../symbols.html">記号索引</a> からも探せる。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で新しく説明する記号と、前の回（第1回）で説明済みで、この回でも使う記号の一覧を置く。「→」の先に説明がある。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$\in\ \ \notin$</td><td>属する／属さない</td><td>集合の要素である／ない</td><td><a href="#sym-in">→1.2</a></td></tr>
+<tr><td>$\{\,\cdots\,\}$、$\{x\mid\cdots\}$</td><td>集合の書き方（外延・内包）</td><td>要素を並べる／条件で決める</td><td><a href="#sym-setbuilder">→1.3</a></td></tr>
+<tr><td>$\mathbb N,\mathbb Z,\mathbb Q,\mathbb R,\mathbb C$</td><td>ナチュラル、ゼット、キュー、アール、シー</td><td>自然数・整数・有理数・実数・複素数の全体</td><td><a href="#sym-numsets">→1.4</a></td></tr>
+<tr><td>$\emptyset$</td><td>空集合</td><td>要素が1つもない集合</td><td><a href="#sym-emptyset">→1.5</a></td></tr>
+<tr><td>$\subseteq\ \subset\ \subsetneq$</td><td>部分集合</td><td>「〜の一部分（または全体）」</td><td><a href="#sym-subset">→1.6</a></td></tr>
+<tr><td>$\cup$</td><td>和集合（カップ）</td><td>どちらかに入っているものの集まり</td><td><a href="#sym-union">→1.7</a></td></tr>
+<tr><td>$\cap$</td><td>共通部分（キャップ）</td><td>両方に入っているものの集まり</td><td><a href="#sym-intersection">→1.7</a></td></tr>
+<tr><td>$\setminus$</td><td>差集合</td><td>前者から後者を除いたもの</td><td><a href="#sym-setminus">→1.7</a></td></tr>
+<tr><td>$[a,b],\ (a,b),\ [a,b),\ (a,b]$</td><td>閉区間・開区間・半開区間</td><td>数直線上の「ひと続きの範囲」</td><td><a href="#sym-interval">→1.8</a></td></tr>
+<tr><td>$\times$（直積）、$\mathbb R^n$</td><td>直積／アール・エヌ</td><td>順序つきの組の全体</td><td><a href="#sym-cartesian">→1.9</a></td></tr>
+<tr><td>$\land$</td><td>かつ</td><td>両方が正しい</td><td><a href="#sym-and">→2.2</a></td></tr>
+<tr><td>$\lor$</td><td>または</td><td>少なくとも一方が正しい</td><td><a href="#sym-or">→2.2</a></td></tr>
+<tr><td>$\lnot$</td><td>でない（否定）</td><td>正しさをひっくり返す</td><td><a href="#sym-not">→2.2</a></td></tr>
+<tr><td>$\Rightarrow$</td><td>ならば</td><td>前が正しければ後ろも正しい</td><td><a href="#sym-implies">→2.3</a></td></tr>
+<tr><td>$\Leftrightarrow$</td><td>同値</td><td>前と後ろの正しさが一致する</td><td><a href="#sym-iff">→2.5</a></td></tr>
+<tr><td>$\forall$</td><td>すべての／任意の</td><td>どの要素についても</td><td><a href="#sym-forall">→3.1</a></td></tr>
+<tr><td>$\exists$</td><td>存在する</td><td>少なくとも1つある</td><td><a href="#sym-exists">→3.2</a></td></tr>
+<tr><td>$\exists!$</td><td>ただ1つ存在する</td><td>ちょうど1つある</td><td><a href="#sym-existsunique">→3.3</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出て、この回でも使う記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>説明（第1回）</th></tr>
+<tr><td>$=$</td><td>左と右が同じ値（3つの顔）</td><td><a href="01_第1回_数式を文として読む.html#sym-equal">第1回 2.1</a></td></tr>
+<tr><td>$:=$</td><td>左の名前を右の式で決める</td><td><a href="01_第1回_数式を文として読む.html#sym-defeq">第1回 2.2</a></td></tr>
+<tr><td>$\equiv$</td><td>どんな値でも常に同じ</td><td><a href="01_第1回_数式を文として読む.html#sym-identical">第1回 2.3</a></td></tr>
+<tr><td>$\propto$</td><td>左は右の定数倍</td><td><a href="01_第1回_数式を文として読む.html#sym-propto">第1回 2.5</a></td></tr>
+<tr><td>$\neq$</td><td>等しくない</td><td><a href="01_第1回_数式を文として読む.html#sym-neq">第1回 2.6</a></td></tr>
+<tr><td>$\lt\ \gt\ \le\ \ge$</td><td>大小の関係</td><td><a href="01_第1回_数式を文として読む.html#sym-order">第1回 2.6</a></td></tr>
+<tr><td>$x_1$（添字）</td><td>名前に番号をつける</td><td><a href="01_第1回_数式を文として読む.html#sym-subscript">第1回 4.1</a></td></tr>
+<tr><td>$x^2$（肩の数字）</td><td>冪（べき）</td><td><a href="01_第1回_数式を文として読む.html#sym-superscript">第1回 4.2</a></td></tr>
+<tr><td>$\cdots$</td><td>同じ規則で続く部分を省く</td><td><a href="01_第1回_数式を文として読む.html#sym-dots">第1回 4.5</a></td></tr>
+<tr><td>式と関係式</td><td>名詞にあたるもの／文にあたるもの</td><td><a href="01_第1回_数式を文として読む.html#sym-expression">第1回 1.2</a></td></tr>
+<tr><td>省略の段階（S0, S1, …）</td><td>省略を1段ずつ並べる考え方</td><td><a href="01_第1回_数式を文として読む.html#abbr-stages">第1回 6.1</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>集合：ものの集まりを一つの名前で呼ぶ</h2>
+
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：「これらの数すべて」と言いたい</h3>
+<p>第1回では、$x+1=3$ という文が「$x$ が2のときだけ正しい」ことを見た。ところで、次の文は何を言っているのだろうか。</p>
+<p>$$ x^2 \lt 4 $$</p>
+<p>これは「$x$ の値しだいで正しさが変わる文（条件）」であり、<a href="01_第1回_数式を文として読む.html#sec-1-3">第1回 1.3</a> の3番目の種類である。$x=1$ なら $1\lt 4$ で正しい。$x=3$ なら $9\lt 4$ で正しくない。では、「この文が正しくなる $x$ はどれか」と聞かれたとき、答えは1つの数ではなく、<strong>たくさんの数のまとまり</strong>になる（実際、$-2$ と $2$ のあいだのすべての実数になる）。</p>
+<p>「たくさんのもののまとまり」を、<strong>一つの名前で呼べるようにする</strong>。それが集合である。これがないと、「条件を満たす $x$ の全体」を式の中で扱えない。</p>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>定義：集合と要素、$\in$、$\notin$</h3>
+<p><strong>集合</strong>とは、「あるものが入っているか入っていないかが、はっきり決まっているものの集まり」のことである。集合に入っている一つ一つを、その集合の<strong>要素</strong>（元・げん）と呼ぶ。「入っているかどうかがはっきり決まる」という条件が大事で、「大きい数の集まり」は（どこからが大きいのか決まっていないので）集合にならない。</p>
+<div class="def" id="sym-in"><span class="label">記号：$\in$、$\notin$</span>
+<p><strong>①読み方</strong>：$a\in A$ は「$a$ は $A$ に属する」「$a$ は $A$ の要素である」「$a$ は $A$ に入っている」。$a\notin A$ は「$a$ は $A$ に属さない」。</p>
+<p><strong>②日本語での意味</strong>：$a\in A$ は「$a$ は、集合 $A$ の要素の一つである」という<em>主張（関係式＝文）</em>。正しいか正しくないかが決まる。$a\notin A$ は、その否定。</p>
+<p><strong>③省略していない書き方</strong>：$\in$ 自体は省略形ではない（ギリシャ文字のイプシロン $\varepsilon$ ではなく、英語 Element の頭文字 E を崩した記号である）。$a\notin A$ は「『$a\in A$』という文が<em>正しくない</em>」の省略（第1回の $\neq$ が「『$=$』が正しくない」の省略だったのと同じ形：<a href="01_第1回_数式を文として読む.html#sym-neq">第1回 2.6</a>）。</p>
+<p><strong>④どこで出会うか</strong>：すべての科目。「$x\in\mathbb R$」（$x$ は実数）、「$\boldsymbol v\in\mathbb R^3$」（$\boldsymbol v$ は3次元の数の組）、確率の「$\omega\in\Omega$」。</p>
+</div>
+
+<p>最小の具体例。集合 $A$ を「1, 2, 3, 4 の4つの数が入っているもの」とする。このとき、</p>
+<ul>
+<li>$3\in A$：正しい（3は入っている）。</li>
+<li>$5\in A$：正しくない（5は入っていない）。したがって $5\notin A$ は正しい。</li>
+</ul>
+<p>$\in$ の左には「要素（ものの1つ）」、右には「集合（ものの集まり）」が来る。<strong>左右を逆にした「$A\in 3$」は文として成り立たない</strong>（3は集合ではなく、中を覗けないから）。</p>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「$\in$ の左にも右にも、数が来てよい」と思ってしまうと、$3\in 3$ のような式を書いてしまう。$\in$ は<strong>左がもの、右が集まり</strong>という向きのある記号である。第1回で見た $=$（左右が対等）とは違う。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>集合は「入っているかどうかがはっきり決まるものの集まり」。$a\in A$ は「$a$ は $A$ の要素だ」という文で、左がもの、右が集まり。</div>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>集合の書き方：外延と内包</h3>
+<p>集合を式の中に書くには、2通りの書き方がある。</p>
+<h4>(a) 外延的表記：要素を全部並べる</h4>
+<p>中括弧 $\{\ \}$ の中に、要素を並べて書く。</p>
+<p>$$ A=\{1,\,2,\,3,\,4\} $$</p>
+<p>ここの $=$ は、<a href="01_第1回_数式を文として読む.html#sym-defeq">第1回 2.2</a> で見た「名前をつける」用法であり、省略せずに書けば $A:=\{1,2,3,4\}$ である。以後、集合に名前をつけるときは $:=$ を使う。</p>
+<p>注意が3つある。</p>
+<ul>
+<li><strong>順番は関係ない</strong>：$\{1,2,3,4\}$ と $\{4,3,2,1\}$ は同じ集合。（要素が「入っているか」だけを問うから。）</li>
+<li><strong>同じ要素を2度書いても1つと数える</strong>：$\{1,1,2\}$ は $\{1,2\}$ と同じ。</li>
+<li>要素が多いときは $\cdots$ で省く：$\{1,2,3,\cdots,100\}$（<a href="01_第1回_数式を文として読む.html#sym-dots">第1回 4.5</a> の注意のとおり、規則が1つに決まるよう十分書く）。</li>
+</ul>
+<h4>(b) 内包的表記：条件で決める</h4>
+<div class="def" id="sym-setbuilder"><span class="label">記号：$\{\,x\mid\cdots\,\}$（内包的表記）</span>
+<p><strong>①読み方</strong>：$\{x\in A\mid P(x)\}$ は「$A$ の要素 $x$ のうち、条件 $P(x)$ を満たすもの全体の集合」。縦棒 $\mid$ は「ただし」「ここで」「such that」の意味で読む。</p>
+<p><strong>②日本語での意味</strong>：<strong>元になる集合 $A$ を先に言い、その中から、条件を満たすものだけを集めた集合</strong>。</p>
+<p><strong>③省略していない書き方</strong>：この記法は次の3つの部品でできている。「$x$（動かす文字）」「$\in A$（どの範囲を動かすか）」「$P(x)$（条件）」。<br>$\{x\in\mathbb R\mid x^2\lt 4\}$ なら、「実数 $x$ を動かし、$x^2\lt 4$ を満たすものを集める」。範囲 $\in\mathbb R$ を省いて $\{x\mid x^2\lt 4\}$ と書く本もある（このとき、どの範囲を動かしているかは読者が補う。<a href="#abbr-quantifier">省略の段階：すべての</a> と同じ型の省略）。</p>
+<p><strong>④どこで出会うか</strong>：解の集合、定義域、確率の事象、領域の表し方（「$\{(x,y)\mid x^2+y^2\le 1\}$」は円板）。</p>
+</div>
+<div class="warn"><span class="label">流派の違い：縦棒とコロン</span>
+<p>縦棒のかわりにコロンを使う流派がある。$\{x\in\mathbb R : x^2\lt 4\}$ と $\{x\in\mathbb R\mid x^2\lt 4\}$ は<strong>同じ意味</strong>。この教材では縦棒 $\mid$ で統一する。また、縦棒 $\mid$ は後の回で「割り切れる」「絶対値」「条件つき確率」にも使われるので、どれかは文脈で判断する。</p>
+</div>
+
+<p>最小の具体例を手で確かめる。$B:=\{x\in\mathbb Z\mid x^2\lt 10\}$（$\mathbb Z$ は整数全体。<a href="#sym-numsets">1.4</a> で説明する）とする。整数を一つずつ入れて、条件 $x^2\lt 10$ が正しいかを見る。</p>
+<table class="tb">
+<tr><th>$x$</th><th>$-4$</th><th>$-3$</th><th>$-2$</th><th>$-1$</th><th>$0$</th><th>$1$</th><th>$2$</th><th>$3$</th><th>$4$</th></tr>
+<tr><td>$x^2$</td><td>$16$</td><td>$9$</td><td>$4$</td><td>$1$</td><td>$0$</td><td>$1$</td><td>$4$</td><td>$9$</td><td>$16$</td></tr>
+<tr><td>$x^2\lt 10$ は？</td><td>×</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>×</td></tr>
+</table>
+<p>したがって $B=\{-3,-2,-1,0,1,2,3\}$（7個）。$x$ が $4$ 以上、または $-4$ 以下では $x^2\ge 16\gt 10$ となり、これより外側は調べなくてよい。</p>
+
+<div class="why"><span class="label">ひとことで</span>集合は「要素を並べる」か「元の集合の中から条件で選ぶ」で書く。$\{x\in A\mid P(x)\}$ は「$A$ の中で $P(x)$ を満たす $x$ 全体」。</div>
+
+<h3 id="sec-1-4"><span class="no">1.4</span>数の集合：$\mathbb N,\mathbb Z,\mathbb Q,\mathbb R,\mathbb C$</h3>
+<p>よく使う数の集まりには、専用の記号が決まっている。</p>
+<div class="def" id="sym-numsets"><span class="label">記号：$\mathbb N,\ \mathbb Z,\ \mathbb Q,\ \mathbb R,\ \mathbb C$</span>
+<p><strong>①読み方</strong>：$\mathbb N$「エヌ（自然数全体）」、$\mathbb Z$「ゼット（整数全体）」、$\mathbb Q$「キュー（有理数全体）」、$\mathbb R$「アール（実数全体）」、$\mathbb C$「シー（複素数全体）」。二重線の文字を<strong>黒板太字</strong>（blackboard bold）という。手書きでは、縦線を二重にして書く。</p>
+<p><strong>②日本語での意味</strong>：それぞれ、次の数すべての集まり。</p>
+<ul>
+<li>$\mathbb N$：自然数（$1,2,3,\cdots$。$0$ を含めるかは流派による）</li>
+<li>$\mathbb Z$：整数（$\cdots,-2,-1,0,1,2,\cdots$）。ドイツ語 Zahlen（数）の頭文字。</li>
+<li>$\mathbb Q$：有理数（分数 $\dfrac{p}{q}$、$p\in\mathbb Z$、$q\in\mathbb Z$、$q\neq 0$ の形に書ける数）。Quotient（商）の頭文字。</li>
+<li>$\mathbb R$：実数（数直線上のすべての点に対応する数）。</li>
+<li>$\mathbb C$：複素数（$a+bi$、$a,b\in\mathbb R$。第34回で扱う）。</li>
+</ul>
+<p><strong>③省略していない書き方</strong>：たとえば $\mathbb N$ は、外延的に書けば $\{1,2,3,\cdots\}$。つまり記号1つで「長い集合の書き方」を折りたたんでいる。</p>
+<p><strong>④どこで出会うか</strong>：すべての科目。「$x\in\mathbb R$」は、文字 $x$ が動いてよい範囲の宣言。</p>
+</div>
+<div class="warn"><span class="label">流派の違い：$\mathbb N$ に 0 を含めるか</span>
+<p>日本の高校数学では $0$ を含めない（$\mathbb N=\{1,2,3,\cdots\}$）。情報科学や一部の数学書では $0$ を含める（$\mathbb N=\{0,1,2,\cdots\}$）。本によって違うので、<strong>$\mathbb N$ が出てきたら、その本の冒頭の宣言を確かめる</strong>。この教材では、$0$ を含めたいときは $\{0\}\cup\mathbb N$（$\cup$ は <a href="#sym-union">1.7</a>）や「$0$ 以上の整数」と、含めるかどうかを明示して書く。</p>
+<p>また、「正の実数全体」を $\mathbb R_{gt 0}$、$\mathbb R^{+}$、$(0,\infty)$（区間：<a href="#sym-interval">1.8</a>）などと書く流派があり、$\mathbb R^{+}$ は 0 を含むかどうかも本による。この教材では $\{x\in\mathbb R\mid x\gt 0\}$ または $(0,\infty)$ と書く。</p>
+</div>
+<p>これらの集合には、包み込む関係がある。たとえば $3$ は、自然数でもあり、整数でもあり、有理数（$3=\dfrac{3}{1}$）でもあり、実数でもあり、複素数でもある。また $\dfrac12$ は有理数だが整数ではない。$\sqrt2$ は実数だが有理数ではない（有理数でないことの証明は本回では扱わない）。この「包み込む関係」を記号で書くのが、次の項である。</p>
+
+<p>この入れ子の関係を、図にして見ておく（記号での書き方は <a href="#sec-1-6">1.6</a> で説明する）。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 560 300" role="img" aria-label="数の集合の入れ子：自然数は整数の中に、整数は有理数の中に、有理数は実数の中に、実数は複素数の中に入る" xmlns="http://www.w3.org/2000/svg"><ellipse cx="280" cy="150" rx="270" ry="140" fill="#f4efe3" stroke="#6b645a" stroke-width="1.2"/><ellipse cx="280" cy="150" rx="225" ry="115" fill="#f8f3e8" stroke="#6b645a" stroke-width="1.2"/><ellipse cx="280" cy="150" rx="180" ry="92" fill="#edf1e8" stroke="#6b645a" stroke-width="1.2"/><ellipse cx="280" cy="150" rx="135" ry="68" fill="#e3ebdb" stroke="#6b645a" stroke-width="1.2"/><ellipse cx="280" cy="150" rx="90" ry="44" fill="#d6e2cb" stroke="#6b645a" stroke-width="1.2"/><text x="280" y="29" text-anchor="middle" font-size="13" fill="#2b3a67" font-weight="bold" font-family="&quot;Hiragino Kaku Gothic ProN&quot;,&quot;Yu Gothic&quot;,Meiryo,sans-serif"><tspan font-family="&quot;Cambria Math&quot;,&quot;STIX Two Math&quot;,serif" font-size="18">ℂ</tspan>　複素数</text><text x="280" y="54" text-anchor="middle" font-size="13" fill="#2b3a67" font-weight="bold" font-family="&quot;Hiragino Kaku Gothic ProN&quot;,&quot;Yu Gothic&quot;,Meiryo,sans-serif"><tspan font-family="&quot;Cambria Math&quot;,&quot;STIX Two Math&quot;,serif" font-size="18">ℝ</tspan>　実数</text><text x="280" y="77" text-anchor="middle" font-size="13" fill="#2b3a67" font-weight="bold" font-family="&quot;Hiragino Kaku Gothic ProN&quot;,&quot;Yu Gothic&quot;,Meiryo,sans-serif"><tspan font-family="&quot;Cambria Math&quot;,&quot;STIX Two Math&quot;,serif" font-size="18">ℚ</tspan>　有理数</text><text x="280" y="101" text-anchor="middle" font-size="13" fill="#2b3a67" font-weight="bold" font-family="&quot;Hiragino Kaku Gothic ProN&quot;,&quot;Yu Gothic&quot;,Meiryo,sans-serif"><tspan font-family="&quot;Cambria Math&quot;,&quot;STIX Two Math&quot;,serif" font-size="18">ℤ</tspan>　整数</text><text x="280" y="130" text-anchor="middle" font-size="13" fill="#2b3a67" font-weight="bold" font-family="&quot;Hiragino Kaku Gothic ProN&quot;,&quot;Yu Gothic&quot;,Meiryo,sans-serif"><tspan font-family="&quot;Cambria Math&quot;,&quot;STIX Two Math&quot;,serif" font-size="18">ℕ</tspan>　自然数（1から）</text><text x="527.5" y="156" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">i</text><text x="482.5" y="156" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">√2</text><text x="437.5" y="156" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">1/2</text><text x="392.5" y="156" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">−2</text><text x="280" y="158" font-size="18" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">3</text></svg>
+<figcaption><strong>図 2.1</strong>　数の集合は、外側の輪が内側の輪をすべて含む入れ子になっている。輪の中の朱い数は、その輪に初めて入る数の例。</figcaption>
+</figure>
+
+<h3 id="sec-1-5"><span class="no">1.5</span>空集合 $\emptyset$</h3>
+<div class="def" id="sym-emptyset"><span class="label">記号：$\emptyset$</span>
+<p><strong>①読み方</strong>：「くうしゅうごう」。</p>
+<p><strong>②日本語での意味</strong>：<strong>要素が1つもない集合</strong>。</p>
+<p><strong>③省略していない書き方</strong>：$\emptyset=\{\ \}$（中括弧の中に何も書かない）。$\varnothing$ と書く本もある（同じ意味）。</p>
+<p><strong>④どこで出会うか</strong>：「解がない」ことを「解の集合が $\emptyset$」と言うとき。共通部分が空であること（$A\cap B=\emptyset$）。</p>
+</div>
+<p>例：$\{x\in\mathbb R\mid x^2\lt 0\}$ は空集合。どんな実数も、二乗すれば $0$ 以上だから（$x=3$ で $9$、$x=-3$ で $9$、$x=0$ で $0$。負にならない）。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>$\emptyset$ と $\{0\}$ は違う。$\{0\}$ は「$0$ という要素を1つ持つ集合」であり、空ではない。また $\emptyset$ と $\{\emptyset\}$ も違う（後者は「空集合を1つ要素に持つ集合」）。</p>
+</div>
+
+<h3 id="sec-1-6"><span class="no">1.6</span>部分集合 $\subseteq$、$\subset$</h3>
+<p>動機：「$\mathbb Z$ は $\mathbb R$ の一部分だ」を記号で書きたい。</p>
+<div class="def" id="sym-subset"><span class="label">記号：$\subseteq$、$\subset$、$\subsetneq$</span>
+<p><strong>①読み方</strong>：$A\subseteq B$ は「$A$ は $B$ の部分集合である」「$A$ は $B$ に含まれる」。</p>
+<p><strong>②日本語での意味</strong>：$A$ のどの要素も、$B$ の要素である。</p>
+<p><strong>③省略していない書き方</strong>：$A\subseteq B$ は、「$A$ のすべての要素 $x$ について、$x\in B$ が成り立つ」の省略。後の<a href="#sec-3">第3節</a>の記号を使えば、</p>
+<p>$$ A\subseteq B\ :\Longleftrightarrow\ \forall x\,\bigl(x\in A\Rightarrow x\in B\bigr) $$</p>
+<p>（$:\Longleftrightarrow$ は「左を右の意味と定める」。$\forall$ は <a href="#sym-forall">3.1</a>、$\Rightarrow$ は <a href="#sym-implies">2.3</a> で説明するので、いまは日本語のほうを読めばよい。）</p>
+<p><strong>④どこで出会うか</strong>：定義域・値域（第3回）、部分空間（第15回）、事象の包含。</p>
+</div>
+<div class="warn"><span class="label">流派の違い：$\subset$ は何を意味するか</span>
+<p>$\subset$ の意味は本によって2通りある。</p>
+<ul>
+<li><strong>流派1（日本の高校数学・多くの数学書）</strong>：$A\subset B$ は「$A\subseteq B$」と同じ。等しい場合（$A=B$）も含む。</li>
+<li><strong>流派2（一部の洋書）</strong>：$A\subset B$ は「$A$ は $B$ の部分集合で、かつ $A\neq B$」。等しい場合は含まない。このとき「等しい場合も含める」ときは $\subseteq$ を使う。</li>
+</ul>
+<p>この教材では、混乱を避けるため、<strong>$\subseteq$（等しい場合を含む）と $\subsetneq$（等しい場合を含まない）だけを使う</strong>。$\subset$ は、他の本を読むときのために、ここで読み方だけ示した。</p>
+</div>
+<p>最小の具体例。$A:=\{2,4\}$、$B:=\{1,2,3,4\}$ とする。</p>
+<ol>
+<li>$A$ の要素を一つずつ取り出す。$2$ と $4$。</li>
+<li>$2\in B$ か？ $B$ には $2$ がある。正しい。</li>
+<li>$4\in B$ か？ $B$ には $4$ がある。正しい。</li>
+<li>$A$ のすべての要素が $B$ に入っていた。よって $A\subseteq B$。さらに $B$ には $1$ が入っていて $A$ に入っていないので $A\neq B$、すなわち $A\subsetneq B$。</li>
+</ol>
+<p>逆向きの $B\subseteq A$ は正しくない（$1\in B$ だが $1\notin A$）。</p>
+<p>数の集合どうしでは、$\mathbb N\subseteq\mathbb Z\subseteq\mathbb Q\subseteq\mathbb R\subseteq\mathbb C$ と並ぶ（$\mathbb N$ は $1$ から始まる流派）。</p>
+<div class="box"><span class="label">補足：空集合と全体について</span>
+<p>どんな集合 $A$ についても、$\emptyset\subseteq A$ と $A\subseteq A$ が成り立つ。$\emptyset\subseteq A$ は、「$\emptyset$ の要素で $A$ に入っていないものは<em>存在しない</em>（そもそも要素がない）」から正しい。この「何もないから反例がない」という考えは、<a href="#sec-2-3">2.3</a> の「前提が偽のとき」と同じ型である。</p>
+</div>
+<p>2つの集合が等しいこと（$A=B$）は、「$A\subseteq B$ かつ $B\subseteq A$」と言い換えられる。つまり、「互いに相手に含まれる」。これを使って集合が等しいことを示すやり方は、演習の C 問題で使う。</p>
+
+<div class="why"><span class="label">ひとことで</span>$A\subseteq B$ は「$A$ のどの要素も $B$ の要素」。$\subset$ は流派で意味が違うので、この教材は $\subseteq$ と $\subsetneq$ だけを使う。</div>
+
+<h3 id="sec-1-7"><span class="no">1.7</span>集合の演算：$\cup$、$\cap$、$\setminus$</h3>
+<p>動機：2つの集合から、新しい集合を作りたい。たとえば、2つの条件の「どちらかを満たす $x$」「両方を満たす $x$」。以降 $A:=\{1,2,3,4\}$、$B:=\{3,4,5\}$ を使って、手で確かめる。</p>
+
+<div class="def" id="sym-union"><span class="label">記号：$\cup$（和集合）</span>
+<p><strong>①読み方</strong>：$A\cup B$ は「$A$ カップ $B$」「$A$ と $B$ の和集合」。</p>
+<p><strong>②日本語での意味</strong>：$A$ か $B$ の<strong>少なくとも一方</strong>に入っているものの集まり。</p>
+<p><strong>③省略していない書き方</strong>：$A\cup B:=\{x\mid x\in A\ \lor\ x\in B\}$（$\lor$ は <a href="#sym-or">2.2</a> の「または」）。</p>
+<p><strong>④どこで出会うか</strong>：定義域を2つ合わせるとき、場合分けの結果をまとめるとき、確率の「$A$ または $B$」。</p>
+</div>
+<div class="def" id="sym-intersection"><span class="label">記号：$\cap$（共通部分）</span>
+<p><strong>①読み方</strong>：$A\cap B$ は「$A$ キャップ $B$」「$A$ と $B$ の共通部分」。</p>
+<p><strong>②日本語での意味</strong>：$A$ にも $B$ にも<strong>両方に</strong>入っているものの集まり。</p>
+<p><strong>③省略していない書き方</strong>：$A\cap B:=\{x\mid x\in A\ \land\ x\in B\}$（$\land$ は <a href="#sym-and">2.2</a> の「かつ」）。</p>
+<p><strong>④どこで出会うか</strong>：連立不等式の解（それぞれの解の共通部分）、確率の「$A$ かつ $B$」。</p>
+</div>
+<div class="def" id="sym-setminus"><span class="label">記号：$\setminus$（差集合）</span>
+<p><strong>①読み方</strong>：$A\setminus B$ は「$A$ マイナス $B$」「$A$ から $B$ を除いた集合」。バックスラッシュ（斜め線）に見えるが、通常の斜線 $/$ とは違う記号である。</p>
+<p><strong>②日本語での意味</strong>：$A$ に入っていて、$B$ には入っていないものの集まり。</p>
+<p><strong>③省略していない書き方</strong>：$A\setminus B:=\{x\in A\mid x\notin B\}$。</p>
+<p><strong>④どこで出会うか</strong>：「0 を除く実数」を $\mathbb R\setminus\{0\}$ と書く（割り算の条件）。</p>
+</div>
+
+<p>$A=\{1,2,3,4\}$、$B=\{3,4,5\}$ で、一つずつ確かめる。</p>
+<ol>
+<li>$A\cup B$：$A$ の要素 $1,2,3,4$ を全部書く。次に $B$ の要素のうち、まだ書いていないものを加える。$3,4$ は書いてある。$5$ は新しい。→ $\{1,2,3,4,5\}$。</li>
+<li>$A\cap B$：$A$ の要素を一つずつ見て、$B$ にも入っているかを調べる。$1\in B$？ いいえ。$2\in B$？ いいえ。$3\in B$？ はい。$4\in B$？ はい。→ $\{3,4\}$。</li>
+<li>$A\setminus B$：$A$ の要素のうち、$B$ に入っていないものを残す。$1$ と $2$ が残る。→ $\{1,2\}$。</li>
+<li>$B\setminus A$：$B$ の要素のうち、$A$ に入っていないものを残す。$5$ だけ。→ $\{5\}$。</li>
+</ol>
+<p>3と4で結果が違うので、<strong>$A\setminus B$ と $B\setminus A$ は一般に別物</strong>（$\cup$ と $\cap$ は左右を入れ替えても同じ）。</p>
+
+<div class="warn"><span class="label">流派の違い：差集合と補集合の書き方</span>
+<p>差集合を $A-B$ と書く本がある（意味は同じ）。また、「全体の集合 $U$ から $A$ を除いたもの」（補集合）を $A^{c}$、$\overline{A}$、$A'$、$U\setminus A$ などと書く流派がある。この教材では、補集合が必要なときは $U\setminus A$ と省略せずに書く。ここの $A'$ は、第1回の<a href="01_第1回_数式を文として読む.html#sym-prime">プライム</a>の3つめの意味になるので注意する。</p>
+</div>
+<div class="box"><span class="label">補足：集合の演算と、論理の言葉の対応</span>
+<p>上の「③省略していない書き方」で見たとおり、$\cup$ は「または」、$\cap$ は「かつ」、$\setminus$ は「かつ〜でない」に対応している。この対応は <a href="#sec-2">第2節</a> で、記号の読み方の裏づけとして何度も使う。見た目も似ている（$\cup$ と $\lor$、$\cap$ と $\land$）。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$\cup$ は「どちらかに入る」、$\cap$ は「両方に入る」、$\setminus$ は「前者に入って後者に入らない」。$A=\{1,2,3,4\}$、$B=\{3,4,5\}$ なら、順に $\{1,2,3,4,5\}$、$\{3,4\}$、$\{1,2\}$。</div>
+
+<p>$A=\{1,2,3,4\}$、$B=\{3,4,5\}$ で、3つの演算が「どこ」を指すのかを図にする。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 600 252" role="img" aria-label="ベン図：A∪B は両方の円全体、A∩B は円の重なり、A∖B は A から B との重なりを除いた部分" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="f22-ca0"><circle cx="72" cy="105" r="50"/></clipPath><clipPath id="f22-ca1"><circle cx="272" cy="105" r="50"/></clipPath><clipPath id="f22-ca2"><circle cx="472" cy="105" r="50"/></clipPath></defs><circle cx="72" cy="105" r="50" fill="#e2b3ad"/><circle cx="128" cy="105" r="50" fill="#e2b3ad"/><circle cx="72" cy="105" r="50" fill="none" stroke="#2a2723" stroke-width="1.5"/><circle cx="128" cy="105" r="50" fill="none" stroke="#2a2723" stroke-width="1.5"/><text x="42" y="52" font-size="16" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">A</text><text x="158" y="52" font-size="16" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">B</text><text x="50" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">1　2</text><text x="100" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">3　4</text><text x="152" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">5</text><circle cx="272" cy="105" r="50" fill="#fffdf7"/><circle cx="328" cy="105" r="50" fill="#fffdf7"/><circle cx="328" cy="105" r="50" fill="#e2b3ad" clip-path="url(#f22-ca1)"/><circle cx="272" cy="105" r="50" fill="none" stroke="#2a2723" stroke-width="1.5"/><circle cx="328" cy="105" r="50" fill="none" stroke="#2a2723" stroke-width="1.5"/><text x="242" y="52" font-size="16" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">A</text><text x="358" y="52" font-size="16" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">B</text><text x="250" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">1　2</text><text x="300" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">3　4</text><text x="352" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">5</text><circle cx="472" cy="105" r="50" fill="#e2b3ad"/><circle cx="528" cy="105" r="50" fill="#fffdf7"/><circle cx="472" cy="105" r="50" fill="none" stroke="#2a2723" stroke-width="1.5"/><circle cx="528" cy="105" r="50" fill="none" stroke="#2a2723" stroke-width="1.5"/><text x="442" y="52" font-size="16" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">A</text><text x="558" y="52" font-size="16" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">B</text><text x="450" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">1　2</text><text x="500" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">3　4</text><text x="552" y="110" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">5</text><text x="100" y="190" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">A ∪ B</text><text x="100" y="212" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">{1, 2, 3, 4, 5}</text><text x="300" y="190" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">A ∩ B</text><text x="300" y="212" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">{3, 4}</text><text x="500" y="190" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">A ∖ B</text><text x="500" y="212" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">{1, 2}</text><text x="300" y="240" font-size="13" fill="#6b645a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">A = {1, 2, 3, 4}、B = {3, 4, 5}。朱く塗った部分が、その演算の結果。</text></svg>
+<figcaption><strong>図 2.2</strong>　A={1,2,3,4}、B={3,4,5} のとき、和集合 A∪B、共通部分 A∩B、差集合 A∖B は、図の朱い部分に入る要素の集まりである。</figcaption>
+</figure>
+
+<h3 id="sec-1-8"><span class="no">1.8</span>区間：数直線上のひと続きの範囲</h3>
+<p>動機：実数の集合 $\{x\in\mathbb R\mid 1\le x\le 3\}$ のように、「ここからここまで」の集合はひんぱんに現れる。毎回この長い形を書くのは大変なので、短い記法ができた。</p>
+
+<div class="def" id="sym-interval"><span class="label">記号：区間 $[a,b]$、$(a,b)$、$[a,b)$、$(a,b]$</span>
+<p><strong>①読み方</strong>：$[a,b]$ は「$a$ から $b$ までの閉区間」。$(a,b)$ は「$a$ から $b$ までの開区間」。$[a,b)$ と $(a,b]$ は「半開区間」（半分だけ閉じて半分だけ開いている）。</p>
+<p><strong>②日本語での意味</strong>：$a\lt b$ とする。端点を含む側は角括弧 $[\ ]$、含まない側は丸括弧 $(\ )$ で表す。</p>
+<table class="tb">
+<tr><th>記法</th><th>名前</th><th>集合の書き方（省略前）</th><th>数直線の見え方</th></tr>
+<tr><td>$[a,b]$</td><td>閉区間</td><td>$\{x\in\mathbb R\mid a\le x\le b\}$</td><td>両端を含む</td></tr>
+<tr><td>$(a,b)$</td><td>開区間</td><td>$\{x\in\mathbb R\mid a\lt x\lt b\}$</td><td>両端を含まない</td></tr>
+<tr><td>$[a,b)$</td><td>半開区間</td><td>$\{x\in\mathbb R\mid a\le x\lt b\}$</td><td>左端だけ含む</td></tr>
+<tr><td>$(a,b]$</td><td>半開区間</td><td>$\{x\in\mathbb R\mid a\lt x\le b\}$</td><td>右端だけ含む</td></tr>
+</table>
+<p>片側に終わりがないときは、$\infty$（無限大）を使う。$[a,\infty)=\{x\in\mathbb R\mid x\ge a\}$、$(-\infty,b)=\{x\in\mathbb R\mid x\lt b\}$。$\infty$ は<strong>実数ではなく</strong>、「果てしなく続く」ことを表す記号なので、側には必ず丸括弧 $)$ をつける（$[a,\infty]$ とは書かない）。$\infty$ の意味は第6回で詳しく扱う。</p>
+<p><strong>③省略していない書き方</strong>：上の表の「集合の書き方（省略前）」の列のとおり。詳しい段階は <a href="#abbr-interval">省略の段階：区間</a> に示す。</p>
+<p><strong>④どこで出会うか</strong>：関数の定義域（第3回）、積分区間（第10回）、極限や連続の定義（第6回）、数値計算の刻み。</p>
+</div>
+
+<div class="warn"><span class="label">流派の違い：開区間の書き方、そして丸括弧の二重の意味</span>
+<p>(1) フランス語圏の流派で育った本は、開いた端を<strong>外向きの角括弧</strong>で書く：$[a,b[$ は $[a,b)$ と同じ、$]a,b[$ は $(a,b)$ と同じ。日本の大学の教科書にも稀に出てくる。「角括弧が内を向いているか、外を向いているか」で見分ける。</p>
+<p>(2) $(a,b)$ は、<strong>区間</strong>を意味する場合と、<strong>2つの数の組</strong>（平面上の点の座標、<a href="#sym-cartesian">1.9</a>）を意味する場合がある。たとえば $(1,3)$ は、文脈によって「$1$ より大きく $3$ より小さい実数全体」か「$x$ 座標が $1$、$y$ 座標が $3$ の点」。見分けるには、「いま何の集合・何の要素の話か」を見る（区間なら $(1,3)\subseteq\mathbb R$、点なら $(1,3)\in\mathbb R^2$）。</p>
+</div>
+
+<div class="box" id="abbr-interval"><span class="label">省略の段階：区間</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても困らない理由</th></tr>
+<tr><td>S0</td><td>$\{x\in\mathbb R\mid a\le x\ \land\ x\le b\}$</td><td>（省略なし）</td><td>―</td></tr>
+<tr><td>S1</td><td>$\{x\in\mathbb R\mid a\le x\le b\}$</td><td>「かつ」と2回目の $x$ を省いて、連ねて書く</td><td>「$a\le x\le b$」は「$a\le x$ かつ $x\le b$」を表すと約束した</td></tr>
+<tr><td>S2</td><td>$[a,b]$</td><td>集合の書き方（括弧、$x\in\mathbb R$、縦棒、条件）を全部省く</td><td>括弧の形（$[\ ]$ か $(\ )$）が、端点を含むかどうかを表すと約束した。$x$ の動く範囲は $\mathbb R$ と約束した</td></tr>
+</table>
+<p>S2 の「$x$ の動く範囲は $\mathbb R$」は、<strong>表に書かれない</strong>約束である。たとえば整数だけの範囲を言いたいときは、区間記法を使わずに $\{x\in\mathbb Z\mid 1\le x\le 3\}=\{1,2,3\}$ と書く。区間 $[1,3]$ に含まれる数は $\{1,2,3\}$ だけではなく、$2.5$ や $\sqrt2$ も含む。</p>
+</div>
+
+<p>数で手を動かす。</p>
+<ol>
+<li>$[1,3]\cap(2,5)$：2つの条件を並べる。$1\le x\le 3$ かつ $2\lt x\lt 5$。</li>
+<li>左端：$x\ge 1$ と $x\gt 2$ を両方満たすのは、$x\gt 2$（強いほう）。右端：$x\le 3$ と $x\lt 5$ を両方満たすのは、$x\le 3$（強いほう）。</li>
+<li>よって $2\lt x\le 3$。区間で書けば $(2,3]$。</li>
+</ol>
+<p>端点の確かめ：$x=2$ は $(2,5)$ に入っていない（$2\lt2$ は正しくない）ので入らない。$x=3$ は $[1,3]$ に入り、$(2,5)$ にも入る（$2\lt 3\lt 5$）ので入る。</p>
+<p>もう一つ：$[0,2)\cup[2,3]$。$[0,2)$ は $2$ を含まず、$[2,3]$ は $2$ を含む。合わせると $2$ のところが埋まり、$[0,3]$。</p>
+
+<div class="why"><span class="label">ひとことで</span>区間は $\{x\in\mathbb R\mid a\le x\le b\}$ の短縮形。角括弧は端点を含み、丸括弧は含まない（流派によっては外向きの角括弧が丸括弧の役）。$(a,b)$ は点の座標とも読めるので文脈で判断する。</div>
+
+<p>区間の記法が、数直線上のどの範囲を表すのかを図にする。</p>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 580 304" role="img" aria-label="数直線上の区間：閉区間[1,3]、開区間(1,3)、半開区間[1,3)、(1,∞)" xmlns="http://www.w3.org/2000/svg"><text x="12" y="38" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">[1, 3]</text><text x="12" y="57" font-size="12" fill="#6b645a" text-anchor="start" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">{x | 1 ≤ x ≤ 3}</text><line x1="130" y1="40" x2="552" y2="40" stroke="#6b645a" stroke-width="1.5"/><line x1="140" y1="36" x2="140" y2="44" stroke="#6b645a"/><text x="140" y="60" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">0</text><line x1="230" y1="36" x2="230" y2="44" stroke="#6b645a"/><text x="230" y="60" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">1</text><line x1="320" y1="36" x2="320" y2="44" stroke="#6b645a"/><text x="320" y="60" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">2</text><line x1="410" y1="36" x2="410" y2="44" stroke="#6b645a"/><text x="410" y="60" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">3</text><line x1="500" y1="36" x2="500" y2="44" stroke="#6b645a"/><text x="500" y="60" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">4</text><line x1="230" y1="40" x2="410" y2="40" stroke="#a8322a" stroke-width="5"/><circle cx="230" cy="40" r="7" fill="#a8322a" stroke="#a8322a" stroke-width="2.5"/><circle cx="410" cy="40" r="7" fill="#a8322a" stroke="#a8322a" stroke-width="2.5"/><text x="12" y="100" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">(1, 3)</text><text x="12" y="119" font-size="12" fill="#6b645a" text-anchor="start" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">{x | 1 &lt; x &lt; 3}</text><line x1="130" y1="102" x2="552" y2="102" stroke="#6b645a" stroke-width="1.5"/><line x1="140" y1="98" x2="140" y2="106" stroke="#6b645a"/><text x="140" y="122" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">0</text><line x1="230" y1="98" x2="230" y2="106" stroke="#6b645a"/><text x="230" y="122" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">1</text><line x1="320" y1="98" x2="320" y2="106" stroke="#6b645a"/><text x="320" y="122" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">2</text><line x1="410" y1="98" x2="410" y2="106" stroke="#6b645a"/><text x="410" y="122" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">3</text><line x1="500" y1="98" x2="500" y2="106" stroke="#6b645a"/><text x="500" y="122" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">4</text><line x1="230" y1="102" x2="410" y2="102" stroke="#a8322a" stroke-width="5"/><circle cx="230" cy="102" r="7" fill="#fffdf7" stroke="#a8322a" stroke-width="2.5"/><circle cx="410" cy="102" r="7" fill="#fffdf7" stroke="#a8322a" stroke-width="2.5"/><text x="12" y="162" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">[1, 3)</text><text x="12" y="181" font-size="12" fill="#6b645a" text-anchor="start" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">{x | 1 ≤ x &lt; 3}</text><line x1="130" y1="164" x2="552" y2="164" stroke="#6b645a" stroke-width="1.5"/><line x1="140" y1="160" x2="140" y2="168" stroke="#6b645a"/><text x="140" y="184" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">0</text><line x1="230" y1="160" x2="230" y2="168" stroke="#6b645a"/><text x="230" y="184" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">1</text><line x1="320" y1="160" x2="320" y2="168" stroke="#6b645a"/><text x="320" y="184" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">2</text><line x1="410" y1="160" x2="410" y2="168" stroke="#6b645a"/><text x="410" y="184" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">3</text><line x1="500" y1="160" x2="500" y2="168" stroke="#6b645a"/><text x="500" y="184" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">4</text><line x1="230" y1="164" x2="410" y2="164" stroke="#a8322a" stroke-width="5"/><circle cx="230" cy="164" r="7" fill="#a8322a" stroke="#a8322a" stroke-width="2.5"/><circle cx="410" cy="164" r="7" fill="#fffdf7" stroke="#a8322a" stroke-width="2.5"/><text x="12" y="224" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">(1, ∞)</text><text x="12" y="243" font-size="12" fill="#6b645a" text-anchor="start" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">{x | x &gt; 1}</text><line x1="130" y1="226" x2="552" y2="226" stroke="#6b645a" stroke-width="1.5"/><polygon points="558,226 548,221 548,231" fill="#6b645a"/><line x1="140" y1="222" x2="140" y2="230" stroke="#6b645a"/><text x="140" y="246" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">0</text><line x1="230" y1="222" x2="230" y2="230" stroke="#6b645a"/><text x="230" y="246" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">1</text><line x1="320" y1="222" x2="320" y2="230" stroke="#6b645a"/><text x="320" y="246" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">2</text><line x1="410" y1="222" x2="410" y2="230" stroke="#6b645a"/><text x="410" y="246" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">3</text><line x1="500" y1="222" x2="500" y2="230" stroke="#6b645a"/><text x="500" y="246" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">4</text><line x1="230" y1="226" x2="548" y2="226" stroke="#a8322a" stroke-width="5"/><circle cx="230" cy="226" r="7" fill="#fffdf7" stroke="#a8322a" stroke-width="2.5"/><text x="12" y="276" font-size="12" fill="#6b645a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">塗りの丸は端点を含む（角括弧）、白抜きの丸は含まない（丸括弧）。</text><text x="12" y="292" font-size="12" fill="#6b645a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">(1, ∞) の ∞ は数ではなく、「右へ限りなく続く」という印。</text></svg>
+<figcaption><strong>図 2.3</strong>　区間は数直線上の線分で表せる。塗りの丸の端は含み、白抜きの丸の端は含まない。</figcaption>
+</figure>
+
+<h3 id="sec-1-9"><span class="no">1.9</span>直積 $\times$ と $\mathbb R^n$</h3>
+<p>動機：平面上の点を、「$x$ 座標と $y$ 座標の2つの数の組」で表したい。また、「サイコロを2回振った結果」のように、<strong>順番に意味のある組</strong>を集合として扱いたい。</p>
+<div class="def" id="sym-cartesian"><span class="label">記号：$A\times B$（直積）、$\mathbb R^n$</span>
+<p><strong>①読み方</strong>：$A\times B$ は「$A$ 直積 $B$」。$\mathbb R^n$ は「アール・エヌ」「$n$ 次元の実数の組全体」。</p>
+<p><strong>②日本語での意味</strong>：$A\times B$ は、「$A$ の要素 $a$ と $B$ の要素 $b$ を、この順に並べた組 $(a,b)$ すべて」の集合。<strong>順番に意味がある</strong>（$(1,2)$ と $(2,1)$ は別の組）。$\mathbb R^n$ は、実数を $n$ 個並べた組 $(x_1,x_2,\cdots,x_n)$ すべての集合。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$ A\times B:=\{(a,b)\mid a\in A\ \land\ b\in B\},\qquad \mathbb R^2:=\mathbb R\times\mathbb R,\qquad \mathbb R^3:=\mathbb R\times\mathbb R\times\mathbb R $$</p>
+<p>肩の $n$ は、第1回で見た冪（$x$ を $n$ 回かける）とは<strong>違う意味</strong>で、「$\mathbb R$ を $n$ 回、直積した」の意味。$\mathbb R^2$ は「$\mathbb R$ の二乗」ではなく、「$\mathbb R\times\mathbb R$」と読む。</p>
+<p><strong>④どこで出会うか</strong>：座標平面・空間（$\mathbb R^2$、$\mathbb R^3$）、ベクトルの空間（第5回、第15回）、多変数関数の定義域（第3回、第11回）。</p>
+</div>
+<p>最小の具体例。$A:=\{1,2\}$、$B:=\{a,b\}$ のとき、$A\times B$ の要素を、左側の $1$ から順に書く。</p>
+<ol>
+<li>左が $1$ のもの：$(1,a)$、$(1,b)$。</li>
+<li>左が $2$ のもの：$(2,a)$、$(2,b)$。</li>
+<li>よって $A\times B=\{(1,a),(1,b),(2,a),(2,b)\}$。要素は $2\times2=4$ 個。</li>
+</ol>
+<p>逆の順の $B\times A$ は $\{(a,1),(a,2),(b,1),(b,2)\}$ で、$A\times B$ とは別の集合（要素の見た目が違う）。</p>
+<p>$\mathbb R^2$ は、「$x$ 座標」と「$y$ 座標」の組のすべて、つまり座標平面そのもの。$(1,3)\in\mathbb R^2$ は「$x=1,\ y=3$ の点」を表す。$\mathbb R^n$ の要素を一つの文字で表したもの（ベクトル）の書き方は、第5回で扱う。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>$\mathbb R^2$ を $\mathbb R\cdot\mathbb R$（実数どうしの積）と読んではいけない。実数どうしの積はやはり実数であり、$\mathbb R^2$ は<strong>実数の組</strong>のこと。なお、<a href="01_第1回_数式を文として読む.html#sym-bracket-sup">第1回 4.3</a> で、肩の数字には「括弧つきは冪ではない」という約束があったが、$\mathbb R^n$ の肩には括弧がない。それでも冪ではない。<strong>肩の数字が冪かどうかは、載っている文字（数か、集合か）で決まる</strong>。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$A\times B$ は「$A$ の要素と $B$ の要素を、この順に並べた組」の集合。$\mathbb R^n$ は「実数を $n$ 個並べた組」の集合。肩の $n$ は個数で、冪ではない。</div>
+
+<!-- ============================================================ -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="../img/a3_peano.png" alt="ペアノ『算術の諸原理』（1889）の一頁。記号 ∈ が初めて使われた箇所" loading="lazy"></div>
+<p class="cap">1889年、ペアノは「〜である（est）」の頭文字 ε を、集合の要素を表す記号 ∈ の起こりとした。</p>
+<p class="cr">Giuseppe Peano, Arithmetices principia (1889)／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:First_usage_of_the_symbol_%E2%88%88.png">Wikimedia Commons</a>（File:First usage of the symbol ∈.png）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="../img/b3_mandala.jpg" alt="金剛界八十一尊曼荼羅。円の中に仏が並び、その円がさらに大きな円の中に並ぶ" loading="lazy"></div>
+<p class="cap">円の中に仏が並び、その円がさらに大きな円の中に並ぶ。集まりの中に、集まりがある。</p>
+<p class="cr">金剛界八十一尊曼荼羅（Commons の作者表記は忠快 1160–1227、根津美術館）／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:Kongokai_81son_mandala.jpg">Wikimedia Commons</a>（File:Kongokai 81son mandala.jpg）</p></div>
+</figure>
+
+<h2 id="sec-2"><span class="no">2</span>論理：文を組み合わせる</h2>
+
+<h3 id="sec-2-1"><span class="no">2.1</span>動機と準備：命題</h3>
+<p>第1回で、「関係式は正しいか正しくないかを言える文」だと確かめた（<a href="01_第1回_数式を文として読む.html#sec-1-2">第1回 1.2</a>）。数学ではこれと同じ意味で、<strong>正しい（真）か正しくない（偽）かが決まる文</strong>を<strong>命題</strong>と呼ぶ。たとえば、</p>
+<ul>
+<li>「$2\lt 3$」：真。</li>
+<li>「$3\in\{1,2\}$」：偽。</li>
+<li>「$x\lt 3$」：$x$ が決まっていないので、このままでは真偽が決まらない（<strong>条件</strong>と呼ぶ。命題の「穴あき」と思えばよい）。</li>
+</ul>
+<p>以下では、命題や条件を $P,\ Q$ という文字で表す。$P$ は「ひとつの文」を代表する文字で、数の代表ではない。</p>
+<p>この節では、2つの文 $P,\ Q$ から、新しい文を作る方法を学ぶ。これは日本語の「かつ」「または」「でない」「ならば」に対応する。日本語は曖昧なところがあるので、<strong>真偽表</strong>で意味をはっきり決める。真偽表とは、$P$ と $Q$ の真偽の4通りの組合せ（真真、真偽、偽真、偽偽）それぞれに対し、新しい文の真偽を書いた表である。以下、真を T、偽を F と書く。</p>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>かつ・または・でない：$\land$、$\lor$、$\lnot$</h3>
+
+<div class="def" id="sym-and"><span class="label">記号：$\land$（かつ）</span>
+<p><strong>①読み方</strong>：$P\land Q$ は「$P$ かつ $Q$」「$P$ アンド $Q$」。</p>
+<p><strong>②日本語での意味</strong>：$P$ も $Q$ も、<strong>両方</strong>真であるとき真、それ以外のとき偽。</p>
+<p><strong>③省略していない書き方</strong>：略記ではない。ただし、数学の本は $\land$ を省略して、<strong>カンマ</strong>や<strong>連ねた不等式</strong>で書くことがある。$a\le x\le b$ は「$a\le x\ \land\ x\le b$」（<a href="#abbr-interval">省略の段階：区間</a>）、「$x\gt 0,\ y\gt 0$」は「$x\gt 0\ \land\ y\gt 0$」。</p>
+<p><strong>④どこで出会うか</strong>：連立条件、共通部分 $\cap$ の定義（<a href="#sym-intersection">1.7</a>）。</p>
+</div>
+
+<div class="def" id="sym-or"><span class="label">記号：$\lor$（または）</span>
+<p><strong>①読み方</strong>：$P\lor Q$ は「$P$ または $Q$」「$P$ オア $Q$」。</p>
+<p><strong>②日本語での意味</strong>：$P$ と $Q$ の<strong>少なくとも一方</strong>が真であるとき真。<strong>両方真のときも真</strong>である。</p>
+<p><strong>③省略していない書き方</strong>：略記ではない。ただし、$a\le b$ という記号が「$a\lt b\ \lor\ a=b$」の省略であることを、<a href="01_第1回_数式を文として読む.html#sym-order">第1回 2.6</a> で予告した。<a href="#sec-3-7">3.7</a> でこれを書き戻す。</p>
+<p><strong>④どこで出会うか</strong>：場合分け、和集合 $\cup$ の定義（<a href="#sym-union">1.7</a>）、不等式「$x\lt 0$ または $x\gt 1$」。</p>
+</div>
+
+<div class="def" id="sym-not"><span class="label">記号：$\lnot$（でない）</span>
+<p><strong>①読み方</strong>：$\lnot P$ は「$P$ でない」「$P$ の否定」「ノット $P$」。</p>
+<p><strong>②日本語での意味</strong>：$P$ が真なら偽、$P$ が偽なら真。真偽をひっくり返す。</p>
+<p><strong>③省略していない書き方</strong>：略記ではない。ただし、特定の関係式には専用の否定記号が用意されている：$\lnot(a=b)$ を $a\neq b$、$\lnot(a\in A)$ を $a\notin A$、$\lnot(a\le b)$ を $a\gt b$ と書く。これらは<strong>$\lnot$ を記号の中に折りたたんだ省略形</strong>である。</p>
+<p><strong>④どこで出会うか</strong>：「〜でない」の形の条件、背理法、対偶（<a href="#sec-2-4">2.4</a>）。流派によって $\sim P$、$\overline{P}$、$P'$ と書く。</p>
+</div>
+
+<h4>真偽表</h4>
+<table class="tb">
+<tr><th>$P$</th><th>$Q$</th><th>$P\land Q$（かつ）</th><th>$P\lor Q$（または）</th><th>$\lnot P$（でない）</th></tr>
+<tr><td>T</td><td>T</td><td>T</td><td>T</td><td>F</td></tr>
+<tr><td>T</td><td>F</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>F</td><td>T</td><td>F</td><td>T</td><td>T</td></tr>
+<tr><td>F</td><td>F</td><td>F</td><td>F</td><td>T</td></tr>
+</table>
+<p>日本語の「または」は、「どちらか一方だけ」の意味（「ご飯またはパン」）で使われることがあるが、<strong>数学の $\lor$ は両方真でも真</strong>（上の表の1行目）。たとえば、$x=3$ のとき、「$x\gt 2\ \lor\ x\gt 1$」は両方真なので真である。</p>
+
+<p>数で確かめる。$x=0.5$ として、「$0\le x\le 1$」（$=0\le x\ \land\ x\le 1$）と、その否定を調べる。</p>
+<ol>
+<li>$0\le 0.5$ は真。$0.5\le 1$ は真。→ 「かつ」は真。</li>
+<li>否定「$\lnot(0\le x\ \land\ x\le 1)$」は偽。</li>
+<li>$x=2$ ではどうか。$0\le 2$ は真、$2\le 1$ は偽。→ 「かつ」は偽。否定は真。</li>
+<li>$x=-1$ ではどうか。$0\le -1$ は偽、$-1\le 1$ は真。→ 「かつ」は偽。否定は真。</li>
+</ol>
+<p>否定が真になるのは、$x=2$ のような（右にはみ出した）場合と、$x=-1$ のような（左にはみ出した）場合。つまり、$\lnot(0\le x\le 1)$ は「$x\lt 0\ \lor\ x\gt 1$」と同じになる。これを一般に書いたのが、次のド・モルガンの法則である。</p>
+
+<div class="thm"><span class="label">ド・モルガンの法則</span>
+<p>$$ \lnot(P\land Q)\ \Leftrightarrow\ (\lnot P)\lor(\lnot Q),\qquad \lnot(P\lor Q)\ \Leftrightarrow\ (\lnot P)\land(\lnot Q) $$</p>
+<p>（$\Leftrightarrow$ は <a href="#sym-iff">2.5</a> で説明する。いまは「左と右の真偽が、$P,Q$ のどの組合せでも一致する」と読む。）言葉で言うと、「『両方』の否定は『少なくとも一方でない』」「『少なくとも一方』の否定は『両方でない』」。</p>
+</div>
+<div class="proof"><span class="label">確かめ（真偽表で）</span>
+<p>$\lnot(P\land Q)$ と $(\lnot P)\lor(\lnot Q)$ を、4通りの組合せそれぞれで計算する。</p>
+<table class="tb">
+<tr><th>$P$</th><th>$Q$</th><th>$P\land Q$</th><th>$\lnot(P\land Q)$</th><th>$\lnot P$</th><th>$\lnot Q$</th><th>$(\lnot P)\lor(\lnot Q)$</th></tr>
+<tr><td>T</td><td>T</td><td>T</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>T</td><td>F</td><td>F</td><td>T</td><td>F</td><td>T</td><td>T</td></tr>
+<tr><td>F</td><td>T</td><td>F</td><td>T</td><td>T</td><td>F</td><td>T</td></tr>
+<tr><td>F</td><td>F</td><td>F</td><td>T</td><td>T</td><td>T</td><td>T</td></tr>
+</table>
+<p>4行とも、第4列と第7列が一致している。もう一方の式も、同じ手順で確かめられる（演習の問で自分でやる）。</p>
+</div>
+
+<div class="box"><span class="label">補足：記号が並んだときの読む順序</span>
+<p>$\land$ や $\lor$ が複数並ぶとき、どちらを先に結ぶかの約束（優先順位）は本によって揺れる。この教材では、<strong>$\lnot$ を最優先、そのあと $\land$、$\lor$、最後に $\Rightarrow$、$\Leftrightarrow$</strong> と読む（第1回の<a href="01_第1回_数式を文として読む.html#rule-order">演算の優先順位</a>の関係記号と同じ型）。ただし、曖昧になりそうなときは<strong>必ず括弧を書く</strong>（第1回 5.3 で見た、割り算の曖昧さと同じ考え方）。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$\land$ は「両方真のとき真」、$\lor$ は「少なくとも一方が真のとき真（両方真でもよい）」、$\lnot$ は「真偽の反転」。「両方」の否定は「少なくとも一方でない」（ド・モルガン）。</div>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>ならば：$\Rightarrow$</h3>
+<p>動機：数学の定理や公式のほとんどは、「〜ならば〜」の形をしている。「$x\gt 2$ ならば $x^2\gt 4$」のように、<strong>前提の条件から結論を導く</strong>文である。</p>
+<div class="def" id="sym-implies"><span class="label">記号：$\Rightarrow$（ならば）</span>
+<p><strong>①読み方</strong>：$P\Rightarrow Q$ は「$P$ ならば $Q$」「$P$ は $Q$ を含意する」「$P$ implies $Q$」。$P$ を<strong>仮定</strong>（前件）、$Q$ を<strong>結論</strong>（後件）と呼ぶ。</p>
+<p><strong>②日本語での意味</strong>：「$P$ が真のときに、$Q$ が偽になることはない」という主張。</p>
+<p><strong>③省略していない書き方</strong>：次の真偽表のとおり。「$P$ が真で $Q$ が偽」のときだけ偽、それ以外は真。<br>$$ P\Rightarrow Q\ \Longleftrightarrow\ (\lnot P)\lor Q $$</p>
+<p><strong>④どこで出会うか</strong>：定理の主張、証明のすべて、条件の書き換え（「$x\gt 2$ ならば…」）、定義の中の条件。</p>
+</div>
+
+<table class="tb">
+<tr><th>$P$</th><th>$Q$</th><th>$P\Rightarrow Q$</th><th>$(\lnot P)\lor Q$</th><th>日常の例：「100点を取ったらおごる」</th></tr>
+<tr><td>T</td><td>T</td><td>T</td><td>T</td><td>100点を取った。おごった。→ 約束は守られた。</td></tr>
+<tr><td>T</td><td>F</td><td>F</td><td>F</td><td>100点を取った。おごらなかった。→ <strong>約束違反</strong>。</td></tr>
+<tr><td>F</td><td>T</td><td>T</td><td>T</td><td>100点を取っていない。それでもおごった。→ 約束は破られていない。</td></tr>
+<tr><td>F</td><td>F</td><td>T</td><td>T</td><td>100点を取っていない。おごらなかった。→ 約束は破られていない。</td></tr>
+</table>
+<p>この表で、<strong>3行目と4行目（$P$ が偽のとき）は、$Q$ が何であっても $P\Rightarrow Q$ は真</strong>である。ここが、最初につまずきやすい。理由は、「$\Rightarrow$ は『$P$ が真のときに $Q$ が偽になる例（反例）がない』という主張だ」と決めているため。$P$ が偽のときは、反例になりようがない。上の「おごる」の例のとおり、約束は<em>破られていない</em>（約束違反の証拠がない）から、「真」と数える。</p>
+
+<p>数で手を動かす。$P$：$x\gt 2$、$Q$：$x^2\gt 4$ として、「$x\gt 2\Rightarrow x^2\gt 4$」を、いくつかの $x$ で確かめる。</p>
+<table class="tb">
+<tr><th>$x$</th><th>$P$：$x\gt2$</th><th>$x^2$</th><th>$Q$：$x^2\gt4$</th><th>$P\Rightarrow Q$</th><th>真偽表のどの行</th></tr>
+<tr><td>$3$</td><td>T</td><td>$9$</td><td>T</td><td>T</td><td>1行目（T,T）</td></tr>
+<tr><td>$-3$</td><td>F</td><td>$9$</td><td>T</td><td>T</td><td>3行目（F,T）</td></tr>
+<tr><td>$1$</td><td>F</td><td>$1$</td><td>F</td><td>T</td><td>4行目（F,F）</td></tr>
+</table>
+<p>2行目の（T,F）、つまり「$x\gt 2$ なのに $x^2\gt 4$ でない」は、どんな $x$ でも起きない。この「起きない」ことが、「$x\gt 2\Rightarrow x^2\gt 4$ は<strong>すべての</strong> $x$ について真」の中身である。（「すべての」の記号は <a href="#sec-3">第3節</a> で。）</p>
+<p>逆の「$x^2\gt 4\Rightarrow x\gt 2$」はどうか。$x=-3$ を入れる。$x^2=9\gt 4$ は真、$x\gt 2$ は偽。（T,F）の行に当たるので、この文は偽。つまり $x=-3$ が<strong>反例</strong>。$P\Rightarrow Q$ を<strong>偽だと示すには、反例を1つ示せば足りる</strong>。</p>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p>(1)「$P\Rightarrow Q$ が真ならば、$P$ のあとで必ず $Q$ が実際に起こる」とは限らない。$P$ が偽の行でも「真」である。<br>
+(2)「$\Rightarrow$ は原因と結果」ではない。「$2\lt 3\Rightarrow 3\lt 4$」のように、因果が何もない2つの文でも、$\Rightarrow$ でつなげる。数学の $\Rightarrow$ は、<strong>真偽表で決まる</strong>約束にすぎない。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$P\Rightarrow Q$ は「$P$ が真なのに $Q$ が偽、という場合は起きない」の意味。$P$ が偽のときは、$Q$ にかかわらず真。偽だと示すには反例を1つ出す。</div>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>逆・裏・対偶と、必要条件・十分条件</h3>
+<p>$P\Rightarrow Q$ から作れる3つの文がある。</p>
+<table class="tb">
+<tr><th>名前</th><th>形</th><th>例（$P$：$x\gt2$、$Q$：$x^2\gt4$）</th><th>真偽</th></tr>
+<tr><td>元の文</td><td>$P\Rightarrow Q$</td><td>$x\gt2\Rightarrow x^2\gt4$</td><td>真</td></tr>
+<tr><td>逆</td><td>$Q\Rightarrow P$</td><td>$x^2\gt4\Rightarrow x\gt2$</td><td>偽（$x=-3$）</td></tr>
+<tr><td>裏</td><td>$\lnot P\Rightarrow\lnot Q$</td><td>$x\le2\Rightarrow x^2\le4$</td><td>偽（$x=-3$）</td></tr>
+<tr><td>対偶</td><td>$\lnot Q\Rightarrow\lnot P$</td><td>$x^2\le4\Rightarrow x\le2$</td><td>真</td></tr>
+</table>
+<p>裏の確認：$x=-3$ は $x\le 2$ で真、$x^2=9\le 4$ は偽。（T,F）の行なので偽。対偶の確認：$x^2\le 4$ なら $-2\le x\le 2$ なので、$x\le 2$ が成り立つ。</p>
+<p><strong>元の文と対偶は、真偽が必ず一致する</strong>。真偽表で確かめる。</p>
+<table class="tb">
+<tr><th>$P$</th><th>$Q$</th><th>$P\Rightarrow Q$</th><th>$\lnot Q$</th><th>$\lnot P$</th><th>$\lnot Q\Rightarrow\lnot P$</th></tr>
+<tr><td>T</td><td>T</td><td>T</td><td>F</td><td>F</td><td>T</td></tr>
+<tr><td>T</td><td>F</td><td>F</td><td>T</td><td>F</td><td>F</td></tr>
+<tr><td>F</td><td>T</td><td>T</td><td>F</td><td>T</td><td>T</td></tr>
+<tr><td>F</td><td>F</td><td>T</td><td>T</td><td>T</td><td>T</td></tr>
+</table>
+<p>第3列と第6列は4行とも一致する。このおかげで、「$P\Rightarrow Q$ を直接示すのが難しいとき、対偶 $\lnot Q\Rightarrow\lnot P$ を示せばよい」という証明が使える。一方、<strong>逆と元の文は、一致するとは限らない</strong>（上の例では、元が真で、逆は偽）。</p>
+
+<h4>必要条件・十分条件</h4>
+<p>$P\Rightarrow Q$ が真のとき、次の2通りの言い方をする。</p>
+<ul>
+<li>$P$ は $Q$ であるための<strong>十分条件</strong>（$P$ が成り立てば、$Q$ を言うのに<em>十分</em>）。</li>
+<li>$Q$ は $P$ であるための<strong>必要条件</strong>（$P$ が成り立つなら、$Q$ は<em>必ず必要</em>）。</li>
+</ul>
+<p>覚え方：矢印の<strong>根元（$P$）が十分</strong>、<strong>矢印の先（$Q$）が必要</strong>。</p>
+<p>数の例：$P$：$x=2$、$Q$：$x^2=4$ とする。</p>
+<ol>
+<li>$x=2\Rightarrow x^2=4$：$x=2$ なら $x^2=2^2=4$。真。</li>
+<li>よって、$x=2$ は $x^2=4$ の十分条件、$x^2=4$ は $x=2$ の必要条件。</li>
+<li>逆 $x^2=4\Rightarrow x=2$：$x=-2$ で $x^2=4$ だが $x=2$ でない。偽。よって $x^2=4$ は $x=2$ の十分条件ではない。</li>
+</ol>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「必要」と「十分」を取り違えやすい。「$x^2=4$ が成り立つことは、$x=2$ であるために<strong>必要</strong>」は正しい（$x=2$ なら必ず $x^2=4$ だから）。しかし「$x^2=4$ ならば $x=2$」とは言えない。<strong>必要条件を満たしても、目的の主張が成り立つとは限らない</strong>。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$P\Rightarrow Q$ の元の文と対偶（$\lnot Q\Rightarrow\lnot P$）は真偽が同じ、逆（$Q\Rightarrow P$）は一致するとは限らない。$P$ は $Q$ の十分条件、$Q$ は $P$ の必要条件。</div>
+
+<p>逆・裏・対偶の関係を、1枚の図にまとめる。</p>
+<figure class="fig" id="fig-2-4">
+<svg viewBox="0 0 580 330" role="img" aria-label="逆・裏・対偶の関係図：元の文と対偶は真偽がいつも同じ" xmlns="http://www.w3.org/2000/svg"><defs><marker id="f24-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2b3a67"/></marker></defs><rect x="20" y="20" width="210" height="90" rx="8" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><text x="32" y="44" font-size="13" fill="#6b645a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">元の文</text><text x="125" y="72" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">P ⇒ Q</text><text x="125" y="96" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">x&gt;2 ⇒ x²&gt;4</text><circle cx="207" cy="42" r="13" fill="#edf1e8" stroke="#6b8a5a" stroke-width="2"/><text x="207" y="47" font-size="14" fill="#6b8a5a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">真</text><rect x="350" y="20" width="210" height="90" rx="8" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><text x="362" y="44" font-size="13" fill="#6b645a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">逆</text><text x="455" y="72" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">Q ⇒ P</text><text x="455" y="96" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">x²&gt;4 ⇒ x&gt;2</text><circle cx="537" cy="42" r="13" fill="#f6e3df" stroke="#a8322a" stroke-width="2"/><text x="537" y="47" font-size="14" fill="#a8322a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">偽</text><rect x="20" y="200" width="210" height="90" rx="8" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><text x="32" y="224" font-size="13" fill="#6b645a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">裏</text><text x="125" y="252" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">¬P ⇒ ¬Q</text><text x="125" y="276" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">x≤2 ⇒ x²≤4</text><circle cx="207" cy="222" r="13" fill="#f6e3df" stroke="#a8322a" stroke-width="2"/><text x="207" y="227" font-size="14" fill="#a8322a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">偽</text><rect x="350" y="200" width="210" height="90" rx="8" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><text x="362" y="224" font-size="13" fill="#6b645a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">対偶</text><text x="455" y="252" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">¬Q ⇒ ¬P</text><text x="455" y="276" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="normal">x²≤4 ⇒ x≤2</text><circle cx="537" cy="222" r="13" fill="#edf1e8" stroke="#6b8a5a" stroke-width="2"/><text x="537" y="227" font-size="14" fill="#6b8a5a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">真</text><line x1="236" y1="65" x2="344" y2="65" stroke="#2b3a67" stroke-width="2" marker-end="url(#f24-ar)"/><text x="290" y="55" font-size="13" fill="#2b3a67" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">入れ替える</text><line x1="236" y1="245" x2="344" y2="245" stroke="#2b3a67" stroke-width="2" marker-end="url(#f24-ar)"/><text x="290" y="235" font-size="13" fill="#2b3a67" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">入れ替える</text><line x1="125" y1="116" x2="125" y2="194" stroke="#2b3a67" stroke-width="2" marker-end="url(#f24-ar)"/><text x="135" y="160" font-size="13" fill="#2b3a67" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">否定をつける</text><line x1="455" y1="116" x2="455" y2="194" stroke="#2b3a67" stroke-width="2" marker-end="url(#f24-ar)"/><text x="465" y="160" font-size="13" fill="#2b3a67" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">否定をつける</text><line x1="236" y1="112" x2="344" y2="198" stroke="#6b8a5a" stroke-width="3" stroke-dasharray="7 5"/><rect x="240" y="138" width="100" height="40" rx="6" fill="#edf1e8" stroke="#6b8a5a"/><text x="290" y="155" font-size="13" fill="#6b8a5a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">いつも</text><text x="290" y="171" font-size="13" fill="#6b8a5a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">真偽が同じ</text><text x="290" y="318" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">例は P：x&gt;2、Q：x²&gt;4。逆と裏は x = −3 が反例（2.4 の表と同じ）。</text></svg>
+<figcaption><strong>図 2.4</strong>　元の文から、P と Q を入れ替えると逆、それぞれに否定をつけると裏、両方すると対偶。元の文と対偶は、いつも真偽が同じ（逆と裏も、互いにいつも同じ）。</figcaption>
+</figure>
+
+<h3 id="sec-2-5"><span class="no">2.5</span>同値：$\Leftrightarrow$</h3>
+<p>動機：$P\Rightarrow Q$ と $Q\Rightarrow P$ が<strong>両方</strong>成り立つとき、$P$ と $Q$ は「同じことを言っている」。これを短く書きたい。</p>
+<div class="def" id="sym-iff"><span class="label">記号：$\Leftrightarrow$（同値）</span>
+<p><strong>①読み方</strong>：$P\Leftrightarrow Q$ は「$P$ と $Q$ は同値」「$P$ であるための必要十分条件は $Q$」「$P$ ならば $Q$、かつ $Q$ ならば $P$」「$P$ if and only if $Q$」。英語では iff と略されることがある。</p>
+<p><strong>②日本語での意味</strong>：$P$ と $Q$ の真偽が<strong>常に一致する</strong>。</p>
+<p><strong>③省略していない書き方</strong>：$$ P\Leftrightarrow Q\quad\text{は}\quad (P\Rightarrow Q)\ \land\ (Q\Rightarrow P)\quad\text{の省略} $$ 真偽表では、$P$ と $Q$ が同じ行（T,T）と（F,F）のときだけ真。</p>
+<p><strong>④どこで出会うか</strong>：定義（「〜であるとは〜のことである」を $\Leftrightarrow$ で書く）、定理の「必要十分」、式変形の連鎖（$x+1=3\Leftrightarrow x=2$）。</p>
+</div>
+<table class="tb">
+<tr><th>$P$</th><th>$Q$</th><th>$P\Rightarrow Q$</th><th>$Q\Rightarrow P$</th><th>$P\Leftrightarrow Q$</th></tr>
+<tr><td>T</td><td>T</td><td>T</td><td>T</td><td>T</td></tr>
+<tr><td>T</td><td>F</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>F</td><td>T</td><td>T</td><td>F</td><td>F</td></tr>
+<tr><td>F</td><td>F</td><td>T</td><td>T</td><td>T</td></tr>
+</table>
+<p>数の例。「$x+1=3\Leftrightarrow x=2$」を確かめる。</p>
+<ol>
+<li>$x+1=3\Rightarrow x=2$：両辺から $1$ を引く。$x+1-1=3-1$、つまり $x=2$。（等式の両辺に同じ操作をしてよい、という約束。）</li>
+<li>$x=2\Rightarrow x+1=3$：両辺に $1$ を足す。$x+1=2+1=3$。</li>
+<li>両方向が成り立つ。よって同値。</li>
+</ol>
+<p>これは、方程式を解く操作の「正体」を示している。各行の変形が同値（$\Leftrightarrow$）でつながっていれば、最後の行が答えの全部になる。一方、$x=2\Rightarrow x^2=4$ のように、ある行から次の行が $\Rightarrow$（片方向）でしか導けない変形（例：両辺を二乗する）を挟むと、<strong>求めた値の中に、元の式を満たさないもの（余分な解）が混じる</strong>可能性が出てくる。たとえば $x=2$ の両辺を二乗して $x^2=4$、そこから $x=\pm2$ と戻すと、$x=-2$ が混じる。</p>
+
+<div class="warn"><span class="label">流派の違い：$\Rightarrow$ と $\to$、$\Leftrightarrow$ と $\leftrightarrow$</span>
+<p>$\Rightarrow$ のかわりに $\to$ を、$\Leftrightarrow$ のかわりに $\leftrightarrow$ を使う論理学の本がある。数学の本では、$\to$ は「関数の矢印」（$f\colon A\to B$、第3回）や「極限の矢印」（$x\to a$、第6回）に使われるため、<strong>論理の矢印は二重線 $\Rightarrow$</strong> を使うのが普通。この教材も二重線を使う。矢印の形ごとに意味が違うことに注意する。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$P\Leftrightarrow Q$ は「$P\Rightarrow Q$ かつ $Q\Rightarrow P$」。方程式を解く変形が同値でつながっていれば、余分な解は混じらない。</div>
+
+<h3 id="sec-2-6"><span class="no">2.6</span>集合の言葉と論理の言葉の対応</h3>
+<p>第1節と第2節で出てきた記号は、次のようにぴったり対応している。（<strong>左の「集合の記号」の定義は、右の「論理の記号」を使って書ける</strong>、という関係。）</p>
+<table class="tb">
+<tr><th>集合の言葉</th><th>論理の言葉</th></tr>
+<tr><td>$x\in A\cap B$</td><td>$x\in A\ \land\ x\in B$（かつ）</td></tr>
+<tr><td>$x\in A\cup B$</td><td>$x\in A\ \lor\ x\in B$（または）</td></tr>
+<tr><td>$x\in A\setminus B$</td><td>$x\in A\ \land\ x\notin B$（かつ〜でない）</td></tr>
+<tr><td>$A\subseteq B$</td><td>$x\in A\Rightarrow x\in B$（ならば）が、すべての $x$ で成り立つ</td></tr>
+<tr><td>$A=B$</td><td>$x\in A\Leftrightarrow x\in B$（同値）が、すべての $x$ で成り立つ</td></tr>
+</table>
+<p>この対応のおかげで、「集合の等式」を示したいときは、「論理の言葉に直して、真偽表や同値変形で確かめる」ことができる。これは C 問題で使う。</p>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>すべての・存在する：量化子</h2>
+
+<h3 id="sec-3-0"><span class="no">3.0</span>動機：条件の文は「穴あき」のままでは真偽が決まらない</h3>
+<p>$x\gt 2\Rightarrow x^2\gt 4$ という文を、もう一度見る。この文の中の $x$ には、まだ値が決まっていない。$x=3$ のときは真、$x=-3$ のときも真（<a href="#sym-implies">2.3</a> の表）だった。では、この文は<strong>全体として</strong>真なのか偽なのか。</p>
+<p>実は、この文は<strong>「$x$ にどんな実数を入れても真になる」</strong>のか、<strong>「真になる $x$ もある」</strong>のか、あるいは<strong>「真になる $x$ がない」</strong>のか、に書き分けないと、文全体の真偽が決まらない。この「どんな $x$ でも」「ある $x$ では」を表すのが、<strong>量化子</strong>である。</p>
+<p>第1回では、この言い分けをせずに書く場面が何度も出てきた。「$(x+1)^2=x^2+2x+1$」（すべての $x$ で成り立つ）と、「$x+1=3$」（ある $x$ で成り立つ）は、見た目の等号が同じ形だったが、<a href="01_第1回_数式を文として読む.html#sym-equal">第1回 2.1</a> で「どちらの顔かは文脈から判断する」と書いた。量化子は、その「文脈」を<strong>記号にして書く</strong>ものである。</p>
+
+<h3 id="sec-3-1"><span class="no">3.1</span>全称：$\forall$（すべての）</h3>
+<div class="def" id="sym-forall"><span class="label">記号：$\forall$（すべての・任意の）</span>
+<p><strong>①読み方</strong>：$\forall x\in A,\ P(x)$ は「すべての $A$ の要素 $x$ について、$P(x)$」「任意の $x\in A$ に対して $P(x)$」「フォーオール $x$ in $A$、$P(x)$」。記号は英語 All の頭文字 A を逆さにしたもの。</p>
+<p><strong>②日本語での意味</strong>：$A$ の要素<strong>どれを取っても</strong>、$P(x)$ が真。</p>
+<p><strong>③省略していない書き方</strong>：$A$ の要素が有限個で $a_1,a_2,\cdots,a_n$ なら、「$P(a_1)\ \land\ P(a_2)\ \land\ \cdots\ \land\ P(a_n)$」と同じ（全部「かつ」でつないだもの）。要素が無限個のときは、このように書き並べることができないので、$\forall$ を使う。<br>$P(x)$ は「文字 $x$ を含む条件」を表す書き方で、$x$ に値を入れると真偽の決まる命題になる（関数の $f(x)$ に似た書き方：<a href="../03_第3回_関数と写像.html#sym-fx">第3回</a>）。</p>
+<p><strong>④どこで出会うか</strong>：恒等式、定理の主張、極限の定義（第6回）、「すべての $x$ について連続」。</p>
+</div>
+
+<p>最小の具体例。$A:=\{1,2,3\}$ で、$P(x)$：$x\lt 4$ とする。</p>
+<ol>
+<li>$\forall x\in A,\ x\lt 4$ は、「$1\lt 4$ かつ $2\lt 4$ かつ $3\lt 4$」と同じ。</li>
+<li>3つとも真。よって全体も真。</li>
+</ol>
+<p>$P(x)$：$x\lt 3$ なら、「$1\lt 3$ かつ $2\lt 3$ かつ $3\lt 3$」。3つめが偽なので、全体が偽。<strong>$\forall$ の文を偽だと示すには、反例（$x=3$）を1つ見つければ十分</strong>。</p>
+<p>無限個の例：$\forall x\in\mathbb R,\ x^2\ge 0$。実数をいくつか入れて試す（$x=-3,\,0,\,0.5,\,\sqrt2$ で $x^2=9,\,0,\,0.25,\,2$、どれも $0$ 以上）が、<strong>試しただけでは真だと示したことにならない</strong>。すべての実数について確かめられるとは限らないため、真を示すには、一般の $x$ で成り立つ理由（たとえば「実数は正か負か $0$ で、符号が同じものをかけると $0$ 以上」）が必要になる。</p>
+
+<div class="why"><span class="label">ひとことで</span>$\forall x\in A,\ P(x)$ は「$A$ のどの要素でも $P$ が真」。偽だと示すには反例を1つ、真だと示すには一般の理由が要る。</div>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>存在：$\exists$（ある）</h3>
+<div class="def" id="sym-exists"><span class="label">記号：$\exists$（存在する）</span>
+<p><strong>①読み方</strong>：$\exists x\in A,\ P(x)$ は「$A$ の要素 $x$ で、$P(x)$ を満たすものが存在する」「ある $x\in A$ があって $P(x)$」「イグジスツ $x$ in $A$、$P(x)$」。記号は英語 Exists の頭文字 E を裏返したもの。</p>
+<p><strong>②日本語での意味</strong>：$P(x)$ が真になる要素が、$A$ の中に<strong>少なくとも1つ</strong>ある（2つ以上あってもよい）。</p>
+<p><strong>③省略していない書き方</strong>：$A$ の要素が有限個で $a_1,\cdots,a_n$ なら、「$P(a_1)\ \lor\ P(a_2)\ \lor\ \cdots\ \lor\ P(a_n)$」と同じ（全部「または」でつないだもの）。</p>
+<p><strong>④どこで出会うか</strong>：方程式の解の存在、「$\propto$ の定数 $k$」、最大値・最小値の存在、極限の定義（第6回）。</p>
+</div>
+<p>最小の具体例。$A:=\{1,2,3\}$ で、$P(x)$：$x\gt 2$ とする。</p>
+<ol>
+<li>$\exists x\in A,\ x\gt 2$ は、「$1\gt 2$ または $2\gt 2$ または $3\gt 2$」と同じ。</li>
+<li>$1\gt 2$ は偽、$2\gt 2$ は偽、$3\gt 2$ は真。1つでも真があるから、全体は真。（$x=3$ が<strong>証拠</strong>。）</li>
+</ol>
+<p>$P(x)$：$x\gt 3$ なら、3つとも偽なので全体は偽。$\exists$ の文を真だと示すには、<strong>具体例を1つ見つければよい</strong>。偽だと示すには、$A$ のすべての要素で $P$ が偽であることを示す。</p>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p>日本語の「ある」は「1つだけある」と受け取られがちだが、$\exists$ は「少なくとも1つ」である。「$\exists x\in\mathbb R,\ x^2=4$」は、解が $x=2$ と $x=-2$ の2つあっても真。「ちょうど1つ」と言いたいときは、次の $\exists!$ を使う。</p>
+</div>
+
+<p>$\forall$ と $\exists$ の違いを、6個の点で見る。</p>
+<figure class="fig" id="fig-2-5">
+<svg viewBox="0 0 580 192" role="img" aria-label="6個の点：左は6個すべてが塗られている図（∀x P(x)）、右は2個が塗られている図（∃x P(x)）" xmlns="http://www.w3.org/2000/svg"><line x1="290" y1="14" x2="290" y2="150" stroke="#ddd6c8" stroke-width="1.5"/><text x="145" y="34" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">∀x P(x)</text><text x="145" y="56" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">どの点も塗られている</text><circle cx="45" cy="100" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="89" cy="100" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="133" cy="100" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="177" cy="100" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="221" cy="100" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="265" cy="100" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><text x="145" y="140" font-size="13" fill="#6b8a5a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">全部が塗られているので、真</text><text x="435" y="34" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">∃x P(x)</text><text x="435" y="56" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">塗られた点が1つ以上ある</text><circle cx="335" cy="100" r="14" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><circle cx="379" cy="100" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="423" cy="100" r="14" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><circle cx="467" cy="100" r="14" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><circle cx="511" cy="100" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="555" cy="100" r="14" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><text x="435" y="140" font-size="13" fill="#6b8a5a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">塗られた点があるので、真</text><circle cx="150" cy="176" r="7" fill="#6b8a5a" stroke="#2a2723"/><text x="162" y="180" font-size="12" fill="#6b645a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">塗られている（P(x) が真）</text><circle cx="360" cy="176" r="7" fill="#fffdf7" stroke="#2a2723"/><text x="372" y="180" font-size="12" fill="#6b645a" text-anchor="start" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">塗られていない（偽）</text></svg>
+<figcaption><strong>図 2.5</strong>　6個の点について、P(x) を「点 x が塗られている」とする。左は全部が塗られた場合、右は一部だけ塗られた場合。「ある」の文は、一部が塗られていれば真になる。</figcaption>
+</figure>
+
+<h3 id="sec-3-3"><span class="no">3.3</span>一意の存在：$\exists!$</h3>
+<div class="def" id="sym-existsunique"><span class="label">記号：$\exists!$（ただ1つ存在する）</span>
+<p><strong>①読み方</strong>：$\exists!\,x\in A,\ P(x)$ は「$P(x)$ を満たす $x\in A$ が<strong>ただ1つ</strong>存在する」。</p>
+<p><strong>②日本語での意味</strong>：$P(x)$ を満たす要素が、$A$ の中に<strong>ちょうど1つ</strong>ある。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$ \exists!\,x\in A,\ P(x)\quad:\Longleftrightarrow\quad \bigl(\exists x\in A,\ P(x)\bigr)\ \land\ \bigl(\forall x\in A,\ \forall y\in A,\ (P(x)\land P(y)\Rightarrow x=y)\bigr) $$</p>
+<p>前半が「少なくとも1つ」（存在）、後半が「2つ取って両方 $P$ を満たすなら、実は同じもの」（一意性＝多くとも1つ）。</p>
+<p><strong>④どこで出会うか</strong>：連立方程式の解がただ1つ（第17回）、微分方程式の初期値問題の解の一意性（第28回）、逆行列・逆関数の存在（第3回、第16回）。</p>
+</div>
+<p>数で確かめる。</p>
+<ol>
+<li>$\exists!\,x\in\mathbb R,\ 2x+1=5$：$2x+1=5\Leftrightarrow 2x=4\Leftrightarrow x=2$。解は $x=2$ の1つだけ。→ 真。</li>
+<li>$\exists!\,x\in\mathbb R,\ x^2=4$：$x=2$ も $x=-2$ も解。2つあるので、「ちょうど1つ」ではない。→ 偽。</li>
+<li>$\exists!\,x\in\mathbb N,\ x^2=4$（$\mathbb N$ は正の整数）：$x=2$ だけが解（$-2\notin\mathbb N$）。→ 真。</li>
+</ol>
+<p>3番めの例が示すとおり、<strong>「どの集合の中で探すか」が違うと、真偽が変わる</strong>。範囲 $\in A$ を省略して書いてよいかどうかは、このことと関わる（<a href="#abbr-quantifier">省略の段階：すべての</a>）。</p>
+
+<div class="why"><span class="label">ひとことで</span>$\exists$ は「少なくとも1つある」、$\exists!$ は「ちょうど1つある」。探す集合（$\mathbb R$ か $\mathbb N$ か）を変えると、真偽が変わることがある。</div>
+
+<figure class="fig" id="photo-frege">
+<img src="../img/a4_frege.png" alt="フレーゲ『概念記法』（1879）の一頁。線と枝分かれで書かれた論理式" loading="lazy" style="display:block;margin:0 auto;max-width:380px;width:100%;height:auto;">
+<figcaption style="text-align:left;"><span class="cap" style="display:block;margin-top:10px;">フレーゲ『概念記法』（1879）の一頁。「すべての」「ならば」を、文字でなく図形で書こうとした。</span>
+<span class="cr" style="display:block;">Gottlob Frege／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:One_page_from_Frege%27s_Begriffsschrift.png">Wikimedia Commons</a>（File:One page from Frege's Begriffsschrift.png）</span></figcaption>
+</figure>
+
+<h3 id="sec-3-4"><span class="no">3.4</span>量化子の順序：$\forall x\,\exists y$ と $\exists y\,\forall x$ は別の文</h3>
+<p>$\forall$ と $\exists$ が2つ並んだとき、<strong>順番を入れ替えると別の文になる</strong>。これが大学の数学・工学で最もつまずく点の一つで、極限の定義（第6回）の ε-δ もこの形である。</p>
+<h4>(a) 有限集合で確かめる</h4>
+<p>$X:=\{1,2,3\}$、$Y:=\{1,2,3\}$ とする。条件 $P(x,y)$ を「$x\neq y$」とする。</p>
+<ol>
+<li><strong>$\forall x\in X,\ \exists y\in Y,\ x\neq y$</strong>（読み方：「どの $x$ に対しても、それとは別の $y$ が存在する」）。$x$ を1つ決めてから、$y$ を選んでよい。
+ <ul>
+ <li>$x=1$ のとき：$y=2$ とすれば $1\neq2$。</li>
+ <li>$x=2$ のとき：$y=1$ とすれば $2\neq1$。</li>
+ <li>$x=3$ のとき：$y=1$ とすれば $3\neq1$。</li>
+ <li>どの $x$ にも、ふさわしい $y$ が見つかった。→ 真。（$y$ は $x$ ごとに<em>違ってよい</em>。）</li>
+ </ul></li>
+<li><strong>$\exists y\in Y,\ \forall x\in X,\ x\neq y$</strong>（読み方：「すべての $x$ とは別になる、ひとつの $y$ が存在する」）。先に $y$ を1つ決めて、<em>その $y$ 1つで</em>すべての $x$ に対して成り立たなければならない。
+ <ul>
+ <li>$y=1$ を試す：$x=1$ のとき $1\neq1$ は偽。失敗。</li>
+ <li>$y=2$ を試す：$x=2$ のとき $2\neq2$ は偽。失敗。</li>
+ <li>$y=3$ を試す：$x=3$ のとき $3\neq3$ は偽。失敗。</li>
+ <li>どの $y$ もだめ。→ 偽。</li>
+ </ul></li>
+</ol>
+<p>同じ記号 $\forall,\exists$ と同じ条件 $x\neq y$ なのに、順番を変えただけで真と偽に分かれた。</p>
+<h4>(b) 実数で確かめる</h4>
+<p>$P(x,y)$：$x+y=0$ とする。</p>
+<ol>
+<li>$\forall x\in\mathbb R,\ \exists y\in\mathbb R,\ x+y=0$：$x$ を決めてから $y:=-x$ とすれば $x+y=x+(-x)=0$。→ 真。（$y$ は $x$ に<em>依存して</em>選ぶ。）</li>
+<li>$\exists y\in\mathbb R,\ \forall x\in\mathbb R,\ x+y=0$：どれか1つの $y$ が、すべての $x$ に対して $x+y=0$ を満たすことになる。$y$ を固定して、$x:=1-y$ とすると $x+y=(1-y)+y=1$ で、$0$ ではない。つまり反例ができる。→ 偽。</li>
+</ol>
+<div class="box"><span class="label">順序の読み方（まとめ）</span>
+<p>量化子は<strong>左から順に</strong>読み、<strong>あとから出てくる文字は、前に出た文字の値を知ったうえで選んでよい</strong>と考える。</p>
+<ul>
+<li>$\forall x\ \exists y$：$x$ を相手に決められてから、それに合わせて $y$ を選んでよい。（$y$ は $x$ に依存してよい。）</li>
+<li>$\exists y\ \forall x$：先に $y$ を1つ決めておき、あとから相手がどんな $x$ を出してきても成り立たなければならない。（$y$ は $x$ に依存できない。）</li>
+</ul>
+<p>したがって、$\exists y\,\forall x$ ならば $\forall x\,\exists y$ は成り立つ（$\Rightarrow$ は真）が、逆（$\forall x\,\exists y\Rightarrow\exists y\,\forall x$）は成り立たないことがある。</p>
+</div>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>日本語で「どんな $x$ にもある $y$ が存在する」と言うと、「ある $y$」が $x$ ごとに違うのか、全員共通の1つなのかがわからない。記号で書くと、$\forall x\,\exists y$（$x$ ごとに違ってよい）と $\exists y\,\forall x$（共通の1つ）で、区別がつく。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>量化子は左から順に読み、あとの文字は前の文字を知って選べる。$\forall x\,\exists y$ と $\exists y\,\forall x$ は別の文で、後者のほうが強い。</div>
+
+<h3 id="sec-3-5"><span class="no">3.5</span>量化子の否定：$\lnot\forall$ は $\exists\lnot$</h3>
+<p>動機：「すべての $x$ で $P(x)$ が真」という主張が<strong>誤り</strong>であることを言うには、どう書けばよいか。<a href="#sec-3-1">3.1</a> で見たとおり、反例を1つ見つければよい。つまり「$P(x)$ が偽になる $x$ が存在する」。</p>
+<div class="thm"><span class="label">量化子の否定</span>
+<p>$$ \lnot\bigl(\forall x\in A,\ P(x)\bigr)\ \Leftrightarrow\ \exists x\in A,\ \lnot P(x),\qquad \lnot\bigl(\exists x\in A,\ P(x)\bigr)\ \Leftrightarrow\ \forall x\in A,\ \lnot P(x) $$</p>
+<p>言葉で言うと、否定をかけると、<strong>$\forall$ と $\exists$ が入れ替わり、$P(x)$ は $\lnot P(x)$ になる</strong>。</p>
+</div>
+<div class="proof"><span class="label">確かめ（有限集合 $A=\{a_1,a_2,a_3\}$ で）</span>
+<ol>
+<li>$\forall x\in A,\ P(x)$ は、<a href="#sym-forall">3.1</a> により $P(a_1)\land P(a_2)\land P(a_3)$。</li>
+<li>その否定は $\lnot\bigl(P(a_1)\land P(a_2)\land P(a_3)\bigr)$。</li>
+<li>ド・モルガンの法則（<a href="#sec-2-2">2.2</a>）により、$\lnot P(a_1)\lor\lnot P(a_2)\lor\lnot P(a_3)$。</li>
+<li>これは、<a href="#sym-exists">3.2</a> により $\exists x\in A,\ \lnot P(x)$。</li>
+</ol>
+<p>2つめの式も同じ手順で確かめられる（$\lnot(\lor)$ が $\land$ に変わる）。</p>
+</div>
+<p>数で手を動かす。$A:=\{1,2,3,4\}$、$P(x)$：$x\lt 4$ とする。</p>
+<ol>
+<li>$\forall x\in A,\ x\lt 4$：$x=4$ で $4\lt4$ が偽。よって偽。</li>
+<li>否定 $\exists x\in A,\ x\ge 4$：$x=4$ で真。よって真。（偽の文の否定は真で、一致している。）</li>
+</ol>
+<p>二重の量化子の否定は、<strong>外側から順に1つずつ</strong>否定を内側に通す。たとえば、<a href="#sec-3-4">3.4</a> の (b) の1つめを例にする。</p>
+<ol>
+<li>元の文：$\forall x\in\mathbb R,\ \exists y\in\mathbb R,\ x+y=0$。</li>
+<li>否定をつける：$\lnot\bigl(\forall x\in\mathbb R,\ \exists y\in\mathbb R,\ x+y=0\bigr)$。</li>
+<li>一番外側の $\forall$ に量化子の否定を使う（$\forall\to\exists$、中身に $\lnot$）：$\exists x\in\mathbb R,\ \lnot\bigl(\exists y\in\mathbb R,\ x+y=0\bigr)$。</li>
+<li>次の $\exists$ に使う（$\exists\to\forall$、中身に $\lnot$）：$\exists x\in\mathbb R,\ \forall y\in\mathbb R,\ \lnot(x+y=0)$。</li>
+<li>$\lnot(x+y=0)$ は $x+y\neq0$（<a href="#sym-not">2.2</a> の専用の否定記号）：$\exists x\in\mathbb R,\ \forall y\in\mathbb R,\ x+y\neq0$。</li>
+</ol>
+<p>元の文が真なので、この否定は偽のはずである（実際、どの $x$ に対しても $y:=-x$ で $x+y=0$ となり、「すべての $y$ で $x+y\neq0$」は成り立たない）。</p>
+
+<div class="why"><span class="label">ひとことで</span>否定をかけると、$\forall$ は $\exists$ に、$\exists$ は $\forall$ に変わり、中身は否定になる。二重の量化子は外側から1つずつ通す。</div>
+
+<p>$\lnot\forall$ が $\exists\lnot$ と同じ意味になることを、6個の点で見る（<a href="#sec-3-5">3.5</a> の確かめの、点の図による言い直し）。</p>
+<figure class="fig" id="fig-2-6">
+<svg viewBox="0 0 580 244" role="img" aria-label="1点だけ塗られていない6個の点：¬∀x P(x) と ∃x ¬P(x) はどちらも真" xmlns="http://www.w3.org/2000/svg"><text x="322" y="24" font-size="14" fill="#a8322a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="bold">塗られていない点が、1つだけある</text><circle cx="130" cy="70" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="194" cy="70" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="258" cy="70" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="322" cy="70" r="20" fill="none" stroke="#a8322a" stroke-width="2.5" stroke-dasharray="5 4"/><circle cx="322" cy="70" r="14" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><circle cx="386" cy="70" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><circle cx="450" cy="70" r="14" fill="#6b8a5a" stroke="#2a2723" stroke-width="1.5"/><line x1="150" y1="140" x2="322" y2="96" stroke="#a8322a" stroke-width="1.5" stroke-dasharray="4 4"/><rect x="20" y="140" width="240" height="66" rx="8" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><text x="140" y="168" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">¬∀x P(x)</text><text x="140" y="193" font-size="13" fill="#6b645a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">「全部が塗られている」ではない</text><line x1="450" y1="140" x2="322" y2="96" stroke="#a8322a" stroke-width="1.5" stroke-dasharray="4 4"/><rect x="320" y="140" width="240" height="66" rx="8" fill="#fffdf7" stroke="#2a2723" stroke-width="1.5"/><text x="440" y="168" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">∃x ¬P(x)</text><text x="440" y="193" font-size="13" fill="#6b645a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">「塗られていない点がある」</text><text x="290" y="180" font-size="24" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math",serif' font-weight="bold">⇔</text><text x="290" y="232" font-size="12" fill="#6b645a" text-anchor="middle" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif' font-weight="normal">同じ6個の点を、2通りの言い方で述べているだけなので、真偽は必ず一致する。</text></svg>
+<figcaption><strong>図 2.6</strong>　1点だけ欠けた6個の点では、「全部が塗られている、ではない」と「塗られていない点がある」は、同じ1点を指している。</figcaption>
+</figure>
+
+<h3 id="sec-3-6"><span class="no">3.6</span>省略の段階：「すべての」はどう省略されるか</h3>
+<p>数学の本・授業・スライドでは、$\forall$ を書かないことが非常に多い。第1回の「恒等式」の省略（<a href="01_第1回_数式を文として読む.html#abbr-forall">第1回 6.4</a>）と同じ型で、段階を並べる。</p>
+<div class="box" id="abbr-quantifier"><span class="label">省略の段階：「すべての」（量化子）</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても困らない理由</th></tr>
+<tr><td>S0</td><td>日本語：「すべての実数 $x$ について、$x^2\ge0$ が成り立つ」</td><td>（省略なし）</td><td>―</td></tr>
+<tr><td>S1</td><td>$\forall x\in\mathbb R,\ x^2\ge0$</td><td>「すべての〜について」を記号 $\forall$ にまとめる</td><td>$\forall$ の定義（<a href="#sym-forall">3.1</a>）</td></tr>
+<tr><td>S2</td><td>$\forall x,\ x^2\ge0$</td><td>範囲 $\in\mathbb R$ を省く</td><td>この本で $x$ は実数と宣言してあれば、動く範囲は読者が補える</td></tr>
+<tr><td>S3</td><td>$x^2\ge0\quad(x\in\mathbb R)$ または $x^2\ge0$ for all $x$</td><td>$\forall$ すら書かず、括弧書きか文末に回す</td><td>文脈で「すべての」と読めると約束した</td></tr>
+<tr><td>S4</td><td>$x^2\ge0$</td><td>量化子も範囲も書かない</td><td>「$x$ は何を動くのか」を<strong>読者が文脈から補う</strong>と約束した。最も多く使われ、最も困る</td></tr>
+</table>
+<p>S4 は、同じ見た目の文 $x+1=3$ とまったく区別がつかない。<strong>S4 を見たら、「これは『すべての $x$』なのか『ある $x$』なのか」を確かめる習慣</strong>をつける。判断の手がかりは、(i) $x$ が前の行で「求めたい未知数」になっていたか、(ii) 「公式」「法則」「恒等式」として載っていたか、(iii) 直前に「任意の $x$」「$x$ を固定する」といった宣言があったか。</p>
+<p><strong>量化子の宣言の省略</strong>：定理の文で、$\forall\varepsilon\gt0$ のように<strong>範囲を条件にして</strong>量化することもある。$\forall\varepsilon\gt 0,\ P(\varepsilon)$ は、S0 に戻せば「すべての正の実数 $\varepsilon$ について $P(\varepsilon)$」、つまり $\forall\varepsilon\in\{x\in\mathbb R\mid x\gt0\},\ P(\varepsilon)$。範囲を表す集合を、条件に置き換えて短くしている。</p>
+</div>
+
+<h3 id="sec-3-7"><span class="no">3.7</span>第1回の省略を、この回の記号で書き戻す</h3>
+<p>第1回に出てきた3つの記号は、この回で、折りたたまれた長い文として書き直せる。</p>
+
+<h4>(1) $\equiv$：「すべての $x$ について」の折りたたみ</h4>
+<p><a href="01_第1回_数式を文として読む.html#sym-identical">第1回 2.3</a> では、$(x+1)^2\equiv x^2+2x+1$ を「すべての $x$ について、$(x+1)^2=x^2+2x+1$」と読むと説明した。いま $\forall$ で書ける。</p>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>備考</th></tr>
+<tr><td>S0</td><td>「すべての実数 $x$ について、$(x+1)^2=x^2+2x+1$ が成り立つ」</td><td>日本語</td></tr>
+<tr><td>S1</td><td>$\forall x\in\mathbb R,\ (x+1)^2=x^2+2x+1$</td><td>$\forall$ と範囲つき（<a href="#sym-forall">3.1</a>）</td></tr>
+<tr><td>S2</td><td>$(x+1)^2\equiv x^2+2x+1$</td><td>$\forall x\in\mathbb R$ を $\equiv$ に折りたたむ（第1回の S1）</td></tr>
+<tr><td>S3</td><td>$(x+1)^2=x^2+2x+1$</td><td>$\equiv$ ですらなく $=$（第1回の S2）</td></tr>
+</table>
+<p>第1回の「省略の段階：恒等式」（<a href="01_第1回_数式を文として読む.html#abbr-forall">第1回 6.4</a>）のS0とS1の間に、記号 $\forall$ を使った形（上のS1）が入る。</p>
+
+<h4>(2) $\propto$：「ある定数 $k$ が存在して」</h4>
+<p><a href="01_第1回_数式を文として読む.html#sym-propto">第1回 2.5</a> では、$y\propto x$ を「ある定数 $k$ が存在して、$y=kx$」と読むと書いた。ここで $y$ が $x$ の関数として決まっているとき（すべての $x$ の値で $y$ が決まるとき）、量化子を全部書くと、</p>
+<p>$$ y\propto x\quad:\Longleftrightarrow\quad \exists k\in\mathbb R,\ \forall x,\ y=kx $$</p>
+<p>順序に注意する（<a href="#sec-3-4">3.4</a>）。<strong>$\exists k$ が先で、$\forall x$ があと</strong>。つまり、定数 $k$ は<strong>1つに決めておいて</strong>、すべての $x$ で同じ $k$ を使う。数で確かめる。</p>
+<ol>
+<li>$y=3x$：$k:=3$ と決めると、$x=1,2,3$ で $y=3,6,9$ となり、すべて $y=3x$ を満たす。→ $y\propto x$ は真。</li>
+<li>$y=x^2$：$k$ を先に決める。$x=1$ で $y=1$ なので $k=1$ しかない。ところが $x=2$ で $y=4$ なので、$k=2$ でなければならない。$k$ が 1 つに決まらない。→ $y\propto x$ は偽（$y=x^2$ は $x$ に比例しない）。</li>
+<li>順序を逆にした $\forall x,\ \exists k,\ y=kx$（$x\neq0$ のとき）は、$y=x^2$ でも真になる。$x$ ごとに $k:=x$ と選べるから（$x=2$ なら $k=2$、$y=2\times2=4$）。しかし、これは「比例」の意味ではない。</li>
+</ol>
+<p>つまり $\propto$ の省略前は、$\exists k\,\forall x$ の順序であり、$\forall x\,\exists k$ ではない。これが、比例の定義で順序が重要になる例である。</p>
+
+<h4>(3) $\le$：「$\lt$ または $=$」</h4>
+<p><a href="01_第1回_数式を文として読む.html#sym-order">第1回 2.6</a> では、$a\le b$ を「$a\lt b$ または $a=b$」と予告した。いま $\lor$ で書ける。</p>
+<p>$$ a\le b\quad:\Longleftrightarrow\quad (a\lt b)\ \lor\ (a=b) $$</p>
+<p>数で確かめる：</p>
+<ol>
+<li>$a=2,\ b=3$：$2\lt3$ は真。「または」の片方が真なので、全体は真。$2\le3$ も真。一致。</li>
+<li>$a=3,\ b=3$：$3\lt3$ は偽、$3=3$ は真。全体は真。$3\le3$ も真。一致。</li>
+<li>$a=4,\ b=3$：$4\lt3$ は偽、$4=3$ は偽。全体は偽。$4\le3$ も偽。一致。</li>
+</ol>
+<p>2番めの例が、$\lor$ の「両方真のときも真」とは別の、「片方だけ真で全体が真」の例である。区間 $[a,b]$ の端点が含まれるのは、$a\le a$ が真だから（$a\lt a$ は偽だが $a=a$ は真）。</p>
+
+<div class="why"><span class="label">ひとことで</span>第1回の $\equiv$ は「$\forall x$ の折りたたみ」、$\propto$ は「$\exists k\,\forall x$（$k$ は先に決める）」、$\le$ は「$\lt$ または $=$」。いずれも、この回の記号で S0 に戻せる。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_02.py）。</p>
+
+<div class="ex"><span class="label">例題1（集合を内包的表記から外延的表記に書く）</span>
+<p>$C:=\{n\in\mathbb Z\mid 0\le n\le 10\ \land\ n\text{ は偶数}\}$ の要素を全部並べよ。また、$D:=\{n\in\mathbb Z\mid 6\le n\le 14\}$ として、$C\cap D$、$C\setminus D$ を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① $C$：$0$ から $10$ の整数のうち偶数を探す。$0,2,4,6,8,10$（<a href="#sym-setbuilder">1.3</a>）。→ $C=\{0,2,4,6,8,10\}$。</p>
+<p>② $D$：$6$ 以上 $14$ 以下の整数。→ $D=\{6,7,8,9,10,11,12,13,14\}$。</p>
+<p>③ $C\cap D$：$C$ の要素を一つずつ $D$ に入っているか見る（<a href="#sym-intersection">1.7</a>）。$0\in D$？ いいえ。$2\in D$？ いいえ。$4\in D$？ いいえ。$6\in D$？ はい。$8\in D$？ はい。$10\in D$？ はい。→ $C\cap D=\{6,8,10\}$。</p>
+<p>④ $C\setminus D$：$C$ の要素のうち、$D$ に入っていないもの（<a href="#sym-setminus">1.7</a>）。③ の「いいえ」の3つ。→ $C\setminus D=\{0,2,4\}$。</p>
+</div>
+
+<div class="ex"><span class="label">例題2（区間の共通部分と和集合）</span>
+<p>$I:=[-1,2)$、$J:=(0,3]$ のとき、$I\cap J$ と $I\cup J$ を区間で表せ。</p>
+<p><strong>解答</strong></p>
+<p>① 省略前に戻す（<a href="#abbr-interval">省略の段階：区間</a>）。$I=\{x\in\mathbb R\mid -1\le x\lt 2\}$、$J=\{x\in\mathbb R\mid 0\lt x\le 3\}$。</p>
+<p>② 共通部分：両方満たす（かつ）。左端：$x\ge-1$ と $x\gt0$ を両方 → $x\gt0$（強いほう）。右端：$x\lt2$ と $x\le3$ を両方 → $x\lt2$（強いほう）。→ $0\lt x\lt 2$、すなわち $I\cap J=(0,2)$。</p>
+<p>③ 和集合：どちらかを満たす（または）。左端：$-1$ から始まる（$-1\in I$）。右端：$3$ まで（$3\in J$）。途中に隙間はあるか。$I$ は $2$ の直前まで、$J$ は $0$ の直後から $3$ まで続くので、$0\lt x\lt 2$ で重なっていて隙間はない。→ $I\cup J=[-1,3]$。</p>
+<p>④ 端点の確かめ。$-1\in I\cup J$：$-1\in I$ だから、はい。$3\in I\cup J$：$3\in J$ だから、はい。$2\in I\cup J$：$2\notin I$ だが $2\in J$（$0\lt2\le3$）だから、はい。→ $[-1,3]$ で矛盾しない。</p>
+</div>
+
+<div class="ex"><span class="label">例題3（量化子つきの文の真偽と否定）</span>
+<p>次の文の真偽を答え、否定を $\lnot$ を使わずに（専用の否定記号 $\neq,\ \lt,\ \ge$ などで）書け。<br>(1) $\forall x\in\mathbb R,\ x^2\gt 0$　(2) $\exists x\in\mathbb R,\ x^2=-1$　(3) $\forall x\in\mathbb R,\ \exists y\in\mathbb R,\ y\gt x$</p>
+<p><strong>解答</strong></p>
+<p>① (1)：$x=0$ を入れる。$0^2=0$ で、$0\gt0$ は偽。反例が1つあるので（<a href="#sym-forall">3.1</a>）、全体は<strong>偽</strong>。否定は <a href="#sec-3-5">3.5</a> により、$\forall\to\exists$、$x^2\gt0$ の否定は $x^2\le0$。→ $\exists x\in\mathbb R,\ x^2\le0$（$x=0$ で真）。</p>
+<p>② (2)：$x^2=-1$ となる実数を探す。どんな実数も二乗すると $0$ 以上（<a href="#sym-emptyset">1.5</a> の例）で、$-1\lt0$ なので一致しない。→ <strong>偽</strong>（複素数 $\mathbb C$ の範囲なら $x=i$ で真になるが、$\mathbb R$ では偽）。否定は $\exists\to\forall$、$x^2=-1$ の否定は $x^2\neq-1$。→ $\forall x\in\mathbb R,\ x^2\neq-1$。</p>
+<p>③ (3)：$x$ を決めたあとで $y$ を選ぶ（<a href="#sec-3-4">3.4</a>）。$y:=x+1$ とすれば $y\gt x$。→ <strong>真</strong>。否定は外側から順に通す。$\lnot(\forall x\,\exists y\,(y\gt x))$ → $\exists x\,\lnot(\exists y\,(y\gt x))$ → $\exists x\,\forall y\,\lnot(y\gt x)$ → $\exists x\in\mathbb R,\ \forall y\in\mathbb R,\ y\le x$。</p>
+<p>確認：この否定は「最大の実数 $x$ が存在する」と言っている。そんな実数はない（どんな $x$ にも $y=x+1$ がある）ので偽。元の文は真だったので、否定が偽で整合する。</p>
+</div>
+
+<div class="ex"><span class="label">例題4（必要条件・十分条件）</span>
+<p>$x$ は実数とする。次の □ に「必要条件」「十分条件」「必要十分条件」「どちらでもない」のどれが入るか。<br>(1) $x\gt3$ は $x\gt1$ であるための □。　(2) $x^2=9$ は $x=3$ であるための □。　(3) $x\ge2$ は $x\gt2$ であるための □。</p>
+<p><strong>解答</strong></p>
+<p>① (1)：$x\gt3\Rightarrow x\gt1$ は真（$3\gt 1$ なので）。逆 $x\gt1\Rightarrow x\gt3$ は、$x=2$ で偽（$2\gt1$ は真、$2\gt3$ は偽）。→ 矢印の根元 $x\gt3$ は十分。答：<strong>十分条件</strong>。</p>
+<p>② (2)：$x^2=9$ を $P$、$x=3$ を $Q$ とすると、$P\Rightarrow Q$ は偽（$x=-3$）、$Q\Rightarrow P$ は真（$3^2=9$）。$Q\Rightarrow P$ の矢印の先が $P$ なので、$P$ は $Q$ の必要条件。答：<strong>必要条件</strong>。</p>
+<p>③ (3)：$x\ge2$ を $P$、$x\gt2$ を $Q$ とする。$P\Rightarrow Q$：$x=2$ で $P$ が真、$Q$ が偽なので偽。$Q\Rightarrow P$：$x\gt2$ なら $x\ge2$（$\gt$ は $\ge$ の特別な場合）で真。→ $P$ は $Q$ の必要条件。答：<strong>必要条件</strong>。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>演習問題</h2>
+
+<div class="box"><span class="label">問1（A 確認）</span>$A:=\{1,3,5,7\}$ について、次の文の真偽を答えよ。(1) $3\in A$　(2) $4\in A$　(3) $4\notin A$　(4) $\{1,5\}\subseteq A$　(5) $\{1,2\}\subseteq A$　(6) $\emptyset\subseteq A$
+<details><summary>解答</summary>
+<p>(1) 真（$A$ に $3$ がある）。(2) 偽（$4$ はない）。(3) 真（(2) の否定）。</p>
+<p>(4) 真：$1\in A$ かつ $5\in A$ なので、$\{1,5\}$ のすべての要素が $A$ に入る（<a href="#sym-subset">1.6</a>）。</p>
+<p>(5) 偽：$2\notin A$。</p>
+<p>(6) 真：空集合には要素がなく、$A$ に入っていない要素が存在しない（<a href="#sym-subset">1.6</a> の補足）。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認）</span>$A:=\{1,2,3,4,5\}$、$B:=\{2,4,6\}$ のとき、$A\cup B$、$A\cap B$、$A\setminus B$、$B\setminus A$ を求めよ。
+<details><summary>解答</summary>
+<p>$A\cup B$：$A$ の要素 $1,2,3,4,5$ に、$B$ の要素のうち $A$ にないもの $6$ を加える。→ $\{1,2,3,4,5,6\}$。</p>
+<p>$A\cap B$：$A$ の要素のうち $B$ にもあるもの。$2$ と $4$。→ $\{2,4\}$。</p>
+<p>$A\setminus B$：$A$ の要素のうち $B$ にないもの。$1,3,5$。→ $\{1,3,5\}$。</p>
+<p>$B\setminus A$：$B$ の要素のうち $A$ にないもの。$6$ だけ。→ $\{6\}$。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認）</span>次の区間を、不等式を使った集合の書き方（S0 に近い形）に直せ。(1) $[2,5]$　(2) $(2,5)$　(3) $[2,5)$　(4) $(-\infty,3]$
+<details><summary>解答</summary>
+<p>(1) $\{x\in\mathbb R\mid 2\le x\le5\}$。(2) $\{x\in\mathbb R\mid 2\lt x\lt5\}$。(3) $\{x\in\mathbb R\mid 2\le x\lt5\}$。(4) $\{x\in\mathbb R\mid x\le3\}$（左側は果てしなく続くので、下限の条件がない。$\infty$ の側は必ず丸括弧）。</p>
+<p>（<a href="#sym-interval">1.8</a> の表）</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認）</span>次の記号の文を、日本語に直せ。(1) $\forall x\in\mathbb R,\ x^2\ge0$　(2) $\exists n\in\mathbb N,\ n^2=9$　(3) $x\gt 2\Rightarrow x\gt 1$
+<details><summary>解答</summary>
+<p>(1) 「すべての実数 $x$ について、$x$ の二乗は $0$ 以上である」。</p>
+<p>(2) 「二乗が $9$ になる自然数 $n$ が存在する」（$n=3$ がその例）。</p>
+<p>(3) 「$x$ が $2$ より大きいならば、$x$ は $1$ より大きい」。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準）</span>$P$ と $Q$ を命題とする。$\lnot(P\lor Q)\Leftrightarrow(\lnot P)\land(\lnot Q)$ を、真偽表で確かめよ。
+<details><summary>解答</summary>
+<p>4通りの組合せ（$P,Q$）で、$\lnot(P\lor Q)$ と $(\lnot P)\land(\lnot Q)$ を計算する。</p>
+<table class="tb">
+<tr><th>$P$</th><th>$Q$</th><th>$P\lor Q$</th><th>$\lnot(P\lor Q)$</th><th>$\lnot P$</th><th>$\lnot Q$</th><th>$(\lnot P)\land(\lnot Q)$</th></tr>
+<tr><td>T</td><td>T</td><td>T</td><td>F</td><td>F</td><td>F</td><td>F</td></tr>
+<tr><td>T</td><td>F</td><td>T</td><td>F</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>F</td><td>T</td><td>T</td><td>F</td><td>T</td><td>F</td><td>F</td></tr>
+<tr><td>F</td><td>F</td><td>F</td><td>T</td><td>T</td><td>T</td><td>T</td></tr>
+</table>
+<p>第4列と第7列が全行で一致する。→ 同値。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準）</span>$X:=\{1,2,3\}$ として、次の2つの文の真偽を答えよ。(1) $\forall x\in X,\ \exists y\in X,\ x+y=4$　(2) $\exists y\in X,\ \forall x\in X,\ x+y=4$
+<details><summary>解答</summary>
+<p>(1) $x=1$ のとき $y=3$（$1+3=4$）。$x=2$ のとき $y=2$（$2+2=4$）。$x=3$ のとき $y=1$（$3+1=4$）。どの $x$ にも相手の $y$ がある。→ <strong>真</strong>。</p>
+<p>(2) $y=1$ を試す：$x=1$ で $1+1=2\neq4$。失敗。$y=2$：$x=1$ で $3\neq4$。失敗。$y=3$：$x=1$ で $4$ だが、$x=2$ で $5\neq4$。失敗。どの $y$ もだめ。→ <strong>偽</strong>。</p>
+<p>(1) の $y$ は $x$ ごとに違った（<a href="#sec-3-4">3.4</a>）。(2) は共通の $y$ が1つ必要なので成り立たない。</p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準）</span>次の文の否定を、$\lnot$ を使わずに書け。(1) $\forall x\in\mathbb R,\ x^2\ge x$　(2) $\exists x\in\mathbb R,\ x^2\lt0$　(3) $\forall x\in\mathbb R,\ (x\gt0\Rightarrow x^2\gt0)$。また、それぞれ元の文と否定の、どちらが真か答えよ。
+<details><summary>解答</summary>
+<p>(1) 否定：$\exists x\in\mathbb R,\ x^2\lt x$。元の文は、$x=0.5$ で $x^2=0.25\lt0.5=x$ なので反例がある。→ 元は<strong>偽</strong>、否定は<strong>真</strong>。</p>
+<p>(2) 否定：$\forall x\in\mathbb R,\ x^2\ge0$。→ 元は<strong>偽</strong>（二乗は $0$ 以上）、否定は<strong>真</strong>。</p>
+<p>(3) まず外側の $\forall$ を通す：$\exists x\in\mathbb R,\ \lnot(x\gt0\Rightarrow x^2\gt0)$。$\lnot(P\Rightarrow Q)$ は、「$P$ は真で $Q$ は偽」（<a href="#sym-implies">2.3</a> の表で偽になる唯一の行）なので、$P\land\lnot Q$。→ $\exists x\in\mathbb R,\ (x\gt0\ \land\ x^2\le0)$。元の文は、$x\gt0$ なら $x^2\gt0$ なので真。否定は偽。</p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準）</span>$x,\ y$ を実数とする。次の □ に、必要条件・十分条件・必要十分条件・どちらでもない、のどれが入るか。(1) $xy=0$ は「$x=0$」であるための □。(2) $x^2+y^2=0$ は「$x=0$ かつ $y=0$」であるための □。(3) $x\gt y$ は $x^2\gt y^2$ であるための □。
+<details><summary>解答</summary>
+<p>(1) $x=0\Rightarrow xy=0$ は真。逆 $xy=0\Rightarrow x=0$ は、$x=1,\ y=0$ で偽。→ $xy=0$ は「$x=0$」の<strong>必要条件</strong>。</p>
+<p>(2) 「$x=0$ かつ $y=0$」ならば $x^2+y^2=0$ は真。逆：$x^2+y^2=0$ で、$x^2\ge0$ と $y^2\ge0$ の和が $0$ になるには、両方とも $0$ が必要なので、$x=0$ かつ $y=0$。逆も真。→ <strong>必要十分条件</strong>。</p>
+<p>(3) $x\gt y\Rightarrow x^2\gt y^2$：$x=1,\ y=-2$ で $1\gt-2$ は真、$1\gt4$ は偽。偽。逆 $x^2\gt y^2\Rightarrow x\gt y$：$x=-2,\ y=1$ で $4\gt1$ は真、$-2\gt1$ は偽。偽。→ <strong>どちらでもない</strong>。</p>
+</details></div>
+
+<div class="box"><span class="label">問9（C 発展：ε の入った文を読む）</span>$f$ を実数から実数への関数（第3回）、$a$ を実数とする。次の文は、第6回で扱う「$f$ が $a$ で連続」の定義を、絶対値を使わずに区間で書いたものである。
+<p>$$ \forall\varepsilon\gt0,\ \exists\delta\gt0,\ \forall x\in\mathbb R,\ \bigl(x\in(a-\delta,\,a+\delta)\ \Rightarrow\ f(x)\in(f(a)-\varepsilon,\,f(a)+\varepsilon)\bigr) $$</p>
+(1) 量化子を、順に日本語で読め。(2) 否定を、$\lnot$ を使わずに書け。(3) $\forall\varepsilon\gt0\ \exists\delta\gt0$ の順序を入れ替えた $\exists\delta\gt0\ \forall\varepsilon\gt0$ は何を意味するか。
+<details><summary>解答</summary>
+<p>(1) 「どんな正の数 $\varepsilon$ に対しても、（その $\varepsilon$ に応じて）ある正の数 $\delta$ が存在して、すべての実数 $x$ について、$x$ が $a$ から $\delta$ 未満の距離にある（$a-\delta\lt x\lt a+\delta$）ならば、$f(x)$ は $f(a)$ から $\varepsilon$ 未満の距離にある」。$\delta$ は $\varepsilon$ のあとで選ぶので、$\varepsilon$ ごとに違ってよい（<a href="#sec-3-4">3.4</a>）。</p>
+<p>(2) 外側から順に通す（<a href="#sec-3-5">3.5</a>）。$\forall\varepsilon\to\exists\varepsilon$、$\exists\delta\to\forall\delta$、$\forall x\to\exists x$、最後に $\lnot(P\Rightarrow Q)$ を $P\land\lnot Q$ に（問7(3)）。→ <br>$\exists\varepsilon\gt0,\ \forall\delta\gt0,\ \exists x\in\mathbb R,\ \bigl(x\in(a-\delta,a+\delta)\ \land\ f(x)\notin(f(a)-\varepsilon,f(a)+\varepsilon)\bigr)$。<br>読み：「ある $\varepsilon$ があって、どんなに小さい $\delta$ をとっても、$a$ の近く（$\delta$ 未満）にありながら、$f(x)$ が $f(a)$ から $\varepsilon$ 以上離れる $x$ がある」。これが「連続でない」の中身。</p>
+<p>(3) $\exists\delta\gt0,\ \forall\varepsilon\gt0,\ \cdots$ は、<strong>1つの $\delta$ を先に決めて</strong>、どんなに小さな $\varepsilon$ に対しても、$\delta$ の範囲の $x$ で $f(x)$ が $f(a)$ から $\varepsilon$ 未満の距離に入る、という意味。$\varepsilon$ をどれだけ小さくしても同じ $\delta$ で成り立つとなると、$\delta$ の範囲の $x$ で $f(x)=f(a)$ のはず（$f(x)$ が $f(a)$ と少しでも違えば、その差より小さい $\varepsilon$ をとれるので）。つまり、$a$ の近くで $f$ が定数、という非常に強い主張になる。順序が違うだけで、まったく別の文である。</p>
+<p class="meta">※自作の解答。この種の問題（量化子の読みと否定）は、Book of Proof（CC BY-NC-ND 4.0）第2章の練習問題にも多数ある（改変不可のため全文は載せない）。</p>
+</details></div>
+
+<div class="box"><span class="label">問10（C 発展：集合の等式を、論理に直して示す）</span>集合 $A,\ B,\ C$ について、次の分配法則を示せ。$$ A\cap(B\cup C)=(A\cap B)\cup(A\cap C) $$
+まず $A=\{1,2,3\}$、$B=\{2,4\}$、$C=\{3,4\}$ で両辺を計算して確かめ、そのあと一般の場合を示せ。
+<details><summary>解答</summary>
+<p><strong>数値の確かめ</strong>：左辺。$B\cup C=\{2,3,4\}$。$A\cap\{2,3,4\}=\{2,3\}$。右辺。$A\cap B=\{2\}$、$A\cap C=\{3\}$。$\{2\}\cup\{3\}=\{2,3\}$。両辺とも $\{2,3\}$ で一致。</p>
+<p><strong>一般の場合</strong>：$X=Y$ を示すには、$X\subseteq Y$ と $Y\subseteq X$ を示す（<a href="#sym-subset">1.6</a>）。ここでは、各行を同値（$\Leftrightarrow$）でつなぐので、一度で両方向が示せる。任意の $x$ について、</p>
+<ol>
+<li>$x\in A\cap(B\cup C)$</li>
+<li>$\Leftrightarrow\ x\in A\ \land\ x\in B\cup C$　（$\cap$ の定義：<a href="#sym-intersection">1.7</a>）</li>
+<li>$\Leftrightarrow\ x\in A\ \land\ (x\in B\ \lor\ x\in C)$　（$\cup$ の定義：<a href="#sym-union">1.7</a>）</li>
+<li>$\Leftrightarrow\ (x\in A\ \land\ x\in B)\ \lor\ (x\in A\ \land\ x\in C)$　（「かつ」と「または」の分配：「$P\land(Q\lor R)$ は、$(P\land Q)\lor(P\land R)$ と真偽が一致する」。$P,Q,R$ の8通りの組合せで確かめられる。ここでは、$P$ が偽なら両辺とも偽、$P$ が真なら両辺とも $Q\lor R$ になることで見る）</li>
+<li>$\Leftrightarrow\ x\in A\cap B\ \lor\ x\in A\cap C$　（$\cap$ の定義を逆向きに使う）</li>
+<li>$\Leftrightarrow\ x\in(A\cap B)\cup(A\cap C)$　（$\cup$ の定義を逆向きに使う）</li>
+</ol>
+<p>どの $x$ についても1行目と6行目が同値なので、2つの集合の要素が一致する。→ 両辺は等しい。</p>
+<p class="meta">※自作の解答。集合の等式を要素で示す方法は、Book of Proof（CC BY-NC-ND 4.0）第1章・第4章に例が多い（改変不可のため全文は載せない）。</p>
+</details></div>
+
+<div class="box"><span class="label">問11（C 発展：$\exists!$ の否定）</span>「$\exists!\,x\in\mathbb R,\ P(x)$」が偽になるのは、どんな場合か。<a href="#sym-existsunique">3.3</a> の省略前の形を否定して、日本語で2通りに言え。例として、$P(x)$：$x^2=4$ と、$P(x)$：$x^2=-1$ で、どちらの場合に当たるか答えよ。
+<details><summary>解答</summary>
+<p>省略前：$(\exists x,\ P(x))\ \land\ (\forall x\,\forall y,\ (P(x)\land P(y)\Rightarrow x=y))$。「かつ」の否定は、ド・モルガン（<a href="#sec-2-2">2.2</a>）により「または」。</p>
+<p>(i) $\lnot(\exists x,\ P(x))$、すなわち $\forall x,\ \lnot P(x)$：「$P(x)$ を満たす $x$ が<strong>1つも</strong>ない」。</p>
+<p>(ii) $\lnot(\forall x\,\forall y,\ (P(x)\land P(y)\Rightarrow x=y))$、すなわち $\exists x\,\exists y,\ (P(x)\land P(y)\land x\neq y)$：「$P$ を満たす互いに異なる $x,y$ が<strong>2つ以上</strong>ある」。</p>
+<p>例：$P(x)$：$x^2=4$ は、$x=2$ と $x=-2$（$2\neq-2$）があるので (ii)。$P(x)$：$x^2=-1$ は、実数の解が1つもないので (i)。</p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ $a\in A$ の左右の意味（左がもの、右が集まり）を説明でき、$\{1,2,3\}$ のような集合の要素を答えられる。</li>
+<li>□ 外延的表記と内包的表記 $\{x\in A\mid P(x)\}$ を相互に書き換えられる。</li>
+<li>□ $\mathbb N,\mathbb Z,\mathbb Q,\mathbb R,\mathbb C$ の意味と、$\mathbb N$ に 0 を含むかが流派で違うことを言える。</li>
+<li>□ $\subseteq$ の意味を「すべての要素が入る」と説明でき、$\subset$ の流派の違いを言える。</li>
+<li>□ $\cup,\ \cap,\ \setminus$ を、具体的な集合で手計算できる。</li>
+<li>□ 区間 $[a,b],\ (a,b),\ [a,b),\ (a,b]$ を不等式で書き直せる。$(a,b)$ が点の座標にもなることを知っている。</li>
+<li>□ $A\times B$ と $\mathbb R^n$ の要素を、組として書ける。</li>
+<li>□ $\land,\ \lor,\ \lnot$ の真偽表を再現でき、ド・モルガンの法則を使える。</li>
+<li>□ $P\Rightarrow Q$ の真偽表（前提が偽のとき真）を再現でき、反例で偽を示せる。</li>
+<li>□ 逆・裏・対偶の違いを言え、必要条件・十分条件を判断できる。</li>
+<li>□ $P\Leftrightarrow Q$ が「$P\Rightarrow Q$ かつ $Q\Rightarrow P$」であることを説明できる。</li>
+<li>□ $\forall,\ \exists,\ \exists!$ を日本語に読み、量化子の順序（$\forall x\,\exists y$ と $\exists y\,\forall x$）の違いを例で説明できる。</li>
+<li>□ 量化子の否定（$\forall\leftrightarrow\exists$、中身を否定）を、二重の量化子についても外側から1つずつ書ける。</li>
+<li>□ 「省略の段階：すべての」「省略の段階：区間」で、S4／S2 の省略形を S0 に戻せる。</li>
+<li>□ 第1回の $\equiv,\ \propto,\ \le$ を、$\forall,\ \exists,\ \lor$ を使って書き直せる。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第3回）</strong>：<a href="../03_第3回_関数と写像.html">関数と写像</a>。この回で作った集合の言葉を使って、「関数とは、集合 $A$ の各要素に、集合 $B$ の要素を1つずつ対応させる規則」と定義し直す。$f\colon A\to B$、$x\mapsto$、$f(x)$ と $f$ の違い、合成関数、逆関数、そして<a href="../03_第3回_関数と写像.html#abbr-fn-args">引数の省略</a>（$\psi(x,t)\to\psi$）を扱う。<br>
+<a href="../index.html">← 目次へ</a>　｜　<a href="../symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：集合・論理・量化子の整理は、Hammack, <em>Book of Proof</em>（CC BY-NC-ND 4.0）の第1章（Sets）・第2章（Logic）の説明順序を参照して、本教材向けに書き直したもの。記号の流派（$\subset$、区間、$\mathbb N$）の整理は各種教科書の書き方による。例題・演習・表は自作。</p>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

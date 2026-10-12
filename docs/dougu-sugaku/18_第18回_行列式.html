@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第18回 行列式</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="img/18_hero_wayang.jpg" alt="暗い舞台で、人形遣いが両手を広げ、金色の人形をスクリーンの前にかざしている">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第18回</p><h1>行列式</h1></div>
+<figcaption><p class="cap">光の前に人形をかざすと、スクリーンに影の姿が映る。</p><p class="cr">FaizAttariqi（2019年、影絵芝居ワヤン・クリの上演）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Pertunjukan_Wayang_Kulit.jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
+</figure>
+<p class="lead">行列 $A$ は平面や空間を「引き伸ばす」写像でもある。そのとき<strong>面積や体積が何倍になるか</strong>を、符号（向き）つきの1つの数にしたものが<strong>行列式</strong> $\det A$ である。式 $ad-bc$ を暗記するのではなく、面積の当たり前の性質3つから式を導き、それが「正則か（逆行列があるか）」の判定に、積の公式に、逆行列とクラメルの公式につながるところまでを、記号を省かずに1行ずつ追う。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：行列 $A$ は写像（第16回）→ 単位正方形が平行四辺形に変わる → その<strong>符号つき面積</strong>が $\det A$（2×2 なら $ad-bc$）→ 面積には「1辺を $c$ 倍すれば $c$ 倍」「辺に別の辺の倍を足しても不変」「同じ辺を2回使えば0」「単位正方形は1」という当たり前の性質がある（<strong>D1〜D3</strong>）→ <strong>この性質だけで</strong>式がただ1つに決まる（置換の和＝ライプニッツの公式）→ 行基本変形（第17回）で実際に計算できる／余因子展開 → $\det(AB)=\det A\cdot\det B$（拡大率の合成）→ $\det A\neq0\Leftrightarrow$ 逆行列がある $\Leftrightarrow\operatorname{rank}A=n$ → 余因子行列による逆行列、クラメルの公式。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>第1回から続く約束どおり、新しい記号は緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。この回の省略は<strong>「$n$ 個のベクトルの関数」を「正方行列の関数」にして、さらに「$|\ \ |$」で囲むだけにする</strong>ものなので、<a href="#abbr-det">1.4 の省略の段階</a>で S0 から S3 まで並べる。</p>
+<p>行列式は、<strong>定義を先に与えて性質を証明する</strong>書き方（式を天下り的に置く）が多く、「なぜこんな式か」が見えにくい。そこでこの回は逆に、<strong>面積という身近なものの性質を先に決め、そこから式を導く</strong>順に進める。高校で習った 2×2 の $ad-bc$ や、第17回の行基本変形も、仮定せずに一度は書く（覚えている人は飛ばしてよい）。式変形は1行に1操作だけ進め、理由を右（または下）に書く。</p>
+<p>なお、固有値（第20回）、LU分解と計算量の議論（第50回）は、この回では<strong>予告だけ</strong>にする。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で<strong>新しく説明する記号</strong>と、<strong>前の回で説明済みの記号</strong>を分けて並べる。右の列の「→」で説明のある場所へ飛べる。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$\det A$、$|A|$（行列式）</td><td>ディターミナント・エー、エー・の・ぎょうれつしき</td><td>正方行列 $A$ が面積・体積を何倍にするかを、向きの符号つきで表す1つの実数</td><td><a href="#sym-det">→1.4</a></td></tr>
+<tr><td>$\sigma$、$S_n$（置換）</td><td>シグマ、エス・エヌ</td><td>$1,\dots,n$ の並べ替え／その全体（$n!$ 個）</td><td><a href="#sym-permutation">→3.1</a></td></tr>
+<tr><td>$\operatorname{sgn}\sigma$（置換の符号）</td><td>サイン・シグマ（またはサイグナム・シグマ）</td><td>並べ替えが偶数回の入れ替えなら $+1$、奇数回なら $-1$</td><td><a href="#sym-perm-sign">→3.2</a></td></tr>
+<tr><td>上三角行列、下三角行列</td><td>じょうさんかくぎょうれつ</td><td>対角線より下（上）の成分がすべて0の正方行列</td><td><a href="#sym-triangular">→4.2</a></td></tr>
+<tr><td>$M_{ij}$（小行列）、$C_{ij}$（余因子）</td><td>エム・アイ・ジェイ、シー・アイ・ジェイ</td><td>第 $i$ 行と第 $j$ 列を取り除いた行列／それの行列式に符号 $(-1)^{i+j}$ をつけたもの</td><td><a href="#sym-minor">→4.4</a>、<a href="#sym-cofactor">→4.4</a></td></tr>
+<tr><td>$\operatorname{adj}A$（余因子行列）</td><td>アジョイント・エー</td><td>余因子を並べて転置した行列。$A^{-1}$ の分子になる</td><td><a href="#sym-adjugate">→5.3</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出た記号（リンクで戻れる）</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>初出</th></tr>
+<tr><td>$=$、$:=$</td><td>等しい／左の名前を右の式で決める</td><td><a href="01_第1回_数式を文として読む.html#sym-equal">第1回</a>、<a href="01_第1回_数式を文として読む.html#sym-defeq">第1回</a></td></tr>
+<tr><td>$\Rightarrow$、$\Leftrightarrow$、$\forall$、$\exists$、$\in$</td><td>ならば／同値／すべての／存在する／要素である</td><td><a href="02_第2回_集合と論理.html#sym-implies">第2回</a>、<a href="02_第2回_集合と論理.html#sym-iff">第2回</a>、<a href="02_第2回_集合と論理.html#sym-forall">第2回</a>、<a href="02_第2回_集合と論理.html#sym-exists">第2回</a>、<a href="02_第2回_集合と論理.html#sym-in">第2回</a></td></tr>
+<tr><td>写像、全単射、$\operatorname{sgn}x$（実数の符号）</td><td>対応の規則／1対1かつ上への写像／正なら$+1$・負なら$-1$</td><td><a href="03_第3回_関数と写像.html#sym-function">第3回</a>、<a href="03_第3回_関数と写像.html#sym-bijection">第3回</a>、<a href="03_第3回_関数と写像.html#sym-sgn">第3回</a></td></tr>
+<tr><td>$\displaystyle\sum$、$\displaystyle\prod$、$n!$</td><td>総和／総乗／階乗</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a>、<a href="04_第4回_総和・総乗と添字.html#sym-prod">第4回</a>、<a href="04_第4回_総和・総乗と添字.html#sym-factorial">第4回</a></td></tr>
+<tr><td>太字 $\boldsymbol x$、$A_{ij}$、$I$、$A^{\mathsf T}$、$\boldsymbol a\times\boldsymbol b$、$\boldsymbol a\cdot\boldsymbol b$</td><td>ベクトル／$i$ 行 $j$ 列の成分／単位行列／転置／外積／内積</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-vector">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix-entry">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-identity">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-cross">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">第5回</a></td></tr>
+<tr><td>ヤコビアン</td><td>変数変換で面積が何倍になるか</td><td><a href="13_第13回_重積分と変数変換.html#sym-jacobian">第13回</a></td></tr>
+<tr><td>一次結合、一次独立、基底、標準基底 $\boldsymbol e_i$</td><td>定数倍の和／冗長がない／座標軸の役目をする組／各成分だけ1</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-linear-combination">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-linear-independent">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-basis">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-standard-basis">第15回</a></td></tr>
+<tr><td>$A\boldsymbol x$、線形写像、$AB$、$A^{-1}$</td><td>列の一次結合／写像／写像の合成／逆の写像</td><td><a href="16_第16回_行列は線形写像.html#sym-matvec">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-linear-map">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-matmul">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-inverse-matrix">第16回</a></td></tr>
+<tr><td>行基本変形 $R_i\leftrightarrow R_j$ ほか、主成分、$\operatorname{rank}A$、$\ker A$</td><td>解を変えない3つの操作／各行の最初の0でない成分／主成分の個数／$A\boldsymbol x=\boldsymbol 0$ の解全体</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-row-ops">第17回</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-pivot">第17回</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-rank">第17回</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-ker">第17回</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>面積・体積の拡大率として</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/18_a1_pantograph.jpg" alt="展示ケースの中に、真鍮の腕と定規を組み合わせた器具が置かれ、奥にゴルトンの肖像写真が掛かっている" loading="lazy"></div>
+<p class="cap">腕の長さの比で、図を決まった倍率に写し取る器具、パントグラフである。</p>
+<p class="cr">フランシス・ゴルトンのパントグラフ（サイエンス・ミュージアム蔵。Andrew Davidson 撮影）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Francis_Galton's_pantograph.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/18_b1_wayang.jpg" alt="水牛の革を切り抜いて彩色した人形。細かい透かしと、赤・金・青の色で、兵士たちが描かれている" loading="lazy"></div>
+<p class="cap">水牛の革を切り抜いて彩色した、影絵芝居の人形である。</p>
+<p class="cr">ワヤン・クリの人形（国立世界文化博物館蔵、2021年撮影）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Wayang_kulit_figure_of_buffalo_hide,_representing_'Prajurit_Jawa',_inventory_number_TM-4551-28.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：行列は面積を何倍にするか</h3>
+<p>第16回で、行列 $A$ は「平面（や空間）の点を動かす写像」だと分かった。$A\boldsymbol x$ は $A$ の列の一次結合である（<a href="16_第16回_行列は線形写像.html#sym-matvec">第16回</a>）。そこで次の問いを立てる。<strong>写像 $\boldsymbol x\mapsto A\boldsymbol x$ は、図形の面積を何倍にするのか。</strong></p>
+<p>最小の具体例から始める。$A=\begin{pmatrix}3&1\\1&2\end{pmatrix}$ とする。列は $\boldsymbol a_1=\begin{pmatrix}3\\1\end{pmatrix}$、$\boldsymbol a_2=\begin{pmatrix}1\\2\end{pmatrix}$。単位正方形の4つの頂点 $(0,0),(1,0),(0,1),(1,1)$ が、$A$ でどこへ動くかを計算する。</p>
+<p>① $A\boldsymbol e_1=1\cdot\boldsymbol a_1+0\cdot\boldsymbol a_2=\boldsymbol a_1=(3,1)$。　<span class="meta">標準基底 $\boldsymbol e_1=(1,0)$ を入れると、$A$ の第1列が出る（<a href="16_第16回_行列は線形写像.html#sym-matvec">第16回</a>）</span></p>
+<p>② $A\boldsymbol e_2=\boldsymbol a_2=(1,2)$。　<span class="meta">同じく第2列</span></p>
+<p>③ $A\begin{pmatrix}1\\1\end{pmatrix}=\boldsymbol a_1+\boldsymbol a_2=(4,3)$。　<span class="meta">一次結合の係数がどちらも1</span></p>
+<p>④ $A\begin{pmatrix}0\\0\end{pmatrix}=\begin{pmatrix}0\\0\end{pmatrix}$。　<span class="meta">原点は動かない</span></p>
+<p>つまり単位正方形は、<strong>列ベクトル $\boldsymbol a_1,\boldsymbol a_2$ を2辺とする平行四辺形</strong>に移る。図1.1 を見る。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 330" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="単位正方形が列ベクトルの作る平行四辺形に移る" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>単位正方形が列ベクトルの作る平行四辺形に移る</title>
+<rect x="0" y="0" width="440" height="330" fill="#fffdf7"/>
+<line x1="152.0" y1="279.0" x2="152.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="220.0" y1="279.0" x2="220.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="288.0" y1="279.0" x2="288.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="356.0" y1="279.0" x2="356.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="50.0" y1="183.8" x2="390.0" y2="183.8" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="50.0" y1="115.8" x2="390.0" y2="115.8" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="50.0" y1="47.8" x2="390.0" y2="47.8" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="50.0" y1="251.8" x2="400.0" y2="251.8" stroke="#2a2723" stroke-width="1.3"/><path d="M393.7 254.8 L400.0 251.8 L393.7 248.8" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="84.0" y1="279.0" x2="84.0" y2="14.0" stroke="#2a2723" stroke-width="1.3"/><path d="M87.0 20.3 L84.0 14.0 L81.0 20.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="152.0" y1="247.8" x2="152.0" y2="255.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="152.0" y="271.8" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="220.0" y1="247.8" x2="220.0" y2="255.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="220.0" y="271.8" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="288.0" y1="247.8" x2="288.0" y2="255.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="288.0" y="271.8" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="356.0" y1="247.8" x2="356.0" y2="255.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="356.0" y="271.8" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="80.0" y1="183.8" x2="88.0" y2="183.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="76.0" y="188.8" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="80.0" y1="115.8" x2="88.0" y2="115.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="76.0" y="120.8" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="80.0" y1="47.8" x2="88.0" y2="47.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="76.0" y="52.8" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="404.0" y="273.8" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="98.0" y="20.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="84.0,251.8 288.0,183.8 356.0,47.8 152.0,115.8 84.0,251.8" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="84.0,251.8 152.0,251.8 152.0,183.8 84.0,183.8 84.0,251.8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="84.0" y1="251.8" x2="288.0" y2="183.8" stroke="#a8322a" stroke-width="2.6"/><path d="M281.5 190.1 L288.0 183.8 L279.1 182.6" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="84.0" y1="251.8" x2="152.0" y2="115.8" stroke="#2b3a67" stroke-width="2.6"/><path d="M151.9 124.8 L152.0 115.8 L144.9 121.3" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<text x="148.0" y="289.8" font-size="15" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="4.2" font-size="10.5">1</tspan></text>
+<text x="68.0" y="188.8" font-size="15" fill="#5f7f4f" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="4.2" font-size="10.5">2</tspan></text>
+<text x="118.0" y="222.8" font-size="16" fill="#5f7f4f" text-anchor="middle" font-weight="bold">1</text>
+<text x="233.6" y="146.4" font-size="22" fill="#a8322a" text-anchor="middle" font-weight="bold">5</text>
+<text x="298.0" y="207.8" font-size="15" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="4.2" font-size="10.5">1</tspan><tspan dy="-4.2">=(3,1)</tspan></text>
+<text x="140.0" y="105.8" font-size="15" fill="#2b3a67" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="4.2" font-size="10.5">2</tspan><tspan dy="-4.2">=(1,2)</tspan></text>
+<text x="20.0" y="316.0" font-size="14" fill="#2a2723" text-anchor="start">緑：単位正方形（面積 1）→ 朱：その像の平行四辺形（面積 5）</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　$A=\begin{pmatrix}3&1\\1&2\end{pmatrix}$ は、標準基底 $\boldsymbol e_1,\boldsymbol e_2$ をそれぞれ第1列 $\boldsymbol a_1=(3,1)$、第2列 $\boldsymbol a_2=(1,2)$ に送る。単位正方形（緑、面積1）は、この2本を辺とする平行四辺形（朱）に移る。</figcaption>
+</figure>
+<p>単位正方形の面積は $1$ である。平行四辺形の面積が $S$ なら、この写像は面積を $S$ 倍にしたことになる。次の節で、$S$ を計算する。</p>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>平行四辺形の面積を、成分から計算する</h3>
+<p>一般に $\boldsymbol a_1=\begin{pmatrix}a\\c\end{pmatrix}$、$\boldsymbol a_2=\begin{pmatrix}b\\d\end{pmatrix}$ とする（$A=\begin{pmatrix}a&b\\c&d\end{pmatrix}$。列が $\boldsymbol a_1,\boldsymbol a_2$ なので、$b$ は第2列の上の成分である点に注意）。まず、すべての成分が正で、$\boldsymbol a_2$ が $\boldsymbol a_1$ の左回り（反時計回り）側にある場合に、図形を切り貼りして面積を求める。</p>
+<p>平行四辺形をぴったり囲む大きな長方形を考える。横の長さは $a+b$、縦の長さは $c+d$ である。長方形の面積から、4隅の余りを引く。</p>
+<p>① 長方形の面積：$(a+b)(c+d)$。　<span class="meta">横×縦</span></p>
+<p>② 下と上にある2つの三角形（底辺 $a$、高さ $c$）：合わせて $2\cdot\frac12ac=ac$。　<span class="meta">三角形の面積は底辺×高さ÷2。2つあるので2倍</span></p>
+<p>③ 左と右にある2つの三角形（底辺 $b$、高さ $d$）：合わせて $2\cdot\frac12bd=bd$。</p>
+<p>④ 左上と右下の2つの長方形（横 $b$、縦 $c$）：合わせて $2bc$。</p>
+<p>⑤ 平行四辺形の面積 $=(a+b)(c+d)-ac-bd-2bc$。　<span class="meta">①から②③④を引く</span></p>
+<p>⑥ $(a+b)(c+d)=ac+ad+bc+bd$ と展開する。　<span class="meta">分配法則</span></p>
+<p>⑦ $ac+ad+bc+bd-ac-bd-2bc=ad-bc$。　<span class="meta">$ac$ と $bd$ が消え、$bc-2bc=-bc$</span></p>
+<p>よって面積は $ad-bc$。図1.2 は数値 $a=3,c=1,b=1,d=2$ で確かめたもの（$12-3-2-2=5=3\cdot2-1\cdot1$）である。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 440 440" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="囲む長方形から余りを引いて平行四辺形の面積を出す" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>囲む長方形から余りを引いて平行四辺形の面積を出す</title>
+<rect x="0" y="0" width="440" height="440" fill="#fffdf7"/>
+<polyline points="60.0,262.0 300.0,262.0 300.0,182.0 60.0,262.0" fill="#f7ecdc" stroke="#6b645a" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="240.0" y="243.0" font-size="15" fill="#2a2723" text-anchor="middle">1.5</text>
+<polyline points="300.0,262.0 380.0,262.0 380.0,182.0 300.0,182.0 300.0,262.0" fill="#edf1e8" stroke="#6b645a" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="340.0" y="227.0" font-size="15" fill="#2a2723" text-anchor="middle">1</text>
+<polyline points="300.0,182.0 380.0,182.0 380.0,22.0 300.0,182.0" fill="#f7ecdc" stroke="#6b645a" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="357.6" y="143.0" font-size="15" fill="#2a2723" text-anchor="middle">1</text>
+<polyline points="140.0,102.0 380.0,22.0 140.0,22.0 140.0,102.0" fill="#f7ecdc" stroke="#6b645a" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="220.0" y="52.6" font-size="15" fill="#2a2723" text-anchor="middle">1.5</text>
+<polyline points="60.0,102.0 140.0,102.0 140.0,22.0 60.0,22.0 60.0,102.0" fill="#edf1e8" stroke="#6b645a" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="100.0" y="67.0" font-size="15" fill="#2a2723" text-anchor="middle">1</text>
+<polyline points="60.0,262.0 140.0,102.0 60.0,102.0 60.0,262.0" fill="#f7ecdc" stroke="#6b645a" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="84.0" y="151.0" font-size="15" fill="#2a2723" text-anchor="middle">1</text>
+<polyline points="60.0,262.0 300.0,182.0 380.0,22.0 140.0,102.0 60.0,262.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="220.0" y="150.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">5</text>
+<rect x="60" y="22" width="320" height="240" rx="0" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="180.0" y="282.0" font-size="14" fill="#6b645a" text-anchor="middle">a = 3</text>
+<text x="340.0" y="282.0" font-size="14" fill="#6b645a" text-anchor="middle">b = 1</text>
+<text x="388.0" y="227.0" font-size="14" fill="#6b645a" text-anchor="start">c=1</text>
+<text x="388.0" y="107.0" font-size="14" fill="#6b645a" text-anchor="start">d=2</text>
+<text x="30.0" y="312.0" font-size="15" fill="#2a2723" text-anchor="start">長方形：4 × 3 = 12　（(a+b)(c+d)）</text>
+<text x="30.0" y="337.0" font-size="15" fill="#2a2723" text-anchor="start">三角形 2 個：1.5 + 1.5 = 3　（= ac）</text>
+<text x="30.0" y="362.0" font-size="15" fill="#2a2723" text-anchor="start">三角形 2 個：1 + 1 = 2　（= bd）</text>
+<text x="30.0" y="387.0" font-size="15" fill="#2a2723" text-anchor="start">長方形 2 個：1 + 1 = 2　（= 2bc）</text>
+<text x="30.0" y="412.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">12 − 3 − 2 − 2 = 5　（= ad − bc）</text>
+</svg>
+<figcaption><strong>図 1.2</strong>　$a=3,\,c=1,\,b=1,\,d=2$ の場合。平行四辺形（朱）を囲む $4\times3$ の長方形から、四隅の三角形4個と長方形2個を引くと $5$ が残る。文字で書けば $(a+b)(c+d)-ac-bd-2bc=ad-bc$。</figcaption>
+</figure>
+<p>これで、1.1 の写像は面積を $5$ 倍にすることが分かった。</p>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>向き：負の面積があってよい理由</h3>
+<p>1.2 では「$\boldsymbol a_2$ が $\boldsymbol a_1$ の左回り側にある」という仮定を置いた。仮定をはずして、列の順番を入れ替えた行列 $A'=\begin{pmatrix}1&3\\2&1\end{pmatrix}$（列が $\boldsymbol a_2,\boldsymbol a_1$ の順）の $ad-bc$ を計算する。</p>
+<p>① $A'$ では $a=1,b=3,c=2,d=1$。　<span class="meta">第1列が $(1,2)$、第2列が $(3,1)$</span></p>
+<p>② $ad-bc=1\cdot1-3\cdot2=-5$。</p>
+<p>平行四辺形そのものは同じ形なので、面積（長さの量）は $5$ である。しかし式 $ad-bc$ は $-5$ を返した。この符号は「<strong>第1の辺から第2の辺へ、左回りに回るか、右回りに回るか</strong>」を表している。左回りなら $+$、右回りなら $-$ と決めるのが、行列式である。図1.3 を見る。</p>
+<figure class="fig" id="fig-1-3">
+<svg viewBox="0 0 440 470" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="列の順番で行列式の符号が変わる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>列の順番で行列式の符号が変わる</title>
+<rect x="0" y="0" width="440" height="470" fill="#fffdf7"/>
+<text x="14.0" y="24.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">列の順番 (a₁, a₂) = ((3,1), (1,2))</text>
+<line x1="110.0" y1="201.0" x2="110.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="160.0" y1="201.0" x2="160.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="210.0" y1="201.0" x2="210.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="260.0" y1="201.0" x2="260.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="40.0" y1="131.0" x2="270.0" y2="131.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="40.0" y1="81.0" x2="270.0" y2="81.0" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="60.0,181.0 210.0,131.0 260.0,31.0 110.0,81.0 60.0,181.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="60.0" y1="181.0" x2="210.0" y2="131.0" stroke="#a8322a" stroke-width="2.6"/><path d="M203.5 137.3 L210.0 131.0 L201.1 129.8" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="60.0" y1="181.0" x2="110.0" y2="81.0" stroke="#2b3a67" stroke-width="2.6"/><path d="M109.9 90.0 L110.0 81.0 L102.9 86.5" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<polyline points="97.9,168.4 97.5,167.1 97.0,165.9 96.5,164.7 96.0,163.5 95.4,162.3 94.8,161.2 94.1,160.1 93.4,159.0 92.6,157.9 91.9,156.8 91.1,155.8 90.2,154.8 89.3,153.8 88.4,152.9 87.5,152.0 86.5,151.1 85.5,150.2 84.5,149.4 83.5,148.6 82.4,147.9 81.3,147.1 80.2,146.5 79.0,145.8" fill="none" stroke="#5f7f4f" stroke-width="2.4" stroke-linejoin="round"/><line x1="79.0" y1="145.8" x2="77.9" y2="145.2" stroke="#5f7f4f" stroke-width="2.4"/><path d="M85.9 145.5 L77.9 145.2 L82.7 151.6" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<text x="216.0" y="151.0" font-size="14" fill="#a8322a" text-anchor="start">第1列</text>
+<text x="104.0" y="73.0" font-size="14" fill="#2b3a67" text-anchor="end">第2列</text>
+<text x="290.0" y="76.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">左回り（反時計回り）</text>
+<text x="290.0" y="106.0" font-size="14" fill="#2a2723" text-anchor="start">ad − bc =</text>
+<text x="290.0" y="128.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">3·2 − 1·1 = +5</text>
+<text x="290.0" y="158.0" font-size="14" fill="#6b645a" text-anchor="start">面積は どちらも 5</text>
+<text x="14.0" y="242.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">列の順番を入れ替える (a₁, a₂) = ((1,2), (3,1))</text>
+<line x1="110.0" y1="419.0" x2="110.0" y2="254.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="160.0" y1="419.0" x2="160.0" y2="254.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="210.0" y1="419.0" x2="210.0" y2="254.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="260.0" y1="419.0" x2="260.0" y2="254.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="40.0" y1="349.0" x2="270.0" y2="349.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="40.0" y1="299.0" x2="270.0" y2="299.0" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="60.0,399.0 110.0,299.0 260.0,249.0 210.0,349.0 60.0,399.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="60.0" y1="399.0" x2="110.0" y2="299.0" stroke="#a8322a" stroke-width="2.6"/><path d="M109.9 308.0 L110.0 299.0 L102.9 304.5" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="60.0" y1="399.0" x2="210.0" y2="349.0" stroke="#2b3a67" stroke-width="2.6"/><path d="M203.5 355.3 L210.0 349.0 L201.1 347.8" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<polyline points="77.9,363.2 79.0,363.8 80.2,364.5 81.3,365.1 82.4,365.9 83.5,366.6 84.5,367.4 85.5,368.2 86.5,369.1 87.5,370.0 88.4,370.9 89.3,371.8 90.2,372.8 91.1,373.8 91.9,374.8 92.6,375.9 93.4,377.0 94.1,378.1 94.8,379.2 95.4,380.3 96.0,381.5 96.5,382.7 97.0,383.9 97.5,385.1" fill="none" stroke="#5f7f4f" stroke-width="2.4" stroke-linejoin="round"/><line x1="97.5" y1="385.1" x2="97.9" y2="386.4" stroke="#5f7f4f" stroke-width="2.4"/><path d="M92.3 380.7 L97.9 386.4 L98.8 378.4" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<text x="116.0" y="319.0" font-size="14" fill="#a8322a" text-anchor="start">第1列</text>
+<text x="204.0" y="341.0" font-size="14" fill="#2b3a67" text-anchor="end">第2列</text>
+<text x="290.0" y="294.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">右回り（時計回り）</text>
+<text x="290.0" y="324.0" font-size="14" fill="#2a2723" text-anchor="start">ad − bc =</text>
+<text x="290.0" y="346.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">1·1 − 3·2 = −5</text>
+<text x="290.0" y="376.0" font-size="14" fill="#6b645a" text-anchor="start">面積は どちらも 5</text>
+</svg>
+<figcaption><strong>図 1.3</strong>　同じ平行四辺形でも、第1列から第2列へ左回りに回るなら $ad-bc=+5$、右回りなら $-5$ になる（緑の弧が回る向き）。面積（長さの量）はどちらも5で、符号が向きを表す。</figcaption>
+</figure>
+<p>符号をつけておくと、「列を入れ替えると符号が変わる」という性質が自然に得られ、後の計算（2節）がうまくいく。面積だけ（常に正）を知りたいときは、絶対値 $|ad-bc|$ をとればよい。</p>
+
+<h3 id="sec-1-4"><span class="no">1.4</span>記号 $\det$ を導入する：省略の段階</h3>
+<p>1.2〜1.3 で調べた「2本の列ベクトルが作る符号つき面積」に名前をつける。そして、名前を縮めていくときに何を省くのかを、1段ずつ並べておく。</p>
+
+<div class="box" id="abbr-det"><span class="label">省略の段階：行列式の書き方</span>
+<table class="tb">
+<tr><th>段</th><th>書き方（例：1.1 の行列）</th><th>この段で省いたもの</th><th>省いても誤解が起きない理由</th></tr>
+<tr><td>S0</td><td>$\det(\boldsymbol a_1,\boldsymbol a_2)$、$\boldsymbol a_1=\begin{pmatrix}3\\1\end{pmatrix}$、$\boldsymbol a_2=\begin{pmatrix}1\\2\end{pmatrix}$ （2本のベクトルを引数にとる関数）</td><td>（なし）</td><td>—</td></tr>
+<tr><td>S1</td><td>$\det\begin{pmatrix}3&1\\1&2\end{pmatrix}$</td><td>ベクトルを1本ずつ列挙するコンマと名前 $\boldsymbol a_1,\boldsymbol a_2$。列を並べた表の形で渡す</td><td>表の第 $j$ 列が $\boldsymbol a_j$ なので、引数の順序は表の列の順序と同じ。順序が分かれば名前は要らない</td></tr>
+<tr><td>S2</td><td>$\det A$、ただし $A=\begin{pmatrix}3&1\\1&2\end{pmatrix}$</td><td>表の中身を $A$ という名前にまとめ、関数の括弧を省いた（$\sin x$ と同じ流儀）</td><td>$A$ が何かは前に書いてあるので、中身に戻れる</td></tr>
+<tr><td>S3</td><td>$|A|$、または表を縦線で囲んだ $\begin{vmatrix}3&1\\1&2\end{vmatrix}$</td><td>文字 $\det$ を縦線に置き換えた</td><td>縦線の意味（絶対値・ノルム・行列式）は<strong>中身で決まる</strong>：中身が数なら絶対値、ベクトルならノルム、<strong>正方行列なら行列式</strong>。ただし紛らわしいので本書は $\det A$ を主に使う</td></tr>
+</table>
+<p>S3 の落とし穴：$|A|$ は<strong>絶対値ではない</strong>。行列式は負にもなる（1.3）。$\begin{vmatrix}1&3\\2&1\end{vmatrix}=-5$ であって $5$ ではない。面積を言いたいときは $|\det A|$ と、縦線を2重に使う。</p>
+</div>
+
+<div class="def" id="sym-det"><span class="label">記号：行列式 $\det A$、$|A|$</span>
+<p><strong>①読み方</strong>：$\det A$ は「ディターミナント・エー」または「デット・エー」、$|A|$ は「エーの行列式」。日本語は「ぎょうれつしき」。$\det$ は英語 determinant（決定するもの）の略。</p>
+<p><strong>②日本語での意味</strong>：<strong>正方行列 $A$（$n$ 行 $n$ 列）が表す写像 $\boldsymbol x\mapsto A\boldsymbol x$ が、$n$ 次元の体積（2次元なら面積）を何倍にするかを、向きの符号つきで表す1つの実数</strong>。$A$ の列ベクトル $\boldsymbol a_1,\dots,\boldsymbol a_n$ を辺とする平行四辺形・平行六面体の符号つき面積・体積と同じである（1.1）。</p>
+<p><strong>③省略していない書き方</strong>：$A\in\mathbb R^{n\times n}$ に対し、$\det A\in\mathbb R$。具体的には
+$$ n=1:\ \det\begin{pmatrix}a\end{pmatrix}=a,\qquad n=2:\ \det\begin{pmatrix}a&b\\c&d\end{pmatrix}=ad-bc $$
+（$n=2$ は 1.2〜1.3 で導いた）。$n=3$ は 1.5、一般の $n$ は<a href="#sec-3-3">3.3 のライプニッツの公式</a>で書く。正方行列でないとき（$m\neq n$）は定義されない。</p>
+<p><strong>④どこで出会うか</strong>：逆行列の有無の判定（5節）、固有値を求める特性方程式 $\det(A-\lambda I)=0$（第20回）、変数変換のヤコビアン（<a href="13_第13回_重積分と変数変換.html#sym-jacobian">第13回</a>）、外積・スカラー三重積（第5回、1.5）、連立方程式のクラメルの公式（5.4）。</p>
+</div>
+
+<p><strong>最小の具体例</strong>：$\det\begin{pmatrix}3&1\\1&2\end{pmatrix}=3\cdot2-1\cdot1=5$。1.1 の写像は面積を $5$ 倍にする。</p>
+<figure class="fig" id="fig-1-4">
+<svg viewBox="0 0 440 506" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="行列式の書き方の省略の階段" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>行列式の書き方の省略の階段</title>
+<rect x="0" y="0" width="440" height="506" fill="#fffdf7"/>
+<rect x="10" y="10" width="420" height="116" rx="6" fill="#fff" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="24.0" y="36.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">S0</text>
+<text x="62.0" y="36.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">引数の関数</text>
+<text x="24.0" y="116.0" font-size="14" fill="#a8322a" text-anchor="start">（なし）</text>
+<text x="60.0" y="70.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">d</tspan><tspan font-style="italic">e</tspan><tspan font-style="italic">t</tspan><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan dy="5.6" font-size="14.0">1</tspan><tspan dy="-5.6">, </tspan><tspan font-style="italic">a</tspan><tspan dy="5.6" font-size="14.0">2</tspan><tspan dy="-5.6">)</tspan></text>
+<text x="210.0" y="70.0" font-size="15" fill="#6b645a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="4.2" font-size="10.5">1</tspan><tspan dy="-4.2">=(3,1)ᵀ,  </tspan><tspan font-style="italic">a</tspan><tspan dy="4.2" font-size="10.5">2</tspan><tspan dy="-4.2">=(1,2)ᵀ</tspan></text>
+<rect x="10" y="134" width="420" height="116" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="24.0" y="160.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">S1</text>
+<text x="62.0" y="160.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">列を表の形で渡す</text>
+<text x="24.0" y="240.0" font-size="14" fill="#a8322a" text-anchor="start">省いたもの：ベクトルの名前 a₁, a₂ とコンマ</text>
+<text x="60.0" y="194.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">d</tspan><tspan font-style="italic">e</tspan><tspan font-style="italic">t</tspan></text>
+<text x="125.0" y="191.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="155.0" y="191.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="125.0" y="215.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="155.0" y="215.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<path d="M111.0 172 L105.0 172 L105.0 224 L111.0 224" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M169.0 172 L175.0 172 L175.0 224 L169.0 224" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<rect x="10" y="258" width="420" height="116" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="24.0" y="284.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">S2</text>
+<text x="62.0" y="284.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">表に名前 A をつける</text>
+<text x="24.0" y="364.0" font-size="14" fill="#a8322a" text-anchor="start">省いたもの：表の中身と関数の括弧</text>
+<text x="60.0" y="318.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">d</tspan><tspan font-style="italic">e</tspan><tspan font-style="italic">t</tspan><tspan> </tspan><tspan font-style="italic">A</tspan></text>
+<text x="150.0" y="318.0" font-size="17" fill="#6b645a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan> =</tspan></text>
+<text x="205.0" y="315.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="235.0" y="315.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="205.0" y="339.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="235.0" y="339.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<path d="M191.0 296 L185.0 296 L185.0 348 L191.0 348" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M249.0 296 L255.0 296 L255.0 348 L249.0 348" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<rect x="10" y="382" width="420" height="116" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="24.0" y="408.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">S3</text>
+<text x="62.0" y="408.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">縦線で囲む</text>
+<text x="24.0" y="488.0" font-size="14" fill="#a8322a" text-anchor="start">省いたもの：文字 det（縦線＝行列式と読む）</text>
+<text x="60.0" y="442.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>|</tspan><tspan font-style="italic">A</tspan><tspan>|</tspan></text>
+<text x="120.0" y="440.0" font-size="14" fill="#6b645a" text-anchor="start">または</text>
+<line x1="185.0" y1="419.0" x2="185.0" y2="471.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="257.0" y1="419.0" x2="257.0" y2="471.0" stroke="#2a2723" stroke-width="1.8"/>
+<text x="215.0" y="440.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="245.0" y="440.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="215.0" y="464.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="245.0" y="464.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="280.0" y="440.0" font-size="14" fill="#a8322a" text-anchor="start">（絶対値ではない）</text>
+</svg>
+<figcaption><strong>図 1.4</strong>　行列式の書き方を S0（2本のベクトルの関数）から S3（縦線）まで縮めていく。各段で省いたものを朱で書いた。どの段でも値は同じ $5$。S3 の縦線は絶対値ではなく、行列式を表す。</figcaption>
+</figure>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「行列式は<strong>行列の各成分に関する、ある式</strong>にすぎず、面積とは別物」と思うのは誤り。$ad-bc$ は成分から面積を計算する式として生まれた。式だけを覚えると、$3\times3$ 以降の符号（$+,-$ の並び）がなぜそうなのか分からなくなる。この回は、その符号を面積・体積の性質から導く。</p>
+<p>また、「$\det(A+B)=\det A+\det B$」は<strong>誤り</strong>。たとえば $A=B=I_2$（2×2 の単位行列）で、$\det(A+B)=\det(2I)=4$、$\det A+\det B=2$。行列式は<strong>足し算と相性が悪く、積と相性がよい</strong>（5.1）。</p>
+</div>
+<div class="why"><span class="label">ひとことで</span>$\det A$ は、$A$ の列ベクトルが作る平行四辺形（平行六面体）の<strong>符号つきの面積（体積）</strong>で、$A$ が面積（体積）を何倍にするかを表す。2×2 では $ad-bc$。</div>
+
+<h3 id="sec-1-5"><span class="no">1.5</span>3×3 の場合：体積</h3>
+<p>3本の列ベクトル $\boldsymbol a_1,\boldsymbol a_2,\boldsymbol a_3$ が作る平行六面体の体積を考える。具体例として、
+$$ A=\begin{pmatrix}2&1&0\\1&3&1\\0&1&2\end{pmatrix},\quad \boldsymbol a_1=\begin{pmatrix}2\\1\\0\end{pmatrix},\ \boldsymbol a_2=\begin{pmatrix}1\\3\\1\end{pmatrix},\ \boldsymbol a_3=\begin{pmatrix}0\\1\\2\end{pmatrix} $$
+とする。図1.5 に平行六面体を示す。</p>
+<figure class="fig" id="fig-1-5">
+<svg viewBox="0 0 440 320" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="3つの列ベクトルが作る平行六面体" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>3つの列ベクトルが作る平行六面体</title>
+<rect x="0" y="0" width="440" height="320" fill="#fffdf7"/>
+<polyline points="40.0,290.0 170.1,270.6 305.3,161.4 175.2,180.8 40.0,290.0" fill="#f7ecdc" stroke="none" stroke-width="0" stroke-linejoin="round"/>
+<polyline points="68.1,168.6 198.2,149.2 333.4,40.0 203.3,59.4 68.1,168.6" fill="#e8ecf4" stroke="none" stroke-width="0" stroke-linejoin="round"/>
+<polyline points="40.0,290.0 170.1,270.6 198.2,149.2 68.1,168.6 40.0,290.0" fill="#e8ecf4" stroke="none" stroke-width="0" stroke-linejoin="round"/>
+<polyline points="175.2,180.8 305.3,161.4 333.4,40.0 203.3,59.4 175.2,180.8" fill="#e8ecf4" stroke="none" stroke-width="0" stroke-linejoin="round"/>
+<polyline points="40.0,290.0 175.2,180.8 203.3,59.4 68.1,168.6 40.0,290.0" fill="#e8ecf4" stroke="none" stroke-width="0" stroke-linejoin="round"/>
+<polyline points="170.1,270.6 305.3,161.4 333.4,40.0 198.2,149.2 170.1,270.6" fill="#e8ecf4" stroke="none" stroke-width="0" stroke-linejoin="round"/>
+<line x1="68.1" y1="168.6" x2="198.2" y2="149.2" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="68.1" y1="168.6" x2="203.3" y2="59.4" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="175.2" y1="180.8" x2="305.3" y2="161.4" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="175.2" y1="180.8" x2="203.3" y2="59.4" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="203.3" y1="59.4" x2="333.4" y2="40.0" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="170.1" y1="270.6" x2="305.3" y2="161.4" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="170.1" y1="270.6" x2="198.2" y2="149.2" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="198.2" y1="149.2" x2="333.4" y2="40.0" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="305.3" y1="161.4" x2="333.4" y2="40.0" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="40.0" y1="290.0" x2="170.1" y2="270.6" stroke="#a8322a" stroke-width="3.0"/><path d="M161.8 276.2 L170.1 270.6 L160.6 267.6" fill="none" stroke="#a8322a" stroke-width="3.0"/>
+<text x="180.1" y="288.6" font-size="16" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="4.5" font-size="11.2">1</tspan></text>
+<line x1="40.0" y1="290.0" x2="175.2" y2="180.8" stroke="#2b3a67" stroke-width="3.0"/><path d="M170.9 189.9 L175.2 180.8 L165.5 183.1" fill="none" stroke="#2b3a67" stroke-width="3.0"/>
+<text x="185.2" y="174.8" font-size="16" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="4.5" font-size="11.2">2</tspan></text>
+<line x1="40.0" y1="290.0" x2="68.1" y2="168.6" stroke="#5f7f4f" stroke-width="3.0"/><path d="M70.3 178.3 L68.1 168.6 L61.8 176.4" fill="none" stroke="#5f7f4f" stroke-width="3.0"/>
+<text x="58.1" y="162.6" font-size="16" fill="#5f7f4f" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="4.5" font-size="11.2">3</tspan></text>
+<text x="32.0" y="310.0" font-size="14" fill="#6b645a" text-anchor="end">O</text>
+<text x="20.0" y="24.0" font-size="14" fill="#b07a3e" text-anchor="start">橙：底面（a₁, a₂ が作る平行四辺形）</text>
+<text x="20.0" y="46.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">体積 = 底面積 × 高さ = 8</text>
+</svg>
+<figcaption><strong>図 1.5</strong>　$\boldsymbol a_1=(2,1,0)$（朱）、$\boldsymbol a_2=(1,3,1)$（藍）、$\boldsymbol a_3=(0,1,2)$（緑）を3辺とする平行六面体。斜めから見た図で、奥行き方向は縮めて描いてある。橙の面が底面で、体積は $8$。</figcaption>
+</figure>
+<p>体積は「底面積×高さ」である。底面を $\boldsymbol a_1,\boldsymbol a_2$ が作る平行四辺形とすると、底面積は外積 $\boldsymbol a_1\times\boldsymbol a_2$ の大きさ $\|\boldsymbol a_1\times\boldsymbol a_2\|$ で、高さは $\boldsymbol a_3$ を外積の向き（底面に垂直な向き）に射影した長さである（<a href="05_第5回_ベクトルと行列の書き方.html#sym-cross">第5回の外積</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">内積</a>）。したがって符号つきの体積は
+$$ \boldsymbol a_3\cdot(\boldsymbol a_1\times\boldsymbol a_2) $$
+（<strong>スカラー三重積</strong>）である。具体例で計算する。</p>
+<p>① $\boldsymbol a_1\times\boldsymbol a_2=\begin{pmatrix}1\cdot1-0\cdot3\\0\cdot1-2\cdot1\\2\cdot3-1\cdot1\end{pmatrix}=\begin{pmatrix}1\\-2\\5\end{pmatrix}$。　<span class="meta">外積の成分の公式（第5回）：$(u_2v_3-u_3v_2,\ u_3v_1-u_1v_3,\ u_1v_2-u_2v_1)$</span></p>
+<p>② $\boldsymbol a_3\cdot(\boldsymbol a_1\times\boldsymbol a_2)=0\cdot1+1\cdot(-2)+2\cdot5=8$。　<span class="meta">内積は成分ごとの積の和</span></p>
+<p>この $8$ を成分の公式にしたものが、次の<strong>サラスの公式</strong>である。$A=\begin{pmatrix}a&b&c\\d&e&f\\g&h&i\end{pmatrix}$ について、
+$$ \det A=aei+bfg+cdh-ceg-bdi-afh $$
+（左上から右下へ向かう3本の斜めの積を足し、右上から左下へ向かう3本の斜めの積を引く）。具体例では $2\cdot3\cdot2+1\cdot1\cdot0+0\cdot1\cdot1-0\cdot3\cdot0-1\cdot1\cdot2-2\cdot1\cdot1=12+0+0-0-2-2=8$。スカラー三重積の $8$ と一致した。図1.6 を見る。</p>
+<figure class="fig" id="fig-1-6">
+<svg viewBox="0 0 440 300" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="サラスの公式" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>サラスの公式</title>
+<rect x="0" y="0" width="440" height="300" fill="#fffdf7"/>
+<rect x="180" y="24" width="100" height="132" rx="0" fill="#f1ede3" stroke="none" stroke-width="0"/>
+<line x1="41.0" y1="38.0" x2="169.0" y2="142.0" stroke="#a8322a" stroke-width="3.0"/>
+<line x1="41.0" y1="142.0" x2="169.0" y2="38.0" stroke="#2b3a67" stroke-width="3.0"/>
+<line x1="91.0" y1="38.0" x2="219.0" y2="142.0" stroke="#a8322a" stroke-width="3.0"/>
+<line x1="91.0" y1="142.0" x2="219.0" y2="38.0" stroke="#2b3a67" stroke-width="3.0"/>
+<line x1="141.0" y1="38.0" x2="269.0" y2="142.0" stroke="#a8322a" stroke-width="3.0"/>
+<line x1="141.0" y1="142.0" x2="269.0" y2="38.0" stroke="#2b3a67" stroke-width="3.0"/>
+<rect x="44.0" y="37.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="55.0" y="57.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<rect x="94.0" y="37.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="105.0" y="57.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<rect x="144.0" y="37.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="155.0" y="57.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<rect x="194.0" y="37.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="205.0" y="57.0" font-size="20" fill="#6b645a" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<rect x="244.0" y="37.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="255.0" y="57.0" font-size="20" fill="#6b645a" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<rect x="44.0" y="77.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="55.0" y="97.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<rect x="94.0" y="77.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="105.0" y="97.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<rect x="144.0" y="77.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="155.0" y="97.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<rect x="194.0" y="77.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="205.0" y="97.0" font-size="20" fill="#6b645a" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<rect x="244.0" y="77.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="255.0" y="97.0" font-size="20" fill="#6b645a" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<rect x="44.0" y="117.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="55.0" y="137.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<rect x="94.0" y="117.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="105.0" y="137.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<rect x="144.0" y="117.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="155.0" y="137.0" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<rect x="194.0" y="117.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="205.0" y="137.0" font-size="20" fill="#6b645a" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<rect x="244.0" y="117.0" width="22" height="26" rx="4" fill="#fffdf7" opacity="0.9"/>
+<text x="255.0" y="137.0" font-size="20" fill="#6b645a" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<path d="M26 24 L20 24 L20 156 L26 156" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<path d="M184 24 L190 24 L190 156 L184 156" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="230.0" y="178.0" font-size="14" fill="#6b645a" text-anchor="middle">（第1・2列を右に写した）</text>
+<line x1="300.0" y1="54.0" x2="340.0" y2="54.0" stroke="#a8322a" stroke-width="3.0"/>
+<text x="348.0" y="59.0" font-size="14" fill="#2a2723" text-anchor="start">右下がり（＋）</text>
+<line x1="300.0" y1="84.0" x2="340.0" y2="84.0" stroke="#2b3a67" stroke-width="3.0"/>
+<text x="348.0" y="89.0" font-size="14" fill="#2a2723" text-anchor="start">右上がり（−）</text>
+<text x="30.0" y="214.0" font-size="15" fill="#a8322a" text-anchor="start">＋　2·3·2 + 1·1·0 + 0·1·1 = 12 + 0 + 0 = 12</text>
+<text x="30.0" y="242.0" font-size="15" fill="#2b3a67" text-anchor="start">−　0·3·0 + 1·1·2 + 2·1·1 = 0 + 2 + 2 = 4</text>
+<text x="30.0" y="274.0" font-size="17" fill="#2a2723" text-anchor="start" font-weight="bold">det A = 12 − 4 = 8</text>
+</svg>
+<figcaption><strong>図 1.6</strong>　3×3 の行列の右に第1列・第2列をもう一度書き写し、右下がりの斜め3本（朱）の積を足し、右上がりの斜め3本（藍）の積を引く。$A=\begin{pmatrix}2&1&0\\1&3&1\\0&1&2\end{pmatrix}$ で $12-4=8$。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解：サラスの公式は 4×4 以上では使えない</span>
+<p>サラスの公式は $3\times3$ 専用である。$4\times4$ で同じ「斜めの積」を8本作っても、正しい値にならない（$4\times4$ の項は $24$ 個ある。3.3）。$4\times4$ 以上は、3節の公式か4節の計算法を使う。</p>
+</div>
+<div class="why"><span class="label">ひとことで</span>3×3 の $\det A$ は平行六面体の符号つき体積で、サラスの公式（斜めの積の6項）かスカラー三重積 $\boldsymbol a_3\cdot(\boldsymbol a_1\times\boldsymbol a_2)$ で計算できる。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>行列式を決める3つの性質（D1〜D3）</h2>
+
+<h3 id="sec-2-1"><span class="no">2.1</span>面積が持っている、当たり前の性質</h3>
+<p>1節の式は 2×2 と 3×3 だけである。$n\times n$ の式をどう作るかが問題になる。ここで発想を変える。「式を探す」のではなく、<strong>面積・体積が必ず持っている性質を先に書き出し、その性質を満たすものはただ1つしかない</strong>ことを示す。そうすれば、式は「必要だから出てくるもの」になる。2×2 の面積 $S(\boldsymbol a_1,\boldsymbol a_2)$ について、図で確かめられる性質を書く。</p>
+<p><strong>(性質1) 1辺を $c$ 倍すれば面積が $c$ 倍</strong>。$\boldsymbol a_1$ を2倍にすると平行四辺形は底辺が2倍になり、高さは同じなので面積は2倍（図2.1）。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 440" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="性質1：1辺をc倍すると面積がc倍" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>性質1：1辺をc倍すると面積がc倍</title>
+<rect x="0" y="0" width="440" height="440" fill="#fffdf7"/>
+<text x="14.0" y="24.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">もとの平行四辺形：辺 a₁, a₂</text>
+<line x1="84.1" y1="201.0" x2="84.1" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="121.1" y1="201.0" x2="121.1" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="158.1" y1="201.0" x2="158.1" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="195.2" y1="201.0" x2="195.2" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="232.2" y1="201.0" x2="232.2" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="269.2" y1="201.0" x2="269.2" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="306.2" y1="201.0" x2="306.2" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="154.4" x2="321.0" y2="154.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="118.5" x2="321.0" y2="118.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="82.6" x2="321.0" y2="82.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="46.8" x2="321.0" y2="46.8" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="47.1,190.2 158.1,154.4 195.2,82.6 84.1,118.5 47.1,190.2" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="47.1" y1="190.2" x2="158.1" y2="154.4" stroke="#a8322a" stroke-width="2.6"/><path d="M151.6 160.6 L158.1 154.4 L149.2 153.1" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="47.1" y1="190.2" x2="84.1" y2="118.5" stroke="#2b3a67" stroke-width="2.6"/><path d="M83.9 127.5 L84.1 118.5 L76.9 123.9" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<text x="164.1" y="174.4" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">a₁</text>
+<text x="78.1" y="112.5" font-size="15" fill="#2b3a67" text-anchor="end" font-weight="bold">a₂</text>
+<text x="334.0" y="86.0" font-size="14" fill="#2a2723" text-anchor="start">底辺 a₁</text>
+<text x="334.0" y="110.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">面積 5</text>
+<text x="14.0" y="236.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">a₁ を 2 倍にする：辺 2a₁, a₂</text>
+<line x1="84.1" y1="413.0" x2="84.1" y2="248.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="121.1" y1="413.0" x2="121.1" y2="248.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="158.1" y1="413.0" x2="158.1" y2="248.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="195.2" y1="413.0" x2="195.2" y2="248.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="232.2" y1="413.0" x2="232.2" y2="248.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="269.2" y1="413.0" x2="269.2" y2="248.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="306.2" y1="413.0" x2="306.2" y2="248.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="366.4" x2="321.0" y2="366.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="330.5" x2="321.0" y2="330.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="294.6" x2="321.0" y2="294.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="258.8" x2="321.0" y2="258.8" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="47.1,402.2 269.2,330.5 306.2,258.8 84.1,330.5 47.1,402.2" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2.0" stroke-linejoin="round"/>
+<polyline points="47.1,402.2 158.1,366.4 195.2,294.6 84.1,330.5 47.1,402.2" fill="none" stroke="#6b645a" stroke-width="1.5" stroke-dasharray="5 4" stroke-linejoin="round"/>
+<line x1="47.1" y1="402.2" x2="269.2" y2="330.5" stroke="#a8322a" stroke-width="2.6"/><path d="M262.7 336.7 L269.2 330.5 L260.3 329.3" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="47.1" y1="402.2" x2="84.1" y2="330.5" stroke="#2b3a67" stroke-width="2.6"/><path d="M83.9 339.5 L84.1 330.5 L76.9 335.9" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<text x="275.2" y="350.5" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">2a₁</text>
+<text x="78.1" y="324.5" font-size="15" fill="#2b3a67" text-anchor="end" font-weight="bold">a₂</text>
+<text x="334.0" y="298.0" font-size="14" fill="#2a2723" text-anchor="start">底辺が2倍</text>
+<text x="334.0" y="322.0" font-size="14" fill="#2a2723" text-anchor="start">高さは同じ</text>
+<text x="334.0" y="346.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">面積 10 = 2×5</text>
+</svg>
+<figcaption><strong>図 2.1</strong>　下の図は $\boldsymbol a_1$ を2倍にした場合。底辺が2倍になり高さは変わらないので、面積は $5$ から $10$ になる。式で書けば $\det(2\boldsymbol a_1,\boldsymbol a_2)=2\det(\boldsymbol a_1,\boldsymbol a_2)$（D1 の定数倍）。</figcaption>
+</figure>
+<p><strong>(性質2) 1辺が2つのベクトルの和なら、面積は2つの面積の和</strong>。底辺 $\boldsymbol a_1$ を固定して、もう1辺を $\boldsymbol u+\boldsymbol v$ にすると、高さは $\boldsymbol u$ の高さと $\boldsymbol v$ の高さの和になる（図2.2）。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 332" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="性質2：和の面積は面積の和" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>性質2：和の面積は面積の和</title>
+<rect x="0" y="0" width="440" height="332" fill="#fffdf7"/>
+<line x1="120.0" y1="262.0" x2="120.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="190.0" y1="262.0" x2="190.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="260.0" y1="262.0" x2="260.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="330.0" y1="262.0" x2="330.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="50.0" y1="192.0" x2="365.0" y2="192.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="50.0" y1="122.0" x2="365.0" y2="122.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="50.0" y1="52.0" x2="365.0" y2="52.0" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="50.0,262.0 260.0,262.0 330.0,192.0 120.0,192.0 50.0,262.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.0" stroke-linejoin="round"/>
+<polyline points="120.0,192.0 330.0,192.0 330.0,52.0 120.0,52.0 120.0,192.0" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2.0" stroke-linejoin="round"/>
+<polyline points="50.0,262.0 260.0,262.0 330.0,52.0 120.0,52.0 50.0,262.0" fill="none" stroke="#2a2723" stroke-width="3.0" stroke-linejoin="round"/>
+<line x1="50.0" y1="262.0" x2="260.0" y2="262.0" stroke="#a8322a" stroke-width="3"/><path d="M251.9 265.9 L260.0 262.0 L251.9 258.1" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="50.0" y1="262.0" x2="120.0" y2="192.0" stroke="#2b3a67" stroke-width="3"/><path d="M117.0 200.5 L120.0 192.0 L111.5 195.0" fill="none" stroke="#2b3a67" stroke-width="3"/>
+<line x1="120.0" y1="192.0" x2="120.0" y2="52.0" stroke="#5f7f4f" stroke-width="3"/><path d="M123.9 60.1 L120.0 52.0 L116.1 60.1" fill="none" stroke="#5f7f4f" stroke-width="3"/>
+<text x="162.0" y="282.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">a₁</text>
+<text x="71.0" y="233.0" font-size="15" fill="#2b3a67" text-anchor="end" font-weight="bold">u</text>
+<text x="108.0" y="127.0" font-size="15" fill="#5f7f4f" text-anchor="end" font-weight="bold">v</text>
+<text x="225.0" y="235.5" font-size="15" fill="#2b3a67" text-anchor="middle" font-weight="bold">面積 3</text>
+<text x="225.0" y="127.0" font-size="15" fill="#b07a3e" text-anchor="middle" font-weight="bold">面積 6</text>
+<line x1="354.5" y1="262.0" x2="354.5" y2="52.0" stroke="#6b645a" stroke-width="1.3"/>
+<line x1="349.5" y1="262.0" x2="359.5" y2="262.0" stroke="#6b645a" stroke-width="1.3"/>
+<line x1="349.5" y1="192.0" x2="359.5" y2="192.0" stroke="#6b645a" stroke-width="1.3"/>
+<line x1="349.5" y1="52.0" x2="359.5" y2="52.0" stroke="#6b645a" stroke-width="1.3"/>
+<text x="362.5" y="232.0" font-size="14" fill="#2b3a67" text-anchor="start">1</text>
+<text x="362.5" y="127.0" font-size="14" fill="#b07a3e" text-anchor="start">2</text>
+<text x="362.5" y="66.0" font-size="13" fill="#6b645a" text-anchor="start">高さ</text>
+<text x="28.0" y="318.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">(a₁, u+v) の面積 = 3 × (1+2) = 9 = 3 + 6</text>
+</svg>
+<figcaption><strong>図 2.2</strong>　底辺 $\boldsymbol a_1=(3,0)$ を固定し、もう1辺を $\boldsymbol u+\boldsymbol v=(1,1)+(0,2)$ とすると、平行四辺形は $(\boldsymbol a_1,\boldsymbol u)$（藍、面積3）と $\boldsymbol u$ だけ平行移動した $(\boldsymbol a_1,\boldsymbol v)$（橙、面積6）に切れる。高さが $1+2$ になるので面積も $3+6$。</figcaption>
+</figure>
+<p>性質1と2をあわせて、<strong>多重線形性</strong>（各辺について線形）という。</p>
+<p><strong>(性質3) ある辺に、別の辺の定数倍を足しても面積は変わらない</strong>。底辺 $\boldsymbol a_1$ を固定して $\boldsymbol a_2$ を $\boldsymbol a_2+t\boldsymbol a_1$ にすると、頂点は底辺と平行に滑るだけで、高さは変わらない（図2.3）。</p>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 230" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="性質3：辺に別の辺の倍を足しても面積は変わらない" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>性質3：辺に別の辺の倍を足しても面積は変わらない</title>
+<rect x="0" y="0" width="440" height="230" fill="#fffdf7"/>
+<line x1="90.0" y1="174.0" x2="90.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="145.0" y1="174.0" x2="145.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="200.0" y1="174.0" x2="200.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="255.0" y1="174.0" x2="255.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="310.0" y1="174.0" x2="310.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="365.0" y1="174.0" x2="365.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="420.0" y1="174.0" x2="420.0" y2="24.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="24.0" y1="108.5" x2="420.0" y2="108.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="24.0" y1="54.0" x2="420.0" y2="54.0" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="35.0,163.1 200.0,163.1 420.0,54.0 255.0,54.0 35.0,163.1" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2.0" stroke-dasharray="6 4" stroke-linejoin="round"/>
+<polyline points="35.0,163.1 200.0,163.1 255.0,54.0 90.0,54.0 35.0,163.1" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="35.0" y1="163.1" x2="200.0" y2="163.1" stroke="#a8322a" stroke-width="3"/><path d="M191.9 167.0 L200.0 163.1 L191.9 159.2" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="35.0" y1="163.1" x2="90.0" y2="54.0" stroke="#2b3a67" stroke-width="3"/><path d="M89.8 63.0 L90.0 54.0 L82.9 59.5" fill="none" stroke="#2b3a67" stroke-width="3"/>
+<line x1="35.0" y1="163.1" x2="255.0" y2="54.0" stroke="#b07a3e" stroke-width="2.2"/><path d="M249.5 61.1 L255.0 54.0 L246.0 54.1" fill="none" stroke="#b07a3e" stroke-width="2.2"/>
+<text x="117.5" y="183.1" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">a₁ （底辺 3）</text>
+<text x="82.0" y="46.0" font-size="15" fill="#2b3a67" text-anchor="end" font-weight="bold">a₂</text>
+<text x="265.0" y="46.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">a₂ + a₁</text>
+<line x1="321.0" y1="163.1" x2="321.0" y2="54.0" stroke="#5f7f4f" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="327.0" y="119.0" font-size="14" fill="#5f7f4f" text-anchor="start">高さ 2</text>
+<text x="24.0" y="214.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">どちらも 底辺 3 × 高さ 2 = 6　（面積は変わらない）</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　$\boldsymbol a_2=(1,2)$ を $\boldsymbol a_2+\boldsymbol a_1=(4,2)$ に変えると、平行四辺形は底辺に沿って滑るだけで形が傾く（藍→橙の破線）。底辺3と高さ2は同じなので面積6は変わらない。D1・D2 から導ける E2 の図形的な意味。</figcaption>
+</figure>
+<p><strong>(性質4) 同じ辺を2回使えば、面積は0</strong>。$\boldsymbol a_1=\boldsymbol a_2$ なら平行四辺形はつぶれて線分になる（図2.4）。</p>
+<figure class="fig" id="fig-2-4">
+<svg viewBox="0 0 440 480" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="性質4：同じ向きの辺では面積が0になる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>性質4：同じ向きの辺では面積が0になる</title>
+<rect x="0" y="0" width="440" height="480" fill="#fffdf7"/>
+<text x="14.0" y="26.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">a₂ = (1, 2)　　　面積 5</text>
+<line x1="74.1" y1="155.0" x2="74.1" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="108.1" y1="155.0" x2="108.1" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="142.1" y1="155.0" x2="142.1" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="176.0" y1="155.0" x2="176.0" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="210.0" y1="155.0" x2="210.0" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="243.9" y1="155.0" x2="243.9" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="277.9" y1="155.0" x2="277.9" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="311.9" y1="155.0" x2="311.9" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="345.8" y1="155.0" x2="345.8" y2="40.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="114.4" x2="356.0" y2="114.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="80.6" x2="356.0" y2="80.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="46.8" x2="356.0" y2="46.8" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="40.2,148.2 142.1,114.4 176.0,46.8 74.1,80.6 40.2,148.2" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="40.2" y1="148.2" x2="142.1" y2="114.4" stroke="#a8322a" stroke-width="3"/><path d="M135.6 120.7 L142.1 114.4 L133.1 113.3" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="40.2" y1="148.2" x2="74.1" y2="80.6" stroke="#2b3a67" stroke-width="2.4"/><path d="M74.0 89.6 L74.1 80.6 L67.0 86.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<text x="14.0" y="176.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">a₂ = (3.5, 2)　　　面積 2.5</text>
+<line x1="74.1" y1="305.0" x2="74.1" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="108.1" y1="305.0" x2="108.1" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="142.1" y1="305.0" x2="142.1" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="176.0" y1="305.0" x2="176.0" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="210.0" y1="305.0" x2="210.0" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="243.9" y1="305.0" x2="243.9" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="277.9" y1="305.0" x2="277.9" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="311.9" y1="305.0" x2="311.9" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="345.8" y1="305.0" x2="345.8" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="264.4" x2="356.0" y2="264.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="230.6" x2="356.0" y2="230.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="196.8" x2="356.0" y2="196.8" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="40.2,298.2 142.1,264.4 260.9,196.8 159.0,230.6 40.2,298.2" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="40.2" y1="298.2" x2="142.1" y2="264.4" stroke="#a8322a" stroke-width="3"/><path d="M135.6 270.7 L142.1 264.4 L133.1 263.3" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="40.2" y1="298.2" x2="159.0" y2="230.6" stroke="#2b3a67" stroke-width="2.4"/><path d="M153.9 238.0 L159.0 230.6 L150.1 231.2" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<text x="14.0" y="326.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">a₂ = (6, 2) = 2a₁　　　面積 0</text>
+<line x1="74.1" y1="455.0" x2="74.1" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="108.1" y1="455.0" x2="108.1" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="142.1" y1="455.0" x2="142.1" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="176.0" y1="455.0" x2="176.0" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="210.0" y1="455.0" x2="210.0" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="243.9" y1="455.0" x2="243.9" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="277.9" y1="455.0" x2="277.9" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="311.9" y1="455.0" x2="311.9" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="345.8" y1="455.0" x2="345.8" y2="340.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="414.4" x2="356.0" y2="414.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="380.6" x2="356.0" y2="380.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="346.8" x2="356.0" y2="346.8" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="40.2" y1="448.2" x2="142.1" y2="414.4" stroke="#a8322a" stroke-width="3"/><path d="M135.6 420.7 L142.1 414.4 L133.1 413.3" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="40.2" y1="448.2" x2="243.9" y2="380.6" stroke="#2b3a67" stroke-width="1.8"/><path d="M237.5 386.9 L243.9 380.6 L235.0 379.4" fill="none" stroke="#2b3a67" stroke-width="1.8"/>
+<line x1="40.2" y1="448.2" x2="345.8" y2="346.8" stroke="#a8322a" stroke-width="5.5"/>
+<text x="322.0" y="378.9" font-size="14" fill="#a8322a" text-anchor="end">つぶれた線分</text>
+<line x1="40.2" y1="448.2" x2="142.1" y2="414.4" stroke="#a8322a" stroke-width="3"/><path d="M135.6 420.7 L142.1 414.4 L133.1 413.3" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="40.2" y1="448.2" x2="243.9" y2="380.6" stroke="#2b3a67" stroke-width="1.8"/><path d="M237.5 386.9 L243.9 380.6 L235.0 379.4" fill="none" stroke="#2b3a67" stroke-width="1.8"/>
+</svg>
+<figcaption><strong>図 2.4</strong>　$\boldsymbol a_1=(3,1)$ を固定し、$\boldsymbol a_2$ を $\boldsymbol a_1$ の2倍 $(6,2)$ に近づけていくと、面積は $5\to2.5\to0$ と減り、最後に平行四辺形は線分につぶれる。同じ向き（一次従属）の2本の辺では面積0、これが D2・E3 にあたる。</figcaption>
+</figure>
+<p>実は性質3は、性質2・性質4から導ける（2.4）ので、独立な要請ではない。最後に、<strong>(性質5) 単位正方形（辺が $\boldsymbol e_1,\boldsymbol e_2$）の面積は1</strong>。</p>
+
+<div class="thm" id="thm-d123"><span class="label">定義・定理 D1〜D3（行列式の特徴づけ）</span>
+<p>正方行列 $A=(\boldsymbol a_1\ \boldsymbol a_2\ \cdots\ \boldsymbol a_n)$（列が $\boldsymbol a_j$）の実数値関数 $f(\boldsymbol a_1,\dots,\boldsymbol a_n)$ が次の3つを満たすとする。</p>
+<ol>
+<li>(D1) <strong>各列について線形</strong>：任意の列番号 $j$ で、他の列を固定したとき、$f(\dots,\ c\boldsymbol a_j,\dots)=c\,f(\dots,\boldsymbol a_j,\dots)$、および $f(\dots,\ \boldsymbol u+\boldsymbol v,\dots)=f(\dots,\boldsymbol u,\dots)+f(\dots,\boldsymbol v,\dots)$（性質1・2）。</li>
+<li>(D2) <strong>同じ列が2つあれば0</strong>：$j\neq k$ で $\boldsymbol a_j=\boldsymbol a_k$ なら $f=0$（性質4）。</li>
+<li>(D3) <strong>単位行列で1</strong>：$f(\boldsymbol e_1,\dots,\boldsymbol e_n)=1$（性質5）。</li>
+</ol>
+<p>このとき $f$ は<strong>ただ1つに決まる</strong>。それを行列式 $\det$ と定義する。（存在と一意性の証明は3節で行う。）</p>
+</div>
+<p>(D1) の「(…, $\boldsymbol u+\boldsymbol v$, …)」は、$j$ 番目だけが $\boldsymbol u+\boldsymbol v$ で、ほかの列は同じ、という意味である。「…」は<a href="01_第1回_数式を文として読む.html#sym-dots">第1回の省略記号</a>。</p>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>2×2 では、D1〜D3 だけから $ad-bc$ が出る</h3>
+<p>D1〜D3 だけを使って、$\det\begin{pmatrix}a&b\\c&d\end{pmatrix}$ を計算する。列は $\boldsymbol a_1=a\boldsymbol e_1+c\boldsymbol e_2$、$\boldsymbol a_2=b\boldsymbol e_1+d\boldsymbol e_2$（標準基底の一次結合。<a href="15_第15回_ベクトル空間と基底.html#sym-standard-basis">第15回</a>）。</p>
+<p>① $\det(a\boldsymbol e_1+c\boldsymbol e_2,\ \boldsymbol a_2)=a\det(\boldsymbol e_1,\boldsymbol a_2)+c\det(\boldsymbol e_2,\boldsymbol a_2)$。　<span class="meta">第1列について D1（和と定数倍）</span></p>
+<p>② $\det(\boldsymbol e_1,\boldsymbol a_2)=b\det(\boldsymbol e_1,\boldsymbol e_1)+d\det(\boldsymbol e_1,\boldsymbol e_2)$。　<span class="meta">第2列について D1</span></p>
+<p>③ $\det(\boldsymbol e_2,\boldsymbol a_2)=b\det(\boldsymbol e_2,\boldsymbol e_1)+d\det(\boldsymbol e_2,\boldsymbol e_2)$。　<span class="meta">同じ</span></p>
+<p>④ $\det(\boldsymbol e_1,\boldsymbol e_1)=0$、$\det(\boldsymbol e_2,\boldsymbol e_2)=0$。　<span class="meta">D2（同じ列）</span></p>
+<p>⑤ $\det(\boldsymbol e_1,\boldsymbol e_2)=1$（D3）。$\det(\boldsymbol e_2,\boldsymbol e_1)=-1$。　<span class="meta">後者の理由は 2.3 の (E1)。列を入れ替えると符号が変わる</span></p>
+<p>⑥ まとめると $\det=a\,(b\cdot0+d\cdot1)+c\,(b\cdot(-1)+d\cdot0)=ad-bc$。</p>
+<p>面積の図形的な切り貼り（1.2）とは別の道で、同じ式 $ad-bc$ にたどり着いた。符号 $-bc$ の「$-$」は、$\det(\boldsymbol e_2,\boldsymbol e_1)=-1$ から来ている。</p>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>D1〜D3 から従う3つの事実</h3>
+<div class="thm"><span class="label">定理2.1（D1〜D3 の帰結）</span>
+<p>D1〜D3 を満たす $f$（行列式）について、次が成り立つ。</p>
+<ol>
+<li>(E1) <strong>2つの列を入れ替えると符号が変わる</strong>：$f(\dots,\boldsymbol a_j,\dots,\boldsymbol a_k,\dots)=-f(\dots,\boldsymbol a_k,\dots,\boldsymbol a_j,\dots)$。</li>
+<li>(E2) <strong>ある列に別の列の定数倍を足しても値は変わらない</strong>：$f(\dots,\boldsymbol a_j+t\boldsymbol a_k,\dots,\boldsymbol a_k,\dots)=f(\dots,\boldsymbol a_j,\dots,\boldsymbol a_k,\dots)$（$j\neq k$）。</li>
+<li>(E3) <strong>列が一次従属なら 0</strong>：ある列が他の列の一次結合ならば $f=0$。</li>
+</ol>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>(E1)：入れ替える2つの列を $\boldsymbol a,\boldsymbol b$ と書き、他の列は固定して省略する。</p>
+<p>① $f(\boldsymbol a+\boldsymbol b,\ \boldsymbol a+\boldsymbol b)=0$。　<span class="meta">D2：同じ列が2つ</span></p>
+<p>② 左辺を第1の位置の和で分ける：$f(\boldsymbol a,\ \boldsymbol a+\boldsymbol b)+f(\boldsymbol b,\ \boldsymbol a+\boldsymbol b)=0$。　<span class="meta">D1（和）</span></p>
+<p>③ さらに第2の位置の和で分ける：$f(\boldsymbol a,\boldsymbol a)+f(\boldsymbol a,\boldsymbol b)+f(\boldsymbol b,\boldsymbol a)+f(\boldsymbol b,\boldsymbol b)=0$。　<span class="meta">D1（和）</span></p>
+<p>④ $f(\boldsymbol a,\boldsymbol a)=0$、$f(\boldsymbol b,\boldsymbol b)=0$ なので $f(\boldsymbol a,\boldsymbol b)+f(\boldsymbol b,\boldsymbol a)=0$。　<span class="meta">D2</span></p>
+<p>⑤ よって $f(\boldsymbol a,\boldsymbol b)=-f(\boldsymbol b,\boldsymbol a)$。□</p>
+<p>(E2)：</p>
+<p>① $f(\dots,\boldsymbol a_j+t\boldsymbol a_k,\dots,\boldsymbol a_k,\dots)=f(\dots,\boldsymbol a_j,\dots,\boldsymbol a_k,\dots)+t\,f(\dots,\boldsymbol a_k,\dots,\boldsymbol a_k,\dots)$。　<span class="meta">第 $j$ 列について D1（和、定数倍）</span></p>
+<p>② 右辺の第2項は、第 $j$ 列と第 $k$ 列がどちらも $\boldsymbol a_k$ なので $0$（D2）。□</p>
+<p>(E3)：$\boldsymbol a_k=\sum_{l\neq k}c_l\boldsymbol a_l$ とする。</p>
+<p>① $f(\dots,\boldsymbol a_k,\dots)=\sum_{l\neq k}c_l\,f(\dots,\boldsymbol a_l,\dots)$。　<span class="meta">第 $k$ 列について D1。右辺の $f$ では第 $k$ 列の位置に $\boldsymbol a_l$ が入る</span></p>
+<p>② 右辺の各 $f$ では、第 $k$ 列の位置と第 $l$ 列の位置がどちらも $\boldsymbol a_l$ なので $0$（D2）。よって $f=0$。□</p>
+</div>
+<p>E2 は「せん断（滑らせる変形）は面積を変えない」（性質3、図2.3）、E3 は「辺が1本余計なら平行四辺形がつぶれる」（性質4の拡張）の代数的な言い直しである。E1 が 1.3 の向きの反転にあたる。</p>
+<p>第17回の行基本変形（<a href="17_第17回_連立一次方程式とランク.html#sym-row-ops">第17回</a>）と見比べておく。(E1)↔入れ替え $R_i\leftrightarrow R_j$、(E2)↔倍を足す $R_i\leftarrow R_i+cR_j$、D1 の定数倍↔$R_i\leftarrow cR_i$。ただし E1〜E3 は<strong>列</strong>についての言明である。<strong>行</strong>についても同じことが言えるのは、3.5 の $\det A^{\mathsf T}=\det A$ による。</p>
+<div class="why"><span class="label">ひとことで</span>行列式は「各列について線形（D1）、同じ列が2つなら0（D2）、単位行列で1（D3）」という3性質で特徴づけられ、そこから「列の入れ替えで符号反転」「列の倍を足しても不変」「列が従属なら0」が従う。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>一般の $n$：置換と符号</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/18_a3_loyd.jpg" alt="畑の畝の上にひざまずいた男が、16の枠をもつ盤を見つめ、奥で馬が鋤を引いているペン画" loading="lazy"></div>
+<p class="cap">14と15だけを入れ替えた盤は、どう動かしても元の並びに戻せない。</p>
+<p class="cr">サム・ロイド『14-15パズルの国』（1914年の本の挿絵。Ed Pegg Jr のスキャン）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Sam_Loyd_-_The_14-15_Puzzle_in_Puzzleland.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/18_b3_kumihimo.jpg" alt="赤と黒の糸を交差させて編んだ、平たい組紐が2本、レースの上に置かれている" loading="lazy"></div>
+<p class="cap">糸を一本ずつ交差させて、並べ替えながら編んでいく。</p>
+<p class="cr">Ccassan（2008年、組紐）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Kumihimo_5_b.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-3-1"><span class="no">3.1</span>D1 を $n$ 回使うと何が現れるか：置換</h3>
+<p>2.2 の計算を、$n\times n$ に広げる。列 $\boldsymbol a_j=\sum_{i=1}^{n}A_{ij}\boldsymbol e_i$（第 $j$ 列の第 $i$ 成分が $A_{ij}$）を $f$ に入れ、D1 を第1列から第 $n$ 列まで順に使うと、
+$$ f(\boldsymbol a_1,\dots,\boldsymbol a_n)=\sum_{i_1=1}^{n}\sum_{i_2=1}^{n}\cdots\sum_{i_n=1}^{n}A_{i_1 1}A_{i_2 2}\cdots A_{i_n n}\ f(\boldsymbol e_{i_1},\boldsymbol e_{i_2},\dots,\boldsymbol e_{i_n}) $$
+となる（$n^n$ 個の項。2×2 では $2^2=4$ 個の項で、2.2 の ①〜③ にあたる）。D2 により、$i_1,\dots,i_n$ のうち<strong>同じ値が2つあれば、その項は0</strong>になる。残るのは、$i_1,\dots,i_n$ が $1,\dots,n$ の<strong>並べ替え</strong>になっている項である。この並べ替えに名前をつける。</p>
+
+<div class="def" id="sym-permutation"><span class="label">記号：置換 $\sigma$、$S_n$</span>
+<p><strong>①読み方</strong>：$\sigma$ は「シグマ」（小文字。和の記号 $\sum$ とは別の文字）。$S_n$ は「エス・エヌ」、「$n$ 次の対称群」と呼ぶ本もある。</p>
+<p><strong>②日本語での意味</strong>：<strong>$1,2,\dots,n$ を並べ替える規則</strong>。「$1$ 番目の場所には $\sigma(1)$ を置く、$2$ 番目には $\sigma(2)$ を置く、…」という対応。</p>
+<p><strong>③省略していない書き方</strong>：$\sigma\colon\{1,\dots,n\}\to\{1,\dots,n\}$ が<strong>全単射</strong>（<a href="03_第3回_関数と写像.html#sym-bijection">第3回</a>：1対1かつ上への写像）であるもの。$\sigma$ を表すとき、値を順に並べて $(\sigma(1),\sigma(2),\dots,\sigma(n))$ と書く。$S_n$ は<strong>そのような $\sigma$ の全体の集合</strong>：$S_n:=\{\sigma\mid\sigma\text{ は }\{1,\dots,n\}\text{ の置換}\}$。要素の個数は $n!$ 個（<a href="04_第4回_総和・総乗と添字.html#sym-factorial">第4回の階乗</a>：1番目の置き場所の候補が $n$ 通り、2番目が $n-1$ 通り、…）。</p>
+<p><strong>④どこで出会うか</strong>：行列式の定義（3.3）、対称群（量子力学で同種粒子の入れ替え）、並べ替えの数え上げ。</p>
+</div>
+<p><strong>最小の具体例</strong>：$n=3$ のとき、$S_3$ の要素は $3!=6$ 個で、$(1,2,3)$、$(1,3,2)$、$(2,1,3)$、$(2,3,1)$、$(3,1,2)$、$(3,2,1)$。たとえば $\sigma=(2,3,1)$ は $\sigma(1)=2$、$\sigma(2)=3$、$\sigma(3)=1$ を表す。</p>
+<p>D1 の展開で残る項は、置換 $\sigma$ ごとに $i_1=\sigma(1),\dots,i_n=\sigma(n)$ とした
+$$ A_{\sigma(1)1}\,A_{\sigma(2)2}\cdots A_{\sigma(n)n}\ f(\boldsymbol e_{\sigma(1)},\dots,\boldsymbol e_{\sigma(n)})=\prod_{j=1}^{n}A_{\sigma(j)j}\ \cdot f(\boldsymbol e_{\sigma(1)},\dots,\boldsymbol e_{\sigma(n)}) $$
+の形の $n!$ 個である（$\prod$ は<a href="04_第4回_総和・総乗と添字.html#sym-prod">第4回の総乗</a>）。この積は「<strong>各列から1個ずつ、どの行も重複しないように成分を選んで掛ける</strong>」ことを表している。図3.1は $n=3$ の6通りで、選ばれた成分に丸をつけたものである。</p>
+<figure class="fig" id="fig-3-1">
+<svg viewBox="0 0 440 460" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="S₃ の6個の置換と、ライプニッツの公式の6項" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>S₃ の6個の置換と、ライプニッツの公式の6項</title>
+<rect x="0" y="0" width="440" height="460" fill="#fffdf7"/>
+<text x="12.0" y="22.0" font-size="14" fill="#6b645a" text-anchor="start">選ぶ成分（○）</text>
+<text x="128.0" y="22.0" font-size="14" fill="#6b645a" text-anchor="middle">σ</text>
+<text x="188.0" y="22.0" font-size="14" fill="#6b645a" text-anchor="middle">転倒数</text>
+<text x="236.0" y="22.0" font-size="14" fill="#6b645a" text-anchor="middle">符号</text>
+<text x="272.0" y="22.0" font-size="14" fill="#6b645a" text-anchor="start">項（符号つき）</text>
+<rect x="14" y="36" width="66" height="66" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="36.0" y1="36.0" x2="36.0" y2="102.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="58.0" x2="80.0" y2="58.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="58.0" y1="36.0" x2="58.0" y2="102.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="80.0" x2="80.0" y2="80.0" stroke="#ddd6c8" stroke-width="1"/>
+<circle cx="25.0" cy="47.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="47.0" cy="69.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="69.0" cy="91.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="128.0" y="74.0" font-size="15" fill="#2a2723" text-anchor="middle">(1,2,3)</text>
+<text x="188.0" y="74.0" font-size="16" fill="#2a2723" text-anchor="middle">0</text>
+<text x="236.0" y="74.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">+1</text>
+<text x="272.0" y="74.0" font-size="16" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>+</tspan><tspan font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">11</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">22</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">33</tspan></text>
+<rect x="14" y="106" width="66" height="66" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="36.0" y1="106.0" x2="36.0" y2="172.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="128.0" x2="80.0" y2="128.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="58.0" y1="106.0" x2="58.0" y2="172.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="150.0" x2="80.0" y2="150.0" stroke="#ddd6c8" stroke-width="1"/>
+<circle cx="25.0" cy="117.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="47.0" cy="161.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="69.0" cy="139.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="128.0" y="144.0" font-size="15" fill="#2a2723" text-anchor="middle">(1,3,2)</text>
+<text x="188.0" y="144.0" font-size="16" fill="#2a2723" text-anchor="middle">1</text>
+<text x="236.0" y="144.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1</text>
+<text x="272.0" y="144.0" font-size="16" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−</tspan><tspan font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">11</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">32</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">23</tspan></text>
+<rect x="14" y="176" width="66" height="66" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="36.0" y1="176.0" x2="36.0" y2="242.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="198.0" x2="80.0" y2="198.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="58.0" y1="176.0" x2="58.0" y2="242.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="220.0" x2="80.0" y2="220.0" stroke="#ddd6c8" stroke-width="1"/>
+<circle cx="25.0" cy="209.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="47.0" cy="187.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="69.0" cy="231.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="128.0" y="214.0" font-size="15" fill="#2a2723" text-anchor="middle">(2,1,3)</text>
+<text x="188.0" y="214.0" font-size="16" fill="#2a2723" text-anchor="middle">1</text>
+<text x="236.0" y="214.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1</text>
+<text x="272.0" y="214.0" font-size="16" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−</tspan><tspan font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">21</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">12</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">33</tspan></text>
+<rect x="14" y="246" width="66" height="66" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="36.0" y1="246.0" x2="36.0" y2="312.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="268.0" x2="80.0" y2="268.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="58.0" y1="246.0" x2="58.0" y2="312.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="290.0" x2="80.0" y2="290.0" stroke="#ddd6c8" stroke-width="1"/>
+<circle cx="25.0" cy="279.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="47.0" cy="301.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="69.0" cy="257.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="128.0" y="284.0" font-size="15" fill="#2a2723" text-anchor="middle">(2,3,1)</text>
+<text x="188.0" y="284.0" font-size="16" fill="#2a2723" text-anchor="middle">2</text>
+<text x="236.0" y="284.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">+1</text>
+<text x="272.0" y="284.0" font-size="16" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>+</tspan><tspan font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">21</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">32</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">13</tspan></text>
+<rect x="14" y="316" width="66" height="66" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="36.0" y1="316.0" x2="36.0" y2="382.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="338.0" x2="80.0" y2="338.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="58.0" y1="316.0" x2="58.0" y2="382.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="360.0" x2="80.0" y2="360.0" stroke="#ddd6c8" stroke-width="1"/>
+<circle cx="25.0" cy="371.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="47.0" cy="327.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="69.0" cy="349.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="128.0" y="354.0" font-size="15" fill="#2a2723" text-anchor="middle">(3,1,2)</text>
+<text x="188.0" y="354.0" font-size="16" fill="#2a2723" text-anchor="middle">2</text>
+<text x="236.0" y="354.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">+1</text>
+<text x="272.0" y="354.0" font-size="16" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>+</tspan><tspan font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">31</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">12</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">23</tspan></text>
+<rect x="14" y="386" width="66" height="66" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="36.0" y1="386.0" x2="36.0" y2="452.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="408.0" x2="80.0" y2="408.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="58.0" y1="386.0" x2="58.0" y2="452.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="14.0" y1="430.0" x2="80.0" y2="430.0" stroke="#ddd6c8" stroke-width="1"/>
+<circle cx="25.0" cy="441.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="47.0" cy="419.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="69.0" cy="397.0" r="7.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="128.0" y="424.0" font-size="15" fill="#2a2723" text-anchor="middle">(3,2,1)</text>
+<text x="188.0" y="424.0" font-size="16" fill="#2a2723" text-anchor="middle">3</text>
+<text x="236.0" y="424.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1</text>
+<text x="272.0" y="424.0" font-size="16" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−</tspan><tspan font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">31</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">22</tspan><tspan dy="-4.5" font-style="italic">A</tspan><tspan dy="4.5" font-size="11.2">13</tspan></text>
+</svg>
+<figcaption><strong>図 3.1</strong>　3×3 では、各列から行の重複なく1個ずつ成分を選ぶ方法が $3!=6$ 通りある（○の位置）。列 $j$ で選ぶ行が $\sigma(j)$。転倒数の偶奇で項の符号が決まる。この6項の和が $\det A$。</figcaption>
+</figure>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>並べ替えの符号</h3>
+<p>残る問題は $f(\boldsymbol e_{\sigma(1)},\dots,\boldsymbol e_{\sigma(n)})$ の値である。標準基底を並べ替えただけなので、D3 の $f(\boldsymbol e_1,\dots,\boldsymbol e_n)=1$ から、E1（列を入れ替えるたびに符号が変わる）で $+1$ か $-1$ になる。その符号を、並べ替えの形から読み出す方法を作る。</p>
+<div class="def" id="sym-perm-sign"><span class="label">記号：転倒数と置換の符号 $\operatorname{sgn}\sigma$</span>
+<p><strong>①読み方</strong>：$\operatorname{sgn}\sigma$ は「サイン・シグマ」または「サイグナム・シグマ」（signature または sign の略）。</p>
+<p><strong>②日本語での意味</strong>：<strong>並べ替えの結果、大小の順が逆転している組の個数（転倒数）が偶数なら $+1$、奇数なら $-1$</strong>。</p>
+<p><strong>③省略していない書き方</strong>：$\sigma\in S_n$ に対し、<strong>転倒数</strong>を $\operatorname{inv}(\sigma):=\#\{(j,k)\mid 1\le j\lt k\le n,\ \sigma(j)\gt\sigma(k)\}$（「$j$ 番目が $k$ 番目より前にあるのに、値は $j$ 番目のほうが大きい」組の数。$\#$ は集合の要素の個数）とし、
+$$ \operatorname{sgn}\sigma:=(-1)^{\operatorname{inv}(\sigma)} $$
+と定める。</p>
+<p><strong>④どこで出会うか</strong>：ライプニッツの公式（3.3）、量子力学の反対称化（フェルミ粒子）、外積の成分 $\varepsilon_{ijk}$（第27回）。</p>
+</div>
+<div class="warn"><span class="label">流派の違い・紛らわしさ：$\operatorname{sgn}$ が2つある</span>
+<p>第3回の $\operatorname{sgn}x$ は<strong>実数</strong> $x$ の符号（正なら $+1$、負なら $-1$、0なら0。<a href="03_第3回_関数と写像.html#sym-sgn">第3回</a>）。この回の $\operatorname{sgn}\sigma$ は<strong>置換</strong> $\sigma$ の符号で、常に $\pm1$。同じ文字だが、引数が実数か置換かで区別する。</p>
+</div>
+<p><strong>最小の具体例</strong>：$\sigma=(2,3,1)$ の転倒数を数える。組 $(j,k)$ は $(1,2),(1,3),(2,3)$ の3つ。</p>
+<p>① $(1,2)$：$\sigma(1)=2$、$\sigma(2)=3$。$2\gt3$ か？　いいえ。　<span class="meta">順が正しい</span></p>
+<p>② $(1,3)$：$\sigma(1)=2$、$\sigma(3)=1$。$2\gt1$ か？　はい。　<span class="meta">逆転</span></p>
+<p>③ $(2,3)$：$\sigma(2)=3$、$\sigma(3)=1$。$3\gt1$ か？　はい。　<span class="meta">逆転</span></p>
+<p>④ $\operatorname{inv}(\sigma)=2$、$\operatorname{sgn}\sigma=(-1)^2=+1$。</p>
+<p>図3.2は、$\sigma=(3,1,4,2)$（$n=4$）の転倒数を、線の<strong>交差の数</strong>として数えたものである。上の列 $1,2,3,4$ から下の列へ線を引くと、交差する線の組の数が転倒数になる。</p>
+<figure class="fig" id="fig-3-2">
+<svg viewBox="0 0 440 366" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="転倒数は線の交差の数" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>転倒数は線の交差の数</title>
+<rect x="0" y="0" width="440" height="366" fill="#fffdf7"/>
+<text x="14.0" y="30.0" font-size="14" fill="#6b645a" text-anchor="start">位置</text>
+<text x="14.0" y="226.0" font-size="14" fill="#6b645a" text-anchor="start">値</text>
+<line x1="70.0" y1="52.0" x2="270.0" y2="190.0" stroke="#a8322a" stroke-width="3.0"/>
+<line x1="170.0" y1="52.0" x2="70.0" y2="190.0" stroke="#2b3a67" stroke-width="3.0"/>
+<line x1="270.0" y1="52.0" x2="370.0" y2="190.0" stroke="#5f7f4f" stroke-width="3.0"/>
+<line x1="370.0" y1="52.0" x2="170.0" y2="190.0" stroke="#b07a3e" stroke-width="3.0"/>
+<circle cx="70.0" cy="52.0" r="14" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="70.0" y="57.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<circle cx="70.0" cy="190.0" r="14" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="70.0" y="195.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<circle cx="170.0" cy="52.0" r="14" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="170.0" y="57.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<circle cx="170.0" cy="190.0" r="14" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="170.0" y="195.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<circle cx="270.0" cy="52.0" r="14" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="270.0" y="57.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">3</text>
+<circle cx="270.0" cy="190.0" r="14" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="270.0" y="195.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">3</text>
+<circle cx="370.0" cy="52.0" r="14" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="370.0" y="57.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">4</text>
+<circle cx="370.0" cy="190.0" r="14" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="370.0" y="195.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">4</text>
+<circle cx="136.7" cy="98.0" r="6.5" fill="#fff" stroke="#a8322a" stroke-width="2.6"/>
+<circle cx="220.0" cy="155.5" r="6.5" fill="#fff" stroke="#a8322a" stroke-width="2.6"/>
+<circle cx="303.3" cy="98.0" r="6.5" fill="#fff" stroke="#a8322a" stroke-width="2.6"/>
+<text x="20.0" y="262.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">組 (1,2)：3 &gt; 1　逆転 ○</text>
+<text x="20.0" y="286.0" font-size="14" fill="#6b645a" text-anchor="start">組 (1,3)：3 &lt; 4　順</text>
+<text x="20.0" y="310.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">組 (1,4)：3 &gt; 2　逆転 ○</text>
+<text x="235.0" y="262.0" font-size="14" fill="#6b645a" text-anchor="start">組 (2,3)：1 &lt; 4　順</text>
+<text x="235.0" y="286.0" font-size="14" fill="#6b645a" text-anchor="start">組 (2,4)：1 &lt; 2　順</text>
+<text x="235.0" y="310.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">組 (3,4)：4 &gt; 2　逆転 ○</text>
+<text x="20.0" y="346.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">転倒数 3 → sgn σ = (−1)³ = −1</text>
+</svg>
+<figcaption><strong>図 3.2</strong>　$\sigma=(3,1,4,2)$ の「位置 $j$」から「値 $\sigma(j)$」へ線を引く。線どうしが交差する組（赤丸）が転倒の組 $(j,k)$（$j\lt k$ かつ $\sigma(j)\gt\sigma(k)$）で、全部で3個。よって $\operatorname{sgn}\sigma=(-1)^3=-1$。</figcaption>
+</figure>
+
+<div class="thm"><span class="label">補題3.1（2つの値を入れ替えると符号が変わる）</span>
+<p>$\sigma\in S_n$ の並び $(\sigma(1),\dots,\sigma(n))$ のうち、<strong>2つの位置の値を入れ替えて</strong>できる置換を $\sigma'$ とすると、$\operatorname{sgn}\sigma'=-\operatorname{sgn}\sigma$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>① まず<strong>隣り合う位置</strong> $j,j+1$ の入れ替えを考える。転倒数を数える組 $(l,m)$ のうち、位置の組 $\{j,j+1\}$ は大小が反転するので、転倒数が1つ増えるか1つ減る。　<span class="meta">その組だけが変わる理由は次の②</span></p>
+<p>② $\{j,j+1\}$ 以外の位置 $l$ と、$j$・$j+1$ の組については、入れ替えても「$l$ より左にある2つの値」「右にある2つの値」の集合は変わらない。したがって、$l$ と $j$、$l$ と $j+1$ の2つの組の転倒の個数の合計は変わらない。　<span class="meta">例：$l\lt j$ なら、$l$ より右に $j,j+1$ の2つがあり、そのどちらが $\sigma(l)$ より小さいかの数が変わらない</span></p>
+<p>③ よって隣り合う入れ替えで転倒数は<strong>ちょうど1だけ</strong>変わり、$(-1)^{\operatorname{inv}}$ の符号が変わる。</p>
+<p>④ 一般の位置 $j\lt k$ の入れ替えは、距離 $d=k-j$ として、$j$ の値を右へ $d$ 回の隣り合う入れ替えで $k$ まで運び、$k$ にあった値を左へ $d-1$ 回で $j$ まで運ぶ、計 $2d-1$ 回（奇数回）の隣り合う入れ替えでできる。　<span class="meta">奇数回なら符号が $(-1)^{2d-1}=-1$ 倍になる</span></p>
+<p>⑤ よって $\operatorname{sgn}\sigma'=-\operatorname{sgn}\sigma$。□</p>
+</div>
+<p>恒等置換 $(1,2,\dots,n)$ の転倒数は0なので符号は $+1$。したがって、「$s$ 回の2つの値の入れ替えで $\sigma$ に到達できる」なら $\operatorname{sgn}\sigma=(-1)^s$ である。これが $f(\boldsymbol e_{\sigma(1)},\dots,\boldsymbol e_{\sigma(n)})$ の値と対応する。</p>
+<div class="why"><span class="label">ひとことで</span>置換の符号 $\operatorname{sgn}\sigma$ は、転倒数（交差の数）の偶奇で $\pm1$ を決めたもの。2つの値を入れ替えるたびに符号が反転する。</div>
+
+<h3 id="sec-3-3"><span class="no">3.3</span>ライプニッツの公式：一般の $n$ の行列式</h3>
+<p>3.1 の展開に戻る。$f(\boldsymbol e_{\sigma(1)},\dots,\boldsymbol e_{\sigma(n)})$ は、$(\boldsymbol e_1,\dots,\boldsymbol e_n)$ から出発して、列を入れ替えるたびに E1 で符号が変わり、$s$ 回の入れ替えで $\sigma$ に至るなら $(-1)^s\,f(\boldsymbol e_1,\dots,\boldsymbol e_n)=\operatorname{sgn}\sigma\cdot1$ となる（D3 と補題3.1）。したがって次の式が得られる。</p>
+<div class="thm"><span class="label">定理3.2（ライプニッツの公式）</span>
+<p>D1〜D3 を満たす $f$ があれば、$A\in\mathbb R^{n\times n}$ に対して
+$$ \det A=\sum_{\sigma\in S_n}\operatorname{sgn}\sigma\ \prod_{j=1}^{n}A_{\sigma(j)\,j} $$
+である。</p>
+</div>
+<p>各部分を読む。$\displaystyle\sum_{\sigma\in S_n}$ は「$S_n$ のすべての置換 $\sigma$ についての和」（$n!$ 項）。各項は、<strong>各列から1個ずつ、どの行も重複しないように成分を選んで掛け</strong>、置換の符号 $\operatorname{sgn}\sigma$ をつけたもの。</p>
+<p><strong>確かめ ($n=2$)</strong>：$S_2=\{(1,2),(2,1)\}$。$\sigma=(1,2)$：$\operatorname{sgn}=+1$、積は $A_{11}A_{22}$。$\sigma=(2,1)$：転倒1つ、$\operatorname{sgn}=-1$、積は $A_{21}A_{12}$。よって $\det A=A_{11}A_{22}-A_{21}A_{12}=ad-bc$ ✓。　<span class="meta">$A_{11}=a$、$A_{12}=b$、$A_{21}=c$、$A_{22}=d$</span></p>
+<p><strong>確かめ ($n=3$)</strong>：6個の置換と、その転倒数・符号・積を表にする。</p>
+<table class="tb">
+<tr><th>$\sigma$</th><th>転倒数</th><th>$\operatorname{sgn}\sigma$</th><th>積 $A_{\sigma(1)1}A_{\sigma(2)2}A_{\sigma(3)3}$</th><th>$A=\begin{pmatrix}a&b&c\\d&e&f\\g&h&i\end{pmatrix}$ のとき</th></tr>
+<tr><td>$(1,2,3)$</td><td>0</td><td>$+1$</td><td>$A_{11}A_{22}A_{33}$</td><td>$+aei$</td></tr>
+<tr><td>$(1,3,2)$</td><td>1</td><td>$-1$</td><td>$A_{11}A_{32}A_{23}$</td><td>$-ahf=-afh$</td></tr>
+<tr><td>$(2,1,3)$</td><td>1</td><td>$-1$</td><td>$A_{21}A_{12}A_{33}$</td><td>$-dbi=-bdi$</td></tr>
+<tr><td>$(2,3,1)$</td><td>2</td><td>$+1$</td><td>$A_{21}A_{32}A_{13}$</td><td>$+dhc=+cdh$</td></tr>
+<tr><td>$(3,1,2)$</td><td>2</td><td>$+1$</td><td>$A_{31}A_{12}A_{23}$</td><td>$+gbf=+bfg$</td></tr>
+<tr><td>$(3,2,1)$</td><td>3</td><td>$-1$</td><td>$A_{31}A_{22}A_{13}$</td><td>$-gec=-ceg$</td></tr>
+</table>
+<p>6項の和は $aei+bfg+cdh-ceg-bdi-afh$ で、1.5 のサラスの公式と一致した。サラスの公式の符号の並びは、置換の符号から来ている。</p>
+<p>$n=4$ では $4!=24$ 項、$n=10$ では $10!=3628800$ 項になる。式の形は美しいが、そのままの計算は現実的でない。実際の計算は4節で行う。</p>
+
+<h3 id="sec-3-4"><span class="no">3.4</span>存在と一意性：ライプニッツの公式は確かに D1〜D3 を満たす</h3>
+<p>定理3.2 は「D1〜D3 を満たす $f$ があれば、その値はこの式になる」（一意性）を示した。逆に、この式で $\det$ を定義したとき D1〜D3 を満たす（存在）ことを確かめる。</p>
+<div class="thm"><span class="label">定理3.3（存在）</span>
+<p>$\det A:=\sum_{\sigma\in S_n}\operatorname{sgn}\sigma\prod_{j}A_{\sigma(j)j}$ は D1・D2・D3 を満たす。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>(D3)：$A=I$ のとき、$A_{\sigma(j)j}=\delta_{\sigma(j)j}$（<a href="04_第4回_総和・総乗と添字.html#sym-kronecker">第4回のクロネッカーのデルタ</a>）。積が0でないのは、すべての $j$ で $\sigma(j)=j$、つまり恒等置換のときだけで、その項は $(+1)\cdot1=1$。よって $\det I=1$。</p>
+<p>(D1)：各項 $\prod_jA_{\sigma(j)j}$ には、第 $j$ 列の成分がちょうど1個だけ含まれる。よって第 $j$ 列について、定数倍と和に関して線形（各項が線形で、線形な項の和も線形）。</p>
+<p>(D2)：第 $j$ 列と第 $k$ 列（$j\neq k$）が等しい、つまり全ての $i$ で $A_{ij}=A_{ik}$ とする。置換 $\sigma$ に対し、$\sigma(j)$ と $\sigma(k)$ の値を入れ替えた置換を $\sigma'$ とする。　<span class="meta">補題3.1 の「2つの位置の値の入れ替え」</span></p>
+<p>① $\prod_lA_{\sigma'(l)l}$ のうち、$l=j,k$ 以外の因子は $\sigma$ の場合と同じ。　<span class="meta">$\sigma'(l)=\sigma(l)$ だから</span></p>
+<p>② $l=j,k$ の因子：$A_{\sigma'(j)j}A_{\sigma'(k)k}=A_{\sigma(k)j}A_{\sigma(j)k}$。　<span class="meta">$\sigma'(j)=\sigma(k)$、$\sigma'(k)=\sigma(j)$</span></p>
+<p>③ $A_{\sigma(k)j}=A_{\sigma(k)k}$、$A_{\sigma(j)k}=A_{\sigma(j)j}$ なので、②は $A_{\sigma(k)k}A_{\sigma(j)j}$ に等しい。　<span class="meta">第 $j$ 列と第 $k$ 列が等しい</span></p>
+<p>④ ゆえに積は $\sigma$ と $\sigma'$ で等しく、符号は $\operatorname{sgn}\sigma'=-\operatorname{sgn}\sigma$（補題3.1）。2つの項は打ち消し合う。　<span class="meta">$\sigma\mapsto\sigma'$ は $\sigma$ と $\sigma'$ を組にして $S_n$ を2つずつに分ける。$\sigma'\neq\sigma$ だから、自分自身と組むことはない</span></p>
+<p>⑤ すべての項が組になって消えるので、$\det A=0$。□</p>
+</div>
+<p>これで、「D1〜D3 を満たす関数は存在し、ただ1つで、ライプニッツの公式で与えられる」ことが言えた。2節の定義 D1〜D3 は筋が通っている。</p>
+<div class="thm"><span class="label">定理3.4（D1・D2 だけを満たす関数は $\det$ の定数倍）</span>
+<p>$g(\boldsymbol a_1,\dots,\boldsymbol a_n)$ が D1・D2 を満たす（D3 は仮定しない）なら、$g(A)=g(I)\cdot\det A$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>3.1〜3.3 の議論は D3 を使うまでは $g$ にそのまま当てはまり、$g(\boldsymbol e_{\sigma(1)},\dots,\boldsymbol e_{\sigma(n)})=\operatorname{sgn}\sigma\cdot g(\boldsymbol e_1,\dots,\boldsymbol e_n)=\operatorname{sgn}\sigma\cdot g(I)$（E1 を $g$ に使う。E1 は D1・D2 だけから導いた）。よって $g(A)=\sum_\sigma\operatorname{sgn}\sigma\prod_jA_{\sigma(j)j}\cdot g(I)=g(I)\det A$。□</p>
+</div>
+<p>定理3.4 は 5.1 で $\det(AB)=\det A\det B$ を示すときに使う。</p>
+
+<h3 id="sec-3-5"><span class="no">3.5</span>転置しても変わらない：$\det A^{\mathsf T}=\det A$</h3>
+<div class="thm"><span class="label">定理3.5（転置不変）</span>
+<p>$\det A^{\mathsf T}=\det A$。（$A^{\mathsf T}$ は転置。<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">第5回</a>。$(A^{\mathsf T})_{ij}=A_{ji}$。）</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>① $\det A^{\mathsf T}=\sum_\sigma\operatorname{sgn}\sigma\prod_{j}(A^{\mathsf T})_{\sigma(j)j}=\sum_\sigma\operatorname{sgn}\sigma\prod_jA_{j\,\sigma(j)}$。　<span class="meta">転置の定義 $(A^{\mathsf T})_{\sigma(j)j}=A_{j\sigma(j)}$</span></p>
+<p>② 積 $\prod_jA_{j\sigma(j)}$ の掛ける順を変える。$i:=\sigma(j)$ とおくと $j=\sigma^{-1}(i)$（$\sigma^{-1}$ は逆の写像）で、$j$ が $1,\dots,n$ を動くとき $i$ も $1,\dots,n$ を動く（$\sigma$ は全単射）。　<span class="meta">掛け算は順序によらない（可換）</span></p>
+<p>③ よって $\prod_jA_{j\sigma(j)}=\prod_iA_{\sigma^{-1}(i)\,i}$。</p>
+<p>④ $\operatorname{sgn}\sigma^{-1}=\operatorname{sgn}\sigma$：$\sigma$ の転倒の組 $(j,k)$（$j\lt k$ かつ $\sigma(j)\gt\sigma(k)$）に、$\sigma^{-1}$ の組 $(\sigma(k),\sigma(j))$ を対応させる。$\sigma(k)\lt\sigma(j)$ で、$\sigma^{-1}(\sigma(k))=k\gt j=\sigma^{-1}(\sigma(j))$ だから、これは $\sigma^{-1}$ の転倒の組である。この対応は逆向きにもできるので、転倒数は等しい。</p>
+<p>⑤ $\sigma\mapsto\sigma^{-1}$ は $S_n$ から $S_n$ への全単射なので、$\sum_\sigma$ を $\sum_{\sigma^{-1}}$ に置き換えてよい。③④より $\det A^{\mathsf T}=\sum_{\tau\in S_n}\operatorname{sgn}\tau\prod_iA_{\tau(i)i}=\det A$。　<span class="meta">$\tau:=\sigma^{-1}$ とおいた</span> □</p>
+</div>
+<p>この結果、「<strong>列についての性質は、すべて行についても成り立つ</strong>」。D1・D2・E1〜E3 の「列」を「行」に読み替えてよい。行基本変形（第17回）と行列式の関係が 4.1 で得られる。</p>
+<div class="why"><span class="label">ひとことで</span>一般の $n$ の行列式は「各列から行の重複なく1個ずつ選んで掛け、置換の符号をつけて全部足す」（ライプニッツの公式）。転置しても値は変わらないので、行と列は同じ資格で扱える。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>実際に計算する</h2>
+
+<h3 id="sec-4-1"><span class="no">4.1</span>行基本変形で $\det$ は何倍になるか</h3>
+<p>第17回の3つの行基本変形（<a href="17_第17回_連立一次方程式とランク.html#sym-row-ops">第17回</a>）を $A$ に施したとき、$\det$ はどう変わるか。D1・E1・E2 を行に読み替える（3.5）と、次の表になる。</p>
+<div class="thm"><span class="label">定理4.1（行基本変形と行列式）</span>
+<table class="tb">
+<tr><th>行基本変形</th><th>$\det$ の変化</th><th>根拠</th></tr>
+<tr><td>(i) $R_i\leftrightarrow R_j$（入れ替え）</td><td>$-1$ 倍</td><td>E1 の行版</td></tr>
+<tr><td>(ii) $R_i\leftarrow cR_i$（$c\neq0$ 倍）</td><td>$c$ 倍</td><td>D1 の行版</td></tr>
+<tr><td>(iii) $R_i\leftarrow R_i+cR_j$（別の行の倍を足す）</td><td>変わらない</td><td>E2 の行版</td></tr>
+</table>
+</div>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 352" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="3つの行基本変形が行列式に与える影響" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>3つの行基本変形が行列式に与える影響</title>
+<rect x="0" y="0" width="440" height="352" fill="#fffdf7"/>
+<rect x="8" y="8" width="424" height="104" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="20.0" y="36.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">(i)</text>
+<text x="64.0" y="36.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">入れ替え</text>
+<text x="24.0" y="70.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">R</tspan><tspan dy="4.8" font-size="11.9">1</tspan><tspan dy="-4.8">↔</tspan><tspan font-style="italic">R</tspan><tspan dy="4.8" font-size="11.9">2</tspan></text>
+<text x="24.0" y="98.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">det は −1 倍</text>
+<polyline points="210.0,90.0 262.0,90.0 282.8,53.6 230.8,53.6 210.0,90.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="210.0" y1="90.0" x2="262.0" y2="90.0" stroke="#a8322a" stroke-width="2.4"/><path d="M254.8 93.5 L262.0 90.0 L254.8 86.5" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="210.0" y1="90.0" x2="230.8" y2="53.6" stroke="#2b3a67" stroke-width="2.4"/><path d="M230.2 61.6 L230.8 53.6 L224.2 58.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<polyline points="225.6,90.0 225.6,89.0 225.5,88.0 225.3,86.9 225.1,85.9 224.8,85.0 224.4,84.0 224.0,83.1 223.5,82.2 222.9,81.3 222.3,80.5 221.7,79.7 221.0,78.9 220.2,78.2 219.4,77.6 218.6,77.0" fill="none" stroke="#5f7f4f" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="218.6" y1="77.0" x2="217.7" y2="76.5" stroke="#5f7f4f" stroke-width="2.2"/><path d="M224.7 77.2 L217.7 76.5 L221.5 82.4" fill="none" stroke="#5f7f4f" stroke-width="2.2"/>
+<polyline points="330.0,90.0 382.0,90.0 402.8,53.6 350.8,53.6 330.0,90.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="330.0" y1="90.0" x2="382.0" y2="90.0" stroke="#a8322a" stroke-width="2.4"/><path d="M374.8 93.5 L382.0 90.0 L374.8 86.5" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="330.0" y1="90.0" x2="350.8" y2="53.6" stroke="#2b3a67" stroke-width="2.4"/><path d="M350.2 61.6 L350.8 53.6 L344.2 58.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<polyline points="337.7,76.5 338.6,77.0 339.4,77.6 340.2,78.2 341.0,78.9 341.7,79.7 342.3,80.5 342.9,81.3 343.5,82.2 344.0,83.1 344.4,84.0 344.8,85.0 345.1,85.9 345.3,86.9 345.5,88.0 345.6,89.0" fill="none" stroke="#5f7f4f" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="345.6" y1="89.0" x2="345.6" y2="90.0" stroke="#5f7f4f" stroke-width="2.2"/><path d="M342.3 83.8 L345.6 90.0 L348.4 83.6" fill="none" stroke="#5f7f4f" stroke-width="2.2"/>
+<text x="210.0" y="30.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">+d</text>
+<text x="330.0" y="30.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">−d</text>
+<rect x="8" y="120" width="424" height="104" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="20.0" y="148.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">(ii)</text>
+<text x="64.0" y="148.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">2倍する</text>
+<text x="24.0" y="182.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">R</tspan><tspan dy="4.8" font-size="11.9">1</tspan><tspan dy="-4.8">←2</tspan><tspan font-style="italic">R</tspan><tspan dy="4.8" font-size="11.9">1</tspan></text>
+<text x="24.0" y="210.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">det は 2 倍</text>
+<polyline points="210.0,202.0 262.0,202.0 282.8,165.6 230.8,165.6 210.0,202.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="210.0" y1="202.0" x2="262.0" y2="202.0" stroke="#a8322a" stroke-width="2.4"/><path d="M254.8 205.5 L262.0 202.0 L254.8 198.5" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="210.0" y1="202.0" x2="230.8" y2="165.6" stroke="#2b3a67" stroke-width="2.4"/><path d="M230.2 173.6 L230.8 165.6 L224.2 170.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<polyline points="300.0,202.0 376.0,202.0 391.2,175.4 315.2,175.4 300.0,202.0" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="300.0" y1="202.0" x2="376.0" y2="202.0" stroke="#a8322a" stroke-width="2.4"/><path d="M368.8 205.5 L376.0 202.0 L368.8 198.5" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="300.0" y1="202.0" x2="315.2" y2="175.4" stroke="#2b3a67" stroke-width="2.4"/><path d="M314.6 183.4 L315.2 175.4 L308.6 179.9" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<text x="212.0" y="142.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">d</text>
+<text x="300.0" y="142.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">2d（底辺が2倍）</text>
+<rect x="8" y="232" width="424" height="104" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="20.0" y="260.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">(iii)</text>
+<text x="64.0" y="260.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">別の行の倍を足す</text>
+<text x="24.0" y="294.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">R</tspan><tspan dy="4.8" font-size="11.9">2</tspan><tspan dy="-4.8">←</tspan><tspan font-style="italic">R</tspan><tspan dy="4.8" font-size="11.9">2</tspan><tspan dy="-4.8">+</tspan><tspan font-style="italic">R</tspan><tspan dy="4.8" font-size="11.9">1</tspan></text>
+<text x="24.0" y="322.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">det は変わらない</text>
+<polyline points="210.0,314.0 262.0,314.0 282.8,277.6 230.8,277.6 210.0,314.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="210.0" y1="314.0" x2="262.0" y2="314.0" stroke="#a8322a" stroke-width="2.4"/><path d="M254.8 317.5 L262.0 314.0 L254.8 310.5" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="210.0" y1="314.0" x2="230.8" y2="277.6" stroke="#2b3a67" stroke-width="2.4"/><path d="M230.2 285.6 L230.8 277.6 L224.2 282.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<polyline points="310.0,314.0 350.0,314.0 406.0,286.0 366.0,286.0 310.0,314.0" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="310.0" y1="314.0" x2="350.0" y2="314.0" stroke="#a8322a" stroke-width="2.4"/><path d="M342.8 317.5 L350.0 314.0 L342.8 310.5" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="310.0" y1="314.0" x2="366.0" y2="286.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M361.1 292.3 L366.0 286.0 L358.0 286.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<text x="212.0" y="254.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">d</text>
+<text x="312.0" y="254.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">d（滑るだけ）</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　3つの行基本変形（第17回）が $\det$ に与える影響。入れ替えは向きの反転（符号が変わる）、$c$ 倍は辺が $c$ 倍（面積が $c$ 倍）、別の行の倍を足すのは滑らせるだけ（面積は変わらない）。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解：(ii) は「割る」と逆向きになる</span>
+<p>(ii) で行 $i$ を $c$ 倍した行列を $A'$ とすると $\det A'=c\det A$。したがって<strong>元の行列式は $\det A=\frac1c\det A'$</strong>。掃き出しの途中で行を $c$ 倍したら、最後に $\frac1c$ を掛けて戻す必要がある。一番安全なのは、(ii) をなるべく使わず、(i) と (iii) だけで進めることである。</p>
+</div>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>三角行列：対角成分の積</h3>
+<div class="def" id="sym-triangular"><span class="label">記号：上三角行列・下三角行列</span>
+<p><strong>①読み方</strong>：「じょうさんかくぎょうれつ」「かさんかくぎょうれつ」。</p>
+<p><strong>②日本語での意味</strong>：対角線より<strong>下</strong>の成分がすべて0（上三角）、対角線より<strong>上</strong>の成分がすべて0（下三角）の正方行列。</p>
+<p><strong>③省略していない書き方</strong>：上三角行列とは、$A\in\mathbb R^{n\times n}$ で、$i\gt j$ ならば $A_{ij}=0$ となるもの（$\forall i,j,\ i\gt j\Rightarrow A_{ij}=0$）。下三角行列は $i\lt j$ ならば $A_{ij}=0$。</p>
+<p><strong>④どこで出会うか</strong>：掃き出し法の途中（行階段形は上三角）、LU分解（第50回）、固有値（第20回、三角行列の固有値は対角成分）。</p>
+</div>
+<div class="thm"><span class="label">定理4.2（三角行列の行列式）</span>
+<p>上三角行列（または下三角行列）の行列式は、<strong>対角成分の積</strong>：$\det A=A_{11}A_{22}\cdots A_{nn}$。</p>
+</div>
+<div class="proof"><span class="label">証明（上三角）</span>
+<p>① ライプニッツの公式（定理3.2）の項 $\prod_jA_{\sigma(j)j}$ が0でないためには、すべての $j$ で $A_{\sigma(j)j}\neq0$、つまり $\sigma(j)\le j$ でなければならない。　<span class="meta">上三角では $i\gt j$ のとき $A_{ij}=0$</span></p>
+<p>② $j=1$：$\sigma(1)\le1$ より $\sigma(1)=1$。</p>
+<p>③ $j=2$：$\sigma(2)\le2$、かつ $\sigma(2)\neq\sigma(1)=1$（全単射だから）。よって $\sigma(2)=2$。</p>
+<p>④ $j=3$：$\sigma(3)\le3$ で、すでに使った $1,2$ は選べない。よって $\sigma(3)=3$。以下、帰納的にすべての $j$ で $\sigma(j)=j$。</p>
+<p>⑤ 残るのは恒等置換だけで、その符号は $+1$、積は $A_{11}\cdots A_{nn}$。□（下三角は転置 $A^{\mathsf T}$ が上三角で、$\det A^{\mathsf T}=\det A$（定理3.5）からも出る。）</p>
+</div>
+<figure class="fig" id="fig-4-2">
+<svg viewBox="0 0 440 366" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="上三角行列の行列式は対角成分の積" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>上三角行列の行列式は対角成分の積</title>
+<rect x="0" y="0" width="440" height="366" fill="#fffdf7"/>
+<rect x="160" y="20" width="50" height="40" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="185.0" y="47.0" font-size="19" fill="#a8322a" text-anchor="middle" font-weight="bold">∗</text>
+<rect x="210" y="20" width="50" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1"/>
+<text x="235.0" y="47.0" font-size="19" fill="#2a2723" text-anchor="middle">∗</text>
+<rect x="260" y="20" width="50" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1"/>
+<text x="285.0" y="47.0" font-size="19" fill="#2a2723" text-anchor="middle">∗</text>
+<rect x="310" y="20" width="50" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1"/>
+<text x="335.0" y="47.0" font-size="19" fill="#2a2723" text-anchor="middle">∗</text>
+<rect x="160" y="60" width="50" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="185.0" y="87.0" font-size="19" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="210" y="60" width="50" height="40" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="235.0" y="87.0" font-size="19" fill="#a8322a" text-anchor="middle" font-weight="bold">∗</text>
+<rect x="260" y="60" width="50" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1"/>
+<text x="285.0" y="87.0" font-size="19" fill="#2a2723" text-anchor="middle">∗</text>
+<rect x="310" y="60" width="50" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1"/>
+<text x="335.0" y="87.0" font-size="19" fill="#2a2723" text-anchor="middle">∗</text>
+<rect x="160" y="100" width="50" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="185.0" y="127.0" font-size="19" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="210" y="100" width="50" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="235.0" y="127.0" font-size="19" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="260" y="100" width="50" height="40" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="285.0" y="127.0" font-size="19" fill="#a8322a" text-anchor="middle" font-weight="bold">∗</text>
+<rect x="310" y="100" width="50" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1"/>
+<text x="335.0" y="127.0" font-size="19" fill="#2a2723" text-anchor="middle">∗</text>
+<rect x="160" y="140" width="50" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="185.0" y="167.0" font-size="19" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="210" y="140" width="50" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="235.0" y="167.0" font-size="19" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="260" y="140" width="50" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="285.0" y="167.0" font-size="19" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="310" y="140" width="50" height="40" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="335.0" y="167.0" font-size="19" fill="#a8322a" text-anchor="middle" font-weight="bold">∗</text>
+<circle cx="185.0" cy="40.0" r="17" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<circle cx="235.0" cy="80.0" r="17" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<circle cx="285.0" cy="120.0" r="17" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<circle cx="335.0" cy="160.0" r="17" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<text x="30.0" y="110.0" font-size="14" fill="#a8322a" text-anchor="start">0 の領域</text>
+<text x="30.0" y="132.0" font-size="14" fill="#a8322a" text-anchor="start">（対角線の下）</text>
+<text x="16.0" y="226.0" font-size="14" fill="#2a2723" text-anchor="start">j=1：σ(1) ≤ 1 　→　σ(1) = 1</text>
+<text x="16.0" y="252.0" font-size="14" fill="#2a2723" text-anchor="start">j=2：σ(2) ≤ 2、1 は使用済み　→　σ(2) = 2</text>
+<text x="16.0" y="278.0" font-size="14" fill="#2a2723" text-anchor="start">j=3：σ(3) ≤ 3、1, 2 は使用済み　→　σ(3) = 3</text>
+<text x="16.0" y="304.0" font-size="14" fill="#2a2723" text-anchor="start">j=4：σ(4) ≤ 4、1, 2, 3 は使用済み　→　σ(4) = 4</text>
+<text x="16.0" y="346.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">残る置換は恒等置換だけ　→　det A = A₁₁A₂₂A₃₃A₄₄</text>
+</svg>
+<figcaption><strong>図 4.2</strong>　対角線より下がすべて0（赤い領域）の上三角行列では、ライプニッツの公式で0にならない項は $\sigma(j)\le j$ を満たす置換に限られる。それは恒等置換（赤丸の対角成分）だけなので、$\det A=A_{11}A_{22}\cdots A_{nn}$。</figcaption>
+</figure>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>行基本変形で上三角にして読む</h3>
+<p>手順：行基本変形 (i)(iii) で上三角行列にし、対角成分の積を取り、入れ替えた回数だけ符号を反転する。第17回の例 2.3 の係数行列で実行する。$A=\begin{pmatrix}1&1&1\\2&1&-1\\1&-1&2\end{pmatrix}$。</p>
+<p>① $R_2\leftarrow R_2-2R_1$：$(2,1,-1)-2(1,1,1)=(0,-1,-3)$。　<span class="meta">(iii)：$\det$ は変わらない</span></p>
+<p>② $R_3\leftarrow R_3-R_1$：$(1,-1,2)-(1,1,1)=(0,-2,1)$。　<span class="meta">(iii)：変わらない</span></p>
+<p>③ $R_3\leftarrow R_3-2R_2$：$(0,-2,1)-2(0,-1,-3)=(0,0,7)$。　<span class="meta">(iii)：変わらない</span></p>
+<p>④ 上三角行列 $\begin{pmatrix}1&1&1\\0&-1&-3\\0&0&7\end{pmatrix}$。対角成分の積は $1\cdot(-1)\cdot7=-7$。　<span class="meta">定理4.2</span></p>
+<p>⑤ 入れ替えは0回、(ii) も使っていないので $\det A=-7$。　<span class="meta">(i) も (ii) も使っていない</span></p>
+<p>サラスの公式で確かめる。$A=\begin{pmatrix}a&b&c\\d&e&f\\g&h&i\end{pmatrix}$ と対応づけて（$A$ の成分を文字 $a$〜$i$ で呼ぶ）$a=1,b=1,c=1,d=2,e=1,f=-1,g=1,h=-1,i=2$。</p>
+<p>⑥ $aei=1\cdot1\cdot2=2$、$bfg=1\cdot(-1)\cdot1=-1$、$cdh=1\cdot2\cdot(-1)=-2$。和は $2-1-2=-1$。</p>
+<p>⑦ $ceg=1\cdot1\cdot1=1$、$bdi=1\cdot2\cdot2=4$、$afh=1\cdot(-1)\cdot(-1)=1$。和は $1+4+1=6$。</p>
+<p>⑧ $\det A=-1-6=-7$ ✓。掃き出しの結果と一致した。この値 $-7$ は、第17回の例 2.3 で最後に $R_3\leftarrow\frac17R_3$ と割った「7」と、符号 $-1$ を合わせたものである（主成分 $1,\ -1,\ 7$ の積）。</p>
+<figure class="fig" id="fig-4-3">
+<svg viewBox="0 0 440 468" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="掃き出して行列式を計算する" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>掃き出して行列式を計算する</title>
+<rect x="0" y="0" width="440" height="468" fill="#fffdf7"/>
+<rect x="8" y="10" width="424" height="98" rx="6" fill="#fff" stroke="#5f7f4f" stroke-width="1.4"/>
+<text x="20.0" y="64.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>初めの </tspan><tspan font-style="italic">A</tspan></text>
+<text x="230.0" y="38.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="270.0" y="38.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="310.0" y="38.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="230.0" y="64.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="270.0" y="64.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="310.0" y="64.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="230.0" y="90.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="270.0" y="90.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="310.0" y="90.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<path d="M211.0 18 L205.0 18 L205.0 100 L211.0 100" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M329.0 18 L335.0 18 L335.0 100 L329.0 100" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="340.0" y="56.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">det = −7</text>
+<text x="340.0" y="78.0" font-size="14" fill="#6b645a" text-anchor="start"></text>
+<rect x="8" y="116" width="424" height="98" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.4"/>
+<text x="20.0" y="170.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">2</tspan><tspan dy="-4.5">←</tspan><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">2</tspan><tspan dy="-4.5">−2</tspan><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">1</tspan></text>
+<rect x="206" y="153" width="128" height="24" fill="#f7ecdc"/>
+<text x="230.0" y="144.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="270.0" y="144.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="310.0" y="144.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="230.0" y="170.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="270.0" y="170.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="310.0" y="170.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−3</tspan></text>
+<text x="230.0" y="196.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="270.0" y="196.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="310.0" y="196.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<path d="M211.0 124 L205.0 124 L205.0 206 L211.0 206" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M329.0 124 L335.0 124 L335.0 206 L329.0 206" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="340.0" y="162.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">det = −7</text>
+<text x="340.0" y="184.0" font-size="14" fill="#6b645a" text-anchor="start">変わらない</text>
+<rect x="8" y="222" width="424" height="98" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.4"/>
+<text x="20.0" y="276.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">3</tspan><tspan dy="-4.5">←</tspan><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">3</tspan><tspan dy="-4.5">−</tspan><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">1</tspan></text>
+<rect x="206" y="285" width="128" height="24" fill="#f7ecdc"/>
+<text x="230.0" y="250.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="270.0" y="250.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="310.0" y="250.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="230.0" y="276.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="270.0" y="276.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="310.0" y="276.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−3</tspan></text>
+<text x="230.0" y="302.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="270.0" y="302.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−2</tspan></text>
+<text x="310.0" y="302.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<path d="M211.0 230 L205.0 230 L205.0 312 L211.0 312" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M329.0 230 L335.0 230 L335.0 312 L329.0 312" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="340.0" y="268.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">det = −7</text>
+<text x="340.0" y="290.0" font-size="14" fill="#6b645a" text-anchor="start">変わらない</text>
+<rect x="8" y="328" width="424" height="98" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.4"/>
+<text x="20.0" y="382.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">3</tspan><tspan dy="-4.5">←</tspan><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">3</tspan><tspan dy="-4.5">−2</tspan><tspan font-style="italic">R</tspan><tspan dy="4.5" font-size="11.2">2</tspan></text>
+<rect x="206" y="391" width="128" height="24" fill="#f7ecdc"/>
+<text x="230.0" y="356.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="270.0" y="356.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="310.0" y="356.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="230.0" y="382.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="270.0" y="382.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−1</tspan></text>
+<text x="310.0" y="382.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>−3</tspan></text>
+<text x="230.0" y="408.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="270.0" y="408.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="310.0" y="408.7" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>7</tspan></text>
+<circle cx="230.0" cy="351.0" r="13.0" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<circle cx="270.0" cy="377.0" r="13.0" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<circle cx="310.0" cy="403.0" r="13.0" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<path d="M211.0 336 L205.0 336 L205.0 418 L211.0 418" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M329.0 336 L335.0 336 L335.0 418 L329.0 418" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="340.0" y="374.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">det = −7</text>
+<text x="340.0" y="396.0" font-size="14" fill="#6b645a" text-anchor="start">変わらない</text>
+<text x="20.0" y="450.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">上三角：対角成分の積 1 × (−1) × 7 = −7</text>
+</svg>
+<figcaption><strong>図 4.3</strong>　第17回の例の係数行列を、「別の行の倍を足す」だけで上三角にしていく（色のついた行が書き換えた行）。この操作では $\det$ は変わらないので、最後の上三角行列の対角成分の積 $1\times(-1)\times7=-7$ が最初の $\det A$。</figcaption>
+</figure>
+<p>行を入れ替える例。$B=\begin{pmatrix}0&2&1\\1&1&3\\2&3&0\end{pmatrix}$。第1行の最初の成分が0なので、そのままでは第1行を使って下の行の第1列を消せない。先に行を入れ替える。</p>
+<p>① $R_1\leftrightarrow R_2$：$\begin{pmatrix}1&1&3\\0&2&1\\2&3&0\end{pmatrix}$。入れ替えを1回行ったので、$\det B=-\det(\text{この行列})$。　<span class="meta">(i)：$-1$ 倍</span></p>
+<p>② $R_3\leftarrow R_3-2R_1$：$(2,3,0)-2(1,1,3)=(0,1,-6)$。　<span class="meta">(iii)</span></p>
+<p>③ $R_3\leftarrow R_3-\frac12R_2$：$(0,1,-6)-\frac12(0,2,1)=(0,0,-\frac{13}2)$。　<span class="meta">(iii)</span></p>
+<p>④ 上三角の対角成分の積：$1\cdot2\cdot(-\frac{13}2)=-13$。</p>
+<p>⑤ 入れ替えを1回したので符号を反転して $\det B=-(-13)=13$。　<span class="meta">サラスの公式で確かめ：$0\cdot1\cdot0+2\cdot3\cdot2+1\cdot1\cdot3-1\cdot1\cdot2-2\cdot1\cdot0-0\cdot3\cdot3=12+3-2=13$ ✓</span></p>
+<div class="why"><span class="label">ひとことで</span>$\det$ の計算は「行基本変形で上三角にして対角成分を掛ける。入れ替えた回数だけ符号を反転し、(ii) を使ったなら $c$ で割る」。計算量は $n^3$ 程度で、$n!$ 項の公式より桁違いに速い。</div>
+
+<h3 id="sec-4-4"><span class="no">4.4</span>余因子展開：小さい行列式の和にする</h3>
+<p>零が多い行列では、別の方法が速いことがある。まず記号を決める。</p>
+<div class="def" id="sym-minor"><span class="label">記号：小行列 $M_{ij}$</span>
+<p><strong>①読み方</strong>：「エム・アイ・ジェイ」。「しょうぎょうれつ」。</p>
+<p><strong>②日本語での意味</strong>：<strong>$A$ から第 $i$ 行と第 $j$ 列を取り除いて残った $(n-1)\times(n-1)$ 行列</strong>。</p>
+<p><strong>③省略していない書き方</strong>：$A\in\mathbb R^{n\times n}$ に対し、$M_{ij}$ は、$A_{kl}$（$k\neq i$ かつ $l\neq j$）を元の順序のまま並べた行列。この回だけの名前で、一般の行列を表す $M$ と混同しないこと。</p>
+<p><strong>④どこで出会うか</strong>：余因子展開、余因子行列（5.3）。</p>
+</div>
+<div class="def" id="sym-cofactor"><span class="label">記号：余因子 $C_{ij}$</span>
+<p><strong>①読み方</strong>：「シー・アイ・ジェイ」。「よいんし」。</p>
+<p><strong>②日本語での意味</strong>：<strong>$(i,j)$ 成分を取り除いた小行列の行列式に、符号 $(-1)^{i+j}$ をつけた数</strong>。符号は市松模様で $+,-$ と交互に並ぶ（図4.5）。</p>
+<p><strong>③省略していない書き方</strong>：$C_{ij}:=(-1)^{i+j}\det M_{ij}$。</p>
+<p><strong>④どこで出会うか</strong>：余因子展開、余因子行列、クラメルの公式（5.4）。</p>
+</div>
+<p>図4.4 は、$(i,j)$ 成分を取り除く様子（第 $i$ 行と第 $j$ 列を消して残りを詰める）である。</p>
+<figure class="fig" id="fig-4-4">
+<svg viewBox="0 0 440 280" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="小行列と余因子" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>小行列と余因子</title>
+<rect x="0" y="0" width="440" height="280" fill="#fffdf7"/>
+<text x="14.0" y="30.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">A（3×3）　(2,3) 成分を取り除く</text>
+<rect x="36" y="92" width="140" height="36" fill="#f7ecdc"/>
+<rect x="128" y="52" width="44" height="116" fill="#f7ecdc"/>
+<text x="62.0" y="81.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="106.0" y="81.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="150.0" y="81.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<text x="62.0" y="117.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>4</tspan></text>
+<text x="106.0" y="117.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>5</tspan></text>
+<text x="150.0" y="117.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>6</tspan></text>
+<text x="62.0" y="153.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>7</tspan></text>
+<text x="106.0" y="153.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>8</tspan></text>
+<text x="150.0" y="153.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan></text>
+<circle cx="150.0" cy="110.0" r="18.0" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<path d="M41.0 54 L35.0 54 L35.0 166 L41.0 166" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M171.0 54 L177.0 54 L177.0 166 L171.0 166" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="30.0" y="116.0" font-size="13" fill="#b07a3e" text-anchor="end">2</text>
+<text x="150.0" y="44.0" font-size="13" fill="#b07a3e" text-anchor="middle">3</text>
+<line x1="210.0" y1="110.0" x2="262.0" y2="110.0" stroke="#6b645a" stroke-width="2.2"/><path d="M253.9 113.9 L262.0 110.0 L253.9 106.1" fill="none" stroke="#6b645a" stroke-width="2.2"/>
+<text x="215.0" y="94.0" font-size="14" fill="#6b645a" text-anchor="start">行・列を消す</text>
+<text x="280.0" y="30.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">M₂₃（2×2）</text>
+<text x="312.0" y="101.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="356.0" y="101.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="312.0" y="137.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>7</tspan></text>
+<text x="356.0" y="137.9" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>8</tspan></text>
+<path d="M291.0 74 L285.0 74 L285.0 150 L291.0 150" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M377.0 74 L383.0 74 L383.0 150 L377.0 150" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="24.0" y="218.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">d</tspan><tspan font-style="italic">e</tspan><tspan font-style="italic">t</tspan><tspan> </tspan><tspan font-style="italic">M</tspan><tspan dy="4.8" font-size="11.9">23</tspan><tspan dy="-4.8"> = 1·8 − 2·7 = −6</tspan></text>
+<text x="24.0" y="252.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">C</tspan><tspan dy="4.8" font-size="11.9">23</tspan><tspan dy="-4.8"> = (−1)</tspan><tspan dy="-7.1" font-size="11.9">2+3</tspan><tspan dy="7.1"> × (−6) = (−1) × (−6) = 6</tspan></text>
+</svg>
+<figcaption><strong>図 4.4</strong>　3×3 の $A$ から第2行と第3列（橙）を取り除いて残った2×2が小行列 $M_{23}$。その行列式 $-6$ に符号 $(-1)^{2+3}=-1$ を掛けたものが余因子 $C_{23}=6$。</figcaption>
+</figure>
+<p><strong>最小の具体例</strong>：$A=\begin{pmatrix}1&2&3\\4&5&6\\7&8&10\end{pmatrix}$ の $(2,3)$ 成分。第2行・第3列を取り除いた $M_{23}=\begin{pmatrix}1&2\\7&8\end{pmatrix}$、$\det M_{23}=8-14=-6$。$C_{23}=(-1)^{2+3}(-6)=(-1)(-6)=6$。</p>
+<div class="thm"><span class="label">定理4.3（余因子展開）</span>
+<p>$A\in\mathbb R^{n\times n}$ について、任意の列 $j$ で
+$$ \det A=\sum_{i=1}^{n}A_{ij}C_{ij}\qquad(\text{第 }j\text{ 列に沿った展開}) $$
+任意の行 $i$ で
+$$ \det A=\sum_{j=1}^{n}A_{ij}C_{ij}\qquad(\text{第 }i\text{ 行に沿った展開}) $$
+が成り立つ。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>(第1列、列に沿った展開)：ライプニッツの公式（定理3.2）の項を、$\sigma(1)=i$ のものにまとめる。</p>
+<p>① $\sigma(1)=i$ のとき、積は $A_{i1}\cdot\prod_{j=2}^{n}A_{\sigma(j)j}$。残りの因子の行番号は $\{1,\dots,n\}\setminus\{i\}$ のすべてを1回ずつ取る。　<span class="meta">全単射だから</span></p>
+<p>② これは、$M_{i1}$（第 $i$ 行と第1列を取り除いた行列）から、各列に1個ずつ重複なく成分を取る積と同じ。行番号を $1,\dots,n-1$ に振り直した置換を $\sigma'\in S_{n-1}$ とする。</p>
+<p>③ 符号の関係：$\operatorname{inv}(\sigma)=(i-1)+\operatorname{inv}(\sigma')$。　<span class="meta">位置1 の値 $i$ より小さい値は $i-1$ 個あり、すべて後ろにあるので、位置1 を含む転倒は $i-1$ 個。残りの転倒の組は $\sigma'$ のそれと同じ</span></p>
+<p>④ よって $\operatorname{sgn}\sigma=(-1)^{i-1}\operatorname{sgn}\sigma'$。したがって $\sigma(1)=i$ の項の和は $A_{i1}(-1)^{i-1}\sum_{\sigma'}\operatorname{sgn}\sigma'\prod A'_{\sigma'(j)j}=A_{i1}(-1)^{i-1}\det M_{i1}$。　<span class="meta">$(-1)^{i-1}=(-1)^{i+1}$</span></p>
+<p>⑤ $i=1,\dots,n$ について足すと $\det A=\sum_iA_{i1}C_{i1}$。</p>
+<p>(第 $j$ 列の展開)：第 $j$ 列を、隣の列と $j-1$ 回入れ替えて最左へ動かす。E1 により $\det$ は $(-1)^{j-1}$ 倍。他の列の順序は保たれるので、新しい第1列の成分 $A_{ij}$ に対する小行列は、元の $M_{ij}$ に等しい。第1列の展開を使うと $\det A=(-1)^{j-1}\sum_iA_{ij}(-1)^{i+1}\det M_{ij}=\sum_iA_{ij}(-1)^{i+j}\det M_{ij}$。</p>
+<p>(行に沿った展開)：転置 $A^{\mathsf T}$ に列の展開を使い、$\det A^{\mathsf T}=\det A$（定理3.5）、$(A^{\mathsf T})$ の第 $i$ 列が $A$ の第 $i$ 行なので、行の展開になる。□</p>
+</div>
+<p>2×2 で確かめる：第1列に沿った展開は $\det\begin{pmatrix}a&b\\c&d\end{pmatrix}=a\cdot(+d)+c\cdot(-b)=ad-bc$ ✓（$C_{11}=(+1)\det(d)=d$、$C_{21}=(-1)\det(b)=-b$）。</p>
+<p><strong>例（4×4）</strong>：$A=\begin{pmatrix}1&0&2&0\\3&1&0&2\\0&2&1&0\\1&0&0&1\end{pmatrix}$。第2列には0が2つあるので、第2列に沿って展開する。第2列は $(0,1,2,0)^{\mathsf T}$。</p>
+<p>① $A_{22}=1$：$M_{22}$ は第2行・第2列を取り除く。$M_{22}=\begin{pmatrix}1&2&0\\0&1&0\\1&0&1\end{pmatrix}$、$\det M_{22}=1$（サラス：$1\cdot1\cdot1+0+0-0-0-2\cdot0\cdot1=1$）。$C_{22}=(+1)\cdot1=1$。</p>
+<p>② $A_{32}=2$：$M_{32}$ は第3行・第2列を取り除く。$M_{32}=\begin{pmatrix}1&2&0\\3&0&2\\1&0&1\end{pmatrix}$、$\det M_{32}=1(0-0)-2(3-2)+0=-2$。$C_{32}=(-1)^{3+2}(-2)=2$。</p>
+<p>③ $\det A=0\cdot C_{12}+1\cdot1+2\cdot2+0\cdot C_{42}=5$。　<span class="meta">$A_{12}=A_{42}=0$ なので $C_{12},C_{42}$ を計算する必要がない</span></p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>(1) <strong>符号 $(-1)^{i+j}$ を忘れる</strong>のが最多の誤り。$(2,1)$ や $(1,2)$ では $-$ が付く。図4.5 の市松模様で確かめる。(2) <strong>展開の列（行）を途中で替えない</strong>。第 $j$ 列の $A_{ij}$ と、別の列の $C_{ik}$ を組み合わせて足すと 0 になる（5.3 で使う）。</p>
+</div>
+<figure class="fig" id="fig-4-5">
+<svg viewBox="0 0 440 386" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="余因子の符号の市松模様" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>余因子の符号の市松模様</title>
+<rect x="0" y="0" width="440" height="386" fill="#fffdf7"/>
+<text x="91.0" y="40.0" font-size="15" fill="#6b645a" text-anchor="middle">1</text>
+<text x="133.0" y="40.0" font-size="15" fill="#6b645a" text-anchor="middle">2</text>
+<text x="175.0" y="40.0" font-size="15" fill="#6b645a" text-anchor="middle">3</text>
+<text x="217.0" y="40.0" font-size="15" fill="#6b645a" text-anchor="middle">4</text>
+<text x="259.0" y="40.0" font-size="15" fill="#6b645a" text-anchor="middle">5</text>
+<text x="56.0" y="78.0" font-size="15" fill="#6b645a" text-anchor="end">1</text>
+<rect x="70" y="52" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="91.0" y="81.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="112" y="52" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="133.0" y="81.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="154" y="52" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="175.0" y="81.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="196" y="52" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="217.0" y="81.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="238" y="52" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="259.0" y="81.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<text x="56.0" y="120.0" font-size="15" fill="#6b645a" text-anchor="end">2</text>
+<rect x="70" y="94" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="91.0" y="123.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="112" y="94" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="133.0" y="123.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="154" y="94" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="175.0" y="123.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="196" y="94" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="217.0" y="123.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="238" y="94" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="259.0" y="123.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<text x="56.0" y="162.0" font-size="15" fill="#6b645a" text-anchor="end">3</text>
+<rect x="70" y="136" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="91.0" y="165.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="112" y="136" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="133.0" y="165.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="154" y="136" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="175.0" y="165.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="196" y="136" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="217.0" y="165.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="238" y="136" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="259.0" y="165.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<text x="56.0" y="204.0" font-size="15" fill="#6b645a" text-anchor="end">4</text>
+<rect x="70" y="178" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="91.0" y="207.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="112" y="178" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="133.0" y="207.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="154" y="178" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="175.0" y="207.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="196" y="178" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="217.0" y="207.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="238" y="178" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="259.0" y="207.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<text x="56.0" y="246.0" font-size="15" fill="#6b645a" text-anchor="end">5</text>
+<rect x="70" y="220" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="91.0" y="249.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="112" y="220" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="133.0" y="249.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="154" y="220" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="175.0" y="249.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="196" y="220" width="42" height="42" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1"/>
+<text x="217.0" y="249.0" font-size="24" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<rect x="238" y="220" width="42" height="42" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1"/>
+<text x="259.0" y="249.0" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<rect x="154" y="94" width="42" height="42" rx="0" fill="none" stroke="#2a2723" stroke-width="3.0"/>
+<text x="14.0" y="20.0" font-size="14" fill="#6b645a" text-anchor="start">行 i ↓／列 j →</text>
+<text x="24.0" y="292.0" font-size="15" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">i</tspan><tspan>, </tspan><tspan font-style="italic">j</tspan><tspan>) の符号は (−1)</tspan><tspan dy="-6.3" font-size="10.5" font-style="italic">i</tspan><tspan font-size="10.5">+</tspan><tspan font-size="10.5" font-style="italic">j</tspan></text>
+<text x="24.0" y="318.0" font-size="15" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">i</tspan><tspan>+</tspan><tspan font-style="italic">j</tspan><tspan> が偶数なら +、奇数なら −</tspan></text>
+<text x="24.0" y="344.0" font-size="15" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>太枠：(2,3) は 2+3 = 5 が奇数なので −</tspan></text>
+</svg>
+<figcaption><strong>図 4.5</strong>　余因子の符号 $(-1)^{i+j}$ は、左上を $+$ として $+,-$ が市松模様に並ぶ。上端を左から右へ、左端を上から下へ数えて、$i+j$ が偶数のマスが $+$。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>余因子展開は「1列（1行）を選び、その成分×余因子を足す」。0の多い列を選ぶと速い。大きな行列は、行基本変形で上三角にするほうが速い。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>積・逆行列・可逆性</h2>
+
+<h3 id="sec-5-1"><span class="no">5.1</span>積の公式：$\det(AB)=\det A\cdot\det B$</h3>
+<p><strong>動機</strong>：行列の積 $AB$ は「$B$ で動かしてから $A$ で動かす」合成写像（<a href="16_第16回_行列は線形写像.html#sym-matmul">第16回</a>）。$B$ が面積を $\det B$ 倍、$A$ が $\det A$ 倍にするなら、合成は $\det A\cdot\det B$ 倍にするはずである。図5.1 を見る。</p>
+<figure class="fig" id="fig-5-1">
+<svg viewBox="0 0 440 482" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="拡大率の合成" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>拡大率の合成</title>
+<rect x="0" y="0" width="440" height="482" fill="#fffdf7"/>
+<text x="14.0" y="22.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">単位正方形</text>
+<line x1="62.7" y1="146.0" x2="62.7" y2="34.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="90.0" y1="146.0" x2="90.0" y2="34.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="117.3" y1="146.0" x2="117.3" y2="34.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="144.5" y1="146.0" x2="144.5" y2="34.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="115.5" x2="150.0" y2="115.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="90.0" x2="150.0" y2="90.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="64.5" x2="150.0" y2="64.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="39.1" x2="150.0" y2="39.1" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="35.5,140.9 62.7,140.9 62.7,115.5 35.5,115.5 35.5,140.9" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2.2" stroke-linejoin="round"/>
+<rect x="30" y="34" width="120" height="112" rx="0" fill="none" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="180.0" y="70.0" font-size="16" fill="#5f7f4f" text-anchor="start" font-weight="bold">面積 1</text>
+<text x="14.0" y="172.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">B で移す</text>
+<line x1="62.7" y1="296.0" x2="62.7" y2="184.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="90.0" y1="296.0" x2="90.0" y2="184.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="117.3" y1="296.0" x2="117.3" y2="184.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="144.5" y1="296.0" x2="144.5" y2="184.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="265.5" x2="150.0" y2="265.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="240.0" x2="150.0" y2="240.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="214.5" x2="150.0" y2="214.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="189.1" x2="150.0" y2="189.1" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="35.5,290.9 62.7,290.9 90.0,240.0 62.7,240.0 35.5,290.9" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<rect x="30" y="184" width="120" height="112" rx="0" fill="none" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="180.0" y="220.0" font-size="16" fill="#2b3a67" text-anchor="start" font-weight="bold">面積 det B = 2</text>
+<text x="180.0" y="262.0" font-size="16" fill="#2a2723" text-anchor="start">B =</text>
+<text x="243.0" y="259.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="279.0" y="259.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="243.0" y="283.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="279.0" y="283.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<path d="M226.0 240 L220.0 240 L220.0 292 L226.0 292" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M296.0 240 L302.0 240 L302.0 292 L296.0 292" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="14.0" y="322.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">さらに A で移す（合わせて AB）</text>
+<line x1="62.7" y1="446.0" x2="62.7" y2="334.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="90.0" y1="446.0" x2="90.0" y2="334.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="117.3" y1="446.0" x2="117.3" y2="334.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="144.5" y1="446.0" x2="144.5" y2="334.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="415.5" x2="150.0" y2="415.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="390.0" x2="150.0" y2="390.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="364.5" x2="150.0" y2="364.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="339.1" x2="150.0" y2="339.1" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="35.5,440.9 90.0,415.5 144.5,339.1 90.0,364.5 35.5,440.9" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<rect x="30" y="334" width="120" height="112" rx="0" fill="none" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="180.0" y="370.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">面積 4 = det A × det B</text>
+<text x="180.0" y="412.0" font-size="16" fill="#2a2723" text-anchor="start">AB =</text>
+<text x="243.0" y="409.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="279.0" y="409.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan></text>
+<text x="243.0" y="433.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>1</tspan></text>
+<text x="279.0" y="433.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<path d="M226.0 390 L220.0 390 L220.0 442 L226.0 442" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<path d="M296.0 390 L302.0 390 L302.0 442 L296.0 442" fill="none" stroke="#2a2723" stroke-width="1.5"/>
+<text x="180.0" y="442.0" font-size="15" fill="#6b645a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">d</tspan><tspan font-style="italic">e</tspan><tspan font-style="italic">t</tspan><tspan> </tspan><tspan font-style="italic">A</tspan><tspan> = 2</tspan></text>
+</svg>
+<figcaption><strong>図 5.1</strong>　$B=\begin{pmatrix}1&1\\0&2\end{pmatrix}$（面積2倍）で移し、続けて $A=\begin{pmatrix}2&0\\1&1\end{pmatrix}$（面積2倍）で移すと、合成 $AB=\begin{pmatrix}2&2\\1&3\end{pmatrix}$ は面積を $2\times2=4$ 倍にする。$\det(AB)=\det A\det B$。</figcaption>
+</figure>
+<div class="thm"><span class="label">定理5.1（積の公式）</span>
+<p>$A,B\in\mathbb R^{n\times n}$ について $\det(AB)=\det A\cdot\det B$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$B$ の列を $\boldsymbol b_1,\dots,\boldsymbol b_n$ とし、$g(\boldsymbol b_1,\dots,\boldsymbol b_n):=\det(AB)$ を、$A$ を固定した $B$ の関数と見る。</p>
+<p>① $AB$ の第 $j$ 列は $A\boldsymbol b_j$。　<span class="meta">第16回：積の定義（列ごとに $A$ を掛ける）</span></p>
+<p>② $g$ は D1 を満たす：$A(c\boldsymbol b_j)=c\,A\boldsymbol b_j$、$A(\boldsymbol u+\boldsymbol v)=A\boldsymbol u+A\boldsymbol v$ で、$AB$ の第 $j$ 列が $\boldsymbol b_j$ について線形に動くから、$\det$ の D1 により $g$ も $\boldsymbol b_j$ について線形。</p>
+<p>③ $g$ は D2 を満たす：$\boldsymbol b_j=\boldsymbol b_k$ なら $A\boldsymbol b_j=A\boldsymbol b_k$ で、$AB$ の同じ列が2つなので $\det(AB)=0$。　<span class="meta">$\det$ の D2</span></p>
+<p>④ 定理3.4 により $g(B)=g(I)\det B$。ここで $g(I)=\det(AI)=\det A$。　<span class="meta">$AI=A$（第16回）</span></p>
+<p>⑤ よって $\det(AB)=\det A\cdot\det B$。□</p>
+</div>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>(1) $\det(AB)=\det(BA)$ は成り立つ（どちらも $\det A\det B$ で、実数の積は順序によらない）。しかし $AB=BA$ とは限らない。<strong>行列式が等しいことと、行列が等しいことは別</strong>。(2) $c$ 倍：$\det(cA)=c^n\det A$（$A$ は $n\times n$）。各列が $c$ 倍になり、D1 を $n$ 回使うから。$c\det A$ ではない。(3) $\det(A+B)\neq\det A+\det B$（1.4）。</p>
+</div>
+
+<h3 id="sec-5-2"><span class="no">5.2</span>可逆かどうかを判定する</h3>
+<div class="thm"><span class="label">定理5.2（行列式と可逆性）</span>
+<p>$A\in\mathbb R^{n\times n}$ について、次の4つは同値である。</p>
+<ol>
+<li>(a) $\det A\neq0$。</li>
+<li>(b) $A$ の列は一次独立。</li>
+<li>(c) $\operatorname{rank}A=n$。</li>
+<li>(d) $A$ に逆行列 $A^{-1}$ がある。</li>
+</ol>
+<p>このとき $\det(A^{-1})=\dfrac1{\det A}$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>(b)⇔(c)⇔(d) は<a href="17_第17回_連立一次方程式とランク.html#sec-6-2">第17回の定理6.1</a>と<a href="17_第17回_連立一次方程式とランク.html#sec-4-3">定理4.2</a>（ランクは一次独立な列の最大個数）による。残りは (a) との同値。</p>
+<p>(a)⇒(b)：その対偶「列が一次従属ならば $\det A=0$」は E3 そのもの。対偶と元の命題は同値（<a href="02_第2回_集合と論理.html#sym-implies">第2回</a>）。</p>
+<p>(d)⇒(a)：$A^{-1}$ があれば、$AA^{-1}=I$ の両辺の $\det$ を取る。$\det(AA^{-1})=\det A\cdot\det A^{-1}$（定理5.1）、$\det I=1$（D3）。よって $\det A\cdot\det A^{-1}=1$。左辺が1なので $\det A\neq0$、かつ $\det A^{-1}=1/\det A$。</p>
+<p>(a)⇒(d)：(a)⇒(b)⇒(c)⇒(d) と進めばよい。□</p>
+</div>
+<p>幾何では、図5.2 のように、$\det A=0$ のとき、$A$ は平面をつぶして直線（または点）に移すので、もう元に戻せない。第17回の「核が $\{\boldsymbol 0\}$ でない」「像が全体に届かない」と同じ現象を、行列式が <strong>1つの数が0</strong> で見分けている。</p>
+<figure class="fig" id="fig-5-2">
+<svg viewBox="0 0 440 470" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="det=0 なら逆戻りできない" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>det=0 なら逆戻りできない</title>
+<rect x="0" y="0" width="440" height="470" fill="#fffdf7"/>
+<text x="14.0" y="24.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">det A = 5 ≠ 0：平面全体に広がる</text>
+<line x1="58.0" y1="212.0" x2="58.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="102.0" y1="212.0" x2="102.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="146.0" y1="212.0" x2="146.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="190.0" y1="212.0" x2="190.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="234.0" y1="212.0" x2="234.0" y2="36.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="190.0" x2="256.0" y2="190.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="146.0" x2="256.0" y2="146.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="102.0" x2="256.0" y2="102.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="58.0" x2="256.0" y2="58.0" stroke="#ddd6c8" stroke-width="1"/>
+<rect x="36" y="36" width="220" height="176" rx="0" fill="none" stroke="#ddd6c8" stroke-width="1.2"/>
+<polyline points="58.0,190.0 190.0,146.0 234.0,58.0 102.0,102.0 58.0,190.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="58.0,190.0 102.0,190.0 102.0,146.0 58.0,146.0 58.0,190.0" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2.0" stroke-linejoin="round"/>
+<text x="280.0" y="86.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">面積 5 倍</text>
+<text x="280.0" y="112.0" font-size="15" fill="#2a2723" text-anchor="start">どの点も</text>
+<text x="280.0" y="138.0" font-size="15" fill="#2a2723" text-anchor="start">違う点に移る</text>
+<text x="280.0" y="164.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">→ 元に戻せる</text>
+<text x="14.0" y="250.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">det A = 0：直線につぶれる</text>
+<line x1="58.0" y1="438.0" x2="58.0" y2="262.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="102.0" y1="438.0" x2="102.0" y2="262.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="146.0" y1="438.0" x2="146.0" y2="262.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="190.0" y1="438.0" x2="190.0" y2="262.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="234.0" y1="438.0" x2="234.0" y2="262.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="416.0" x2="256.0" y2="416.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="372.0" x2="256.0" y2="372.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="328.0" x2="256.0" y2="328.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="284.0" x2="256.0" y2="284.0" stroke="#ddd6c8" stroke-width="1"/>
+<rect x="36" y="262" width="220" height="176" rx="0" fill="none" stroke="#ddd6c8" stroke-width="1.2"/>
+<polyline points="58.0,416.0 102.0,416.0 102.0,372.0 58.0,372.0 58.0,416.0" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2.0" stroke-linejoin="round"/>
+<line x1="58.0" y1="416.0" x2="190.0" y2="284.0" stroke="#2b3a67" stroke-width="5.5"/>
+<circle cx="102.0" cy="416.0" r="5.5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<circle cx="124.0" cy="427.0" r="5.5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<line x1="102.0" y1="410.0" x2="102.0" y2="381.0" stroke="#5f7f4f" stroke-width="1.8"/><path d="M105.0 387.3 L102.0 381.0 L99.0 387.3" fill="none" stroke="#5f7f4f" stroke-width="1.8"/>
+<line x1="121.0" y1="421.0" x2="107.0" y2="380.0" stroke="#5f7f4f" stroke-width="1.8"/><path d="M111.9 385.0 L107.0 380.0 L106.2 386.9" fill="none" stroke="#5f7f4f" stroke-width="1.8"/>
+<circle cx="102.0" cy="372.0" r="6.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="94.0" y="420.0" font-size="14" fill="#5f7f4f" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(1, 0)</tspan></text>
+<text x="132.0" y="432.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(1.5, −0.25)</tspan></text>
+<text x="280.0" y="312.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">面積 0 倍</text>
+<text x="280.0" y="338.0" font-size="15" fill="#2a2723" text-anchor="start">2 つの点が同じ</text>
+<text x="280.0" y="364.0" font-size="15" fill="#2a2723" text-anchor="start">点 (1, 1) に移る</text>
+<text x="280.0" y="390.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">→ 元に戻せない</text>
+</svg>
+<figcaption><strong>図 5.2</strong>　上：$\begin{pmatrix}3&1\\1&2\end{pmatrix}$ は平面を平面に移し、違う点は違う点に移るので戻せる。下：$\begin{pmatrix}1&2\\1&2\end{pmatrix}$（$\det=0$）は平面を直線 $y=x$ につぶし、$(1,0)$ と $(1.5,-0.25)$ のように別々の点を同じ点 $(1,1)$ に重ねるので、どこから来たか分からず戻せない。</figcaption>
+</figure>
+<p>第17回の定理6.1 に、(g) $\det A\neq0$ を足して覚えるとよい。</p>
+<div class="why"><span class="label">ひとことで</span>$\det A\neq0\Leftrightarrow$ 列が一次独立 $\Leftrightarrow\operatorname{rank}A=n\Leftrightarrow A^{-1}$ がある。$\det A=0$ なら写像が面積をつぶしており、逆戻りできない。</div>
+
+<h3 id="sec-5-3"><span class="no">5.3</span>余因子行列と逆行列の公式</h3>
+<div class="def" id="sym-adjugate"><span class="label">記号：余因子行列 $\operatorname{adj}A$</span>
+<p><strong>①読み方</strong>：「アジョイント・エー」または「よいんしぎょうれつ」。「余因子行列」「古典随伴行列」とも呼ぶ。</p>
+<p><strong>②日本語での意味</strong>：<strong>各成分の余因子 $C_{ij}$ を並べて、転置した行列</strong>。</p>
+<p><strong>③省略していない書き方</strong>：$(\operatorname{adj}A)_{ij}:=C_{ji}$。$(i,j)$ 成分が $C_{ij}$ ではなく $C_{ji}$（<strong>添字が逆</strong>）である点に注意。</p>
+<p><strong>④どこで出会うか</strong>：逆行列の公式（定理5.3）、クラメルの公式の別証明。</p>
+</div>
+<p><strong>最小の具体例</strong>：$A=\begin{pmatrix}a&b\\c&d\end{pmatrix}$。余因子は $C_{11}=d$、$C_{12}=-c$、$C_{21}=-b$、$C_{22}=a$。$(\operatorname{adj}A)_{ij}=C_{ji}$ なので $\operatorname{adj}A=\begin{pmatrix}C_{11}&C_{21}\\C_{12}&C_{22}\end{pmatrix}=\begin{pmatrix}d&-b\\-c&a\end{pmatrix}$。</p>
+<div class="thm"><span class="label">定理5.3（余因子行列と逆行列）</span>
+<p>$A\operatorname{adj}A=(\operatorname{adj}A)A=(\det A)\,I$。したがって $\det A\neq0$ ならば
+$$ A^{-1}=\frac1{\det A}\operatorname{adj}A $$
+</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$(A\operatorname{adj}A)_{ik}=\sum_{j=1}^{n}A_{ij}(\operatorname{adj}A)_{jk}=\sum_{j}A_{ij}C_{kj}$ である。　<span class="meta">行列の積の成分表示（第16回、第4回の $\sum$）と $\operatorname{adj}$ の定義</span></p>
+<p>(i) $k=i$：$\sum_jA_{ij}C_{ij}$ は第 $i$ 行に沿った余因子展開（定理4.3）そのもの。$=\det A$。</p>
+<p>(ii) $k\neq i$：$A$ の第 $k$ 行を第 $i$ 行のコピーに置き換えた行列を $A'$ とする。$A'$ は第 $i$ 行と第 $k$ 行が等しいので $\det A'=0$（D2 の行版）。一方、$A'$ を第 $k$ 行に沿って展開すると、$C_{kj}$ は第 $k$ 行を取り除いて作るから $A$ と $A'$ で同じ。よって $\sum_jA'_{kj}C_{kj}=\sum_jA_{ij}C_{kj}=\det A'=0$。</p>
+<p>(iii) (i)(ii) より、$A\operatorname{adj}A$ の対角成分は $\det A$、他は0。つまり $(\det A)I$。$(\operatorname{adj}A)A$ の $(k,j)$ 成分は $\sum_iC_{ik}A_{ij}$ で、$k=j$ なら第 $j$ 列に沿った展開で $\det A$、$k\neq j$ なら第 $j$ 列を第 $k$ 列のコピーに置き換えた行列（同じ列が2つで $\det=0$）の第 $k$ 列に沿った展開で $0$。(iii) の結論は両方とも $(\det A)I$。$\det A\neq0$ なら $A$ に $\frac1{\det A}\operatorname{adj}A$ を左右どちらから掛けても $I$ になるので、これが $A^{-1}$。□</p>
+</div>
+<p><strong>確かめ ($2\times2$)</strong>：$A^{-1}=\frac1{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}$。第17回の問11で、掃き出し法から導いた式と一致する。</p>
+<p><strong>例 (3×3)</strong>：$A=\begin{pmatrix}1&2&0\\0&1&3\\1&0&1\end{pmatrix}$。第1列に沿って展開して $\det A=1\cdot(1\cdot1-3\cdot0)+0\cdot C_{21}+1\cdot(2\cdot3-0\cdot1)=1+0+6=7$（第1列は $(1,0,1)^{\mathsf T}$。第2項は $A_{21}=0$ なので $C_{21}$ を計算しなくてよい）。余因子は
+$C_{11}=1$、$C_{12}=-(0\cdot1-3\cdot1)=3$、$C_{13}=0\cdot0-1\cdot1=-1$、
+$C_{21}=-(2\cdot1-0\cdot0)=-2$、$C_{22}=1\cdot1-0\cdot1=1$、$C_{23}=-(1\cdot0-2\cdot1)=2$、
+$C_{31}=2\cdot3-0\cdot1=6$、$C_{32}=-(1\cdot3-0\cdot0)=-3$、$C_{33}=1\cdot1-2\cdot0=1$。
+$\operatorname{adj}A=\begin{pmatrix}C_{11}&C_{21}&C_{31}\\C_{12}&C_{22}&C_{32}\\C_{13}&C_{23}&C_{33}\end{pmatrix}=\begin{pmatrix}1&-2&6\\3&1&-3\\-1&2&1\end{pmatrix}$、$A^{-1}=\frac17\begin{pmatrix}1&-2&6\\3&1&-3\\-1&2&1\end{pmatrix}$。確かめ：$A\operatorname{adj}A$ の $(1,1)$ 成分 $=1\cdot1+2\cdot3+0\cdot(-1)=7=\det A$ ✓。$(1,2)$ 成分 $=1\cdot(-2)+2\cdot1+0\cdot2=0$ ✓。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>余因子行列で逆行列を求めるのは、$n$ が3を超えると計算量が大きすぎる（$n^2$ 個の $(n-1)$ 次行列式）。実際の計算には第17回の $[A\mid I]$ の掃き出しを使う。余因子の公式は、$A^{-1}$ の<strong>成分を式で書き表したい</strong>とき（理論や 2×2 の手計算）に価値がある。</p>
+</div>
+
+<h3 id="sec-5-4"><span class="no">5.4</span>クラメルの公式</h3>
+<p>連立方程式 $A\boldsymbol x=\boldsymbol b$（$A$ は $n\times n$、$\det A\neq0$）の解は、行列式の比で書ける。</p>
+<div class="thm"><span class="label">定理5.4（クラメルの公式）</span>
+<p>$A=(\boldsymbol a_1\ \cdots\ \boldsymbol a_n)$、$\det A\neq0$ のとき、$A\boldsymbol x=\boldsymbol b$ の解 $\boldsymbol x=(x_1,\dots,x_n)^{\mathsf T}$ は
+$$ x_j=\frac{\det(\boldsymbol a_1,\dots,\boldsymbol a_{j-1},\ \boldsymbol b,\ \boldsymbol a_{j+1},\dots,\boldsymbol a_n)}{\det A}\qquad(j=1,\dots,n) $$
+（分子は $A$ の第 $j$ 列を $\boldsymbol b$ に置き換えた行列の行列式）。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>① $A\boldsymbol x=\boldsymbol b$ は $\boldsymbol b=x_1\boldsymbol a_1+\cdots+x_n\boldsymbol a_n$（<a href="17_第17回_連立一次方程式とランク.html#sec-1-3">第17回 1.3</a>）。</p>
+<p>② 分子の第 $j$ 列に ① を入れて D1 で展開する：$\det(\dots,\boldsymbol b,\dots)=\sum_{k=1}^{n}x_k\det(\dots,\boldsymbol a_k,\dots)$（$k$ 番目の項は、第 $j$ 列に $\boldsymbol a_k$ を置いたもの）。　<span class="meta">D1（和と定数倍）</span></p>
+<p>③ $k\neq j$ の項は、第 $j$ 列と第 $k$ 列がどちらも $\boldsymbol a_k$ なので 0。　<span class="meta">D2</span></p>
+<p>④ $k=j$ の項は $x_j\det(\boldsymbol a_1,\dots,\boldsymbol a_n)=x_j\det A$。よって分子 $=x_j\det A$。□</p>
+</div>
+<p><strong>最小の具体例</strong>：$3x+y=7$、$x+2y=4$。$A=\begin{pmatrix}3&1\\1&2\end{pmatrix}$、$\boldsymbol b=\begin{pmatrix}7\\4\end{pmatrix}$、$\det A=5$。</p>
+<p>① $x_1=\dfrac{\det\begin{pmatrix}7&1\\4&2\end{pmatrix}}{5}=\dfrac{14-4}{5}=2$。　<span class="meta">第1列を $\boldsymbol b$ に</span></p>
+<p>② $x_2=\dfrac{\det\begin{pmatrix}3&7\\1&4\end{pmatrix}}{5}=\dfrac{12-7}{5}=1$。　<span class="meta">第2列を $\boldsymbol b$ に</span></p>
+<p>③ 確かめ：$3\cdot2+1=7$ ✓、$2+2\cdot1=4$ ✓。</p>
+<p>図5.3 は、②の仕組みの幾何学的な意味を示す。$\boldsymbol b=2\boldsymbol a_1+1\boldsymbol a_2$ なので、辺 $\boldsymbol b,\boldsymbol a_2$ の平行四辺形の面積は、辺 $\boldsymbol a_1,\boldsymbol a_2$ の面積の2倍になる。</p>
+<figure class="fig" id="fig-5-3">
+<svg viewBox="0 0 440 336" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="クラメルの公式の図形的な意味" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>クラメルの公式の図形的な意味</title>
+<rect x="0" y="0" width="440" height="336" fill="#fffdf7"/>
+<line x1="68.0" y1="248.0" x2="68.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="106.0" y1="248.0" x2="106.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="144.0" y1="248.0" x2="144.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="182.0" y1="248.0" x2="182.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="220.0" y1="248.0" x2="220.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="258.0" y1="248.0" x2="258.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="296.0" y1="248.0" x2="296.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="334.0" y1="248.0" x2="334.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="210.0" x2="334.0" y2="210.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="172.0" x2="334.0" y2="172.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="134.0" x2="334.0" y2="134.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="96.0" x2="334.0" y2="96.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="58.0" x2="334.0" y2="58.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="30.0" y1="20.0" x2="334.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<polyline points="30.0,248.0 296.0,96.0 334.0,20.0 68.0,172.0 30.0,248.0" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="30.0,248.0 144.0,210.0 182.0,134.0 68.0,172.0 30.0,248.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="30.0,248.0 144.0,210.0 258.0,172.0 296.0,96.0" fill="none" stroke="#5f7f4f" stroke-width="1.8" stroke-dasharray="5 4" stroke-linejoin="round"/>
+<line x1="30.0" y1="248.0" x2="144.0" y2="210.0" stroke="#a8322a" stroke-width="3"/><path d="M137.5 216.3 L144.0 210.0 L135.1 208.8" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="30.0" y1="248.0" x2="68.0" y2="172.0" stroke="#2b3a67" stroke-width="3"/><path d="M67.9 181.0 L68.0 172.0 L60.9 177.5" fill="none" stroke="#2b3a67" stroke-width="3"/>
+<line x1="30.0" y1="248.0" x2="296.0" y2="96.0" stroke="#b07a3e" stroke-width="3"/><path d="M290.9 103.4 L296.0 96.0 L287.0 96.6" fill="none" stroke="#b07a3e" stroke-width="3"/>
+<text x="152.0" y="228.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">a₁</text>
+<text x="60.0" y="168.0" font-size="15" fill="#2b3a67" text-anchor="end" font-weight="bold">a₂</text>
+<text x="304.0" y="114.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">b = (7, 4)</text>
+<text x="254.0" y="194.0" font-size="14" fill="#5f7f4f" text-anchor="end">2a₁</text>
+<text x="125.0" y="168.2" font-size="22" fill="#2b3a67" text-anchor="middle" font-weight="bold">5</text>
+<text x="227.6" y="96.0" font-size="24" fill="#b07a3e" text-anchor="middle" font-weight="bold">10</text>
+<text x="24.0" y="288.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">面積(b, a₂) = 10 = 2 × 5 = x₁ × 面積(a₁, a₂)</text>
+<text x="24.0" y="314.0" font-size="15" fill="#5f7f4f" text-anchor="start">b = 2a₁ + a₂ （破線の道のり）→ x₁ = 2</text>
+</svg>
+<figcaption><strong>図 5.3</strong>　$A=\begin{pmatrix}3&1\\1&2\end{pmatrix}$、$\boldsymbol b=(7,4)$ で $A\boldsymbol x=\boldsymbol b$ の解は $\boldsymbol x=(2,1)$。辺 $(\boldsymbol b,\boldsymbol a_2)$ の平行四辺形（橙）は、$\boldsymbol b$ のうち $\boldsymbol a_1$ 成分 $x_1=2$ だけ伸びているので、面積が $(\boldsymbol a_1,\boldsymbol a_2)$（藍）の2倍の10になる。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>クラメルの公式は<strong>式が美しく、理論の証明に使える</strong>が、数値計算には向かない（$n+1$ 個の行列式が必要）。実際の計算は掃き出し法（第17回）を使う。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>幾何に戻る：拡大率としての $\det$</h2>
+
+<h3 id="sec-6-1"><span class="no">6.1</span>どんな図形でも $|\det A|$ 倍になる</h3>
+<p>1節では、単位正方形（平行四辺形）の面積だけを調べた。ほかの図形はどうか。結論は、<strong>任意の図形の面積は $|\det A|$ 倍になる</strong>。理由の骨組みは次のとおりである。</p>
+<p>① 平面を、1辺 $\varepsilon$ の小さな正方形の格子に分け、図形を正方形の和で近似する（第10回の積分と同じ発想）。</p>
+<p>② 写像 $\boldsymbol x\mapsto A\boldsymbol x$ は正方形を平行四辺形に移し、各平行四辺形の面積は $|\det A|\cdot\varepsilon^2$（1.1〜1.2 と、図形を $\varepsilon$ 倍に縮める性質。D1）。</p>
+<p>③ 平行四辺形たちの面積の和は、元の図形の面積の $|\det A|$ 倍。$\varepsilon\to0$ の極限で、図形の面積も $|\det A|$ 倍。　<span class="meta">厳密な議論は重積分（第13回）の定義に基づく</span></p>
+<p>図6.1 は、半径1の円（面積 $\pi$）が楕円に移り、面積が $5\pi$ になる様子である。</p>
+<figure class="fig" id="fig-6-1">
+<svg viewBox="0 0 440 346" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="円が楕円に移っても面積比は |det A|" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>円が楕円に移っても面積比は |det A|</title>
+<rect x="0" y="0" width="440" height="346" fill="#fffdf7"/>
+<line x1="82.0" y1="296.0" x2="82.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="128.0" y1="296.0" x2="128.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="174.0" y1="296.0" x2="174.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="266.0" y1="296.0" x2="266.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="312.0" y1="296.0" x2="312.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="358.0" y1="296.0" x2="358.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="250.0" x2="404.0" y2="250.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="204.0" x2="404.0" y2="204.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="112.0" x2="404.0" y2="112.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="66.0" x2="404.0" y2="66.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="36.0" y1="158.0" x2="414.0" y2="158.0" stroke="#2a2723" stroke-width="1.3"/><path d="M407.7 161.0 L414.0 158.0 L407.7 155.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="220.0" y1="296.0" x2="220.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M223.0 16.3 L220.0 10.0 L217.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="82.0" y1="154.0" x2="82.0" y2="162.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="82.0" y="178.0" font-size="14" fill="#6b645a" text-anchor="middle">-3</text>
+<line x1="128.0" y1="154.0" x2="128.0" y2="162.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="128.0" y="178.0" font-size="14" fill="#6b645a" text-anchor="middle">-2</text>
+<line x1="174.0" y1="154.0" x2="174.0" y2="162.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="174.0" y="178.0" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="266.0" y1="154.0" x2="266.0" y2="162.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="266.0" y="178.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="312.0" y1="154.0" x2="312.0" y2="162.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="312.0" y="178.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="358.0" y1="154.0" x2="358.0" y2="162.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="358.0" y="178.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="216.0" y1="250.0" x2="224.0" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="255.0" font-size="14" fill="#6b645a" text-anchor="end">-2</text>
+<line x1="216.0" y1="204.0" x2="224.0" y2="204.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="209.0" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="216.0" y1="112.0" x2="224.0" y2="112.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="117.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="216.0" y1="66.0" x2="224.0" y2="66.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="71.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="418.0" y="180.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="234.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="358.0,112.0 360.9,105.7 363.1,99.6 364.5,93.9 365.3,88.4 365.4,83.3 364.8,78.6 363.4,74.2 361.4,70.2 358.7,66.7 355.3,63.6 351.2,61.0 346.5,58.9 341.2,57.2 335.3,56.0 328.8,55.3 321.8,55.1 314.3,55.5 306.4,56.3 298.0,57.6 289.3,59.4 280.2,61.7 270.8,64.5 261.2,67.7 251.3,71.3 241.3,75.4 231.2,79.9 221.1,84.7 211.0,89.9 200.8,95.5 190.8,101.3 181.0,107.5 171.3,113.8 161.8,120.4 152.7,127.2 143.9,134.1 135.4,141.1 127.3,148.3 119.7,155.4 112.6,162.6 106.1,169.8 100.0,176.9 94.6,183.9 89.7,190.7 85.5,197.5 82.0,204.0 79.1,210.3 76.9,216.4 75.5,222.1 74.7,227.6 74.6,232.7 75.2,237.4 76.6,241.8 78.6,245.8 81.3,249.3 84.7,252.4 88.8,255.0 93.5,257.1 98.8,258.8 104.7,260.0 111.2,260.7 118.2,260.9 125.7,260.5 133.6,259.7 142.0,258.4 150.7,256.6 159.8,254.3 169.2,251.5 178.8,248.3 188.7,244.7 198.7,240.6 208.8,236.1 218.9,231.3 229.0,226.1 239.2,220.5 249.2,214.7 259.0,208.5 268.7,202.2 278.2,195.6 287.3,188.8 296.1,181.9 304.6,174.9 312.7,167.7 320.3,160.6 327.4,153.4 333.9,146.2 340.0,139.1 345.4,132.1 350.3,125.3 354.5,118.5 358.0,112.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.6" stroke-linejoin="round"/>
+<polyline points="220.0,158.0 358.0,112.0 404.0,20.0 266.0,66.0 220.0,158.0" fill="none" stroke="#2b3a67" stroke-width="1.8" stroke-dasharray="6 4" stroke-linejoin="round"/>
+<polyline points="266.0,158.0 265.9,154.8 265.6,151.6 265.0,148.4 264.2,145.3 263.2,142.3 262.0,139.3 260.6,136.4 259.0,133.6 257.2,131.0 255.2,128.4 253.1,126.0 250.8,123.8 248.3,121.8 245.7,119.9 243.0,118.2 240.2,116.7 237.2,115.3 234.2,114.3 231.1,113.4 228.0,112.7 224.8,112.3 221.6,112.0 218.4,112.0 215.2,112.3 212.0,112.7 208.9,113.4 205.8,114.3 202.8,115.3 199.8,116.7 197.0,118.2 194.3,119.9 191.7,121.8 189.2,123.8 186.9,126.0 184.8,128.4 182.8,131.0 181.0,133.6 179.4,136.4 178.0,139.3 176.8,142.3 175.8,145.3 175.0,148.4 174.4,151.6 174.1,154.8 174.0,158.0 174.1,161.2 174.4,164.4 175.0,167.6 175.8,170.7 176.8,173.7 178.0,176.7 179.4,179.6 181.0,182.4 182.8,185.0 184.8,187.6 186.9,190.0 189.2,192.2 191.7,194.2 194.3,196.1 197.0,197.8 199.8,199.3 202.8,200.7 205.8,201.7 208.9,202.6 212.0,203.3 215.2,203.7 218.4,204.0 221.6,204.0 224.8,203.7 228.0,203.3 231.1,202.6 234.2,201.7 237.2,200.7 240.2,199.3 243.0,197.8 245.7,196.1 248.3,194.2 250.8,192.2 253.1,190.0 255.2,187.6 257.2,185.0 259.0,182.4 260.6,179.6 262.0,176.7 263.2,173.7 264.2,170.7 265.0,167.6 265.6,164.4 265.9,161.2 266.0,158.0" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="220.0" y1="158.0" x2="358.0" y2="112.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M351.5 118.3 L358.0 112.0 L349.1 110.8" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="220.0" y1="158.0" x2="266.0" y2="66.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M265.9 75.0 L266.0 66.0 L258.9 71.5" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<rect x="185.7" y="128.8" width="18.0" height="26" fill="#fffdf7" opacity="0.92"/><text x="194.7" y="148.8" font-size="20" fill="#5f7f4f" text-anchor="middle" font-weight="bold">π</text>
+<rect x="81.6" y="66.4" width="74.4" height="24" fill="#fffdf7" opacity="0.92"/><text x="118.8" y="84.4" font-size="18" fill="#a8322a" text-anchor="middle" font-weight="bold">面積 5π</text>
+<text x="364.0" y="132.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">a₁</text>
+<text x="260.0" y="58.0" font-size="14" fill="#2b3a67" text-anchor="end" font-weight="bold">a₂</text>
+<text x="24.0" y="330.0" font-size="14" fill="#2a2723" text-anchor="start">緑：単位円（面積 π）→ 朱：像の楕円（面積 5π = |det A|·π）</text>
+</svg>
+<figcaption><strong>図 6.1</strong>　$A=\begin{pmatrix}3&1\\1&2\end{pmatrix}$ は単位円（緑）を楕円（朱）に移す。藍の破線は単位正方形の像で、面積は5。円も正方形と同じ倍率 $|\det A|=5$ で面積が変わり、楕円の面積は $5\pi$ になる。</figcaption>
+</figure>
+<p><strong>符号</strong>：$\det A\lt0$ のときは、図形が鏡に映したように向きが反転する（時計回りと反時計回りが入れ替わる）。面積は $|\det A|$ 倍。</p>
+
+<h3 id="sec-6-2"><span class="no">6.2</span>代表的な写像の行列式</h3>
+<p>第16回で扱った基本的な写像の $\det$ を並べる。図6.2 を見る。</p>
+<table class="tb">
+<tr><th>写像</th><th>行列</th><th>$\det$</th><th>理由</th></tr>
+<tr><td>回転（角 $\theta$）</td><td>$\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}$</td><td>$1$</td><td>$\cos^2\theta+\sin^2\theta=1$。形を保つので面積は不変、向きも保つ</td></tr>
+<tr><td>鏡映（$x$ 軸に関して）</td><td>$\begin{pmatrix}1&0\\0&-1\end{pmatrix}$</td><td>$-1$</td><td>面積は不変、向きが反転</td></tr>
+<tr><td>拡大縮小</td><td>$\begin{pmatrix}p&0\\0&q\end{pmatrix}$</td><td>$pq$</td><td>横が $p$ 倍、縦が $q$ 倍</td></tr>
+<tr><td>せん断</td><td>$\begin{pmatrix}1&t\\0&1\end{pmatrix}$</td><td>$1$</td><td>E2：底辺を固定して滑らせるだけ</td></tr>
+<tr><td>射影（つぶす）</td><td>$\begin{pmatrix}1&0\\0&0\end{pmatrix}$</td><td>$0$</td><td>平面が直線につぶれる</td></tr>
+</table>
+<figure class="fig" id="fig-6-2">
+<svg viewBox="0 0 440 500" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="代表的な写像の行列式" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>代表的な写像の行列式</title>
+<rect x="0" y="0" width="440" height="500" fill="#fffdf7"/>
+<rect x="8" y="8" width="424" height="84" rx="5" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<polyline points="60.0,64.0 88.0,64.0 88.0,55.6 68.4,55.6 68.4,36.0 60.0,36.0 60.0,64.0" fill="none" stroke="#6b645a" stroke-width="1.4" stroke-dasharray="4 3" stroke-linejoin="round"/>
+<polyline points="60.0,64.0 84.2,50.0 80.0,42.7 63.1,52.5 53.3,35.6 46.0,39.8 60.0,64.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="150.0" y="42.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">回転 30°</text>
+<text x="150.0" y="68.0" font-size="14" fill="#6b645a" text-anchor="start">形も向きも保つ</text>
+<text x="300.0" y="56.0" font-size="15" fill="#2a2723" text-anchor="start">det =</text>
+<text x="344.0" y="57.0" font-size="22" fill="#a8322a" text-anchor="start" font-weight="bold">1</text>
+<rect x="8" y="98" width="424" height="84" rx="5" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<polyline points="60.0,154.0 88.0,154.0 88.0,145.6 68.4,145.6 68.4,126.0 60.0,126.0 60.0,154.0" fill="none" stroke="#6b645a" stroke-width="1.4" stroke-dasharray="4 3" stroke-linejoin="round"/>
+<polyline points="60.0,154.0 88.0,154.0 88.0,162.4 68.4,162.4 68.4,182.0 60.0,182.0 60.0,154.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="150.0" y="132.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">鏡映（x 軸）</text>
+<text x="150.0" y="158.0" font-size="14" fill="#6b645a" text-anchor="start">向きが反転する</text>
+<text x="300.0" y="146.0" font-size="15" fill="#2a2723" text-anchor="start">det =</text>
+<text x="344.0" y="147.0" font-size="22" fill="#2b3a67" text-anchor="start" font-weight="bold">−1</text>
+<rect x="8" y="188" width="424" height="84" rx="5" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<polyline points="60.0,244.0 88.0,244.0 88.0,235.6 68.4,235.6 68.4,216.0 60.0,216.0 60.0,244.0" fill="none" stroke="#6b645a" stroke-width="1.4" stroke-dasharray="4 3" stroke-linejoin="round"/>
+<polyline points="60.0,244.0 116.0,244.0 116.0,231.4 76.8,231.4 76.8,202.0 60.0,202.0 60.0,244.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="150.0" y="222.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">拡大縮小</text>
+<text x="150.0" y="248.0" font-size="14" fill="#6b645a" text-anchor="start">横2倍・縦1.5倍</text>
+<text x="300.0" y="236.0" font-size="15" fill="#2a2723" text-anchor="start">det =</text>
+<text x="344.0" y="237.0" font-size="22" fill="#a8322a" text-anchor="start" font-weight="bold">3</text>
+<rect x="8" y="278" width="424" height="84" rx="5" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<polyline points="60.0,334.0 88.0,334.0 88.0,325.6 68.4,325.6 68.4,306.0 60.0,306.0 60.0,334.0" fill="none" stroke="#6b645a" stroke-width="1.4" stroke-dasharray="4 3" stroke-linejoin="round"/>
+<polyline points="60.0,334.0 88.0,334.0 96.4,325.6 76.8,325.6 96.4,306.0 88.0,306.0 60.0,334.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="150.0" y="312.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">せん断</text>
+<text x="150.0" y="338.0" font-size="14" fill="#6b645a" text-anchor="start">滑らせるだけ</text>
+<text x="300.0" y="326.0" font-size="15" fill="#2a2723" text-anchor="start">det =</text>
+<text x="344.0" y="327.0" font-size="22" fill="#a8322a" text-anchor="start" font-weight="bold">1</text>
+<rect x="8" y="368" width="424" height="84" rx="5" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<polyline points="60.0,424.0 88.0,424.0 88.0,415.6 68.4,415.6 68.4,396.0 60.0,396.0 60.0,424.0" fill="none" stroke="#6b645a" stroke-width="1.4" stroke-dasharray="4 3" stroke-linejoin="round"/>
+<polyline points="60.0,424.0 88.0,424.0 88.0,424.0 68.4,424.0 68.4,424.0 60.0,424.0 60.0,424.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="150.0" y="402.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">射影</text>
+<text x="150.0" y="428.0" font-size="14" fill="#6b645a" text-anchor="start">直線につぶれる</text>
+<text x="300.0" y="416.0" font-size="15" fill="#2a2723" text-anchor="start">det =</text>
+<text x="344.0" y="417.0" font-size="22" fill="#a8322a" text-anchor="start" font-weight="bold">0</text>
+</svg>
+<figcaption><strong>図 6.2</strong>　文字 L（灰の破線）をそれぞれの写像で移した形（色）。回転とせん断は面積も向きも保つので $\det=1$、鏡映は向きを反転するので $-1$、拡大縮小は倍率の積（ここでは $2\times1.5=3$）、射影は面積が0になる。</figcaption>
+</figure>
+
+<h3 id="sec-6-3"><span class="no">6.3</span>外積とヤコビアンとの関係</h3>
+<p><strong>外積</strong>：3次元で $\boldsymbol a_3\cdot(\boldsymbol a_1\times\boldsymbol a_2)=\det(\boldsymbol a_1,\boldsymbol a_2,\boldsymbol a_3)$（1.5）。2本の平面ベクトル $\boldsymbol a_1=(a,c)$、$\boldsymbol a_2=(b,d)$ を $z$ 成分0として3次元に埋め込むと、$\boldsymbol a_1\times\boldsymbol a_2=(0,0,ad-bc)$。外積の大きさ $\|\boldsymbol a_1\times\boldsymbol a_2\|=|ad-bc|$ は、平行四辺形の面積である（<a href="05_第5回_ベクトルと行列の書き方.html#sym-cross">第5回</a>）。</p>
+<p><strong>ヤコビアン</strong>：<a href="13_第13回_重積分と変数変換.html#sym-jacobian">第13回のヤコビアン</a> $\dfrac{\partial(x,y)}{\partial(u,v)}$ は、座標変換 $(u,v)\mapsto(x,y)$ の<strong>各点のごく近くを線形写像で近似したときの行列（ヤコビ行列）の行列式</strong>である。重積分の置換積分 $dA=|J|\,du\,dv$ は、この回の「$\det$ は面積の拡大率」を、点ごとに変わる写像に使ったものにあたる。たとえば極座標 $(r,\theta)\mapsto(x,y)=(r\cos\theta,r\sin\theta)$ のヤコビ行列は $\begin{pmatrix}\cos\theta&-r\sin\theta\\\sin\theta&r\cos\theta\end{pmatrix}$ で、$\det=r\cos^2\theta+r\sin^2\theta=r$。第13回で「$dA=r\,dr\,d\theta$」としたときの $r$ の正体は、この $\det$ である。</p>
+<div class="why"><span class="label">ひとことで</span>$|\det A|$ は<strong>どんな図形の面積（体積）も同じ倍率で変える</strong>倍率で、符号は向きの反転を表す。外積やヤコビアンは、同じ量を別の場所で呼んだものである。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>数値計算への予告</h2>
+<p>① <strong>計算量</strong>：ライプニッツの公式は $n!$ 項、余因子展開は再帰的に使うと同じく $n!$ 程度の乗算。行基本変形で上三角にすれば $n^3$ 程度（第50回）。$n=20$ で $20!\approx2.4\times10^{18}$ に対し $20^3=8000$。実際の計算は掃き出しで行う。</p>
+<p>② <strong>$\det$ が0に近い</strong>：数値計算では $\det A$ が小さいことは「ほぼ特異」を意味するとは限らない（$A$ を $10^{-3}$ 倍するだけで $\det$ は $10^{-3n}$ 倍）。ほぼ特異かどうかの判断には、特異値（第22回）や条件数を使う。</p>
+<p>③ <strong>固有値との接続</strong>：固有値は $\det(A-\lambda I)=0$ の解である（第20回）。これは「$A-\lambda I$ が可逆でない」＝定理5.2 の $\det=0$ にあたる。</p>
+
+<!-- ============================================================ -->
+<h2 id="sec-8"><span class="no">8</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_18.py）。</p>
+
+<div class="ex"><span class="label">例題1（A 確認：2×2 の行列式と面積）</span>
+<p>$A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ について、$\det A$ を求め、$A$ が単位正方形を移した平行四辺形の面積と向きを答えよ。列を入れ替えた $A'$ の $\det$ も求めよ。</p>
+<p>① $\det A=4\cdot3-1\cdot2=12-2=10$。　<span class="meta">$ad-bc$：$a=4,b=1,c=2,d=3$</span></p>
+<p>② 面積は $|10|=10$。$\det A\gt0$ なので向きは保たれる（左回り）。</p>
+<p>③ $A'=\begin{pmatrix}1&4\\3&2\end{pmatrix}$（第1列と第2列を入れ替えた）。$\det A'=1\cdot2-4\cdot3=2-12=-10$。　<span class="meta">E1：列を入れ替えると符号が変わる</span></p>
+</div>
+
+<div class="ex"><span class="label">例題2（B 標準：行基本変形で計算する）</span>
+<p>$B=\begin{pmatrix}0&2&1\\1&1&3\\2&3&0\end{pmatrix}$ の $\det$ を、行基本変形で求めよ。</p>
+<p>① $R_1\leftrightarrow R_2$：$\begin{pmatrix}1&1&3\\0&2&1\\2&3&0\end{pmatrix}$。符号を1回反転。　<span class="meta">4.1(i)</span></p>
+<p>② $R_3\leftarrow R_3-2R_1$：$(0,1,-6)$。　③ $R_3\leftarrow R_3-\frac12R_2$：$(0,0,-\frac{13}2)$。</p>
+<p>④ 対角成分の積 $1\cdot2\cdot(-\frac{13}2)=-13$。符号反転で $\det B=13$。　<span class="meta">4.3 で示したとおり、サラスの公式でも $13$</span></p>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：余因子展開）</span>
+<p>$A=\begin{pmatrix}1&0&2&0\\3&1&0&2\\0&2&1&0\\1&0&0&1\end{pmatrix}$ の $\det$ を、第1行に沿って展開して求めよ。</p>
+<p>① 第1行は $(1,0,2,0)$。0でない成分は $A_{11}=1$、$A_{13}=2$。</p>
+<p>② $C_{11}=(+1)\det\begin{pmatrix}1&0&2\\2&1&0\\0&0&1\end{pmatrix}$。第3行に沿って展開（第3行は $(0,0,1)$）すると $=1\cdot\det\begin{pmatrix}1&0\\2&1\end{pmatrix}=1$。よって $C_{11}=1$。</p>
+<p>③ $C_{13}=(+1)\det\begin{pmatrix}3&1&2\\0&2&0\\1&0&1\end{pmatrix}$。第2行に沿って展開（第2行は $(0,2,0)$、$(2,2)$ 成分の符号は $+$）すると $2\cdot\det\begin{pmatrix}3&2\\1&1\end{pmatrix}=2(3-2)=2$。よって $C_{13}=2$。</p>
+<p>④ $\det A=1\cdot1+2\cdot2=5$。　<span class="meta">4.4 で第2列に沿って求めた値 5 と一致</span></p>
+</div>
+
+<div class="ex"><span class="label">例題4（B 標準：パラメータを含む行列の可逆性）</span>
+<p>$A=\begin{pmatrix}1&1&1\\1&2&k\\1&4&k^2\end{pmatrix}$ が可逆になるような $k$ の条件を求めよ。</p>
+<p>① $R_2\leftarrow R_2-R_1$：$(0,1,k-1)$。　② $R_3\leftarrow R_3-R_1$：$(0,3,k^2-1)$。　<span class="meta">どちらも (iii)：$\det$ は変わらない</span></p>
+<p>③ $R_3\leftarrow R_3-3R_2$：$(0,0,k^2-1-3(k-1))=(0,0,k^2-3k+2)$。　<span class="meta">$-1+3=2$</span></p>
+<p>④ 上三角の対角成分の積 $\det A=1\cdot1\cdot(k^2-3k+2)=(k-1)(k-2)$。　<span class="meta">$k^2-3k+2$ を因数分解</span></p>
+<p>⑤ 定理5.2 により可逆 $\Leftrightarrow\det A\neq0\Leftrightarrow k\neq1$ かつ $k\neq2$。　<span class="meta">$k=1$ なら第3列が第1列と等しく、$k=2$ なら第3列が第2列と等しい（$x^2$ が $x=1,2$ のとき）</span></p>
+</div>
+
+<div class="ex"><span class="label">例題5（B 標準：余因子行列で逆行列、クラメルの公式）</span>
+<p>$A=\begin{pmatrix}1&2&0\\0&1&3\\1&0&1\end{pmatrix}$、$\boldsymbol b=\begin{pmatrix}2\\1\\2\end{pmatrix}$。$\det A$、$A^{-1}$ を求め、$A\boldsymbol x=\boldsymbol b$ を2通りで解け。</p>
+<p>① $\det A=7$、$A^{-1}=\frac17\begin{pmatrix}1&-2&6\\3&1&-3\\-1&2&1\end{pmatrix}$。　<span class="meta">5.3 の例</span></p>
+<p>② 逆行列で：$\boldsymbol x=A^{-1}\boldsymbol b=\frac17\begin{pmatrix}1\cdot2-2\cdot1+6\cdot2\\3\cdot2+1\cdot1-3\cdot2\\-1\cdot2+2\cdot1+1\cdot2\end{pmatrix}=\frac17\begin{pmatrix}12\\1\\2\end{pmatrix}$。</p>
+<p>③ クラメルで：$x_1=\dfrac{\det\begin{pmatrix}2&2&0\\1&1&3\\2&0&1\end{pmatrix}}7$。第1行で展開：$2(1-0)-2(1-6)+0=2+10=12$。よって $x_1=\frac{12}7$ ✓。</p>
+<p>④ 確かめ：$A\boldsymbol x$ の第1成分 $\frac{12}7+2\cdot\frac17=2$ ✓、第2成分 $\frac17+3\cdot\frac27=1$ ✓、第3成分 $\frac{12}7+\frac27=2$ ✓。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-9"><span class="no">9</span>演習問題</h2>
+<p class="meta">問1〜4 が A（確認）、問5〜8 が B（標準）、問9〜11 が C（発展）。解答は折りたたんである。問9〜11 は Hefferon <em>Linear Algebra</em>（GFDL／CC BY-SA）第4章の主題に沿って本教材で作った問題で、同書の公式解答とは照合していない。</p>
+
+<div class="box"><span class="label">問1（A 確認：2×2 の $\det$ と面積）</span>(1) $\begin{pmatrix}5&2\\1&3\end{pmatrix}$、(2) $\begin{pmatrix}2&6\\1&3\end{pmatrix}$ の $\det$ を求めよ。(2) の列について何が言えるか。
+<details><summary>解答</summary>
+<p>(1) $5\cdot3-2\cdot1=13$。(2) $2\cdot3-6\cdot1=0$。第2列 $(6,3)$ は第1列 $(2,1)$ の3倍で、列が一次従属（E3）。平行四辺形が線分につぶれている。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認：サラスの公式）</span>$\begin{pmatrix}1&2&3\\0&1&4\\5&6&0\end{pmatrix}$ の $\det$ をサラスの公式で求めよ。
+<details><summary>解答</summary>
+<p>右下がりの積の和：$1\cdot1\cdot0+2\cdot4\cdot5+3\cdot0\cdot6=0+40+0=40$。右上がりの積の和：$3\cdot1\cdot5+2\cdot0\cdot0+1\cdot4\cdot6=15+0+24=39$。$40-39=1$。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認：置換の符号）</span>$\sigma=(3,1,2)$、$\tau=(4,3,2,1)$ の転倒数と符号を求めよ。
+<details><summary>解答</summary>
+<p>$\sigma$：組 $(1,2)$：$3\gt1$（逆転）、$(1,3)$：$3\gt2$（逆転）、$(2,3)$：$1\gt2$ でない。転倒数2、$\operatorname{sgn}\sigma=+1$。$\tau$：6つの組すべてが逆転（降順）。転倒数 $6=\binom42$、$\operatorname{sgn}\tau=+1$。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認：三角行列）</span>$\begin{pmatrix}2&5&1\\0&3&7\\0&0&-4\end{pmatrix}$ の $\det$ を求めよ。
+<details><summary>解答</summary>
+<p>上三角なので対角成分の積：$2\cdot3\cdot(-4)=-24$（定理4.2）。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準：4×4 を行基本変形で）</span>$A=\begin{pmatrix}1&2&1&0\\2&5&3&1\\1&3&4&2\\0&1&2&5\end{pmatrix}$ の $\det$ を求めよ。
+<details><summary>解答</summary>
+<p>① $R_2\leftarrow R_2-2R_1$：$(0,1,1,1)$、$R_3\leftarrow R_3-R_1$：$(0,1,3,2)$。　② $R_3\leftarrow R_3-R_2$：$(0,0,2,1)$、$R_4\leftarrow R_4-R_2$：$(0,0,1,4)$。　③ $R_4\leftarrow R_4-\frac12R_3$：$(0,0,0,4-\frac12)=(0,0,0,\frac72)$。　④ 対角成分の積 $1\cdot1\cdot2\cdot\frac72=7$。入れ替えなし、(ii) なしなので $\det A=7$。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準：余因子展開）</span>$A=\begin{pmatrix}2&1&0&0\\1&2&1&0\\0&1&2&1\\0&0&1&2\end{pmatrix}$ の $\det$ を、第1行に沿って展開して求めよ。
+<details><summary>解答</summary>
+<p>第1行は $(2,1,0,0)$。$\det A=2\det\begin{pmatrix}2&1&0\\1&2&1\\0&1&2\end{pmatrix}-1\cdot\det\begin{pmatrix}1&1&0\\0&2&1\\0&1&2\end{pmatrix}$。　<span class="meta">$(1,2)$ 成分の符号は $-$</span></p>
+<p>前の3×3：サラス $=2\cdot2\cdot2+1\cdot1\cdot0+0-0-2\cdot1\cdot1-1\cdot1\cdot2=8-2-2=4$。後の3×3は第1列に沿って展開して $1\cdot(4-1)=3$。よって $\det A=2\cdot4-3=5$。　<span class="meta">対角に $2$、その隣に $1$ が並ぶ $n$ 次の行列では $\det=n+1$</span></p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準：積・逆・$c$ 倍）</span>$A$ は $3\times3$ で $\det A=4$。(1) $\det(2A)$、(2) $\det(A^{-1})$、(3) $\det(A^2)$、(4) $\det(A^{\mathsf T}A)$ を求めよ。
+<details><summary>解答</summary>
+<p>(1) $\det(2A)=2^3\det A=32$（各列が2倍、D1を3回）。(2) $1/4$（定理5.2）。(3) $\det(AA)=\det A\cdot\det A=16$（定理5.1）。(4) $\det(A^{\mathsf T}A)=\det A^{\mathsf T}\cdot\det A=4\cdot4=16$（定理3.5、5.1）。</p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準：可逆になる条件）</span>$A=\begin{pmatrix}1&2&3\\2&4&k\\1&1&1\end{pmatrix}$ が可逆でない $k$ を求めよ。
+<details><summary>解答</summary>
+<p>サラスの公式を使う。右下がりの積の和：$1\cdot4\cdot1+2\cdot k\cdot1+3\cdot2\cdot1=4+2k+6=10+2k$。右上がり：$3\cdot4\cdot1+2\cdot2\cdot1+1\cdot k\cdot1=12+4+k=16+k$。$\det A=(10+2k)-(16+k)=k-6$。$\det A=0$ となるのは $k=6$。　<span class="meta">$k=6$ のとき第2行 $(2,4,6)=2\times$ 第1行 $(1,2,3)$</span></p>
+</details></div>
+
+<div class="box"><span class="label">問9（C 発展：ヴァンデルモンドの行列式）</span>$V=\begin{pmatrix}1&x&x^2\\1&y&y^2\\1&z&z^2\end{pmatrix}$ の $\det$ が $(y-x)(z-x)(z-y)$ に等しいことを示せ。
+<details><summary>解答</summary>
+<p>① $R_2\leftarrow R_2-R_1$：$(0,\ y-x,\ y^2-x^2)$、$R_3\leftarrow R_3-R_1$：$(0,\ z-x,\ z^2-x^2)$。　<span class="meta">(iii)</span></p>
+<p>② 第1列に沿って展開：$\det V=1\cdot\det\begin{pmatrix}y-x&y^2-x^2\\z-x&z^2-x^2\end{pmatrix}$。</p>
+<p>③ $y^2-x^2=(y-x)(y+x)$、$z^2-x^2=(z-x)(z+x)$。第1行から $(y-x)$、第2行から $(z-x)$ をくくり出す（D1 の行版）：$(y-x)(z-x)\det\begin{pmatrix}1&y+x\\1&z+x\end{pmatrix}$。</p>
+<p>④ $\det\begin{pmatrix}1&y+x\\1&z+x\end{pmatrix}=(z+x)-(y+x)=z-y$。よって $\det V=(y-x)(z-x)(z-y)$。□　<span class="meta">自作の解答。例題4（$x=1,y=2,z=k$）は $(2-1)(k-1)(k-2)$ で、この公式の特別な場合</span></p>
+</details></div>
+
+<div class="box"><span class="label">問10（C 発展：直交行列の行列式）</span>$Q^{\mathsf T}Q=I$ を満たす正方行列 $Q$（<strong>直交行列</strong>）の $\det$ は $+1$ か $-1$ であることを示せ。
+<details><summary>解答</summary>
+<p>① $\det(Q^{\mathsf T}Q)=\det I=1$。　<span class="meta">D3</span></p>
+<p>② $\det(Q^{\mathsf T}Q)=\det Q^{\mathsf T}\cdot\det Q=(\det Q)^2$。　<span class="meta">定理5.1、定理3.5</span></p>
+<p>③ $(\det Q)^2=1$ だから $\det Q=\pm1$。□　<span class="meta">自作の解答。回転は $+1$、鏡映は $-1$（6.2）。第19回で直交行列を扱う</span></p>
+</details></div>
+
+<div class="box"><span class="label">問11（C 発展：極座標のヤコビアン、球座標の予告）</span>(1) 極座標 $(x,y)=(r\cos\theta,\ r\sin\theta)$ のヤコビ行列式が $r$ になることを示せ。(2) 円板 $x^2+y^2\le R^2$ の面積を $\iint dA$ から求めよ（第13回の記法）。
+<details><summary>解答</summary>
+<p>(1) $\dfrac{\partial x}{\partial r}=\cos\theta$、$\dfrac{\partial x}{\partial\theta}=-r\sin\theta$、$\dfrac{\partial y}{\partial r}=\sin\theta$、$\dfrac{\partial y}{\partial\theta}=r\cos\theta$。ヤコビ行列の行列式は $\cos\theta\cdot r\cos\theta-(-r\sin\theta)\sin\theta=r(\cos^2\theta+\sin^2\theta)=r$。</p>
+<p>(2) $dA=r\,dr\,d\theta$。$\displaystyle\int_0^{2\pi}\int_0^Rr\,dr\,d\theta=2\pi\cdot\frac{R^2}2=\pi R^2$ ✓。　<span class="meta">自作の解答。第13回の結果と同じ</span></p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ $\det A$ を「列ベクトルが作る平行四辺形・平行六面体の符号つき面積・体積」として説明でき、2×2 の $ad-bc$ を図から導ける。</li>
+<li>□ 3×3 をサラスの公式で計算でき、4×4 以上では使えないことを言える。</li>
+<li>□ D1（各列について線形）・D2（同じ列が2つなら0）・D3（$\det I=1$）を書け、E1〜E3 を導ける。</li>
+<li>□ 置換の符号を転倒数で求め、ライプニッツの公式 $\sum_\sigma\operatorname{sgn}\sigma\prod_jA_{\sigma(j)j}$ を読める。$\det A^{\mathsf T}=\det A$ を言える。</li>
+<li>□ 行基本変形での $\det$ の変化（入れ替え：$-1$ 倍、$c$ 倍：$c$ 倍、倍を足す：不変）を言え、上三角にして対角成分の積で計算できる。</li>
+<li>□ 余因子展開を符号 $(-1)^{i+j}$ に注意して使える。</li>
+<li>□ $\det(AB)=\det A\det B$、$\det A^{-1}=1/\det A$、$\det(cA)=c^n\det A$ を言え、$\det A\neq0\Leftrightarrow$ 可逆 $\Leftrightarrow\operatorname{rank}A=n$ を説明できる。</li>
+<li>□ $A^{-1}=\frac1{\det A}\operatorname{adj}A$ とクラメルの公式を使える（ただし数値計算には向かない）。</li>
+<li>□ $|\det A|$ が任意の図形の面積・体積の拡大率であり、ヤコビアン・外積と同じ量であることを言える。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第19回）</strong>：<a href="19_第19回_内積・直交・射影.html">内積・直交・射影</a>。この回で「行列式 $\pm1$ の写像は面積を保つ」ことを見た（問10 の直交行列）。第19回では、長さと角度を保つ写像、つまり内積と直交を正面から扱う。<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：行列式の導入（面積・体積の性質から定義する流れ）、置換による定義、余因子展開、積の公式は、Jim Hefferon <em>Linear Algebra</em>（GFDL／CC BY-SA）第4章（Determinants）の順序と主題を参照し、本教材向けに書き直したもの。符号と正則性の見方は MML（<em>Mathematics for Machine Learning</em>）第4章を照合した。例題・演習・図・表は自作で、数値は検算済み（draft/check_18.py）。演習の C は公式解答とは照合していない。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

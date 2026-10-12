@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第19回 内積・直交・射影</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="img/19_hero_noh.jpg" alt="青空の下、深い軒をもつ木造の能舞台が、柱と梁を組んで建っている">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第19回</p><h1>内積・直交・射影</h1></div>
+<figcaption><p class="cap">柱と梁が、水平と垂直に、直角に組まれている。</p><p class="cr">Komatta（2011年、小樽の能舞台）／<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Noh_Stage_Otaru.jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
+</figure>
+<p class="lead">第5回で「成分を掛けて足した数」として書いた内積を、「満たすべき3つの性質」として取り出し直す。その3つだけから、長さ・角・直交が決まり、「ベクトルのうち、ある方向の成分」を取り出す射影と、直交する基底を作るグラム・シュミットの方法までを、記号を省かずに1行ずつ追う。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：第5回の内積は「数の組」専用の計算だった → 関数や重みつきの量にも「長さ」「直交」を使いたい → 内積を<em>計算式</em>ではなく<em>3つの性質</em>（対称・線形・正定値）で定義し直す（<strong>内積の公理</strong>）→ この3つだけから、長さ $\|\boldsymbol v\|:=\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$、<strong>コーシー・シュワルツの不等式</strong>、角 $\theta$ が決まる → 内積が0なら<strong>直交</strong> $\perp$ → 直交するものは一次独立で、互いに長さ1の直交基底（<strong>正規直交基底</strong>）なら座標が内積1回で出る → 「$\boldsymbol v$ のうち $\boldsymbol u$ 方向の成分」を取り出す操作が<strong>射影</strong>で、最も近い点を与える → 任意の基底から正規直交基底を作る手順が<strong>グラム・シュミット</strong>。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>第1回から続く約束どおり、新しい記号は緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。この回の中心の省略は<strong>射影の公式</strong>（$\operatorname{proj}_{\boldsymbol u}\boldsymbol v=\frac{\langle\boldsymbol v,\boldsymbol u\rangle}{\langle\boldsymbol u,\boldsymbol u\rangle}\boldsymbol u$ を、長さ1のベクトルでは $\langle\boldsymbol v,\boldsymbol e\rangle\boldsymbol e$ まで縮める）なので、<a href="#abbr-proj">5.2 の省略の段階</a>で S0 から S3 まで1段ずつ並べる。</p>
+<p>内積・ノルム・成分・転置は第5回、一次結合・基底・部分空間・次元は第15回、$A\boldsymbol x$ と逆行列は第16回、ランク・核・像は第17回で説明済みである。使うたびにリンクで戻れるようにしてある。高校で習った「ベクトルの内積」「三平方の定理」も、仮定せずに一度は書く（覚えている人は飛ばしてよい）。</p>
+<p>なお、行列式（第18回）、固有値と対称行列の対角化（第20・21回）、フーリエ級数（第36回）、最小二乗法（第47回）は、この回では<strong>予告だけ</strong>にする。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で<strong>新しく説明する記号</strong>と、<strong>前の回で説明済みの記号</strong>を分けて並べる。右の列の「→」で説明のある場所へ飛べる。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$\langle\boldsymbol u,\boldsymbol v\rangle$（内積、公理で定義し直したもの）</td><td>ユー・ブイ の内積（アングル・ユー・カンマ・ブイ・アングル）</td><td>2つのベクトルから数を作る規則のうち、3つの性質（対称・線形・正定値）を満たすもの</td><td><a href="#sym-inner-product">→1.2</a></td></tr>
+<tr><td>$\|\boldsymbol v\|:=\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$（内積から決まる長さ）</td><td>ノルム・ブイ</td><td>自分自身との内積の平方根</td><td><a href="#sym-norm-induced">→2.1</a></td></tr>
+<tr><td>コーシー・シュワルツの不等式</td><td>—</td><td>$\lvert\langle\boldsymbol u,\boldsymbol v\rangle\rvert\le\|\boldsymbol u\|\|\boldsymbol v\|$</td><td><a href="#sym-cauchy">→2.2</a></td></tr>
+<tr><td>$\theta$（2つのベクトルのなす角）</td><td>シータ</td><td>$\cos\theta=\frac{\langle\boldsymbol u,\boldsymbol v\rangle}{\|\boldsymbol u\|\|\boldsymbol v\|}$ で決まる角</td><td><a href="#sym-angle">→2.4</a></td></tr>
+<tr><td>$\boldsymbol u\perp\boldsymbol v$（直交）</td><td>ユー・ブイ は 直交する（ユー・パープ・ブイ）</td><td>内積が0</td><td><a href="#sym-orthogonal">→3.1</a></td></tr>
+<tr><td>$W^{\perp}$（直交補空間）</td><td>ダブリュー・パープ</td><td>$W$ のどのベクトルとも直交するベクトルの全体</td><td><a href="#sym-orth-complement">→3.4</a></td></tr>
+<tr><td>正規直交基底</td><td>せいきちょっこうきてい</td><td>どの2本も直交し、どれも長さ1の基底</td><td><a href="#sym-orthonormal">→4.1</a></td></tr>
+<tr><td>直交行列 $Q$（$Q^{\mathsf T}Q=I$）</td><td>ちょっこうぎょうれつ・キュー</td><td>列が正規直交基底になっている正方行列</td><td><a href="#sym-orthogonal-matrix">→4.3</a></td></tr>
+<tr><td>$\operatorname{proj}_{\boldsymbol u}\boldsymbol v$（射影）</td><td>プロジェクション・ユー・ブイ</td><td>$\boldsymbol v$ のうち $\boldsymbol u$ の方向にある成分</td><td><a href="#sym-projection">→5.2</a></td></tr>
+<tr><td>$P$（射影行列）、$P^2=P$</td><td>しゃえいぎょうれつ・ピー</td><td>射影を行列の積で書いたもの</td><td><a href="#sym-proj-matrix">→5.3</a></td></tr>
+<tr><td>グラム・シュミットの方法</td><td>—</td><td>基底から、正規直交基底を1本ずつ作る手順</td><td><a href="#sym-gram-schmidt">→6.2</a></td></tr>
+<tr><td>$A=QR$（QR分解）</td><td>キューアール・ぶんかい</td><td>$A$ を直交行列 $Q$ と上三角行列 $R$ の積に書いたもの</td><td><a href="#sym-qr">→6.4</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出た記号（リンクで戻れる）</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>初出</th></tr>
+<tr><td>$=$、$:=$</td><td>等しい／左の名前を右の式で決める</td><td><a href="01_第1回_数式を文として読む.html#sym-equal">第1回</a>、<a href="01_第1回_数式を文として読む.html#sym-defeq">第1回</a></td></tr>
+<tr><td>$\in$、$\{\ \mid\ \}$、$\mathbb R$、$\subseteq$</td><td>要素である／条件で集合を作る／実数全体／部分集合</td><td><a href="02_第2回_集合と論理.html#sym-in">第2回</a>、<a href="02_第2回_集合と論理.html#sym-setbuilder">第2回</a>、<a href="02_第2回_集合と論理.html#sym-numsets">第2回</a>、<a href="02_第2回_集合と論理.html#sym-subset">第2回</a></td></tr>
+<tr><td>$\Rightarrow$、$\Leftrightarrow$、$\forall$、$\exists$</td><td>ならば／同値／すべての／存在する</td><td><a href="02_第2回_集合と論理.html#sym-implies">第2回</a>、<a href="02_第2回_集合と論理.html#sym-iff">第2回</a>、<a href="02_第2回_集合と論理.html#sym-forall">第2回</a>、<a href="02_第2回_集合と論理.html#sym-exists">第2回</a></td></tr>
+<tr><td>$\displaystyle\sum$、$\delta_{ij}$</td><td>総和／クロネッカーのデルタ</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a>、<a href="04_第4回_総和・総乗と添字.html#sym-kronecker">第4回</a></td></tr>
+<tr><td>太字 $\boldsymbol v$（ベクトル）、成分 $v_i$、$\boldsymbol 0$</td><td>数の組／その中の数／全成分が0</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-vector">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-component">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-zero-vector">第5回</a></td></tr>
+<tr><td>$\boldsymbol a\cdot\boldsymbol b=\boldsymbol a^{\mathsf T}\boldsymbol b$（標準内積）、$\|\boldsymbol a\|$、$A^{\mathsf T}$、$I$</td><td>成分の積の和／長さ／転置／単位行列</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-identity">第5回</a></td></tr>
+<tr><td>ベクトル空間、一次結合、$\operatorname{span}$、一次独立、基底、$\dim$、部分空間</td><td>足せて定数倍できる集まり／定数倍の和／張る空間／冗長がない／座標軸の組／基底の本数／閉じた部分</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-vector-space">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-linear-combination">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-span">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-linear-independent">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-basis">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-dim">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-subspace">第15回</a></td></tr>
+<tr><td>$A\boldsymbol x$、線形写像、$AB$、$A^{-1}$</td><td>列の一次結合／写像／合成／逆</td><td><a href="16_第16回_行列は線形写像.html#sym-matvec">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-linear-map">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-matmul">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-inverse-matrix">第16回</a></td></tr>
+<tr><td>$\operatorname{rank}A$、$\ker A$、$\operatorname{im}A$</td><td>主成分の数／$A\boldsymbol x=\boldsymbol 0$ の解全体／$A\boldsymbol x$ の全体</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-rank">第17回</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-ker">第17回</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-im">第17回</a></td></tr>
+<tr><td>$\displaystyle\int_a^b f\,\mathrm dx$（定積分）</td><td>面積（符号つき）</td><td><a href="10_第10回_積分.html#sym-integral-definite">第10回</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>内積を「性質」で定義し直す</h2>
+
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：計算式から、満たすべき性質へ</h3>
+<p>第5回で、内積を<a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">$\boldsymbol a\cdot\boldsymbol b:=a_1b_1+\cdots+a_nb_n$</a> と定めた。これで<a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">長さ</a>も、なす角も、直交も（$\boldsymbol a\cdot\boldsymbol b=0$）計算できた。ただし、この定義には<strong>前の道具ではできないこと</strong>が2つある。</p>
+<ul>
+<li>$n$ 個の数の組でないものには使えない。たとえば「区間 $[-1,1]$ で定義された関数 $f$」には成分がない。それでも、フーリエ級数（第36回）では、関数どうしを「直交している」と言いたい。</li>
+<li>成分に<strong>重み</strong>がつく場合を扱えない。センサー1は精度がよく、センサー2は粗いとき、「誤差の大きさ」には精度に応じた重みをつけて測りたい。成分を単純に足す内積では、これを表せない。</li>
+</ul>
+<p>そこで数学では、「成分を掛けて足す」という<strong>計算の手順</strong>ではなく、その計算が満たしている<strong>性質</strong>のほうを定義にする。3つの性質を満たす規則を、すべて「内積」と呼ぶ。そうすれば、長さ・角・直交・射影の議論が、<strong>3つの性質だけを使って</strong>一度に書ける。内積の「型」がちがっても、同じ証明がそのまま使える、というのがこの回の見通しである。</p>
+<p>図1.1 は、この回で出会う3種類の内積を並べたものである。どれも「2つのものから1つの実数を作る」規則で、中身の計算式だけが違う。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 434" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="3種類の内積" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>3種類の内積</title>
+<rect x="0" y="0" width="440" height="434" fill="#fffdf7"/>
+<rect x="14" y="12" width="412" height="132" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="28.0" y="38.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">ア　数の組（標準内積）</text>
+<text x="28.0" y="70.0" font-size="19" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>⟨</tspan><tspan font-style="italic">u</tspan><tspan>, </tspan><tspan font-style="italic">v</tspan><tspan>⟩ = </tspan><tspan font-style="italic">u</tspan><tspan dy="5.3" font-size="13.3">1</tspan><tspan dy="-5.3" font-style="italic">v</tspan><tspan dy="5.3" font-size="13.3">1</tspan><tspan dy="-5.3"> + </tspan><tspan font-style="italic">u</tspan><tspan dy="5.3" font-size="13.3">2</tspan><tspan dy="-5.3" font-style="italic">v</tspan><tspan dy="5.3" font-size="13.3">2</tspan></text>
+<text x="28.0" y="96.0" font-size="14" fill="#6b645a" text-anchor="start">u = (3, 2)、v = (1, −1) のとき</text>
+<text x="44.0" y="118.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>→  3·1 + 2·(−1) = 1</tspan></text>
+<text x="412.0" y="38.0" font-size="14" fill="#5f7f4f" text-anchor="end">対称 ✓　線形 ✓　正定値 ✓</text>
+<rect x="14" y="154" width="412" height="132" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="28.0" y="180.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">イ　重みつき</text>
+<text x="28.0" y="212.0" font-size="19" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>⟨</tspan><tspan font-style="italic">u</tspan><tspan>, </tspan><tspan font-style="italic">v</tspan><tspan>⟩</tspan><tspan dy="5.3" font-size="13.3" font-style="italic">w</tspan><tspan dy="-5.3"> = 2</tspan><tspan font-style="italic">u</tspan><tspan dy="5.3" font-size="13.3">1</tspan><tspan dy="-5.3" font-style="italic">v</tspan><tspan dy="5.3" font-size="13.3">1</tspan><tspan dy="-5.3"> + 3</tspan><tspan font-style="italic">u</tspan><tspan dy="5.3" font-size="13.3">2</tspan><tspan dy="-5.3" font-style="italic">v</tspan><tspan dy="5.3" font-size="13.3">2</tspan></text>
+<text x="28.0" y="238.0" font-size="14" fill="#6b645a" text-anchor="start">同じ u = (3, 2)、v = (1, −1) のとき</text>
+<text x="44.0" y="260.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>→  2·3·1 + 3·2·(−1) = 0</tspan></text>
+<text x="412.0" y="180.0" font-size="14" fill="#5f7f4f" text-anchor="end">対称 ✓　線形 ✓　正定値 ✓</text>
+<rect x="14" y="296" width="412" height="132" rx="8" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="28.0" y="322.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">ウ　関数</text>
+<text x="28.0" y="354.0" font-size="19" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>⟨</tspan><tspan font-style="italic">f</tspan><tspan>, </tspan><tspan font-style="italic">g</tspan><tspan>⟩ = ∫ </tspan><tspan font-style="italic">f</tspan><tspan>(</tspan><tspan font-style="italic">x</tspan><tspan>) </tspan><tspan font-style="italic">g</tspan><tspan>(</tspan><tspan font-style="italic">x</tspan><tspan>) </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">x</tspan></text>
+<text x="28.0" y="380.0" font-size="14" fill="#6b645a" text-anchor="start">f = 1、g = x のとき（x を −1〜1 で積分）</text>
+<text x="44.0" y="402.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>→  ∫ </tspan><tspan font-style="italic">x</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">x</tspan><tspan> = 0</tspan></text>
+<text x="412.0" y="322.0" font-size="14" fill="#5f7f4f" text-anchor="end">対称 ✓　線形 ✓　正定値 ✓</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　左の見出しの3つは入れ物（数の組・重みつきの数の組・関数）も計算式も違うが、どれも (I1) 対称・(I2) 線形・(I3) 正定値を満たすので内積である。ア とイ は、同じ2本のベクトルに対して値が 1 と 0 で異なる。ウ の関数 1 と x は、積分すると 0 になる。</figcaption>
+</figure>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>定義：内積の公理</h3>
+<div class="def" id="sym-inner-product"><span class="label">記号：内積 $\langle\boldsymbol u,\boldsymbol v\rangle$</span>
+<p><strong>①読み方</strong>：「ユー・ブイ の内積」「アングル・ユー・カンマ・ブイ・アングル」。山かっこ $\langle\ \rangle$ はふつうの括弧ではなく、「内積という規則に入れる」しるし。</p>
+<p><strong>②日本語での意味</strong>：実数のベクトル空間 $V$ の2つのベクトル $\boldsymbol u,\boldsymbol v$ に実数を1つ対応させる規則で、次の3つの性質をもつもの。<strong>入れ替えても同じ</strong>（対称）、<strong>各側で、足し算と定数倍が外に出せる</strong>（線形）、<strong>自分自身との値は0以上で、0になるのは零ベクトルのときだけ</strong>（正定値）。</p>
+<p><strong>③省略していない書き方</strong>：$V$ を実ベクトル空間（<a href="15_第15回_ベクトル空間と基底.html#sym-vector-space">第15回</a>）とする。$V$ の任意の $\boldsymbol u,\boldsymbol v,\boldsymbol w$ と任意の実数 $a,b$ に対して、</p>
+<ul>
+<li>(I1) 対称性：$\langle\boldsymbol u,\boldsymbol v\rangle=\langle\boldsymbol v,\boldsymbol u\rangle$</li>
+<li>(I2) 線形性：$\langle a\boldsymbol u+b\boldsymbol v,\ \boldsymbol w\rangle=a\langle\boldsymbol u,\boldsymbol w\rangle+b\langle\boldsymbol v,\boldsymbol w\rangle$</li>
+<li>(I3) 正定値性：$\langle\boldsymbol v,\boldsymbol v\rangle\ge0$。かつ、$\langle\boldsymbol v,\boldsymbol v\rangle=0\Leftrightarrow\boldsymbol v=\boldsymbol 0$</li>
+</ul>
+<p>が成り立つ。この3つを満たす $\langle\ ,\ \rangle$ を、$V$ の<strong>内積</strong>と呼び、内積が1つ決まった実ベクトル空間を<strong>内積空間</strong>と呼ぶ。</p>
+<p><strong>④どこで出会うか</strong>：機械力学（運動エネルギーの質量行列による内積、モードの直交性）、フーリエ級数（第36回）、最小二乗法（第47回）、量子力学（状態ベクトルの内積。複素数の場合は第34回）。</p>
+</div>
+<p><strong>公理を1つずつ読む</strong>。</p>
+<p>(I1) は、「$\boldsymbol u$ と $\boldsymbol v$ の内積」と「$\boldsymbol v$ と $\boldsymbol u$ の内積」が同じ、という約束である。第5回の内積では、各成分の積 $u_iv_i$ が $v_iu_i$ に等しい（実数の掛け算は順序によらない）ので成り立っていた。</p>
+<p>(I2) は<strong>左側の入れ物について</strong>の線形性である。$\boldsymbol u$ と $\boldsymbol v$ を1つの一次結合 $a\boldsymbol u+b\boldsymbol v$ にしてから内積をとっても、先に内積をとってから同じ一次結合にしても結果が同じ。「足し算と定数倍を、内積の外に出してよい」という意味で、第16回の<a href="16_第16回_行列は線形写像.html#sym-linear-map">線形写像</a>の定義と同じ形をしている。</p>
+<p>(I3) は、「長さの2乗」にあたる量 $\langle\boldsymbol v,\boldsymbol v\rangle$ が、負にならず、$\boldsymbol 0$ のときだけ0になる、という約束である。これがあるから、2.1 で $\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$ を「長さ」と呼べる。</p>
+<p><strong>(I1) と (I2) から出る性質</strong>（右側の入れ物でも線形）。1行に1操作で示す。</p>
+<p>$$ \begin{aligned} \langle\boldsymbol w,\ a\boldsymbol u+b\boldsymbol v\rangle &= \langle a\boldsymbol u+b\boldsymbol v,\ \boldsymbol w\rangle && \text{（(I1)：入れ替える）}\\ &= a\langle\boldsymbol u,\boldsymbol w\rangle+b\langle\boldsymbol v,\boldsymbol w\rangle && \text{（(I2)：外に出す）}\\ &= a\langle\boldsymbol w,\boldsymbol u\rangle+b\langle\boldsymbol w,\boldsymbol v\rangle && \text{（(I1)：各項を入れ替える）} \end{aligned} $$</p>
+<p>したがって、2つの入れ物のどちらでも、足し算と定数倍を外に出せる。これを<strong>双線形性</strong>と言う（「2つの入れ物で、それぞれ線形」）。特に、$\langle\boldsymbol 0,\boldsymbol v\rangle=\langle0\cdot\boldsymbol 0,\boldsymbol v\rangle=0\cdot\langle\boldsymbol 0,\boldsymbol v\rangle=0$ （(I2) で $a=0$）。零ベクトルとの内積はいつも0である。</p>
+
+<p><strong>最小の具体例（標準内積が3つの性質を満たす）</strong>：第5回の $\boldsymbol u\cdot\boldsymbol v=u_1v_1+u_2v_2$（$\mathbb R^2$）を、$\langle\boldsymbol u,\boldsymbol v\rangle$ と書いて確かめる。</p>
+<p>(I1)：$u_1v_1+u_2v_2=v_1u_1+v_2u_2$。　<span class="meta">実数の掛け算は順序によらない</span></p>
+<p>(I2)：左辺 $=(au_1+bv_1)w_1+(au_2+bv_2)w_2$。　<span class="meta">$a\boldsymbol u+b\boldsymbol v$ の成分は $au_i+bv_i$</span>　$=a(u_1w_1+u_2w_2)+b(v_1w_1+v_2w_2)$。　<span class="meta">分配法則で $a$ と $b$ を前に出した</span></p>
+<p>(I3)：$\langle\boldsymbol v,\boldsymbol v\rangle=v_1^2+v_2^2\ge0$。0になるのは、$v_1^2=0$ かつ $v_2^2=0$、つまり $v_1=v_2=0$ のときだけ。　<span class="meta">実数の2乗は0以上で、0になるのは0だけ</span></p>
+<p>数値でも確かめる。$a=2$、$b=-1$、$\boldsymbol u=(1,2)$、$\boldsymbol v=(3,-1)$、$\boldsymbol w=(2,5)$ として (I2)：左辺 $\langle2\boldsymbol u-\boldsymbol v,\boldsymbol w\rangle=\langle(-1,5),(2,5)\rangle=-2+25=23$。右辺 $2\langle\boldsymbol u,\boldsymbol w\rangle-\langle\boldsymbol v,\boldsymbol w\rangle=2\cdot12-1=23$ ✓。</p>
+
+<div class="why"><span class="label">ひとことで</span>内積とは「成分を掛けて足す計算」のことではなく、「対称・線形・正定値」という3つの性質を満たす、2つのベクトルから数を作る規則のことである。成分を掛けて足す計算は、その一例にすぎない。</div>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>例2：重みつきの内積（直交が内積に依存する例）</h3>
+<p>$\mathbb R^2$ で、次の規則を考える。</p>
+<p>$$ \langle\boldsymbol u,\boldsymbol v\rangle_w:=2u_1v_1+3u_2v_2 $$</p>
+<p>添字の $w$ は「重み（weight）つき」を表す小さな目印で、標準内積と区別するためにつけた。成分ごとの積に、重み 2 と 3 を掛けてから足している。</p>
+<p>(I1)：$2u_1v_1+3u_2v_2=2v_1u_1+3v_2u_2$ ✓。(I2)：$2(au_1+bv_1)w_1+3(au_2+bv_2)w_2=a(2u_1w_1+3u_2w_2)+b(2v_1w_1+3v_2w_2)$ ✓。(I3)：$\langle\boldsymbol v,\boldsymbol v\rangle_w=2v_1^2+3v_2^2\ge0$。0になるのは $v_1=v_2=0$ のときだけ（重み 2, 3 がどちらも正だから）✓。3つとも満たすので、これも内積である。</p>
+<p><strong>同じ2本のベクトルでも、内積が違えば結論が変わる</strong>。$\boldsymbol u=(3,2)$、$\boldsymbol v=(1,-1)$ とする。</p>
+<p>$$ \begin{aligned} \langle\boldsymbol u,\boldsymbol v\rangle_w &= 2\cdot3\cdot1+3\cdot2\cdot(-1) && \text{（定義）}\\ &= 6-6=0 && \text{（計算）}\\ \boldsymbol u\cdot\boldsymbol v &= 3\cdot1+2\cdot(-1)=1 && \text{（標準内積）} \end{aligned} $$</p>
+<p>重みつきの内積では0（直交）、標準内積では1（直交しない）。つまり、「直交している」は<strong>ベクトルだけでなく、どの内積を使うかにも依存する</strong>。図1.2 で、「長さ 1 のベクトルの集まり」の形がどう変わるかを見る。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 440 616" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="重みつき内積と軸の伸ばし" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>重みつき内積と軸の伸ばし</title>
+<rect x="0" y="0" width="440" height="616" fill="#fffdf7"/>
+<text x="14.0" y="22.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">上：ふつうの方眼で描いた2本のベクトル</text>
+<line x1="44.0" y1="162.0" x2="294.0" y2="162.0" stroke="#2a2723" stroke-width="1.3"/><path d="M287.7 165.0 L294.0 162.0 L287.7 159.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="104.0" y1="242.0" x2="104.0" y2="52.0" stroke="#2a2723" stroke-width="1.3"/><path d="M107.0 58.3 L104.0 52.0 L101.0 58.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="144.0" y1="158.0" x2="144.0" y2="166.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="144.0" y="182.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="184.0" y1="158.0" x2="184.0" y2="166.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="184.0" y="182.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="224.0" y1="158.0" x2="224.0" y2="166.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="224.0" y="182.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="264.0" y1="158.0" x2="264.0" y2="166.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="264.0" y="182.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="100.0" y1="202.0" x2="108.0" y2="202.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="96.0" y="207.0" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="100.0" y1="122.0" x2="108.0" y2="122.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="96.0" y="127.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="100.0" y1="82.0" x2="108.0" y2="82.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="96.0" y="87.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="298.0" y="184.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="118.0" y="58.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="132.3,162.0 132.2,160.8 132.1,159.6 131.9,158.4 131.7,157.2 131.3,156.0 130.9,154.9 130.4,153.7 129.8,152.6 129.2,151.5 128.5,150.5 127.7,149.4 126.9,148.4 126.0,147.5 125.0,146.5 124.0,145.7 122.9,144.8 121.8,144.1 120.6,143.3 119.4,142.6 118.1,142.0 116.8,141.4 115.5,140.9 114.1,140.4 112.7,140.0 111.3,139.7 109.9,139.4 108.4,139.2 107.0,139.0 105.5,138.9 104.0,138.9 102.5,138.9 101.0,139.0 99.6,139.2 98.1,139.4 96.7,139.7 95.3,140.0 93.9,140.4 92.5,140.9 91.2,141.4 89.9,142.0 88.6,142.6 87.4,143.3 86.2,144.1 85.1,144.8 84.0,145.7 83.0,146.5 82.0,147.5 81.1,148.4 80.3,149.4 79.5,150.5 78.8,151.5 78.2,152.6 77.6,153.7 77.1,154.9 76.7,156.0 76.3,157.2 76.1,158.4 75.9,159.6 75.8,160.8 75.7,162.0 75.8,163.2 75.9,164.4 76.1,165.6 76.3,166.8 76.7,168.0 77.1,169.1 77.6,170.3 78.2,171.4 78.8,172.5 79.5,173.5 80.3,174.6 81.1,175.6 82.0,176.5 83.0,177.5 84.0,178.3 85.1,179.2 86.2,179.9 87.4,180.7 88.6,181.4 89.9,182.0 91.2,182.6 92.5,183.1 93.9,183.6 95.3,184.0 96.7,184.3 98.1,184.6 99.6,184.8 101.0,185.0 102.5,185.1 104.0,185.1 105.5,185.1 107.0,185.0 108.4,184.8 109.9,184.6 111.3,184.3 112.7,184.0 114.1,183.6 115.5,183.1 116.8,182.6 118.1,182.0 119.4,181.4 120.6,180.7 121.8,179.9 122.9,179.2 124.0,178.3 125.0,177.5 126.0,176.5 126.9,175.6 127.7,174.6 128.5,173.5 129.2,172.5 129.8,171.4 130.4,170.3 130.9,169.1 131.3,168.0 131.7,166.8 131.9,165.6 132.1,164.4 132.2,163.2 132.3,162.0" fill="#f7ecdc" stroke="#2b3a67" stroke-width="1.8" stroke-dasharray="4 3" stroke-linejoin="round"/>
+<line x1="104.0" y1="162.0" x2="224.0" y2="82.0" stroke="#a8322a" stroke-width="2.4"/><path d="M219.4 89.8 L224.0 82.0 L215.1 83.2" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="104.0" y1="162.0" x2="144.0" y2="202.0" stroke="#5f7f4f" stroke-width="2.4"/><path d="M135.5 199.0 L144.0 202.0 L141.0 193.5" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<text x="232.0" y="76.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">u</tspan></text>
+<text x="152.0" y="216.0" font-size="17" fill="#5f7f4f" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan></text>
+<text x="134.0" y="126.0" font-size="14" fill="#2b3a67" text-anchor="start">楕円</text>
+<text x="318.0" y="84.0" font-size="14" fill="#6b645a" text-anchor="start">見かけの角</text>
+<text x="318.0" y="104.0" font-size="15" fill="#6b645a" text-anchor="start">約 79°</text>
+<text x="318.0" y="138.0" font-size="14" fill="#6b645a" text-anchor="start">標準内積</text>
+<text x="318.0" y="160.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>⟨</tspan><tspan font-style="italic">u</tspan><tspan>, </tspan><tspan font-style="italic">v</tspan><tspan>⟩ = 1</tspan></text>
+<text x="318.0" y="190.0" font-size="14" fill="#6b645a" text-anchor="start">重みつき内積</text>
+<text x="318.0" y="212.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>⟨</tspan><tspan font-style="italic">u</tspan><tspan>, </tspan><tspan font-style="italic">v</tspan><tspan>⟩</tspan><tspan dy="4.8" font-size="11.9" font-style="italic">w</tspan><tspan dy="-4.8"> = 0</tspan></text>
+<text x="14.0" y="284.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">下：x を √2 倍、y を √3 倍に伸ばした方眼</text>
+<line x1="44.0" y1="480.0" x2="294.0" y2="480.0" stroke="#2a2723" stroke-width="1.3"/><path d="M287.7 483.0 L294.0 480.0 L287.7 477.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="84.0" y1="580.0" x2="84.0" y2="310.0" stroke="#2a2723" stroke-width="1.3"/><path d="M87.0 316.3 L84.0 310.0 L81.0 316.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="124.0" y1="476.0" x2="124.0" y2="484.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="124.0" y="500.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="164.0" y1="476.0" x2="164.0" y2="484.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="164.0" y="500.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="204.0" y1="476.0" x2="204.0" y2="484.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="204.0" y="500.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="244.0" y1="476.0" x2="244.0" y2="484.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="244.0" y="500.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="80.0" y1="560.0" x2="88.0" y2="560.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="76.0" y="565.0" font-size="14" fill="#6b645a" text-anchor="end">-2</text>
+<line x1="80.0" y1="520.0" x2="88.0" y2="520.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="76.0" y="525.0" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="80.0" y1="440.0" x2="88.0" y2="440.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="76.0" y="445.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="80.0" y1="400.0" x2="88.0" y2="400.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="76.0" y="405.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="80.0" y1="360.0" x2="88.0" y2="360.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="76.0" y="365.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="298.0" y="502.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">X</tspan></text>
+<text x="98.0" y="316.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">Y</tspan></text>
+<polyline points="124.0,480.0 123.9,477.9 123.8,475.8 123.5,473.7 123.1,471.7 122.6,469.6 122.0,467.6 121.3,465.7 120.5,463.7 119.6,461.8 118.6,460.0 117.5,458.2 116.4,456.5 115.1,454.8 113.7,453.2 112.3,451.7 110.8,450.3 109.2,448.9 107.5,447.6 105.8,446.5 104.0,445.4 102.2,444.4 100.3,443.5 98.3,442.7 96.4,442.0 94.4,441.4 92.3,440.9 90.3,440.5 88.2,440.2 86.1,440.1 84.0,440.0 81.9,440.1 79.8,440.2 77.7,440.5 75.7,440.9 73.6,441.4 71.6,442.0 69.7,442.7 67.7,443.5 65.8,444.4 64.0,445.4 62.2,446.5 60.5,447.6 58.8,448.9 57.2,450.3 55.7,451.7 54.3,453.2 52.9,454.8 51.6,456.5 50.5,458.2 49.4,460.0 48.4,461.8 47.5,463.7 46.7,465.7 46.0,467.6 45.4,469.6 44.9,471.7 44.5,473.7 44.2,475.8 44.1,477.9 44.0,480.0 44.1,482.1 44.2,484.2 44.5,486.3 44.9,488.3 45.4,490.4 46.0,492.4 46.7,494.3 47.5,496.3 48.4,498.2 49.4,500.0 50.5,501.8 51.6,503.5 52.9,505.2 54.3,506.8 55.7,508.3 57.2,509.7 58.8,511.1 60.5,512.4 62.2,513.5 64.0,514.6 65.8,515.6 67.7,516.5 69.7,517.3 71.6,518.0 73.6,518.6 75.7,519.1 77.7,519.5 79.8,519.8 81.9,519.9 84.0,520.0 86.1,519.9 88.2,519.8 90.3,519.5 92.3,519.1 94.4,518.6 96.4,518.0 98.3,517.3 100.3,516.5 102.2,515.6 104.0,514.6 105.8,513.5 107.5,512.4 109.2,511.1 110.8,509.7 112.3,508.3 113.7,506.8 115.1,505.2 116.4,503.5 117.5,501.8 118.6,500.0 119.6,498.2 120.5,496.3 121.3,494.3 122.0,492.4 122.6,490.4 123.1,488.3 123.5,486.3 123.8,484.2 123.9,482.1 124.0,480.0" fill="#f7ecdc" stroke="#2b3a67" stroke-width="1.8" stroke-dasharray="4 3" stroke-linejoin="round"/>
+<line x1="84.0" y1="480.0" x2="253.7" y2="341.4" stroke="#a8322a" stroke-width="2.4"/><path d="M249.9 349.6 L253.7 341.4 L245.0 343.5" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="84.0" y1="480.0" x2="140.6" y2="549.3" stroke="#5f7f4f" stroke-width="2.4"/><path d="M132.4 545.5 L140.6 549.3 L138.5 540.5" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<text x="261.7" y="335.4" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">u</tspan></text>
+<text x="148.6" y="563.3" font-size="17" fill="#5f7f4f" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan></text>
+<polyline points="93.3,472.4 100.9,481.7 91.6,489.3" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="318.0" y="360.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">直角に見える</text>
+<text x="318.0" y="384.0" font-size="14" fill="#6b645a" text-anchor="start">円は半径 1</text>
+<text x="312.0" y="418.0" font-size="14" fill="#6b645a" text-anchor="start">この方眼の普通の内積</text>
+<text x="318.0" y="438.0" font-size="14" fill="#6b645a" text-anchor="start">= 重みつき内積</text>
+</svg>
+<figcaption><strong>図 1.2</strong>　上は x, y を同じ目盛りで描いた2本のベクトル（見かけの角は 79° 前後）。破線の楕円は重みつき内積で長さ1の点の集まり 2x² + 3y² = 1。下は x を √2 倍、y を √3 倍に伸ばした方眼に同じ2本を移したもので、普通の内積が 3√2·√2 + 2√3·(−√3) = 6 − 6 = 0、つまり直角に見える。重みつき内積で直交するとは、軸を伸ばした世界で直角になること。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「ベクトル2本が直交しているかどうかは、図に描いて直角に見えるかどうかで決まる」は誤りである。<strong>図の直角</strong>は、標準内積（紙の上の普通の長さ）で見たときの直交にすぎない。力学の質量行列や、統計の分散で重みをつけた内積では、図で斜めに見えても、その内積で直交していることがある。この回では「直交」と言うたびに、どの内積かを意識する。</p>
+</div>
+
+<h3 id="sec-1-4"><span class="no">1.4</span>例3：関数の内積</h3>
+<p>$[-1,1]$ で連続な関数 $f,g$ に対して、</p>
+<p>$$ \langle f,g\rangle:=\int_{-1}^{1}f(x)\,g(x)\,\mathrm dx $$</p>
+<p>と定める（積分は<a href="10_第10回_積分.html#sym-integral-definite">第10回</a>）。成分ごとの積 $u_iv_i$ を、点ごとの積 $f(x)g(x)$ に取り替え、「足す」を「積分する」に取り替えた形である。</p>
+<p>(I1)：$f(x)g(x)=g(x)f(x)$ だから積分も同じ ✓。(I2)：積分は足し算・定数倍を外に出せる（積分の線形性）✓。(I3)：$\langle f,f\rangle=\int_{-1}^{1}f(x)^2\,\mathrm dx\ge0$ ✓。0になるのは、連続な $f$ が区間全体で $f(x)^2=0$ のとき、つまり $f$ が恒等的に0のときだけ（連続でなければ、1点だけ値の違う関数が反例になるので、<strong>連続</strong>という条件が必要）。</p>
+<p><strong>最小の具体例</strong>：$f(x)=1$、$g(x)=x$。</p>
+<p>$$ \begin{aligned} \langle1,x\rangle &= \int_{-1}^{1}1\cdot x\,\mathrm dx && \text{（定義）}\\ &= \Bigl[\tfrac{x^2}{2}\Bigr]_{-1}^{1} && \text{（$x$ の原始関数）}\\ &= \tfrac12-\tfrac12=0 && \text{（上端と下端を入れる）} \end{aligned} $$</p>
+<p>0なので、$1$ と $x$ はこの内積で直交している。図1.3 のように、積 $1\cdot x$ のグラフは、$x\gt0$ の側の面積と $x\lt0$ の側の面積が、符号が逆で打ち消し合っている。</p>
+<figure class="fig" id="fig-1-3">
+<svg viewBox="0 0 440 330" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="関数の内積" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>関数の内積</title>
+<rect x="0" y="0" width="440" height="330" fill="#fffdf7"/>
+<polyline points="220.0,145.0 343.1,145.0 343.1,56.5 220.0,145.0" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="220.0,145.0 96.9,145.0 96.9,233.5 220.0,145.0" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.2" stroke-linejoin="round"/>
+<line x1="60.0" y1="145.0" x2="390.0" y2="145.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 148.0 L390.0 145.0 L383.7 142.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="220.0" y1="260.0" x2="220.0" y2="20.0" stroke="#2a2723" stroke-width="1.3"/><path d="M223.0 26.3 L220.0 20.0 L217.0 26.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="96.9" y1="141.0" x2="96.9" y2="149.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="96.9" y="165.0" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="343.1" y1="141.0" x2="343.1" y2="149.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="343.1" y="165.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="216.0" y1="233.5" x2="224.0" y2="233.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="238.5" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="216.0" y1="56.5" x2="224.0" y2="56.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="61.5" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<text x="394.0" y="167.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="234.0" y="26.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>1·<tspan font-style="italic">x</tspan></text>
+<polyline points="96.9,233.5 220.0,145.0 343.1,56.5" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<rect x="268.1" y="103.5" width="81.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="308.6" y="118.5" font-size="15" fill="#5f7f4f" text-anchor="middle" font-weight="bold">面積 +1/2</text>
+<rect x="87.9" y="156.5" width="87.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="131.4" y="171.5" font-size="15" fill="#b07a3e" text-anchor="middle" font-weight="bold">面積 −1/2</text>
+<text x="220.0" y="296.0" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="bold">合計：+1/2 + (−1/2) = 0</text>
+<text x="220.0" y="318.0" font-size="15" fill="#6b645a" text-anchor="middle">なので ⟨1, x⟩ = 0（直交）</text>
+</svg>
+<figcaption><strong>図 1.3</strong>　関数 1 と x の積 1·x のグラフ。x が正の側の面積は +1/2、負の側の面積は −1/2（x 軸より下なので符号が負）で、足すと 0。積分で内積を測るので、この2つの関数は直交する。</figcaption>
+</figure>
+<p>同じ内積で、$\langle1,1\rangle=\int_{-1}^{1}1\,\mathrm dx=2$、$\langle x,x\rangle=\int_{-1}^{1}x^2\,\mathrm dx=\bigl[\tfrac{x^3}{3}\bigr]_{-1}^{1}=\tfrac23$、$\langle1,x^2\rangle=\tfrac23$。関数の長さの2乗が $\langle f,f\rangle$、関数どうしの直交が $\langle f,g\rangle=0$ になる。第36回のフーリエ級数では、$\sin nx$ と $\cos mx$ がこの意味で直交していることを使う。</p>
+
+<h3 id="sec-1-5"><span class="no">1.5</span>内積でないもの、流派の違い</h3>
+<p><strong>内積でない例</strong>：$\mathbb R^2$ で $\langle\boldsymbol u,\boldsymbol v\rangle':=u_1v_1-u_2v_2$ は、(I1)(I2) は満たす（確かめは1.3 と同じ）が、(I3) を満たさない。$\boldsymbol v=(1,1)$ とすると $\langle\boldsymbol v,\boldsymbol v\rangle'=1-1=0$ なのに $\boldsymbol v\neq\boldsymbol 0$。さらに $\boldsymbol v=(0,1)$ では $\langle\boldsymbol v,\boldsymbol v\rangle'=-1\lt0$ で、「長さの2乗」が負になる。(I3) は、「長さ」と言えるための条件だった。（この規則は相対性理論の時空の計量に現れるが、「長さの2乗が負」になるため、この回の内積ではない。）</p>
+<div class="warn"><span class="label">流派の違い：内積の書き方と、線形の側</span>
+<table class="tb">
+<tr><th>書き方</th><th>主に使われる場所</th><th>注意</th></tr>
+<tr><td>$\boldsymbol a\cdot\boldsymbol b$</td><td>物理・工学の入門（$\mathbb R^n$ の標準内積）</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">第5回</a>で使った書き方。標準内積に限ることが多い</td></tr>
+<tr><td>$\langle\boldsymbol u,\boldsymbol v\rangle$</td><td>線形代数・解析（この回）</td><td>どんな内積にも使える。本によっては $(\boldsymbol u,\boldsymbol v)$</td></tr>
+<tr><td>$\boldsymbol u^{\mathsf T}\boldsymbol v$</td><td>機械学習・数値計算</td><td>列ベクトルの転置との行列の積。標準内積のときだけ</td></tr>
+<tr><td>$\langle\boldsymbol u\vert\boldsymbol v\rangle$</td><td>量子力学（<a href="05_第5回_ベクトルと行列の書き方.html#sym-braket">第5回のブラ・ケット</a>）</td><td>複素数のときは、左側の入れ物に複素共役をとる流儀が多い</td></tr>
+</table>
+<p>実数のベクトルでは (I1) があるので「どちらの側で線形か」を気にしなくてよい。複素数（第34回）では対称性が崩れるため、本によって「第1引数で線形」「第2引数で線形」が分かれる。この回は実数だけを扱うので、(I2) は左側の入れ物で書き、右側は1.2 で導いた。</p>
+</div>
+<div class="why"><span class="label">ひとことで</span>内積は、成分の積の和（標準内積）、重みつきの和、積分の3種類を例に挙げた。どれも (I1) 対称・(I2) 線形・(I3) 正定値を満たすので、以後の議論（長さ・角・直交・射影）は、3つの性質だけを使って書ける。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>長さ、コーシー・シュワルツの不等式、角</h2>
+
+<h3 id="sec-2-1"><span class="no">2.1</span>内積から長さを決める</h3>
+<div class="def" id="sym-norm-induced"><span class="label">記号：内積から決まるノルム $\|\boldsymbol v\|:=\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$</span>
+<p><strong>①読み方</strong>：「ノルム・ブイ」「ブイの長さ」。</p>
+<p><strong>②日本語での意味</strong>：自分自身との内積（長さの2乗にあたる）の、非負の平方根。</p>
+<p><strong>③省略していない書き方</strong>：(I3) より $\langle\boldsymbol v,\boldsymbol v\rangle\ge0$ なので平方根がとれる。$\|\boldsymbol v\|:=\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$（非負の平方根）。標準内積なら $\|\boldsymbol v\|=\sqrt{v_1^2+\cdots+v_n^2}$ となり、<a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">第5回のノルム</a>に一致する。</p>
+<p><strong>④どこで出会うか</strong>：誤差の大きさ（最小二乗法、第47回）、関数の「大きさ」$\sqrt{\int f^2}$（信号の実効値、フーリエ級数）、重みつきの誤差（重みつき最小二乗）。</p>
+</div>
+<p><strong>確かめ</strong>：(a) $\|\boldsymbol v\|\ge0$、かつ $\|\boldsymbol v\|=0\Leftrightarrow\boldsymbol v=\boldsymbol 0$（(I3) そのもの）。(b) 定数倍：</p>
+<p>$$ \begin{aligned} \|c\boldsymbol v\|^2 &= \langle c\boldsymbol v,\ c\boldsymbol v\rangle && \text{（ノルムの定義の2乗）}\\ &= c\langle\boldsymbol v,\ c\boldsymbol v\rangle && \text{（(I2)：左側から $c$ を出す）}\\ &= c\cdot c\langle\boldsymbol v,\boldsymbol v\rangle && \text{（双線形性：右側から $c$ を出す）}\\ &= c^2\|\boldsymbol v\|^2 && \text{（ノルムの定義の2乗）} \end{aligned} $$</p>
+<p>両辺の非負の平方根をとって $\|c\boldsymbol v\|=\lvert c\rvert\,\|\boldsymbol v\|$。<strong>$c$ ではなく $\lvert c\rvert$</strong> になるのは、$\sqrt{c^2}=\lvert c\rvert$ だからである（<a href="03_第3回_関数と写像.html#sym-abs">絶対値</a>）。</p>
+<p><strong>数値</strong>：1.3 の重みつき内積で $\boldsymbol u=(3,2)$：$\|\boldsymbol u\|_w=\sqrt{2\cdot9+3\cdot4}=\sqrt{30}$。標準のノルムなら $\sqrt{13}$。内積が違えば、長さも違う。</p>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>コーシー・シュワルツの不等式</h3>
+<p>第5回で、$\boldsymbol a\cdot\boldsymbol b=\|\boldsymbol a\|\|\boldsymbol b\|\cos\theta$ を導いた。$\lvert\cos\theta\rvert\le1$ だから、$\lvert\boldsymbol a\cdot\boldsymbol b\rvert\le\|\boldsymbol a\|\|\boldsymbol b\|$ のはずである。ただしこの導き方は、「$\theta$ が存在すること」を前提にしていた。一般の内積では、<strong>角の定義のほうが、この不等式を使って作られる</strong>ので、不等式を先に、(I1)〜(I3) だけから証明しなければならない。</p>
+<div class="thm" id="sym-cauchy"><span class="label">定理2.1（コーシー・シュワルツの不等式）</span>
+<p>内積空間の任意の $\boldsymbol u,\boldsymbol v$ について、</p>
+<p>$$ \lvert\langle\boldsymbol u,\boldsymbol v\rangle\rvert\le\|\boldsymbol u\|\,\|\boldsymbol v\| $$</p>
+<p>等号が成り立つのは、一方が他方の定数倍のとき（一次従属のとき）に限る。</p>
+</div>
+<p>証明の方針を先に言う。「$\boldsymbol u$ から $\boldsymbol v$ の $t$ 倍を引いたベクトル $\boldsymbol u-t\boldsymbol v$」の長さの2乗は、(I3) により、どんな $t$ でも0以上である。この「0以上」を $t$ の2次式として見て、その最小値が0以上であることを使う。図2.1 の上の図が引き算の絵、下の図がその長さの2乗を $t$ の関数として描いた絵である。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 572" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="u − t v とその長さ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>u − t v とその長さ</title>
+<rect x="0" y="0" width="440" height="572" fill="#fffdf7"/>
+<text x="14.0" y="18.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">上：u から v の t 倍を引いたベクトル</text>
+<line x1="40.0" y1="264.0" x2="380.0" y2="264.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 267.0 L380.0 264.0 L373.7 261.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="70.0" y1="294.0" x2="70.0" y2="44.0" stroke="#2a2723" stroke-width="1.3"/><path d="M73.0 50.3 L70.0 44.0 L67.0 50.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="130.0" y1="260.0" x2="130.0" y2="268.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="130.0" y="284.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="190.0" y1="260.0" x2="190.0" y2="268.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="190.0" y="284.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="250.0" y1="260.0" x2="250.0" y2="268.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="250.0" y="284.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="310.0" y1="260.0" x2="310.0" y2="268.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="310.0" y="284.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="66.0" y1="204.0" x2="74.0" y2="204.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="209.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="66.0" y1="144.0" x2="74.0" y2="144.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="149.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="66.0" y1="84.0" x2="74.0" y2="84.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="89.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="384.0" y="286.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="84.0" y="50.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="70.0" y1="264.0" x2="334.0" y2="132.0" stroke="#5f7f4f" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="70.0" y1="264.0" x2="310.0" y2="84.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M305.9 92.0 L310.0 84.0 L301.2 85.7" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="70.0" y1="264.0" x2="190.0" y2="204.0" stroke="#5f7f4f" stroke-width="2.4"/><path d="M184.5 211.1 L190.0 204.0 L181.0 204.1" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<line x1="334.0" y1="132.0" x2="310.0" y2="84.0" stroke="#a8322a" stroke-width="2.4"/><path d="M317.1 89.5 L310.0 84.0 L310.1 93.0" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<circle cx="334.0" cy="132.0" r="4.5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<polyline points="324.2,136.9 319.2,127.1 329.1,122.2" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="316.0" y="76.0" font-size="17" fill="#2b3a67" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">u</tspan></text>
+<text x="184.0" y="226.0" font-size="17" fill="#5f7f4f" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan></text>
+<text x="342.0" y="154.0" font-size="17" fill="#5f7f4f" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">t</tspan><tspan> </tspan><tspan font-style="italic">v</tspan></text>
+<text x="325.0" y="90.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">u − t v</text>
+<text x="130.0" y="108.0" font-size="14" fill="#6b645a" text-anchor="start">t = 11/5 のとき</text>
+<text x="130.0" y="126.0" font-size="14" fill="#6b645a" text-anchor="start">u − t v ⟂ v</text>
+<text x="14.0" y="338.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">下：長さの2乗 ‖u − t v‖² を t の関数として描く</text>
+<line x1="60.0" y1="536.0" x2="390.0" y2="536.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 539.0 L390.0 536.0 L383.7 533.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="73.3" y1="536.0" x2="73.3" y2="356.0" stroke="#2a2723" stroke-width="1.3"/><path d="M76.4 362.3 L73.3 356.0 L70.3 362.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="140.0" y1="532.0" x2="140.0" y2="540.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="140.0" y="556.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="206.7" y1="532.0" x2="206.7" y2="540.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="206.7" y="556.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="273.3" y1="532.0" x2="273.3" y2="540.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="273.3" y="556.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="340.0" y1="532.0" x2="340.0" y2="540.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="340.0" y="556.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="69.3" y1="479.3" x2="77.3" y2="479.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="65.3" y="484.3" font-size="14" fill="#6b645a" text-anchor="end">10</text>
+<line x1="69.3" y1="422.7" x2="77.3" y2="422.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="65.3" y="427.7" font-size="14" fill="#6b645a" text-anchor="end">20</text>
+<line x1="69.3" y1="366.0" x2="77.3" y2="366.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="65.3" y="371.0" font-size="14" fill="#6b645a" text-anchor="end">30</text>
+<text x="394.0" y="558.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">t</tspan></text>
+<text x="87.3" y="362.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>‖<tspan font-style="italic">u</tspan> − <tspan font-style="italic">t</tspan> <tspan font-style="italic">v</tspan>‖²</text>
+<polyline points="60.0,368.3 62.7,373.7 65.3,379.0 68.0,384.2 70.7,389.3 73.3,394.3 76.0,399.3 78.7,404.1 81.3,408.9 84.0,413.6 86.7,418.1 89.3,422.6 92.0,427.0 94.7,431.3 97.3,435.5 100.0,439.7 102.7,443.7 105.3,447.6 108.0,451.5 110.7,455.3 113.3,458.9 116.0,462.5 118.7,466.0 121.3,469.4 124.0,472.7 126.7,475.9 129.3,479.1 132.0,482.1 134.7,485.0 137.3,487.9 140.0,490.7 142.7,493.3 145.3,495.9 148.0,498.4 150.7,500.8 153.3,503.1 156.0,505.4 158.7,507.5 161.3,509.5 164.0,511.5 166.7,513.3 169.3,515.1 172.0,516.8 174.7,518.4 177.3,519.9 180.0,521.3 182.7,522.6 185.3,523.8 188.0,524.9 190.7,526.0 193.3,526.9 196.0,527.8 198.7,528.6 201.3,529.2 204.0,529.8 206.7,530.3 209.3,530.7 212.0,531.1 214.7,531.3 217.3,531.4 220.0,531.5 222.7,531.4 225.3,531.3 228.0,531.1 230.7,530.7 233.3,530.3 236.0,529.8 238.7,529.2 241.3,528.6 244.0,527.8 246.7,526.9 249.3,526.0 252.0,524.9 254.7,523.8 257.3,522.6 260.0,521.3 262.7,519.9 265.3,518.4 268.0,516.8 270.7,515.1 273.3,513.3 276.0,511.5 278.7,509.5 281.3,507.5 284.0,505.4 286.7,503.1 289.3,500.8 292.0,498.4 294.7,495.9 297.3,493.3 300.0,490.7 302.7,487.9 305.3,485.0 308.0,482.1 310.7,479.1 313.3,475.9 316.0,472.7 318.7,469.4 321.3,466.0 324.0,462.5 326.7,458.9 329.3,455.3 332.0,451.5 334.7,447.6 337.3,443.7 340.0,439.7 342.7,435.5 345.3,431.3 348.0,427.0 350.7,422.6 353.3,418.1 356.0,413.6 358.7,408.9 361.3,404.1 364.0,399.3 366.7,394.3 369.3,389.3 372.0,384.2 374.7,379.0 377.3,373.7 380.0,368.3" fill="none" stroke="#2b3a67" stroke-width="2.4" stroke-linejoin="round"/>
+<line x1="220.0" y1="536.0" x2="220.0" y2="531.5" stroke="#a8322a" stroke-width="1.4" stroke-dasharray="4 3"/>
+<circle cx="220.0" cy="531.5" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="223.0" y="493.5" width="162.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="226.0" y="507.5" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">最小 4/5（t = 11/5）</text>
+<text x="79.3" y="386.3" font-size="14" fill="#6b645a" text-anchor="start">t = 0 で 25</text>
+</svg>
+<figcaption><strong>図 2.1</strong>　上：u = (4, 3)、v = (2, 1)。t を動かして v の t 倍（緑の破線）の先から u へ向かう赤い矢印 u − t v を引く。赤が v と直角になる t で、赤い矢印が最も短い。下：その長さの2乗 25 − 22t + 5t² は下に凸の2次関数で、頂点は t = 11/5、値は 4/5。どんな t でも 0 以上、というのが (I3) の使いどころ。</figcaption>
+</figure>
+<div class="proof"><span class="label">証明</span>
+<p>$\boldsymbol v=\boldsymbol 0$ のときは、両辺とも0（1.2 で見たとおり $\langle\boldsymbol u,\boldsymbol 0\rangle=0$、$\|\boldsymbol 0\|=0$）なので成り立つ。以下 $\boldsymbol v\neq\boldsymbol 0$ とする。このとき (I3) より $\langle\boldsymbol v,\boldsymbol v\rangle\gt0$。実数 $t$ を、</p>
+<p>$$ t:=\frac{\langle\boldsymbol u,\boldsymbol v\rangle}{\langle\boldsymbol v,\boldsymbol v\rangle} $$</p>
+<p>と選ぶ（分母は正なので割れる。この選び方の理由は、図2.1 の下の図の最小の位置である）。</p>
+<p>$$ \begin{aligned} 0 &\le \langle\boldsymbol u-t\boldsymbol v,\ \boldsymbol u-t\boldsymbol v\rangle && \text{（(I3)：自分自身との内積は0以上）}\\ &= \langle\boldsymbol u,\boldsymbol u\rangle-t\langle\boldsymbol v,\boldsymbol u\rangle-t\langle\boldsymbol u,\boldsymbol v\rangle+t^2\langle\boldsymbol v,\boldsymbol v\rangle && \text{（双線形性：4項に展開）}\\ &= \langle\boldsymbol u,\boldsymbol u\rangle-2t\langle\boldsymbol u,\boldsymbol v\rangle+t^2\langle\boldsymbol v,\boldsymbol v\rangle && \text{（(I1)：$\langle\boldsymbol v,\boldsymbol u\rangle=\langle\boldsymbol u,\boldsymbol v\rangle$）}\\ &= \langle\boldsymbol u,\boldsymbol u\rangle-2\frac{\langle\boldsymbol u,\boldsymbol v\rangle^2}{\langle\boldsymbol v,\boldsymbol v\rangle}+\frac{\langle\boldsymbol u,\boldsymbol v\rangle^2}{\langle\boldsymbol v,\boldsymbol v\rangle^2}\langle\boldsymbol v,\boldsymbol v\rangle && \text{（$t$ の式を代入）}\\ &= \langle\boldsymbol u,\boldsymbol u\rangle-\frac{\langle\boldsymbol u,\boldsymbol v\rangle^2}{\langle\boldsymbol v,\boldsymbol v\rangle} && \text{（$-2+1=-1$：同じ分数どうしをまとめた）} \end{aligned} $$</p>
+<p>両辺に正の数 $\langle\boldsymbol v,\boldsymbol v\rangle$ を掛けて（不等号の向きは変わらない）、$\langle\boldsymbol u,\boldsymbol v\rangle^2\le\langle\boldsymbol u,\boldsymbol u\rangle\langle\boldsymbol v,\boldsymbol v\rangle=\|\boldsymbol u\|^2\|\boldsymbol v\|^2$。両辺の非負の平方根をとると $\lvert\langle\boldsymbol u,\boldsymbol v\rangle\rvert\le\|\boldsymbol u\|\|\boldsymbol v\|$。</p>
+<p>等号は、最初の「$0\le$」が等号のとき、つまり (I3) の「$=0$ になるのは零ベクトルのときだけ」より $\boldsymbol u-t\boldsymbol v=\boldsymbol 0$、すなわち $\boldsymbol u=t\boldsymbol v$ のときに限る。□</p>
+</div>
+<p><strong>数値で確かめる</strong>：$\boldsymbol u=(4,3)$、$\boldsymbol v=(2,1)$（標準内積）。$\langle\boldsymbol u,\boldsymbol v\rangle=11$、$\langle\boldsymbol v,\boldsymbol v\rangle=5$、$\langle\boldsymbol u,\boldsymbol u\rangle=25$。$t=\frac{11}{5}$。$\boldsymbol u-t\boldsymbol v=(4,3)-\frac{11}5(2,1)=\bigl(-\frac25,\ \frac45\bigr)$ で、長さの2乗は $\frac{4}{25}+\frac{16}{25}=\frac45$。証明の最後の式 $25-\frac{121}{5}=\frac45$ と一致する ✓。不等式は $11^2=121\le25\cdot5=125$ ✓。もう1つ：$\boldsymbol u=(1,2,3)$、$\boldsymbol v=(4,5,6)$ なら $\lvert32\rvert\le\sqrt{14}\sqrt{77}=\sqrt{1078}\approx32.83$ ✓（第5回の内積の例）。</p>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>三角不等式</h3>
+<p>図2.2 のように、$\boldsymbol u$ の先に $\boldsymbol v$ をつなぐと、「$\boldsymbol u+\boldsymbol v$」は三角形の第3辺になる。「三角形の1辺は、他の2辺の和以下」という高校の知識を、ベクトルの長さで書いたものが次の定理である。</p>
+<div class="thm"><span class="label">定理2.2（三角不等式）</span>
+<p>$\|\boldsymbol u+\boldsymbol v\|\le\|\boldsymbol u\|+\|\boldsymbol v\|$</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$$ \begin{aligned} \|\boldsymbol u+\boldsymbol v\|^2 &= \langle\boldsymbol u+\boldsymbol v,\ \boldsymbol u+\boldsymbol v\rangle && \text{（ノルムの定義の2乗）}\\ &= \langle\boldsymbol u,\boldsymbol u\rangle+2\langle\boldsymbol u,\boldsymbol v\rangle+\langle\boldsymbol v,\boldsymbol v\rangle && \text{（双線形性で展開し、(I1) で2項をまとめた）}\\ &\le \|\boldsymbol u\|^2+2\|\boldsymbol u\|\|\boldsymbol v\|+\|\boldsymbol v\|^2 && \text{（定理2.1：$\langle\boldsymbol u,\boldsymbol v\rangle\le\lvert\langle\boldsymbol u,\boldsymbol v\rangle\rvert\le\|\boldsymbol u\|\|\boldsymbol v\|$）}\\ &= (\|\boldsymbol u\|+\|\boldsymbol v\|)^2 && \text{（展開の逆）} \end{aligned} $$</p>
+<p>両辺は0以上なので、平方根をとって不等号の向きは変わらない。□</p>
+</div>
+<p>数値：$\boldsymbol u=(3,0)$、$\boldsymbol v=(1,2)$。$\|\boldsymbol u+\boldsymbol v\|=\|(4,2)\|=\sqrt{20}\approx4.47$。$\|\boldsymbol u\|+\|\boldsymbol v\|=3+\sqrt5\approx5.24$。$4.47\le5.24$ ✓。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 340" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="三角不等式" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>三角不等式</title>
+<rect x="0" y="0" width="440" height="340" fill="#fffdf7"/>
+<line x1="30.0" y1="164.0" x2="370.0" y2="164.0" stroke="#2a2723" stroke-width="1.3"/><path d="M363.7 167.0 L370.0 164.0 L363.7 161.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="182.0" x2="60.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 16.3 L60.0 10.0 L57.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="120.0" y1="160.0" x2="120.0" y2="168.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="120.0" y="184.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="180.0" y1="160.0" x2="180.0" y2="168.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="180.0" y="184.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="240.0" y1="160.0" x2="240.0" y2="168.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="240.0" y="184.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="300.0" y1="160.0" x2="300.0" y2="168.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="300.0" y="184.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="56.0" y1="104.0" x2="64.0" y2="104.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="109.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="44.0" x2="64.0" y2="44.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="49.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="374.0" y="186.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="74.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="60.0" y1="164.0" x2="240.0" y2="164.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M231.9 167.9 L240.0 164.0 L231.9 160.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="240.0" y1="164.0" x2="300.0" y2="44.0" stroke="#5f7f4f" stroke-width="2.4"/><path d="M299.9 53.0 L300.0 44.0 L292.9 49.5" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<line x1="60.0" y1="164.0" x2="300.0" y2="44.0" stroke="#a8322a" stroke-width="2.4"/><path d="M294.5 51.1 L300.0 44.0 L291.0 44.1" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<rect x="106.4" y="142.0" width="87.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="150.0" y="156.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">u（長さ 3）</text>
+<text x="294.0" y="114.0" font-size="17" fill="#5f7f4f" text-anchor="start" font-weight="bold">v</text>
+<text x="308.0" y="134.0" font-size="14" fill="#5f7f4f" text-anchor="start">（長さ √5 ≈ 2.24）</text>
+<rect x="138.0" y="75.0" width="48.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="162.0" y="89.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">u + v</text>
+<text x="30.0" y="228.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">‖u + v‖ = √20 ≈ 4.47</text>
+<rect x="30" y="236" width="268.326" height="22" rx="3" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.5"/>
+<text x="30.0" y="292.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">‖u‖ + ‖v‖ = 3 + √5 ≈ 5.24</text>
+<rect x="30" y="300" width="180" height="22" rx="3" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<rect x="210" y="300" width="134.1640786499874" height="22" rx="3" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.5"/>
+<text x="120.0" y="316.0" font-size="15" fill="#2b3a67" text-anchor="middle" font-weight="bold">3</text>
+<text x="277.1" y="316.0" font-size="15" fill="#5f7f4f" text-anchor="middle" font-weight="bold">2.24</text>
+<text x="352.2" y="316.0" font-size="14" fill="#6b645a" text-anchor="start">長い</text>
+</svg>
+<figcaption><strong>図 2.2</strong>　u の先に v をつなぐと、u + v は三角形の第3辺になる。下の帯は、第3辺の長さ ‖u + v‖ ≈ 4.47 が、他の2辺の長さの和 ‖u‖ + ‖v‖ ≈ 5.24 より短いことを、同じ縮尺の帯で比べたもの。</figcaption>
+</figure>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>角を内積で定義する</h3>
+<p>第5回では、図形の角 $\theta$ から $\boldsymbol a\cdot\boldsymbol b=\|\boldsymbol a\|\|\boldsymbol b\|\cos\theta$ を導いた。一般の内積空間（関数など）には「図形の角」がないので、<strong>この式を逆に使って、角を定義する</strong>。</p>
+<div class="def" id="sym-angle"><span class="label">記号：なす角 $\theta$</span>
+<p><strong>①読み方</strong>：「シータ」。2つのベクトルの「なす角」。</p>
+<p><strong>②日本語での意味</strong>：「内積を、2つの長さの積で割った数」の逆余弦（$\cos$ の逆）。この数は、定理2.1 により $-1$ 以上 $1$ 以下なので、$0$ 度から $180$ 度のどこかの角の余弦として必ず書ける。</p>
+<p><strong>③省略していない書き方</strong>：$\boldsymbol u,\boldsymbol v$ がどちらも $\boldsymbol 0$ でないとき、</p>
+<p>$$ \theta:=\arccos\frac{\langle\boldsymbol u,\boldsymbol v\rangle}{\|\boldsymbol u\|\,\|\boldsymbol v\|}\qquad(0\le\theta\le\pi) $$</p>
+<p>すなわち $\cos\theta=\dfrac{\langle\boldsymbol u,\boldsymbol v\rangle}{\|\boldsymbol u\|\|\boldsymbol v\|}$ を満たす $\theta\in[0,\pi]$ で、ただ1つ決まる。</p>
+<p><strong>④どこで出会うか</strong>：仕事 $W=\boldsymbol F\cdot\boldsymbol d$、2つのモードの「似ている度合い」、機械学習のコサイン類似度。</p>
+</div>
+<p>割り算の分母 $\|\boldsymbol u\|\|\boldsymbol v\|$ が0でないこと（$\boldsymbol 0$ を除く）と、商が $[-1,1]$ に入ること（定理2.1）の2つがそろって初めて、$\arccos$ に入れられる。定理2.1 は、角の定義を<strong>成立させるための道具</strong>であった。図2.3 は $\cos\theta$ の値と角の対応である。</p>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 318" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="cos θ と角" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>cos θ と角</title>
+<rect x="0" y="0" width="440" height="318" fill="#fffdf7"/>
+<rect x="60.0" y="48.0" width="320" height="160.0" fill="#e8ecf4"/>
+<line x1="60.0" y1="128.0" x2="384.0" y2="128.0" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="228.0" x2="60.0" y2="20.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 26.3 L60.0 20.0 L57.0 26.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="56.0" y1="48.0" x2="64.0" y2="48.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="53.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="128.0" x2="64.0" y2="128.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="133.0" font-size="14" fill="#6b645a" text-anchor="end">0</text>
+<line x1="56.0" y1="208.0" x2="64.0" y2="208.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="213.0" font-size="14" fill="#6b645a" text-anchor="end">−1</text>
+<polyline points="60.0,48.0 62.0,48.0 64.0,48.1 66.0,48.1 68.0,48.2 70.0,48.4 72.0,48.6 74.0,48.8 76.0,49.0 78.0,49.2 80.0,49.5 82.0,49.9 84.0,50.2 86.0,50.6 88.0,51.0 90.0,51.4 92.0,51.9 94.0,52.4 96.0,52.9 98.0,53.5 100.0,54.1 102.0,54.7 104.0,55.3 106.0,56.0 108.0,56.7 110.0,57.4 112.0,58.2 114.0,59.0 116.0,59.8 118.0,60.6 120.0,61.5 122.0,62.4 124.0,63.3 126.0,64.2 128.0,65.2 130.0,66.2 132.0,67.2 134.0,68.2 136.0,69.3 138.0,70.3 140.0,71.4 142.0,72.6 144.0,73.7 146.0,74.9 148.0,76.0 150.0,77.2 152.0,78.5 154.0,79.7 156.0,81.0 158.0,82.3 160.0,83.6 162.0,84.9 164.0,86.2 166.0,87.5 168.0,88.9 170.0,90.3 172.0,91.7 174.0,93.1 176.0,94.5 178.0,95.9 180.0,97.4 182.0,98.8 184.0,100.3 186.0,101.8 188.0,103.3 190.0,104.8 192.0,106.3 194.0,107.8 196.0,109.3 198.0,110.9 200.0,112.4 202.0,113.9 204.0,115.5 206.0,117.0 208.0,118.6 210.0,120.2 212.0,121.7 214.0,123.3 216.0,124.9 218.0,126.4 220.0,128.0 222.0,129.6 224.0,131.1 226.0,132.7 228.0,134.3 230.0,135.8 232.0,137.4 234.0,139.0 236.0,140.5 238.0,142.1 240.0,143.6 242.0,145.1 244.0,146.7 246.0,148.2 248.0,149.7 250.0,151.2 252.0,152.7 254.0,154.2 256.0,155.7 258.0,157.2 260.0,158.6 262.0,160.1 264.0,161.5 266.0,162.9 268.0,164.3 270.0,165.7 272.0,167.1 274.0,168.5 276.0,169.8 278.0,171.1 280.0,172.4 282.0,173.7 284.0,175.0 286.0,176.3 288.0,177.5 290.0,178.8 292.0,180.0 294.0,181.1 296.0,182.3 298.0,183.4 300.0,184.6 302.0,185.7 304.0,186.7 306.0,187.8 308.0,188.8 310.0,189.8 312.0,190.8 314.0,191.8 316.0,192.7 318.0,193.6 320.0,194.5 322.0,195.4 324.0,196.2 326.0,197.0 328.0,197.8 330.0,198.6 332.0,199.3 334.0,200.0 336.0,200.7 338.0,201.3 340.0,201.9 342.0,202.5 344.0,203.1 346.0,203.6 348.0,204.1 350.0,204.6 352.0,205.0 354.0,205.4 356.0,205.8 358.0,206.1 360.0,206.5 362.0,206.8 364.0,207.0 366.0,207.2 368.0,207.4 370.0,207.6 372.0,207.8 374.0,207.9 376.0,207.9 378.0,208.0 380.0,208.0" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="60.0" y1="228.0" x2="60.0" y2="233.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="60.0" y="250.0" font-size="14" fill="#6b645a" text-anchor="middle">0°</text>
+<circle cx="60.0" cy="48.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="166.7" y1="228.0" x2="166.7" y2="233.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="166.7" y="250.0" font-size="14" fill="#6b645a" text-anchor="middle">60°</text>
+<circle cx="166.7" cy="88.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="220.0" y1="228.0" x2="220.0" y2="233.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="220.0" y="250.0" font-size="14" fill="#6b645a" text-anchor="middle">90°</text>
+<circle cx="220.0" cy="128.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="380.0" y1="228.0" x2="380.0" y2="233.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="380.0" y="250.0" font-size="14" fill="#6b645a" text-anchor="middle">180°</text>
+<circle cx="380.0" cy="208.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="70.0" y="40.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">1：同じ向き</text>
+<rect x="171.7" y="66.0" width="112.4" height="20" fill="#fffdf7" opacity="0.92"/><text x="174.7" y="80.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">1/2（例：60°）</text>
+<rect x="225.0" y="104.0" width="56.4" height="20" fill="#fffdf7" opacity="0.92"/><text x="228.0" y="118.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">0：直交</text>
+<rect x="278.6" y="184.0" width="98.4" height="20" fill="#fffdf7" opacity="0.92"/><text x="374.0" y="198.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">−1：反対向き</text>
+<text x="414.0" y="250.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">θ</tspan></text>
+<text x="60.0" y="280.0" font-size="14" fill="#6b645a" text-anchor="start">内積 ÷ (長さ × 長さ) は −1 以上 1 以下（青い帯）</text>
+<text x="60.0" y="302.0" font-size="14" fill="#6b645a" text-anchor="start">だから 0° 〜 180° のただ1つの角 θ に対応する</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　横軸は角 θ（0° 〜 180°）、縦軸は cos θ。コーシー・シュワルツの不等式は、内積÷（長さの積）が青い帯（−1 以上 1 以下）に入ることを保証するので、この曲線の上のただ1つの θ が決まる。2.4 の例（内積÷長さの積 = 1/2）は 60°。</figcaption>
+</figure>
+<p><strong>最小の具体例</strong>：$\boldsymbol u=(1,1,0)$、$\boldsymbol v=(1,0,1)$。$\langle\boldsymbol u,\boldsymbol v\rangle=1$、$\|\boldsymbol u\|=\sqrt2$、$\|\boldsymbol v\|=\sqrt2$。$\cos\theta=\frac{1}{\sqrt2\cdot\sqrt2}=\frac12$。よって $\theta=60^\circ$（$\pi/3$）。</p>
+<div class="why"><span class="label">ひとことで</span>内積があれば長さ $\|\boldsymbol v\|=\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$ が決まり、コーシー・シュワルツの不等式のおかげで、「内積÷長さの積」が $-1$ 以上 $1$ 以下になる。だから、関数のような図に描けないものにも「角」が定義できる。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>直交</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/19_a3_trysquare.jpg" alt="木の台と鋼の刃をもつ直角定規を、木の板の縁に当てている手" loading="lazy"></div>
+<p class="cap">板の縁に当てて、直角を確かめる定規である。</p>
+<p class="cr">Luke Milburn（2014年、直角定規）／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Try_Square.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/19_b3_weaving.jpg" alt="垂直に張った白い縦糸の下に、赤や青の色糸の房が並び、絨毯が織られている" loading="lazy"></div>
+<p class="cap">垂直に張った縦糸に、横から糸を結んで、絨毯を織っていく。</p>
+<p class="cr">Fulvio Spada（2007年、イラン・マハーンの絨毯織り）／<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Carpet_weaving,_Mahan,_Iran_(1248461911).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-3-1"><span class="no">3.1</span>定義：内積が0</h3>
+<p><strong>動機</strong>：2つのベクトルが「互いに無関係な方向」を向いていることを、数で言いたい。図形では直角だが、関数のように図に描けないものにも使えるよう、内積で定義する。</p>
+<div class="def" id="sym-orthogonal"><span class="label">記号：直交 $\boldsymbol u\perp\boldsymbol v$</span>
+<p><strong>①読み方</strong>：「ユー・ブイ は 直交する」「ユー・パープ・ブイ」。$\perp$ は「垂直」の記号で、perpendicular（パーペンディキュラー）の略。</p>
+<p><strong>②日本語での意味</strong>：2つのベクトルの内積が0であること。なす角が $90^\circ$（2.4 の $\cos\theta=0$）であるか、どちらかが零ベクトルであること。</p>
+<p><strong>③省略していない書き方</strong>：$\boldsymbol u\perp\boldsymbol v:\Longleftrightarrow\langle\boldsymbol u,\boldsymbol v\rangle=0$。（「$\Leftrightarrow$」は<a href="02_第2回_集合と論理.html#sym-iff">同値</a>、「:」は左を右で定義する印。）使っている内積が標準内積でない場合は、「その内積について直交」と、どの内積かを添える。</p>
+<p><strong>④どこで出会うか</strong>：座標軸（互いに直交する $x,y,z$ 軸）、振動のモード（質量行列について直交）、フーリエ級数（$\sin nx$ と $\cos mx$）、最小二乗法（誤差の向きが説明変数に直交）。</p>
+</div>
+<p><strong>例</strong>：$(3,4)\perp(4,-3)$（標準内積で $12-12=0$）。零ベクトルは、どのベクトルとも直交する（$\langle\boldsymbol 0,\boldsymbol v\rangle=0$、1.2）。1.3 の例で、$(3,2)$ と $(1,-1)$ は重みつき内積について直交する。1.4 の例で、関数 $1$ と $x$ は $\int_{-1}^1$ の内積について直交する。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「$\boldsymbol u\perp\boldsymbol v$ なら、どちらも零ベクトルでない」は誤りである。定義は「内積が0」なので、$\boldsymbol u=\boldsymbol 0$ でも成り立つ。「直交する2本の<em>非零</em>ベクトル」と言うときは、「非零」を明示する。</p>
+</div>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>三平方の定理（ピタゴラス）</h3>
+<p>高校で習う「直角三角形の斜辺の2乗は、他の2辺の2乗の和」を、内積で書く。</p>
+<div class="thm"><span class="label">定理3.1（ピタゴラスの定理）</span>
+<p>$\boldsymbol u\perp\boldsymbol v$ ならば、$\|\boldsymbol u+\boldsymbol v\|^2=\|\boldsymbol u\|^2+\|\boldsymbol v\|^2$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>2.3 の三角不等式の証明の2行目をそのまま使う：$\|\boldsymbol u+\boldsymbol v\|^2=\langle\boldsymbol u,\boldsymbol u\rangle+2\langle\boldsymbol u,\boldsymbol v\rangle+\langle\boldsymbol v,\boldsymbol v\rangle$。直交の仮定により中央の項は $2\cdot0=0$。残りは $\|\boldsymbol u\|^2+\|\boldsymbol v\|^2$。□</p>
+</div>
+<p>数値：$\boldsymbol u=(3,0)$、$\boldsymbol v=(0,4)$。$\|\boldsymbol u+\boldsymbol v\|^2=\|(3,4)\|^2=25$。$\|\boldsymbol u\|^2+\|\boldsymbol v\|^2=9+16=25$ ✓。図3.1 は、$\boldsymbol u$ と $\boldsymbol v$ をつないでできる直角三角形である。5.5 の「最短距離」の証明は、この定理だけを使う。</p>
+<figure class="fig" id="fig-3-1">
+<svg viewBox="0 0 440 364" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="ピタゴラスの定理" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>ピタゴラスの定理</title>
+<rect x="0" y="0" width="440" height="364" fill="#fffdf7"/>
+<polyline points="150.0,224.0 240.0,224.0 240.0,314.0 150.0,314.0 150.0,224.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6" stroke-linejoin="round"/>
+<polyline points="240.0,224.0 240.0,104.0 360.0,104.0 360.0,224.0 240.0,224.0" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6" stroke-linejoin="round"/>
+<polyline points="150.0,224.0 240.0,104.0 120.0,14.0 30.0,134.0 150.0,224.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6" stroke-linejoin="round"/>
+<polyline points="150.0,224.0 240.0,224.0 240.0,104.0 150.0,224.0" fill="none" stroke="#2a2723" stroke-width="2.4" stroke-linejoin="round"/>
+<polyline points="229.0,224.0 229.0,213.0 240.0,213.0" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="195.0" y="269.0" font-size="15" fill="#2b3a67" text-anchor="middle" font-weight="bold">‖u‖² = 9</text>
+<text x="300.0" y="164.0" font-size="15" fill="#5f7f4f" text-anchor="middle" font-weight="bold">‖v‖² = 16</text>
+<text x="105.0" y="119.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">‖u + v‖² = 25</text>
+<text x="195.0" y="216.0" font-size="17" fill="#2b3a67" text-anchor="middle" font-weight="bold">u</text>
+<text x="226.0" y="169.0" font-size="17" fill="#5f7f4f" text-anchor="middle" font-weight="bold">v</text>
+<text x="173.0" y="162.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">u + v</text>
+<text x="220.0" y="348.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">9 + 16 = 25：u ⟂ v のとき ‖u‖² + ‖v‖² = ‖u + v‖²</text>
+</svg>
+<figcaption><strong>図 3.1</strong>　u = (3, 0) と v = (0, 4)（直交）をつないだ直角三角形。各辺の上に、その辺の長さを1辺とする正方形を描くと、面積はそれぞれ ‖u‖² = 9、‖v‖² = 16、‖u + v‖² = 25 で、小さい2つを足すと大きい1つになる。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>逆「$\|\boldsymbol u+\boldsymbol v\|^2=\|\boldsymbol u\|^2+\|\boldsymbol v\|^2$ なら $\boldsymbol u\perp\boldsymbol v$」は正しい（証明の式から $2\langle\boldsymbol u,\boldsymbol v\rangle=0$）。一方、$\boldsymbol u\perp\boldsymbol v$ と<em>長さが等しい</em>ことは別の話で、混同しやすい。直交は角の話、長さが等しいは大きさの話である。</p>
+</div>
+
+<h3 id="sec-3-3"><span class="no">3.3</span>直交するベクトルは一次独立</h3>
+<p>第15回で、<a href="15_第15回_ベクトル空間と基底.html#sym-linear-independent">一次独立</a>の判定は「$c_1\boldsymbol v_1+\cdots+c_k\boldsymbol v_k=\boldsymbol 0$ なら $c_1=\cdots=c_k=0$」だった。直交なら、この判定が1行で済む。</p>
+<div class="thm"><span class="label">定理3.2</span>
+<p>$\boldsymbol v_1,\dots,\boldsymbol v_k$ が<strong>零ベクトルでなく</strong>、どの2本も直交する（$i\neq j$ なら $\langle\boldsymbol v_i,\boldsymbol v_j\rangle=0$）ならば、$\boldsymbol v_1,\dots,\boldsymbol v_k$ は一次独立である。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$c_1\boldsymbol v_1+\cdots+c_k\boldsymbol v_k=\boldsymbol 0$ とする。番号 $j$ を1つ選び、両辺と $\boldsymbol v_j$ との内積をとる。</p>
+<p>$$ \begin{aligned} 0 &= \langle\boldsymbol 0,\boldsymbol v_j\rangle && \text{（零ベクトルとの内積は0、1.2）}\\ &= \Bigl\langle\sum_{i=1}^kc_i\boldsymbol v_i,\ \boldsymbol v_j\Bigr\rangle && \text{（仮定：$\boldsymbol 0$ を一次結合で置き換えた）}\\ &= \sum_{i=1}^kc_i\langle\boldsymbol v_i,\boldsymbol v_j\rangle && \text{（(I2)：和と定数倍を外に出す）}\\ &= c_j\langle\boldsymbol v_j,\boldsymbol v_j\rangle && \text{（$i\neq j$ の項は直交の仮定で0。残るのは $i=j$ だけ）}\\ &= c_j\|\boldsymbol v_j\|^2 && \text{（ノルムの定義）} \end{aligned} $$</p>
+<p>$\boldsymbol v_j\neq\boldsymbol 0$ なので $\|\boldsymbol v_j\|^2\gt0$（(I3)）。したがって $c_j=0$。$j$ は任意だったので、すべての $c_j=0$。□</p>
+</div>
+<p>図3.2 は、「$\boldsymbol v_2$ との内積をとる」と、$\boldsymbol v_1$ と $\boldsymbol v_3$ の項が消えて $c_2$ だけが残る様子を並べたものである。</p>
+<figure class="fig" id="fig-3-2">
+<svg viewBox="0 0 440 304" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="直交すれば一次独立" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>直交すれば一次独立</title>
+<rect x="0" y="0" width="440" height="304" fill="#fffdf7"/>
+<text x="220.0" y="26.0" font-size="16" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan><tspan dy="4.5" font-size="11.2">1</tspan><tspan dy="-4.5"> = (1, 1, 0)　</tspan><tspan font-style="italic">v</tspan><tspan dy="4.5" font-size="11.2">2</tspan><tspan dy="-4.5"> = (1, −1, 0)　</tspan><tspan font-style="italic">v</tspan><tspan dy="4.5" font-size="11.2">3</tspan><tspan dy="-4.5"> = (0, 0, 1)</tspan></text>
+<text x="220.0" y="50.0" font-size="14" fill="#6b645a" text-anchor="middle">どの2本も内積が 0（直交）、どれも零ベクトルではない</text>
+<rect x="40" y="66" width="360" height="34" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.4"/>
+<text x="220.0" y="89.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">c</tspan><tspan dy="5.0" font-size="12.6">1</tspan><tspan dy="-5.0" font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">1</tspan><tspan dy="-5.0"> + </tspan><tspan font-style="italic">c</tspan><tspan dy="5.0" font-size="12.6">2</tspan><tspan dy="-5.0" font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">2</tspan><tspan dy="-5.0"> + </tspan><tspan font-style="italic">c</tspan><tspan dy="5.0" font-size="12.6">3</tspan><tspan dy="-5.0" font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6">3</tspan><tspan dy="-5.0"> = 0</tspan></text>
+<line x1="220.0" y1="104.0" x2="220.0" y2="134.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M216.1 125.9 L220.0 134.0 L223.9 125.9" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<text x="232.0" y="126.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">両辺と v₂ との内積をとる</text>
+<rect x="30" y="142" width="112" height="66" rx="6" fill="#f1eee6" stroke="#ddd6c8" stroke-width="1.6"/>
+<text x="86.0" y="168.0" font-size="16" fill="#6b645a" text-anchor="middle">c₁⟨v₁, v₂⟩</text>
+<text x="86.0" y="194.0" font-size="16" fill="#6b645a" text-anchor="middle">= c₁·0 = 0</text>
+<line x1="38.0" y1="156.0" x2="134.0" y2="200.0" stroke="#6b645a" stroke-width="1.4"/>
+<rect x="164" y="142" width="112" height="66" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="220.0" y="168.0" font-size="16" fill="#2a2723" text-anchor="middle">c₂⟨v₂, v₂⟩</text>
+<text x="220.0" y="194.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">= c₂·2</text>
+<rect x="298" y="142" width="112" height="66" rx="6" fill="#f1eee6" stroke="#ddd6c8" stroke-width="1.6"/>
+<text x="354.0" y="168.0" font-size="16" fill="#6b645a" text-anchor="middle">c₃⟨v₃, v₂⟩</text>
+<text x="354.0" y="194.0" font-size="16" fill="#6b645a" text-anchor="middle">= c₃·0 = 0</text>
+<line x1="306.0" y1="156.0" x2="402.0" y2="200.0" stroke="#6b645a" stroke-width="1.4"/>
+<text x="153.0" y="182.0" font-size="20" fill="#2a2723" text-anchor="middle">+</text>
+<text x="287.0" y="182.0" font-size="20" fill="#2a2723" text-anchor="middle">+</text>
+<text x="220.0" y="238.0" font-size="17" fill="#2a2723" text-anchor="middle" font-weight="bold">0 + 2c₂ + 0 = 0　より　c₂ = 0</text>
+<text x="220.0" y="266.0" font-size="15" fill="#6b645a" text-anchor="middle">v₁ や v₃ との内積でも同じ → c₁ = c₂ = c₃ = 0</text>
+<text x="220.0" y="290.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">つまり一次独立</text>
+</svg>
+<figcaption><strong>図 3.2</strong>　c₁v₁ + c₂v₂ + c₃v₃ = 0 の両辺に v₂ との内積をとる。v₁, v₃ は v₂ と直交するので、その項は係数が何であっても 0 になって消え（灰色）、c₂⟨v₂, v₂⟩ = 2c₂ だけが残る。v₂ ≠ 0 なので c₂ = 0。他の係数も同じ手順で 0 になる。</figcaption>
+</figure>
+<p><strong>確かめ</strong>：「非零」の条件がなぜ要るか。$\boldsymbol v_1=(1,0)$、$\boldsymbol v_2=\boldsymbol 0$ は（定義の上では）直交するが、$0\cdot\boldsymbol v_1+5\boldsymbol v_2=\boldsymbol 0$ のように、係数が0でない一次結合が $\boldsymbol 0$ になり、一次独立ではない。</p>
+
+<h3 id="sec-3-4"><span class="no">3.4</span>直交補空間 $W^{\perp}$</h3>
+<div class="def" id="sym-orth-complement"><span class="label">記号：直交補空間 $W^{\perp}$</span>
+<p><strong>①読み方</strong>：「ダブリュー・パープ」「ダブリューの直交補空間」。</p>
+<p><strong>②日本語での意味</strong>：部分空間 $W$ のベクトルすべてと直交するベクトルの集まり。</p>
+<p><strong>③省略していない書き方</strong>：$V$ の部分空間 $W$ に対して、$W^{\perp}:=\{\boldsymbol x\in V\mid\text{すべての }\boldsymbol w\in W\text{ について }\langle\boldsymbol x,\boldsymbol w\rangle=0\}$。（集合の書き方は<a href="02_第2回_集合と論理.html#sym-setbuilder">第2回</a>。）$W^{\perp}$ も部分空間である（下の確かめ）。</p>
+<p><strong>④どこで出会うか</strong>：連立方程式の解空間（3.4 の最後、$\ker A=(\text{行の張る空間})^{\perp}$）、最小二乗法の誤差の空間（第47回）。</p>
+</div>
+<p><strong>確かめ（$W^{\perp}$ は部分空間）</strong>：$\boldsymbol 0\in W^{\perp}$（零ベクトルは全員と直交）。$\boldsymbol x,\boldsymbol y\in W^{\perp}$ と実数 $a,b$、任意の $\boldsymbol w\in W$ について $\langle a\boldsymbol x+b\boldsymbol y,\boldsymbol w\rangle=a\langle\boldsymbol x,\boldsymbol w\rangle+b\langle\boldsymbol y,\boldsymbol w\rangle=a\cdot0+b\cdot0=0$。よって $a\boldsymbol x+b\boldsymbol y\in W^{\perp}$。<a href="15_第15回_ベクトル空間と基底.html#sym-subspace">部分空間</a>の3条件を満たす。</p>
+<p><strong>最小の具体例</strong>：$\mathbb R^3$（標準内積）の部分空間 $W=\operatorname{span}\{(1,1,0),(0,0,1)\}$。$\boldsymbol x=(x_1,x_2,x_3)$ が $W^{\perp}$ に入る条件は、$W$ の基底2本との内積が0（$W$ のベクトルは基底の一次結合なので、基底との内積が0なら全員と0。双線形性）：</p>
+<p>$$ \begin{aligned} \langle\boldsymbol x,(1,1,0)\rangle &= x_1+x_2=0 && \text{（1本目）}\\ \langle\boldsymbol x,(0,0,1)\rangle &= x_3=0 && \text{（2本目）} \end{aligned} $$</p>
+<p>よって $x_2=-x_1$、$x_3=0$。$W^{\perp}=\{t(1,-1,0)\mid t\in\mathbb R\}=\operatorname{span}\{(1,-1,0)\}$。$\dim W=2$、$\dim W^{\perp}=1$、合計 $3=n$。図3.3 は、$\mathbb R^3$ の中の平面 $W$ と、それに垂直な直線 $W^{\perp}$ である。</p>
+<figure class="fig" id="fig-3-3">
+<svg viewBox="0 0 440 356" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="W と W⊥" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>W と W⊥</title>
+<rect x="0" y="0" width="440" height="356" fill="#fffdf7"/>
+<polyline points="185.4,216.1 290.8,300.4 290.8,139.2 185.4,54.9 185.4,216.1" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.4" stroke-linejoin="round"/>
+<line x1="235.0" y1="200.0" x2="275.3" y2="167.8" stroke="#6b645a" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="235.0" y1="200.0" x2="154.4" y2="200.0" stroke="#6b645a" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="235.0" y1="200.0" x2="281.5" y2="237.2" stroke="#2b3a67" stroke-width="2.4"/><path d="M272.7 235.2 L281.5 237.2 L277.6 229.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="235.0" y1="200.0" x2="235.0" y2="107.0" stroke="#2b3a67" stroke-width="2.4"/><path d="M238.9 115.1 L235.0 107.0 L231.1 115.1" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="365.2" y1="165.3" x2="95.5" y2="237.2" stroke="#a8322a" stroke-width="2.6"/><path d="M102.3 231.3 L95.5 237.2 L104.3 238.9" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<polyline points="243.6,206.9 233.0,209.7 224.4,202.8" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="289.5" y="243.2" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">(1, 1, 0)</text>
+<text x="243.0" y="111.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">(0, 0, 1)</text>
+<text x="89.5" y="261.2" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">W⊥ の方向 (1, −1, 0)</text>
+<text x="201.8" y="71.2" font-size="16" fill="#2b3a67" text-anchor="start" font-weight="bold">W（平面）</text>
+<text x="295.2" y="153.3" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">W⊥（直線）</text>
+<text x="220.0" y="340.0" font-size="14" fill="#6b645a" text-anchor="middle">※ 斜めから描いたので、直角は見かけ上ゆがむ</text>
+</svg>
+<figcaption><strong>図 3.3</strong>　R³ の平面 W = span{(1,1,0), (0,0,1)}（青）と、W のどのベクトルとも直交する直線 W⊥ = span{(1,−1,0)}（赤）。次元は 2 + 1 = 3。</figcaption>
+</figure>
+<p><strong>第17回との接続</strong>：行列 $A$ の第 $i$ 行を $\boldsymbol r_i^{\mathsf T}$ とすると、$A\boldsymbol x=\boldsymbol 0$ は「どの行も $\boldsymbol x$ と標準内積が0」、つまり「$\boldsymbol x$ は行の張る空間と直交する」と読める。したがって<a href="17_第17回_連立一次方程式とランク.html#sym-ker">$\ker A$</a> $=(\text{行の張る空間})^{\perp}$。上の例は、$A=\begin{pmatrix}1&1&0\\0&0&1\end{pmatrix}$ の $\ker A=\{t(1,-1,0)\}$ を求めたことに他ならない。</p>
+<div class="why"><span class="label">ひとことで</span>直交とは内積が0のことで、直交する非零ベクトルは必ず一次独立になる。部分空間 $W$ に直交するベクトル全体 $W^{\perp}$ も部分空間で、連立方程式の核は、行の空間の直交補空間である。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>正規直交基底と直交行列</h2>
+
+<h3 id="sec-4-1"><span class="no">4.1</span>定義：直交していて、長さが1</h3>
+<p><strong>動機</strong>：第15回で、<a href="15_第15回_ベクトル空間と基底.html#sym-coordinates">座標</a>を求めるには、基底の一次結合で $\boldsymbol v$ を書く係数を、連立方程式を解いて出していた。基底が「互いに直交していて、長さが1」なら、この連立方程式を解かずに、内積1回で係数が出せる（4.2）。</p>
+<div class="def" id="sym-orthonormal"><span class="label">記号：正規直交基底 $\{\boldsymbol e_1,\dots,\boldsymbol e_n\}$</span>
+<p><strong>①読み方</strong>：「せいきちょっこうきてい」。「正規」は長さが1、「直交」は互いに内積が0、「基底」は第15回のもの。ベクトルの名前の $\boldsymbol e$ は、長さ1のベクトルによく使う文字（<a href="05_第5回_ベクトルと行列の書き方.html#sym-unit-vector">単位ベクトル</a>）。</p>
+<p><strong>②日本語での意味</strong>：互いに内積が0で、どれも長さが1であるような基底。</p>
+<p><strong>③省略していない書き方</strong>：基底 $\{\boldsymbol e_1,\dots,\boldsymbol e_n\}$ について、すべての $i,j\in\{1,\dots,n\}$ で</p>
+<p>$$ \langle\boldsymbol e_i,\boldsymbol e_j\rangle=\delta_{ij}=\begin{cases}1&(i=j)\\0&(i\neq j)\end{cases} $$</p>
+<p>が成り立つ。（$\delta_{ij}$ は<a href="04_第4回_総和・総乗と添字.html#sym-kronecker">クロネッカーのデルタ</a>。$i=j$ のとき $\langle\boldsymbol e_i,\boldsymbol e_i\rangle=\|\boldsymbol e_i\|^2=1$ が「長さ1」、$i\neq j$ のとき0が「直交」。）</p>
+<p><strong>④どこで出会うか</strong>：直交する座標軸（$x,y,z$ 軸）、回転した座標系、フーリエ級数、行列の対角化（第21回）。</p>
+</div>
+<p><strong>例</strong>：(a) $\mathbb R^n$ の標準基底（第15回の<a href="15_第15回_ベクトル空間と基底.html#sym-standard-basis">標準基底</a>）は、標準内積で正規直交。(b) $\mathbb R^2$ の $\boldsymbol e_1=\bigl(\tfrac35,\tfrac45\bigr)$、$\boldsymbol e_2=\bigl(-\tfrac45,\tfrac35\bigr)$。確かめ：$\langle\boldsymbol e_1,\boldsymbol e_1\rangle=\frac{9+16}{25}=1$、$\langle\boldsymbol e_2,\boldsymbol e_2\rangle=\frac{16+9}{25}=1$、$\langle\boldsymbol e_1,\boldsymbol e_2\rangle=\frac{-12+12}{25}=0$。3.3 の定理から一次独立で、2本なので $\mathbb R^2$ の基底（本数が次元と同じ。第15回）。これは標準の座標軸を、角 $\arctan\frac43\approx53.1^\circ$ だけ回したものである。</p>
+<p><strong>長さ1にする（正規化）</strong>：非零ベクトル $\boldsymbol u$ から、同じ向きの長さ1のベクトルを作るには、長さで割る：$\boldsymbol e:=\boldsymbol u/\|\boldsymbol u\|$。確かめ：$\|\boldsymbol e\|=\bigl\|\tfrac1{\|\boldsymbol u\|}\boldsymbol u\bigr\|=\tfrac1{\|\boldsymbol u\|}\|\boldsymbol u\|=1$（2.1 の $\|c\boldsymbol v\|=\lvert c\rvert\|\boldsymbol v\|$ で、$c=1/\|\boldsymbol u\|\gt0$）。</p>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>座標が内積1回で出る</h3>
+<div class="thm"><span class="label">定理4.1（正規直交基底での座標）</span>
+<p>$\{\boldsymbol e_1,\dots,\boldsymbol e_n\}$ を内積空間 $V$ の正規直交基底とする。任意の $\boldsymbol v\in V$ について、</p>
+<p>$$ \boldsymbol v=\langle\boldsymbol v,\boldsymbol e_1\rangle\boldsymbol e_1+\langle\boldsymbol v,\boldsymbol e_2\rangle\boldsymbol e_2+\cdots+\langle\boldsymbol v,\boldsymbol e_n\rangle\boldsymbol e_n=\sum_{i=1}^n\langle\boldsymbol v,\boldsymbol e_i\rangle\boldsymbol e_i $$</p>
+<p>すなわち、$\boldsymbol v$ の座標（基底の係数）は $c_i=\langle\boldsymbol v,\boldsymbol e_i\rangle$。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>基底なので、$\boldsymbol v=c_1\boldsymbol e_1+\cdots+c_n\boldsymbol e_n$ と書ける係数 $c_1,\dots,c_n$ が存在する（第15回）。番号 $j$ を選び、両辺と $\boldsymbol e_j$ との内積をとる。</p>
+<p>$$ \begin{aligned} \langle\boldsymbol v,\boldsymbol e_j\rangle &= \Bigl\langle\sum_{i=1}^nc_i\boldsymbol e_i,\ \boldsymbol e_j\Bigr\rangle && \text{（$\boldsymbol v$ を一次結合で置き換えた）}\\ &= \sum_{i=1}^nc_i\langle\boldsymbol e_i,\boldsymbol e_j\rangle && \text{（(I2)：外に出す）}\\ &= \sum_{i=1}^nc_i\delta_{ij} && \text{（正規直交：$\langle\boldsymbol e_i,\boldsymbol e_j\rangle=\delta_{ij}$）}\\ &= c_j && \text{（$\delta_{ij}$ は $i=j$ の項だけ1）} \end{aligned} $$</p>
+<p>よって $c_j=\langle\boldsymbol v,\boldsymbol e_j\rangle$。□</p>
+</div>
+<p><strong>数値</strong>：4.1 の $\boldsymbol e_1,\boldsymbol e_2$ と $\boldsymbol v=(7,1)$。</p>
+<p>$$ \begin{aligned} c_1 &= \langle\boldsymbol v,\boldsymbol e_1\rangle=7\cdot\tfrac35+1\cdot\tfrac45=\tfrac{21+4}{5}=5 && \text{（内積1回）}\\ c_2 &= \langle\boldsymbol v,\boldsymbol e_2\rangle=7\cdot\bigl(-\tfrac45\bigr)+1\cdot\tfrac35=\tfrac{-28+3}{5}=-5 && \text{（内積1回）}\\ 5\boldsymbol e_1-5\boldsymbol e_2 &= \bigl(3,4\bigr)-\bigl(-4,3\bigr)=(7,1) && \text{（確かめ：$5\boldsymbol e_1=(3,4)$、$5\boldsymbol e_2=(-4,3)$）} \end{aligned} $$</p>
+<p>図4.1 は、この分解を方眼に描いたものである。座標の2つの係数が、それぞれ1回の内積で出ている。</p>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 352" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="正規直交基底での座標" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>正規直交基底での座標</title>
+<rect x="0" y="0" width="440" height="352" fill="#fffdf7"/>
+<line x1="40.0" y1="184.0" x2="370.0" y2="184.0" stroke="#2a2723" stroke-width="1.3"/><path d="M363.7 187.0 L370.0 184.0 L363.7 181.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="104.0" y1="312.0" x2="104.0" y2="14.0" stroke="#2a2723" stroke-width="1.3"/><path d="M107.0 20.3 L104.0 14.0 L101.0 20.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="168.0" y1="180.0" x2="168.0" y2="188.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="168.0" y="204.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="232.0" y1="180.0" x2="232.0" y2="188.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="232.0" y="204.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="296.0" y1="180.0" x2="296.0" y2="188.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="296.0" y="204.0" font-size="14" fill="#6b645a" text-anchor="middle">6</text>
+<line x1="360.0" y1="180.0" x2="360.0" y2="188.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="360.0" y="204.0" font-size="14" fill="#6b645a" text-anchor="middle">8</text>
+<line x1="100.0" y1="248.0" x2="108.0" y2="248.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="96.0" y="253.0" font-size="14" fill="#6b645a" text-anchor="end">-2</text>
+<line x1="100.0" y1="120.0" x2="108.0" y2="120.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="96.0" y="125.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="100.0" y1="56.0" x2="108.0" y2="56.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="96.0" y="61.0" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="374.0" y="206.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="118.0" y="20.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="65.6" y1="235.2" x2="276.8" y2="-46.4" stroke="#bcc5de" stroke-width="1.4" stroke-dasharray="6 4"/>
+<line x1="257.6" y1="299.2" x2="52.8" y2="145.6" stroke="#e1bcb7" stroke-width="1.4" stroke-dasharray="6 4"/>
+<line x1="200.0" y1="56.0" x2="328.0" y2="152.0" stroke="#6b645a" stroke-width="1.5" stroke-dasharray="4 3"/>
+<line x1="232.0" y1="280.0" x2="328.0" y2="152.0" stroke="#6b645a" stroke-width="1.5" stroke-dasharray="4 3"/>
+<line x1="104.0" y1="184.0" x2="200.0" y2="56.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M198.3 64.8 L200.0 56.0 L192.0 60.1" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<line x1="104.0" y1="184.0" x2="232.0" y2="280.0" stroke="#5f7f4f" stroke-width="2.0"/><path d="M223.2 278.3 L232.0 280.0 L227.9 272.0" fill="none" stroke="#5f7f4f" stroke-width="2.0"/>
+<line x1="104.0" y1="184.0" x2="328.0" y2="152.0" stroke="#a8322a" stroke-width="2.8"/><path d="M320.5 157.0 L328.0 152.0 L319.4 149.3" fill="none" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="104.0" y1="184.0" x2="123.2" y2="158.4" stroke="#2a2723" stroke-width="3.4"/><path d="M121.3 168.2 L123.2 158.4 L114.3 163.0" fill="none" stroke="#2a2723" stroke-width="3.4"/>
+<line x1="104.0" y1="184.0" x2="78.4" y2="164.8" stroke="#2a2723" stroke-width="3.4"/><path d="M88.2 166.7 L78.4 164.8 L83.0 173.7" fill="none" stroke="#2a2723" stroke-width="3.4"/>
+<circle cx="200.0" cy="56.0" r="4.5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="232.0" cy="280.0" r="4.5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<polyline points="194.0,64.0 202.0,70.0 208.0,62.0" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<polyline points="224.0,274.0 230.0,266.0 238.0,272.0" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="133.2" y="166.4" font-size="17" fill="#2a2723" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="4.8" font-size="11.9">1</tspan></text>
+<text x="44.4" y="166.8" font-size="17" fill="#2a2723" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="4.8" font-size="11.9">2</tspan></text>
+<text x="336.0" y="146.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan><tspan> = (7, 1)</tspan></text>
+<text x="192.0" y="48.0" font-size="16" fill="#2b3a67" text-anchor="end" font-weight="bold">5e₁</text>
+<text x="240.0" y="298.0" font-size="16" fill="#5f7f4f" text-anchor="start" font-weight="bold">−5e₂</text>
+<text x="267.2" y="36.8" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">c₁ = ⟨v, e₁⟩ = 5</text>
+<text x="267.2" y="59.2" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">c₂ = ⟨v, e₂⟩ = −5</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　e₁ = (3/5, 4/5)、e₂ = (−4/5, 3/5) を黒い矢印で示す（太い短い矢印）。v = (7, 1) から各軸（青い破線と赤い破線）へ垂線を下ろした足が 5e₁ = (3, 4) と −5e₂ = (4, −3) で、この2つを足すと v に戻る（長方形）。係数 5 と −5 は、連立方程式を解かずに、内積 ⟨v, e₁⟩、⟨v, e₂⟩ で出る。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「座標は内積で出る」は、基底が<strong>直交しているとき</strong>だけ成り立つ。基底 $\boldsymbol b_1=(1,0)$、$\boldsymbol b_2=(1,1)$（直交しない）で $\boldsymbol v=(7,1)$ を書くと、$\boldsymbol v=6\boldsymbol b_1+1\cdot\boldsymbol b_2$（連立方程式 $c_1+c_2=7$、$c_2=1$ を解いた）で係数は $(6,1)$。ところが $\langle\boldsymbol v,\boldsymbol b_1\rangle=7$、$\langle\boldsymbol v,\boldsymbol b_2\rangle=8$ で、係数と一致しない。直交の仮定が、証明の「3行目で $i\neq j$ の項が0」を支えていた。</p>
+</div>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>直交行列</h3>
+<p>正規直交基底を<strong>列に並べた行列</strong>は、特別な性質をもつ。標準内積の $\mathbb R^n$ で、$\boldsymbol e_1,\dots,\boldsymbol e_n$ を列にした $n\times n$ 行列 $Q=\begin{pmatrix}\boldsymbol e_1&\cdots&\boldsymbol e_n\end{pmatrix}$ を考える。</p>
+<div class="def" id="sym-orthogonal-matrix"><span class="label">記号：直交行列 $Q$（$Q^{\mathsf T}Q=I$）</span>
+<p><strong>①読み方</strong>：「ちょっこうぎょうれつ」。$Q^{\mathsf T}Q=I$ は「キュー・トランスポーズ・キュー イコール アイ」。</p>
+<p><strong>②日本語での意味</strong>：列ベクトルが正規直交基底になっている正方行列。$Q^{\mathsf T}$ を左から掛けると $Q$ が打ち消される（$Q^{\mathsf T}$ が $Q$ の逆行列になる）。</p>
+<p><strong>③省略していない書き方</strong>：実 $n\times n$ 行列 $Q$ が直交行列であるとは、$Q^{\mathsf T}Q=I$ が成り立つこと。成分で書くと、$Q$ の第 $j$ 列を $\boldsymbol q_j$ として、$(Q^{\mathsf T}Q)_{ij}=\sum_{k=1}^nQ_{ki}Q_{kj}=\boldsymbol q_i\cdot\boldsymbol q_j=\delta_{ij}$。（転置は<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">第5回</a>、単位行列 $I$ は<a href="05_第5回_ベクトルと行列の書き方.html#sym-identity">第5回</a>。）</p>
+<p><strong>④どこで出会うか</strong>：回転行列（第16回の<a href="16_第16回_行列は線形写像.html#sym-rotation">回転</a>）、対称行列の対角化（第21回）、QR分解（6.4）、特異値分解（第22回）。</p>
+</div>
+<p><strong>なぜ $Q^{\mathsf T}Q=I$ か</strong>。第 $i$ 行 $\boldsymbol q_i^{\mathsf T}$ と第 $j$ 列 $\boldsymbol q_j$ の積が、$(Q^{\mathsf T}Q)_{ij}$（<a href="05_第5回_ベクトルと行列の書き方.html#abbr-matrix-product">行列の積の定義</a>）。つまり、「$Q$ の列どうしの内積」を並べた表が $Q^{\mathsf T}Q$ である。列が正規直交なら、その表は $\delta_{ij}$、すなわち単位行列。</p>
+<p><strong>数値</strong>：4.1 の $\boldsymbol e_1,\boldsymbol e_2$ を列にして、</p>
+<p>$$ Q=\frac15\begin{pmatrix}3&-4\\4&3\end{pmatrix},\quad Q^{\mathsf T}Q=\frac1{25}\begin{pmatrix}3&4\\-4&3\end{pmatrix}\begin{pmatrix}3&-4\\4&3\end{pmatrix}=\frac1{25}\begin{pmatrix}9+16&-12+12\\-12+12&16+9\end{pmatrix}=\begin{pmatrix}1&0\\0&1\end{pmatrix} $$</p>
+<p>図4.2 は、$Q^{\mathsf T}Q$ の各成分が「$Q$ の列どうしの内積」であることを、表にしたものである。</p>
+<figure class="fig" id="fig-4-2">
+<svg viewBox="0 0 440 308" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="QᵀQ = I" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>QᵀQ = I</title>
+<rect x="0" y="0" width="440" height="308" fill="#fffdf7"/>
+<text x="14.0" y="22.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">Q の列</text>
+<text x="236.0" y="22.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">内積の表（= QᵀQ）</text>
+<rect x="30" y="44" width="74" height="100" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="67.0" y="72.0" font-size="18" fill="#2a2723" text-anchor="middle">3/5</text>
+<text x="67.0" y="112.0" font-size="18" fill="#2a2723" text-anchor="middle">4/5</text>
+<text x="67.0" y="168.0" font-size="17" fill="#2b3a67" text-anchor="middle" font-weight="bold">q₁</text>
+<rect x="112" y="44" width="74" height="100" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.8"/>
+<text x="149.0" y="72.0" font-size="18" fill="#2a2723" text-anchor="middle">−4/5</text>
+<text x="149.0" y="112.0" font-size="18" fill="#2a2723" text-anchor="middle">3/5</text>
+<text x="149.0" y="168.0" font-size="17" fill="#5f7f4f" text-anchor="middle" font-weight="bold">q₂</text>
+<text x="30.0" y="200.0" font-size="14" fill="#6b645a" text-anchor="start">Q = 列が q₁, q₂ の行列</text>
+<rect x="250" y="44" width="80" height="66" rx="6" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="290.0" y="70.0" font-size="14" fill="#6b645a" text-anchor="middle">q₁·q₁</text>
+<text x="290.0" y="98.0" font-size="19" fill="#a8322a" text-anchor="middle" font-weight="bold">= 1</text>
+<rect x="338" y="44" width="80" height="66" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.6"/>
+<text x="378.0" y="70.0" font-size="14" fill="#6b645a" text-anchor="middle">q₁·q₂</text>
+<text x="378.0" y="98.0" font-size="19" fill="#2a2723" text-anchor="middle" font-weight="bold">= 0</text>
+<rect x="250" y="118" width="80" height="66" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.6"/>
+<text x="290.0" y="144.0" font-size="14" fill="#6b645a" text-anchor="middle">q₂·q₁</text>
+<text x="290.0" y="172.0" font-size="19" fill="#2a2723" text-anchor="middle" font-weight="bold">= 0</text>
+<rect x="338" y="118" width="80" height="66" rx="6" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="378.0" y="144.0" font-size="14" fill="#6b645a" text-anchor="middle">q₂·q₂</text>
+<text x="378.0" y="172.0" font-size="19" fill="#a8322a" text-anchor="middle" font-weight="bold">= 1</text>
+<text x="250.0" y="214.0" font-size="14" fill="#6b645a" text-anchor="start">対角：長さ² = 1</text>
+<text x="250.0" y="234.0" font-size="14" fill="#6b645a" text-anchor="start">対角以外：直交で 0</text>
+<line x1="190.0" y1="96.0" x2="240.0" y2="96.0" stroke="#6b645a" stroke-width="1.8"/><path d="M232.8 99.5 L240.0 96.0 L232.8 92.5" fill="none" stroke="#6b645a" stroke-width="1.8"/>
+<text x="215.0" y="84.0" font-size="14" fill="#6b645a" text-anchor="middle">内積</text>
+<text x="30.0" y="262.0" font-size="14" fill="#2a2723" text-anchor="start">例：q₁·q₂ = (3·(−4) + 4·3)/25 = 0、q₁·q₁ = (9 + 16)/25 = 1</text>
+<text x="30.0" y="288.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">この表が単位行列 I になっている ⟺ Q は直交行列</text>
+</svg>
+<figcaption><strong>図 4.2</strong>　(QᵀQ) の第 i 行・第 j 列は「Q の第 i 列と第 j 列の内積」。列が正規直交なら、対角（自分自身との内積 = 長さの2乗）が 1、対角以外（別の列との内積）が 0 の表、つまり単位行列になる。</figcaption>
+</figure>
+<p>$Q^{\mathsf T}Q=I$ は、<a href="16_第16回_行列は線形写像.html#sym-inverse-matrix">逆行列</a>の定義（$Q^{-1}Q=I$）と同じ形なので、<strong>$Q^{-1}=Q^{\mathsf T}$</strong>。逆行列を求めるのに連立方程式を解かず、転置するだけでよい。</p>
+<p><strong>長さと内積を変えない</strong>。$Q$ を掛けても、長さと内積は変わらない。</p>
+<p>$$ \begin{aligned} \langle Q\boldsymbol x,\ Q\boldsymbol y\rangle &= (Q\boldsymbol x)^{\mathsf T}(Q\boldsymbol y) && \text{（標準内積は転置と積で書ける、第5回）}\\ &= \boldsymbol x^{\mathsf T}Q^{\mathsf T}Q\,\boldsymbol y && \text{（積の転置は順序が逆：$(Q\boldsymbol x)^{\mathsf T}=\boldsymbol x^{\mathsf T}Q^{\mathsf T}$）}\\ &= \boldsymbol x^{\mathsf T}I\boldsymbol y=\boldsymbol x^{\mathsf T}\boldsymbol y=\langle\boldsymbol x,\boldsymbol y\rangle && \text{（$Q^{\mathsf T}Q=I$）} \end{aligned} $$</p>
+<p>$\boldsymbol y=\boldsymbol x$ とすれば $\|Q\boldsymbol x\|=\|\boldsymbol x\|$。長さと内積（したがって角）が変わらない変換は、回転や鏡映（向きの反転）だけである。数値：$\boldsymbol x=(1,2)$。$Q\boldsymbol x=\frac15(3-8,\ 4+6)=(-1,2)$。$\|\boldsymbol x\|^2=5$、$\|Q\boldsymbol x\|^2=1+4=5$ ✓。図4.3 は、標準の座標軸を、$Q$ の列が決める新しい座標軸に移す様子である。</p>
+<figure class="fig" id="fig-4-3">
+<svg viewBox="0 0 440 332" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="直交行列は長さを変えない" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>直交行列は長さを変えない</title>
+<rect x="0" y="0" width="440" height="332" fill="#fffdf7"/>
+<line x1="60.0" y1="206.0" x2="385.0" y2="206.0" stroke="#2a2723" stroke-width="1.3"/><path d="M378.7 209.0 L385.0 206.0 L378.7 203.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="200.0" y1="234.0" x2="200.0" y2="14.0" stroke="#2a2723" stroke-width="1.3"/><path d="M203.0 20.3 L200.0 14.0 L197.0 20.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="202.0" x2="60.0" y2="210.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="60.0" y="226.0" font-size="14" fill="#6b645a" text-anchor="middle">-2</text>
+<line x1="130.0" y1="202.0" x2="130.0" y2="210.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="130.0" y="226.0" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="270.0" y1="202.0" x2="270.0" y2="210.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="270.0" y="226.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="340.0" y1="202.0" x2="340.0" y2="210.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="340.0" y="226.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="196.0" y1="136.0" x2="204.0" y2="136.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="192.0" y="141.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="196.0" y1="66.0" x2="204.0" y2="66.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="192.0" y="71.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="389.0" y="228.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="214.0" y="20.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="200.0,206.0 270.0,206.0 270.0,136.0 200.0,136.0 200.0,206.0" fill="#ece8dd" stroke="#6b645a" stroke-width="1.6" stroke-linejoin="round"/>
+<polyline points="200.0,206.0 242.0,150.0 186.0,108.0 144.0,164.0 200.0,206.0" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.8" stroke-linejoin="round"/>
+<line x1="200.0" y1="206.0" x2="270.0" y2="66.0" stroke="#2b3a67" stroke-width="2.6"/><path d="M269.9 75.0 L270.0 66.0 L262.9 71.5" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="200.0" y1="206.0" x2="130.0" y2="66.0" stroke="#a8322a" stroke-width="2.6"/><path d="M137.1 71.5 L130.0 66.0 L130.1 75.0" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<polyline points="259.5,206.0 259.5,205.0 259.5,203.9 259.4,202.9 259.4,201.8 259.3,200.8 259.2,199.8 259.1,198.7 258.9,197.7 258.8,196.7 258.6,195.7 258.4,194.6 258.2,193.6 258.0,192.6 257.7,191.6 257.5,190.6 257.2,189.6 256.9,188.6 256.6,187.6 256.3,186.6 255.9,185.6 255.5,184.7 255.2,183.7 254.8,182.8 254.4,181.8 253.9,180.9 253.5,179.9 253.0,179.0 252.5,178.1 252.0,177.2 251.5,176.2 251.0,175.4 250.5,174.5 249.9,173.6 249.3,172.7 248.7,171.9 248.1,171.0 247.5,170.2 246.9,169.4 246.2,168.6 245.6,167.8 244.9,167.0 244.2,166.2 243.5,165.4 242.8,164.7 242.1,163.9 241.3,163.2 240.6,162.5 239.8,161.8 239.0,161.1 238.2,160.4 237.4,159.8 236.6,159.1 235.8,158.5" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="263.0" y="189.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">53.1°</text>
+<text x="278.0" y="62.0" font-size="17" fill="#2b3a67" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan> = (1, 2)</tspan></text>
+<text x="122.0" y="58.0" font-size="17" fill="#a8322a" text-anchor="end" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">Q</tspan><tspan font-style="italic">x</tspan><tspan> = (−1, 2)</tspan></text>
+<text x="278.4" y="176.0" font-size="14" fill="#6b645a" text-anchor="start">単位正方形</text>
+<text x="67.0" y="185.0" font-size="14" fill="#b07a3e" text-anchor="start" font-weight="bold">Q で移した像</text>
+<text x="220.0" y="290.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">‖x‖² = 1 + 4 = 5　　‖Qx‖² = 1 + 4 = 5</text>
+<text x="220.0" y="314.0" font-size="14" fill="#6b645a" text-anchor="middle">長さも、辺の間の角（90°）も変わらない</text>
+</svg>
+<figcaption><strong>図 4.3</strong>　直交行列 Q（列が e₁ = (3/5, 4/5)、e₂ = (−4/5, 3/5)）は平面を原点のまわりに 53.1° 回す。単位正方形は同じ大きさの正方形に移り、x = (1, 2) は Qx = (−1, 2) に移る。長さ √5 は変わらない。</figcaption>
+</figure>
+<p>なお、$Q^{\mathsf T}Q=I$ の両辺の行列式（第18回）をとると $(\det Q)^2=1$。第18回で、直交行列の $\det$ が $+1$（回転）か $-1$（鏡映）であることを示す。</p>
+<div class="why"><span class="label">ひとことで</span>正規直交基底なら、座標は $c_i=\langle\boldsymbol v,\boldsymbol e_i\rangle$ と内積1回で出る。それを列に並べた直交行列は $Q^{\mathsf T}Q=I$ を満たし、逆行列が転置で済み、長さも角も変えない。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>射影：ある方向の成分を取り出す</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/19_a5_shadow.jpg" alt="潮だまりのある砂浜に、撮影者の影が、長く細く伸びている" loading="lazy"></div>
+<p class="cap">立体の人も、地面の上では、細長い影として平らに落ちる。</p>
+<p class="cr">Rick Obst（2022年、米国オレゴン州ビバリー・ビーチ）／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Casting_a_Long_Sunrise_Shadow_on_Beverly_Beach.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/19_b5_goyomi.jpg" alt="格子の障子に、人の影がうっすらと映っている浮世絵" loading="lazy"></div>
+<p class="cap">障子の向こうの人は、影として、平面にだけ映る。</p>
+<p class="cr">『暦』の浮世絵（ブルックリン美術館蔵。Commons の年代欄は1783〜1784年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Brooklyn_Museum_-_E-Goyomi_(Shadow_of_Man_on_Shoji).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-5-1"><span class="no">5.1</span>動機</h3>
+<p>斜面の上の物体にかかる重力を、「斜面に沿う成分」と「斜面に垂直な成分」に分ける。観測データのベクトルを、「モデルで説明できる部分」と「説明できない部分（誤差）」に分ける。どちらも、<strong>1つのベクトル $\boldsymbol v$ を、ある方向（または部分空間）の成分と、それに直交する残りの成分に分ける</strong>操作である。これが射影である。高校の物理では、$\|\boldsymbol v\|\cos\theta$ という「影の長さ」を使った。内積で書き直すと、角を使わずに済み、$n$ 次元や関数にも使える。</p>
+
+<h3 id="sec-5-2"><span class="no">5.2</span>1本のベクトルへの射影</h3>
+<p>非零ベクトル $\boldsymbol u$ と、別のベクトル $\boldsymbol v$ が与えられたとする。$\boldsymbol v$ のうち「$\boldsymbol u$ の方向の成分」$\boldsymbol p$ を、次の2つの条件で定める。</p>
+<ul>
+<li>(i) $\boldsymbol p$ は $\boldsymbol u$ の定数倍：$\boldsymbol p=c\boldsymbol u$（$c$ は実数）。</li>
+<li>(ii) 残り $\boldsymbol v-\boldsymbol p$ は $\boldsymbol u$ と直交：$\langle\boldsymbol v-\boldsymbol p,\ \boldsymbol u\rangle=0$。</li>
+</ul>
+<p>図5.1 は、この2つの条件を絵にしたものである。$\boldsymbol v$ の先端から、$\boldsymbol u$ を通る直線へ垂線を下ろしたときの足が $\boldsymbol p$ である。</p>
+<figure class="fig" id="fig-5-1">
+<svg viewBox="0 0 440 360" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="射影の2つの条件" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>射影の2つの条件</title>
+<rect x="0" y="0" width="440" height="360" fill="#fffdf7"/>
+<line x1="40.0" y1="234.0" x2="380.0" y2="234.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 237.0 L380.0 234.0 L373.7 231.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="70.0" y1="264.0" x2="70.0" y2="14.0" stroke="#2a2723" stroke-width="1.3"/><path d="M73.0 20.3 L70.0 14.0 L67.0 20.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="130.0" y1="230.0" x2="130.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="130.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="190.0" y1="230.0" x2="190.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="190.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="250.0" y1="230.0" x2="250.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="250.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="310.0" y1="230.0" x2="310.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="310.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="66.0" y1="174.0" x2="74.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="179.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="66.0" y1="114.0" x2="74.0" y2="114.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="119.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="66.0" y1="54.0" x2="74.0" y2="54.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="59.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="384.0" y="256.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="84.0" y="20.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="22.0" y1="258.0" x2="358.0" y2="90.0" stroke="#6b645a" stroke-width="1.6" stroke-dasharray="7 4"/>
+<line x1="70.0" y1="234.0" x2="190.0" y2="174.0" stroke="#5f7f4f" stroke-width="3.0"/><path d="M184.5 181.1 L190.0 174.0 L181.0 174.1" fill="none" stroke="#5f7f4f" stroke-width="3.0"/>
+<line x1="70.0" y1="234.0" x2="310.0" y2="54.0" stroke="#2b3a67" stroke-width="2.6"/><path d="M305.9 62.0 L310.0 54.0 L301.2 55.7" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="334.0" y1="102.0" x2="310.0" y2="54.0" stroke="#a8322a" stroke-width="2.6"/><path d="M317.1 59.5 L310.0 54.0 L310.1 63.0" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<circle cx="334.0" cy="102.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<polyline points="324.2,106.9 319.2,97.1 329.1,92.2" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="186.0" y="198.0" font-size="17" fill="#5f7f4f" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">u</tspan></text>
+<text x="306.0" y="46.0" font-size="17" fill="#2b3a67" text-anchor="end" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan><tspan> = (4, 3)</tspan></text>
+<text x="342.0" y="122.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">p = proj v</text>
+<text x="340.0" y="73.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">r = v − p</text>
+<text x="244.0" y="178.0" font-size="14" fill="#6b645a" text-anchor="start">直線（u の定数倍）</text>
+<text x="40.0" y="316.0" font-size="15" fill="#2a2723" text-anchor="start">(i) p は u の定数倍（直線の上にある）</text>
+<text x="40.0" y="340.0" font-size="15" fill="#2a2723" text-anchor="start">(ii) 残り r = v − p は u と直交（直角マーク）</text>
+</svg>
+<figcaption><strong>図 5.1</strong>　v = (4, 3) の先端から、u = (2, 1) を通る直線へ垂線を下ろした足が p = (22/5, 11/5)（u の方向への v の射影）。(i) p は直線の上にある、(ii) 残り r = v − p は直線と直角、の2つで p が決まる。</figcaption>
+</figure>
+<p><strong>導出</strong>：(i) を (ii) に入れて、$c$ を求める。</p>
+<p>$$ \begin{aligned} 0 &= \langle\boldsymbol v-c\boldsymbol u,\ \boldsymbol u\rangle && \text{（条件 (ii) に (i) を代入）}\\ &= \langle\boldsymbol v,\boldsymbol u\rangle-c\langle\boldsymbol u,\boldsymbol u\rangle && \text{（(I2)：展開して $c$ を外に出す）}\\ c\langle\boldsymbol u,\boldsymbol u\rangle &= \langle\boldsymbol v,\boldsymbol u\rangle && \text{（$c$ の項を左辺に移す）}\\ c &= \frac{\langle\boldsymbol v,\boldsymbol u\rangle}{\langle\boldsymbol u,\boldsymbol u\rangle} && \text{（$\boldsymbol u\neq\boldsymbol 0$ より $\langle\boldsymbol u,\boldsymbol u\rangle\gt0$ なので割れる）} \end{aligned} $$</p>
+<div class="def" id="sym-projection"><span class="label">記号：射影 $\operatorname{proj}_{\boldsymbol u}\boldsymbol v$</span>
+<p><strong>①読み方</strong>：「プロジェクション・ユー・ブイ」「ブイの、ユー方向への射影」。proj は projection（射影）の略。「$\pi_{\boldsymbol u}(\boldsymbol v)$」「$P_{\boldsymbol u}\boldsymbol v$」と書く本もある。</p>
+<p><strong>②日本語での意味</strong>：$\boldsymbol v$ のうち、$\boldsymbol u$ の方向にある成分。$\boldsymbol v$ の先端から $\boldsymbol u$ を通る直線に垂線を下ろしたときの、足の位置のベクトル。</p>
+<p><strong>③省略していない書き方</strong>：$\boldsymbol u\neq\boldsymbol 0$ のとき、</p>
+<p>$$ \operatorname{proj}_{\boldsymbol u}\boldsymbol v:=\frac{\langle\boldsymbol v,\boldsymbol u\rangle}{\langle\boldsymbol u,\boldsymbol u\rangle}\,\boldsymbol u $$</p>
+<p><strong>④どこで出会うか</strong>：力の分解（斜面の重力の分解）、最小二乗法（第47回）、フーリエ係数（第36回）、座標変換。</p>
+</div>
+
+<div class="box" id="abbr-proj"><span class="label">省略の段階：射影の公式</span>
+<table class="tb">
+<tr><th>段</th><th>書き方</th><th>この段で省いたもの</th><th>省いても誤解が起きない理由</th></tr>
+<tr><td>S0</td><td>$\operatorname{proj}_{\boldsymbol u}\boldsymbol v$ は、「$c\boldsymbol u$ の形で、$\langle\boldsymbol v-c\boldsymbol u,\boldsymbol u\rangle=0$ を満たすもの」</td><td>（なし。条件のまま）</td><td>—</td></tr>
+<tr><td>S1</td><td>$\displaystyle\operatorname{proj}_{\boldsymbol u}\boldsymbol v=\frac{\langle\boldsymbol v,\boldsymbol u\rangle}{\langle\boldsymbol u,\boldsymbol u\rangle}\boldsymbol u$</td><td>条件を解く手順（上の4行）</td><td>解は上の導出の通り1つに決まる（$c$ の1次方程式で、係数 $\langle\boldsymbol u,\boldsymbol u\rangle\neq0$）</td></tr>
+<tr><td>S2</td><td>$\displaystyle\operatorname{proj}_{\boldsymbol u}\boldsymbol v=\frac{\langle\boldsymbol v,\boldsymbol u\rangle}{\|\boldsymbol u\|^2}\boldsymbol u$</td><td>$\langle\boldsymbol u,\boldsymbol u\rangle$ を $\|\boldsymbol u\|^2$ と書く</td><td>ノルムの定義（2.1）から $\|\boldsymbol u\|^2=\langle\boldsymbol u,\boldsymbol u\rangle$</td></tr>
+<tr><td>S3</td><td>$\|\boldsymbol e\|=1$ なら $\operatorname{proj}_{\boldsymbol e}\boldsymbol v=\langle\boldsymbol v,\boldsymbol e\rangle\boldsymbol e$</td><td>分母の $\|\boldsymbol e\|^2$（$=1$）</td><td>1で割っても変わらない。4.2 の座標の公式の1項と同じ</td></tr>
+</table>
+<p>S3 が使える（分母を省ける）のは<strong>長さ1</strong>のときだけである。長さが1でない $\boldsymbol u$ に S3 を使うと、$\|\boldsymbol u\|^2$ 倍だけ大きい誤った答えになる。以後この箱にリンクして使う。</p>
+</div>
+<p><strong>最小の具体例</strong>：$\boldsymbol v=(4,3)$、$\boldsymbol u=(2,1)$（標準内積）。</p>
+<p>$$ \begin{aligned} \langle\boldsymbol v,\boldsymbol u\rangle &= 4\cdot2+3\cdot1=11 && \text{（分子）}\\ \langle\boldsymbol u,\boldsymbol u\rangle &= 2\cdot2+1\cdot1=5 && \text{（分母）}\\ c &= \tfrac{11}5 && \text{（割る）}\\ \operatorname{proj}_{\boldsymbol u}\boldsymbol v &= \tfrac{11}5(2,1)=\bigl(\tfrac{22}5,\tfrac{11}5\bigr) && \text{（$\boldsymbol u$ に掛ける）}\\ \boldsymbol v-\boldsymbol p &= \bigl(4-\tfrac{22}5,\ 3-\tfrac{11}5\bigr)=\bigl(-\tfrac25,\ \tfrac45\bigr) && \text{（残り）} \end{aligned} $$</p>
+<p>確かめ：(a) 残りと $\boldsymbol u$ の内積 $-\frac25\cdot2+\frac45\cdot1=0$ ✓（直交）。(b) ピタゴラス（定理3.1）：$\|\boldsymbol p\|^2=\frac{484+121}{25}=\frac{121}5$、$\|\boldsymbol v-\boldsymbol p\|^2=\frac{4+16}{25}=\frac45$、合計 $\frac{121+4}5=25=\|\boldsymbol v\|^2$ ✓。</p>
+<p>図5.2 は、この足し算 $25=\frac{121}5+\frac45$ を、長さの2乗の帯で描いたものである。</p>
+<figure class="fig" id="fig-5-2">
+<svg viewBox="0 0 440 342" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="射影の数値例" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>射影の数値例</title>
+<rect x="0" y="0" width="440" height="342" fill="#fffdf7"/>
+<text x="14.0" y="22.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">計算の流れ（v = (4, 3)、u = (2, 1)）</text>
+<text x="24.0" y="50.0" font-size="14" fill="#2a2723" text-anchor="start">分子 ⟨v, u⟩ = 4·2 + 3·1 = 11　　分母 ⟨u, u⟩ = 2·2 + 1·1 = 5</text>
+<text x="24.0" y="74.0" font-size="14" fill="#2a2723" text-anchor="start">c = 11/5　→　p = (11/5)(2, 1) = (22/5, 11/5)</text>
+<text x="24.0" y="98.0" font-size="14" fill="#2a2723" text-anchor="start">r = v − p = (−2/5, 4/5)</text>
+<text x="14.0" y="130.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">長さの2乗（面積ではなく帯の長さで比べる）</text>
+<text x="30.0" y="152.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">‖v‖² = 25</text>
+<rect x="30" y="160" width="380.0" height="24" rx="3" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="30.0" y="222.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">‖p‖² + ‖r‖² = 24.2 + 0.8</text>
+<rect x="30" y="230" width="367.84" height="24" rx="3" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<rect x="397.84" y="230" width="12.16" height="24" rx="3" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="213.9" y="247.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">‖p‖² = 121/5 = 24.2</text>
+<line x1="403.9" y1="254.0" x2="403.9" y2="270.0" stroke="#a8322a" stroke-width="1.4"/>
+<text x="403.9" y="288.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">‖r‖² = 4/5 = 0.8</text>
+<text x="220.0" y="322.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">24.2 + 0.8 = 25 ✓（ピタゴラス：p ⟂ r）</text>
+</svg>
+<figcaption><strong>図 5.2</strong>　上は5.2 の計算を順に並べたもの。下は ‖v‖² = 25 を、p の長さの2乗 24.2（緑）と r の長さの2乗 0.8（赤）に分けた帯。p と r は直交するので、2つの長さの2乗を足すと v の長さの2乗に戻る。</figcaption>
+</figure>
+<p><strong>特別な場合で既知の結果に戻る</strong>：2.4 の $\boldsymbol v\cdot\boldsymbol u=\|\boldsymbol v\|\|\boldsymbol u\|\cos\theta$ を使うと、$\|\operatorname{proj}_{\boldsymbol u}\boldsymbol v\|=\bigl\lvert\frac{\langle\boldsymbol v,\boldsymbol u\rangle}{\|\boldsymbol u\|^2}\bigr\rvert\|\boldsymbol u\|=\frac{\lvert\langle\boldsymbol v,\boldsymbol u\rangle\rvert}{\|\boldsymbol u\|}=\|\boldsymbol v\|\lvert\cos\theta\rvert$。高校の「影の長さ $\|\boldsymbol v\|\cos\theta$」に一致する。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>(a) $\operatorname{proj}_{\boldsymbol u}\boldsymbol v$ と $\operatorname{proj}_{\boldsymbol v}\boldsymbol u$ は<strong>別のもの</strong>。前者は $\boldsymbol u$ の定数倍、後者は $\boldsymbol v$ の定数倍で、向きも長さも違う（$\boldsymbol u=(2,1)$、$\boldsymbol v=(4,3)$ で、後者は $\frac{11}{25}(4,3)$）。(b) 「$\boldsymbol p=\langle\boldsymbol v,\boldsymbol u\rangle\boldsymbol u$」と書くのは、$\boldsymbol u$ が長さ1のときだけ正しい（上の S3）。</p>
+</div>
+
+<h3 id="sec-5-3"><span class="no">5.3</span>射影行列</h3>
+<p>$\operatorname{proj}_{\boldsymbol u}\boldsymbol v$ は、$\boldsymbol v$ について線形である（$\boldsymbol v$ を $a\boldsymbol v+b\boldsymbol w$ にすると、内積 $\langle\boldsymbol v,\boldsymbol u\rangle$ が (I2) で分けられる）。だから第16回の<a href="16_第16回_行列は線形写像.html#sym-linear-map">線形写像</a>であり、行列で書ける。標準内積で $\langle\boldsymbol v,\boldsymbol u\rangle=\boldsymbol u^{\mathsf T}\boldsymbol v$ と書き、数 $\frac1{\boldsymbol u^{\mathsf T}\boldsymbol u}$ を前に出すと、</p>
+<p>$$ \operatorname{proj}_{\boldsymbol u}\boldsymbol v=\frac{\boldsymbol u^{\mathsf T}\boldsymbol v}{\boldsymbol u^{\mathsf T}\boldsymbol u}\boldsymbol u=\frac{1}{\boldsymbol u^{\mathsf T}\boldsymbol u}\,\boldsymbol u\,(\boldsymbol u^{\mathsf T}\boldsymbol v)=\Bigl(\frac{\boldsymbol u\boldsymbol u^{\mathsf T}}{\boldsymbol u^{\mathsf T}\boldsymbol u}\Bigr)\boldsymbol v $$</p>
+<p>2つ目の等号は、数 $\boldsymbol u^{\mathsf T}\boldsymbol v$ を $\boldsymbol u$ の後ろへ動かしただけ（数なので位置を変えてよい）。3つ目は、行列の積の結合法則（第5回・第16回）で、$\boldsymbol u(\boldsymbol u^{\mathsf T}\boldsymbol v)=(\boldsymbol u\boldsymbol u^{\mathsf T})\boldsymbol v$。</p>
+<div class="def" id="sym-proj-matrix"><span class="label">記号：射影行列 $P$</span>
+<p><strong>①読み方</strong>：「しゃえいぎょうれつ」「ピー」。$P^2=P$ は「ピー・にじょう イコール ピー」。</p>
+<p><strong>②日本語での意味</strong>：「$\boldsymbol v$ を掛けると、その射影が出てくる」行列。1度射影した結果を、もう1度射影しても変わらない（すでに直線の上にあるから）。</p>
+<p><strong>③省略していない書き方</strong>：$\boldsymbol u\in\mathbb R^n$（非零）に対して、$P:=\dfrac{\boldsymbol u\boldsymbol u^{\mathsf T}}{\boldsymbol u^{\mathsf T}\boldsymbol u}$。$\boldsymbol u\boldsymbol u^{\mathsf T}$ は、列ベクトル（$n\times1$）と行ベクトル（$1\times n$）の積で、$n\times n$ 行列（成分は $u_iu_j$）。分母 $\boldsymbol u^{\mathsf T}\boldsymbol u$ は<em>数</em>（$1\times1$）。$P\boldsymbol v=\operatorname{proj}_{\boldsymbol u}\boldsymbol v$。</p>
+<p><strong>④どこで出会うか</strong>：最小二乗法（第47回）、回帰の「ハット行列」、画像・信号の成分分解。</p>
+</div>
+<p><strong>数値</strong>：$\boldsymbol u=(2,1)$。$\boldsymbol u\boldsymbol u^{\mathsf T}=\begin{pmatrix}2\\1\end{pmatrix}\begin{pmatrix}2&1\end{pmatrix}=\begin{pmatrix}4&2\\2&1\end{pmatrix}$、$\boldsymbol u^{\mathsf T}\boldsymbol u=5$。$P=\frac15\begin{pmatrix}4&2\\2&1\end{pmatrix}$。$P\boldsymbol v=\frac15\begin{pmatrix}4\cdot4+2\cdot3\\2\cdot4+1\cdot3\end{pmatrix}=\frac15\begin{pmatrix}22\\11\end{pmatrix}$ で、5.2 の射影と一致 ✓。</p>
+<p><strong>$P^2=P$ の確かめ</strong>：$P^2=\frac1{25}\begin{pmatrix}4&2\\2&1\end{pmatrix}\begin{pmatrix}4&2\\2&1\end{pmatrix}=\frac1{25}\begin{pmatrix}16+4&8+2\\8+2&4+1\end{pmatrix}=\frac1{25}\begin{pmatrix}20&10\\10&5\end{pmatrix}=P$ ✓。一般には、$P^2=\frac{\boldsymbol u(\boldsymbol u^{\mathsf T}\boldsymbol u)\boldsymbol u^{\mathsf T}}{(\boldsymbol u^{\mathsf T}\boldsymbol u)^2}=\frac{\boldsymbol u\boldsymbol u^{\mathsf T}}{\boldsymbol u^{\mathsf T}\boldsymbol u}=P$（真ん中の数 $\boldsymbol u^{\mathsf T}\boldsymbol u$ が分母と1つ約分される）。また $P^{\mathsf T}=P$（$(\boldsymbol u\boldsymbol u^{\mathsf T})^{\mathsf T}=(\boldsymbol u^{\mathsf T})^{\mathsf T}\boldsymbol u^{\mathsf T}=\boldsymbol u\boldsymbol u^{\mathsf T}$、積の転置は順序が逆）。$P^2=P$ と $P^{\mathsf T}=P$ の2つが、「（直交）射影行列」の特徴である。</p>
+<p>図5.3 は、射影行列 $P$ をいろいろな点に掛けたときの動きである。落ちた点にもう一度 $P$ を掛けても動かない（$P^2=P$）。</p>
+<figure class="fig" id="fig-5-3">
+<svg viewBox="0 0 440 432" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="射影行列" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>射影行列</title>
+<rect x="0" y="0" width="440" height="432" fill="#fffdf7"/>
+<line x1="45.0" y1="199.0" x2="380.0" y2="199.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 202.0 L380.0 199.0 L373.7 196.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="120.0" y1="324.0" x2="120.0" y2="14.0" stroke="#2a2723" stroke-width="1.3"/><path d="M123.0 20.3 L120.0 14.0 L117.0 20.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="170.0" y1="195.0" x2="170.0" y2="203.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="170.0" y="219.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="220.0" y1="195.0" x2="220.0" y2="203.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="220.0" y="219.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="270.0" y1="195.0" x2="270.0" y2="203.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="270.0" y="219.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="320.0" y1="195.0" x2="320.0" y2="203.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="320.0" y="219.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="116.0" y1="299.0" x2="124.0" y2="299.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="112.0" y="304.0" font-size="14" fill="#6b645a" text-anchor="end">-2</text>
+<line x1="116.0" y1="249.0" x2="124.0" y2="249.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="112.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="116.0" y1="149.0" x2="124.0" y2="149.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="112.0" y="154.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="116.0" y1="99.0" x2="124.0" y2="99.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="112.0" y="104.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="116.0" y1="49.0" x2="124.0" y2="49.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="112.0" y="54.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="384.0" y="221.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="134.0" y="20.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="45.0" y1="236.5" x2="370.0" y2="74.0" stroke="#6b645a" stroke-width="1.6" stroke-dasharray="7 4"/>
+<line x1="320.0" y1="49.0" x2="340.0" y2="89.0" stroke="#a8322a" stroke-width="1.5" stroke-dasharray="4 3"/>
+<polyline points="336.0,81.0 344.0,76.9 348.0,85.0" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<circle cx="320.0" cy="49.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="340.0" cy="89.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="328.0" y="43.0" font-size="17" fill="#2b3a67" text-anchor="start" font-weight="bold">a</text>
+<text x="348.0" y="107.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">Pa</text>
+<line x1="70.0" y1="49.0" x2="140.0" y2="189.0" stroke="#a8322a" stroke-width="1.5" stroke-dasharray="4 3"/>
+<polyline points="136.0,181.0 144.0,176.9 148.0,185.0" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<circle cx="70.0" cy="49.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="140.0" cy="189.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="78.0" y="43.0" font-size="17" fill="#2b3a67" text-anchor="start" font-weight="bold">b</text>
+<text x="148.0" y="207.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">Pb</text>
+<line x1="270.0" y1="299.0" x2="200.0" y2="159.0" stroke="#a8322a" stroke-width="1.5" stroke-dasharray="4 3"/>
+<polyline points="204.0,167.0 212.1,163.0 208.0,155.0" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<circle cx="270.0" cy="299.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="200.0" cy="159.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="278.0" y="293.0" font-size="17" fill="#2b3a67" text-anchor="start" font-weight="bold">c</text>
+<text x="208.0" y="177.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">Pc</text>
+<text x="365.0" y="68.5" font-size="14" fill="#6b645a" text-anchor="end">u の直線</text>
+<text x="45.0" y="374.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">P = (1/5) [[4, 2], [2, 1]]（u = (2, 1)）</text>
+<text x="45.0" y="398.0" font-size="14" fill="#6b645a" text-anchor="start">どの点も直線の上に垂直に落ちる。落ちた点にもう一度 P を</text>
+<text x="45.0" y="418.0" font-size="14" fill="#6b645a" text-anchor="start">掛けても動かない：P(Pa) = Pa（P² = P）</text>
+</svg>
+<figcaption><strong>図 5.3</strong>　点 a, b, c に射影行列 P を掛けた像 Pa, Pb, Pc（赤い点）は、すべて直線の上にあり、元の点から直線への垂線（赤い破線）の足になっている。Pa が直線の上にあるので、もう一度 P を掛けても動かない。これが P² = P。</figcaption>
+</figure>
+
+<h3 id="sec-5-4"><span class="no">5.4</span>部分空間への射影</h3>
+<p>1本の直線ではなく、平面のような部分空間 $W$ に射影したい。5.2 の条件を、$W$ に広げる。</p>
+<ul>
+<li>(i) $\boldsymbol p\in W$。</li>
+<li>(ii) $\boldsymbol v-\boldsymbol p\in W^{\perp}$（$W$ のどのベクトルとも直交）。</li>
+</ul>
+<p>$W$ に<strong>正規直交基底</strong> $\{\boldsymbol e_1,\dots,\boldsymbol e_k\}$ があれば、答えは4.2 の座標の公式を $k$ 項で止めたものになる。</p>
+<div class="thm"><span class="label">定理5.1（正規直交基底による射影）</span>
+<p>$\boldsymbol p:=\sum_{i=1}^k\langle\boldsymbol v,\boldsymbol e_i\rangle\boldsymbol e_i$ とすると、$\boldsymbol p\in W$ かつ $\boldsymbol v-\boldsymbol p\in W^{\perp}$。この $\boldsymbol p$ を $\boldsymbol v$ の $W$ への射影と呼ぶ。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$\boldsymbol p$ は $\boldsymbol e_i$ の一次結合なので $\boldsymbol p\in W$。残り $\boldsymbol r:=\boldsymbol v-\boldsymbol p$ について、番号 $j\in\{1,\dots,k\}$ を選ぶ。</p>
+<p>$$ \begin{aligned} \langle\boldsymbol r,\boldsymbol e_j\rangle &= \langle\boldsymbol v,\boldsymbol e_j\rangle-\sum_{i=1}^k\langle\boldsymbol v,\boldsymbol e_i\rangle\langle\boldsymbol e_i,\boldsymbol e_j\rangle && \text{（(I2)：展開）}\\ &= \langle\boldsymbol v,\boldsymbol e_j\rangle-\langle\boldsymbol v,\boldsymbol e_j\rangle && \text{（$\langle\boldsymbol e_i,\boldsymbol e_j\rangle=\delta_{ij}$：$i=j$ の項だけ残る）}\\ &= 0 \end{aligned} $$</p>
+<p>$\boldsymbol r$ は $W$ の基底のすべてと直交する。$W$ の任意のベクトルは基底の一次結合なので、双線形性により、$W$ のすべてのベクトルとも直交する。したがって $\boldsymbol r\in W^{\perp}$。□</p>
+</div>
+<p><strong>最小の具体例</strong>：$W=\operatorname{span}\{(1,1,0),(0,0,1)\}$（3.4 と同じ）。正規直交基底は $\boldsymbol e_1=\frac1{\sqrt2}(1,1,0)$、$\boldsymbol e_2=(0,0,1)$（確かめ：$\langle\boldsymbol e_1,\boldsymbol e_2\rangle=0$、$\|\boldsymbol e_1\|^2=\frac12+\frac12=1$、$\|\boldsymbol e_2\|=1$）。$\boldsymbol v=(2,0,3)$ とする。</p>
+<p>$$ \begin{aligned} \langle\boldsymbol v,\boldsymbol e_1\rangle &= \tfrac{2+0+0}{\sqrt2}=\sqrt2 && \text{（1本目との内積）}\\ \langle\boldsymbol v,\boldsymbol e_2\rangle &= 3 && \text{（2本目との内積）}\\ \boldsymbol p &= \sqrt2\cdot\tfrac1{\sqrt2}(1,1,0)+3(0,0,1)=(1,1,3) && \text{（定理5.1）}\\ \boldsymbol v-\boldsymbol p &= (1,-1,0) && \text{（残り）} \end{aligned} $$</p>
+<p>残り $(1,-1,0)$ は、3.4 で求めた $W^{\perp}=\operatorname{span}\{(1,-1,0)\}$ に入っている ✓。図5.4 に描く。</p>
+<figure class="fig" id="fig-5-4">
+<svg viewBox="0 0 440 426" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="平面への射影" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>平面への射影</title>
+<rect x="0" y="0" width="440" height="426" fill="#fffdf7"/>
+<polyline points="175.4,267.1 287.0,356.4 287.0,114.6 175.4,25.3 175.4,267.1" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.4" stroke-linejoin="round"/>
+<line x1="225.0" y1="282.0" x2="256.0" y2="120.8" stroke="#2b3a67" stroke-width="2.4"/><path d="M258.3 129.5 L256.0 120.8 L250.6 128.0" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="225.0" y1="282.0" x2="163.0" y2="145.6" stroke="#5f7f4f" stroke-width="2.4"/><path d="M169.9 151.4 L163.0 145.6 L162.8 154.6" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<line x1="256.0" y1="120.8" x2="163.0" y2="145.6" stroke="#a8322a" stroke-width="2.8"/><path d="M169.8 139.7 L163.0 145.6 L171.8 147.3" fill="none" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="256.0" y1="120.8" x2="256.0" y2="306.8" stroke="#6b645a" stroke-width="1.2" stroke-dasharray="4 3"/>
+<circle cx="256.0" cy="120.8" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<polyline points="246.3,123.4 246.3,133.4 256.0,130.8" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<circle cx="163.0" cy="145.6" r="5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<text x="155.0" y="137.6" font-size="15" fill="#5f7f4f" text-anchor="end" font-weight="bold">v = (2, 0, 3)</text>
+<text x="266.0" y="112.8" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">p = (1, 1, 3)</text>
+<text x="203.5" y="117.2" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">r = (1, −1, 0)</text>
+<text x="185.6" y="42.9" font-size="18" fill="#2b3a67" text-anchor="start" font-weight="bold">W</text>
+<text x="30.0" y="388.0" font-size="14" fill="#2a2723" text-anchor="start">p は W の中、r は W⊥ の中（W の基底と直交）</text>
+<text x="30.0" y="410.0" font-size="14" fill="#6b645a" text-anchor="start">※ 斜めから描いたので、直角マークは見かけ上ゆがむ</text>
+</svg>
+<figcaption><strong>図 5.4</strong>　v = (2, 0, 3) を、平面 W = span{(1,1,0), (0,0,1)} へ射影する。正規直交基底 e₁ = (1,1,0)/√2、e₂ = (0,0,1) を使うと p = ⟨v,e₁⟩e₁ + ⟨v,e₂⟩e₂ = √2·e₁ + 3·e₂ = (1, 1, 3)。残り r = v − p = (1, −1, 0) は W⊥ に入る。</figcaption>
+</figure>
+<p><strong>行列で書くと</strong>：$Q:=\begin{pmatrix}\boldsymbol e_1&\cdots&\boldsymbol e_k\end{pmatrix}$（$n\times k$）とすると、$\langle\boldsymbol v,\boldsymbol e_i\rangle=\boldsymbol e_i^{\mathsf T}\boldsymbol v$ は $Q^{\mathsf T}\boldsymbol v$ の第 $i$ 成分で、$\boldsymbol p=\sum_i(\boldsymbol e_i^{\mathsf T}\boldsymbol v)\boldsymbol e_i=Q(Q^{\mathsf T}\boldsymbol v)$（$A\boldsymbol x$ は列の一次結合、第16回）。したがって射影行列は $P=QQ^{\mathsf T}$（$k=1$、$\boldsymbol e=\boldsymbol u/\|\boldsymbol u\|$ なら 5.3 の $P$ に戻る）。基底が正規直交でないときは $P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}$（$A$ の列が $W$ の基底）となる。これは第47回の最小二乗法で導く。</p>
+
+<h3 id="sec-5-5"><span class="no">5.5</span>射影は、いちばん近い点を与える</h3>
+<p>射影が「$\boldsymbol v$ に最も近い $W$ の点」であることを示す。最小二乗法（第47回）で「誤差を最小にする」ことが、射影を求めることと同じになる理由である。</p>
+<div class="thm"><span class="label">定理5.2（最良近似）</span>
+<p>$\boldsymbol p$ を $\boldsymbol v$ の $W$ への射影とする。$W$ の任意のベクトル $\boldsymbol w$ について、$\|\boldsymbol v-\boldsymbol w\|\ge\|\boldsymbol v-\boldsymbol p\|$。等号は $\boldsymbol w=\boldsymbol p$ のときに限る。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$$ \begin{aligned} \|\boldsymbol v-\boldsymbol w\|^2 &= \|(\boldsymbol v-\boldsymbol p)+(\boldsymbol p-\boldsymbol w)\|^2 && \text{（$-\boldsymbol p+\boldsymbol p$ を挿入）}\\ &= \|\boldsymbol v-\boldsymbol p\|^2+\|\boldsymbol p-\boldsymbol w\|^2 && \text{（ピタゴラス、定理3.1）}\\ &\ge \|\boldsymbol v-\boldsymbol p\|^2 && \text{（$\|\boldsymbol p-\boldsymbol w\|^2\ge0$）} \end{aligned} $$</p>
+<p>2行目でピタゴラスを使えるのは、$\boldsymbol v-\boldsymbol p\in W^{\perp}$、$\boldsymbol p-\boldsymbol w\in W$（$W$ は部分空間で、$\boldsymbol p,\boldsymbol w\in W$ の差も $W$ に入る）だから、2本が直交するため。等号は $\|\boldsymbol p-\boldsymbol w\|^2=0$、すなわち $\boldsymbol w=\boldsymbol p$（(I3)）のとき。□</p>
+</div>
+<p><strong>数値</strong>：5.2 の $\boldsymbol v=(4,3)$、$W=\operatorname{span}\{(2,1)\}$、$\boldsymbol p=(\frac{22}5,\frac{11}5)$、$\|\boldsymbol v-\boldsymbol p\|^2=\frac45=0.8$。別の点 $\boldsymbol w=(4,2)=2(2,1)\in W$：$\|\boldsymbol v-\boldsymbol w\|^2=\|(0,1)\|^2=1\ge0.8$ ✓。$\boldsymbol w=(2,1)$：$\|(2,2)\|^2=8\ge0.8$ ✓。ピタゴラスの確かめ：$\boldsymbol w=(4,2)$ で $\|\boldsymbol p-\boldsymbol w\|^2=\bigl(\frac{22}5-4\bigr)^2+\bigl(\frac{11}5-2\bigr)^2=\frac4{25}+\frac1{25}=\frac15=0.2$。$0.8+0.2=1$ ✓。</p>
+<p>図5.5 は、直線上の3つの点 $\boldsymbol p$、$(4,2)$、$(2,1)$ までの距離を比べたものである。</p>
+<figure class="fig" id="fig-5-5">
+<svg viewBox="0 0 440 378" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="射影は最も近い点" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>射影は最も近い点</title>
+<rect x="0" y="0" width="440" height="378" fill="#fffdf7"/>
+<line x1="40.0" y1="234.0" x2="380.0" y2="234.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 237.0 L380.0 234.0 L373.7 231.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="70.0" y1="264.0" x2="70.0" y2="14.0" stroke="#2a2723" stroke-width="1.3"/><path d="M73.0 20.3 L70.0 14.0 L67.0 20.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="130.0" y1="230.0" x2="130.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="130.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="190.0" y1="230.0" x2="190.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="190.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="250.0" y1="230.0" x2="250.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="250.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="310.0" y1="230.0" x2="310.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="310.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="66.0" y1="174.0" x2="74.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="179.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="66.0" y1="114.0" x2="74.0" y2="114.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="119.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="66.0" y1="54.0" x2="74.0" y2="54.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="59.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="384.0" y="256.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="84.0" y="20.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="22.0" y1="258.0" x2="358.0" y2="90.0" stroke="#6b645a" stroke-width="1.6" stroke-dasharray="7 4"/>
+<line x1="310.0" y1="54.0" x2="190.0" y2="174.0" stroke="#b07a3e" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="310.0" y1="54.0" x2="310.0" y2="114.0" stroke="#2b3a67" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="310.0" y1="54.0" x2="334.0" y2="102.0" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="310.0" y1="114.0" x2="334.0" y2="102.0" stroke="#6b645a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="330.0,94.0 321.9,98.0 326.0,106.0" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<circle cx="310.0" cy="54.0" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="310.0" cy="114.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="190.0" cy="174.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="334.0" cy="102.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="318.0" y="48.0" font-size="17" fill="#2a2723" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan></text>
+<text x="300.0" y="120.0" font-size="15" fill="#2b3a67" text-anchor="end" font-weight="bold">(4, 2)</text>
+<text x="198.0" y="194.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">(2, 1)</text>
+<text x="344.0" y="106.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">p</text>
+<text x="40.0" y="316.0" font-size="14" fill="#6b645a" text-anchor="start">v までの距離の2乗：</text>
+<text x="40.0" y="340.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">p まで 0.8（最小）　(4, 2) まで 1　(2, 1) まで 8</text>
+<text x="40.0" y="362.0" font-size="14" fill="#6b645a" text-anchor="start">(4, 2) の場合：0.8 + 0.2 = 1（p, (4, 2), v が直角三角形）</text>
+</svg>
+<figcaption><strong>図 5.5</strong>　直線上の点のうち、v に最も近いのは射影 p。他の点 (4, 2) や (2, 1) へのルート（破線）は、p への垂線（赤）より必ず長い。(4, 2) について、v–p–(4, 2) は p で直角の三角形なので、ピタゴラスにより 0.8 + 0.2 = 1。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>射影とは、$\boldsymbol v$ を「$W$ の中の成分 $\boldsymbol p$」と「$W$ に直交する残り」に分ける操作である。正規直交基底があれば $\boldsymbol p=\sum\langle\boldsymbol v,\boldsymbol e_i\rangle\boldsymbol e_i$ と内積だけで書け、$\boldsymbol p$ は $W$ の中で $\boldsymbol v$ にいちばん近い点になる。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>グラム・シュミットの方法とQR分解</h2>
+
+<h3 id="sec-6-1"><span class="no">6.1</span>動機：直交していない基底しか手元にないとき</h3>
+<p>4.2 の「座標が内積1回で出る」も、5.4 の「射影が内積の和で書ける」も、<strong>正規直交基底があること</strong>が条件だった。ところが、実際に手にする基底は、たいてい直交していない。たとえば、センサーを斜めに取りつけたので、3本の測定軸が互いに斜めになっている、という場合である。</p>
+<p>そこで必要になるのが、「<strong>一次独立な $n$ 本のベクトルから、同じ空間を張る正規直交基底を作る手順</strong>」である。考え方は1つだけ。</p>
+<ul>
+<li>ベクトルを<strong>1本ずつ順番に</strong>処理する。</li>
+<li>$k$ 本目を処理するとき、すでに作った $\boldsymbol e_1,\dots,\boldsymbol e_{k-1}$ の方向の成分（5.4 の射影）を<strong>引いて取り除く</strong>。</li>
+<li>5.4 の定理5.1 により、引いた残りは、$\boldsymbol e_1,\dots,\boldsymbol e_{k-1}$ のすべてと直交する。残りの長さを1にそろえれば $\boldsymbol e_k$ ができる。</li>
+</ul>
+<p>図6.1 は、2本の場合（$\mathbb R^2$）の様子である。</p>
+<figure class="fig" id="fig-6-1">
+<svg viewBox="0 0 440 348" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="グラム・シュミット（2本）" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>グラム・シュミット（2本）</title>
+<rect x="0" y="0" width="440" height="348" fill="#fffdf7"/>
+<line x1="40.0" y1="230.0" x2="379.0" y2="230.0" stroke="#2a2723" stroke-width="1.3"/><path d="M372.7 233.0 L379.0 230.0 L372.7 227.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="124.0" y1="258.0" x2="124.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M127.0 16.3 L124.0 10.0 L121.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="194.0" y1="226.0" x2="194.0" y2="234.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="194.0" y="250.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="264.0" y1="226.0" x2="264.0" y2="234.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="264.0" y="250.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="334.0" y1="226.0" x2="334.0" y2="234.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="334.0" y="250.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="120.0" y1="160.0" x2="128.0" y2="160.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="116.0" y="165.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="120.0" y1="90.0" x2="128.0" y2="90.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="116.0" y="95.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="383.0" y="252.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="138.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="124.0" y1="230.0" x2="334.0" y2="160.0" stroke="#2b3a67" stroke-width="2.2"/><path d="M327.5 166.3 L334.0 160.0 L325.1 158.8" fill="none" stroke="#2b3a67" stroke-width="2.2"/>
+<line x1="124.0" y1="230.0" x2="264.0" y2="90.0" stroke="#5f7f4f" stroke-width="2.2"/><path d="M261.0 98.5 L264.0 90.0 L255.5 93.0" fill="none" stroke="#5f7f4f" stroke-width="2.2"/>
+<line x1="124.0" y1="230.0" x2="292.0" y2="174.0" stroke="#6b645a" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="292.0" y1="174.0" x2="264.0" y2="90.0" stroke="#a8322a" stroke-width="2.6"/><path d="M270.3 96.5 L264.0 90.0 L262.8 98.9" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="124.0" y1="230.0" x2="96.0" y2="146.0" stroke="#d9a49f" stroke-width="1.6" stroke-dasharray="4 3"/>
+<circle cx="292.0" cy="174.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<polyline points="282.5,177.2 279.4,167.7 288.8,164.5" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<line x1="124.0" y1="230.0" x2="190.4" y2="207.9" stroke="#2a2723" stroke-width="3.4"/><path d="M183.2 214.8 L190.4 207.9 L180.5 206.6" fill="none" stroke="#2a2723" stroke-width="3.4"/>
+<line x1="124.0" y1="230.0" x2="101.9" y2="163.6" stroke="#2a2723" stroke-width="3.4"/><path d="M108.8 170.8 L101.9 163.6 L100.6 173.5" fill="none" stroke="#2a2723" stroke-width="3.4"/>
+<polyline points="134.4,226.5 131.0,216.1 120.5,219.6" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<text x="342.0" y="166.0" font-size="17" fill="#2b3a67" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="4.8" font-size="11.9">1</tspan><tspan dy="-4.8"> = (3, 1)</tspan></text>
+<text x="260.0" y="80.0" font-size="17" fill="#5f7f4f" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="4.8" font-size="11.9">2</tspan><tspan dy="-4.8"> = (2, 2)</tspan></text>
+<text x="300.0" y="194.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">p</text>
+<text x="278.0" y="121.5" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">u₂ = a₂ − p</text>
+<text x="182.4" y="193.9" font-size="17" fill="#2a2723" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="4.8" font-size="11.9">1</tspan></text>
+<text x="67.9" y="167.6" font-size="17" fill="#2a2723" text-anchor="start" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="4.8" font-size="11.9">2</tspan></text>
+<text x="30.0" y="304.0" font-size="14" fill="#2a2723" text-anchor="start">① e₁ = a₁/‖a₁‖　　② p = ⟨a₂, e₁⟩e₁ = (12/5, 4/5)</text>
+<text x="30.0" y="328.0" font-size="14" fill="#2a2723" text-anchor="start">③ u₂ = a₂ − p = (−2/5, 6/5)　　④ e₂ = u₂/‖u₂‖</text>
+</svg>
+<figcaption><strong>図 6.1</strong>　a₁ = (3, 1) の向きをそのまま e₁ にする。a₂ から e₁ 方向の成分 p を引いた残り u₂ は、e₁ と直角になる。u₂ の長さを1にそろえたのが e₂。黒い短い矢印 e₁, e₂ が新しい正規直交基底で、点線は u₂ を原点に移した位置。</figcaption>
+</figure>
+
+<h3 id="sec-6-2"><span class="no">6.2</span>手順と、その正しさ</h3>
+<div class="def" id="sym-gram-schmidt"><span class="label">記号：グラム・シュミットの方法</span>
+<p><strong>①読み方</strong>：「グラム・シュミットのほうほう」（Gram–Schmidt）。人名2人（ヨルゲン・グラムとエルハルト・シュミット）にちなむ。英語では “Gram–Schmidt process”。</p>
+<p><strong>②日本語での意味</strong>：基底のベクトルを順番に並べ、$k$ 本目から「すでに作った正規直交ベクトルの方向の成分」をすべて引き、残りの長さを1にして、新しい正規直交ベクトルとする手順。</p>
+<p><strong>③省略していない書き方</strong>：$\boldsymbol a_1,\dots,\boldsymbol a_n$ を内積空間 $V$ の一次独立なベクトルとする。$k=1,2,\dots,n$ の順に、</p>
+<p>$$ \boldsymbol u_k:=\boldsymbol a_k-\sum_{i=1}^{k-1}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\,\boldsymbol e_i,\qquad \boldsymbol e_k:=\frac{\boldsymbol u_k}{\|\boldsymbol u_k\|} $$</p>
+<p>と決める。$k=1$ のときは和が空（足す項が1つもない）なので、和は $\boldsymbol 0$ と約束し、$\boldsymbol u_1=\boldsymbol a_1$ となる。（$\boldsymbol u_k$ は「引いた残り」で、まだ長さが1とは限らない。$\boldsymbol e_k$ は長さ1にそろえたもの。和の記号は<a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a>。）</p>
+<p><strong>④どこで出会うか</strong>：QR分解（6.4）、最小二乗法（第47回）、数値計算（第50回）、関数の直交多項式（ルジャンドル多項式。演習問題の問5）。</p>
+</div>
+
+<div class="box" id="abbr-gs"><span class="label">省略の段階：グラム・シュミットの式</span>
+<table class="tb">
+<tr><th>段</th><th>書き方</th><th>この段で省いたもの</th><th>省いても誤解が起きない理由</th></tr>
+<tr><td>S0</td><td>$\boldsymbol u_1=\boldsymbol a_1$。$\boldsymbol u_2=\boldsymbol a_2-\langle\boldsymbol a_2,\boldsymbol e_1\rangle\boldsymbol e_1$。$\boldsymbol u_3=\boldsymbol a_3-\langle\boldsymbol a_3,\boldsymbol e_1\rangle\boldsymbol e_1-\langle\boldsymbol a_3,\boldsymbol e_2\rangle\boldsymbol e_2$。各 $\boldsymbol e_k=\boldsymbol u_k/\|\boldsymbol u_k\|$。</td><td>（なし。$k$ ごとに全部書いた形）</td><td>—</td></tr>
+<tr><td>S1</td><td>$\displaystyle\boldsymbol u_k=\boldsymbol a_k-\sum_{i=1}^{k-1}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i$</td><td>$k=2,3,\dots$ を別々に書くこと。$\boldsymbol u_1$ の行</td><td>和の記号は「同じ形の項を $i=1$ から $k-1$ まで足す」の略（<a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a>）。$k=1$ は空の和で $\boldsymbol 0$</td></tr>
+<tr><td>S2</td><td>$\displaystyle\boldsymbol u_k=\boldsymbol a_k-\sum_{i=1}^{k-1}\operatorname{proj}_{\boldsymbol e_i}\boldsymbol a_k$</td><td>$\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i$ を射影の記号に置いた</td><td>$\|\boldsymbol e_i\|=1$ なので、<a href="#abbr-proj">5.2 の省略の段階の S3</a> により $\operatorname{proj}_{\boldsymbol e_i}\boldsymbol a_k=\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i$</td></tr>
+<tr><td>S3</td><td>$\boldsymbol u_k=\boldsymbol a_k-(\boldsymbol a_k\text{ の }W_{k-1}\text{ への射影})$、ただし $W_{k-1}:=\operatorname{span}\{\boldsymbol e_1,\dots,\boldsymbol e_{k-1}\}$</td><td>和の中身を、部分空間への射影ひとまとまりに言い換えた</td><td>定理5.1 により、$\sum_i\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i$ は $W_{k-1}$ への射影そのもの</td></tr>
+</table>
+<p>S3 の読み方：「$\boldsymbol a_k$ から、それまでに作った空間への射影を引いた残り」。残りは $W_{k-1}^{\perp}$ に入る。以後、式を短く言うときはこの箱にリンクする。</p>
+</div>
+
+<div class="thm"><span class="label">定理6.1（グラム・シュミットの方法の正しさ）</span>
+<p>$\boldsymbol a_1,\dots,\boldsymbol a_n$ が一次独立ならば、上の手順は最後まで実行でき（すべての $k$ で $\boldsymbol u_k\neq\boldsymbol 0$、割り算ができる）、次が成り立つ。</p>
+<ul>
+<li>(a) $\boldsymbol e_1,\dots,\boldsymbol e_n$ は正規直交である。</li>
+<li>(b) どの $k$ についても $\operatorname{span}\{\boldsymbol e_1,\dots,\boldsymbol e_k\}=\operatorname{span}\{\boldsymbol a_1,\dots,\boldsymbol a_k\}$。</li>
+</ul>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$k$ についての数学的帰納法で示す（「$k=1$ で成り立つ。$k-1$ までで成り立てば $k$ でも成り立つ」の2つを示すと、$k=1,2,3,\dots$ と順に成り立つ、という論法）。</p>
+<p><strong>$k=1$</strong>：$\boldsymbol a_1$ は一次独立なベクトルの1本なので $\boldsymbol 0$ ではない。$\boldsymbol u_1=\boldsymbol a_1\neq\boldsymbol 0$ で、$\|\boldsymbol u_1\|\gt0$（(I3)）。$\boldsymbol e_1=\boldsymbol a_1/\|\boldsymbol a_1\|$ の長さは1（4.1 の正規化）。$\boldsymbol e_1$ と $\boldsymbol a_1$ は定数倍の関係なので、張る空間も等しい。</p>
+<p><strong>$k-1$ まで成り立つと仮定して、$k$ を示す</strong>（$k\ge2$）。仮定：$\boldsymbol e_1,\dots,\boldsymbol e_{k-1}$ は正規直交で、$\operatorname{span}\{\boldsymbol e_1,\dots,\boldsymbol e_{k-1}\}=\operatorname{span}\{\boldsymbol a_1,\dots,\boldsymbol a_{k-1}\}$。</p>
+<p>(i) $\boldsymbol u_k\neq\boldsymbol 0$。もし $\boldsymbol u_k=\boldsymbol 0$ なら、定義より $\boldsymbol a_k=\sum_{i=1}^{k-1}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i$ で、$\boldsymbol a_k$ は $\boldsymbol e_1,\dots,\boldsymbol e_{k-1}$ の一次結合。仮定により、これは $\boldsymbol a_1,\dots,\boldsymbol a_{k-1}$ の一次結合でもある。すると $\boldsymbol a_k$ が他の本数の一次結合で書けてしまい、$\boldsymbol a_1,\dots,\boldsymbol a_n$ の一次独立（第15回）に反する。したがって $\boldsymbol u_k\neq\boldsymbol 0$。</p>
+<p>(ii) $\boldsymbol u_k$ は $\boldsymbol e_1,\dots,\boldsymbol e_{k-1}$ のすべてと直交する。番号 $j\lt k$ を選ぶ。</p>
+<p>$$ \begin{aligned} \langle\boldsymbol u_k,\boldsymbol e_j\rangle &= \langle\boldsymbol a_k,\boldsymbol e_j\rangle-\sum_{i=1}^{k-1}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\langle\boldsymbol e_i,\boldsymbol e_j\rangle && \text{（(I2)：展開）}\\ &= \langle\boldsymbol a_k,\boldsymbol e_j\rangle-\langle\boldsymbol a_k,\boldsymbol e_j\rangle && \text{（$\langle\boldsymbol e_i,\boldsymbol e_j\rangle=\delta_{ij}$：$i=j$ の項だけ残る）}\\ &= 0 \end{aligned} $$</p>
+<p>$\boldsymbol e_k=\boldsymbol u_k/\|\boldsymbol u_k\|$ は $\boldsymbol u_k$ の定数倍なので、これも $\boldsymbol e_j$ と直交（(I2) で定数が外に出る）。長さは1。よって $\boldsymbol e_1,\dots,\boldsymbol e_k$ は正規直交。これで (a)。</p>
+<p>(iii) 張る空間。$\boldsymbol e_k=\boldsymbol u_k/\|\boldsymbol u_k\|$ は $\boldsymbol a_k$ と $\boldsymbol e_1,\dots,\boldsymbol e_{k-1}$ の一次結合なので、$\operatorname{span}\{\boldsymbol a_1,\dots,\boldsymbol a_k\}$ に入る（$\boldsymbol e_1,\dots,\boldsymbol e_{k-1}$ は仮定により $\boldsymbol a_1,\dots,\boldsymbol a_{k-1}$ の張る空間に入る）。逆に、$\boldsymbol a_k=\boldsymbol u_k+\sum_{i\lt k}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i=\|\boldsymbol u_k\|\boldsymbol e_k+\sum_{i\lt k}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i$ なので $\operatorname{span}\{\boldsymbol e_1,\dots,\boldsymbol e_k\}$ に入る。互いの中に入るので、2つの空間は等しい。これで (b)。□</p>
+</div>
+
+<h3 id="sec-6-3"><span class="no">6.3</span>数値で手を動かす</h3>
+<p><strong>最小の具体例（$\mathbb R^2$、標準内積）</strong>：$\boldsymbol a_1=(3,1)$、$\boldsymbol a_2=(2,2)$。</p>
+<p>$$ \begin{aligned} \boldsymbol u_1 &= \boldsymbol a_1=(3,1) && \text{（$k=1$：そのまま）}\\ \|\boldsymbol u_1\| &= \sqrt{9+1}=\sqrt{10} && \text{（長さ）}\\ \boldsymbol e_1 &= \tfrac1{\sqrt{10}}(3,1) && \text{（長さ1にする）}\\ \langle\boldsymbol a_2,\boldsymbol e_1\rangle &= \tfrac{2\cdot3+2\cdot1}{\sqrt{10}}=\tfrac8{\sqrt{10}} && \text{（$\boldsymbol a_2$ の $\boldsymbol e_1$ 方向の係数）}\\ \langle\boldsymbol a_2,\boldsymbol e_1\rangle\boldsymbol e_1 &= \tfrac8{\sqrt{10}}\cdot\tfrac1{\sqrt{10}}(3,1)=\tfrac{8}{10}(3,1)=\bigl(\tfrac{12}5,\tfrac45\bigr) && \text{（引く成分）}\\ \boldsymbol u_2 &= (2,2)-\bigl(\tfrac{12}5,\tfrac45\bigr)=\bigl(-\tfrac25,\tfrac65\bigr) && \text{（引いた残り）}\\ \|\boldsymbol u_2\|^2 &= \tfrac4{25}+\tfrac{36}{25}=\tfrac85 && \text{（長さの2乗）}\\ \boldsymbol e_2 &= \boldsymbol u_2/\|\boldsymbol u_2\|=\tfrac1{\sqrt{10}}(-1,3) && \text{（$\|\boldsymbol u_2\|=\sqrt{8/5}=\tfrac{2\sqrt{10}}5$ で割る）} \end{aligned} $$</p>
+<p>確かめ：$\langle\boldsymbol e_1,\boldsymbol e_2\rangle=\frac{-3+3}{10}=0$ ✓、$\|\boldsymbol e_2\|^2=\frac{1+9}{10}=1$ ✓。$\operatorname{span}\{\boldsymbol e_1,\boldsymbol e_2\}=\mathbb R^2$（正規直交の2本は3.3 により一次独立で、本数が次元と同じ）。</p>
+<p><strong>$\mathbb R^3$ の例</strong>：$\boldsymbol a_1=(1,1,0)$、$\boldsymbol a_2=(1,0,1)$、$\boldsymbol a_3=(0,1,1)$（どの2本も直交しない。3本は一次独立）。</p>
+<p>$$ \begin{aligned} \boldsymbol e_1 &= \tfrac1{\sqrt2}(1,1,0) && \text{（$\boldsymbol u_1=\boldsymbol a_1$、$\|\boldsymbol u_1\|=\sqrt2$）}\\ \langle\boldsymbol a_2,\boldsymbol e_1\rangle &= \tfrac{1}{\sqrt2} && \text{（$\boldsymbol a_2\cdot\boldsymbol e_1=\frac{1+0+0}{\sqrt2}$）}\\ \boldsymbol u_2 &= (1,0,1)-\tfrac1{\sqrt2}\cdot\tfrac1{\sqrt2}(1,1,0)=\bigl(\tfrac12,-\tfrac12,1\bigr) && \text{（$\tfrac12(1,1,0)=(\tfrac12,\tfrac12,0)$ を引いた）}\\ \|\boldsymbol u_2\|^2 &= \tfrac14+\tfrac14+1=\tfrac32 && \text{（長さの2乗）}\\ \boldsymbol e_2 &= \tfrac1{\sqrt6}(1,-1,2) && \text{（$\boldsymbol u_2=\tfrac12(1,-1,2)$、$\|(1,-1,2)\|=\sqrt6$）}\\ \langle\boldsymbol a_3,\boldsymbol e_1\rangle &= \tfrac1{\sqrt2},\ \ \langle\boldsymbol a_3,\boldsymbol e_2\rangle=\tfrac{0-1+2}{\sqrt6}=\tfrac1{\sqrt6} && \text{（2つの係数）}\\ \boldsymbol u_3 &= (0,1,1)-\bigl(\tfrac12,\tfrac12,0\bigr)-\bigl(\tfrac16,-\tfrac16,\tfrac13\bigr)=\bigl(-\tfrac23,\tfrac23,\tfrac23\bigr) && \text{（2つの成分を引く）}\\ \|\boldsymbol u_3\|^2 &= \tfrac49+\tfrac49+\tfrac49=\tfrac43 && \text{（長さの2乗）}\\ \boldsymbol e_3 &= \tfrac1{\sqrt3}(-1,1,1) && \text{（$\boldsymbol u_3=\tfrac23(-1,1,1)$、$\|(-1,1,1)\|=\sqrt3$）} \end{aligned} $$</p>
+<p>確かめ（3組の内積）：$\langle\boldsymbol e_1,\boldsymbol e_2\rangle\propto1-1+0=0$、$\langle\boldsymbol e_1,\boldsymbol e_3\rangle\propto-1+1+0=0$、$\langle\boldsymbol e_2,\boldsymbol e_3\rangle\propto-1-1+2=0$。長さはどれも1。図6.2 に、3段の手順を表にまとめる。</p>
+<figure class="fig" id="fig-6-2">
+<svg viewBox="0 0 440 498" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="グラム・シュミット（3本）" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>グラム・シュミット（3本）</title>
+<rect x="0" y="0" width="440" height="498" fill="#fffdf7"/>
+<rect x="14" y="10" width="412" height="140" rx="8" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="28.0" y="34.0" font-size="16" fill="#2b3a67" text-anchor="start" font-weight="bold">k = 1</text>
+<text x="28.0" y="60.0" font-size="14" fill="#2a2723" text-anchor="start">a₁ = (1, 1, 0)</text>
+<text x="28.0" y="82.0" font-size="14" fill="#2a2723" text-anchor="start">引く成分：なし</text>
+<text x="28.0" y="104.0" font-size="14" fill="#2a2723" text-anchor="start">u₁ = (1, 1, 0)、‖u₁‖ = √2</text>
+<text x="28.0" y="140.0" font-size="16" fill="#2b3a67" text-anchor="start" font-weight="bold">→ e₁ = (1, 1, 0)/√2</text>
+<line x1="220.0" y1="150.0" x2="220.0" y2="166.0" stroke="#6b645a" stroke-width="1.6"/><path d="M217.0 159.7 L220.0 166.0 L223.0 159.7" fill="none" stroke="#6b645a" stroke-width="1.6"/>
+<rect x="14" y="168" width="412" height="140" rx="8" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="28.0" y="192.0" font-size="16" fill="#5f7f4f" text-anchor="start" font-weight="bold">k = 2</text>
+<text x="28.0" y="218.0" font-size="14" fill="#2a2723" text-anchor="start">a₂ = (1, 0, 1)</text>
+<text x="28.0" y="240.0" font-size="14" fill="#2a2723" text-anchor="start">引く成分：⟨a₂, e₁⟩e₁ = (1/2, 1/2, 0)</text>
+<text x="28.0" y="262.0" font-size="14" fill="#2a2723" text-anchor="start">u₂ = (1/2, −1/2, 1)、‖u₂‖ = √6/2</text>
+<text x="28.0" y="298.0" font-size="16" fill="#5f7f4f" text-anchor="start" font-weight="bold">→ e₂ = (1, −1, 2)/√6</text>
+<line x1="220.0" y1="308.0" x2="220.0" y2="324.0" stroke="#6b645a" stroke-width="1.6"/><path d="M217.0 317.7 L220.0 324.0 L223.0 317.7" fill="none" stroke="#6b645a" stroke-width="1.6"/>
+<rect x="14" y="326" width="412" height="162" rx="8" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="28.0" y="350.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">k = 3</text>
+<text x="28.0" y="376.0" font-size="14" fill="#2a2723" text-anchor="start">a₃ = (0, 1, 1)</text>
+<text x="28.0" y="398.0" font-size="14" fill="#2a2723" text-anchor="start">引く：⟨a₃, e₁⟩e₁ = (1/2, 1/2, 0)</text>
+<text x="28.0" y="420.0" font-size="14" fill="#2a2723" text-anchor="start">　　と ⟨a₃, e₂⟩e₂ = (1/6, −1/6, 1/3)</text>
+<text x="28.0" y="442.0" font-size="14" fill="#2a2723" text-anchor="start">u₃ = (−2/3, 2/3, 2/3)、‖u₃‖ = 2/√3</text>
+<text x="28.0" y="478.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">→ e₃ = (−1, 1, 1)/√3</text>
+</svg>
+<figcaption><strong>図 6.2</strong>　3本のベクトル a₁, a₂, a₃ を順に処理した表。k 段目では、k 本目のベクトルから、それまでに作った（k−1 本までの）e の方向の成分をすべて引き、残りの長さを1にして k 本目の e とする。3段の結果 e₁, e₂, e₃ はどの2本も内積が 0 で、長さが 1。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>(a) <strong>引く成分は $\langle\boldsymbol a_k,\boldsymbol a_i\rangle$ ではなく $\langle\boldsymbol a_k,\boldsymbol e_i\rangle$</strong>。まだ直交していない $\boldsymbol a_i$ との内積を使うと、成分が直交方向に分かれない。式 $\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i$ が射影の公式（5.2 の S3）であるために、$\boldsymbol e_i$ の長さが1であることが必要になっている。長さを1にそろえずに進める流儀では、各項を $\frac{\langle\boldsymbol a_k,\boldsymbol u_i\rangle}{\langle\boldsymbol u_i,\boldsymbol u_i\rangle}\boldsymbol u_i$（5.2 の S1）に取り替える。</p>
+<p>(b) <strong>順番を変えると、結果の基底も変わる</strong>。上の $\mathbb R^2$ の例で $\boldsymbol a_2$ から始めると、$\boldsymbol e_1=\frac1{\sqrt2}(1,1)$ から始まり、別の基底が出る（空間 $\operatorname{span}\{\boldsymbol a_1,\boldsymbol a_2\}$ は変わらない）。「正規直交基底」は1つには決まらない。</p>
+<p>(c) <strong>一次従属だと途中で止まる</strong>。$\boldsymbol a_3:=\boldsymbol a_1+\boldsymbol a_2=(2,1,1)$ とすると、$\boldsymbol a_3=\boldsymbol a_1+\boldsymbol a_2=\frac3{\sqrt2}\boldsymbol e_1+\frac{\sqrt6}2\boldsymbol e_2$（$\boldsymbol a_1=\sqrt2\,\boldsymbol e_1$、$\boldsymbol a_2=\frac1{\sqrt2}\boldsymbol e_1+\frac{\sqrt6}2\boldsymbol e_2$ を足した）のように $\boldsymbol e_1,\boldsymbol e_2$ の一次結合になるので、$\boldsymbol u_3=\boldsymbol 0$ になる。$\boldsymbol 0$ では割れないので手順は止まる。これは定理6.1 の (i) の裏返しで、「一次従属を見つける方法」としても使える。</p>
+</div>
+
+<h3 id="sec-6-4"><span class="no">6.4</span>QR分解：グラム・シュミットを行列の積に書き直す</h3>
+<p>6.2 の式を $\boldsymbol a_k$ について解くと、$\boldsymbol a_k$ が $\boldsymbol e_1,\dots,\boldsymbol e_k$ の一次結合として書ける。</p>
+<p>$$ \begin{aligned} \boldsymbol a_k &= \boldsymbol u_k+\sum_{i=1}^{k-1}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i && \text{（定義 $\boldsymbol u_k=\boldsymbol a_k-\sum\cdots$ の移項）}\\ &= \|\boldsymbol u_k\|\,\boldsymbol e_k+\sum_{i=1}^{k-1}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i && \text{（$\boldsymbol u_k=\|\boldsymbol u_k\|\boldsymbol e_k$：$\boldsymbol e_k$ の定義）} \end{aligned} $$</p>
+<p>これは「$\boldsymbol e_1,\dots,\boldsymbol e_n$ を列にした行列 $Q$ に、ある係数の列ベクトルを掛けたもの」と読める（$A\boldsymbol x$ は列の一次結合、<a href="16_第16回_行列は線形写像.html#sym-matvec">第16回</a>）。係数の列を並べた行列が $R$ である。</p>
+<div class="def" id="sym-qr"><span class="label">記号：QR分解 $A=QR$</span>
+<p><strong>①読み方</strong>：「キューアールぶんかい」。$Q$ は直交行列によく使う文字、$R$ は上三角行列によく使う文字で、それを並べた名前である。</p>
+<p><strong>②日本語での意味</strong>：列が一次独立な行列 $A$ を、「列が正規直交基底になっている行列 $Q$」と「対角線より下がすべて0の行列 $R$（上三角行列）」の積に書いたもの。</p>
+<p><strong>③省略していない書き方</strong>：$A=\begin{pmatrix}\boldsymbol a_1&\cdots&\boldsymbol a_n\end{pmatrix}$（$m\times n$、列が一次独立）に6.2 を施して得た $\boldsymbol e_1,\dots,\boldsymbol e_n$ を $Q:=\begin{pmatrix}\boldsymbol e_1&\cdots&\boldsymbol e_n\end{pmatrix}$ とし、$n\times n$ 行列 $R$ を次で決める。</p>
+<p>$$ R_{ij}:=\begin{cases}\langle\boldsymbol a_j,\boldsymbol e_i\rangle & (i\le j)\\[2pt] 0 & (i\gt j)\end{cases}\qquad\text{（特に }R_{jj}=\|\boldsymbol u_j\|\gt0\text{）} $$</p>
+<p>このとき $A=QR$、$Q^{\mathsf T}Q=I$（$Q$ の列が正規直交）、$R=Q^{\mathsf T}A$。</p>
+<p><strong>④どこで出会うか</strong>：最小二乗法（第47回。正規方程式を作らずに解ける）、数値計算（第50回）、固有値を数値で求める「QR法」。</p>
+</div>
+<p><strong>$A=QR$ の導出</strong>。上の $\boldsymbol a_k$ の式を、列ごとに並べる。</p>
+<ul>
+<li>$R_{kk}=\|\boldsymbol u_k\|$：上の式の $\boldsymbol e_k$ の係数。一方、$\langle\boldsymbol a_k,\boldsymbol e_k\rangle=\langle\boldsymbol u_k+\sum_{i\lt k}\langle\boldsymbol a_k,\boldsymbol e_i\rangle\boldsymbol e_i,\ \boldsymbol e_k\rangle=\langle\boldsymbol u_k,\boldsymbol e_k\rangle=\|\boldsymbol u_k\|$（$\boldsymbol e_i\perp\boldsymbol e_k$ の項が消える）。だから $R_{kk}=\langle\boldsymbol a_k,\boldsymbol e_k\rangle$ とも書け、$i\le j$ の公式と形がそろう。</li>
+<li>$R_{ik}=\langle\boldsymbol a_k,\boldsymbol e_i\rangle$（$i\lt k$）：上の式の $\boldsymbol e_i$ の係数。</li>
+<li>$R_{ik}=0$（$i\gt k$）：$\boldsymbol a_k$ は $\boldsymbol e_1,\dots,\boldsymbol e_k$ の一次結合だけで書けていて、$\boldsymbol e_i$（$i\gt k$）は現れない。</li>
+</ul>
+<p>したがって第 $k$ 列について $\boldsymbol a_k=Q\,(R\text{ の第 }k\text{ 列})$。列を並べると $A=QR$。両辺に左から $Q^{\mathsf T}$ を掛けると $Q^{\mathsf T}A=Q^{\mathsf T}QR=IR=R$（$Q^{\mathsf T}Q=I$ は4.3）。</p>
+<p><strong>数値（6.3 の $\mathbb R^3$ の例）</strong>：$A=\begin{pmatrix}1&1&0\\1&0&1\\0&1&1\end{pmatrix}$（列が $\boldsymbol a_1,\boldsymbol a_2,\boldsymbol a_3$）。$R$ の成分は、6.3 で求めた内積と長さ：</p>
+<p>$$ R=\begin{pmatrix}\sqrt2&\frac1{\sqrt2}&\frac1{\sqrt2}\\0&\frac{\sqrt6}2&\frac1{\sqrt6}\\0&0&\frac2{\sqrt3}\end{pmatrix} $$</p>
+<p>（$R_{11}=\|\boldsymbol u_1\|=\sqrt2$、$R_{12}=\langle\boldsymbol a_2,\boldsymbol e_1\rangle=\frac1{\sqrt2}$、$R_{22}=\|\boldsymbol u_2\|=\sqrt{3/2}=\frac{\sqrt6}2$、$R_{13}=\frac1{\sqrt2}$、$R_{23}=\frac1{\sqrt6}$、$R_{33}=\|\boldsymbol u_3\|=\sqrt{4/3}=\frac2{\sqrt3}$。）列ごとに確かめる：$\boldsymbol a_2=\frac1{\sqrt2}\boldsymbol e_1+\frac{\sqrt6}2\boldsymbol e_2=\bigl(\frac12,\frac12,0\bigr)+\bigl(\frac12,-\frac12,1\bigr)=(1,0,1)$ ✓。$\boldsymbol a_3=\frac1{\sqrt2}\boldsymbol e_1+\frac1{\sqrt6}\boldsymbol e_2+\frac2{\sqrt3}\boldsymbol e_3=\bigl(\frac12,\frac12,0\bigr)+\bigl(\frac16,-\frac16,\frac13\bigr)+\bigl(-\frac23,\frac23,\frac23\bigr)=(0,1,1)$ ✓。図6.3 に、$A=QR$ の形をまとめる。</p>
+<figure class="fig" id="fig-6-3">
+<svg viewBox="0 0 440 404" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="A = QR" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>A = QR</title>
+<rect x="0" y="0" width="440" height="404" fill="#fffdf7"/>
+<text x="74.0" y="28.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">A</text>
+<text x="212.0" y="28.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">Q</text>
+<text x="352.0" y="28.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">R</text>
+<text x="130.0" y="124.0" font-size="24" fill="#2a2723" text-anchor="middle">=</text>
+<text x="272.0" y="124.0" font-size="22" fill="#2a2723" text-anchor="middle">×</text>
+<rect x="14" y="62" width="40" height="34" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="34.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₁</text>
+<rect x="54" y="62" width="40" height="34" rx="0" fill="#edf1e8" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="74.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₂</text>
+<rect x="94" y="62" width="40" height="34" rx="0" fill="#f7ecdc" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="114.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₃</text>
+<rect x="14" y="96" width="40" height="34" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="34.0" y="118.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₁</text>
+<rect x="54" y="96" width="40" height="34" rx="0" fill="#edf1e8" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="74.0" y="118.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₂</text>
+<rect x="94" y="96" width="40" height="34" rx="0" fill="#f7ecdc" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="114.0" y="118.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₃</text>
+<rect x="14" y="130" width="40" height="34" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="34.0" y="152.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₁</text>
+<rect x="54" y="130" width="40" height="34" rx="0" fill="#edf1e8" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="74.0" y="152.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₂</text>
+<rect x="94" y="130" width="40" height="34" rx="0" fill="#f7ecdc" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="114.0" y="152.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">a₃</text>
+<rect x="14" y="62" width="120" height="102" rx="2" fill="none" stroke="#2a2723" stroke-width="1.8"/>
+<rect x="152" y="62" width="40" height="34" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="172.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₁</text>
+<rect x="192" y="62" width="40" height="34" rx="0" fill="#edf1e8" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="212.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₂</text>
+<rect x="232" y="62" width="40" height="34" rx="0" fill="#f7ecdc" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="252.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₃</text>
+<rect x="152" y="96" width="40" height="34" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="172.0" y="118.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₁</text>
+<rect x="192" y="96" width="40" height="34" rx="0" fill="#edf1e8" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="212.0" y="118.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₂</text>
+<rect x="232" y="96" width="40" height="34" rx="0" fill="#f7ecdc" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="252.0" y="118.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₃</text>
+<rect x="152" y="130" width="40" height="34" rx="0" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="172.0" y="152.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₁</text>
+<rect x="192" y="130" width="40" height="34" rx="0" fill="#edf1e8" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="212.0" y="152.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₂</text>
+<rect x="232" y="130" width="40" height="34" rx="0" fill="#f7ecdc" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="252.0" y="152.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">e₃</text>
+<rect x="152" y="62" width="120" height="102" rx="2" fill="none" stroke="#2a2723" stroke-width="1.8"/>
+<rect x="292" y="62" width="40" height="34" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="312.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">r₁₁</text>
+<rect x="332" y="62" width="40" height="34" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="352.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">r₁₂</text>
+<rect x="372" y="62" width="40" height="34" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="392.0" y="84.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">r₁₃</text>
+<rect x="292" y="96" width="40" height="34" rx="0" fill="#eee9dd" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="312.0" y="118.0" font-size="15" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="332" y="96" width="40" height="34" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="352.0" y="118.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">r₂₂</text>
+<rect x="372" y="96" width="40" height="34" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="392.0" y="118.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">r₂₃</text>
+<rect x="292" y="130" width="40" height="34" rx="0" fill="#eee9dd" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="312.0" y="152.0" font-size="15" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="332" y="130" width="40" height="34" rx="0" fill="#eee9dd" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="352.0" y="152.0" font-size="15" fill="#6b645a" text-anchor="middle">0</text>
+<rect x="372" y="130" width="40" height="34" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.0"/>
+<text x="392.0" y="152.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">r₃₃</text>
+<rect x="292" y="62" width="120" height="102" rx="2" fill="none" stroke="#2a2723" stroke-width="1.8"/>
+<text x="74.0" y="186.0" font-size="14" fill="#6b645a" text-anchor="middle">列が一次独立</text>
+<text x="212.0" y="186.0" font-size="14" fill="#6b645a" text-anchor="middle">列が正規直交</text>
+<text x="352.0" y="186.0" font-size="14" fill="#6b645a" text-anchor="middle">上三角</text>
+<text x="14.0" y="220.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">R の成分（6.3 の例の数値）</text>
+<text x="40.0" y="250.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">1.414</text>
+<text x="114.0" y="250.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">0.707</text>
+<text x="188.0" y="250.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">0.707</text>
+<text x="40.0" y="276.0" font-size="16" fill="#6b645a" text-anchor="start">0</text>
+<text x="114.0" y="276.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">1.225</text>
+<text x="188.0" y="276.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">0.408</text>
+<text x="40.0" y="302.0" font-size="16" fill="#6b645a" text-anchor="start">0</text>
+<text x="114.0" y="302.0" font-size="16" fill="#6b645a" text-anchor="start">0</text>
+<text x="188.0" y="302.0" font-size="16" fill="#2a2723" text-anchor="start" font-weight="bold">1.155</text>
+<text x="266.0" y="250.0" font-size="14" fill="#6b645a" text-anchor="start">r₁₁ = ‖u₁‖ = √2</text>
+<text x="266.0" y="276.0" font-size="14" fill="#6b645a" text-anchor="start">r₂₂ = ‖u₂‖ = √6/2</text>
+<text x="266.0" y="302.0" font-size="14" fill="#6b645a" text-anchor="start">r₃₃ = ‖u₃‖ = 2/√3</text>
+<text x="30.0" y="338.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">第3列を読む：a₃ = r₁₃e₁ + r₂₃e₂ + r₃₃e₃</text>
+<text x="30.0" y="362.0" font-size="15" fill="#2a2723" text-anchor="start">= 0.707 e₁ + 0.408 e₂ + 1.155 e₃</text>
+<text x="30.0" y="386.0" font-size="14" fill="#6b645a" text-anchor="start">（Q の列の一次結合の係数が、R の第3列）</text>
+</svg>
+<figcaption><strong>図 6.3</strong>　A = QR の形。色は列の対応を表し、A の第 k 列は Q の第 1 列から第 k 列までの一次結合で書ける（係数が R の第 k 列）ので、R の対角線より下は 0（灰色）になる。下は 6.3 の例の R の成分の数値と、第3列の読み方。</figcaption>
+</figure>
+<p><strong>予告</strong>：第47回の最小二乗法では、$A\boldsymbol x=\boldsymbol b$ が解けないとき（式が多すぎるとき）に、$\boldsymbol b$ に最も近い $A\boldsymbol x$ を探す。これは「$\boldsymbol b$ の $\operatorname{im}A$ への射影」（5.5）を求めることに他ならず、$A=QR$ を使うと、射影行列は $P=QQ^{\mathsf T}$（5.4）、解は $R\boldsymbol x=Q^{\mathsf T}\boldsymbol b$（上三角なので、下から順に解ける）になる。</p>
+<div class="why"><span class="label">ひとことで</span>グラム・シュミットは、「すでに作った方向の成分を引いて、残りを長さ1にする」を1本ずつ繰り返して、直交していない基底から正規直交基底を作る手順である。その結果を行列で書いたものが $A=QR$（$Q$ は列が正規直交、$R$ は上三角）である。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_19.py）。</p>
+
+<div class="ex"><span class="label">例題1（A 確認：内積の3つの性質を確かめる）</span>
+<p>$\mathbb R^2$ の次の2つの規則は内積か。内積でなければ、どの性質が成り立たないかを答えよ。(ア) $\langle\boldsymbol u,\boldsymbol v\rangle:=4u_1v_1+u_2v_2$。(イ) $\langle\boldsymbol u,\boldsymbol v\rangle:=u_1v_1+u_1v_2+u_2v_1+u_2v_2$。</p>
+<p>① (ア)(I1) $4u_1v_1+u_2v_2=4v_1u_1+v_2u_2$ ✓。　<span class="meta">実数の積は順序によらない</span></p>
+<p>② (ア)(I2) 各項が $\boldsymbol u$ の成分について1次なので、$\boldsymbol u$ を $a\boldsymbol u+b\boldsymbol v$ にすると $a$ と $b$ が外に出る ✓。　<span class="meta">1.3 と同じ確かめ</span></p>
+<p>③ (ア)(I3) $\langle\boldsymbol v,\boldsymbol v\rangle=4v_1^2+v_2^2\ge0$。0になるのは $v_1=v_2=0$ のときだけ ✓。(ア) は内積。</p>
+<p>④ (イ) は $(u_1+u_2)(v_1+v_2)$ と因数分解できる。(I1)(I2) は満たす。</p>
+<p>⑤ (イ)(I3)：$\boldsymbol v=(1,-1)$ とすると $\langle\boldsymbol v,\boldsymbol v\rangle=(1-1)^2=0$。ところが $\boldsymbol v\neq\boldsymbol 0$。(I3) の「0になるのは零ベクトルのときだけ」が成り立たない。(イ) は内積でない。</p>
+</div>
+
+<div class="ex"><span class="label">例題2（A 確認：長さ・なす角・直交）</span>
+<p>標準内積で $\boldsymbol u=(1,-1,0)$、$\boldsymbol v=(0,1,1)$ のなす角 $\theta$ を求め、コーシー・シュワルツの不等式を確かめよ。また、$\boldsymbol u$ と直交するベクトル $(a,a,b)$ をすべて求めよ。</p>
+<p>① $\langle\boldsymbol u,\boldsymbol v\rangle=0+(-1)+0=-1$、$\|\boldsymbol u\|=\sqrt2$、$\|\boldsymbol v\|=\sqrt2$。</p>
+<p>② $\cos\theta=\dfrac{-1}{\sqrt2\cdot\sqrt2}=-\dfrac12$。$0\le\theta\le\pi$ で $\cos\theta=-\frac12$ となるのは $\theta=\frac{2\pi}3=120^\circ$（鈍角）。　<span class="meta">2.4 の定義</span></p>
+<p>③ 不等式：$\lvert-1\rvert=1\le\sqrt2\cdot\sqrt2=2$ ✓。</p>
+<p>④ $\langle\boldsymbol u,(a,a,b)\rangle=a-a+0=0$。$a,b$ がどんな値でも内積は0。したがって $(a,a,b)$ はすべて $\boldsymbol u$ と直交する。　<span class="meta">$\boldsymbol u^{\perp}=\operatorname{span}\{(1,1,0),(0,0,1)\}$。3.4 の $W$ と $W^{\perp}$ が入れ替わった形</span></p>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：直線への射影）</span>
+<p>標準内積で $\boldsymbol v=(3,1,2)$ を $\boldsymbol u=(1,2,2)$ の方向に射影せよ。残りが $\boldsymbol u$ と直交することを確かめ、$\boldsymbol v$ から直線 $\operatorname{span}\{\boldsymbol u\}$ までの距離を求めよ。</p>
+<p>① $\langle\boldsymbol v,\boldsymbol u\rangle=3+2+4=9$、$\langle\boldsymbol u,\boldsymbol u\rangle=1+4+4=9$。　<span class="meta">5.2 の S1 の分子と分母</span></p>
+<p>② $c=\frac99=1$ なので $\boldsymbol p=1\cdot\boldsymbol u=(1,2,2)$。</p>
+<p>③ 残り $\boldsymbol r=\boldsymbol v-\boldsymbol p=(2,-1,0)$。$\langle\boldsymbol r,\boldsymbol u\rangle=2-2+0=0$ ✓。</p>
+<p>④ 距離は定理5.2 により $\|\boldsymbol r\|=\sqrt{4+1+0}=\sqrt5\approx2.24$。ピタゴラス（定理3.1）の確かめ：$\|\boldsymbol p\|^2+\|\boldsymbol r\|^2=9+5=14=9+1+4=\|\boldsymbol v\|^2$ ✓。</p>
+</div>
+
+<div class="ex"><span class="label">例題4（B 標準：グラム・シュミットと平面への射影）</span>
+<p>$W=\operatorname{span}\{\boldsymbol a_1,\boldsymbol a_2\}$、$\boldsymbol a_1=(1,0,1)$、$\boldsymbol a_2=(0,1,1)$ の正規直交基底をグラム・シュミットで作り、$\boldsymbol v=(1,1,1)$ の $W$ への射影 $\boldsymbol p$ と残り $\boldsymbol r$ を求めよ。</p>
+<p>① $\|\boldsymbol a_1\|=\sqrt2$、$\boldsymbol e_1=\frac1{\sqrt2}(1,0,1)$。</p>
+<p>② $\langle\boldsymbol a_2,\boldsymbol e_1\rangle=\frac1{\sqrt2}$、$\boldsymbol u_2=(0,1,1)-\frac1{\sqrt2}\cdot\frac1{\sqrt2}(1,0,1)=(0,1,1)-(\frac12,0,\frac12)=(-\frac12,1,\frac12)$。</p>
+<p>③ $\|\boldsymbol u_2\|^2=\frac14+1+\frac14=\frac32$。$\boldsymbol e_2=\frac1{\sqrt6}(-1,2,1)$。確かめ：$\langle\boldsymbol e_1,\boldsymbol e_2\rangle\propto-1+0+1=0$ ✓。</p>
+<p>④ $\langle\boldsymbol v,\boldsymbol e_1\rangle=\frac2{\sqrt2}=\sqrt2$、$\langle\boldsymbol v,\boldsymbol e_2\rangle=\frac{-1+2+1}{\sqrt6}=\frac2{\sqrt6}$。　<span class="meta">定理5.1 の係数</span></p>
+<p>⑤ $\boldsymbol p=\sqrt2\cdot\frac1{\sqrt2}(1,0,1)+\frac2{\sqrt6}\cdot\frac1{\sqrt6}(-1,2,1)=(1,0,1)+\frac13(-1,2,1)=\bigl(\frac23,\frac23,\frac43\bigr)$。$\boldsymbol r=\boldsymbol v-\boldsymbol p=\bigl(\frac13,\frac13,-\frac13\bigr)$。</p>
+<p>⑥ 確かめ：$\langle\boldsymbol r,\boldsymbol a_1\rangle=\frac13-\frac13=0$ ✓、$\langle\boldsymbol r,\boldsymbol a_2\rangle=\frac13-\frac13=0$ ✓。$\boldsymbol r$ は $W$ の基底2本と直交するので $W^{\perp}$ に入る（$W^{\perp}=\operatorname{span}\{(1,1,-1)\}$）。</p>
+</div>
+
+<div class="ex"><span class="label">例題5（B 標準：QR分解）</span>
+<p>$A=\begin{pmatrix}3&2\\1&2\end{pmatrix}$ を $A=QR$ と分解せよ。</p>
+<p>① 列は $\boldsymbol a_1=(3,1)$、$\boldsymbol a_2=(2,2)$。これは6.3 の最初の例で、$\boldsymbol e_1=\frac1{\sqrt{10}}(3,1)$、$\boldsymbol e_2=\frac1{\sqrt{10}}(-1,3)$。</p>
+<p>② $R_{11}=\|\boldsymbol u_1\|=\sqrt{10}$、$R_{12}=\langle\boldsymbol a_2,\boldsymbol e_1\rangle=\frac8{\sqrt{10}}$、$R_{21}=0$、$R_{22}=\|\boldsymbol u_2\|=\sqrt{8/5}=\frac{2\sqrt{10}}5$。</p>
+<p>③ $Q=\frac1{\sqrt{10}}\begin{pmatrix}3&-1\\1&3\end{pmatrix}$、$R=\begin{pmatrix}\sqrt{10}&\frac8{\sqrt{10}}\\0&\frac{2\sqrt{10}}5\end{pmatrix}$。</p>
+<p>④ 確かめ（1列目）：$Q$ の1列目 $\times R_{11}$ $=\frac{\sqrt{10}}{\sqrt{10}}(3,1)=(3,1)=\boldsymbol a_1$ ✓。（2列目）：$\frac8{\sqrt{10}}\boldsymbol e_1+\frac{2\sqrt{10}}5\boldsymbol e_2=\frac{8}{10}(3,1)+\frac{2}{5}(-1,3)=\bigl(\frac{12}5,\frac45\bigr)+\bigl(-\frac25,\frac65\bigr)=(2,2)=\boldsymbol a_2$ ✓。$Q^{\mathsf T}Q=\frac1{10}\begin{pmatrix}9+1&-3+3\\-3+3&1+9\end{pmatrix}=I$ ✓。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-8"><span class="no">8</span>演習問題</h2>
+<p class="meta">問1〜4 が A（確認）、問5〜8 が B（標準）、問9〜11 が C（発展）。解答は折りたたんである。問9〜11 は Hefferon <em>Linear Algebra</em>（GFDL／CC BY-SA）の第3章 Section VI（Projection）や MML 第3章の主題に沿って本教材で作った問題で、公式解答とは照合していない（自作の解答）。</p>
+
+<div class="box"><span class="label">問1（A 確認：重みつき内積の計算）</span>$\mathbb R^2$ の内積 $\langle\boldsymbol u,\boldsymbol v\rangle:=3u_1v_1+u_2v_2$ について、$\boldsymbol u=(1,2)$、$\boldsymbol v=(2,-1)$ のとき、$\langle\boldsymbol u,\boldsymbol v\rangle$、$\|\boldsymbol u\|$、$\|\boldsymbol v\|$ を求め、コーシー・シュワルツの不等式が成り立つことを確かめよ。
+<details><summary>解答</summary>
+<p>$\langle\boldsymbol u,\boldsymbol v\rangle=3\cdot1\cdot2+2\cdot(-1)=6-2=4$。　<span class="meta">定義にそのまま入れた</span></p>
+<p>$\|\boldsymbol u\|=\sqrt{3\cdot1^2+2^2}=\sqrt7$、$\|\boldsymbol v\|=\sqrt{3\cdot2^2+(-1)^2}=\sqrt{13}$。　<span class="meta">2.1：$\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$</span></p>
+<p>不等式：$\lvert4\rvert\le\sqrt7\sqrt{13}=\sqrt{91}\approx9.54$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認：直交の判定と条件）</span>標準内積で、(1) $(1,2,3)$ と $(3,0,-1)$ は直交するか。(2) $(1,k,2)$ と $(3,-1,1)$ が直交するような $k$ を求めよ。
+<details><summary>解答</summary>
+<p>(1) $1\cdot3+2\cdot0+3\cdot(-1)=3+0-3=0$。内積が0なので直交する（3.1）。</p>
+<p>(2) $1\cdot3+k\cdot(-1)+2\cdot1=5-k=0$ より $k=5$。確かめ：$(1,5,2)\cdot(3,-1,1)=3-5+2=0$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認：射影の計算）</span>標準内積で、$\boldsymbol v=(5,0)$ の $\boldsymbol u=(1,1)$ 方向への射影 $\boldsymbol p$ と残り $\boldsymbol r$ を求め、$\boldsymbol r\perp\boldsymbol u$ を確かめよ。
+<details><summary>解答</summary>
+<p>$\langle\boldsymbol v,\boldsymbol u\rangle=5$、$\langle\boldsymbol u,\boldsymbol u\rangle=2$。$c=\frac52$。$\boldsymbol p=\frac52(1,1)=(\frac52,\frac52)$。　<span class="meta">5.2 の S1</span></p>
+<p>$\boldsymbol r=(5,0)-(\frac52,\frac52)=(\frac52,-\frac52)$。$\langle\boldsymbol r,\boldsymbol u\rangle=\frac52-\frac52=0$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認：正規直交基底での座標）</span>$\boldsymbol e_1=\frac13(1,2,2)$、$\boldsymbol e_2=\frac13(2,1,-2)$、$\boldsymbol e_3=\frac13(2,-2,1)$ は正規直交基底であることを確かめ、$\boldsymbol v=(3,0,0)$ の座標 $(c_1,c_2,c_3)$ を内積で求めよ。
+<details><summary>解答</summary>
+<p>長さ：$\|\boldsymbol e_1\|^2=\frac{1+4+4}9=1$、$\|\boldsymbol e_2\|^2=\frac{4+1+4}9=1$、$\|\boldsymbol e_3\|^2=\frac{4+4+1}9=1$。直交：$\langle\boldsymbol e_1,\boldsymbol e_2\rangle=\frac{2+2-4}9=0$、$\langle\boldsymbol e_1,\boldsymbol e_3\rangle=\frac{2-4+2}9=0$、$\langle\boldsymbol e_2,\boldsymbol e_3\rangle=\frac{4-2-2}9=0$。3本が一次独立（3.3）で、本数は次元 3 と同じなので、基底（第15回）。</p>
+<p>座標（定理4.1）：$c_1=\langle\boldsymbol v,\boldsymbol e_1\rangle=\frac{3}{3}=1$、$c_2=\frac{6}3=2$、$c_3=\frac63=2$。</p>
+<p>確かめ：$1\boldsymbol e_1+2\boldsymbol e_2+2\boldsymbol e_3=\frac13\bigl(1+4+4,\ 2+2-4,\ 2-4+2\bigr)=\frac13(9,0,0)=(3,0,0)$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準：関数の内積とグラム・シュミット）</span>$[-1,1]$ で $\langle f,g\rangle=\int_{-1}^{1}f(x)g(x)\,\mathrm dx$ とする。(1) $f=1$ と $g=x^2-\frac13$ が直交することを示せ。(2) $\|x^2-\frac13\|^2$ を求めよ。(3) $x^2$ を $1$ の方向に射影したときの残りを求め、(1) との関係を述べよ。
+<details><summary>解答</summary>
+<p>(1) $\langle1,x^2-\frac13\rangle=\int_{-1}^1\bigl(x^2-\frac13\bigr)\mathrm dx=\bigl[\frac{x^3}3-\frac x3\bigr]_{-1}^{1}=\bigl(\frac13-\frac13\bigr)-\bigl(-\frac13+\frac13\bigr)=0$。直交する。</p>
+<p>(2) $\int_{-1}^1\bigl(x^4-\frac23x^2+\frac19\bigr)\mathrm dx=\frac25-\frac23\cdot\frac23+\frac29=\frac25-\frac49+\frac29=\frac25-\frac29=\frac{18-10}{45}=\frac8{45}$。　<span class="meta">$\int_{-1}^1x^4\,\mathrm dx=\frac25$、$\int_{-1}^1x^2\,\mathrm dx=\frac23$、$\int_{-1}^1\mathrm dx=2$</span></p>
+<p>(3) $\langle x^2,1\rangle=\frac23$、$\langle1,1\rangle=2$。係数 $c=\frac{2/3}2=\frac13$。射影は $\frac13\cdot1$、残りは $x^2-\frac13$。これは (1) の関数そのもので、<strong>グラム・シュミットの $k=2$ 段（$\boldsymbol u_2=\boldsymbol a_2-\operatorname{proj}\boldsymbol a_2$）</strong>の結果と同じ。（なお $x$ は $1$ とも $x^2$ とも奇偶が違うので直交する。$1,\ x,\ x^2-\frac13$ がルジャンドル多項式の始まりである。）</p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準：$\mathbb R^3$ の2本からグラム・シュミット）</span>標準内積で $\boldsymbol a_1=(1,1,1)$、$\boldsymbol a_2=(1,1,0)$ から正規直交な $\boldsymbol e_1,\boldsymbol e_2$ を作り、$\boldsymbol a_2$ を $\boldsymbol e_1,\boldsymbol e_2$ の一次結合で表せ。
+<details><summary>解答</summary>
+<p>$\|\boldsymbol a_1\|=\sqrt3$、$\boldsymbol e_1=\frac1{\sqrt3}(1,1,1)$。　<span class="meta">$k=1$</span></p>
+<p>$\langle\boldsymbol a_2,\boldsymbol e_1\rangle=\frac2{\sqrt3}$。引く成分：$\frac2{\sqrt3}\cdot\frac1{\sqrt3}(1,1,1)=\frac23(1,1,1)$。</p>
+<p>$\boldsymbol u_2=(1,1,0)-\frac23(1,1,1)=\bigl(\frac13,\frac13,-\frac23\bigr)=\frac13(1,1,-2)$。$\|\boldsymbol u_2\|=\frac13\sqrt6$。$\boldsymbol e_2=\frac1{\sqrt6}(1,1,-2)$。</p>
+<p>確かめ：$\langle\boldsymbol e_1,\boldsymbol e_2\rangle\propto1+1-2=0$ ✓。$\boldsymbol a_2=\frac2{\sqrt3}\boldsymbol e_1+\frac{\sqrt6}3\boldsymbol e_2=\frac23(1,1,1)+\frac13(1,1,-2)=(1,1,0)$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準：射影行列）</span>$\boldsymbol u=(1,2)$ の方向への射影行列 $P$ を求め、$P^2=P$ と $P^{\mathsf T}=P$ を確かめよ。$\boldsymbol v=(3,-1)$ に対して $P\boldsymbol v$ と $(I-P)\boldsymbol v$ を求め、$(I-P)\boldsymbol v\perp\boldsymbol u$ を確かめよ。
+<details><summary>解答</summary>
+<p>$\boldsymbol u\boldsymbol u^{\mathsf T}=\begin{pmatrix}1&2\\2&4\end{pmatrix}$、$\boldsymbol u^{\mathsf T}\boldsymbol u=5$。$P=\frac15\begin{pmatrix}1&2\\2&4\end{pmatrix}$。　<span class="meta">5.3 の定義</span></p>
+<p>$P^2=\frac1{25}\begin{pmatrix}1+4&2+8\\2+8&4+16\end{pmatrix}=\frac1{25}\begin{pmatrix}5&10\\10&20\end{pmatrix}=P$ ✓。成分が対称なので $P^{\mathsf T}=P$ ✓。</p>
+<p>$P\boldsymbol v=\frac15(3-2,\ 6-4)=\bigl(\frac15,\frac25\bigr)$。$(I-P)\boldsymbol v=\boldsymbol v-P\boldsymbol v=\bigl(\frac{14}5,-\frac75\bigr)$。　<span class="meta">$=\frac75(2,-1)$</span></p>
+<p>$\langle(I-P)\boldsymbol v,\boldsymbol u\rangle=\frac{14}5-\frac{14}5=0$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準：回転行列は直交行列）</span>$Q=\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}$ について、$Q^{\mathsf T}Q=I$ を示し、$Q^{-1}$ を求めよ。$\theta=30^\circ$、$\boldsymbol v=(2,0)$ で $\|Q\boldsymbol v\|=\|\boldsymbol v\|$ を確かめよ。
+<details><summary>解答</summary>
+<p>$Q^{\mathsf T}Q=\begin{pmatrix}\cos\theta&\sin\theta\\-\sin\theta&\cos\theta\end{pmatrix}\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}=\begin{pmatrix}\cos^2\theta+\sin^2\theta&-\cos\theta\sin\theta+\sin\theta\cos\theta\\-\sin\theta\cos\theta+\cos\theta\sin\theta&\sin^2\theta+\cos^2\theta\end{pmatrix}=\begin{pmatrix}1&0\\0&1\end{pmatrix}$。　<span class="meta">$\cos^2\theta+\sin^2\theta=1$</span></p>
+<p>よって $Q^{-1}=Q^{\mathsf T}=\begin{pmatrix}\cos\theta&\sin\theta\\-\sin\theta&\cos\theta\end{pmatrix}$（角 $-\theta$ の回転）。</p>
+<p>$\theta=30^\circ$：$Q\boldsymbol v=(2\cos30^\circ,\ 2\sin30^\circ)=(\sqrt3,1)$。$\|Q\boldsymbol v\|^2=3+1=4=\|\boldsymbol v\|^2$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問9（C 発展：平行四辺形の法則）</span>任意の内積空間で $\|\boldsymbol u+\boldsymbol v\|^2+\|\boldsymbol u-\boldsymbol v\|^2=2\|\boldsymbol u\|^2+2\|\boldsymbol v\|^2$ を示せ。
+<details><summary>解答</summary>
+<p>$\|\boldsymbol u+\boldsymbol v\|^2=\|\boldsymbol u\|^2+2\langle\boldsymbol u,\boldsymbol v\rangle+\|\boldsymbol v\|^2$（2.3 の証明の2行目）。　$\boldsymbol v$ を $-\boldsymbol v$ に取り替えると $\|\boldsymbol u-\boldsymbol v\|^2=\|\boldsymbol u\|^2-2\langle\boldsymbol u,\boldsymbol v\rangle+\|\boldsymbol v\|^2$（双線形性）。</p>
+<p>2式を足すと、$\pm2\langle\boldsymbol u,\boldsymbol v\rangle$ が打ち消し合い、$2\|\boldsymbol u\|^2+2\|\boldsymbol v\|^2$。□　<span class="meta">自作の解答。「平行四辺形の2本の対角線の長さの2乗の和は、4辺の長さの2乗の和」という幾何の定理の一般化。公式解答とは照合していない</span></p>
+</details></div>
+
+<div class="box"><span class="label">問10（C 発展：$P=QQ^{\mathsf T}$ は射影行列）</span>$Q$ を $n\times k$ 行列で $Q^{\mathsf T}Q=I_k$（列が正規直交）とする。$P:=QQ^{\mathsf T}$ が $P^2=P$、$P^{\mathsf T}=P$ を満たすこと、さらに $I-P$ も同じ性質をもち $P(I-P)=O$（零行列）であることを示せ。
+<details><summary>解答</summary>
+<p>$P^2=QQ^{\mathsf T}QQ^{\mathsf T}=Q(Q^{\mathsf T}Q)Q^{\mathsf T}=QIQ^{\mathsf T}=QQ^{\mathsf T}=P$。　<span class="meta">結合法則で真ん中の $Q^{\mathsf T}Q$ を先に計算した</span></p>
+<p>$P^{\mathsf T}=(QQ^{\mathsf T})^{\mathsf T}=(Q^{\mathsf T})^{\mathsf T}Q^{\mathsf T}=QQ^{\mathsf T}=P$。　<span class="meta">積の転置は順序が逆</span></p>
+<p>$(I-P)^2=I-2P+P^2=I-2P+P=I-P$、$(I-P)^{\mathsf T}=I-P^{\mathsf T}=I-P$。$P(I-P)=P-P^2=P-P=O$。□　<span class="meta">自作の解答。$I-P$ は「$P$ が取り出さなかった残り」への射影行列で、$P(I-P)=O$ は「射影の成分と残りが直交する」ことの行列版</span></p>
+</details></div>
+
+<div class="box"><span class="label">問11（C 発展：平均値は射影）</span>$\boldsymbol b=(1,2,2)$、$\boldsymbol 1=(1,1,1)$ とする。(1) $\boldsymbol b$ の $\boldsymbol 1$ 方向への射影を求めよ。(2) 残りの成分の和が0になることを確かめよ。(3) 定理5.2 を使い、$\sum_{i=1}^{3}(b_i-c)^2$ を最小にする実数 $c$ が $\boldsymbol b$ の成分の平均であることを説明せよ。
+<details><summary>解答</summary>
+<p>(1) $\langle\boldsymbol b,\boldsymbol 1\rangle=5$、$\langle\boldsymbol 1,\boldsymbol 1\rangle=3$。射影は $\frac53\boldsymbol 1=(\frac53,\frac53,\frac53)$。　<span class="meta">5.2 の S1</span></p>
+<p>(2) 残り $\boldsymbol r=\boldsymbol b-\frac53\boldsymbol 1=\bigl(-\frac23,\frac13,\frac13\bigr)$。成分の和 $-\frac23+\frac13+\frac13=0$ ✓（$\boldsymbol r\perp\boldsymbol 1$ とは、成分の和が0ということ）。</p>
+<p>(3) $\sum_i(b_i-c)^2=\|\boldsymbol b-c\boldsymbol 1\|^2$。$c\boldsymbol 1$ は直線 $W=\operatorname{span}\{\boldsymbol 1\}$ の点を動く。定理5.2 により、これを最小にするのは $c\boldsymbol 1=\boldsymbol p$、すなわち $c=\frac{\langle\boldsymbol b,\boldsymbol 1\rangle}{\langle\boldsymbol 1,\boldsymbol 1\rangle}=\frac{b_1+b_2+b_3}3$（平均）。最小値は $\|\boldsymbol r\|^2=\frac49+\frac19+\frac19=\frac23$。□　<span class="meta">自作の解答。「平均は2乗誤差を最小にする」ことの射影による説明で、第44回（期待値）と第47回（最小二乗法）の入口になる</span></p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 内積を、計算式ではなく (I1) 対称・(I2) 線形・(I3) 正定値の3つで定義でき、標準内積・重みつき内積・関数の内積がそれぞれ3つを満たすことを確かめられる。</li>
+<li>□ 「直交は内積に依存する」ことを、重みつき内積の例で説明できる。</li>
+<li>□ $\|\boldsymbol v\|:=\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$ と $\|c\boldsymbol v\|=\lvert c\rvert\|\boldsymbol v\|$ を導け、コーシー・シュワルツの不等式と三角不等式を証明を追って言える。</li>
+<li>□ 角 $\theta:=\arccos\frac{\langle\boldsymbol u,\boldsymbol v\rangle}{\|\boldsymbol u\|\|\boldsymbol v\|}$ が定義できる理由（不等式が $-1$ 以上 $1$ 以下を保証する）を言える。</li>
+<li>□ 直交の定義（内積0）、ピタゴラスの定理、「直交する非零ベクトルは一次独立」を証明つきで言え、$W^{\perp}$ を求められる。</li>
+<li>□ 正規直交基底で座標が $c_i=\langle\boldsymbol v,\boldsymbol e_i\rangle$ と出ること、直交行列が $Q^{\mathsf T}Q=I$、$Q^{-1}=Q^{\mathsf T}$、長さと内積を変えないことを言える。</li>
+<li>□ 射影の公式を S0〜S3（5.2）で行き来でき、$\operatorname{proj}_{\boldsymbol u}\boldsymbol v$ を計算できる。長さ1のときだけ分母を省けることを言える。</li>
+<li>□ 射影行列 $P=\frac{\boldsymbol u\boldsymbol u^{\mathsf T}}{\boldsymbol u^{\mathsf T}\boldsymbol u}$、$P=QQ^{\mathsf T}$ と、$P^2=P$、$P^{\mathsf T}=P$ を言える。</li>
+<li>□ 射影が「いちばん近い点」を与える理由を、ピタゴラスで示せる。</li>
+<li>□ グラム・シュミットを2〜3本の具体例で実行でき、定理6.1 の流れ（引く→直交→正規化）と、$A=QR$（$R=Q^{\mathsf T}A$）を言える。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第20回）</strong>：<a href="20_第20回_固有値と固有ベクトル.html">固有値と固有ベクトル</a>。この回で、直交行列と射影行列という「$P^2=P$」「$Q^{\mathsf T}Q=I$」を満たす行列に出会った。第20回では、行列を掛けても向きが変わらないベクトル（$A\boldsymbol v=\lambda\boldsymbol v$）を探す。第21回で、対称行列ならそのベクトルを<strong>正規直交基底</strong>に選べる（直交行列で対角化できる）ことを示し、この回の内容が再び使われる。<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：内積の公理・直交・射影・グラム・シュミットの整理は、Jim Hefferon <em>Linear Algebra</em>（GFDL／CC BY-SA）第3章 Section VI（Projection）の順序と主題を参照し、MML（<em>Mathematics for Machine Learning</em>）第3章（Analytic Geometry。内積・直交射影・グラム・シュミット）を照合して、本教材向けに書き直したもの。例題・演習・図・表は自作で、数値は検算済み（draft/check_19.py、draft/v2/check_figs19.py）。演習の C は公式解答とは照合していない。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

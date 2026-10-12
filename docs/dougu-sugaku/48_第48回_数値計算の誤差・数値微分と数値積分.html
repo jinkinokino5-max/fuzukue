@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第48回 数値計算の誤差・数値微分と数値積分</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero plain">
+<div class="ttl"><p class="vol">第48回</p><h1>数値計算の誤差・数値微分と数値積分</h1></div>
+</figure>
+<p class="lead">計算機は極限 $h\to0$ を実行できず、実数も有限の桁でしか持てない。そこで微分・積分を「$h$ を小さい有限の値で止めた式」に置き換えると、数学の近似による<strong>打切り誤差</strong>と、有限桁による<strong>丸め誤差</strong>の2種類のずれが生まれる。打切り誤差はテイラー展開から $h^p$ に比例すると分かり、丸め誤差は $1/h$ に比例して増える。両者の和は $h$ に対して V 字になるので、「$h$ は小さいほどよい」は誤りである。この回では、前進・中心差分、台形則、シンプソン則を、誤差の次数 $O(h^p)$ とともに、1行1操作で導く。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：微分は $h\to0$ の極限、積分は区間を細かくした極限だが、計算機には極限が実行できない → $h$ を小さい有限の値で止める（<strong>打切り</strong>）と、真の値とずれる（<strong>打切り誤差</strong>）→ 一方、計算機は実数を有限桁（倍精度で約16桁）でしか持てず、四則演算のたびに小さなずれ（<strong>丸め誤差</strong>）が入る → 引き算で近い2数の差をとると、上の桁が消えて相対誤差が拡大する（<strong>桁落ち</strong>）→ 数値微分 $\dfrac{f(x+h)-f(x)}{h}$ の打切り誤差は、テイラーの定理（第9回）から $\dfrac h2f''(c)=O(h)$、中心差分では $\dfrac{h^2}6f'''(c)=O(h^2)$ → ところが丸め誤差は $\dfrac1h$ に比例して<strong>$h$ を小さくするほど増える</strong>ので、合計は V 字になり、底（最適な $h$）がある → 数値積分は区間を $n$ 個の台形で近似し（台形則 $T_n$、誤差 $O(h^2)$）、2つの $h$ の結果を組み合わせて誤差の主要項を消すとシンプソン則 $S_n$（誤差 $O(h^4)$）になる。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>第1回から続く約束どおり、新しい記号は緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。この回の中心の省略は、<strong>「誤差が $h$ の $p$ 乗の定数倍で押さえられる」を $O(h^p)$ の4文字にまとめた</strong>ことなので、<a href="#abbr-order">2.7 の省略の段階</a>で S0 から S2 まで1段ずつ並べる。以後この箱にリンクして使う。</p>
+<p>この回は<a href="06_第6回_極限と連続.html#sym-landau-O">第6回のランダウの記号 $O$</a>、<a href="09_第9回_テイラー展開.html#sym-taylor">第9回のテイラーの定理</a>（誤差の式の出どころ）、<a href="10_第10回_積分.html#sym-riemann-sum">第10回のリーマン和</a>を<strong>合わせて使う回</strong>である。使うたびにリンクを張る。</p>
+<p>すべての計算は、<strong>$f(x)=e^x$ の $x=1$ での微分</strong>と、<strong>$\displaystyle\int_0^\pi\sin x\,dx=2$</strong> という、真の値が分かっている例で手を動かしてから、一般の式に進む。真の値が分かっているので、誤差が本当に式どおりの大きさかを毎回確かめられる。数値はすべて計算機で検算した（draft/check_48.py）。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で<strong>新しく説明する記号</strong>と、<strong>前の回で説明済みの記号</strong>を分けて並べる。右の列の「→」で説明のある場所へ飛べる。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$h$（刻み幅）</td><td>エイチ</td><td>差分や台形の幅。小さい正の数</td><td><a href="#sym-step-h">→1.1</a></td></tr>
+<tr><td>打切り誤差 $E_{\text{打切り}}$、丸め誤差 $E_{\text{丸め}}$</td><td>うちきりごさ、まるめごさ</td><td>極限を有限で止めたずれ／有限桁の計算で入るずれ</td><td><a href="#sym-trunc-err">→1.1</a></td></tr>
+<tr><td>絶対誤差 $|\tilde x-x|$、相対誤差</td><td>ぜったいごさ、そうたいごさ</td><td>ずれの大きさ／ずれを真の値の大きさで割ったもの</td><td><a href="#sym-error">→1.2</a></td></tr>
+<tr><td>$\operatorname{fl}(x)$、$u$、$\varepsilon_{\mathrm{mach}}$</td><td>エフ・エル、ユー、イプシロン・マシン</td><td>計算機に入れた後の値／丸めの最大の相対誤差／1 の次の数との差</td><td><a href="#sym-unit-roundoff">→1.3</a></td></tr>
+<tr><td>$D_{+}f$、$D_{-}f$、$D_{0}f$</td><td>前進差分、後退差分、中心差分</td><td>$f'$ を2点の値で近似する式</td><td><a href="#sym-fd">→2.1</a></td></tr>
+<tr><td>$E=O(h^p)$（誤差の次数）</td><td>イー・イコール・オー・エイチ・ピー乗</td><td>$h$ を $\frac1{10}$ にすると誤差が約 $\frac1{10^p}$ になる</td><td><a href="#sym-order-h">→2.3</a></td></tr>
+<tr><td>$D^2f$（2階差分）</td><td>にかいさぶん</td><td>$f''$ を3点の値で近似する式</td><td><a href="#sym-second-diff">→2.8</a></td></tr>
+<tr><td>$T_n$（台形則）</td><td>ティー・エヌ</td><td>$n$ 個の台形の面積の和</td><td><a href="#sym-trapezoid">→4.1</a></td></tr>
+<tr><td>$S_n$（シンプソン則）</td><td>エス・エヌ</td><td>3点を通る放物線の面積を並べた和</td><td><a href="#sym-simpson">→4.3</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出た記号（リンクで戻れる）</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>初出</th></tr>
+<tr><td>$=$、$:=$、$\approx$</td><td>等しい／左の名前を右の式で決める／ほぼ等しい</td><td><a href="01_第1回_数式を文として読む.html#sym-equal">第1回</a>、<a href="01_第1回_数式を文として読む.html#sym-defeq">第1回</a>、<a href="01_第1回_数式を文として読む.html#sym-approx">第1回 2.4</a></td></tr>
+<tr><td>$\displaystyle\sum$（総和）、$n!$</td><td>足し合わせ／階乗</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a>、<a href="04_第4回_総和・総乗と添字.html#sym-factorial">第4回</a></td></tr>
+<tr><td>$\displaystyle\lim_{h\to0}$</td><td>$h$ を $0$ に近づけたときの値</td><td><a href="06_第6回_極限と連続.html#sym-lim">第6回</a></td></tr>
+<tr><td>$f=O(g)$（ランダウの記号）</td><td>$f$ の大きさは $g$ の定数倍で押さえられる</td><td><a href="06_第6回_極限と連続.html#sym-landau-O">第6回 6.3</a></td></tr>
+<tr><td>$\dfrac{\Delta f}{\Delta x}$、$f'(a)$</td><td>平均の変化の割合（割線の傾き）／微分係数</td><td><a href="07_第7回_微分.html#sym-average-rate">第7回</a>、<a href="07_第7回_微分.html#sym-derivative-at">第7回</a></td></tr>
+<tr><td>$f''$、$f'''$、$f^{(n)}$、臨界点</td><td>高階の導関数／$f'=0$ になる点</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-second-derivative">第8回</a>、<a href="08_第8回_微分を使う・近似と極値.html#sym-critical-point">第8回</a></td></tr>
+<tr><td>$T_N$、$R_N$、テイラーの定理</td><td>テイラー多項式／剰余項／$f=T_N+R_N$、$R_N=\frac{f^{(N+1)}(c)}{(N+1)!}(x-a)^{N+1}$</td><td><a href="09_第9回_テイラー展開.html#sym-taylor-poly">第9回</a>、<a href="09_第9回_テイラー展開.html#sym-remainder">第9回</a>、<a href="09_第9回_テイラー展開.html#sym-taylor">第9回 5.3</a></td></tr>
+<tr><td>分割 $x_0\lt x_1\lt\cdots\lt x_n$、リーマン和、$\displaystyle\int_a^b$</td><td>区間の区切り／細長い長方形の面積の和／その極限</td><td><a href="10_第10回_積分.html#sym-partition">第10回</a>、<a href="10_第10回_積分.html#sym-riemann-sum">第10回</a>、<a href="10_第10回_積分.html#sym-integral-definite">第10回</a></td></tr>
+<tr><td>微積分学の基本定理</td><td>$\displaystyle\int_a^bf'(x)\,dx=f(b)-f(a)$</td><td><a href="10_第10回_積分.html#sym-ftc">第10回</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>計算機の上では、2種類の「ずれ」が避けられない</h2>
+
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：極限は、計算機には実行できない</h3>
+<p>これまでの微積分は、<strong>極限</strong>でできていた。微分係数は
+$$ f'(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}{h} $$
+（<a href="07_第7回_微分.html#sym-derivative-at">第7回</a>）、定積分は区間を細かくしたリーマン和の極限（<a href="10_第10回_積分.html#sym-integral-definite">第10回</a>）である。式に書かれた「$\lim_{h\to0}$」は、<strong>$h$ を限りなく $0$ に近づける</strong>という操作である。</p>
+<p>計算機は、この操作ができない。計算機にできるのは、<strong>有限個の数に対する、有限回の足し算・引き算・掛け算・割り算</strong>だけである。したがって、極限を使って決まっていた値を計算機で出すには、<strong>極限の手前で止める</strong>しかない。たとえば $h=10^{-3}$ と決めて、
+$$ \frac{f(x+10^{-3})-f(x)}{10^{-3}} $$
+という<strong>ただの割り算</strong>を計算する。これは $f'(x)$ そのものではない。そのずれを<strong>打切り誤差</strong>（うちきりごさ）という（極限という無限の操作を、有限で打ち切ったことによる誤差）。</p>
+
+<div class="def" id="sym-step-h"><span class="label">記号：$h$（刻み幅）</span>
+<p><strong>①読み方</strong>：「エイチ」。「刻み幅」（きざみはば）。</p>
+<p><strong>②日本語での意味</strong>：差分では「$x$ から隣の点までの距離」、台形則では「1つの台形の幅」。計算者が決める、<strong>小さい正の数</strong>。</p>
+<p><strong>③省略していない書き方</strong>：差分では $h=(x+h)-x$。積分では区間 $[a,b]$ を $n$ 等分して $h:=\dfrac{b-a}{n}$、分点は $x_i:=a+ih$（$i=0,1,\dots,n$）。第7回の $\Delta x$（<a href="07_第7回_微分.html#sym-delta-x">第7回</a>）、第10回の $\Delta x_i$（<a href="10_第10回_積分.html#sym-partition">第10回</a>）と同じものを、この回では $h$ と書く。</p>
+<p><strong>④どこで出会うか</strong>：数値微分・数値積分、常微分方程式の数値解法（第49回）、偏微分方程式の差分法（第50回）。</p>
+</div>
+
+<p>計算機の限界は、もう1つある。<strong>実数を、有限の桁でしか持てない</strong>こと（1.3）。こちらが生むずれは<strong>丸め誤差</strong>という。この回の主題は、次の2つの誤差の<strong>綱引き</strong>である。</p>
+<ul>
+<li><strong>打切り誤差</strong>：数学の近似（極限を有限で止めること）で生じる。<strong>$h$ を小さくすると減る</strong>。</li>
+<li><strong>丸め誤差</strong>：計算機の都合（有限桁）で生じる。<strong>$h$ を小さくすると、かえって増える</strong>（第3章）。</li>
+</ul>
+
+<div class="def" id="sym-trunc-err"><span class="label">記号：打切り誤差 $E_{\text{打切り}}$</span>
+<p><strong>①読み方</strong>：「うちきりごさ」。英語は truncation error（トランケーション・エラー）。式の中では $E_{\text{打切り}}$（または $E_{\mathrm{trunc}}$）と書く。</p>
+<p><strong>②日本語での意味</strong>：<strong>無限に続く操作（極限、無限和）を、有限のところで止めたために生じるずれ</strong>。計算機が完璧でも（丸めが全くなくても）残る、数学の近似そのもののずれ。</p>
+<p><strong>③省略していない書き方</strong>：近似の式を $\Phi(h)$、本来の値を $A$ とするとき
+$$ E_{\text{打切り}}(h):=\Phi(h)-A. $$
+たとえば前進差分なら、$\Phi(h)=\dfrac{f(x+h)-f(x)}{h}$、$A=f'(x)$ で、$E_{\text{打切り}}(h)=\dfrac h2f''(c)$（2.3）。テイラー展開を途中で打ち切ったときの剰余項（<a href="09_第9回_テイラー展開.html#sym-remainder">第9回の $R_N$</a>）は、まさにこの種の誤差。</p>
+<p><strong>④どこで出会うか</strong>：数値微分・数値積分、常微分方程式の数値解法（第49回の局所打切り誤差）、差分法（第50回）。</p>
+</div>
+
+<div class="def" id="sym-round-err"><span class="label">記号：丸め誤差 $E_{\text{丸め}}$</span>
+<p><strong>①読み方</strong>：「まるめごさ」。英語は rounding error（ラウンディング・エラー）。式の中では $E_{\text{丸め}}$（または $E_{\mathrm{round}}$）と書く。</p>
+<p><strong>②日本語での意味</strong>：<strong>計算機が実数を有限の桁でしか持てないため、値を入れるときや四則演算のたびに入る小さなずれ</strong>が、積もって生じる誤差。</p>
+<p><strong>③省略していない書き方</strong>：厳密な計算の結果を $\Phi(h)$、計算機で実際に得た結果を $\tilde\Phi(h)$ とするとき
+$$ E_{\text{丸め}}(h):=\tilde\Phi(h)-\Phi(h). $$
+1回の丸めの相対誤差は $u=2^{-53}$ 以下（<a href="#sym-unit-roundoff">1.3</a>）。全体の誤差は $\tilde\Phi-A=E_{\text{丸め}}+E_{\text{打切り}}$（<a href="#sec-3-2">3.2</a>）。</p>
+<p><strong>④どこで出会うか</strong>：数値計算のすべて。$h$ を小さくすると増える側の誤差（第3章）、反復計算で積もる誤差（第49回）。</p>
+</div>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>ずれの測り方：絶対誤差と相対誤差</h3>
+<p>「どれだけずれているか」を言うには、ものさしが必要である。2通りある。</p>
+
+<div class="def" id="sym-error"><span class="label">記号：絶対誤差と相対誤差</span>
+<p><strong>①読み方</strong>：「ぜったいごさ」「そうたいごさ」。真の値を $x$、近似値（計算で得た値）を $\tilde x$（エックス・チルダ）とする。</p>
+<p><strong>②日本語での意味</strong>：<strong>絶対誤差</strong>は、近似値と真の値の差の大きさ。<strong>相対誤差</strong>は、その差を真の値の大きさで割ったもの（「真の値の何割ずれているか」）。</p>
+<p><strong>③省略していない書き方</strong>：
+$$ \text{絶対誤差}:=|\tilde x-x|,\qquad \text{相対誤差}:=\frac{|\tilde x-x|}{|x|}\quad(x\neq0). $$
+相対誤差は無単位（割り算で単位が消える）。「$\approx$」（<a href="01_第1回_数式を文として読む.html#sym-approx">第1回 2.4</a>）は「どれくらい近いか」を書かないので、数値計算では、これらの式で数字を書く。</p>
+<p><strong>④どこで出会うか</strong>：測定の精度、数値計算の収束判定、有効数字の桁数（相対誤差が $10^{-k}$ 程度なら、およそ $k$ 桁正しい）。</p>
+</div>
+
+<p>最小の具体例。$\pi=3.14159265\ldots$ を $\tilde x=3.14$ で近似する。
+$$ \text{絶対誤差}=|3.14-3.14159265|=0.00159265, $$
+$$ \text{相対誤差}=\frac{0.00159265}{3.14159265}=5.07\times10^{-4}\quad(\text{およそ }0.05\,\%). $$
+同じ絶対誤差 $1\,\mathrm{m}$ でも、$1000\,\mathrm{m}$ の測量なら相対誤差 $10^{-3}$、$1\,\mathrm{cm}$ の部品なら相対誤差 $100$（すなわち $10000\,\%$）である。<strong>大きさとの比べ方で意味が全く変わる</strong>ので、どちらの誤差を言っているのかを必ず書く。</p>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>計算機は実数を、有限の桁でしか持てない：浮動小数点数</h3>
+<p>計算機は実数を<strong>2進数</strong>で、<strong>有効数字の桁数を決めて</strong>持つ。現在の標準（IEEE 754 の倍精度、Python の <code>float</code>）は、「$\pm 1.b_1b_2\cdots b_{52}\times2^k$」の形（$b_i$ は $0$ か $1$。小数部が52ビット、先頭の「$1.$」を合わせて<strong>53ビットの有効数字</strong>）の数だけを表せる。これを<strong>浮動小数点数</strong>という。覚えている人は飛ばしてよいが、結論だけ先に言うと、<strong>表せる数は飛び飛び</strong>で、その間隔は数の大きさに比例して広がる。</p>
+<p>おもちゃの例（小数部が3ビットしかない形式）で、表せる数を数直線に並べると図1.1になる。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 268" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="おもちゃの浮動小数点" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>おもちゃの浮動小数点</title>
+<rect x="0" y="0" width="440" height="268" fill="#fffdf7"/>
+<line x1="32.0" y1="70.0" x2="407.0" y2="70.0" stroke="#2a2723" stroke-width="1.4"/>
+<circle cx="40.0" cy="70.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="46.4" cy="70.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="52.8" cy="70.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="59.1" cy="70.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="65.5" cy="70.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="71.9" cy="70.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="78.2" cy="70.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="84.6" cy="70.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="91.0" cy="70.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="103.8" cy="70.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="116.5" cy="70.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="129.2" cy="70.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="142.0" cy="70.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="154.8" cy="70.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="167.5" cy="70.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="180.2" cy="70.0" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="193.0" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="218.5" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="244.0" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="269.5" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="295.0" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="320.5" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="346.0" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="371.5" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="397.0" cy="70.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="40.0" y1="82.0" x2="40.0" y2="92.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="40.0" y="112.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<line x1="91.0" y1="82.0" x2="91.0" y2="92.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="91.0" y="112.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<line x1="193.0" y1="82.0" x2="193.0" y2="92.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="193.0" y="112.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">4</text>
+<line x1="397.0" y1="82.0" x2="397.0" y2="92.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="397.0" y="112.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">8</text>
+<line x1="40.0" y1="128.0" x2="40.0" y2="140.0" stroke="#2b3a67" stroke-width="2"/>
+<line x1="40.0" y1="140.0" x2="88.0" y2="140.0" stroke="#2b3a67" stroke-width="2"/>
+<text x="40.0" y="158.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">1 以上 2 未満：点の間隔 1/8</text>
+<line x1="91.0" y1="158.0" x2="91.0" y2="170.0" stroke="#b07a3e" stroke-width="2"/>
+<line x1="91.0" y1="170.0" x2="190.0" y2="170.0" stroke="#b07a3e" stroke-width="2"/>
+<text x="91.0" y="188.0" font-size="14" fill="#b07a3e" text-anchor="start" font-weight="bold">2 以上 4 未満：点の間隔 1/4</text>
+<line x1="193.0" y1="188.0" x2="193.0" y2="200.0" stroke="#a8322a" stroke-width="2"/>
+<line x1="193.0" y1="200.0" x2="394.0" y2="200.0" stroke="#a8322a" stroke-width="2"/>
+<text x="193.0" y="218.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">4 以上 8 未満：点の間隔 1/2</text>
+<text x="14.0" y="250.0" font-size="14" fill="#2a2723" text-anchor="start">各区間に点は 8 個ずつ。大きい数ほど、点と点のあいだが広い。</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　小数部を 3 ビットだけ持つおもちゃの形式（$1.b_1b_2b_3\times2^k$）で表せる数を、数直線の上に点で打った。2 倍になるたびに点の間隔も 2 倍になる。つまり<strong>表せる数のあいだの隙間は、数が大きいほど広い</strong>（相対的な隙間はほぼ一定）。</figcaption>
+</figure>
+<p>図1.1 のとおり、$[1,2)$ に点は8個（$1,\frac98,\frac{10}8,\ldots,\frac{15}8$）で間隔は $\frac18$。$[2,4)$ でも点は8個で間隔は $\frac14$。倍精度では小数部が52ビットなので、$[2^k,2^{k+1})$ の間隔は $2^{k-52}$ になる。したがって、数 $x$ を最も近い表せる数に丸めたとき、</p>
+<p>$$ \text{丸めのずれ}\ \le\ \text{間隔の半分}=2^{k-53}\qquad(2^k\le x\lt2^{k+1}) $$
+<small>（理由：数直線上で、隣り合う表せる数の真ん中より近い方に丸めるから、ずれは間隔の半分を超えない）</small></p>
+<p>相対誤差にするために、$x$ で割る。$x\ge2^k$ だから $\dfrac1x\le\dfrac1{2^k}$：
+$$ \frac{\text{丸めのずれ}}{x}\ \le\ \frac{2^{k-53}}{2^k}=2^{-53}. $$
+<small>（理由：分母を最小の $2^k$ に置き換えると、分数は大きくなる側に見積もれる）</small></p>
+<p>この $2^{-53}$ を記号にする。</p>
+
+<div class="def" id="sym-unit-roundoff"><span class="label">記号：$\operatorname{fl}(x)$、$u$、$\varepsilon_{\mathrm{mach}}$</span>
+<p><strong>①読み方</strong>：$\operatorname{fl}(x)$ は「エフ・エル・エックス」（floating-point、浮動小数点に直した値）。$u$ は「ユー」（単位丸め、unit roundoff）。$\varepsilon_{\mathrm{mach}}$ は「イプシロン・マシン」（機械イプシロン）。</p>
+<p><strong>②日本語での意味</strong>：$\operatorname{fl}(x)$ は<strong>実数 $x$ を計算機に入れたときの値</strong>（最も近い表せる数）。$u$ は<strong>1回の丸めで入る相対誤差の上限</strong>。$\varepsilon_{\mathrm{mach}}$ は<strong>$1$ の次に表せる数と $1$ の差</strong>。</p>
+<p><strong>③省略していない書き方</strong>：倍精度では
+$$ \operatorname{fl}(x)=x\,(1+\delta),\qquad|\delta|\le u:=2^{-53}\approx1.11\times10^{-16}, $$
+$$ \varepsilon_{\mathrm{mach}}:=2^{-52}\approx2.22\times10^{-16}\ (=2u). $$
+（$\delta$ は個々の数ごとに違う小さな数。「どんな $x$ でも $|\delta|\le u$」というのが主張。上で示したとおり、$2^{-53}$ はずれの相対値の最大である。）四則演算 $\circ$ も、真の結果を丸めたものが返る：$\operatorname{fl}(a\circ b)=(a\circ b)(1+\delta)$、$|\delta|\le u$。</p>
+<p><strong>④どこで出会うか</strong>：数値計算のすべて。「計算機で得られる精度は、相対誤差でおよそ $10^{-16}$（約16桁）が限界」と言うときの数字。流派により $u$ を $2^{-52}$ と書く本もある（<a href="#sec-5-3">5.3</a>）。</p>
+</div>
+
+<p>最小の具体例。$0.1+0.2$ を計算機でやると、</p>
+<p>$$ 0.1+0.2=0.30000000000000004\quad(\neq0.3) $$
+<small>（Python で実際に確かめた値。<code>0.1+0.2==0.3</code> は <code>False</code> になる）</small></p>
+<p>理由は、$0.1$ を2進数で書くと $0.000110011001100\cdots$ と<strong>無限に続く</strong>ので、有限の52ビットで打ち切るしかなく、$\operatorname{fl}(0.1)\neq0.1$ だからである。ここでのずれは $10^{-17}$ 程度で、$\operatorname{fl}(0.1)=0.1(1+\delta)$、$|\delta|\le u$ に収まっている。10進数の $\frac13=0.333\ldots$ が10進数で書き切れないのと同じ事情が、2進数の $0.1$ にも起きている。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p><strong>「倍精度は16桁だから、計算結果も16桁正しい」は誤り。</strong>$u\approx10^{-16}$ は<strong>1回の丸め</strong>の上限である。丸めは演算のたびに入るので、計算が長くなれば積もる。さらに、次の1.4の<strong>桁落ち</strong>では、1回の引き算で桁が大幅に失われる。</p>
+</div>
+
+<h3 id="sec-1-4"><span class="no">1.4</span>桁落ち：近い2数の引き算が、桁を食う</h3>
+<p>丸めの害でいちばん大きいのは、<strong>ほぼ等しい2つの数の引き算</strong>である。最小の具体例を、10進4桁（有効数字4桁で丸める約束）で見る。$e^{1.001}-e^{1}$ を計算する。</p>
+<ol>
+<li>$e^{1.001}=2.7210015\ldots$ を4桁に丸めて $2.721$。<small>（5桁目以下を四捨五入）</small></li>
+<li>$e^{1}=2.7182818\ldots$ を4桁に丸めて $2.718$。</li>
+<li>引き算：$2.721-2.718=0.003$。<small>（4桁の数同士の引き算だが、上の3桁 $2.7$ と $1$ の位 $2$ が消えて、$3$ 1桁だけが残る）</small></li>
+<li>真の差：$2.7210015-2.7182818=0.0027197\ldots$。</li>
+<li>相対誤差：$\dfrac{|0.003-0.0027197|}{0.0027197}=0.103$。<small>（約10 %。入力は4桁（相対誤差 $10^{-4}$ 程度）で正しかったのに、答えは1桁しか合っていない）</small></li>
+</ol>
+<p>これを図1.2 で見る。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 440 298" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="桁落ち" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>桁落ち</title>
+<rect x="0" y="0" width="440" height="298" fill="#fffdf7"/>
+<text x="14.0" y="50.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="-7.6" font-size="12.6">1.001</tspan></text>
+<rect x="150" y="22" width="40" height="40" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="170.0" y="51.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<rect x="208" y="22" width="40" height="40" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="228.0" y="51.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">7</text>
+<rect x="252" y="22" width="40" height="40" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="272.0" y="51.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<rect x="296" y="22" width="40" height="40" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="316.0" y="51.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="199.0" y="56.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">.</text>
+<text x="152.0" y="82.0" font-size="14" fill="#6b645a" text-anchor="start">（真の値 2.7210015…を 4 桁に丸めた）</text>
+<text x="14.0" y="128.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="-7.6" font-size="12.6">1</tspan></text>
+<rect x="150" y="100" width="40" height="40" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="170.0" y="129.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<rect x="208" y="100" width="40" height="40" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="228.0" y="129.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">7</text>
+<rect x="252" y="100" width="40" height="40" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="272.0" y="129.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<rect x="296" y="100" width="40" height="40" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="316.0" y="129.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">8</text>
+<text x="199.0" y="134.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">.</text>
+<text x="152.0" y="160.0" font-size="14" fill="#6b645a" text-anchor="start">（真の値 2.7182818…を 4 桁に丸めた）</text>
+<text x="14.0" y="206.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>差</tspan></text>
+<rect x="150" y="178" width="40" height="40" rx="5" fill="#eee8da" stroke="#6b645a" stroke-width="1.8"/>
+<text x="170.0" y="207.0" font-size="22" fill="#6b645a" text-anchor="middle" font-weight="bold">0</text>
+<rect x="208" y="178" width="40" height="40" rx="5" fill="#eee8da" stroke="#6b645a" stroke-width="1.8"/>
+<text x="228.0" y="207.0" font-size="22" fill="#6b645a" text-anchor="middle" font-weight="bold">0</text>
+<rect x="252" y="178" width="40" height="40" rx="5" fill="#eee8da" stroke="#6b645a" stroke-width="1.8"/>
+<text x="272.0" y="207.0" font-size="22" fill="#6b645a" text-anchor="middle" font-weight="bold">0</text>
+<rect x="296" y="178" width="40" height="40" rx="5" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.8"/>
+<text x="316.0" y="207.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">3</text>
+<text x="199.0" y="212.0" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="bold">.</text>
+<text x="152.0" y="238.0" font-size="14" fill="#6b645a" text-anchor="start">（0.003 しか残らない）</text>
+<text x="14.0" y="256.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">0.003 ÷ 0.001 = 3 ．真の値は e = 2.718…．</text>
+<text x="14.0" y="280.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">相対誤差は約 10 %．4 桁あった精度が 1 桁に落ちた．</text>
+</svg>
+<figcaption><strong>図 1.2</strong>　10 進 4 桁で計算する約束で、$e^{1.001}-e^{1}$ を計算した。上の 2 数は 4 桁とも信じてよいが、ほとんど等しいので引き算で上の桁が全部消え、最後の 1 桁（丸めで生じたずれを含む）だけが残る。</figcaption>
+</figure>
+<p>一般の式で書く。$x,y$ を近似値 $\tilde x=x(1+\delta_1)$、$\tilde y=y(1+\delta_2)$（$|\delta_1|,|\delta_2|\le u$）で置き換えて、差をとる。</p>
+<p>$$ \tilde x-\tilde y-(x-y)=x\delta_1-y\delta_2 $$
+<small>（理由：$\tilde x=x+x\delta_1$、$\tilde y=y+y\delta_2$ を代入して、$x-y$ を引く）</small></p>
+<p>$$ \bigl|\tilde x-\tilde y-(x-y)\bigr|\le u\,(|x|+|y|) $$
+<small>（理由：三角不等式 $|a-b|\le|a|+|b|$ と、$|\delta_i|\le u$）</small></p>
+<p>$$ \text{相対誤差}\ \le\ \frac{u\,(|x|+|y|)}{|x-y|} $$
+<small>（理由：両辺を、真の差 $|x-y|$ で割る）</small></p>
+<p>分母 $|x-y|$ が小さい（$x\approx y$）と、この上限は大きくなる。上の例では $\dfrac{0.5\times10^{-3}\times(2.721+2.718)}{0.0027}\approx1$、すなわち最悪では100 %のずれが起こりうる（実際は約10 %で済んだ）。<strong>引き算そのものは誤差を足さないが、引く前に入っていた小さな誤差を、相対的に拡大する</strong>。これが桁落ちである。</p>
+<p>この回の数値微分は、まさに $f(x+h)-f(x)$ という<strong>近い2数の引き算</strong>を、小さな $h$ で割る計算である。$h$ を小さくすると $f(x+h)\approx f(x)$ がますます近くなり、桁落ちが強まる。これが第3章で見る V 字の<strong>左半分</strong>（$h$ が小さすぎる側で、誤差が増える部分）の原因である。</p>
+<p>桁落ちは、<strong>式を変形して引き算をなくす</strong>ことで避けられることが多い。例：$x=10^{12}$ のとき、</p>
+<p>$$ \sqrt{x+1}-\sqrt x=\frac{(\sqrt{x+1}-\sqrt x)(\sqrt{x+1}+\sqrt x)}{\sqrt{x+1}+\sqrt x}=\frac{1}{\sqrt{x+1}+\sqrt x}. $$
+<small>（理由：分子分母に同じ数 $\sqrt{x+1}+\sqrt x$ を掛け、分子に和と差の積 $(a-b)(a+b)=a^2-b^2$ を使うと分子が $(x+1)-x=1$ になる）</small></p>
+<p>左辺を倍精度でそのまま計算すると $5.00003807\ldots\times10^{-7}$ になり、右辺の $4.99999999999875\ldots\times10^{-7}$ に対して相対誤差が $7.6\times10^{-6}$ ある（Python で確かめた値。16桁のうち約11桁を失った）。右辺は足し算と割り算だけなので、ほぼ全桁が合う。</p>
+
+<div class="why"><span class="label">ひとことで</span>
+<p>計算機には、極限を実行できないことによる<strong>打切り誤差</strong>と、実数を有限桁で持つことによる<strong>丸め誤差</strong>の2種類のずれがつきまとう。丸めの相対誤差は1回あたり $u=2^{-53}\approx10^{-16}$ 以下だが、<strong>近い2数の引き算（桁落ち）</strong>は、その小さなずれを相対的に大きく拡大する。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>数値微分：差分近似と、打切り誤差の次数</h2>
+
+<h3 id="sec-2-1"><span class="no">2.1</span>動機と定義：極限を外した式を3つ作る</h3>
+<p>微分係数の定義は $f'(x)=\displaystyle\lim_{h\to0}\frac{f(x+h)-f(x)}{h}$ だった。この「割線の傾き」（<a href="07_第7回_微分.html#sym-average-rate">第7回の平均の変化の割合</a>）から、極限だけを外して $h$ を小さい正の数に固定したものが、<strong>差分商</strong>である。図2.1 は、$y=e^x$ の点 $(1,e)$ で、$h$ を小さくすると割線が接線に近づく様子である。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 290" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="割線が接線に近づく" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>割線が接線に近づく</title>
+<rect x="0" y="0" width="440" height="290" fill="#fffdf7"/>
+<line x1="50.0" y1="250.0" x2="400.0" y2="250.0" stroke="#2a2723" stroke-width="1.3"/><path d="M393.7 253.0 L400.0 250.0 L393.7 247.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="50.0" y1="250.0" x2="50.0" y2="4.0" stroke="#2a2723" stroke-width="1.3"/><path d="M53.0 10.3 L50.0 4.0 L47.0 10.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="101.0" y1="246.0" x2="101.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="101.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">0.5</text>
+<line x1="186.0" y1="246.0" x2="186.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="186.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="271.0" y1="246.0" x2="271.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="271.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">1.5</text>
+<line x1="356.0" y1="246.0" x2="356.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="356.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="46.0" y1="197.6" x2="54.0" y2="197.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="202.6" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="46.0" y1="145.1" x2="54.0" y2="145.1" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="150.1" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<line x1="46.0" y1="92.7" x2="54.0" y2="92.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="97.7" font-size="14" fill="#6b645a" text-anchor="end">6</text>
+<line x1="46.0" y1="40.2" x2="54.0" y2="40.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="45.2" font-size="14" fill="#6b645a" text-anchor="end">8</text>
+<text x="404.0" y="272.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="64.0" y="10.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="50.0,218.0 52.1,217.6 54.2,217.2 56.4,216.7 58.5,216.3 60.6,215.9 62.8,215.5 64.9,215.0 67.0,214.6 69.1,214.2 71.2,213.7 73.4,213.3 75.5,212.8 77.6,212.3 79.8,211.8 81.9,211.4 84.0,210.9 86.1,210.4 88.2,209.9 90.4,209.4 92.5,208.9 94.6,208.4 96.8,207.8 98.9,207.3 101.0,206.8 103.1,206.2 105.2,205.7 107.4,205.1 109.5,204.6 111.6,204.0 113.8,203.4 115.9,202.8 118.0,202.2 120.1,201.6 122.2,201.0 124.4,200.4 126.5,199.8 128.6,199.1 130.8,198.5 132.9,197.9 135.0,197.2 137.1,196.5 139.3,195.9 141.4,195.2 143.5,194.5 145.6,193.8 147.8,193.1 149.9,192.4 152.0,191.6 154.1,190.9 156.2,190.2 158.4,189.4 160.5,188.6 162.6,187.9 164.8,187.1 166.9,186.3 169.0,185.5 171.1,184.7 173.2,183.9 175.4,183.0 177.5,182.2 179.6,181.3 181.8,180.5 183.9,179.6 186.0,178.7 188.1,177.8 190.2,176.9 192.4,176.0 194.5,175.1 196.6,174.1 198.8,173.2 200.9,172.2 203.0,171.2 205.1,170.2 207.2,169.2 209.4,168.2 211.5,167.2 213.6,166.1 215.8,165.1 217.9,164.0 220.0,162.9 222.1,161.8 224.2,160.7 226.4,159.6 228.5,158.5 230.6,157.3 232.8,156.2 234.9,155.0 237.0,153.8 239.1,152.6 241.2,151.3 243.4,150.1 245.5,148.8 247.6,147.6 249.8,146.3 251.9,145.0 254.0,143.7 256.1,142.3 258.2,141.0 260.4,139.6 262.5,138.2 264.6,136.8 266.8,135.4 268.9,133.9 271.0,132.5 273.1,131.0 275.2,129.5 277.4,128.0 279.5,126.5 281.6,124.9 283.8,123.3 285.9,121.7 288.0,120.1 290.1,118.5 292.2,116.8 294.4,115.2 296.5,113.5 298.6,111.7 300.8,110.0 302.9,108.2 305.0,106.5 307.1,104.7 309.2,102.8 311.4,101.0 313.5,99.1 315.6,97.2 317.8,95.3 319.9,93.3 322.0,91.4 324.1,89.4 326.2,87.3 328.4,85.3 330.5,83.2 332.6,81.1 334.8,79.0 336.9,76.9 339.0,74.7 341.1,72.5 343.2,70.2 345.4,68.0 347.5,65.7 349.6,63.4 351.8,61.0 353.9,58.6 356.0,56.2 358.1,53.8 360.2,51.3 362.4,48.8 364.5,46.3 366.6,43.7 368.8,41.2 370.9,38.5 373.0,35.9 375.1,33.2 377.2,30.4 379.4,27.7 381.5,24.9 383.6,22.1 385.8,19.2 387.9,16.3" fill="none" stroke="#2a2723" stroke-width="2.4" stroke-linejoin="round"/>
+<polyline points="91.2,247.0 99.1,241.3 106.9,235.7 114.8,230.0 122.7,224.3 130.5,218.7 138.4,213.0 146.3,207.3 154.1,201.7 162.0,196.0 169.9,190.4 177.7,184.7 185.6,179.0 193.4,173.4 201.3,167.7 209.2,162.0 217.0,156.4 224.9,150.7 232.8,145.0 240.6,139.4 248.5,133.7 256.3,128.0 264.2,122.4 272.1,116.7 279.9,111.1 287.8,105.4 295.6,99.7 303.5,94.1 311.4,88.4 319.2,82.7 327.1,77.1 335.0,71.4 342.8,65.7 350.7,60.1 358.6,54.4 366.4,48.7 374.3,43.1 382.1,37.4 390.0,31.7" fill="none" stroke="#b07a3e" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="356.0" cy="56.2" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<polyline points="75.5,238.8 83.4,234.6 91.2,230.3 99.1,226.0 106.9,221.7 114.8,217.4 122.7,213.2 130.5,208.9 138.4,204.6 146.3,200.3 154.1,196.1 162.0,191.8 169.9,187.5 177.7,183.2 185.6,179.0 193.4,174.7 201.3,170.4 209.2,166.1 217.0,161.8 224.9,157.6 232.8,153.3 240.6,149.0 248.5,144.7 256.3,140.5 264.2,136.2 272.1,131.9 279.9,127.6 287.8,123.3 295.6,119.1 303.5,114.8 311.4,110.5 319.2,106.2 327.1,102.0 335.0,97.7 342.8,93.4 350.7,89.1 358.6,84.9 366.4,80.6 374.3,76.3 382.1,72.0 390.0,67.7" fill="none" stroke="#5f7f4f" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="271.0" cy="132.5" r="5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<polyline points="75.5,230.0 83.4,226.4 91.2,222.7 99.1,219.1 106.9,215.4 114.8,211.8 122.7,208.1 130.5,204.5 138.4,200.8 146.3,197.2 154.1,193.5 162.0,189.9 169.9,186.2 177.7,182.6 185.6,178.9 193.4,175.3 201.3,171.6 209.2,168.0 217.0,164.3 224.9,160.7 232.8,157.0 240.6,153.4 248.5,149.7 256.3,146.1 264.2,142.4 272.1,138.8 279.9,135.1 287.8,131.5 295.6,127.8 303.5,124.2 311.4,120.5 319.2,116.9 327.1,113.2 335.0,109.6 342.8,105.9 350.7,102.3 358.6,98.6 366.4,95.0 374.3,91.3 382.1,87.7 390.0,84.0" fill="none" stroke="#2a5d8f" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="220.0" cy="162.9" r="5" fill="#2a5d8f" stroke="#2a5d8f" stroke-width="1.5"/>
+<polyline points="75.5,225.1 83.4,221.8 91.2,218.5 99.1,215.2 106.9,211.9 114.8,208.6 122.7,205.3 130.5,202.0 138.4,198.7 146.3,195.4 154.1,192.1 162.0,188.8 169.9,185.5 177.7,182.2 185.6,178.9 193.4,175.6 201.3,172.3 209.2,169.0 217.0,165.7 224.9,162.4 232.8,159.1 240.6,155.8 248.5,152.5 256.3,149.2 264.2,145.9 272.1,142.6 279.9,139.3 287.8,136.0 295.6,132.7 303.5,129.4 311.4,126.2 319.2,122.9 327.1,119.6 335.0,116.3 342.8,113.0 350.7,109.7 358.6,106.4 366.4,103.1 374.3,99.8 382.1,96.5 390.0,93.2" fill="none" stroke="#a8322a" stroke-width="2.8" stroke-dasharray="7 4" stroke-linejoin="round"/>
+<circle cx="186.0" cy="178.7" r="6" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="196.0" y="204.7" font-size="14" fill="#2a2723" text-anchor="start">点 (1, e)</text>
+<line x1="70.0" y1="43.0" x2="100.0" y2="43.0" stroke="#b07a3e" stroke-width="2.6"/>
+<text x="108.0" y="48.0" font-size="14" fill="#2a2723" text-anchor="start">h = 1　傾き 4.671</text>
+<line x1="70.0" y1="67.0" x2="100.0" y2="67.0" stroke="#5f7f4f" stroke-width="2.6"/>
+<text x="108.0" y="72.0" font-size="14" fill="#2a2723" text-anchor="start">h = 0.5　傾き 3.527</text>
+<line x1="70.0" y1="91.0" x2="100.0" y2="91.0" stroke="#2a5d8f" stroke-width="2.6"/>
+<text x="108.0" y="96.0" font-size="14" fill="#2a2723" text-anchor="start">h = 0.2　傾き 3.009</text>
+<line x1="70.0" y1="115.0" x2="100.0" y2="115.0" stroke="#a8322a" stroke-width="2.6" stroke-dasharray="7 4"/>
+<text x="108.0" y="120.0" font-size="14" fill="#2a2723" text-anchor="start">接線　傾き e = 2.718</text>
+</svg>
+<figcaption><strong>図 2.1</strong>　$y=e^x$ 上の点 $(1,e)$ と、右に $h$ だけ離れた点を結ぶ直線（割線）を、$h=1,\,0.5,\,0.2$ で引いた。$h$ を小さくすると割線の傾き（差分商）は、朱の破線の接線の傾き $e$ に近づく。ただし<strong>どの $h$ でも、傾きは $e$ より大きい</strong>（曲線が下に凸だから）。</figcaption>
+</figure>
+<p>どちらの点とつなぐかで、3通りの作り方がある。</p>
+
+<div class="def" id="sym-fd"><span class="label">記号：$D_{+}f$、$D_{-}f$、$D_{0}f$（前進・後退・中心差分）</span>
+<p><strong>①読み方</strong>：$D_{+}f(x;h)$ は「前進差分」、$D_{-}f(x;h)$ は「後退差分」、$D_{0}f(x;h)$ は「中心差分」（「ディー・プラス」「ディー・マイナス」「ディー・ゼロ」とも読む）。</p>
+<p><strong>②日本語での意味</strong>：<strong>$x$ の前（右）の点と、後ろ（左）の点と、前後の両方の点</strong>を使って、$f'(x)$ を近似する式。</p>
+<p><strong>③省略していない書き方</strong>：$h\gt0$ として
+$$ D_{+}f(x;h):=\frac{f(x+h)-f(x)}{h},\qquad D_{-}f(x;h):=\frac{f(x)-f(x-h)}{h},\qquad D_{0}f(x;h):=\frac{f(x+h)-f(x-h)}{2h}. $$
+3番目の分母が $2h$ なのは、2点 $x-h$、$x+h$ の距離が $2h$ だから（「傾き＝高さの差÷横の差」、<a href="07_第7回_微分.html#sym-average-rate">第7回</a>）。$D_{0}f=\dfrac12\bigl(D_{+}f+D_{-}f\bigr)$（右辺を通分して確かめられる：$\frac12\cdot\frac{f(x+h)-f(x)+f(x)-f(x-h)}{h}=\frac{f(x+h)-f(x-h)}{2h}$）。引数 $x;h$ を省いて $D_{+}f$ と書くこともある。</p>
+<p><strong>④どこで出会うか</strong>：数値微分、常微分方程式の数値解法（第49回の前進オイラー法は $D_{+}$ を使う）、偏微分方程式の差分法（第50回）。流派によっては $\Delta_{+}$、$\nabla$、$\delta$ など（<a href="#sec-5-3">5.3</a>）。</p>
+</div>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>最小の具体例：$f(x)=e^x$、$x=1$</h3>
+<p>$f'(x)=e^x$（<a href="07_第7回_微分.html#sym-diff-rules">第7回</a>）だから、真の値は $f'(1)=e=2.7182818\ldots$。$h=0.1$ で手計算する。$e^{1.1}=3.0041660\ldots$、$e^{0.9}=2.4596031\ldots$。</p>
+<ol>
+<li>前進差分：$D_{+}f(1;0.1)=\dfrac{3.0041660-2.7182818}{0.1}=\dfrac{0.2858842}{0.1}=2.858842$。<small>（真の値 $2.718282$ より $0.1406$ 大きい）</small></li>
+<li>中心差分：$D_{0}f(1;0.1)=\dfrac{3.0041660-2.4596031}{0.2}=\dfrac{0.5445629}{0.2}=2.722815$。<small>（真の値より $0.0045$ 大きい）</small></li>
+</ol>
+<p>$h=0.01$ では、前進差分の誤差が $0.01364$、中心差分の誤差が $0.0000453$。<strong>同じ $h$ でも、中心差分の方がずっと誤差が小さい</strong>。しかも $h$ を $\frac1{10}$ にしたとき、前進は誤差が約 $\frac1{10}$（$0.1406\to0.01364$）、中心は約 $\frac1{100}$（$0.004533\to0.0000453$）になっている。これがなぜ起きるかを、テイラーの定理から導く。まず図2.2 で、3つの割線を比べる。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 290" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="前進・中心・後退差分" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>前進・中心・後退差分</title>
+<rect x="0" y="0" width="440" height="290" fill="#fffdf7"/>
+<line x1="50.0" y1="250.0" x2="390.0" y2="250.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 253.0 L390.0 250.0 L383.7 247.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="50.0" y1="250.0" x2="50.0" y2="4.0" stroke="#2a2723" stroke-width="1.3"/><path d="M53.0 10.3 L50.0 4.0 L47.0 10.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="94.0" y1="246.0" x2="94.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="94.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">0.5</text>
+<line x1="204.0" y1="246.0" x2="204.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="204.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="314.0" y1="246.0" x2="314.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="314.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">1.5</text>
+<line x1="46.0" y1="210.7" x2="54.0" y2="210.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="215.7" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="46.0" y1="171.3" x2="54.0" y2="171.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="176.3" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="46.0" y1="132.0" x2="54.0" y2="132.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="137.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<line x1="46.0" y1="92.7" x2="54.0" y2="92.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="97.7" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<line x1="46.0" y1="53.3" x2="54.0" y2="53.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="58.3" font-size="14" fill="#6b645a" text-anchor="end">5</text>
+<text x="394.0" y="272.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="64.0" y="10.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="50.0,196.9 52.8,196.2 55.5,195.6 58.2,194.9 61.0,194.2 63.8,193.5 66.5,192.8 69.2,192.1 72.0,191.3 74.8,190.6 77.5,189.8 80.2,189.1 83.0,188.3 85.8,187.5 88.5,186.8 91.2,186.0 94.0,185.2 96.8,184.3 99.5,183.5 102.2,182.7 105.0,181.8 107.8,181.0 110.5,180.1 113.2,179.2 116.0,178.3 118.8,177.4 121.5,176.5 124.2,175.6 127.0,174.7 129.8,173.7 132.5,172.7 135.2,171.8 138.0,170.8 140.8,169.8 143.5,168.8 146.2,167.8 149.0,166.7 151.8,165.7 154.5,164.6 157.2,163.5 160.0,162.5 162.8,161.4 165.5,160.2 168.2,159.1 171.0,158.0 173.8,156.8 176.5,155.6 179.2,154.5 182.0,153.3 184.8,152.0 187.5,150.8 190.2,149.6 193.0,148.3 195.7,147.0 198.5,145.7 201.2,144.4 204.0,143.1 206.7,141.7 209.5,140.4 212.2,139.0 215.0,137.6 217.8,136.2 220.5,134.8 223.2,133.3 226.0,131.8 228.8,130.3 231.5,128.8 234.2,127.3 237.0,125.8 239.8,124.2 242.5,122.6 245.2,121.0 248.0,119.4 250.7,117.8 253.5,116.1 256.2,114.4 259.0,112.7 261.8,111.0 264.5,109.2 267.2,107.5 270.0,105.7 272.8,103.9 275.5,102.0 278.2,100.2 281.0,98.3 283.8,96.4 286.5,94.4 289.2,92.5 292.0,90.5 294.8,88.5 297.5,86.5 300.2,84.4 303.0,82.3 305.8,80.2 308.5,78.1 311.2,75.9 314.0,73.7 316.7,71.5 319.5,69.3 322.2,67.0 325.0,64.7 327.8,62.4 330.5,60.0 333.2,57.6 336.0,55.2 338.8,52.7 341.5,50.2 344.2,47.7 347.0,45.2 349.8,42.6 352.5,40.0 355.2,37.4 358.0,34.7 360.8,32.0 363.5,29.2 366.2,26.5 369.0,23.7 371.8,20.8 374.5,17.9 377.2,15.0" fill="none" stroke="#2a2723" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="72.0,226.3 79.4,221.6 86.9,217.0 94.3,212.3 101.7,207.6 109.1,202.9 116.6,198.2 124.0,193.5 131.4,188.9 138.8,184.2 146.2,179.5 153.7,174.8 161.1,170.1 168.5,165.4 175.9,160.8 183.4,156.1 190.8,151.4 198.2,146.7 205.7,142.0 213.1,137.4 220.5,132.7 227.9,128.0 235.3,123.3 242.8,118.6 250.2,113.9 257.6,109.3 265.1,104.6 272.5,99.9 279.9,95.2 287.3,90.5 294.8,85.9 302.2,81.2 309.6,76.5 317.0,71.8 324.5,67.1 331.9,62.4 339.3,57.8 346.7,53.1 354.2,48.4 361.6,43.7 369.0,39.0" fill="none" stroke="#b07a3e" stroke-width="2.4" stroke-linejoin="round"/>
+<polyline points="72.0,193.6 79.4,190.7 86.9,187.9 94.3,185.0 101.7,182.2 109.1,179.4 116.6,176.5 124.0,173.7 131.4,170.8 138.8,168.0 146.2,165.2 153.7,162.3 161.1,159.5 168.5,156.6 175.9,153.8 183.4,151.0 190.8,148.1 198.2,145.3 205.7,142.4 213.1,139.6 220.5,136.8 227.9,133.9 235.3,131.1 242.8,128.3 250.2,125.4 257.6,122.6 265.1,119.7 272.5,116.9 279.9,114.1 287.3,111.2 294.8,108.4 302.2,105.5 309.6,102.7 317.0,99.9 324.5,97.0 331.9,94.2 339.3,91.3 346.7,88.5 354.2,85.7 361.6,82.8 369.0,80.0" fill="none" stroke="#5f7f4f" stroke-width="2.4" stroke-linejoin="round"/>
+<polyline points="72.0,209.9 79.4,206.2 86.9,202.4 94.3,198.7 101.7,194.9 109.1,191.1 116.6,187.4 124.0,183.6 131.4,179.9 138.8,176.1 146.2,172.3 153.7,168.6 161.1,164.8 168.5,161.0 175.9,157.3 183.4,153.5 190.8,149.8 198.2,146.0 205.7,142.2 213.1,138.5 220.5,134.7 227.9,131.0 235.3,127.2 242.8,123.4 250.2,119.7 257.6,115.9 265.1,112.2 272.5,108.4 279.9,104.6 287.3,100.9 294.8,97.1 302.2,93.4 309.6,89.6 317.0,85.8 324.5,82.1 331.9,78.3 339.3,74.6 346.7,70.8 354.2,67.0 361.6,63.3 369.0,59.5" fill="none" stroke="#2a5d8f" stroke-width="2.4" stroke-linejoin="round"/>
+<polyline points="72.0,207.2 79.4,203.6 86.9,200.0 94.3,196.4 101.7,192.8 109.1,189.2 116.6,185.6 124.0,182.0 131.4,178.4 138.8,174.8 146.2,171.1 153.7,167.5 161.1,163.9 168.5,160.3 175.9,156.7 183.4,153.1 190.8,149.5 198.2,145.9 205.7,142.3 213.1,138.7 220.5,135.1 227.9,131.5 235.3,127.8 242.8,124.2 250.2,120.6 257.6,117.0 265.1,113.4 272.5,109.8 279.9,106.2 287.3,102.6 294.8,99.0 302.2,95.4 309.6,91.8 317.0,88.2 324.5,84.5 331.9,80.9 339.3,77.3 346.7,73.7 354.2,70.1 361.6,66.5 369.0,62.9" fill="none" stroke="#a8322a" stroke-width="2.4" stroke-dasharray="7 4" stroke-linejoin="round"/>
+<circle cx="94.0" cy="185.2" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="204.0" cy="143.1" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="314.0" cy="73.7" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="66.0" y1="35.0" x2="96.0" y2="35.0" stroke="#b07a3e" stroke-width="2.6"/>
+<text x="104.0" y="40.0" font-size="14" fill="#2a2723" text-anchor="start">前進差分　傾き 3.527</text>
+<line x1="66.0" y1="59.0" x2="96.0" y2="59.0" stroke="#2a5d8f" stroke-width="2.6"/>
+<text x="104.0" y="64.0" font-size="14" fill="#2a2723" text-anchor="start">中心差分　傾き 2.833</text>
+<line x1="66.0" y1="83.0" x2="96.0" y2="83.0" stroke="#5f7f4f" stroke-width="2.6"/>
+<text x="104.0" y="88.0" font-size="14" fill="#2a2723" text-anchor="start">後退差分　傾き 2.139</text>
+<line x1="66.0" y1="107.0" x2="96.0" y2="107.0" stroke="#a8322a" stroke-width="2.6" stroke-dasharray="7 4"/>
+<text x="104.0" y="112.0" font-size="14" fill="#2a2723" text-anchor="start">接線　傾き 2.718</text>
+</svg>
+<figcaption><strong>図 2.2</strong>　$h=0.5$ で、点 $(1,e)$ を通る傾き違いの 3 本。前進差分（右の点との割線）は大きすぎ、後退差分（左の点との割線）は小さすぎ、<strong>中心差分（左右の点との割線）は接線にほぼ重なる</strong>。左右の「行き過ぎ」が打ち消し合うからである。</figcaption>
+</figure>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>前進差分の打切り誤差：$\dfrac h2f''(c)$</h3>
+<p>前進差分に現れる $f(x+h)$ を、$x$ のまわりのテイラーの定理（<a href="09_第9回_テイラー展開.html#sym-taylor">第9回 5.3</a>、$N=1$、$a=x$、「$x$」の役を $x+h$ とする）で書く。$f$ が2回微分できるとして、$x$ と $x+h$ の間に点 $c$ があって、</p>
+<p>$$ f(x+h)=f(x)+h\,f'(x)+\frac{h^2}{2}f''(c). $$
+<small>（理由：テイラーの定理 $f=T_1+R_1$、$T_1=f(a)+f'(a)(x-a)$、$R_1=\frac{f''(c)}{2!}(x-a)^2$。ここで $a$ を $x$、$x$ を $x+h$ に読みかえた。$c$ は未知だが $x$ と $x+h$ の間にある）</small></p>
+<p>差分商の分子 $f(x+h)-f(x)$ をつくるため、両辺から $f(x)$ を引く：</p>
+<p>$$ f(x+h)-f(x)=h\,f'(x)+\frac{h^2}{2}f''(c). $$
+<small>（理由：両辺から同じ $f(x)$ を引いた）</small></p>
+<p>両辺を $h$ で割る：</p>
+<p>$$ D_{+}f(x;h)=\frac{f(x+h)-f(x)}{h}=f'(x)+\frac h2f''(c). $$
+<small>（理由：$h\neq0$ だから割り算ができる。右辺は各項を $h$ で割った）</small></p>
+<p>$f'(x)$ を左辺に移して<strong>誤差</strong>の形にする：</p>
+<p>$$ \boxed{\;D_{+}f(x;h)-f'(x)=\frac h2f''(c),\qquad c\text{ は }x\text{ と }x+h\text{ の間}\;} $$
+<small>（理由：両辺から $f'(x)$ を引いた）</small></p>
+<p>確かめ。$f=e^x$、$x=1$、$h=0.1$ なら、右辺 $=0.05\,e^{c}$、$c\in(1,1.1)$。$e^{c}$ は $e^{1}=2.718$ から $e^{1.1}=3.004$ のあいだなので、右辺は $0.1359$ から $0.1502$ のあいだ。実際の誤差 $0.1406$ はこの範囲に入っている。</p>
+<p>この式から読み取れることは2つ。</p>
+<ul>
+<li>誤差は、<strong>$h$ に比例</strong>する（係数 $\frac12f''(c)$ は、$h$ を小さくしても、$f''$ が連続なら $\frac12f''(x)$ に近づくだけで $0$ にはならない）。</li>
+<li>誤差は、<strong>$f''$、つまり曲がり具合に比例</strong>する。直線（$f''=0$）なら誤差は $0$。図2.1 で割線が接線より傾いていたのは、曲線が下に凸（$f''\gt0$）だったからである。</li>
+</ul>
+<p>「$h$ に比例して小さくなる」を、記号で短く書く道具が第6回のランダウの記号 $O$ である。</p>
+
+<div class="def" id="sym-order-h"><span class="label">記号：$E(h)=O(h^p)$（誤差の次数 $p$）</span>
+<p><strong>①読み方</strong>：「イー・オブ・エイチは、オー・エイチ・ピー乗」。$p$ は「次数」（オーダー）。$p=1$ なら「1次の精度」、$p=2$ なら「2次の精度」。</p>
+<p><strong>②日本語での意味</strong>：<strong>$h$ が十分小さいとき、誤差 $E(h)$ の大きさは、$h^p$ の定数倍で押さえられる</strong>。実用上は「$h$ を $\frac1{10}$ にすると、誤差が約 $\frac1{10^p}$ になる」。</p>
+<p><strong>③省略していない書き方</strong>：第6回の定義（<a href="06_第6回_極限と連続.html#sym-landau-O">第6回 6.3</a>）で $x$ を $h$、$a$ を $0$、$g(h)$ を $h^p$ とする：
+$$ E(h)=O(h^p)\ (h\to0)\ :\Longleftrightarrow\ \exists C\gt0,\ \exists\delta\gt0,\ \forall h,\ \bigl(0\lt h\lt\delta\ \Rightarrow\ |E(h)|\le C\,h^p\bigr). $$
+（<a href="02_第2回_集合と論理.html#sym-exists">$\exists$</a>：存在する、<a href="02_第2回_集合と論理.html#sym-forall">$\forall$</a>：すべての、<a href="02_第2回_集合と論理.html#sym-implies">$\Rightarrow$</a>：ならば。）$C$ は $h$ によらない定数（ここでは $\frac12|f''|$ の最大値など）。</p>
+<p><strong>④どこで出会うか</strong>：数値微分・積分・常微分方程式の数値解法の「精度の次数」。「テイラー展開の剰余は $O(h^{N+1})$」（<a href="09_第9回_テイラー展開.html#sec-6-1">第9回 6.1</a>）と同じ記号。</p>
+</div>
+
+<p>前進差分では、$|E(h)|=\dfrac h2|f''(c)|\le\dfrac12M_2\,h$（$M_2:=\max|f''|$、<small>$x$ のまわりの区間での最大値</small>）なので、$C=\frac12M_2$、$p=1$ で $E(h)=O(h)$ である。つまり、<strong>前進差分は1次の精度</strong>。</p>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>中心差分の打切り誤差：$\dfrac{h^2}6f'''(c)$</h3>
+<p>中心差分では、$f(x+h)$ と $f(x-h)$ の両方が出る。どちらも $x$ のまわりのテイラーの定理で、今度は $N=2$（3次の項を剰余に入れる）として書く。$f$ が3回連続微分できるとして、$x$ と $x+h$ の間に $c_{+}$、$x-h$ と $x$ の間に $c_{-}$ があって、</p>
+<p>$$ f(x+h)=f(x)+h\,f'(x)+\frac{h^2}{2}f''(x)+\frac{h^3}{6}f'''(c_{+}), $$
+$$ f(x-h)=f(x)-h\,f'(x)+\frac{h^2}{2}f''(x)-\frac{h^3}{6}f'''(c_{-}). $$
+<small>（理由：テイラーの定理の $N=2$ で、$R_2=\frac{f'''(c)}{3!}(x-a)^3$、$3!=6$（<a href="04_第4回_総和・総乗と添字.html#sym-factorial">階乗</a>）。2番目は $h$ を $-h$ に替えたもので、$(-h)^3=-h^3$、$(-h)^1=-h$、$(-h)^2=h^2$）</small></p>
+<p>図2.3 は、この2本の式の項を縦に並べ、足し引きで何が残るかを見るための図である。</p>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 272" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="中心差分の項の打ち消し" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>中心差分の項の打ち消し</title>
+<rect x="0" y="0" width="440" height="272" fill="#fffdf7"/>
+<text x="150.0" y="26.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">f(x)</text>
+<text x="230.0" y="26.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">hf′</text>
+<text x="310.0" y="26.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">h²f″/2</text>
+<text x="390.0" y="26.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">h³f‴/6</text>
+<text x="14.0" y="72.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan>(</tspan><tspan font-style="italic">x</tspan><tspan>+</tspan><tspan font-style="italic">h</tspan><tspan>)</tspan></text>
+<rect x="112" y="40" width="76" height="44" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="150.0" y="69.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">＋</text>
+<rect x="192" y="40" width="76" height="44" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="230.0" y="69.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">＋</text>
+<rect x="272" y="40" width="76" height="44" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="310.0" y="69.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">＋</text>
+<rect x="352" y="40" width="76" height="44" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="390.0" y="69.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">＋</text>
+<text x="14.0" y="128.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan>(</tspan><tspan font-style="italic">x</tspan><tspan>−</tspan><tspan font-style="italic">h</tspan><tspan>)</tspan></text>
+<rect x="112" y="96" width="76" height="44" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="150.0" y="125.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">＋</text>
+<rect x="192" y="96" width="76" height="44" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="230.0" y="125.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">−</text>
+<rect x="272" y="96" width="76" height="44" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="310.0" y="125.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">＋</text>
+<rect x="352" y="96" width="76" height="44" rx="5" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="390.0" y="125.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">−</text>
+<text x="14.0" y="184.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>差</tspan></text>
+<rect x="112" y="152" width="76" height="44" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="150.0" y="181.0" font-size="18" fill="#5f7f4f" text-anchor="middle" font-weight="bold">0</text>
+<rect x="192" y="152" width="76" height="44" rx="5" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="230.0" y="181.0" font-size="18" fill="#7a5420" text-anchor="middle" font-weight="bold">2 倍</text>
+<rect x="272" y="152" width="76" height="44" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="310.0" y="181.0" font-size="18" fill="#5f7f4f" text-anchor="middle" font-weight="bold">0</text>
+<rect x="352" y="152" width="76" height="44" rx="5" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="390.0" y="181.0" font-size="18" fill="#7a5420" text-anchor="middle" font-weight="bold">2 倍</text>
+<text x="14.0" y="230.0" font-size="14" fill="#2a2723" text-anchor="start">f と f″ の項は消え、f′ と f‴ の項は 2 倍になる．</text>
+<text x="14.0" y="254.0" font-size="14" fill="#2a2723" text-anchor="start">差 = 2h·f′ + (h³/3)·f‴ + …</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　$f(x+h)$ と $f(x-h)$ のテイラー展開を、同じ次数の項ごとに並べた。引き算すると $h^0$、$h^2$ の項が消えるので、最初に残る誤差の項が $h^3$ になる（$2h$ で割ると $h^2$）。</figcaption>
+</figure>
+<p>1行目から2行目を引く。右辺の項ごとに（図2.3 の「差」の行）：</p>
+<ol>
+<li>$f(x)-f(x)=0$。<small>（同じ項が打ち消し合う）</small></li>
+<li>$h\,f'(x)-\bigl(-h\,f'(x)\bigr)=2h\,f'(x)$。<small>（符号が逆なので、引くと2倍になる）</small></li>
+<li>$\frac{h^2}{2}f''(x)-\frac{h^2}{2}f''(x)=0$。<small>（$h^2$ は偶数乗で符号が変わらないので、打ち消し合う）</small></li>
+<li>$\frac{h^3}{6}f'''(c_{+})-\bigl(-\frac{h^3}{6}f'''(c_{-})\bigr)=\frac{h^3}{6}\bigl(f'''(c_{+})+f'''(c_{-})\bigr)$。<small>（$h^3$ は奇数乗で符号が変わるので、足し合わさる）</small></li>
+</ol>
+<p>まとめて：</p>
+<p>$$ f(x+h)-f(x-h)=2h\,f'(x)+\frac{h^3}{6}\bigl(f'''(c_{+})+f'''(c_{-})\bigr). $$
+<small>（理由：上の4項の結果を並べた）</small></p>
+<p>両辺を $2h$ で割る：</p>
+<p>$$ D_{0}f(x;h)=f'(x)+\frac{h^2}{12}\bigl(f'''(c_{+})+f'''(c_{-})\bigr). $$
+<small>（理由：$\frac{h^3}{6}\div2h=\frac{h^2}{12}$）</small></p>
+<p>括弧の中は、2つの値 $f'''(c_{+})$、$f'''(c_{-})$ の和である。$f'''$ が連続なら、その<strong>平均</strong> $\frac12\bigl(f'''(c_{+})+f'''(c_{-})\bigr)$ は、2つの値のあいだにあるので、<strong>中間値の定理</strong>（<a href="06_第6回_極限と連続.html#sec-5-4">第6回 5.4</a>）から、$c_{-}$ と $c_{+}$ のあいだのある点 $\bar c$ での値 $f'''(\bar c)$ に等しい。したがって $f'''(c_{+})+f'''(c_{-})=2f'''(\bar c)$：</p>
+<p>$$ \boxed{\;D_{0}f(x;h)-f'(x)=\frac{h^2}{6}f'''(\bar c),\qquad \bar c\text{ は }x-h\text{ と }x+h\text{ の間}\;} $$
+<small>（理由：$\frac{h^2}{12}\cdot2f'''(\bar c)=\frac{h^2}{6}f'''(\bar c)$。$f'$ を左辺に移した）</small></p>
+<p>確かめ。$f=e^x$、$x=1$、$h=0.1$ なら、右辺 $=\frac{0.01}6e^{\bar c}$、$\bar c\in(0.9,1.1)$。$e^{0.9}=2.4596$ から $e^{1.1}=3.0042$ のあいだなので、右辺は $0.00410$ から $0.00501$ のあいだ。実際の誤差 $0.004533$ は範囲に入っている。</p>
+<p>誤差は $h^2$ に比例するので $E(h)=O(h^2)$、<strong>中心差分は2次の精度</strong>である。前進差分より1次高いのは、図2.3 のとおり、<strong>左右対称の点を使うと $h^2$ の項（曲がりに比例する項）が打ち消し合う</strong>から。</p>
+
+<h3 id="sec-2-5"><span class="no">2.5</span>確かめ：多項式で、誤差の式が当たっているか</h3>
+<p>誤差の式が正しいなら、多項式（誤差の式の $c$ が消える）で、手計算の結果が一致するはずである。</p>
+<p>(1) $f(x)=x^2$ なら $f''=2$、$f'''=0$。<br>
+前進差分：$\dfrac{(x+h)^2-x^2}{h}=\dfrac{2xh+h^2}{h}=2x+h$。誤差は $h$。式の右辺は $\dfrac h2f''=\dfrac h2\cdot2=h$。<strong>一致</strong>。<br>
+中心差分：$\dfrac{(x+h)^2-(x-h)^2}{2h}=\dfrac{4xh}{2h}=2x$。誤差は $0$。式の右辺は $\dfrac{h^2}6f'''=0$。<strong>一致</strong>（2次式の傾きは、中心差分なら厳密に出る）。</p>
+<p>(2) $f(x)=x^3$ なら $f'''=6$。中心差分：$\dfrac{(x+h)^3-(x-h)^3}{2h}=\dfrac{6x^2h+2h^3}{2h}=3x^2+h^2$。誤差は $h^2$。式の右辺は $\dfrac{h^2}6\cdot6=h^2$。<strong>一致</strong>。</p>
+<p>この3つの結果は、<a href="#sec-2-2">2.2</a> の $e^x$ の数値とも整合する（誤差の大きさ、$h$ への比例）。</p>
+
+<h3 id="sec-2-6"><span class="no">2.6</span>誤差の次数を、数値から読み取る：$h$ を半分にする実験</h3>
+<p>誤差が $|E(h)|\approx Ch^p$ なら、$h$ を半分にして誤差を比べると、
+$$ \frac{E(h)}{E(h/2)}\approx\frac{Ch^p}{C(h/2)^p}=2^p. $$
+<small>（理由：$C$ が約分され、$\frac{h^p}{(h/2)^p}=2^p$。$\approx$ は「$h$ が十分小さいとき、ほぼ」の意味）</small></p>
+<p>つまり、比が $2$ なら $p=1$、$4$ なら $p=2$、$8$ なら $p=3$、$16$ なら $p=4$。真の値が分かっていれば、次数は<strong>実験で確かめられる</strong>。$f=e^x$、$x=1$ で、$h$ を半分にしていく：</p>
+<table class="tb">
+<tr><th>$h$</th><th>前進差分の誤差</th><th>比</th><th>中心差分の誤差</th><th>比</th></tr>
+<tr><td>$0.1$</td><td>$0.14056$</td><td>―</td><td>$0.0045327$</td><td>―</td></tr>
+<tr><td>$0.05$</td><td>$0.069104$</td><td>$2.03$</td><td>$0.0011328$</td><td>$4.00$</td></tr>
+<tr><td>$0.025$</td><td>$0.034263$</td><td>$2.02$</td><td>$0.00028316$</td><td>$4.00$</td></tr>
+<tr><td>$0.0125$</td><td>$0.017060$</td><td>$2.01$</td><td>$0.000070789$</td><td>$4.00$</td></tr>
+</table>
+<p>比が $2$ と $4$ に近づく。<strong>前進は1次、中心は2次</strong>で、誤差の式と一致している。誤差を両対数のグラフで描くと、$|E|=Ch^p$ の両辺の対数をとって $\log|E|=\log C+p\log h$ だから、<strong>傾き $p$ の直線</strong>になる（図2.4）。</p>
+<figure class="fig" id="fig-2-4">
+<svg viewBox="0 0 440 312" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="打切り誤差のh依存" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>打切り誤差のh依存</title>
+<rect x="0" y="0" width="440" height="312" fill="#fffdf7"/>
+<line x1="87.5" y1="264.0" x2="87.5" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="159.3" y1="264.0" x2="159.3" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="231.0" y1="264.0" x2="231.0" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="302.7" y1="264.0" x2="302.7" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="374.5" y1="264.0" x2="374.5" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="228.6" x2="396.0" y2="228.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="181.4" x2="396.0" y2="181.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="134.2" x2="396.0" y2="134.2" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="87.0" x2="396.0" y2="87.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="39.8" x2="396.0" y2="39.8" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="264.0" x2="396.0" y2="264.0" stroke="#2a2723" stroke-width="1.4"/>
+<line x1="66.0" y1="264.0" x2="66.0" y2="28.0" stroke="#2a2723" stroke-width="1.4"/>
+<text x="87.5" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−4</tspan></text>
+<text x="159.3" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−3</tspan></text>
+<text x="231.0" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−2</tspan></text>
+<text x="302.7" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−1</tspan></text>
+<text x="374.5" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">0</tspan></text>
+<text x="60.0" y="233.6" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−8</tspan></text>
+<text x="60.0" y="186.4" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−6</tspan></text>
+<text x="60.0" y="139.2" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−4</tspan></text>
+<text x="60.0" y="92.0" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−2</tspan></text>
+<text x="60.0" y="44.8" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">0</tspan></text>
+<text x="396.0" y="308.0" font-size="14" fill="#2a2723" text-anchor="end">刻み幅 h</text>
+<text x="60.0" y="22.0" font-size="14" fill="#2a2723" text-anchor="start">誤差 |E|</text>
+<polyline points="87.5,131.1 91.1,129.9 94.7,128.7 98.3,127.5 101.9,126.3 105.5,125.2 109.0,124.0 112.6,122.8 116.2,121.6 119.8,120.4 123.4,119.3 127.0,118.1 130.6,116.9 134.2,115.7 137.7,114.5 141.3,113.4 144.9,112.2 148.5,111.0 152.1,109.8 155.7,108.6 159.3,107.5 162.8,106.3 166.4,105.1 170.0,103.9 173.6,102.7 177.2,101.5 180.8,100.4 184.4,99.2 188.0,98.0 191.5,96.8 195.1,95.6 198.7,94.5 202.3,93.3 205.9,92.1 209.5,90.9 213.1,89.7 216.7,88.6 220.2,87.4 223.8,86.2 227.4,85.0 231.0,83.8 234.6,82.6 238.2,81.5 241.8,80.3 245.3,79.1 248.9,77.9 252.5,76.7 256.1,75.5 259.7,74.3 263.3,73.1 266.9,71.9 270.5,70.8 274.0,69.6 277.6,68.4 281.2,67.2 284.8,66.0 288.4,64.8 292.0,63.6 295.6,62.3 299.2,61.1 302.7,59.9 306.3,58.7 309.9,57.5 313.5,56.2 317.1,55.0 320.7,53.7 324.3,52.5 327.8,51.2 331.4,49.9 335.0,48.6 338.6,47.3 342.2,46.0 345.8,44.7 349.4,43.3 353.0,41.9 356.5,40.5 360.1,39.1 363.7,37.6 367.3,36.1 370.9,34.6 374.5,32.9" fill="none" stroke="#b07a3e" stroke-width="2.6" stroke-linejoin="round"/>
+<polyline points="87.5,236.7 91.1,234.4 94.7,232.0 98.3,229.6 101.9,227.3 105.5,224.9 109.0,222.6 112.6,220.2 116.2,217.8 119.8,215.5 123.4,213.1 127.0,210.8 130.6,208.4 134.2,206.0 137.7,203.7 141.3,201.3 144.9,199.0 148.5,196.6 152.1,194.2 155.7,191.9 159.3,189.5 162.8,187.2 166.4,184.8 170.0,182.4 173.6,180.1 177.2,177.7 180.8,175.4 184.4,173.0 188.0,170.6 191.5,168.3 195.1,165.9 198.7,163.6 202.3,161.2 205.9,158.8 209.5,156.5 213.1,154.1 216.7,151.8 220.2,149.4 223.8,147.0 227.4,144.7 231.0,142.3 234.6,140.0 238.2,137.6 241.8,135.2 245.3,132.9 248.9,130.5 252.5,128.2 256.1,125.8 259.7,123.4 263.3,121.1 266.9,118.7 270.5,116.4 274.0,114.0 277.6,111.6 281.2,109.3 284.8,106.9 288.4,104.6 292.0,102.2 295.6,99.8 299.2,97.5 302.7,95.1 306.3,92.7 309.9,90.4 313.5,88.0 317.1,85.7 320.7,83.3 324.3,80.9 327.8,78.6 331.4,76.2 335.0,73.8 338.6,71.5 342.2,69.1 345.8,66.7 349.4,64.3 353.0,61.9 356.5,59.6 360.1,57.2 363.7,54.7 367.3,52.3 370.9,49.9 374.5,47.4" fill="none" stroke="#a8322a" stroke-width="2.6" stroke-linejoin="round"/>
+<rect x="156.6" y="74.6" width="134.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="288.4" y="88.6" font-size="14" fill="#7a5420" text-anchor="end" font-weight="bold">前進差分（傾き 1）</text>
+<rect x="206.8" y="138.4" width="134.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="338.6" y="152.4" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">中心差分（傾き 2）</text>
+</svg>
+<figcaption><strong>図 2.4</strong>　$f(x)=e^x$、$x=1$ での、差分近似の<strong>打切り誤差だけ</strong>（丸め誤差を除いた数学的な誤差）。両対数で描くと直線になり、その傾きが誤差の次数 $p$（誤差 $\propto h^p$）。$h$ が $10$ 分の 1 になると、前進差分の誤差は約 $10$ 分の 1、中心差分は約 $100$ 分の 1 になる。</figcaption>
+</figure>
+<p>（図2.4 の誤差は、丸め誤差を含まない数学的な誤差を $e\,(\mathrm{expm1}(h)/h-1)$ と $e\,(\sinh h/h-1)$ の式から直接計算したもの。計算機で $D_{+}f$ をそのまま計算すると、第3章のように左端で形が崩れる。）</p>
+
+<h3 id="sec-2-7"><span class="no">2.7</span>省略の段階：「誤差は $O(h^p)$」</h3>
+<div class="box" id="abbr-order"><span class="label">省略の段階：誤差の次数</span>
+<p><strong>S0（完全形）</strong>：ある定数 $C\gt0$ とある $\delta\gt0$ が存在して、$0\lt h\lt\delta$ のすべての $h$ について、$\bigl|D_{+}f(x;h)-f'(x)\bigr|\le C\,h$。量化子（$\exists$、$\forall$）と不等式と、$f'$ との差が何の差かを全部書いた。</p>
+<p><strong>S1</strong>：$D_{+}f(x;h)-f'(x)=O(h)$。<em>省いたもの</em>：$C$ と $\delta$ の存在、不等式の形。<em>誤解が起きない理由</em>：$O(h)$ の定義（<a href="#sym-order-h">2.3</a>）がこの形を一意に展開する。</p>
+<p><strong>S2</strong>：「前進差分は1次精度」。<em>省いたもの</em>：何と何の差か、$x$、$f$ への依存。<em>誤解が起きない理由</em>：差が $f'(x)$ との差であることは「数値微分」の話題では決まっている。</p>
+<p>注意：S1 と S2 は、<strong>$C$ の大きさ</strong>を言っていない。$C=10^{10}$ でも $O(h)$ である。だから「1次精度」の公式が「2次精度」より常に正確とは限らない。「$h$ を小さくしたとき、どう減るか」だけを言っている。</p>
+</div>
+
+<h3 id="sec-2-8"><span class="no">2.8</span>2階の差分：$f''$ を3点で近似する</h3>
+<p>$f''$（<a href="08_第8回_微分を使う・近似と極値.html#sym-second-derivative">第8回</a>）も、同じ方法で近似できる。2.4 の2本の式を、剰余を $f''''$ の項まで伸ばして書く（$N=3$、$f$ が4回連続微分できるとして）：</p>
+<p>$$ f(x\pm h)=f(x)\pm h\,f'(x)+\frac{h^2}{2}f''(x)\pm\frac{h^3}{6}f'''(x)+\frac{h^4}{24}f''''(c_{\pm}). $$
+<small>（理由：テイラーの定理 $N=3$、$R_3=\frac{f^{(4)}(c)}{4!}(x-a)^4$、$4!=24$。複号 $\pm$ は上と下で同順）</small></p>
+<p>2本を足す（引くのでなく足す）と、奇数乗の項が打ち消し合う：</p>
+<p>$$ f(x+h)+f(x-h)=2f(x)+h^2f''(x)+\frac{h^4}{24}\bigl(f''''(c_{+})+f''''(c_{-})\bigr). $$
+<small>（理由：$f(x)$ が2つで $2f(x)$、$\pm hf'$ が消える、$\frac{h^2}2f''$ が2つで $h^2f''$、$\pm\frac{h^3}6f'''$ が消える）</small></p>
+<p>$2f(x)$ を移項して $h^2$ で割る：</p>
+<p>$$ \frac{f(x+h)-2f(x)+f(x-h)}{h^2}=f''(x)+\frac{h^2}{24}\bigl(f''''(c_{+})+f''''(c_{-})\bigr). $$
+<small>（理由：両辺から $2f(x)$ を引き、$h^2$ で割った）</small></p>
+<p>2.4 と同じく中間値の定理で平均を1つの値にまとめる（$f''''$ が連続なら）：</p>
+
+<div class="def" id="sym-second-diff"><span class="label">記号：$D^2f(x;h)$（2階差分）</span>
+<p><strong>①読み方</strong>：「ディー・にじょう・エフ」、または「にかいさぶん」。</p>
+<p><strong>②日本語での意味</strong>：<strong>左・中・右の3点の値を $1:(-2):1$ の重みで足して $h^2$ で割ったもの</strong>。$f''(x)$ の近似（図2.5）。</p>
+<p><strong>③省略していない書き方</strong>：
+$$ D^2f(x;h):=\frac{f(x+h)-2f(x)+f(x-h)}{h^2},\qquad D^2f(x;h)-f''(x)=\frac{h^2}{12}f''''(\bar c)\quad(\bar c\in(x-h,x+h)). $$
+<small>（誤差の式は、上の等式で $\frac{h^2}{24}\cdot2f''''(\bar c)=\frac{h^2}{12}f''''(\bar c)$ としたもの）</small>
+$D^2f=\dfrac{D_{+}f(x;h)-D_{+}f(x-h;h)}{h}$（前進差分の差を、もう一度 $h$ で割る：$\frac1h\Bigl(\frac{f(x+h)-f(x)}{h}-\frac{f(x)-f(x-h)}{h}\Bigr)$ を通分すると分子が上の形になる）。</p>
+<p><strong>④どこで出会うか</strong>：熱方程式・波動方程式・ラプラス方程式の数値解法（有限差分法、第50回）、曲率の近似。</p>
+</div>
+
+<figure class="fig" id="fig-2-5">
+<svg viewBox="0 0 440 332" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="差分公式の重み" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>差分公式の重み</title>
+<rect x="0" y="0" width="440" height="332" fill="#fffdf7"/>
+<rect x="8" y="14" width="424" height="94" rx="4" fill="#fffdf7" stroke="#ddd6c8" stroke-width="1"/>
+<text x="18.0" y="68.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">前進差分</text>
+<line x1="168.0" y1="70.0" x2="420.0" y2="70.0" stroke="#6b645a" stroke-width="1.4"/>
+<circle cx="285.0" cy="70.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="285.0" y="46.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1/h</text>
+<text x="285.0" y="98.0" font-size="14" fill="#2a2723" text-anchor="middle">x</text>
+<circle cx="370.0" cy="70.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="370.0" y="46.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">+1/h</text>
+<text x="370.0" y="98.0" font-size="14" fill="#2a2723" text-anchor="middle">x+h</text>
+<rect x="8" y="118" width="424" height="94" rx="4" fill="#fffdf7" stroke="#ddd6c8" stroke-width="1"/>
+<text x="18.0" y="172.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">中心差分</text>
+<line x1="168.0" y1="174.0" x2="420.0" y2="174.0" stroke="#6b645a" stroke-width="1.4"/>
+<circle cx="200.0" cy="174.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="200.0" y="150.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1/(2h)</text>
+<text x="200.0" y="202.0" font-size="14" fill="#2a2723" text-anchor="middle">x−h</text>
+<circle cx="285.0" cy="174.0" r="6" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="285.0" cy="174.0" r="6" fill="#fff" stroke="#a8322a" stroke-width="1.8"/>
+<text x="285.0" y="150.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">0</text>
+<text x="285.0" y="202.0" font-size="14" fill="#2a2723" text-anchor="middle">x</text>
+<circle cx="370.0" cy="174.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="370.0" y="150.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">+1/(2h)</text>
+<text x="370.0" y="202.0" font-size="14" fill="#2a2723" text-anchor="middle">x+h</text>
+<rect x="8" y="222" width="424" height="94" rx="4" fill="#fffdf7" stroke="#ddd6c8" stroke-width="1"/>
+<text x="18.0" y="276.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">2 階の差分</text>
+<line x1="168.0" y1="278.0" x2="420.0" y2="278.0" stroke="#6b645a" stroke-width="1.4"/>
+<circle cx="200.0" cy="278.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="200.0" y="254.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">1/h²</text>
+<text x="200.0" y="306.0" font-size="14" fill="#2a2723" text-anchor="middle">x−h</text>
+<circle cx="285.0" cy="278.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="285.0" y="254.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">−2/h²</text>
+<text x="285.0" y="306.0" font-size="14" fill="#2a2723" text-anchor="middle">x</text>
+<circle cx="370.0" cy="278.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="370.0" y="254.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">1/h²</text>
+<text x="370.0" y="306.0" font-size="14" fill="#2a2723" text-anchor="middle">x+h</text>
+</svg>
+<figcaption><strong>図 2.5</strong>　3 つの差分公式を「どの点の値に、どんな重みをかけて足すか」で描いた。前進差分は $f(x+h)$ に $+\frac1h$、$f(x)$ に $-\frac1h$。中心差分は左右の点に $\mp\frac1{2h}$ で、真ん中の $f(x)$ には重みがない。2 階の差分は重みの和が $0$ で、$(1,-2,1)/h^2$ という並びになる。</figcaption>
+</figure>
+<p>確かめ。$f=e^x$、$x=1$、$h=0.1$。$e^{1.1}-2e+e^{0.9}=3.0041660-5.4365637+2.4596031=0.0272054$、$\div0.01$ で $2.72054$。真の値 $f''(1)=e=2.71828$ との差は $0.00227$、式の右辺 $\dfrac{0.01}{12}e=0.002265$。<strong>一致</strong>。$f=x^4$、$x=1$、$h=0.1$ でも、$\dfrac{1.4641-2+0.6561}{0.01}=12.02$（真の値 $12$）、誤差 $0.02=\dfrac{0.01}{12}\cdot24$ で一致する（演習問題 問10）。</p>
+<p>誤差は $h^2$ に比例するので、<strong>2階差分も2次精度</strong>である。</p>
+
+<div class="why"><span class="label">ひとことで</span>
+<p>前進差分は、テイラーの定理から誤差が $\dfrac h2f''(c)$（$h$ に比例、1次精度）。左右対称な中心差分は、$h^2$ の項が打ち消し合って誤差が $\dfrac{h^2}6f'''(\bar c)$（$h^2$ に比例、2次精度）。次数は、$h$ を半分にしたときの誤差の比 $2^p$ から実験でも読み取れる。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>丸め誤差との綱引き：「$h$ は小さいほどよい」は誤り</h2>
+
+<h3 id="sec-3-1"><span class="no">3.1</span>動機：$h=10^{-16}$ にしたら、答えは $0$ になった</h3>
+<p>第2章の打切り誤差は、$h\to0$ で $0$ に近づく。ならば $h$ をどんどん小さくすればよいはずである。計算機で試す。</p>
+<table class="tb">
+<tr><th>$h$</th><th>前進差分の誤差 $|D_{+}f-e|$</th><th>中心差分の誤差 $|D_{0}f-e|$</th></tr>
+<tr><td>$10^{-1}$</td><td>$1.4\times10^{-1}$</td><td>$4.5\times10^{-3}$</td></tr>
+<tr><td>$10^{-2}$</td><td>$1.4\times10^{-2}$</td><td>$4.5\times10^{-5}$</td></tr>
+<tr><td>$10^{-4}$</td><td>$1.4\times10^{-4}$</td><td>$4.5\times10^{-9}$</td></tr>
+<tr><td>$10^{-6}$</td><td>$1.4\times10^{-6}$</td><td>$1.6\times10^{-10}$</td></tr>
+<tr><td>$10^{-8}$</td><td>$6.6\times10^{-9}$</td><td>$6.6\times10^{-9}$</td></tr>
+<tr><td>$10^{-10}$</td><td>$1.5\times10^{-6}$</td><td>$6.7\times10^{-7}$</td></tr>
+<tr><td>$10^{-12}$</td><td>$4.3\times10^{-4}$</td><td>$2.1\times10^{-4}$</td></tr>
+<tr><td>$10^{-14}$</td><td>$9.3\times10^{-3}$</td><td>$9.3\times10^{-3}$</td></tr>
+<tr><td>$10^{-16}$</td><td>$2.718\ldots$</td><td>$2.718\ldots$</td></tr>
+</table>
+<p>（$f=e^x$、$x=1$、倍精度で本当に計算した値。真の値は $e$。）</p>
+<p>誤差は $h=10^{-5}$ のあたりまで予想どおり減るが、そこから<strong>増える</strong>。$h=10^{-16}$ では、誤差が $2.718\ldots=e$ そのもの、つまり差分商の値が $0$ になっている。理由を式で追う。</p>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>丸め誤差を見積もる</h3>
+<p>計算機で得る $f$ の値は、真の値に、相対で最大 $u$ の丸め誤差が入っている（1.3）と仮定する：$\tilde f(x)=f(x)(1+\delta)$、$|\delta|\le u$。</p>
+<p>前進差分の分子 $\tilde f(x+h)-\tilde f(x)$ の誤差は、1.4 の桁落ちの式で $x,y$ を $f(x+h),f(x)$ に替えると、</p>
+<p>$$ \bigl|\tilde f(x+h)-\tilde f(x)-\bigl(f(x+h)-f(x)\bigr)\bigr|\le u\bigl(|f(x+h)|+|f(x)|\bigr)\approx2u\,|f(x)|. $$
+<small>（理由：1.4 の不等式。$h$ が小さいと $f(x+h)\approx f(x)$ なので、右辺は $2u|f(x)|$ にほぼ等しい。引き算そのものは、近い数同士ならほぼ厳密に行われるので、誤差は引く前の丸めだけ）</small></p>
+<p>これを $h$ で割ると、差分商の丸め誤差は
+$$ E_{\text{丸め}}\lesssim\frac{2u\,|f(x)|}{h}. $$
+<small>（理由：分子の誤差を $h$ で割る。$\lesssim$ は「ほぼ以下」）</small></p>
+<p><strong>$h$ が小さいほど、分母が小さくなって、丸め誤差が拡大する</strong>。これが桁落ち（1.4）の定量的な形である。中心差分は、分子が同じく $2u|f|$ 程度だが分母が $2h$ なので $E_{\text{丸め}}\lesssim\dfrac{u|f(x)|}{h}$。</p>
+<p>全体の誤差は、打切り誤差と丸め誤差の和以下である（三角不等式）：</p>
+<p>$$ \text{前進：}\ |E(h)|\lesssim\frac{|f''|}{2}\,h+\frac{2u|f|}{h},\qquad \text{中心：}\ |E(h)|\lesssim\frac{|f'''|}{6}\,h^2+\frac{u|f|}{h}. $$
+<small>（理由：全誤差＝打切り誤差＋丸め誤差。第1項は2.3, 2.4、第2項は上）</small></p>
+<p>$f=e^x$、$x=1$（$f=f'=f''=f'''=e$）なら、中心差分は $E(h)\lesssim\dfrac e6h^2+\dfrac{ue}{h}$。これを図3.1 に描く。</p>
+<figure class="fig" id="fig-3-1">
+<svg viewBox="0 0 440 316" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="誤差のV字" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>誤差のV字</title>
+<rect x="0" y="0" width="440" height="316" fill="#fffdf7"/>
+<line x1="115.9" y1="264.0" x2="115.9" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="192.6" y1="264.0" x2="192.6" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="269.4" y1="264.0" x2="269.4" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="346.1" y1="264.0" x2="346.1" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="235.7" x2="396.0" y2="235.7" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="197.9" x2="396.0" y2="197.9" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="160.2" x2="396.0" y2="160.2" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="122.4" x2="396.0" y2="122.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="84.6" x2="396.0" y2="84.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="46.9" x2="396.0" y2="46.9" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="264.0" x2="396.0" y2="264.0" stroke="#2a2723" stroke-width="1.4"/>
+<line x1="66.0" y1="264.0" x2="66.0" y2="28.0" stroke="#2a2723" stroke-width="1.4"/>
+<text x="115.9" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−8</tspan></text>
+<text x="192.6" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−6</tspan></text>
+<text x="269.4" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−4</tspan></text>
+<text x="346.1" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−2</tspan></text>
+<text x="60.0" y="240.7" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−12</tspan></text>
+<text x="60.0" y="202.9" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−10</tspan></text>
+<text x="60.0" y="165.2" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−8</tspan></text>
+<text x="60.0" y="127.4" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−6</tspan></text>
+<text x="60.0" y="89.6" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−4</tspan></text>
+<text x="60.0" y="51.9" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−2</tspan></text>
+<text x="396.0" y="308.0" font-size="14" fill="#2a2723" text-anchor="end">刻み幅 h</text>
+<text x="60.0" y="22.0" font-size="14" fill="#2a2723" text-anchor="start">誤差の見積り</text>
+<polyline points="170.5,263.9 173.2,261.2 176.0,258.5 178.8,255.8 181.5,253.1 184.2,250.4 187.0,247.7 189.8,245.0 192.5,242.3 195.2,239.6 198.0,236.9 200.8,234.2 203.5,231.5 206.3,228.8 209.0,226.1 211.8,223.4 214.5,220.6 217.2,217.9 220.0,215.2 222.8,212.5 225.5,209.8 228.2,207.1 231.0,204.4 233.8,201.7 236.5,199.0 239.2,196.3 242.0,193.6 244.8,190.9 247.5,188.2 250.2,185.5 253.0,182.8 255.8,180.1 258.5,177.4 261.2,174.6 264.0,171.9 266.8,169.2 269.5,166.5 272.2,163.8 275.0,161.1 277.8,158.4 280.5,155.7 283.2,153.0 286.0,150.3 288.8,147.6 291.5,144.9 294.2,142.2 297.0,139.5 299.8,136.8 302.5,134.1 305.2,131.3 308.0,128.6 310.8,125.9 313.5,123.2 316.2,120.5 319.0,117.8 321.8,115.1 324.5,112.4 327.2,109.7 330.0,107.0 332.8,104.3 335.5,101.6 338.2,98.9 341.0,96.2 343.8,93.5 346.5,90.8 349.2,88.0 352.0,85.3 354.8,82.6 357.5,79.9 360.2,77.2 363.0,74.5 365.8,71.8 368.5,69.1 371.2,66.4 374.0,63.7 376.8,61.0 379.5,58.3 382.2,55.6 385.0,52.9 387.8,50.2 390.5,47.5 393.2,44.8 396.0,42.0" fill="none" stroke="#5f7f4f" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="66.0,126.6 68.8,127.9 71.5,129.3 74.2,130.6 77.0,132.0 79.8,133.3 82.5,134.7 85.2,136.0 88.0,137.4 90.7,138.7 93.5,140.1 96.3,141.4 99.0,142.8 101.8,144.1 104.5,145.5 107.2,146.9 110.0,148.2 112.8,149.6 115.5,150.9 118.3,152.3 121.0,153.6 123.7,155.0 126.5,156.3 129.2,157.7 132.0,159.0 134.8,160.4 137.5,161.7 140.2,163.1 143.0,164.4 145.8,165.8 148.5,167.2 151.2,168.5 154.0,169.9 156.8,171.2 159.5,172.6 162.2,173.9 165.0,175.3 167.8,176.6 170.5,178.0 173.2,179.3 176.0,180.7 178.8,182.0 181.5,183.4 184.2,184.7 187.0,186.1 189.8,187.4 192.5,188.8 195.2,190.2 198.0,191.5 200.8,192.9 203.5,194.2 206.3,195.6 209.0,196.9 211.8,198.3 214.5,199.6 217.2,201.0 220.0,202.3 222.8,203.7 225.5,205.0 228.2,206.4 231.0,207.7 233.8,209.1 236.5,210.4 239.2,211.8 242.0,213.2 244.8,214.5 247.5,215.9 250.2,217.2 253.0,218.6 255.8,219.9 258.5,221.3 261.2,222.6 264.0,224.0 266.8,225.3 269.5,226.7 272.2,228.0 275.0,229.4 277.8,230.7 280.5,232.1 283.2,233.5 286.0,234.8 288.8,236.2 291.5,237.5 294.2,238.9 297.0,240.2 299.8,241.6 302.5,242.9 305.2,244.3 308.0,245.6 310.8,247.0 313.5,248.3 316.2,249.7 319.0,251.0 321.8,252.4 324.5,253.7 327.2,255.1 330.0,256.5 332.8,257.8 335.5,259.2 338.2,260.5 341.0,261.9 343.8,263.2" fill="none" stroke="#b07a3e" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="66.0,126.6 68.8,127.9 71.5,129.3 74.2,130.6 77.0,132.0 79.8,133.3 82.5,134.7 85.2,136.0 88.0,137.4 90.7,138.7 93.5,140.1 96.3,141.4 99.0,142.8 101.8,144.1 104.5,145.5 107.2,146.9 110.0,148.2 112.8,149.6 115.5,150.9 118.3,152.3 121.0,153.6 123.7,155.0 126.5,156.3 129.2,157.7 132.0,159.0 134.8,160.4 137.5,161.7 140.2,163.1 143.0,164.4 145.8,165.8 148.5,167.2 151.2,168.5 154.0,169.9 156.8,171.2 159.5,172.6 162.2,173.9 165.0,175.3 167.8,176.6 170.5,178.0 173.2,179.3 176.0,180.7 178.8,182.0 181.5,183.4 184.2,184.7 187.0,186.1 189.8,187.4 192.5,188.8 195.2,190.1 198.0,191.5 200.8,192.8 203.5,194.1 206.3,195.4 209.0,196.7 211.8,197.9 214.5,199.0 217.2,200.0 220.0,200.8 222.8,201.3 225.5,201.4 228.2,201.1 231.0,200.2 233.8,198.9 236.5,197.2 239.2,195.1 242.0,192.9 244.8,190.4 247.5,187.9 250.2,185.3 253.0,182.7 255.8,180.0 258.5,177.3 261.2,174.6 264.0,171.9 266.8,169.2 269.5,166.5 272.2,163.8 275.0,161.1 277.8,158.4 280.5,155.7 283.2,153.0 286.0,150.3 288.8,147.6 291.5,144.9 294.2,142.2 297.0,139.5 299.8,136.8 302.5,134.1 305.2,131.3 308.0,128.6 310.8,125.9 313.5,123.2 316.2,120.5 319.0,117.8 321.8,115.1 324.5,112.4 327.2,109.7 330.0,107.0 332.8,104.3 335.5,101.6 338.2,98.9 341.0,96.2 343.8,93.5 346.5,90.8 349.2,88.0 352.0,85.3 354.8,82.6 357.5,79.9 360.2,77.2 363.0,74.5 365.8,71.8 368.5,69.1 371.2,66.4 374.0,63.7 376.8,61.0 379.5,58.3 382.2,55.6 385.0,52.9 387.8,50.2 390.5,47.5 393.2,44.8 396.0,42.0" fill="none" stroke="#a8322a" stroke-width="3.2" stroke-linejoin="round"/>
+<line x1="224.9" y1="264.0" x2="224.9" y2="201.4" stroke="#6b645a" stroke-width="1.4" stroke-dasharray="4 3"/>
+<circle cx="224.9" cy="201.4" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="231.9" y="217.4" width="118.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="234.9" y="231.4" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">いちばん小さい点</text>
+<rect x="231.9" y="237.4" width="106.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="234.9" y="251.4" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">h ≈ 7×10⁻⁶</text>
+<rect x="263.9" y="29.4" width="123.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="384.5" y="43.4" font-size="14" fill="#5f7f4f" text-anchor="end" font-weight="bold">打切り誤差 ∝ h²</text>
+<rect x="74.5" y="108.2" width="118.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="77.5" y="122.2" font-size="14" fill="#7a5420" text-anchor="start" font-weight="bold">丸め誤差 ∝ 1/h</text>
+</svg>
+<figcaption><strong>図 3.1</strong>　中心差分の誤差の<strong>最悪の見積り</strong> $E(h)=\frac{e}{6}h^2+\frac{ue}{h}$ を、両対数で描いた（$u=2^{-53}$）。緑（打切り誤差）は右上がり、橙（丸め誤差）は左上がり、足した朱が V 字になる。底が最適な $h$ で、それより小さくしても誤差は<strong>増える</strong>。</figcaption>
+</figure>
+
+<h3 id="sec-3-3"><span class="no">3.3</span>V字の底：最適な $h$ を求める</h3>
+<p>全誤差の見積もりは $h$ の関数で、小さい $h$ では $1/h$ が効いて増え、大きい $h$ では $h$ や $h^2$ が効いて増える。最小点は、<a href="08_第8回_微分を使う・近似と極値.html#sym-critical-point">第8回の臨界点</a>（微分が $0$）で求まる。</p>
+<p><strong>中心差分</strong>：$E(h)=a\,h^2+\dfrac bh$ とおく（$a:=\frac{|f'''|}{6}$、$b:=u|f|$）。</p>
+<ol>
+<li>$h$ で微分する：$E'(h)=2a\,h-\dfrac{b}{h^2}$。<small>（$h^2\to2h$、$h^{-1}\to-h^{-2}$）</small></li>
+<li>$E'(h)=0$ とおく：$2a\,h=\dfrac b{h^2}$。</li>
+<li>両辺に $h^2$ を掛ける：$2a\,h^3=b$。</li>
+<li>$h$ について解く：$h_*=\Bigl(\dfrac{b}{2a}\Bigr)^{1/3}=\Bigl(\dfrac{3u|f|}{|f'''|}\Bigr)^{1/3}$。<small>（理由：$\frac b{2a}=\frac{u|f|}{|f'''|/3}$）</small></li>
+</ol>
+<p>この $h_*$ で $E'$ は負から正に変わるので（$h$ が小さい側で $E'\lt0$、大きい側で $E'\gt0$）最小である。$f=e^x$、$x=1$ なら $|f|=|f'''|=e$ で、
+$$ h_*=(3u)^{1/3}=(3.33\times10^{-16})^{1/3}=6.9\times10^{-6}. $$
+最小の誤差は、$E(h_*)=a\,h_*^2+\dfrac b{h_*}$ で、2のステップから $a\,h_*^3=\dfrac b2$ すなわち $a\,h_*^2=\dfrac b{2h_*}$ だから、$E(h_*)=\dfrac{b}{2h_*}+\dfrac b{h_*}=\dfrac{3b}{2h_*}=\dfrac{3\cdot ue}{2\cdot6.9\times10^{-6}}=6.5\times10^{-11}$。<small>（$ue=1.11\times10^{-16}\times2.718=3.0\times10^{-16}$）</small></p>
+<p><strong>前進差分</strong>：$E(h)=\alpha h+\dfrac\beta h$、$\alpha=\frac{|f''|}{2}$、$\beta=2u|f|$。同じ手順で $E'=\alpha-\dfrac{\beta}{h^2}=0$ から $h_*=\sqrt{\beta/\alpha}=\sqrt{\dfrac{4u|f|}{|f''|}}$。$f=e^x$ なら $h_*=2\sqrt u=2.1\times10^{-8}$、$E(h_*)=2\sqrt{\alpha\beta}=2e\sqrt u=5.7\times10^{-8}$。</p>
+
+<table class="tb">
+<tr><th>公式</th><th>最適な $h_*$ の目安</th><th>そのときの最小誤差の目安</th><th>$e^x$ の場合の見積もり</th></tr>
+<tr><td>前進差分（1次）</td><td>$\sim u^{1/2}\approx10^{-8}$</td><td>$\sim u^{1/2}\approx10^{-8}$</td><td>$h_*\approx2\times10^{-8}$、$E\approx6\times10^{-8}$</td></tr>
+<tr><td>中心差分（2次）</td><td>$\sim u^{1/3}\approx10^{-5}$</td><td>$\sim u^{2/3}\approx10^{-11}$</td><td>$h_*\approx7\times10^{-6}$、$E\approx7\times10^{-11}$</td></tr>
+</table>
+<p>（この見積もりは<strong>最悪の場合</strong>。丸め誤差が毎回最大に出るとは限らないので、実測はこれより小さい：図3.2、$e^x$ では前進 $6.6\times10^{-9}$、中心 $5.9\times10^{-11}$。）</p>
+<figure class="fig" id="fig-3-2">
+<svg viewBox="0 0 440 316" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="実測のV字" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>実測のV字</title>
+<rect x="0" y="0" width="440" height="316" fill="#fffdf7"/>
+<line x1="72.0" y1="264.0" x2="72.0" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="151.5" y1="264.0" x2="151.5" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="231.0" y1="264.0" x2="231.0" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="310.5" y1="264.0" x2="310.5" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="390.0" y1="264.0" x2="390.0" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="244.3" x2="396.0" y2="244.3" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="205.0" x2="396.0" y2="205.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="165.7" x2="396.0" y2="165.7" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="126.3" x2="396.0" y2="126.3" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="87.0" x2="396.0" y2="87.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="47.7" x2="396.0" y2="47.7" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="264.0" x2="396.0" y2="264.0" stroke="#2a2723" stroke-width="1.4"/>
+<line x1="66.0" y1="264.0" x2="66.0" y2="28.0" stroke="#2a2723" stroke-width="1.4"/>
+<text x="72.0" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−16</tspan></text>
+<text x="151.5" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−12</tspan></text>
+<text x="231.0" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−8</tspan></text>
+<text x="310.5" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−4</tspan></text>
+<text x="390.0" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">0</tspan></text>
+<text x="60.0" y="249.3" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−10</tspan></text>
+<text x="60.0" y="210.0" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−8</tspan></text>
+<text x="60.0" y="170.7" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−6</tspan></text>
+<text x="60.0" y="131.3" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−4</tspan></text>
+<text x="60.0" y="92.0" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−2</tspan></text>
+<text x="60.0" y="52.7" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">0</tspan></text>
+<text x="396.0" y="308.0" font-size="14" fill="#2a2723" text-anchor="end">刻み幅 h</text>
+<text x="60.0" y="22.0" font-size="14" fill="#2a2723" text-anchor="start">実際の誤差 |E|</text>
+<polyline points="66.0,26.4 68.7,29.1 71.5,31.9 74.2,34.6 77.0,37.3 79.8,40.0 82.5,42.7 85.2,45.5 88.0,48.2 90.8,50.9 93.5,53.6 96.2,56.3 99.0,59.1 101.8,61.8 104.5,64.5 107.2,67.2 110.0,69.9 112.8,72.7 115.5,75.4 118.2,78.1 121.0,80.8 123.8,83.5 126.5,86.3 129.2,89.0 132.0,91.7 134.8,94.4 137.5,97.1 140.2,99.9 143.0,102.6 145.8,105.3 148.5,108.0 151.2,110.7 154.0,113.5 156.8,116.2 159.5,118.9 162.2,121.6 165.0,124.4 167.8,127.1 170.5,129.8 173.2,132.5 176.0,135.2 178.8,138.0 181.5,140.7 184.2,143.4 187.0,146.1 189.8,148.8 192.5,151.6 195.2,154.3 198.0,157.0 200.8,159.7 203.5,162.4 206.2,165.2 209.0,167.9 211.8,170.6 214.5,173.3 217.2,176.0 220.0,178.6 222.8,181.2 225.5,183.7 228.2,186.0 231.0,187.9 233.8,189.3 236.5,190.0 239.2,189.9 242.0,189.0 244.8,187.3 247.5,185.3 250.2,182.9 253.0,180.4 255.7,177.8 258.5,175.1 261.2,172.4 264.0,169.7 266.8,167.0 269.5,164.3 272.2,161.6 275.0,158.8 277.8,156.1 280.5,153.4 283.2,150.7 286.0,148.0 288.8,145.2 291.5,142.5 294.2,139.8 297.0,137.1 299.8,134.4 302.5,131.6 305.2,128.9 308.0,126.2 310.8,123.5 313.5,120.8 316.2,118.0 319.0,115.3 321.8,112.6 324.5,109.9 327.2,107.2 330.0,104.4 332.7,101.7 335.5,99.0 338.2,96.3 341.0,93.6 343.8,90.8 346.5,88.1 349.2,85.4 352.0,82.7 354.8,80.0 357.5,77.2 360.2,74.5 363.0,71.8 365.8,69.1 368.5,66.4 371.2,63.6 374.0,60.9 376.8,58.2 379.5,55.5 382.2,52.7 385.0,50.0 387.8,47.3 390.5,44.6 393.2,41.9 396.0,39.1" fill="none" stroke="#e3c9a6" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round"/>
+<polyline points="66.0,32.3 68.7,35.1 71.5,37.8 74.2,40.5 77.0,43.2 79.8,45.9 82.5,48.7 85.2,51.4 88.0,54.1 90.8,56.8 93.5,59.5 96.2,62.3 99.0,65.0 101.8,67.7 104.5,70.4 107.2,73.1 110.0,75.9 112.8,78.6 115.5,81.3 118.2,84.0 121.0,86.7 123.8,89.5 126.5,92.2 129.2,94.9 132.0,97.6 134.8,100.3 137.5,103.1 140.2,105.8 143.0,108.5 145.8,111.2 148.5,113.9 151.2,116.7 154.0,119.4 156.8,122.1 159.5,124.8 162.2,127.6 165.0,130.3 167.8,133.0 170.5,135.7 173.2,138.4 176.0,141.2 178.8,143.9 181.5,146.6 184.2,149.3 187.0,152.0 189.8,154.8 192.5,157.5 195.2,160.2 198.0,162.9 200.8,165.6 203.5,168.4 206.2,171.1 209.0,173.8 211.8,176.5 214.5,179.2 217.2,182.0 220.0,184.7 222.8,187.4 225.5,190.1 228.2,192.8 231.0,195.6 233.8,198.3 236.5,201.0 239.2,203.7 242.0,206.4 244.8,209.2 247.5,211.9 250.2,214.6 253.0,217.3 255.7,220.1 258.5,222.8 261.2,225.5 264.0,228.2 266.8,230.9 269.5,233.6 272.2,236.4 275.0,239.0 277.8,241.7 280.5,244.2 283.2,246.3 286.0,247.7 288.8,247.8 291.5,246.0 294.2,242.5 297.0,237.9 299.8,232.8 302.5,227.5 305.2,222.2 308.0,216.7 310.8,211.3 313.5,205.9 316.2,200.4 319.0,195.0 321.8,189.5 324.5,184.1 327.2,178.7 330.0,173.2 332.7,167.8 335.5,162.3 338.2,156.9 341.0,151.5 343.8,146.0 346.5,140.6 349.2,135.1 352.0,129.7 354.8,124.2 357.5,118.8 360.2,113.4 363.0,107.9 365.8,102.5 368.5,97.0 371.2,91.6 374.0,86.2 376.8,80.7 379.5,75.3 382.2,69.8 385.0,64.4 387.8,59.0 390.5,53.5 393.2,48.1 396.0,42.6" fill="none" stroke="#e0a9a3" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round"/>
+<polyline points="390.0,42.0 385.1,48.3 380.1,54.0 375.1,59.3 370.2,64.4 365.2,69.5 360.2,74.5 355.2,79.4 350.3,84.4 345.3,89.3 340.3,94.2 335.4,99.1 330.4,104.0 325.4,109.0 320.5,113.9 315.5,118.8 310.5,123.7 305.5,128.6 300.6,133.5 295.6,138.5 290.6,143.4 285.7,148.3 280.7,153.2 275.7,158.1 270.8,163.0 265.8,168.0 260.8,172.9 255.8,177.8 250.9,182.5 245.9,187.5 240.9,190.4 236.0,192.1 231.0,208.5 226.0,195.6 221.1,190.1 216.1,184.9 211.1,178.8 206.2,183.2 201.2,169.4 196.2,164.5 191.2,161.9 186.3,156.2 181.3,159.5 176.3,137.8 171.4,135.9 166.4,128.9 161.4,127.6 156.5,117.7 151.5,113.8 146.5,109.6 141.5,112.5 136.6,104.6 131.6,113.4 126.6,102.3 121.7,89.0 116.7,95.3 111.7,87.6 106.8,76.7 101.8,73.2 96.8,78.0 91.8,55.7 86.9,54.7 81.9,68.2 76.9,40.6 72.0,39.1" fill="none" stroke="#b07a3e" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="390.0" cy="42.0" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="385.1" cy="48.3" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="380.1" cy="54.0" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="375.1" cy="59.3" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="370.2" cy="64.4" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="365.2" cy="69.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="360.2" cy="74.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="355.2" cy="79.4" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="350.3" cy="84.4" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="345.3" cy="89.3" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="340.3" cy="94.2" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="335.4" cy="99.1" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="330.4" cy="104.0" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="325.4" cy="109.0" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="320.5" cy="113.9" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="315.5" cy="118.8" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="310.5" cy="123.7" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="305.5" cy="128.6" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="300.6" cy="133.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="295.6" cy="138.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="290.6" cy="143.4" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="285.7" cy="148.3" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="280.7" cy="153.2" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="275.7" cy="158.1" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="270.8" cy="163.0" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="265.8" cy="168.0" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="260.8" cy="172.9" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="255.8" cy="177.8" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="250.9" cy="182.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="245.9" cy="187.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="240.9" cy="190.4" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="236.0" cy="192.1" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="231.0" cy="208.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="226.0" cy="195.6" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="221.1" cy="190.1" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="216.1" cy="184.9" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="211.1" cy="178.8" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="206.2" cy="183.2" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="201.2" cy="169.4" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="196.2" cy="164.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="191.2" cy="161.9" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="186.3" cy="156.2" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="181.3" cy="159.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="176.3" cy="137.8" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="171.4" cy="135.9" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="166.4" cy="128.9" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="161.4" cy="127.6" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="156.5" cy="117.7" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="151.5" cy="113.8" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="146.5" cy="109.6" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="141.5" cy="112.5" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="136.6" cy="104.6" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="131.6" cy="113.4" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="126.6" cy="102.3" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="121.7" cy="89.0" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="116.7" cy="95.3" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="111.7" cy="87.6" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="106.8" cy="76.7" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="101.8" cy="73.2" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="96.8" cy="78.0" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="91.8" cy="55.7" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="86.9" cy="54.7" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="81.9" cy="68.2" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="76.9" cy="40.6" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="72.0" cy="39.1" r="2.6" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<polyline points="390.0,54.0 385.1,64.1 380.1,74.1 375.1,83.9 370.2,93.8 365.2,103.6 360.2,113.4 355.2,123.3 350.3,133.1 345.3,142.9 340.3,152.8 335.4,162.6 330.4,172.4 325.4,182.3 320.5,192.1 315.5,201.9 310.5,211.8 305.5,221.6 300.6,231.3 295.6,241.5 290.6,248.9 285.7,251.6 280.7,253.8 275.7,250.6 270.8,240.1 265.8,231.0 260.8,252.8 255.8,246.6 250.9,248.9 245.9,217.0 240.9,209.0 236.0,207.4 231.0,208.5 226.0,205.5 221.1,190.1 216.1,184.9 211.1,208.5 206.2,183.2 201.2,190.1 196.2,184.9 191.2,169.1 186.3,166.4 181.3,159.5 176.3,143.4 171.4,145.6 166.4,135.4 161.4,141.9 156.5,137.8 151.5,120.0 146.5,116.6 141.5,120.6 136.6,137.8 131.6,113.4 126.6,102.3 121.7,89.0 116.7,88.2 111.7,87.6 106.8,76.7 101.8,73.2 96.8,78.0 91.8,62.9 86.9,74.0 81.9,68.2 76.9,47.4 72.0,39.1" fill="none" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="390.0" cy="54.0" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="385.1" cy="64.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="380.1" cy="74.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="375.1" cy="83.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="370.2" cy="93.8" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="365.2" cy="103.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="360.2" cy="113.4" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="355.2" cy="123.3" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="350.3" cy="133.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="345.3" cy="142.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="340.3" cy="152.8" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="335.4" cy="162.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="330.4" cy="172.4" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="325.4" cy="182.3" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="320.5" cy="192.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="315.5" cy="201.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="310.5" cy="211.8" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="305.5" cy="221.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="300.6" cy="231.3" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="295.6" cy="241.5" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="290.6" cy="248.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="285.7" cy="251.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="280.7" cy="253.8" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="275.7" cy="250.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="270.8" cy="240.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="265.8" cy="231.0" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="260.8" cy="252.8" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="255.8" cy="246.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="250.9" cy="248.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="245.9" cy="217.0" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="240.9" cy="209.0" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="236.0" cy="207.4" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="231.0" cy="208.5" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="226.0" cy="205.5" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="221.1" cy="190.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="216.1" cy="184.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="211.1" cy="208.5" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="206.2" cy="183.2" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="201.2" cy="190.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="196.2" cy="184.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="191.2" cy="169.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="186.3" cy="166.4" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="181.3" cy="159.5" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="176.3" cy="143.4" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="171.4" cy="145.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="166.4" cy="135.4" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="161.4" cy="141.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="156.5" cy="137.8" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="151.5" cy="120.0" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="146.5" cy="116.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="141.5" cy="120.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="136.6" cy="137.8" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="131.6" cy="113.4" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="126.6" cy="102.3" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="121.7" cy="89.0" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="116.7" cy="88.2" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="111.7" cy="87.6" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="106.8" cy="76.7" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="101.8" cy="73.2" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="96.8" cy="78.0" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="91.8" cy="62.9" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="86.9" cy="74.0" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="81.9" cy="68.2" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="76.9" cy="47.4" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="72.0" cy="39.1" r="2.6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="76.0" y1="213.0" x2="106.0" y2="213.0" stroke="#b07a3e" stroke-width="2.6"/>
+<text x="114.0" y="218.0" font-size="14" fill="#2a2723" text-anchor="start">前進差分（実測）</text>
+<line x1="76.0" y1="233.0" x2="106.0" y2="233.0" stroke="#a8322a" stroke-width="2.6"/>
+<text x="114.0" y="238.0" font-size="14" fill="#2a2723" text-anchor="start">中心差分（実測）</text>
+<line x1="76.0" y1="253.0" x2="106.0" y2="253.0" stroke="#c9ad8a" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="114.0" y="258.0" font-size="14" fill="#2a2723" text-anchor="start">最悪見積り（点線）</text>
+</svg>
+<figcaption><strong>図 3.2</strong>　倍精度（$u=2^{-53}$）で本当に計算した誤差。$h=10^{-k/4}$（$k=0,1,\dots,64$）の 65 個の点を結んだ。前進差分は $h\approx10^{-8}$ で最小（誤差 $\approx10^{-8}$）、中心差分は $h\approx10^{-5}\sim10^{-6}$ で最小（誤差 $\approx10^{-10}$）。左端では $x+h$ が $x$ と区別できなくなり、差分が $0$ になって誤差は $e$ に張りつく。点線は図 3.1 の最悪見積り。</figcaption>
+</figure>
+<p>読み取れること：<strong>高次の公式ほど、最適な $h_*$ が大きく、最小誤差が小さい</strong>。前進差分は精度が $10^{-8}$ までで、倍精度の16桁のうち半分しか使えていない。中心差分は $10^{-11}$ まで届く。</p>
+
+<h3 id="sec-3-4"><span class="no">3.4</span>$h$ が小さすぎると $x+h=x$：左端で何が起きるか</h3>
+<p>図3.2 の左端では、誤差が $e$ に張りつく。理由は、$x=1$ の近くで表せる数の間隔が $\varepsilon_{\mathrm{mach}}=2^{-52}$（1.3）で、$h$ が $\varepsilon_{\mathrm{mach}}$ の半分より小さいと、$x+h$ が最も近い表せる数、すなわち $x$ そのものに丸められてしまうからである（図3.3）。</p>
+<figure class="fig" id="fig-3-3">
+<svg viewBox="0 0 440 270" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="足しても変わらない" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>足しても変わらない</title>
+<rect x="0" y="0" width="440" height="270" fill="#fffdf7"/>
+<line x1="40.0" y1="100.0" x2="410.0" y2="100.0" stroke="#2a2723" stroke-width="1.4"/>
+<circle cx="80.0" cy="100.0" r="6" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="80.0" y="130.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<circle cx="220.0" cy="100.0" r="6" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="220.0" y="130.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1 + ε</text>
+<circle cx="360.0" cy="100.0" r="6" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="360.0" y="130.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1 + 2ε</text>
+<line x1="150.0" y1="60.0" x2="150.0" y2="112.0" stroke="#6b645a" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="150.0" y="50.0" font-size="14" fill="#6b645a" text-anchor="middle">中点（1 + ε/2）</text>
+<circle cx="122.0" cy="100.0" r="6" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="116.0" y="78.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">1 + 0.3ε</text>
+<line x1="116.0" y1="148.0" x2="86.0" y2="148.0" stroke="#a8322a" stroke-width="2"/><path d="M92.3 145.0 L86.0 148.0 L92.3 151.0" fill="none" stroke="#a8322a" stroke-width="2"/>
+<circle cx="185.0" cy="100.0" r="6" fill="#fff" stroke="#b07a3e" stroke-width="2"/>
+<text x="193.0" y="78.0" font-size="14" fill="#7a5420" text-anchor="start" font-weight="bold">1 + 0.75ε</text>
+<line x1="191.0" y1="148.0" x2="214.0" y2="148.0" stroke="#b07a3e" stroke-width="2"/><path d="M207.7 151.0 L214.0 148.0 L207.7 145.0" fill="none" stroke="#b07a3e" stroke-width="2"/>
+<text x="30.0" y="176.0" font-size="14" fill="#a8322a" text-anchor="start">1 に丸められる</text>
+<text x="200.0" y="176.0" font-size="14" fill="#7a5420" text-anchor="start">1 + ε に丸められる</text>
+<text x="14.0" y="208.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">h が ε/2 より小さいと x + h = x になり、</text>
+<text x="14.0" y="230.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">差分は 0 になる．</text>
+<text x="14.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="start">ε = 2⁻⁵² ≈ 2.2×10⁻¹⁶（1 の次に表せる数との差）</text>
+</svg>
+<figcaption><strong>図 3.3</strong>　1 のまわりの、表せる数（藍の点）は $\varepsilon$ ごとにしかない。その間にある数は、近い方の点へ丸められる。$x=1$ に $h\lt\varepsilon/2$ を足しても、結果は $1$ のまま。</figcaption>
+</figure>
+<p>$x+h=x$ なら $f(x+h)=f(x)$ で、差分商は $\dfrac{f(x)-f(x)}{h}=0$。真の値 $e$ との差は $e$。表の $10^{-16}$ の行がこの状態である。</p>
+
+<h3 id="sec-3-5"><span class="no">3.5</span>よくある誤解と、実用の目安</h3>
+<div class="warn"><span class="label">よくある誤解</span>
+<ul>
+<li><strong>「$h$ は小さいほど正確」は誤り。</strong>打切り誤差だけを見た結論で、丸め誤差が $1/h$ で増えることを見落としている。底を過ぎると逆効果になる。</li>
+<li><strong>「倍精度なら誤差は $10^{-16}$」は誤り。</strong>数値微分では、前進差分で $10^{-8}$、中心差分で $10^{-11}$ 程度が限界。微分は「誤差を拡大する」操作で、引き算と $h$ での割り算を含むため。</li>
+<li><strong>「関数の評価誤差は $u$」とは限らない。</strong>測定値のノイズは $u$ よりはるかに大きい。ノイズが $\eta$ なら、$u$ を $\eta/|f|$ に読みかえた同じ式になり、最適な $h$ はずっと大きくなる。<strong>ノイズのあるデータを小さい $h$ で差分すると、微分が荒れる</strong>。</li>
+</ul>
+</div>
+<p>実用の目安（関数の大きさが $1$ 程度のとき）：前進差分なら $h\approx10^{-8}$、中心差分なら $h\approx10^{-5}$ から始め、$h$ を変えて結果が安定するかを確かめる。</p>
+
+<div class="why"><span class="label">ひとことで</span>
+<p>数値微分の誤差は、$h$ に比例して減る打切り誤差（前進 $\propto h$、中心 $\propto h^2$）と、$1/h$ に比例して増える丸め誤差の和なので、<strong>$h$ に対して V 字</strong>になる。底は、前進で $h\approx10^{-8}$（誤差 $\approx10^{-8}$）、中心で $h\approx10^{-5}$（誤差 $\approx10^{-11}$）。それより小さい $h$ は逆効果である。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>数値積分：台形則とシンプソン則</h2>
+
+<h3 id="sec-4-1"><span class="no">4.1</span>動機と定義：区間を $n$ 個の台形で覆う</h3>
+<p>定積分 $\displaystyle\int_a^bf(x)\,dx$ は、原始関数が見つかれば微積分学の基本定理（<a href="10_第10回_積分.html#sym-ftc">第10回</a>）で計算できた。しかし、
+$$ \int_0^1e^{-x^2}\,dx $$
+のように、原始関数が（初等関数では）書けない積分がある。また、実験データのように、関数が<strong>式でなく数値の表</strong>で与えられることもある。このとき頼れるのは、定義そのものである<strong>リーマン和</strong>（<a href="10_第10回_積分.html#sym-riemann-sum">第10回 2.2</a>）、つまり「区切って足す」だけである。</p>
+<p>区間 $[a,b]$ を $n$ 等分する。$h:=\dfrac{b-a}n$（<a href="#sym-step-h">1.1</a>）、分点 $x_i:=a+ih$（$i=0,\dots,n$、<a href="10_第10回_積分.html#sym-partition">第10回の分割</a>）。第10回のリーマン和は、各区間の<strong>左端の高さ</strong> $f(x_{i-1})$ の長方形を足した（図4.1 上）。長方形の上辺は水平だが、曲線は傾いているので、必ずずれる。そこで、上辺を<strong>両端を結ぶ直線</strong>にすると、長方形が<strong>台形</strong>になる（図4.1 下）。</p>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 390" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="長方形と台形" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>長方形と台形</title>
+<rect x="0" y="0" width="440" height="390" fill="#fffdf7"/>
+<line x1="44.0" y1="140.0" x2="400.0" y2="140.0" stroke="#2a2723" stroke-width="1.4"/>
+<polygon points="44.0,140.0 44.0,140.0 131.5,140.0 131.5,140.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<polygon points="131.5,140.0 131.5,98.3 219.0,98.3 219.0,140.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<polygon points="219.0,140.0 219.0,62.9 306.5,62.9 306.5,140.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<polygon points="306.5,140.0 306.5,39.2 394.0,39.2 394.0,140.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<polyline points="44.0,140.0 48.4,137.9 52.8,135.7 57.1,133.6 61.5,131.4 65.9,129.3 70.2,127.2 74.6,125.1 79.0,122.9 83.4,120.8 87.8,118.7 92.1,116.6 96.5,114.5 100.9,112.5 105.2,110.4 109.6,108.3 114.0,106.3 118.4,104.3 122.8,102.2 127.1,100.2 131.5,98.3 135.9,96.3 140.2,94.3 144.6,92.4 149.0,90.5 153.4,88.6 157.8,86.7 162.1,84.8 166.5,83.0 170.9,81.2 175.2,79.4 179.6,77.6 184.0,75.9 188.4,74.2 192.8,72.5 197.1,70.8 201.5,69.2 205.9,67.5 210.2,65.9 214.6,64.4 219.0,62.9 223.4,61.4 227.8,59.9 232.1,58.5 236.5,57.0 240.9,55.7 245.2,54.3 249.6,53.0 254.0,51.7 258.4,50.5 262.8,49.3 267.1,48.1 271.5,47.0 275.9,45.9 280.2,44.8 284.6,43.8 289.0,42.8 293.4,41.8 297.8,40.9 302.1,40.1 306.5,39.2 310.9,38.4 315.2,37.7 319.6,36.9 324.0,36.2 328.4,35.6 332.8,35.0 337.1,34.4 341.5,33.9 345.9,33.4 350.2,33.0 354.6,32.6 359.0,32.3 363.4,31.9 367.8,31.7 372.1,31.4 376.5,31.2 380.9,31.1 385.2,31.0 389.6,30.9 394.0,30.9" fill="none" stroke="#2a2723" stroke-width="2.4" stroke-linejoin="round"/>
+<line x1="44.0" y1="140.0" x2="44.0" y2="145.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="44.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<line x1="131.5" y1="140.0" x2="131.5" y2="145.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="131.5" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">π</tspan><tspan>/8</tspan></text>
+<line x1="219.0" y1="140.0" x2="219.0" y2="145.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="219.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">π</tspan><tspan>/4</tspan></text>
+<line x1="306.5" y1="140.0" x2="306.5" y2="145.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="306.5" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan><tspan font-style="italic">π</tspan><tspan>/8</tspan></text>
+<line x1="394.0" y1="140.0" x2="394.0" y2="145.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="394.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">π</tspan><tspan>/2</tspan></text>
+<text x="14.0" y="16.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">左端の高さで長方形を並べる（リーマン和）</text>
+<text x="388.0" y="90.9" font-size="15" fill="#a8322a" text-anchor="end" font-weight="bold">面積の和 0.7908</text>
+<line x1="44.0" y1="330.0" x2="400.0" y2="330.0" stroke="#2a2723" stroke-width="1.4"/>
+<polygon points="44.0,330.0 44.0,330.0 131.5,288.3 131.5,330.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<polygon points="131.5,330.0 131.5,288.3 219.0,252.9 219.0,330.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<polygon points="219.0,330.0 219.0,252.9 306.5,229.2 306.5,330.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<polygon points="306.5,330.0 306.5,229.2 394.0,220.9 394.0,330.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<polyline points="44.0,330.0 48.4,327.9 52.8,325.7 57.1,323.6 61.5,321.4 65.9,319.3 70.2,317.2 74.6,315.1 79.0,312.9 83.4,310.8 87.8,308.7 92.1,306.6 96.5,304.5 100.9,302.5 105.2,300.4 109.6,298.3 114.0,296.3 118.4,294.3 122.8,292.2 127.1,290.2 131.5,288.3 135.9,286.3 140.2,284.3 144.6,282.4 149.0,280.5 153.4,278.6 157.8,276.7 162.1,274.8 166.5,273.0 170.9,271.2 175.2,269.4 179.6,267.6 184.0,265.9 188.4,264.2 192.8,262.5 197.1,260.8 201.5,259.2 205.9,257.5 210.2,255.9 214.6,254.4 219.0,252.9 223.4,251.4 227.8,249.9 232.1,248.5 236.5,247.0 240.9,245.7 245.2,244.3 249.6,243.0 254.0,241.7 258.4,240.5 262.8,239.3 267.1,238.1 271.5,237.0 275.9,235.9 280.2,234.8 284.6,233.8 289.0,232.8 293.4,231.8 297.8,230.9 302.1,230.1 306.5,229.2 310.9,228.4 315.2,227.7 319.6,226.9 324.0,226.2 328.4,225.6 332.8,225.0 337.1,224.4 341.5,223.9 345.9,223.4 350.2,223.0 354.6,222.6 359.0,222.3 363.4,221.9 367.8,221.7 372.1,221.4 376.5,221.2 380.9,221.1 385.2,221.0 389.6,220.9 394.0,220.9" fill="none" stroke="#2a2723" stroke-width="2.4" stroke-linejoin="round"/>
+<line x1="44.0" y1="330.0" x2="44.0" y2="335.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="44.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<line x1="131.5" y1="330.0" x2="131.5" y2="335.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="131.5" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">π</tspan><tspan>/8</tspan></text>
+<line x1="219.0" y1="330.0" x2="219.0" y2="335.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="219.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">π</tspan><tspan>/4</tspan></text>
+<line x1="306.5" y1="330.0" x2="306.5" y2="335.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="306.5" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan><tspan font-style="italic">π</tspan><tspan>/8</tspan></text>
+<line x1="394.0" y1="330.0" x2="394.0" y2="335.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="394.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">π</tspan><tspan>/2</tspan></text>
+<text x="14.0" y="206.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">両端を直線で結んで台形を並べる</text>
+<text x="388.0" y="280.9" font-size="15" fill="#a8322a" text-anchor="end" font-weight="bold">面積の和 0.9871</text>
+<text x="14.0" y="376.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">真の値の面積は 1</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　$\sin x$ を $[0,\frac\pi2]$ で $n=4$ 等分した。上は各区間の左端の高さ（第10回のリーマン和）、下は両端を直線で結んだ台形。曲線が上に凸なので長方形は低すぎ（$0.7908$）、台形は少し低い（$0.9871$）が、はるかに真の値 $1$ に近い。</figcaption>
+</figure>
+<p>1つの台形の面積は、「（上底＋下底）×高さ÷2」。区間 $[x_{i-1},x_i]$ では、上底と下底が $f(x_{i-1})$ と $f(x_i)$、高さが $h$ なので、
+$$ \frac{h}{2}\bigl(f(x_{i-1})+f(x_i)\bigr). $$
+これを $i=1,\dots,n$ について足す：</p>
+<p>$$ \sum_{i=1}^{n}\frac h2\bigl(f(x_{i-1})+f(x_i)\bigr)=\frac h2\Bigl(f(x_0)+f(x_1)\Bigr)+\frac h2\Bigl(f(x_1)+f(x_2)\Bigr)+\cdots+\frac h2\Bigl(f(x_{n-1})+f(x_n)\Bigr). $$
+<small>（理由：<a href="04_第4回_総和・総乗と添字.html#sym-sum">総和 $\sum$</a> を、$i=1,2,\dots,n$ の項をすべて書き下した形に戻した）</small></p>
+<p>端の $f(x_0)$ と $f(x_n)$ は1回ずつ、内側の $f(x_1),\dots,f(x_{n-1})$ は<strong>2つの隣り合う台形に1回ずつ、合計2回</strong>出る。したがって、</p>
+<p>$$ =\frac h2f(x_0)+h\,f(x_1)+h\,f(x_2)+\cdots+h\,f(x_{n-1})+\frac h2f(x_n). $$
+<small>（理由：内側の点は $\frac h2+\frac h2=h$。端の点は $\frac h2$ のまま）</small></p>
+
+<div class="def" id="sym-trapezoid"><span class="label">記号：$T_n$（複合台形則）</span>
+<p><strong>①読み方</strong>：「ティー・エヌ」。「$n$ 個の台形による近似」。</p>
+<p><strong>②日本語での意味</strong>：区間を $n$ 等分し、各区間の曲線を<strong>直線で置き換えた</strong>ときの面積の和。端の値は半分、内側の値は全部、を足して $h$ を掛ける。</p>
+<p><strong>③省略していない書き方</strong>：
+$$ T_n:=h\Bigl(\tfrac12f(x_0)+f(x_1)+f(x_2)+\cdots+f(x_{n-1})+\tfrac12f(x_n)\Bigr)=h\Bigl(\tfrac12f(x_0)+\sum_{i=1}^{n-1}f(x_i)+\tfrac12f(x_n)\Bigr), $$
+$h=\dfrac{b-a}n$、$x_i=a+ih$。近似として $\displaystyle\int_a^bf(x)\,dx\approx T_n$（<a href="01_第1回_数式を文として読む.html#sym-approx">$\approx$</a>）。</p>
+<p><strong>④どこで出会うか</strong>：数値積分、実験データの面積（仕事・エネルギー・積算量）、台形公式を使う常微分方程式の解法（第49回）。</p>
+</div>
+
+<p>最小の具体例。$\displaystyle\int_0^\pi\sin x\,dx=2$ を、$n=2$ と $n=4$ で。</p>
+<ol>
+<li>$n=2$：$h=\dfrac\pi2$。$x_0=0$、$x_1=\dfrac\pi2$、$x_2=\pi$。$f=\sin$ で $0,\,1,\,0$。$T_2=\dfrac\pi2\bigl(\tfrac12\cdot0+1+\tfrac12\cdot0\bigr)=\dfrac\pi2=1.5708$。</li>
+<li>$n=4$：$h=\dfrac\pi4$。値は $0,\ \dfrac{\sqrt2}2,\ 1,\ \dfrac{\sqrt2}2,\ 0$（$=0,\,0.7071,\,1,\,0.7071,\,0$）。$T_4=\dfrac\pi4\bigl(0+0.7071+1+0.7071+0\bigr)=\dfrac\pi4\times2.4142=1.8961$。</li>
+</ol>
+<p>真の値 $2$ との差は、$T_2$ が $-0.4292$、$T_4$ が $-0.1039$。$n$ を2倍にすると誤差が約 $\frac14$ になっている。図4.2 が、1つの台形でのずれの様子である。</p>
+<figure class="fig" id="fig-4-2">
+<svg viewBox="0 0 440 270" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="台形1枚の誤差" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>台形1枚の誤差</title>
+<rect x="0" y="0" width="440" height="270" fill="#fffdf7"/>
+<line x1="60.0" y1="240.0" x2="398.0" y2="240.0" stroke="#2a2723" stroke-width="1.4"/>
+<polygon points="60.0,240.0 390.0,48.7 390.0,240.0" fill="#f6e4e1" stroke="none"/>
+<polygon points="60.0,240.0 64.1,236.2 68.2,232.5 72.4,228.7 76.5,225.0 80.6,221.2 84.8,217.5 88.9,213.8 93.0,210.1 97.1,206.4 101.2,202.7 105.4,199.0 109.5,195.3 113.6,191.7 117.8,188.1 121.9,184.5 126.0,180.9 130.1,177.3 134.2,173.8 138.4,170.3 142.5,166.8 146.6,163.3 150.8,159.9 154.9,156.5 159.0,153.1 163.1,149.8 167.2,146.5 171.4,143.3 175.5,140.0 179.6,136.9 183.8,133.7 187.9,130.6 192.0,127.6 196.1,124.5 200.2,121.6 204.4,118.6 208.5,115.8 212.6,112.9 216.8,110.1 220.9,107.4 225.0,104.7 229.1,102.1 233.2,99.5 237.4,97.0 241.5,94.5 245.6,92.1 249.7,89.8 253.9,87.5 258.0,85.2 262.1,83.1 266.2,80.9 270.4,78.9 274.5,76.9 278.6,75.0 282.8,73.1 286.9,71.3 291.0,69.5 295.1,67.9 299.2,66.3 303.4,64.7 307.5,63.3 311.6,61.9 315.8,60.5 319.9,59.3 324.0,58.1 328.1,56.9 332.2,55.9 336.4,54.9 340.5,54.0 344.6,53.1 348.8,52.4 352.9,51.7 357.0,51.1 361.1,50.5 365.2,50.0 369.4,49.6 373.5,49.3 377.6,49.0 381.8,48.8 385.9,48.7 390.0,48.7 60.0,240.0" fill="#f7ecdc" stroke="none" opacity="0.9"/>
+<line x1="60.0" y1="240.0" x2="390.0" y2="48.7" stroke="#a8322a" stroke-width="2.6"/>
+<polyline points="60.0,240.0 64.1,236.2 68.2,232.5 72.4,228.7 76.5,225.0 80.6,221.2 84.8,217.5 88.9,213.8 93.0,210.1 97.1,206.4 101.2,202.7 105.4,199.0 109.5,195.3 113.6,191.7 117.8,188.1 121.9,184.5 126.0,180.9 130.1,177.3 134.2,173.8 138.4,170.3 142.5,166.8 146.6,163.3 150.8,159.9 154.9,156.5 159.0,153.1 163.1,149.8 167.2,146.5 171.4,143.3 175.5,140.0 179.6,136.9 183.8,133.7 187.9,130.6 192.0,127.6 196.1,124.5 200.2,121.6 204.4,118.6 208.5,115.8 212.6,112.9 216.8,110.1 220.9,107.4 225.0,104.7 229.1,102.1 233.2,99.5 237.4,97.0 241.5,94.5 245.6,92.1 249.7,89.8 253.9,87.5 258.0,85.2 262.1,83.1 266.2,80.9 270.4,78.9 274.5,76.9 278.6,75.0 282.8,73.1 286.9,71.3 291.0,69.5 295.1,67.9 299.2,66.3 303.4,64.7 307.5,63.3 311.6,61.9 315.8,60.5 319.9,59.3 324.0,58.1 328.1,56.9 332.2,55.9 336.4,54.9 340.5,54.0 344.6,53.1 348.8,52.4 352.9,51.7 357.0,51.1 361.1,50.5 365.2,50.0 369.4,49.6 373.5,49.3 377.6,49.0 381.8,48.8 385.9,48.7 390.0,48.7" fill="none" stroke="#2a2723" stroke-width="2.6" stroke-linejoin="round"/>
+<circle cx="60.0" cy="240.0" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="390.0" cy="48.7" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="390.0" y1="240.0" x2="390.0" y2="48.7" stroke="#6b645a" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="130.0" y="210.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">台形</text>
+<text x="130.0" y="230.0" font-size="14" fill="#a8322a" text-anchor="start">面積 π/4 = 0.7854</text>
+<rect x="187.3" y="48.8" width="81.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="190.3" y="63.8" font-size="15" fill="#7a5420" text-anchor="start" font-weight="bold">取りこぼし</text>
+<rect x="187.3" y="71.8" width="146.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="190.3" y="85.8" font-size="14" fill="#7a5420" text-anchor="start">1 − π/4 = 0.2146</text>
+<text x="60.0" y="262.0" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan></text>
+<text x="390.0" y="262.0" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">b</tspan></text>
+</svg>
+<figcaption><strong>図 4.2</strong>　1 つの区間で、曲線の下の面積（真の値）と台形の差。曲線が上に凸（$f''\lt0$）のとき、弦は曲線の<strong>下</strong>にあり、橙の薄い部分だけ台形が足りない。曲がりが強い（$|f''|$ が大きい）ほど、取りこぼしも大きい。</figcaption>
+</figure>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>台形則の誤差：$h^2$ に比例する（テイラーから）</h3>
+<p>1つの台形の誤差を、<strong>中心 $c$ のまわりのテイラー展開</strong>で求める。区間を $[c-\tfrac h2,\,c+\tfrac h2]$ とし、$s:=x-c$（中心からの距離）とおく。$f$ が4回連続微分できるとして、</p>
+<p>$$ f(c+s)=f(c)+s\,f'(c)+\frac{s^2}{2}f''(c)+\frac{s^3}{6}f'''(c)+O(s^4). $$
+<small>（理由：テイラーの定理（<a href="09_第9回_テイラー展開.html#sym-taylor">第9回 5.3</a>）。$N=3$ までと、剰余 $R_3=O(s^4)$（<a href="09_第9回_テイラー展開.html#sec-6-1">第9回 6.1</a>））</small></p>
+<p><strong>(a) 真の値</strong>：$\displaystyle I_{\text{1枚}}=\int_{-h/2}^{h/2}f(c+s)\,ds$ を項ごとに積分する（<a href="10_第10回_積分.html#sym-integral-definite">第10回</a>、$s^k$ の積分は $\frac{s^{k+1}}{k+1}$）。</p>
+<ol>
+<li>$\int_{-h/2}^{h/2}f(c)\,ds=h\,f(c)$。<small>（定数の積分は定数×幅）</small></li>
+<li>$\int_{-h/2}^{h/2}s\,f'(c)\,ds=f'(c)\Bigl[\dfrac{s^2}{2}\Bigr]_{-h/2}^{h/2}=0$。<small>（$s^2$ は偶関数で、$\pm\frac h2$ での値が等しいので引くと $0$）</small></li>
+<li>$\int_{-h/2}^{h/2}\dfrac{s^2}2f''(c)\,ds=\dfrac{f''(c)}{2}\Bigl[\dfrac{s^3}{3}\Bigr]_{-h/2}^{h/2}=\dfrac{f''(c)}{2}\cdot\dfrac{2}{3}\Bigl(\dfrac h2\Bigr)^3=\dfrac{h^3}{24}f''(c)$。<small>（$\bigl(\frac h2\bigr)^3=\frac{h^3}8$、$\frac12\cdot\frac23\cdot\frac18=\frac1{24}$）</small></li>
+<li>$s^3$ の項は奇関数なので $0$。残りは $O(h^5)$。<small>（$s^4$ の積分は $h^5$ に比例）</small></li>
+</ol>
+<p>したがって $I_{\text{1枚}}=h\,f(c)+\dfrac{h^3}{24}f''(c)+O(h^5)$。</p>
+<p><strong>(b) 台形</strong>：$\dfrac h2\Bigl(f(c-\tfrac h2)+f(c+\tfrac h2)\Bigr)$。$s=\pm\frac h2$ を展開に代入して足す。奇数乗の項は打ち消し合うので、</p>
+<p>$$ f\bigl(c-\tfrac h2\bigr)+f\bigl(c+\tfrac h2\bigr)=2f(c)+2\cdot\frac{(h/2)^2}{2}f''(c)+O(h^4)=2f(c)+\frac{h^2}{4}f''(c)+O(h^4). $$
+<small>（理由：$s^2=\frac{h^2}4$。$f''$ の項は $\frac{s^2}2f''$ が2つで $s^2f''=\frac{h^2}4f''$）</small></p>
+<p>$\dfrac h2$ を掛ける：台形 $=h\,f(c)+\dfrac{h^3}{8}f''(c)+O(h^5)$。<small>（$\frac h2\cdot\frac{h^2}4=\frac{h^3}8$）</small></p>
+<p><strong>(c) 差</strong>：台形 $-$ 真の値 $=\Bigl(\dfrac18-\dfrac1{24}\Bigr)h^3f''(c)+O(h^5)=\dfrac{h^3}{12}f''(c)+O(h^5)$。<small>（$\frac18=\frac3{24}$、$\frac3{24}-\frac1{24}=\frac2{24}=\frac1{12}$）</small></p>
+<p>符号は、$f''\gt0$（下に凸）なら台形が真の値より大きい（弦が曲線の上）、$f''\lt0$（図4.2 の $\sin x$）なら台形が小さい。</p>
+<p><strong>(d) $n$ 枚を足す</strong>：各台形の中心を $c_1,\dots,c_n$ として、全体の誤差は</p>
+<p>$$ T_n-I=\frac{h^2}{12}\sum_{i=1}^{n}f''(c_i)\,h+O(h^4). $$
+<small>（理由：$\frac{h^3}{12}=\frac{h^2}{12}\cdot h$ と書き、$n$ 枚足す。$O(h^5)$ を $n=\frac{b-a}h$ 個足すと $O(h^4)$）</small></p>
+<p>右辺の $\sum f''(c_i)\,h$ は、$f''$ のリーマン和（中点での高さ、<a href="10_第10回_積分.html#sym-riemann-sum">第10回</a>）で、$h\to0$ のとき $\displaystyle\int_a^bf''(x)\,dx$ に近づく。基本定理で $=f'(b)-f'(a)$：</p>
+<p>$$ \boxed{\;T_n-I=\frac{h^2}{12}\bigl(f'(b)-f'(a)\bigr)+O(h^4)\;} $$
+<small>（理由：$\int_a^bf''\,dx=f'(b)-f'(a)$（<a href="10_第10回_積分.html#sym-ftc">第10回の基本定理</a>）。リーマン和と積分のずれは、中点で高さをとるので $O(h^2)$。それに $\frac{h^2}{12}$ を掛けて $O(h^4)$。台形ごとの残り $O(h^5)$ の総和も $O(h^4)$）</small></p>
+<p>（$f''$ が連続なら、$h^2$ の係数が $f'(b)-f'(a)$ になる。教科書では、これを少し粗くして $T_n-I=\dfrac{(b-a)h^2}{12}f''(c)$ となる点 $c$ がある、あるいは $|T_n-I|\le\dfrac{(b-a)h^2}{12}\max|f''|$ と書く。いずれも <strong>$O(h^2)$</strong> である。）</p>
+<p>確かめ。$f=\sin$、$[0,\pi]$。$f'(\pi)-f'(0)=\cos\pi-\cos0=-2$ だから、$T_n-I\approx\dfrac{h^2}{12}(-2)=-\dfrac{h^2}6$。表は4.4。$n=4$（$h=\pi/4$）では $-\dfrac{(\pi/4)^2}6=-0.1028$ で、実際の $-0.1039$ とほぼ一致する。</p>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>シンプソン則：2つの台形の誤差を組み合わせて、$h^2$ の項を消す</h3>
+<p>4.2 の結果は、$T_n-I=c\,h^2+O(h^4)$（$c:=\frac1{12}(f'(b)-f'(a))$）という形をしている。$h$ を半分にした $T_{2n}$ と比べる。</p>
+<ol>
+<li>$T_n$（刻み $2h$）：$T_n-I=c\,(2h)^2+O(h^4)=4c\,h^2+O(h^4)$。<small>（$T_n$ の刻みは $\frac{b-a}n$。ここでは $T_{2n}$ の刻みを $h=\frac{b-a}{2n}$ とおいたので、$T_n$ の刻みは $2h$）</small></li>
+<li>$T_{2n}$（刻み $h$）：$T_{2n}-I=c\,h^2+O(h^4)$。</li>
+</ol>
+<p>$c\,h^2$ の係数が $4:1$ なので、$T_{2n}$ を4倍して $T_n$ を引くと、$c\,h^2$ が消える：</p>
+<p>$$ 4T_{2n}-T_n-(4-1)I=\bigl(4c\,h^2-4c\,h^2\bigr)+O(h^4)=O(h^4). $$
+<small>（理由：1行目と2行目の式から、$4\times$（2行目）$-$（1行目））</small></p>
+<p>$3$ で割る：$\dfrac{4T_{2n}-T_n}{3}-I=O(h^4)$。この組み合わせに名前をつける。</p>
+
+<div class="def" id="sym-simpson"><span class="label">記号：$S_{2n}$（複合シンプソン則）</span>
+<p><strong>①読み方</strong>：「エス・にえぬ」。「シンプソン（の1/3）則」。</p>
+<p><strong>②日本語での意味</strong>：<strong>隣り合う2つの区間をひとまとめにして、3点を通る放物線の面積に置き換えて足したもの</strong>。台形則の精度を、$h^2$ から $h^4$ に上げた組み合わせ。</p>
+<p><strong>③省略していない書き方</strong>：区間を<strong>偶数個</strong> $2n$ 等分（$h=\frac{b-a}{2n}$、$x_i=a+ih$）として
+$$ S_{2n}:=\frac{4T_{2n}-T_n}{3}=\frac h3\Bigl(f(x_0)+4f(x_1)+2f(x_2)+4f(x_3)+2f(x_4)+\cdots+2f(x_{2n-2})+4f(x_{2n-1})+f(x_{2n})\Bigr). $$
+両端の重みは $1$、奇数番目の点は $4$、偶数番目の内側の点は $2$。</p>
+<p><strong>④どこで出会うか</strong>：数値積分の標準的な方法、ルンゲ＝クッタ法の考え方（第49回）、ガウス求積など。</p>
+</div>
+
+<p>2つの式が等しいことを確かめる。$T_{2n}$ の重み（$h$ 倍）は $\frac12,1,1,\dots,1,\frac12$、$T_n$ は刻みが $2h$ なので重み（$2h$ 倍）が $\frac12,1,1,\dots,\frac12$ で、$h$ 倍に直すと偶数番目の点にだけ重み $2$（端は $1$）が付く。</p>
+<ul>
+<li>$4T_{2n}$：端 $2h$、すべての内側の点 $4h$。</li>
+<li>$T_n$：端 $h$、偶数番目の内側の点 $2h$、奇数番目の点は $0$。</li>
+<li>$4T_{2n}-T_n$：端 $2h-h=h$、奇数番目 $4h-0=4h$、偶数番目の内側 $4h-2h=2h$。</li>
+<li>$3$ で割ると $\dfrac h3\bigl(1,4,2,4,\dots,2,4,1\bigr)$。</li>
+</ul>
+<p>図4.3 は、この重みの並びを台形則と比べたものである。</p>
+<figure class="fig" id="fig-4-3">
+<svg viewBox="0 0 440 360" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="台形とシンプソンの重み" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>台形とシンプソンの重み</title>
+<rect x="0" y="0" width="440" height="360" fill="#fffdf7"/>
+<text x="14.0" y="20.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">台形則 T₈ の重み（h 倍する）</text>
+<line x1="30.0" y1="140.0" x2="420.0" y2="140.0" stroke="#2a2723" stroke-width="1.4"/>
+<rect x="37" y="118.0" width="30" height="22.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="52.0" y="112.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">0.5</text>
+<text x="52.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">0</tspan></text>
+<rect x="79" y="96.0" width="30" height="44.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="94.0" y="90.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="94.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">1</tspan></text>
+<rect x="121" y="96.0" width="30" height="44.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="136.0" y="90.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="136.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">2</tspan></text>
+<rect x="163" y="96.0" width="30" height="44.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="178.0" y="90.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="178.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">3</tspan></text>
+<rect x="205" y="96.0" width="30" height="44.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="220.0" y="90.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="220.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">4</tspan></text>
+<rect x="247" y="96.0" width="30" height="44.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="262.0" y="90.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="262.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">5</tspan></text>
+<rect x="289" y="96.0" width="30" height="44.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="304.0" y="90.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="304.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">6</tspan></text>
+<rect x="331" y="96.0" width="30" height="44.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="346.0" y="90.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="346.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">7</tspan></text>
+<rect x="373" y="118.0" width="30" height="22.0" rx="2" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="388.0" y="112.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">0.5</text>
+<text x="388.0" y="162.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">8</tspan></text>
+<text x="14.0" y="210.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">シンプソン則 S₈ の重み（h/3 倍する）</text>
+<line x1="30.0" y1="330.0" x2="420.0" y2="330.0" stroke="#2a2723" stroke-width="1.4"/>
+<rect x="37" y="310" width="30" height="20" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="52.0" y="304.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="52.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">0</tspan></text>
+<rect x="79" y="250" width="30" height="80" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="94.0" y="244.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">4</text>
+<text x="94.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">1</tspan></text>
+<rect x="121" y="290" width="30" height="40" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="136.0" y="284.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<text x="136.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">2</tspan></text>
+<rect x="163" y="250" width="30" height="80" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="178.0" y="244.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">4</text>
+<text x="178.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">3</tspan></text>
+<rect x="205" y="290" width="30" height="40" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="220.0" y="284.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<text x="220.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">4</tspan></text>
+<rect x="247" y="250" width="30" height="80" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="262.0" y="244.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">4</text>
+<text x="262.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">5</tspan></text>
+<rect x="289" y="290" width="30" height="40" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="304.0" y="284.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<text x="304.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">6</tspan></text>
+<rect x="331" y="250" width="30" height="80" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="346.0" y="244.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">4</text>
+<text x="346.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">7</tspan></text>
+<rect x="373" y="310" width="30" height="20" rx="2" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="388.0" y="304.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<text x="388.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="3.9" font-size="9.8">8</tspan></text>
+</svg>
+<figcaption><strong>図 4.3</strong>　9 個の点 $x_0,\dots,x_8$（$n=8$）にかける重み。台形は両端が $\frac12$、中は全部 $1$。シンプソンは $1,4,2,4,2,4,2,4,1$ と、奇数番目の点が $4$、偶数番目の内側の点が $2$ という並びになる。</figcaption>
+</figure>
+
+<p>3点 $(x_{2k-2},\,x_{2k-1},\,x_{2k})$ を通る放物線の面積が、$\dfrac h3\bigl(f_{2k-2}+4f_{2k-1}+f_{2k}\bigr)$ に一致することも確かめる（区間を $[-h,h]$ に平行移動して、$f(s)=1,\,s,\,s^2$ で）。</p>
+<ol>
+<li>$f=1$：真の値 $\int_{-h}^h1\,ds=2h$。公式 $\dfrac h3(1+4+1)=2h$。<strong>一致</strong>。</li>
+<li>$f=s$：真の値 $0$。公式 $\dfrac h3(-h+0+h)=0$。<strong>一致</strong>。</li>
+<li>$f=s^2$：真の値 $\dfrac{2h^3}{3}$。公式 $\dfrac h3(h^2+0+h^2)=\dfrac{2h^3}3$。<strong>一致</strong>。</li>
+</ol>
+<p>2次以下の多項式で一致するので（2次式は $1,s,s^2$ の一次結合だから）、3点を通る放物線の面積と、この公式は等しい。図4.4 が、3点だけで台形（折れ線）と放物線を比べたものである。</p>
+<figure class="fig" id="fig-4-4">
+<svg viewBox="0 0 440 332" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="台形とシンプソン" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>台形とシンプソン</title>
+<rect x="0" y="0" width="440" height="332" fill="#fffdf7"/>
+<line x1="40.0" y1="220.0" x2="408.0" y2="220.0" stroke="#2a2723" stroke-width="1.4"/>
+<polygon points="40.0,220.0 220.0,53.3 400.0,220.0" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2" stroke-dasharray="6 4"/>
+<polyline points="40.0,220.0 44.5,211.8 49.0,203.8 53.5,195.9 58.0,188.3 62.5,180.9 67.0,173.8 71.5,166.8 76.0,160.0 80.5,153.4 85.0,147.1 89.5,140.9 94.0,135.0 98.5,129.3 103.0,123.8 107.5,118.4 112.0,113.3 116.5,108.4 121.0,103.7 125.5,99.3 130.0,95.0 134.5,90.9 139.0,87.1 143.5,83.4 148.0,80.0 152.5,76.8 157.0,73.8 161.5,70.9 166.0,68.3 170.5,65.9 175.0,63.8 179.5,61.8 184.0,60.0 188.5,58.4 193.0,57.1 197.5,55.9 202.0,55.0 206.5,54.3 211.0,53.8 215.5,53.4 220.0,53.3 224.5,53.4 229.0,53.8 233.5,54.3 238.0,55.0 242.5,55.9 247.0,57.1 251.5,58.4 256.0,60.0 260.5,61.8 265.0,63.8 269.5,65.9 274.0,68.3 278.5,70.9 283.0,73.8 287.5,76.8 292.0,80.0 296.5,83.4 301.0,87.1 305.5,90.9 310.0,95.0 314.5,99.3 319.0,103.7 323.5,108.4 328.0,113.3 332.5,118.4 337.0,123.8 341.5,129.3 346.0,135.0 350.5,140.9 355.0,147.1 359.5,153.4 364.0,160.0 368.5,166.8 373.0,173.8 377.5,180.9 382.0,188.3 386.5,195.9 391.0,203.8 395.5,211.8 400.0,220.0" fill="none" stroke="#a8322a" stroke-width="2.8" stroke-linejoin="round"/>
+<polyline points="40.0,220.0 44.5,213.5 49.0,206.9 53.5,200.4 58.0,193.9 62.5,187.5 67.0,181.1 71.5,174.8 76.0,168.5 80.5,162.3 85.0,156.2 89.5,150.2 94.0,144.3 98.5,138.6 103.0,132.9 107.5,127.4 112.0,122.0 116.5,116.8 121.0,111.8 125.5,106.9 130.0,102.1 134.5,97.6 139.0,93.3 143.5,89.1 148.0,85.2 152.5,81.4 157.0,77.9 161.5,74.6 166.0,71.5 170.5,68.6 175.0,66.0 179.5,63.6 184.0,61.5 188.5,59.6 193.0,57.9 197.5,56.5 202.0,55.4 206.5,54.5 211.0,53.8 215.5,53.5 220.0,53.3 224.5,53.5 229.0,53.8 233.5,54.5 238.0,55.4 242.5,56.5 247.0,57.9 251.5,59.6 256.0,61.5 260.5,63.6 265.0,66.0 269.5,68.6 274.0,71.5 278.5,74.6 283.0,77.9 287.5,81.4 292.0,85.2 296.5,89.1 301.0,93.3 305.5,97.6 310.0,102.1 314.5,106.9 319.0,111.8 323.5,116.8 328.0,122.0 332.5,127.4 337.0,132.9 341.5,138.6 346.0,144.3 350.5,150.2 355.0,156.2 359.5,162.3 364.0,168.5 368.5,174.8 373.0,181.1 377.5,187.5 382.0,193.9 386.5,200.4 391.0,206.9 395.5,213.5 400.0,220.0" fill="none" stroke="#2a2723" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="40.0" cy="220.0" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="220.0" cy="53.3" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="400.0" cy="220.0" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="40.0" y="242.0" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="220.0" y="242.0" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">π</tspan><tspan>/2</tspan></text>
+<text x="400.0" y="242.0" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">π</tspan></text>
+<line x1="60.0" y1="261.0" x2="90.0" y2="261.0" stroke="#b07a3e" stroke-width="2.6" stroke-dasharray="6 4"/>
+<text x="98.0" y="266.0" font-size="14" fill="#2a2723" text-anchor="start">台形（2 区間）　面積 π/2 = 1.5708</text>
+<line x1="60.0" y1="285.0" x2="90.0" y2="285.0" stroke="#a8322a" stroke-width="2.6"/>
+<text x="98.0" y="290.0" font-size="14" fill="#2a2723" text-anchor="start">放物線（3 点を通る）　面積 2π/3 = 2.0944</text>
+<line x1="60.0" y1="309.0" x2="90.0" y2="309.0" stroke="#2a2723" stroke-width="2.6"/>
+<text x="98.0" y="314.0" font-size="14" fill="#2a2723" text-anchor="start">真の曲線 sin x　面積 2</text>
+</svg>
+<figcaption><strong>図 4.4</strong>　$\sin x$ を $[0,\pi]$ の 3 点 $x=0,\frac\pi2,\pi$ だけで近似する。折れ線（台形 2 枚）より、3 点を通る放物線（朱）の方が曲線によく沿う。放物線の下の面積が、シンプソン則の値である。</figcaption>
+</figure>
+<p>さらに <strong>$f=s^3$</strong> でも、真の値 $0$、公式 $\dfrac h3(-h^3+0+h^3)=0$ で一致する。つまり、シンプソン則は<strong>3次多項式まで厳密</strong>である。誤差が最初に現れるのは $f=s^4$ のときで、真の値 $\dfrac{2h^5}{5}$、公式 $\dfrac h3(h^4+h^4)=\dfrac{2h^5}3$。差（公式$-$真の値）$=\dfrac{2h^5}{3}-\dfrac{2h^5}5=\dfrac{4h^5}{15}$。テイラー展開の $s^4$ の項の係数は $\dfrac{f''''}{24}$ だから、2区間あたりの誤差は $\dfrac{f''''}{24}\cdot\dfrac{4h^5}{15}=\dfrac{h^5}{90}f''''$。これを $n$ 組足し、4.2 の (d) と同じく積分に直すと、</p>
+<p>$$ \boxed{\;S_{2n}-I=\frac{h^4}{180}\bigl(f'''(b)-f'''(a)\bigr)+O(h^6)\;} $$
+<small>（理由：$n=\frac{b-a}{2h}$ 組の和 $\frac{h^5}{90}\sum f''''(c_k)=\frac{h^4}{180}\sum f''''(c_k)\cdot2h\to\frac{h^4}{180}\int_a^bf''''\,dx=\frac{h^4}{180}(f'''(b)-f'''(a))$。この式は、台形則の誤差が $h^2,h^4,\dots$ の偶数べきだけで展開できること〔オイラー＝マクローリンの公式〕から出る。この回では紹介にとどめ、数値で確かめる）</small></p>
+<p>したがって、<strong>シンプソン則は $O(h^4)$、すなわち4次精度</strong>。台形則（2次）より、2段階高い。</p>
+<p>確かめ。$f=\sin$、$[0,\pi]$：$f'''=-\cos$、$f'''(\pi)-f'''(0)=1-(-1)=2$。$S_{2n}-I\approx\dfrac{2h^4}{180}=\dfrac{h^4}{90}$。表は次の4.4。</p>
+
+<h3 id="sec-4-4"><span class="no">4.4</span>数値で確かめる：誤差の比が $4$ と $16$ になる</h3>
+<p>$\displaystyle\int_0^\pi\sin x\,dx=2$ を、$n$ を2倍ずつにして計算した表。</p>
+<table class="tb">
+<tr><th>$n$</th><th>$h=\pi/n$</th><th>$T_n-2$</th><th>予測 $-\frac{h^2}6$</th><th>比</th><th>$S_n-2$</th><th>予測 $\frac{h^4}{90}$</th><th>比</th></tr>
+<tr><td>$2$</td><td>$1.5708$</td><td>$-0.42920$</td><td>$-0.4112$</td><td>―</td><td>$0.094395$</td><td>$0.06765$</td><td>―</td></tr>
+<tr><td>$4$</td><td>$0.7854$</td><td>$-0.103881$</td><td>$-0.10281$</td><td>$4.13$</td><td>$0.0045598$</td><td>$0.004228$</td><td>$20.7$</td></tr>
+<tr><td>$8$</td><td>$0.3927$</td><td>$-0.025768$</td><td>$-0.025702$</td><td>$4.03$</td><td>$0.00026917$</td><td>$0.00026424$</td><td>$16.9$</td></tr>
+<tr><td>$16$</td><td>$0.19635$</td><td>$-0.0064297$</td><td>$-0.0064255$</td><td>$4.01$</td><td>$0.000016591$</td><td>$0.000016515$</td><td>$16.2$</td></tr>
+<tr><td>$32$</td><td>$0.098175$</td><td>$-0.0016066$</td><td>$-0.0016064$</td><td>$4.00$</td><td>$0.0000010334$</td><td>$0.0000010322$</td><td>$16.1$</td></tr>
+</table>
+<p>（「比」は上の行の誤差を、この行の誤差で割ったもの。）台形は比が $4=2^2$（2次）、シンプソンは比が $16=2^4$（4次）に近づく。予測の列とも $n$ が大きいほどよく合う。$n=32$ で、台形は誤差 $1.6\times10^{-3}$、シンプソンは $1.0\times10^{-6}$。<strong>同じ関数評価の回数（$n+1$ 回）で、シンプソンは3桁も良い</strong>。図4.5 が両対数のグラフである。</p>
+<figure class="fig" id="fig-4-5">
+<svg viewBox="0 0 440 312" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="台形とシンプソンの収束" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>台形とシンプソンの収束</title>
+<rect x="0" y="0" width="440" height="312" fill="#fffdf7"/>
+<line x1="80.3" y1="264.0" x2="80.3" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="152.1" y1="264.0" x2="152.1" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="223.8" y1="264.0" x2="223.8" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="295.6" y1="264.0" x2="295.6" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="367.3" y1="264.0" x2="367.3" y2="28.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="250.5" x2="396.0" y2="250.5" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="196.6" x2="396.0" y2="196.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="142.6" x2="396.0" y2="142.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="88.7" x2="396.0" y2="88.7" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="34.7" x2="396.0" y2="34.7" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="66.0" y1="264.0" x2="396.0" y2="264.0" stroke="#2a2723" stroke-width="1.4"/>
+<line x1="66.0" y1="264.0" x2="66.0" y2="28.0" stroke="#2a2723" stroke-width="1.4"/>
+<text x="80.3" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−4</tspan></text>
+<text x="152.1" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−3</tspan></text>
+<text x="223.8" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−2</tspan></text>
+<text x="295.6" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−1</tspan></text>
+<text x="367.3" y="286.0" font-size="14" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">0</tspan></text>
+<text x="60.0" y="255.5" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−16</tspan></text>
+<text x="60.0" y="201.6" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−12</tspan></text>
+<text x="60.0" y="147.6" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−8</tspan></text>
+<text x="60.0" y="93.7" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">−4</tspan></text>
+<text x="60.0" y="39.7" font-size="14" fill="#6b645a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>10</tspan><tspan dy="-5.9" font-size="9.8">0</tspan></text>
+<text x="396.0" y="308.0" font-size="14" fill="#2a2723" text-anchor="end">刻み幅 h = π/n</text>
+<text x="60.0" y="22.0" font-size="14" fill="#2a2723" text-anchor="start">誤差 |I − 近似|</text>
+<polyline points="381.4,39.7 359.8,48.0 338.2,56.2 316.6,64.3 295.0,72.4 273.4,80.5 251.8,88.7 230.2,96.8 208.6,104.9 187.0,113.0 165.4,121.1 143.8,129.3 122.2,137.4 100.6,145.5 79.0,153.6" fill="none" stroke="#b07a3e" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="381.4" cy="39.7" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="359.8" cy="48.0" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="338.2" cy="56.2" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="316.6" cy="64.3" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="295.0" cy="72.4" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="273.4" cy="80.5" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="251.8" cy="88.7" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="230.2" cy="96.8" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="208.6" cy="104.9" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="187.0" cy="113.0" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="165.4" cy="121.1" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="143.8" cy="129.3" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="122.2" cy="137.4" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="100.6" cy="145.5" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="79.0" cy="153.6" r="3.4" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<polyline points="381.4,48.6 359.8,66.3 338.2,82.9 316.6,99.2 295.0,115.5 273.4,131.7 251.8,147.9 230.2,164.2 208.6,180.4 187.0,196.7 165.4,212.9 143.8,229.6 122.2,264.0 100.6,245.8 79.0,245.8" fill="none" stroke="#a8322a" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="381.4" cy="48.6" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="359.8" cy="66.3" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="338.2" cy="82.9" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="316.6" cy="99.2" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="295.0" cy="115.5" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="273.4" cy="131.7" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="251.8" cy="147.9" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="230.2" cy="164.2" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="208.6" cy="180.4" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="187.0" cy="196.7" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="165.4" cy="212.9" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="143.8" cy="229.6" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="122.2" cy="264.0" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="100.6" cy="245.8" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="79.0" cy="245.8" r="3.4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="277.9" y="48.8" width="106.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="381.7" y="62.8" font-size="14" fill="#7a5420" text-anchor="end" font-weight="bold">台形（傾き 2）</text>
+<rect x="200.0" y="83.1" width="148.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="345.8" y="97.1" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">シンプソン（傾き 4）</text>
+<rect x="228.0" y="231.1" width="193.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="231.0" y="245.1" font-size="14" fill="#6b645a" text-anchor="start">10⁻¹⁶ 付近：丸め誤差の床</text>
+</svg>
+<figcaption><strong>図 4.5</strong>　$\int_0^\pi\sin x\,dx=2$ を $n=2,4,\dots,32768$ 等分で計算したときの誤差。台形の誤差は傾き $2$ の直線（$h$ が半分で誤差は約 $\frac14$）、シンプソンは傾き $4$ の直線（$h$ が半分で約 $\frac1{16}$）。シンプソンは $h\approx10^{-3}$ より小さくなると $10^{-15}\sim10^{-16}$ 付近の丸め誤差の床にぶつかって、それ以上は減らない。</figcaption>
+</figure>
+<p>図4.5 のシンプソンは、$h\approx5\times10^{-3}$ あたりで誤差が $10^{-16}$ の床に当たり、それ以上は減らない。ただし床の高さは約 $10^{-16}$ で、数値微分の最適誤差（$10^{-8}\sim10^{-11}$）よりはるかに低い。<strong>積分は足し算（誤差をならす）で、微分は引き算と $h$ での割り算（誤差を拡大する）</strong>。この違いが、数値積分が数値微分より扱いやすい理由である。</p>
+
+<h3 id="sec-4-5"><span class="no">4.5</span>手計算で全部たどる：$\displaystyle\int_0^1\frac{4}{1+x^2}\,dx=\pi$</h3>
+<p>真の値が $\pi$ になる積分で、台形とシンプソンを手で計算する（$\displaystyle\int\frac4{1+x^2}dx=4\arctan x$、$\arctan1=\frac\pi4$ だから $\pi$）。$f(x)=\dfrac4{1+x^2}$。</p>
+<ol>
+<li>$f(0)=4$、$f(0.5)=\dfrac4{1.25}=3.2$、$f(1)=\dfrac42=2$。</li>
+<li>$n=2$（$h=0.5$）の台形：$T_2=0.5\bigl(\tfrac12\cdot4+3.2+\tfrac12\cdot2\bigr)=0.5\times6.2=3.1$。<small>（真の値 $3.14159$ より $0.0416$ 小さい）</small></li>
+<li>$n=2$ のシンプソン：$S_2=\dfrac{0.5}3\bigl(4+4\times3.2+2\bigr)=\dfrac{0.5}3\times18.8=3.13333$。<small>（誤差 $-0.00826$。同じ3点の値から、台形より5倍ほど良い）</small></li>
+<li>$n=4$ の台形（$h=0.25$）：$f(0.25)=\dfrac4{1.0625}=3.76471$、$f(0.75)=\dfrac4{1.5625}=2.56$。$T_4=0.25\bigl(2+3.76471+3.2+2.56+1\bigr)=0.25\times12.52471=3.13118$。</li>
+<li>$n=4$ のシンプソン：$S_4=\dfrac{0.25}3\bigl(4+4\times3.76471+2\times3.2+4\times2.56+2\bigr)=\dfrac{0.25}3\times37.69884=3.14157$。<small>（誤差 $-0.000024$。真の値 $\pi=3.14159$ に5桁合う）</small></li>
+</ol>
+<p>3.1 と 3.14157 を比べると、<strong>評価した点は3つと5つだけ</strong>で、ここまで届く。</p>
+
+<div class="why"><span class="label">ひとことで</span>
+<p>台形則 $T_n$ は、曲線を直線で置き換えて足し、誤差は $\dfrac{h^2}{12}(f'(b)-f'(a))$ で <strong>2次精度</strong>。$T_n$ と $T_{2n}$ を $4:{-1}$ で組み合わせて $h^2$ の項を消すとシンプソン則 $S_{2n}=\dfrac{4T_{2n}-T_n}3$ で、誤差は $\dfrac{h^4}{180}(f'''(b)-f'''(a))$ の <strong>4次精度</strong>。積分の丸め誤差は、微分と違って $1/h$ では増えない。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>使い分けと、誤差の見積もり方</h2>
+
+<h3 id="sec-5-1"><span class="no">5.1</span>4つの公式の比較</h3>
+<table class="tb">
+<tr><th>公式</th><th>使う点（1回分）</th><th>誤差の主要項</th><th>次数</th><th>注意</th></tr>
+<tr><td>前進差分 $D_{+}f$</td><td>$x,\ x+h$</td><td>$\frac h2f''$</td><td>1</td><td>端でも使える。精度は低い</td></tr>
+<tr><td>中心差分 $D_{0}f$</td><td>$x-h,\ x+h$</td><td>$\frac{h^2}6f'''$</td><td>2</td><td>$x$ の左右が必要。端では使えない</td></tr>
+<tr><td>台形則 $T_n$</td><td>$n+1$ 点</td><td>$\frac{h^2}{12}(f'(b)-f'(a))$</td><td>2</td><td>周期関数を1周期積分すると、端の項が消えて意外に高精度</td></tr>
+<tr><td>シンプソン則 $S_{2n}$</td><td>$2n+1$ 点（偶数区間）</td><td>$\frac{h^4}{180}(f'''(b)-f'''(a))$</td><td>4</td><td>区間数が偶数のときだけ使える</td></tr>
+</table>
+
+<h3 id="sec-5-2"><span class="no">5.2</span>真の値を知らずに、誤差を見積もる：$h$ を半分にした結果と比べる</h3>
+<p>実際の問題では、真の値 $I$ を知らない。それでも、4.3 の関係から誤差の大きさが見積もれる。台形則 $T_n-I=4c\,h^2$、$T_{2n}-I=c\,h^2$（$h$ は $T_{2n}$ の刻み）の2式を引き算する：</p>
+<p>$$ T_n-T_{2n}=3c\,h^2=3\,(T_{2n}-I). $$
+<small>（理由：1つ目から2つ目を引いた。$I$ が打ち消し合う。$T_{2n}-I=c\,h^2$ を使って右辺を書きかえた）</small></p>
+<p>$$ T_{2n}-I=\frac{T_n-T_{2n}}{3}. $$
+<small>（理由：両辺を3で割った）</small></p>
+<p>つまり、<strong>細かい方の台形則の誤差は、粗い方との差の $\frac13$</strong>。$h$ を半分にして計算し直せば、真の値を知らなくても、誤差の大きさが分かる。確かめ：$\int_0^1\frac4{1+x^2}dx$ で $T_2=3.1$、$T_4=3.13118$。見積もり $\dfrac{3.1-3.13118}3=-0.01039$。実際の $T_4-\pi=-0.010416$。<strong>一致</strong>。</p>
+<p>さらに、この見積もりを使って真の値を逆算すると、$I=T_{2n}-(T_{2n}-I)=T_{2n}-\dfrac{T_n-T_{2n}}{3}=\dfrac{4T_{2n}-T_n}{3}=S_{2n}$。<small>（理由：$T_{2n}-I$ に上の見積もりを代入し、通分した）</small> つまり<strong>誤差の見積もりを引いて補正した値が、シンプソン則そのもの</strong>である。この「2つの刻みの結果を組み合わせて高次の精度を得る」方法を、<strong>リチャードソンの補外</strong>という。差分でも使える（演習問題 問12）。</p>
+
+<h3 id="sec-5-3"><span class="no">5.3</span>流派の違い</h3>
+<div class="warn"><span class="label">流派の違い</span>
+<ul>
+<li><strong>丸めの大きさ</strong>：この回は、単位丸め $u=2^{-53}$（1回の丸めの相対誤差の上限）と、機械イプシロン $\varepsilon_{\mathrm{mach}}=2^{-52}$（$1$ の次の数との差）を区別した。数値計算の本（Higham など）は $u$ を使うが、MATLAB や NumPy の <code>eps</code> は $2^{-52}$。本によっては、機械イプシロンを $2^{-53}$ と定義するものもある。<strong>どちらの意味か、定義を確かめてから使う</strong>。</li>
+<li><strong>差分の記号</strong>：$D_{+}f$、$D_{-}f$、$D_{0}f$ はこの教材の書き方。ほかに、前進を $\Delta f(x)=f(x+h)-f(x)$（分母なし）、後退を $\nabla f(x)=f(x)-f(x-h)$、中心を $\delta f(x)=f(x+\frac h2)-f(x-\frac h2)$ とする流派がある。<strong>分母の $h$ を含めるかどうか</strong>が違う。</li>
+<li><strong>台形則・シンプソン則の添字</strong>：この回は $T_n$、$S_{2n}$ の添字を「区間の数」にした。$T(h)$、$S(h)$ と刻み幅で書く本も多い。</li>
+<li><strong>シンプソンの名前</strong>：この回の $\frac h3(1,4,2,\dots,4,1)$ は「シンプソンの1/3則」（放物線＝2次）。3次多項式で区間を3つずつ覆う「3/8則」$\frac{3h}{8}(1,3,3,2,\dots)$ は別の公式。</li>
+<li><strong>区間の数</strong>：シンプソン則を「区間の数が $n$（偶数）」で書く本と、この回のように「$2n$」で書く本がある。</li>
+</ul>
+</div>
+
+<h3 id="sec-5-4"><span class="no">5.4</span>手順と、よくある誤解</h3>
+<figure class="fig" id="fig-5-1">
+<svg viewBox="0 0 440 344" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="数値計算の手順" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>数値計算の手順</title>
+<rect x="0" y="0" width="440" height="344" fill="#fffdf7"/>
+<rect x="10" y="12" width="420" height="54" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<circle cx="40.0" cy="39.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="45.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">1</text>
+<text x="66.0" y="36.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">調べたい量を式で書く</text>
+<text x="66.0" y="56.0" font-size="14" fill="#6b645a" text-anchor="start">微分か、積分か。関数は式か、表（測定値）か</text>
+<line x1="220.0" y1="66.0" x2="220.0" y2="78.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 71.7 L220.0 78.0 L223.0 71.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="78" width="420" height="54" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<circle cx="40.0" cy="105.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="111.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">2</text>
+<text x="66.0" y="102.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">公式を選ぶ</text>
+<text x="66.0" y="122.0" font-size="14" fill="#6b645a" text-anchor="start">中心差分／台形／シンプソン。誤差の次数を確認</text>
+<line x1="220.0" y1="132.0" x2="220.0" y2="144.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 137.7 L220.0 144.0 L223.0 137.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="144" width="420" height="54" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<circle cx="40.0" cy="171.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="177.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">3</text>
+<text x="66.0" y="168.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">h を決めて計算する</text>
+<text x="66.0" y="188.0" font-size="14" fill="#6b645a" text-anchor="start">小さければよいわけではない（V字の底の近く）</text>
+<line x1="220.0" y1="198.0" x2="220.0" y2="210.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 203.7 L220.0 210.0 L223.0 203.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="210" width="420" height="54" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.8"/>
+<circle cx="40.0" cy="237.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="243.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">4</text>
+<text x="66.0" y="234.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">h を半分にして、もう一度</text>
+<text x="66.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="start">誤差の比 2ᵖ が出れば公式は正しく働いている</text>
+<line x1="220.0" y1="264.0" x2="220.0" y2="276.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 269.7 L220.0 276.0 L223.0 269.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="276" width="420" height="54" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<circle cx="40.0" cy="303.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="309.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">5</text>
+<text x="66.0" y="300.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">2 つの結果の差で誤差を見積もる</text>
+<text x="66.0" y="320.0" font-size="14" fill="#6b645a" text-anchor="start">差が許容値以下なら採用、そうでなければ戻る</text>
+</svg>
+<figcaption><strong>図 5.1</strong>　数値微分・数値積分の標準的な流れ。4 番の「$h$ を半分にして比べる」は、真の値を知らなくても誤差を見積もれる点で、実際の計算でいちばん役に立つ。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<ul>
+<li><strong>「次数が高い公式は、いつも正確」は誤り。</strong>次数は、$h$ を小さくしたときの減り方であって、誤差の大きさ（定数 $C$）は言っていない（<a href="#abbr-order">2.7</a>）。$f''''$ が極端に大きい関数では、シンプソンが台形に負けることもある。</li>
+<li><strong>「関数が滑らかでなくても同じ次数が出る」は誤り。</strong>誤差の式は、$f''$、$f'''$、$f''''$ が連続であることを使った。角のある関数（$|x|$）や発散する関数（$\sqrt x$ の $x=0$ の近く）では、次数が落ちる。</li>
+<li><strong>「$n$ を増やせばいくらでも精度が上がる」は誤り。</strong>数値積分でも、誤差は $10^{-16}$ の床で止まる（図4.5）。数値微分の V 字（図3.2）ほど極端ではないが、$h$ を小さくするだけでは限界がある。</li>
+</ul>
+</div>
+<div class="why"><span class="label">ひとことで</span>
+<p>真の値が分からなくても、$h$ を半分にして2回計算し、その差の $\frac13$（台形）を誤差の見積もりに使える。補正した値がシンプソン則で、4つの公式の使い分けは「必要な精度」と「使える点の数」で決める。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>章末例題</h2>
+<p class="meta">各例題は「問題 → 解答（①②③…）」で自己完結している。数値は計算機で検算した（draft/check_48.py）。</p>
+
+<div class="ex"><span class="label">例題1（A 確認：$\sqrt x$ の前進差分と中心差分と、誤差の式）</span>
+<p><strong>問題</strong>：$f(x)=\sqrt x$、$x=4$、$h=1$ で $f'(4)$ を前進差分と中心差分で近似し、真の値との誤差を求めよ。さらに、2.3 と 2.4 の誤差の式の見積もりと比べよ。</p>
+<p><strong>解答</strong></p>
+<ol>
+<li>真の値：$f'(x)=\dfrac1{2\sqrt x}$ なので $f'(4)=\dfrac14=0.25$。</li>
+<li>前進差分：$D_{+}f=\dfrac{\sqrt5-\sqrt4}{1}=2.236068-2=0.236068$。誤差 $=0.236068-0.25=-0.013932$。</li>
+<li>中心差分：$D_{0}f=\dfrac{\sqrt5-\sqrt3}{2}=\dfrac{2.236068-1.732051}{2}=0.252009$。誤差 $=+0.002009$。</li>
+<li>見積もり（前進）：$f''(x)=-\dfrac14x^{-3/2}$ なので $f''(4)=-\dfrac1{32}=-0.03125$。$\dfrac h2f''=0.5\times(-0.03125)=-0.0156$。実際の $-0.0139$ と同じ向き・同じ程度。</li>
+<li>見積もり（中心）：$f'''(x)=\dfrac38x^{-5/2}$ なので $f'''(4)=\dfrac3{8\cdot32}=0.01172$。$\dfrac{h^2}6f'''=0.00195$。実際の $0.00201$ とほぼ一致。</li>
+</ol>
+<p>（$h=1$ は大きいので、$c$ が $f''(4)$ からずれる分だけ、ぴったりは一致しない。中心差分の誤差が前進の $\frac17$ しかない点に注目。）</p>
+</div>
+
+<div class="ex"><span class="label">例題2（B 標準：位置の表から速度を求める）</span>
+<p><strong>問題</strong>：1 秒ごとの位置の表 $t=0,1,2,3,4$ に対して $s=0,1,8,27,64$（m）が得られた（実は $s=t^3$ だが、式は知らないとする）。$t=1$ での速度を、前進・後退・中心差分で求め、真の値 $3$ との誤差を、テイラーの定理から説明せよ。</p>
+<p><strong>解答</strong></p>
+<ol>
+<li>前進：$\dfrac{s(2)-s(1)}1=\dfrac{8-1}1=7$。誤差 $+4$。</li>
+<li>後退：$\dfrac{s(1)-s(0)}1=\dfrac{1-0}1=1$。誤差 $-2$。</li>
+<li>中心：$\dfrac{s(2)-s(0)}2=\dfrac{8-0}2=4$。誤差 $+1$。</li>
+<li>説明：$s=t^3$ ($s''=6t=6$、$s'''=6$)。前進の誤差は 2.3 の $\dfrac h2s''$ に、次の項 $\dfrac{h^2}6s'''$ を足した $3+1=4$。後退は $-\dfrac h2s''+\dfrac{h^2}6s'''=-3+1=-2$。中心は $\dfrac{h^2}6s'''=1$。</li>
+<li>結論：中心差分が最もよい。<strong>端の $t=0$ や $t=4$ では左右の点がそろわないので</strong>、前進差分（左端）か後退差分（右端）しか使えず、精度が1次に落ちる。</li>
+</ol>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：$\displaystyle\int_0^1e^x\,dx$ を台形とシンプソンで）</span>
+<p><strong>問題</strong>：$n=2$ の台形則とシンプソン則で $\displaystyle\int_0^1e^x\,dx$ を近似し、真の値 $e-1=1.718282$ との誤差を求めよ。</p>
+<p><strong>解答</strong></p>
+<ol>
+<li>$h=0.5$。$f(0)=1$、$f(0.5)=e^{0.5}=1.648721$、$f(1)=e=2.718282$。</li>
+<li>台形：$T_2=0.5\bigl(\tfrac12\cdot1+1.648721+\tfrac12\cdot2.718282\bigr)=0.5\times3.507862=1.753931$。誤差 $+0.035649$。<small>（4.2 の式 $\frac{h^2}{12}(f'(1)-f'(0))=\frac{0.25}{12}(e-1)=0.0358$ とほぼ一致）</small></li>
+<li>シンプソン：$S_2=\dfrac{0.5}3\bigl(1+4\times1.648721+2.718282\bigr)=\dfrac{0.5}3\times10.313167=1.718861$。誤差 $+0.000579$。<small>（シンプソンの式 $\frac{h^4}{180}(f'''(1)-f'''(0))=\frac{0.0625}{180}(e-1)=0.000597$ とほぼ一致）</small></li>
+</ol>
+<p>同じ3点の値から、シンプソンの誤差は台形の約 $\frac1{62}$。</p>
+</div>
+
+<div class="ex"><span class="label">例題4（B 標準：真の値を使わずに、誤差を見積もる）</span>
+<p><strong>問題</strong>：例題3の積分で、$T_2=1.753931$、$T_4=1.727222$ を得た。真の値を知らないものとして、$T_4$ の誤差を見積もり、補正した値を求めよ。</p>
+<p><strong>解答</strong></p>
+<ol>
+<li>5.2 の式：$T_4-I\approx\dfrac{T_2-T_4}3=\dfrac{1.753931-1.727222}3=\dfrac{0.026709}3=0.008903$。<small>（$T_4$ は真の値より約 $0.0089$ 大きいと見積もる）</small></li>
+<li>補正した値：$T_4-0.008903=1.718319$。これは $\dfrac{4T_4-T_2}3=S_4$ そのもの。</li>
+<li>確かめ（真の値は $1.718282$）：$T_4$ の実際の誤差 $0.008940$（見積もりは $0.008903$、約0.4 %の差）。補正した値の誤差は $0.000037$ で、$T_4$ の約 $\frac1{240}$。</li>
+</ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>演習問題</h2>
+<p class="meta">※A は記号を読み書きできるか、B は定期試験水準、C は発展。解答は折りたたんである。すべて自作の問題で、公式解答とは照合していない（数値は計算機で検算した）。</p>
+
+<div class="box"><span class="label">問1（A 確認：絶対誤差と相対誤差）</span>$\pi=3.14159265\ldots$ を $\dfrac{22}7$ で近似したときの、絶対誤差と相対誤差を求めよ。
+<details><summary>解答</summary>
+<p>$\dfrac{22}7=3.142857\ldots$。絶対誤差 $=|3.142857-3.141593|=0.001264$。相対誤差 $=\dfrac{0.001264}{3.141593}=4.02\times10^{-4}$（約0.04 %）。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認：3つの差分）</span>$f(x)=x^2$、$x=3$、$h=0.5$ で、前進・後退・中心差分を計算し、真の値 $f'(3)=6$ との誤差を求めよ。
+<details><summary>解答</summary>
+<p>$f(2.5)=6.25$、$f(3)=9$、$f(3.5)=12.25$。前進：$\dfrac{12.25-9}{0.5}=6.5$（誤差 $+0.5$、式 $\frac h2f''=0.25\cdot2=0.5$ と一致）。後退：$\dfrac{9-6.25}{0.5}=5.5$（誤差 $-0.5$）。中心：$\dfrac{12.25-6.25}{1}=6$（誤差 $0$、2次式の傾きは中心差分で厳密、2.5）。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認：台形則とシンプソン則）</span>$\displaystyle\int_0^2x^2\,dx=\dfrac83$ を、$n=2$ の台形則とシンプソン則で近似し、誤差を求めよ。
+<details><summary>解答</summary>
+<p>$h=1$。$f(0)=0$、$f(1)=1$、$f(2)=4$。台形：$T_2=1\cdot\bigl(0+1+\tfrac12\cdot4\bigr)=3$。誤差 $3-\frac83=\frac13$（4.2 の式 $\frac{h^2}{12}(f'(2)-f'(0))=\frac1{12}\cdot4=\frac13$ と一致）。シンプソン：$S_2=\dfrac13(0+4\cdot1+4)=\dfrac83$。<strong>誤差 $0$</strong>（2次式は3次まで厳密なシンプソンで厳密に出る、4.3）。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認：桁落ち）</span>有効数字4桁で計算する。(1) $\cos0.01=0.99995000\ldots$ を4桁に丸めると $1.000$ になる。$1-\cos0.01$ を、この丸めた値でそのまま計算するとどうなるか。(2) 式変形 $1-\cos x=2\sin^2\dfrac x2$ を使って計算し直せ（$\sin0.005=0.004999979\ldots$）。
+<details><summary>解答</summary>
+<p>(1) $1-1.000=0.000$。<strong>真の値 $4.99996\times10^{-5}$ の桁が全部消える</strong>（相対誤差100 %）。(2) $\sin0.005$ を4桁に丸めて $0.005000$、2乗して $2.500\times10^{-5}$、2倍して $5.000\times10^{-5}$。真の値 $4.99996\times10^{-5}$ と4桁一致する。引き算を避ける式変形が効く（1.4）。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（A 確認：誤差の次数を読む）</span>ある数値公式の誤差が、$h=0.2$ で $0.08$、$h=0.1$ で $0.02$ だった。誤差の次数 $p$ を求め、$h=0.05$ での誤差を予測せよ。
+<details><summary>解答</summary>
+<p>比 $\dfrac{0.08}{0.02}=4=2^2$ なので $p=2$（2.6）。$h$ をさらに半分にすると誤差は $\frac14$ になるので、$h=0.05$ では約 $0.005$。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準：前進差分の誤差の範囲）</span>$f(x)=\ln x$、$x=2$、$h=0.1$ で前進差分を計算し、誤差を求めよ。さらに 2.3 の式から、誤差が入る範囲を求めて確かめよ。
+<details><summary>解答</summary>
+<p>$D_{+}f=\dfrac{\ln2.1-\ln2}{0.1}=\dfrac{\ln1.05}{0.1}=0.487902$。真の値 $f'(2)=0.5$。誤差 $-0.012098$。式：$\dfrac h2f''(c)=0.05\cdot\Bigl(-\dfrac1{c^2}\Bigr)$、$c\in(2,2.1)$。$c=2$ で $-0.0125$、$c=2.1$ で $-0.01134$。誤差の範囲は $[-0.0125,-0.01134]$ で、実際の $-0.012098$ はこの中。</p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準：最適な刻み幅）</span>$f(x)=\sin x$、$x=1$ の中心差分について、3.3 の見積もり $E(h)\lesssim\dfrac{|f'''|}{6}h^2+\dfrac{u|f|}{h}$（$u=2^{-53}$）を最小にする $h_*$ を求めよ。
+<details><summary>解答</summary>
+<p>$a=\dfrac{|f'''(1)|}6=\dfrac{\cos1}6=0.0900$、$b=u|f(1)|=u\sin1=9.34\times10^{-17}$。$h_*=\Bigl(\dfrac b{2a}\Bigr)^{1/3}=\Bigl(\dfrac{3u\sin1}{\cos1}\Bigr)^{1/3}=(5.19\times10^{-16})^{1/3}=8.0\times10^{-6}$。最小の誤差の見積もりは $\dfrac{3b}{2h_*}=1.7\times10^{-11}$。</p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準：台形とシンプソン、$\sin$ の半周期）</span>$\displaystyle\int_0^{\pi/2}\sin x\,dx=1$ を、$n=2$ の台形則とシンプソン則で近似し、誤差を求めよ。台形の誤差を 4.2 の式で予測せよ。
+<details><summary>解答</summary>
+<p>$h=\dfrac\pi4$。$f=0,\ 0.70711,\ 1$。$T_2=0.7854\bigl(0+0.70711+0.5\bigr)=0.94804$（誤差 $-0.05196$）。$S_2=\dfrac{\pi/4}3\bigl(0+4\times0.70711+1\bigr)=0.261799\times3.82843=1.00228$（誤差 $+0.00228$）。予測：$\dfrac{h^2}{12}\bigl(f'(\tfrac\pi2)-f'(0)\bigr)=\dfrac{0.61685}{12}(0-1)=-0.0514$、実際の $-0.0520$ とほぼ一致。</p>
+</details></div>
+
+<div class="box"><span class="label">問9（B 標準：次数を実験で確かめる）</span>$\displaystyle\int_0^1e^x\,dx$ で、$T_2$ の誤差が $0.035649$、$T_4$ の誤差が $0.008940$、$T_8$ の誤差が $0.002237$ だった。比から台形則の次数を求め、$T_{16}$ の誤差を予測せよ。
+<details><summary>解答</summary>
+<p>比：$\dfrac{0.035649}{0.008940}=3.99$、$\dfrac{0.008940}{0.002237}=4.00$。$4=2^2$ なので $p=2$。$T_{16}$ の誤差は $0.002237/4\approx0.000559$。</p>
+</details></div>
+
+<div class="box"><span class="label">問10（B 標準：2階差分）</span>$f(x)=x^4$、$x=1$、$h=0.1$ で 2階差分 $D^2f$ を計算し、真の値 $f''(1)=12$ との誤差を、2.8 の式 $\dfrac{h^2}{12}f''''$ と比べよ。
+<details><summary>解答</summary>
+<p>$f(1.1)=1.4641$、$f(1)=1$、$f(0.9)=0.6561$。$D^2f=\dfrac{1.4641-2+0.6561}{0.01}=\dfrac{0.1202}{0.01}=12.02$。誤差 $0.02$。式：$f''''=24$（定数）なので $\dfrac{0.01}{12}\cdot24=0.02$。<strong>一致</strong>。</p>
+</details></div>
+
+<div class="box"><span class="label">問11（C 発展：中心差分を別の道で導く）</span>3点 $(x-h,f(x-h))$、$(x,f(x))$、$(x+h,f(x+h))$ を通る2次式 $p(s)=\alpha+\beta s+\gamma s^2$（$s=$ $x$ からの距離）の $s=0$ での微分 $p'(0)$ が、中心差分に一致することを示せ。
+<details><summary>解答</summary>
+<p>$p(0)=\alpha=f(x)$。$p(h)=\alpha+\beta h+\gamma h^2=f(x+h)$、$p(-h)=\alpha-\beta h+\gamma h^2=f(x-h)$。2式を引く：$2\beta h=f(x+h)-f(x-h)$、$\beta=\dfrac{f(x+h)-f(x-h)}{2h}$。$p'(s)=\beta+2\gamma s$ だから $p'(0)=\beta$。これは中心差分。<strong>中心差分は、3点を通る放物線の中央での傾き</strong>（シンプソン則が3点を通る放物線の面積だったことと同じ見方）。</p>
+</details></div>
+
+<div class="box"><span class="label">問12（C 発展：前進差分のリチャードソン補外）</span>$D_{+}f(x;h)=f'(x)+\dfrac h2f''(x)+\dfrac{h^2}6f'''(x)+O(h^3)$ を用いて、$2D_{+}f(x;\tfrac h2)-D_{+}f(x;h)$ の誤差が $O(h^2)$ になることを示せ。$f=e^x$、$x=1$、$h=0.1$ で確かめよ。
+<details><summary>解答</summary>
+<p>$D_{+}f(x;\frac h2)=f'+\dfrac h4f''+\dfrac{h^2}{24}f'''+O(h^3)$。2倍して $D_{+}f(x;h)$ を引く：$f'$ の係数 $2-1=1$、$f''$ の項 $\dfrac h2f''-\dfrac h2f''=0$（消える）、$f'''$ の項 $\dfrac{h^2}{12}f'''-\dfrac{h^2}6f'''=-\dfrac{h^2}{12}f'''$。したがって誤差は $-\dfrac{h^2}{12}f'''+O(h^3)=O(h^2)$。数値：$D_{+}f(1;0.05)=2.787386$、$D_{+}f(1;0.1)=2.858842$。$2\times2.787386-2.858842=2.715930$、誤差 $-0.002352$。予測 $-\dfrac{0.01}{12}e=-0.002265$（次の項の分だけずれる）。<strong>1次の公式2つから、2次の公式ができた</strong>。</p>
+</details></div>
+
+<div class="box"><span class="label">問13（C 発展：必要な区間数）</span>$\displaystyle\int_0^1e^x\,dx$ を誤差 $10^{-6}$ 以下で求めたい。台形則の誤差の上限 $\dfrac{(b-a)h^2}{12}\max|f''|$ と、シンプソン則の上限 $\dfrac{(b-a)h^4}{180}\max|f''''|$ から、必要な区間数 $n$ をそれぞれ見積もれ。
+<details><summary>解答</summary>
+<p>$b-a=1$、$h=\frac1n$、$\max|f''|=\max|f''''|=e$。台形：$\dfrac{e}{12n^2}\le10^{-6}$ より $n^2\ge\dfrac{e\times10^6}{12}=2.265\times10^5$、$n\ge476$。シンプソン（$n$ は偶数）：$\dfrac{e}{180n^4}\le10^{-6}$ より $n^4\ge1.510\times10^4$、$n\ge11.1$ なので $n=12$。<strong>台形の約40分の1の区間数で済む</strong>（これらは上限なので、実際に必要な数はこれ以下。教科書の上限の式は OpenStax <em>Calculus</em> Vol. 2 の数値積分の節にある）。</p>
+</details></div>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><span class="label">この回でできるようになったこと</span>
+<ul>
+<li>□ 絶対誤差と相対誤差を区別し、数値で計算できる（1.2）。</li>
+<li>□ 浮動小数点数が飛び飛びの値であること、丸めの相対誤差の上限が $u=2^{-53}\approx10^{-16}$ であることを説明できる（1.3）。</li>
+<li>□ 桁落ち（近い2数の引き算）で相対誤差が拡大する理由を、式で説明できる（1.4）。</li>
+<li>□ 前進・後退・中心差分を書き、テイラーの定理から誤差 $\frac h2f''$、$\frac{h^2}6f'''$ を1行1操作で導ける（2.3, 2.4）。</li>
+<li>□ $E(h)=O(h^p)$ の意味と、$h$ を半分にしたときの誤差の比が $2^p$ になることを言える（2.3, 2.6）。省略の段階（S0〜S2、<a href="#abbr-order">2.7</a>）を言える。</li>
+<li>□ 2階差分 $D^2f$ とその誤差 $\frac{h^2}{12}f''''$（2.8）。</li>
+<li>□ 全誤差が打切り誤差＋丸め誤差で、$h$ に対して V 字になる理由と、最適な $h_*$ を微分で求められる（3.2, 3.3）。前進で $h_*\approx10^{-8}$、中心で $h_*\approx10^{-5}$。</li>
+<li>□ 台形則 $T_n$ を書き、誤差が $O(h^2)$ になることをテイラーから導ける（4.1, 4.2）。</li>
+<li>□ シンプソン則 $S_{2n}=\frac{4T_{2n}-T_n}3$ の重み $(1,4,2,4,\dots,4,1)$ と、誤差 $O(h^4)$、3次まで厳密なことを言える（4.3）。</li>
+<li>□ 真の値を知らなくても、$h$ を半分にして誤差を見積もれる（5.2）。数値積分は誤差をならし、数値微分は誤差を拡大することを言える（4.4）。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第49回）</strong>：ODE の数値解法。この回の前進差分 $D_{+}$ は、そのまま<strong>オイラー法</strong> $y_{n+1}=y_n+h\,f(t_n,y_n)$ になる（微分方程式 $y'=f(t,y)$ の $y'$ を前進差分で置き換えた形）。台形則は<strong>台形法</strong>、シンプソン則の考え方は<strong>ルンゲ＝クッタ法</strong>の土台になる。「刻み幅 $h$ を小さくすれば精度が上がるが、丸め誤差が積もる」「誤差の次数を $h$ を半分にして確かめる」という、この回の考え方がそのまま続く。また、第50回の差分法では、2階差分 $D^2f$ が熱方程式・波動方程式の数値解法の部品になる。<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：数値微分の誤差（テイラー展開による導出）、丸め誤差と打切り誤差の V 字、台形則・シンプソン則とその誤差の上限の式は、数値解析の標準的な内容で、教科書の式の形は OpenStax <em>Calculus</em> Vol. 2（CC BY-NC-SA）の数値積分の節と照合した。浮動小数点の仕様（倍精度は有効数字53ビット、$u=2^{-53}$）は IEEE 754 に基づく。誤差の主要項 $\frac{h^2}{12}(f'(b)-f'(a))$ と $\frac{h^4}{180}(f'''(b)-f'''(a))$（オイラー＝マクローリンの公式の最初の項）は、この回では導出せず紹介にとどめ、数値で確かめた（4.2 末尾、4.4）。例題・演習・図・表はすべて自作で、数値は検算済み（draft/check_48.py、draft/v2/check_figs48.py）。演習の C は公式解答とは照合していない。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

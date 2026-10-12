@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回 数式を文として読む</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id]{ scroll-margin-top:12px; }
+  figure.fig{margin:22px auto} figure.fig svg{max-width:100%;height:auto;background:#fffdf7;border:1px solid var(--line);border-radius:6px}
+  .hero .ttl{background:rgba(247,244,236,.86);padding:10px 18px}
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="../img/hero01_plimpton.jpg" alt="粘土板に刻まれた数の表（プリンプトン322、紀元前1800年ごろ）。読み方を知らなければ、ただの傷にしか見えない。">
+<div class="ttl"><p class="vol">第1回</p><h1>数式を文として読む</h1></div>
+<figcaption><p class="cap">粘土板に刻まれた数の表（プリンプトン322、紀元前1800年ごろ）。読み方を知らなければ、ただの傷にしか見えない。</p><p class="cr">写真：作者不詳／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:Plimpton_322.jpg">Wikimedia Commons</a>（File:Plimpton 322.jpg、コロンビア大学所蔵）</p></figcaption>
+</figure>
+<p class="lead">第0部「記号と言葉」の最初の回。数式は「主語と述語のある文」であること、等号の種類、文字の読み方、そして<strong>省略の段階</strong>という考え方を、ゆっくり確かめる。以後のすべての回は、この回の記号と「省略の段階」にリンクして戻れる。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：数式には<em>名詞にあたるもの（式）</em>と<em>文にあたるもの（関係式）</em>がある → 文を作る記号は「等号」だけではなく、種類ごとに意味が違う → 文字は読み方・添字・肩の数字で意味が変わる → 数学の本は、約束ごとを使って書き方を<strong>省略</strong>している。その省略を1段ずつ元に戻して読めるようになる。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>この教材は、数学の本で<strong>説明されないまま使われている約束ごと</strong>を、全部ことばにして書く。「こんなこと知っている」と思う部分は、飛ばして次へ進んでよい。ただし、飛ばしたはずの記号が後の回でわからなくなったら、その記号のところへリンクで戻れるようになっている。</p>
+<p>記号が出てくるたびに、緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。全部の記号は <a href="../symbols.html">記号索引</a> からも探せる。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>まず、この回で新しく説明する記号の一覧。右の列の「→」で、説明のある節へ飛べる。（第1回は最初の回なので、「前の回で出た記号」はない。）</p>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$=$</td><td>イコール</td><td>左と右が同じ値</td><td><a href="#sym-equal">→2.1</a></td></tr>
+<tr><td>$:=$</td><td>コロンイコール</td><td>左の名前を、右の式で<em>決める</em></td><td><a href="#sym-defeq">→2.2</a></td></tr>
+<tr><td>$\equiv$</td><td>合同／恒等</td><td>どんな値でも常に同じ</td><td><a href="#sym-identical">→2.3</a></td></tr>
+<tr><td>$\approx$</td><td>ニアリーイコール</td><td>だいたい同じ</td><td><a href="#sym-approx">→2.4</a></td></tr>
+<tr><td>$\propto$</td><td>比例</td><td>左は右の定数倍</td><td><a href="#sym-propto">→2.5</a></td></tr>
+<tr><td>$\neq$</td><td>ノットイコール</td><td>等しくない</td><td><a href="#sym-neq">→2.6</a></td></tr>
+<tr><td>$\lt\ \gt\ \le\ \ge$</td><td>未満・より大きい・以下・以上</td><td>大小の関係</td><td><a href="#sym-order">→2.6</a></td></tr>
+<tr><td>$x_1$（添字）</td><td>エックス・いち（エックス・ワン）</td><td>名前に番号やラベルをつける</td><td><a href="#sym-subscript">→4.1</a></td></tr>
+<tr><td>$x^2$（肩の数字）</td><td>エックスの二乗</td><td>冪（べき）</td><td><a href="#sym-superscript">→4.2</a></td></tr>
+<tr><td>$x^{(2)}$</td><td>エックスの括弧二</td><td>2<em>番目</em>の何か（冪ではない）</td><td><a href="#sym-bracket-sup">→4.3</a></td></tr>
+<tr><td>$x'$</td><td>エックス・プライム</td><td>別のもの、または微分</td><td><a href="#sym-prime">→4.4</a></td></tr>
+<tr><td>$\cdots$（三点リーダー）</td><td>てんてんてん</td><td>同じ規則で続く部分を省く</td><td><a href="#sym-dots">→4.5</a></td></tr>
+<tr><td>ギリシャ文字</td><td>アルファ、ベータ…</td><td>文字の足りない分を補う</td><td><a href="#sec-3">→3</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>数式は「文」でできている</h2>
+
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：読めないのは「文の切れ目」がわからないから</h3>
+<p>数学の本のページを開くと、記号が並んでいる。これを「なんとなく雰囲気で」眺めていると、1行がどこで切れて、どの部分が主張で、どの部分が材料なのか、わからなくなる。それが「記号がわからない」という感覚の、かなり大きな原因になっている。</p>
+<p>日本語の文には、「何が（主語）」「どうする／どうだ（述語）」がある。数式にも、これと同じものがある。それを最初に区別しておく。</p>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>定義：式と関係式</h3>
+<div class="def" id="sym-expression"><span class="label">記号：式（しき）と関係式（かんけいしき）</span>
+<p><strong>①読み方</strong>：「しき」「かんけいしき」。</p>
+<p><strong>②日本語での意味</strong>：<strong>式</strong>とは、計算した結果として<em>1つの値（または1つの量）</em>になる記号の並び。日本語でいえば<em>名詞（のかたまり）</em>。<strong>関係式</strong>とは、2つの式を等号や不等号などでつないで、<em>正しいか正しくないか</em>を言える形にしたもの。日本語でいえば<em>文</em>。</p>
+<p><strong>③省略していない書き方</strong>：この区別そのものに略記はない。ただし本によっては、関係式のことも単に「式」と呼ぶ。この教材では<strong>区別して書く</strong>。</p>
+<p><strong>④どこで出会うか</strong>：すべての科目。</p>
+</div>
+
+<p>例を並べる。</p>
+<table class="tb">
+<tr><th>書いたもの</th><th>式か関係式か</th><th>日本語に直すと</th></tr>
+<tr><td>$x+1$</td><td>式（名詞）</td><td>「$x$ に1を足したもの」</td></tr>
+<tr><td>$3$</td><td>式（名詞）</td><td>「3」</td></tr>
+<tr><td>$x+1=3$</td><td>関係式（文）</td><td>「$x$ に1を足したものは、3に等しい」</td></tr>
+<tr><td>$x+1\lt 3$</td><td>関係式（文）</td><td>「$x$ に1を足したものは、3より小さい」</td></tr>
+<tr><td>$x+1=3$ ならば $x=2$</td><td>関係式をつないだ文</td><td>「前の文が正しいなら、後ろの文も正しい」</td></tr>
+</table>
+<p>「$x+1$」だけを書いて止まるのは、日本語で「りんごの」とだけ言って止まるのに近い。何も主張していない。主張は、<strong>関係式</strong>になって初めて生まれる。</p>
+
+<div class="why"><span class="label">ひとことで</span>数式の中には、名詞にあたる「式」と、文にあたる「関係式」がある。関係式は「正しいか正しくないか」が言える。</div>
+
+<p>図1.1 を見る。日本語の文と数式 $x+1=3$ を上下に並べて、部品を1つずつ対応させたものである。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 480 320" style="display:block;margin:0 auto;width:100%;max-width:560px" role="img" aria-label="日本語の文と数式の対応" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>日本語の文と数式の対応</title>
+<g transform="translate(50,0)">
+<text x="0" y="22" font-size="13" fill="#6b645a" text-anchor="start" font-weight="normal">日本語の文</text>
+<rect x="0" y="32" width="185" height="40" rx="5" fill="#edf1e8" stroke="#6b8a5a"/>
+<text x="92" y="58" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="normal">x に 1 を足したもの</text>
+<text x="210" y="58" font-size="15" fill="#6b645a" text-anchor="middle" font-weight="normal">は</text>
+<rect x="228" y="32" width="40" height="40" rx="5" fill="#edf1e8" stroke="#6b8a5a"/>
+<text x="248" y="58" font-size="16" fill="#2a2723" text-anchor="middle" font-weight="normal">3</text>
+<rect x="278" y="32" width="90" height="40" rx="5" fill="#f6e4e1" stroke="#a8322a"/>
+<text x="323" y="58" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="normal">に等しい</text>
+<path d="M92 74 L92 150" stroke="#6b8a5a" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+<path d="M248 74 C248 105 323 115 323 150" stroke="#6b8a5a" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+<path d="M323 74 C323 105 248 115 248 150" stroke="#a8322a" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+<text x="0" y="140" font-size="13" fill="#6b645a" text-anchor="start" font-weight="normal">数式の文</text>
+<rect x="0" y="152" width="185" height="44" rx="5" fill="#edf1e8" stroke="#6b8a5a"/>
+<text x="92" y="184" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>x + 1</text>
+<rect x="228" y="152" width="40" height="44" rx="5" fill="#f6e4e1" stroke="#a8322a"/>
+<text x="248" y="185" font-size="24" fill="#a8322a" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>=</text>
+<rect x="278" y="152" width="90" height="44" rx="5" fill="#edf1e8" stroke="#6b8a5a"/>
+<text x="323" y="184" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>3</text>
+<text x="92" y="218" font-size="13" fill="#6b8a5a" text-anchor="middle" font-weight="normal">式（名詞のかたまり）</text>
+<text x="248" y="218" font-size="13" fill="#a8322a" text-anchor="middle" font-weight="normal">関係を言う記号</text>
+<text x="323" y="218" font-size="13" fill="#6b8a5a" text-anchor="middle" font-weight="normal">式</text>
+<path d="M0 252 L0 262 L368 262 L368 252" stroke="#2b3a67" stroke-width="1.5" fill="none"/>
+<text x="184" y="284" font-size="15" fill="#2b3a67" text-anchor="middle" font-weight="bold">全体で1つの文（関係式）</text>
+<text x="184" y="304" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">正しいか、正しくないかが言える</text>
+</g>
+</svg>
+<figcaption><strong>図 1.1</strong>　「x に 1 を足したもの」と「3」は式（名詞）、「に等しい」は「=」にあたり、全体が1つの文になる。</figcaption>
+</figure>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>最小の具体例：正しい文・正しくない文・まだわからない文</h3>
+<p>関係式には、次の3つの状態がある。</p>
+<ol>
+<li><strong>いつでも正しい</strong>：$1+1=2$。</li>
+<li><strong>いつでも正しくない</strong>：$1+1=3$。（これも「文」である。正しくない文を書くことはできる。）</li>
+<li><strong>文字の値しだいで変わる</strong>：$x+1=3$。$x=2$ のときだけ正しい。</li>
+</ol>
+<p>3番目の「文字の値しだいで変わる文」を、<strong>条件</strong>と呼ぶ。「$x+1=3$ を解く」とは、「この文が正しくなるような $x$ の値をすべて探す」ことである。答え「$x=2$」もまた1つの関係式（文）で、「$x$ は2である」と読む。</p>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「$=$ の右に答えを書く記号だ」と思っていると、$x+1=3$ を「$x+1$ を計算して3を出せ」と読んでしまう。正しくは「$x+1$ と $3$ が同じ値になっている」という<strong>主張（または条件）</strong>である。計算の指示ではない。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>関係式は3種類ある：いつでも正しい／いつでも正しくない／値しだいで変わる。「方程式を解く」は、3番目の文が正しくなる値を探すこと。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>等号は1種類ではない</h2>
+
+<h3 id="sec-2-0"><span class="no">2.0</span>動機</h3>
+<p>多くの人が「$=$」を1種類の記号だと思っている。ところが数学の本は、同じ「$=$」の形で<strong>まったく違う3つの用法</strong>を、説明なしに混ぜて書く。ここがわからなくなる、最初の落とし穴になる。以下、1つずつ区別する。</p>
+
+<p>次の図1.2 は、この回で出会う関係の記号を6枚のカードにした地図である。各記号の読み方・意味・省略前の形は、右上の節番号で示す 2.1〜2.6 に書いてある。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 480 384" style="display:block;margin:0 auto;width:100%;max-width:560px" role="img" aria-label="関係を言う記号の地図" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>関係を言う記号の地図</title>
+<rect x="4" y="4" width="148" height="176" rx="6" fill="#fff" stroke="#ddd6c8"/>
+<rect x="4" y="4" width="148" height="5" rx="2" fill="#2b3a67"/>
+<text x="78" y="50" font-size="32" fill="#2b3a67" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>=</text>
+<text x="146" y="26" font-size="12" fill="#6b645a" text-anchor="end" font-weight="normal">2.1</text>
+<text x="78" y="72" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">「イコール」</text>
+<text x="78" y="96" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">同じ値に</text>
+<text x="78" y="113" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">なっている</text>
+<line x1="16" y1="150" x2="140" y2="150" stroke="#ddd6c8"/>
+<text x="78" y="169" font-size="13" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>x + 1 = 3</text>
+<text x="18" y="145" font-size="11" fill="#6b645a" text-anchor="start" font-weight="normal">例</text>
+<rect x="166" y="4" width="148" height="176" rx="6" fill="#fff" stroke="#ddd6c8"/>
+<rect x="166" y="4" width="148" height="5" rx="2" fill="#6b8a5a"/>
+<text x="240" y="50" font-size="32" fill="#6b8a5a" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>:=</text>
+<text x="308" y="26" font-size="12" fill="#6b645a" text-anchor="end" font-weight="normal">2.2</text>
+<text x="240" y="72" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">「コロンイコール」</text>
+<text x="240" y="96" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">左の名前を</text>
+<text x="240" y="113" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">右の式で決める</text>
+<line x1="178" y1="150" x2="302" y2="150" stroke="#ddd6c8"/>
+<text x="240" y="169" font-size="13" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>v := Δx/Δt</text>
+<text x="180" y="145" font-size="11" fill="#6b645a" text-anchor="start" font-weight="normal">例</text>
+<rect x="328" y="4" width="148" height="176" rx="6" fill="#fff" stroke="#ddd6c8"/>
+<rect x="328" y="4" width="148" height="5" rx="2" fill="#2b3a67"/>
+<text x="402" y="50" font-size="32" fill="#2b3a67" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>≡</text>
+<text x="470" y="26" font-size="12" fill="#6b645a" text-anchor="end" font-weight="normal">2.3</text>
+<text x="402" y="72" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">「恒等的に等しい」</text>
+<text x="402" y="96" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">どんな値でも</text>
+<text x="402" y="113" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">いつも等しい</text>
+<line x1="340" y1="150" x2="464" y2="150" stroke="#ddd6c8"/>
+<text x="402" y="169" font-size="13" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>(x+1)² ≡ x²+2x+1</text>
+<text x="342" y="145" font-size="11" fill="#6b645a" text-anchor="start" font-weight="normal">例</text>
+<rect x="4" y="192" width="148" height="176" rx="6" fill="#fff" stroke="#ddd6c8"/>
+<rect x="4" y="192" width="148" height="5" rx="2" fill="#c08a52"/>
+<text x="78" y="238" font-size="32" fill="#c08a52" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>≈</text>
+<text x="146" y="214" font-size="12" fill="#6b645a" text-anchor="end" font-weight="normal">2.4</text>
+<text x="78" y="260" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">「ほぼ等しい」</text>
+<text x="78" y="284" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">十分に近い。</text>
+<text x="78" y="301" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">範囲は自分で</text>
+<text x="78" y="318" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">確かめる</text>
+<line x1="16" y1="338" x2="140" y2="338" stroke="#ddd6c8"/>
+<text x="78" y="357" font-size="13" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>sin x ≈ x（x が小さい）</text>
+<text x="18" y="333" font-size="11" fill="#6b645a" text-anchor="start" font-weight="normal">例</text>
+<rect x="166" y="192" width="148" height="176" rx="6" fill="#fff" stroke="#ddd6c8"/>
+<rect x="166" y="192" width="148" height="5" rx="2" fill="#c08a52"/>
+<text x="240" y="238" font-size="32" fill="#c08a52" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>∝</text>
+<text x="308" y="214" font-size="12" fill="#6b645a" text-anchor="end" font-weight="normal">2.5</text>
+<text x="240" y="260" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">「比例」</text>
+<text x="240" y="284" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">ある定数 k で</text>
+<text x="240" y="301" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">y = kx と書ける</text>
+<line x1="178" y1="338" x2="302" y2="338" stroke="#ddd6c8"/>
+<text x="240" y="357" font-size="13" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>y ∝ x</text>
+<text x="180" y="333" font-size="11" fill="#6b645a" text-anchor="start" font-weight="normal">例</text>
+<rect x="328" y="192" width="148" height="176" rx="6" fill="#fff" stroke="#ddd6c8"/>
+<rect x="328" y="192" width="148" height="5" rx="2" fill="#a8322a"/>
+<text x="402" y="238" font-size="32" fill="#a8322a" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>≠</text>
+<text x="470" y="214" font-size="12" fill="#6b645a" text-anchor="end" font-weight="normal">2.6</text>
+<text x="402" y="260" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">「等しくない」</text>
+<text x="402" y="284" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">「=」が正しく</text>
+<text x="402" y="301" font-size="13.5" fill="#2a2723" text-anchor="middle" font-weight="normal">ない、という主張</text>
+<line x1="340" y1="338" x2="464" y2="338" stroke="#ddd6c8"/>
+<text x="402" y="357" font-size="13" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>x ≠ 0</text>
+<text x="342" y="333" font-size="11" fill="#6b645a" text-anchor="start" font-weight="normal">例</text>
+</svg>
+<figcaption><strong>図 1.2</strong>　関係を言う記号の地図。読み方と、その記号が言っていることを、カードごとに1行で確かめられる。</figcaption>
+</figure>
+
+<h3 id="sec-2-1"><span class="no">2.1</span>イコール $=$（主張・条件・恒等式の3つの顔）</h3>
+<div class="def" id="sym-equal"><span class="label">記号：$=$</span>
+<p><strong>①読み方</strong>：「イコール」。文として読むときは「〜は…に等しい」「〜は…である」。</p>
+<p><strong>②日本語での意味</strong>：左の式と右の式が、<em>同じ値になっている</em>という主張。</p>
+<p><strong>③省略していない書き方</strong>：$=$ 自体は省略形ではない。ただし<strong>3つの顔</strong>がある（下の表）。どの顔なのかは、記号に書いていない。<strong>文脈から読み取る</strong>約束になっている。</p>
+<p><strong>④どこで出会うか</strong>：すべての科目。</p>
+</div>
+
+<table class="tb">
+<tr><th>顔</th><th>例</th><th>日本語で言うと</th><th>見分け方</th></tr>
+<tr><td>(a) 条件（方程式）</td><td>$x+1=3$</td><td>「$x$ がこの値のときだけ正しい」</td><td>$x$ が<em>求めたい未知数</em>のとき</td></tr>
+<tr><td>(b) 恒等式</td><td>$(x+1)^2=x^2+2x+1$</td><td>「$x$ が何であっても常に正しい」</td><td>$x$ が<em>どんな値でも</em>よいとき。「展開する」「公式」</td></tr>
+<tr><td>(c) 結果の記述</td><td>$2+3=5$</td><td>「計算した結果は5である」</td><td>文字がなく、数だけのとき</td></tr>
+</table>
+
+<p>(a) と (b) の違いを、実際に確かめる。$x=2$ を入れてみる。</p>
+<ol>
+<li>(a) $x+1=3$：左は $2+1=3$、右は $3$。一致する。<strong>ただし $x=5$ を入れると</strong>、左は $5+1=6$、右は $3$ で一致しない。→ 値しだいで変わる。</li>
+<li>(b) $(x+1)^2=x^2+2x+1$：$x=2$ では、左は $(2+1)^2=9$、右は $2^2+2\cdot 2+1=4+4+1=9$。一致する。$x=5$ では、左は $(5+1)^2=36$、右は $25+10+1=36$。一致する。<strong>どの値を入れても一致する</strong>。</li>
+</ol>
+<p>なお、2.1 で使った <a href="#sec-6-1">掛け算の「$\cdot$」と、記号を書かずに並べる書き方は、第6節の「省略の段階」</a>でまとめて説明する。</p>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p>(a) と (b) を取り違えると、「$x$ を求めよ」と言われていないのに $(x+1)^2=x^2+2x+1$ を解こうとして、「$x$ は任意」という答えになって混乱する。逆に、(a) を恒等式のつもりで使うと、「$x+1=3$ だから $x$ に何を入れても $x+1$ は3だ」という誤りにつながる。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>同じ「$=$」でも、「この値のときだけ正しい（条件）」「どの値でも正しい（恒等式）」「計算結果の記述」の3つの顔がある。文字が<em>未知数</em>か<em>何でもよい文字</em>かで見分ける。</div>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>定義の等号 $:=$</h3>
+<p>「$x+1=3$」の $=$ は、<em>正しいかどうかを問える</em>文を作った。しかし、次のような書き方もある。</p>
+<p>$$ v := \frac{\Delta x}{\Delta t} $$</p>
+<p>これは「$v$ は $\Delta x/\Delta t$ に等しい」という主張ではない。「<strong>$v$ という名前を、右の式のことにする</strong>」という<em>命名（約束）</em>である。正しいか正しくないかを問う文ではない。</p>
+<div class="def" id="sym-defeq"><span class="label">記号：$:=$</span>
+<p><strong>①読み方</strong>：「コロンイコール」。文として読むときは「左を、右で定義する」。</p>
+<p><strong>②日本語での意味</strong>：<strong>左の名前を、右の式のことだと決める</strong>。コロンのある側（左）が、これから決められる名前である。</p>
+<p><strong>③省略していない書き方</strong>：次のように日本語で書いたものを、記号1つにまとめている。<br>「$v$ を、$\Delta x/\Delta t$ のことと定める」または「$v$ とは $\Delta x/\Delta t$ のことである」。</p>
+<p><strong>④どこで出会うか</strong>：物理・工学の教科書の「定義」。量子力学・機械力学・制御工学。</p>
+</div>
+
+<div class="warn"><span class="label">流派の違い：定義の等号の書き方</span>
+<p>教科書によって、定義の等号は次のように書き分けられる。<strong>どれも同じ意味</strong>で、「$=$」とも区別されないことがある。</p>
+<ul>
+<li>$v := \dfrac{\Delta x}{\Delta t}$（コロンの側が新しい名前。この教材ではこれを使う）</li>
+<li>$v \equiv \dfrac{\Delta x}{\Delta t}$（三本線を定義に使う流派）</li>
+<li>$v \overset{\text{def}}{=} \dfrac{\Delta x}{\Delta t}$（等号の上に def と書く流派）</li>
+<li>$v = \dfrac{\Delta x}{\Delta t}$（何も区別せず「$=$」で書く流派）</li>
+</ul>
+<p>最後のものが最も困る。「これは定義なのか、導かれた結果なのか」が、文脈からしか読み取れない。本を読むときは、「この等号の右辺は、さっき使った記号だけで書けているか（結果）、それともまだ名前のなかったものに名前をつけているか（定義）」を確かめるとよい。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$:=$ は「左の名前を、右の式で決める」。正しいか正しくないかを問う文ではなく、名前をつける宣言。</div>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>恒等の記号 $\equiv$</h3>
+<div class="def" id="sym-identical"><span class="label">記号：$\equiv$</span>
+<p><strong>①読み方</strong>：「合同」「恒等的に等しい」。文として読むときは「いつでも等しい」。</p>
+<p><strong>②日本語での意味</strong>：<em>文字にどんな値を入れても</em>等しい。2.1 の(b)（恒等式）をわざわざ強調するときに使う。例：$(x+1)^2\equiv x^2+2x+1$。</p>
+<p><strong>③省略していない書き方</strong>：「すべての $x$ について、$(x+1)^2=x^2+2x+1$」。つまり、「すべての…について」を<strong>記号 $\equiv$ の中に折りたたんでいる</strong>。（「すべての」を表す記号 $\forall$ は第2回で扱う。）</p>
+<p><strong>④どこで出会うか</strong>：微分方程式（「$f(x)\equiv 0$」は「すべての $x$ で $f(x)=0$」の意味）、線形代数、数論（別の意味：合同式）。</p>
+</div>
+
+<div class="warn"><span class="label">注意：$\equiv$ は流派で意味が違う</span>
+<p>$\equiv$ には少なくとも3つの用法がある。</p>
+<ul>
+<li>恒等的に等しい（ここで説明した意味）</li>
+<li>定義する（2.2 の流派）</li>
+<li>合同式（整数の割り算の余りが等しい。$7\equiv 1 \pmod 3$）。この教材では扱わない。</li>
+</ul>
+<p>どの意味かは、<strong>その本が最初に宣言している</strong>ことが多い。読み始めに「記号の約束」のページがないかを探す習慣をつける。</p>
+</div>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>だいたい等しい $\approx$</h3>
+<div class="def" id="sym-approx"><span class="label">記号：$\approx$</span>
+<p><strong>①読み方</strong>：「ニアリーイコール」。文として読むときは「ほぼ等しい」「近似的に等しい」。</p>
+<p><strong>②日本語での意味</strong>：<em>厳密には等しくない</em>が、目的に対して<em>十分近い</em>。「どれくらい近いのか」は、この記号には書かれていない。</p>
+<p><strong>③省略していない書き方</strong>：書かれていない部分を補うと、「差の絶対値が、問題にしている誤差の範囲より小さい」。例：$\sin 0.1 \approx 0.1$ は、「$|\sin 0.1 - 0.1|$ は小さい」の省略。</p>
+<p><strong>④どこで出会うか</strong>：物理（微小振動の近似）、数値計算、テイラー展開（第9回）。</p>
+</div>
+
+<p>実際にどれくらい近いのかを、数で確かめる。</p>
+<table class="tb">
+<tr><th>$x$</th><th>$\sin x$</th><th>$x-\sin x$（ずれ）</th></tr>
+<tr><td>$0.5$</td><td>$0.479426$</td><td>$0.020574$</td></tr>
+<tr><td>$0.1$</td><td>$0.099833$</td><td>$0.000167$</td></tr>
+<tr><td>$0.01$</td><td>$0.0099998$</td><td>$0.00000017$</td></tr>
+</table>
+<p>$x$ が小さいほど、ずれはさらに急に小さくなる。だから「$x$ が小さいとき $\sin x\approx x$」と書ける。<strong>$x=3$ では使えない</strong>（$\sin 3 = 0.1411\ldots$、$3$ とはまったく違う）。$\approx$ は<em>どの範囲で成り立つかを必ず確認して使う</em>記号である。</p>
+
+<div class="why"><span class="label">ひとことで</span>$\approx$ は「ほぼ等しい」。ただし「どれくらいほぼか」「どの範囲でか」は記号に書かれていない。範囲は自分で確かめる。</div>
+
+<h3 id="sec-2-5"><span class="no">2.5</span>比例 $\propto$</h3>
+<div class="def" id="sym-propto"><span class="label">記号：$\propto$</span>
+<p><strong>①読み方</strong>：「比例」。$y\propto x$ は「$y$ は $x$ に比例する」。</p>
+<p><strong>②日本語での意味</strong>：<em>ある定数 $k$ があって</em>、$y=kx$ と書ける。</p>
+<p><strong>③省略していない書き方</strong>：「$y\propto x$」$\;\Leftrightarrow\;$「ある定数 $k$ が存在して、$y=kx$」。定数 $k$ の値は記号に書かれていない。（$\Leftrightarrow$ と「存在して」は第2回で説明する。）</p>
+<p><strong>④どこで出会うか</strong>：物理・工学のスケーリング（$F\propto m$、$T\propto \sqrt{\ell}$）。</p>
+</div>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>$y\propto x$ と $y=x$ は違う。$y\propto x$ は、右辺に定数倍がついている可能性を含む。一方、「$y\propto x+1$」のように書くと、$y=k(x+1)$ という意味になる。$x=0$ のとき $y=k\neq 0$ なので、いわゆる「正比例」（原点を通る）とは別物になる。</p>
+</div>
+
+<h3 id="sec-2-6"><span class="no">2.6</span>等しくない・大小の関係</h3>
+<div class="def" id="sym-neq"><span class="label">記号：$\neq$</span>
+<p><strong>①読み方</strong>：「ノットイコール」。「〜は…に等しくない」。</p>
+<p><strong>②日本語での意味</strong>：左と右が<em>違う値</em>である。</p>
+<p><strong>③省略していない書き方</strong>：「$a\neq b$」は「『$a=b$』という文が<em>正しくない</em>」の省略。</p>
+<p><strong>④どこで出会うか</strong>：割り算の条件（「$x\neq 0$」）、固有値の議論（第20回）。</p>
+</div>
+<div class="def" id="sym-order"><span class="label">記号：$\lt\ \gt\ \le\ \ge$</span>
+<p><strong>①読み方</strong>：$a\lt b$ は「$a$ は $b$ より小さい」（$a$ は $b$ 未満）。$a\gt b$ は「$a$ は $b$ より大きい」。$a\le b$ は「$a$ は $b$ 以下」。$a\ge b$ は「$a$ は $b$ 以上」。</p>
+<p><strong>②日本語での意味</strong>：数の<em>大小の順序</em>を表す。$\lt\ \gt$ は等しい場合を含まず、$\le\ \ge$ は等しい場合を含む。</p>
+<p><strong>③省略していない書き方</strong>：$a\le b$ は「$a\lt b$ または $a=b$」。「または」は第2回で記号 $\lor$ として扱う。</p>
+<p><strong>④どこで出会うか</strong>：区間（第2回）、極限の定義（第6回）、不等式の評価。</p>
+</div>
+
+<div class="warn"><span class="label">流派の違い：$\le$ の別の書き方</span>
+<p>$\le$ を $\leqq$（二重線）や $\leqslant$（斜め線）と書く本がある。<strong>意味は同じ</strong>。$\ge$ にも別の書き方がある。この教材では $\le\ \ge$ で統一する。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$\neq$ は「等しくない」、$\le$ は「小さいか等しい」。どちらも「関係式（文）」を作る記号。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="../img/a1_recorde.png" alt="1557年の書物で、二本の平行線が等号として初めて書かれた箇所" loading="lazy"></div>
+<p class="cap">1557年、レコードは二本の平行線を等号とした。理由は原文のとおり、bicause noe. 2. thynges, can be moare equalle（これ以上に等しいものはないから）。</p>
+<p class="cr">Robert Recorde, The Whetstone of Witte (1557)／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:Equals_sign_in_Robert_Recorde,_The_Whetstone_of_Witte,_London_1557,_p.238.png">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="../img/b1_meotoiwa.jpg" alt="しめ縄で結ばれた二つの岩（夫婦岩）" loading="lazy"></div>
+<p class="cap">縄で結ばれた二つの岩。結ばれていることと、同じであることは別の話だ。</p>
+<p class="cr">夫婦岩（三重県伊勢市二見）／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:Meotoiwa.jpg">Wikimedia Commons</a>（撮影者の記載なし）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>文字をどう読むか：ギリシャ文字</h2>
+<h3 id="sec-3-1"><span class="no">3.1</span>動機</h3>
+<p>数学や物理では、$a,b,c,\ldots,x,y,z$ だけでは文字が足りなくなる。そこで<strong>ギリシャ文字</strong>を借りる。読み方を知らないと、声に出して読めないため、式を<em>文として</em>読む練習ができない。最初に表を作っておく。</p>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>表：よく使うギリシャ文字</h3>
+<div class="def" id="sym-greek"><span class="label">記号：ギリシャ文字</span>
+<p><strong>①読み方</strong>：下の表のとおり。</p>
+<p><strong>②日本語での意味</strong>：文字にすぎない。特定の意味が決まっているわけではなく、<em>慣習として使われる場所</em>がある。</p>
+<p><strong>③省略していない書き方</strong>：略記ではない。ただし、物理・工学の本では、慣習により文字を読む前から意味が想像される。<strong>慣習は慣習であり、その本が別の使い方を宣言していたら、そちらが優先</strong>。</p>
+<p><strong>④どこで出会うか</strong>：すべて。</p>
+</div>
+<table class="tb">
+<tr><th>小文字</th><th>大文字</th><th>読み</th><th>よくある使われ方（慣習）</th></tr>
+<tr><td>$\alpha$</td><td>$A$</td><td>アルファ</td><td>角度、係数、加速度（角）</td></tr>
+<tr><td>$\beta$</td><td>$B$</td><td>ベータ</td><td>角度、係数</td></tr>
+<tr><td>$\gamma$</td><td>$\Gamma$</td><td>ガンマ</td><td>せん断ひずみ、比熱比、ガンマ関数</td></tr>
+<tr><td>$\delta$</td><td>$\Delta$</td><td>デルタ</td><td>微小量（$\delta$）、変化量（$\Delta$）、クロネッカー、ディラック</td></tr>
+<tr><td>$\varepsilon$（$\epsilon$）</td><td>$E$</td><td>イプシロン</td><td>微小量、ひずみ、誘電率</td></tr>
+<tr><td>$\zeta$</td><td>$Z$</td><td>ゼータ</td><td>減衰比</td></tr>
+<tr><td>$\eta$</td><td>$H$</td><td>イータ</td><td>効率、粘性</td></tr>
+<tr><td>$\theta$（$\vartheta$）</td><td>$\Theta$</td><td>シータ</td><td>角度</td></tr>
+<tr><td>$\kappa$</td><td>$K$</td><td>カッパ</td><td>曲率、熱伝導</td></tr>
+<tr><td>$\lambda$</td><td>$\Lambda$</td><td>ラムダ</td><td>固有値、波長</td></tr>
+<tr><td>$\mu$</td><td>$M$</td><td>ミュー</td><td>平均、摩擦係数、$10^{-6}$（マイクロ）</td></tr>
+<tr><td>$\nu$</td><td>$N$</td><td>ニュー</td><td>動粘度、ポアソン比、振動数</td></tr>
+<tr><td>$\xi$</td><td>$\Xi$</td><td>クシー</td><td>座標、変数</td></tr>
+<tr><td>$\pi$</td><td>$\Pi$</td><td>パイ</td><td>円周率（小文字）、総乗（大文字、第4回）</td></tr>
+<tr><td>$\rho$</td><td>$P$</td><td>ロー</td><td>密度、相関係数</td></tr>
+<tr><td>$\sigma$</td><td>$\Sigma$</td><td>シグマ</td><td>応力、標準偏差（小文字）、総和（大文字、第4回）</td></tr>
+<tr><td>$\tau$</td><td>$T$</td><td>タウ</td><td>せん断応力、時定数</td></tr>
+<tr><td>$\phi$（$\varphi$）</td><td>$\Phi$</td><td>ファイ</td><td>角度、位相、ポテンシャル</td></tr>
+<tr><td>$\chi$</td><td>$X$</td><td>カイ</td><td>感受率、カイ二乗分布</td></tr>
+<tr><td>$\psi$</td><td>$\Psi$</td><td>プサイ</td><td>波動関数</td></tr>
+<tr><td>$\omega$</td><td>$\Omega$</td><td>オメガ</td><td>角振動数、角速度（小文字）、オーム（大文字）</td></tr>
+</table>
+<div class="warn"><span class="label">注意：似た文字</span>
+<ul>
+<li>$\epsilon$ と $\varepsilon$ は<strong>同じ文字の別の書体</strong>。本によって使い分けが決まっている場合がある。</li>
+<li>$\phi$ と $\varphi$、$\theta$ と $\vartheta$ も同様。</li>
+<li>$v$（ブイ）、$\nu$（ニュー）、$\upsilon$（ウプシロン）、$\omega$（オメガ）と $w$（ダブリュー）は、<strong>形が似ている</strong>。ノートに手書きするときは区別して書く。</li>
+</ul>
+</div>
+<div class="why"><span class="label">ひとことで</span>ギリシャ文字は「アルファ、ベータ…」と声に出して読む。意味は慣習で、その本の宣言が優先。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>文字のまわりについている数字：添字・肩の数字・プライム</h2>
+<h3 id="sec-4-0"><span class="no">4.0</span>動機</h3>
+<p>文字の右下や右上に小さな数字や記号がついていることがある。これを<strong>同じものだと思って区別しない</strong>と、$x_2$、$x^2$、$x^{(2)}$、$x'$ が全部「$x$ に何かがついたもの」としか見えない。しかし、<em>意味はまったく違う</em>。1つずつ区別する。</p>
+
+<h3 id="sec-4-1"><span class="no">4.1</span>添字 $x_1$</h3>
+<div class="def" id="sym-subscript"><span class="label">記号：添字（そえじ）$x_1$</span>
+<p><strong>①読み方</strong>：$x_1$ は「エックス・いち」または「エックス・ワン」。$x_i$ は「エックス・アイ」。</p>
+<p><strong>②日本語での意味</strong>：名前 $x$ の<em>仲間のうちの、1番目</em>。数に限らず、ラベルでもよい（$x_{\max}$ は「$x$ の最大値」、$v_{\text{初}}$ は「初めの $v$」）。</p>
+<p><strong>③省略していない書き方</strong>：次のように書く本もある。「$x$ の 1番目」→ $x(1)$ または $x[1]$（コンピュータ）。つまり<strong>関数の引数のかわりに、右下に小さく書く</strong>のが添字。</p>
+<p><strong>④どこで出会うか</strong>：数列、ベクトルの成分（第5回）、総和（第4回）。</p>
+</div>
+<p>例：3つの数 $3,\;5,\;8$ を並べて名前をつけるとき、</p>
+<p>$$ x_1 := 3,\qquad x_2 := 5,\qquad x_3 := 8 $$</p>
+<p>と書く。（ここで使った $:=$ は <a href="#sym-defeq">2.2</a> で説明した、名前をつける等号である。）「$x_2$ は5である」と読む。$x_i$ の $i$ は「どの番号でもよい」を表す<strong>仮の文字</strong>で、「$i=1,2,3$ のどれか」と思えばよい。</p>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>肩の数字（冪）$x^2$</h3>
+<div class="def" id="sym-superscript"><span class="label">記号：肩の数字（冪）$x^2$</span>
+<p><strong>①読み方</strong>：$x^2$ は「エックスの二乗」。$x^3$ は「エックスの三乗」。$x^n$ は「エックスの $n$ 乗」。</p>
+<p><strong>②日本語での意味</strong>：$x$ を<em>$n$ 回かけたもの</em>。</p>
+<p><strong>③省略していない書き方</strong>：$x^3 = x\times x\times x$（$x$ を3つかけ合わせる）。ここで $x\times x\times x$ は、$x\cdot x\cdot x$ とも書き、さらに省略すると $x^3$ になる。</p>
+<p><strong>④どこで出会うか</strong>：すべて。</p>
+</div>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>括弧つきの肩の数字 $x^{(2)}$</h3>
+<div class="def" id="sym-bracket-sup"><span class="label">記号：括弧つきの肩の数字 $x^{(2)}$</span>
+<p><strong>①読み方</strong>：「エックスの括弧に」「エックス・上付き括弧に」。</p>
+<p><strong>②日本語での意味</strong>：<em>冪ではない</em>。「2番目の $x$」「2回目の繰り返しの $x$」「2階微分」など、<strong>書いた本が決める</strong>。</p>
+<p><strong>③省略していない書き方</strong>：本が宣言している意味に展開する。例：$f^{(2)}(x)$ は「$f$ を2回微分したもの」。$x^{(k)}$ は「$k$ 回目の反復で得られた $x$」。</p>
+<p><strong>④どこで出会うか</strong>：テイラー展開の $f^{(n)}(a)$（第9回）、反復法（第50回）。</p>
+</div>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>$x^2$（二乗）と $x^{(2)}$（「2番目」など）を同じと見てはいけない。括弧がつくだけで、「冪ではない」というサインになっている。</p>
+</div>
+
+<h3 id="sec-4-4"><span class="no">4.4</span>プライム $x'$</h3>
+<div class="def" id="sym-prime"><span class="label">記号：プライム $x'$</span>
+<p><strong>①読み方</strong>：「エックス・プライム」。$f'$ は「エフ・プライム」。$x''$ は「エックス・ダブルプライム」。</p>
+<p><strong>②日本語での意味</strong>：<em>文脈によって2つの意味がある</em>。(a) 「$x$ とは別の、似た量」（別の座標系の $x$ など）。(b) 「$f$ の導関数（微分したもの）」。</p>
+<p><strong>③省略していない書き方</strong>：(b) の場合、$f'(x) := \dfrac{df}{dx}(x)$ の省略。つまり「$f$ を $x$ で微分した関数」。</p>
+<p><strong>④どこで出会うか</strong>：(a) 座標変換、(b) 微積分（第7回で詳しく）。</p>
+</div>
+<div class="warn"><span class="label">注意：どちらの意味か</span>
+<p>(a) と (b) は、記号は同じでも意味が違う。見分けるには、「$f$ が関数かどうか」を見る。$x'$ が「$x$ を $t$ で微分したもの」なのか「別の座標」なのかは、<strong>その本のその節の冒頭で宣言されている</strong>。第7回で、微分の記号の流派（$f'$、$\dfrac{df}{dx}$、$\dot x$）を並べて整理する。</p>
+</div>
+
+<h3 id="sec-4-5"><span class="no">4.5</span>三点リーダー $\cdots$</h3>
+<div class="def" id="sym-dots"><span class="label">記号：三点リーダー $\cdots$、$\ldots$</span>
+<p><strong>①読み方</strong>：「てんてんてん」。意味としては「以下、同じ規則で続く」。</p>
+<p><strong>②日本語での意味</strong>：<em>同じ規則で続く部分を、書かずに省く</em>。</p>
+<p><strong>③省略していない書き方</strong>：$1+2+\cdots+5 = 1+2+3+4+5$。つまり<strong>「規則を読み取って、省かれた項を補う」責任は読者側にある</strong>。</p>
+<p><strong>④どこで出会うか</strong>：数列、総和（第4回）、行列の成分（第5回）。</p>
+</div>
+<div class="warn"><span class="label">注意：$\cdots$ は規則が複数ありうる</span>
+<p>「$1,\;2,\;4,\;\cdots$」の次は、$8$（2倍）かもしれないし、$7$（差が1,2,3,…と増える）かもしれない。<strong>規則が1つに決まるように、最初の何項かを十分に書く</strong>のが書く側の責任である。最初の3項だけで規則を決めつけてよいのかは、読むときに注意する。この問題を避けるために、第4回で扱う総和記号 $\sum$ が作られた。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>文字のまわりの小さな記号は、位置と形で意味が違う。右下＝番号やラベル、右上の数字＝冪、右上の括弧つき＝冪ではない、右上のプライム＝別のもの／微分、点々＝規則で続く。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>演算の順序：書き方が曖昧になる場所</h2>
+
+<h3 id="sec-5-1"><span class="no">5.1</span>動機</h3>
+<p>式を「文」として読むためには、「どこからどこまでが1つのまとまりか」が決まっていなければならない。これを決めている約束を、<strong>演算の優先順位</strong>という。この約束は、本には書かれていないことが多い。</p>
+
+<h3 id="sec-5-2"><span class="no">5.2</span>約束のリスト</h3>
+<div class="box" id="rule-order"><span class="label">演算の優先順位（上ほど先に計算する）</span>
+<ol>
+<li>括弧の中</li>
+<li>冪（肩の数字）と関数（$\sin,\ln$ など）の「引数の確定」</li>
+<li>掛け算・割り算（左から順に）</li>
+<li>足し算・引き算（左から順に）</li>
+<li>関係の記号（$=,\lt,\le,\approx$ など）。ここで文になる。</li>
+</ol>
+</div>
+<p>この約束のとおりに読むと、次のことが起きる。</p>
+<table class="tb">
+<tr><th>書いたもの</th><th>約束に従った読み</th><th>$x=3$ のときの値</th></tr>
+<tr><td>$2x^2$</td><td>$2\times(x^2)$</td><td>$2\times 9=18$</td></tr>
+<tr><td>$(2x)^2$</td><td>$(2\times x)^2$</td><td>$6^2=36$</td></tr>
+<tr><td>$-x^2$</td><td>$-(x^2)$</td><td>$-9$</td></tr>
+<tr><td>$(-x)^2$</td><td>$(-x)\times(-x)$</td><td>$(-3)^2=9$</td></tr>
+</table>
+<p>$2x^2$ と $(2x)^2$ では値が2倍ちがう。$-x^2$ と $(-x)^2$ では符号が逆になる。<strong>括弧があるかないかだけで、値が変わる</strong>。</p>
+
+<p>図1.3 は、括弧のあるなしを「式の木」で比べたものである。木の下（葉）にある計算が先に行われ、根が最後に残る。</p>
+<figure class="fig" id="fig-1-3">
+<svg viewBox="0 0 480 326" style="display:block;margin:0 auto;width:100%;max-width:560px" role="img" aria-label="式の木で比べる 2+3×4 と (2+3)×4" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>式の木で比べる 2+3×4 と (2+3)×4</title>
+<text x="120" y="28" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>2 + 3 × 4</text>
+<line x1="120" y1="70" x2="60" y2="150" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="120" y1="70" x2="180" y2="150" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="180" y1="150" x2="140" y2="230" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="180" y1="150" x2="220" y2="230" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="120" cy="70" r="17" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/><text x="120" y="77" font-size="20" fill="#2b3a67" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>+</text>
+<circle cx="60" cy="150" r="17" fill="#fff" stroke="#2a2723" stroke-width="1.5"/><text x="60" y="157" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>2</text>
+<circle cx="180" cy="150" r="17" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/><text x="180" y="157" font-size="20" fill="#2b3a67" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>×</text>
+<circle cx="140" cy="230" r="17" fill="#fff" stroke="#2a2723" stroke-width="1.5"/><text x="140" y="237" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>3</text>
+<circle cx="220" cy="230" r="17" fill="#fff" stroke="#2a2723" stroke-width="1.5"/><text x="220" y="237" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>4</text>
+<text x="204" y="156" font-size="14" fill="#a8322a" text-anchor="start" font-weight="normal">① 12</text>
+<text x="142" y="76" font-size="14" fill="#a8322a" text-anchor="start" font-weight="normal">② 14</text>
+<text x="120" y="278" font-size="15" fill="#2b3a67" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>答えは 14</text>
+<text x="360" y="28" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>(2 + 3) × 4</text>
+<line x1="360" y1="70" x2="300" y2="150" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="360" y1="70" x2="420" y2="150" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="300" y1="150" x2="260" y2="230" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="300" y1="150" x2="340" y2="230" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="360" cy="70" r="17" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/><text x="360" y="77" font-size="20" fill="#2b3a67" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>×</text>
+<circle cx="300" cy="150" r="17" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/><text x="300" y="157" font-size="20" fill="#2b3a67" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>+</text>
+<circle cx="420" cy="150" r="17" fill="#fff" stroke="#2a2723" stroke-width="1.5"/><text x="420" y="157" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>4</text>
+<circle cx="260" cy="230" r="17" fill="#fff" stroke="#2a2723" stroke-width="1.5"/><text x="260" y="237" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>2</text>
+<circle cx="340" cy="230" r="17" fill="#fff" stroke="#2a2723" stroke-width="1.5"/><text x="340" y="237" font-size="20" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>3</text>
+<text x="322" y="156" font-size="14" fill="#a8322a" text-anchor="start" font-weight="normal">① 5</text>
+<text x="382" y="76" font-size="14" fill="#a8322a" text-anchor="start" font-weight="normal">② 20</text>
+<text x="360" y="278" font-size="15" fill="#2b3a67" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>答えは 20</text>
+<text x="240" y="312" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">葉（数）から先に計算し、根で答えが出る。① → ② の順。</text>
+</svg>
+<figcaption><strong>図 1.3</strong>　括弧は、足し算を先に行うという指示である。同じ数字と記号でも、木の形が変わり、答えが 14 と 20 に分かれる。</figcaption>
+</figure>
+
+<h3 id="sec-5-3"><span class="no">5.3</span>割り算の曖昧さ</h3>
+<p>「$1/2x$」と書かれたら、どう読むか。2通りある。</p>
+<ul>
+<li>$(1/2)\times x = \dfrac{1}{2}x$：$x=3$ のとき $1.5$。</li>
+<li>$1/(2x) = \dfrac{1}{2x}$：$x=3$ のとき $\dfrac{1}{6}\approx 0.1667$。</li>
+</ul>
+<p>上の「優先順位の約束」に従えば、掛け算と割り算は<strong>左から順に</strong>だから、$1/2x$ は $(1/2)\times x$ である。しかし、<strong>多くの人は $1/(2x)$ のつもりで書く</strong>。この曖昧さのために、本によっては「$1/2x$」を使わない。<em>括弧を省略しない</em>か、<em>分数の形</em>で書くとよい。</p>
+<div class="warn"><span class="label">流派の違い</span>
+<p>$a/bc$ の読みについて、「$bc$ をまとめて1つのかたまりとして割る」という約束を採る流派（物理の一部）と、「左から順」の約束を採る流派（プログラミング言語・多くの電卓）がある。<strong>この教材では、曖昧な書き方はしない</strong>（必ず括弧か分数で書く）。他の本を読むときは、前後の計算でどちらの意味か確かめる。</p>
+</div>
+
+<h3 id="sec-5-4"><span class="no">5.4</span>関数名と肩の数字：$\sin^2 x$</h3>
+<p>三角関数では、さらに別の約束がある。</p>
+<ul>
+<li>$\sin^2 x$ は $(\sin x)^2$、つまり「$\sin x$ を二乗したもの」。</li>
+<li>$\sin x^2$ は $\sin(x^2)$、つまり「$x^2$ を $\sin$ に入れたもの」。</li>
+</ul>
+<p>$x=\pi/6$（$30^\circ$）で比べる。</p>
+<table class="tb">
+<tr><th>書いたもの</th><th>読み</th><th>値</th></tr>
+<tr><td>$\sin^2 x$</td><td>$(\sin x)^2$</td><td>$(1/2)^2=0.25$</td></tr>
+<tr><td>$\sin x^2$</td><td>$\sin(x^2)=\sin(0.2742\ldots)$</td><td>$0.2707\ldots$</td></tr>
+</table>
+<p>値がちがう。$\sin^2 x$ の肩の「2」は、<strong>$\sin$ にではなく、$\sin x$ という結果に</strong>かかっている。（ところが、$\sin^{-1}x$ は「$\sin x$ の $-1$ 乗」ではなく<em>逆関数</em>$\arcsin x$を意味する流派もあり、さらに混乱する。第3回で、関数の肩の数字をまとめて整理する。）</p>
+
+<div class="why"><span class="label">ひとことで</span>括弧を書かない式には、「優先順位の約束」が隠れている。約束を知らないと、$2x^2$ と $(2x)^2$ のように値が変わるものを同じに見てしまう。曖昧なときは括弧を補って読む。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>省略の段階：この資料全体を貫く考え方</h2>
+
+<h3 id="sec-6-1"><span class="no">6.1</span>省略とは何か</h3>
+<p>これまで見てきたことを、まとめて言い直す。数学の本は、次のようなことを<strong>説明なしに省略している</strong>。</p>
+<ul>
+<li>掛け算の記号 $\times$ や $\cdot$ を書かない（$2x$ は $2\times x$）。</li>
+<li>括弧を書かない（優先順位の約束を読者が補う）。</li>
+<li>「すべての $x$ について」を書かない（恒等式の $=$）。</li>
+<li>関数の引数を書かない（$\sin x$ は $\sin(x)$）。</li>
+<li>規則の続きを書かない（$\cdots$）。</li>
+</ul>
+<p>省略は悪いことではない。短く書けるから、<strong>慣れた人には読みやすい</strong>。問題は、<em>慣れる前の人には、何が省かれたのかわからない</em>こと。さらに、<strong>省略の上に省略が重なる</strong>と、元の形に戻れなくなる。</p>
+
+<div class="box" id="abbr-stages"><span class="label">省略の段階（この資料の用語）</span>
+<p>この資料では、書き方の「省略の度合い」を<strong>段階</strong>で呼ぶ。数字が大きいほど、省略が多い。</p>
+<ul>
+<li><strong>S0（完全形）</strong>：何も省略していない書き方。</li>
+<li><strong>S1</strong>：S0 から<em>1つ</em>の省略をした形。</li>
+<li><strong>S2</strong>：S1 からさらに1つ省略した形。以下同様。</li>
+</ul>
+<p>各段階で、<strong>何を省いたか</strong>と<strong>省いても誤解が起きない理由</strong>を書く。以降の回で省略形が出てくるたびに、この箱にリンクして戻れる。</p>
+</div>
+
+<h3 id="sec-6-2"><span class="no">6.2</span>具体例1：掛け算の省略</h3>
+<div class="box" id="abbr-mult"><span class="label">省略の段階：掛け算</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても困らない理由</th></tr>
+<tr><td>S0</td><td>$2\times x\times x$</td><td>（省略なし）</td><td>―</td></tr>
+<tr><td>S1</td><td>$2\cdot x\cdot x$</td><td>$\times$ を $\cdot$ に替える</td><td>$\times$ は文字 $x$ と紛らわしいため</td></tr>
+<tr><td>S2</td><td>$2xx$</td><td>$\cdot$ を書かない</td><td>数と文字、文字と文字が並んだら「掛ける」と約束した</td></tr>
+<tr><td>S3</td><td>$2x^2$</td><td>同じ文字の掛け算を肩の数字でまとめる</td><td>冪の定義（<a href="#sym-superscript">4.2</a>）</td></tr>
+</table>
+<p>注意：「文字と文字が並んだら掛ける」という約束は、$xy$ を「$x\times y$」と読む。しかし「$\sin x$」のように、関数名と文字が並んだ場合は<strong>掛け算ではなく、関数に値を入れる</strong>と読む。また、数を並べたもの（$23$）は「2かける3」ではなく「二十三」である。<strong>並べて書く意味は、並ぶ記号の種類で決まる</strong>。</p>
+</div>
+
+<p>図1.4 は、上の表「省略の段階：掛け算」を階段にしたものである。1段降りるごとに、何を省いたかを矢印の横に書いた。</p>
+<figure class="fig" id="fig-1-4">
+<svg viewBox="0 0 480 384" style="display:block;margin:0 auto;width:100%;max-width:560px" role="img" aria-label="省略の段階：掛け算 S0からS3" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>省略の段階：掛け算 S0からS3</title>
+<rect x="10" y="8" width="190" height="46" rx="5" fill="#edf1e8" stroke="#6b8a5a" stroke-width="1.5"/>
+<text x="22" y="37" font-size="14" fill="#6b8a5a" text-anchor="start" font-weight="bold">S0</text>
+<text x="115" y="39" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>2 × x × x</text>
+<text x="210" y="37" font-size="13" fill="#6b645a" text-anchor="start" font-weight="normal">（省略なし）</text>
+<path d="M42 56 L42 98" stroke="#a8322a" stroke-width="1.5" fill="none"/>
+<path d="M37 92 L42 100 L47 92" stroke="#a8322a" stroke-width="1.5" fill="none"/>
+<text x="56" y="74" font-size="14" fill="#a8322a" text-anchor="start" font-weight="normal">省く：× を · に替える</text>
+<text x="56" y="94" font-size="12.5" fill="#6b645a" text-anchor="start" font-weight="normal">理由：文字 x と紛らわしいため</text>
+<rect x="44" y="104" width="190" height="46" rx="5" fill="#edf1e8" stroke="#6b8a5a" stroke-width="1.5"/>
+<text x="56" y="133" font-size="14" fill="#6b8a5a" text-anchor="start" font-weight="bold">S1</text>
+<text x="149" y="135" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>2 · x · x</text>
+<path d="M76 152 L76 194" stroke="#a8322a" stroke-width="1.5" fill="none"/>
+<path d="M71 188 L76 196 L81 188" stroke="#a8322a" stroke-width="1.5" fill="none"/>
+<text x="90" y="170" font-size="14" fill="#a8322a" text-anchor="start" font-weight="normal">省く：· を書かない</text>
+<text x="90" y="190" font-size="12.5" fill="#6b645a" text-anchor="start" font-weight="normal">理由：並べたら掛けると約束した</text>
+<rect x="78" y="200" width="190" height="46" rx="5" fill="#f7ecdc" stroke="#c08a52" stroke-width="1.5"/>
+<text x="90" y="229" font-size="14" fill="#c08a52" text-anchor="start" font-weight="bold">S2</text>
+<text x="183" y="231" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>2 x x</text>
+<path d="M110 248 L110 290" stroke="#a8322a" stroke-width="1.5" fill="none"/>
+<path d="M105 284 L110 292 L115 284" stroke="#a8322a" stroke-width="1.5" fill="none"/>
+<text x="124" y="266" font-size="14" fill="#a8322a" text-anchor="start" font-weight="normal">省く：同じ文字を肩の数字にまとめる</text>
+<text x="124" y="286" font-size="12.5" fill="#6b645a" text-anchor="start" font-weight="normal">理由：冪の定義による</text>
+<rect x="112" y="296" width="190" height="46" rx="5" fill="#f7ecdc" stroke="#c08a52" stroke-width="1.5"/>
+<text x="124" y="325" font-size="14" fill="#c08a52" text-anchor="start" font-weight="bold">S3</text>
+<text x="217" y="327" font-size="22" fill="#2a2723" text-anchor="middle" font-weight="normal" font-family='"Cambria Math","STIX Two Math",serif'>2 x²</text>
+<text x="240" y="372" font-size="13" fill="#6b645a" text-anchor="middle" font-weight="normal">どの段も、1つ上の段へ戻れる（矢印は逆にたどれる）</text>
+</svg>
+<figcaption><strong>図 1.4</strong>　$2\times x\times x$ から $2x^2$ までは4段である。各段で省いたものは、表の「何を省いたか」の列と同じである。</figcaption>
+</figure>
+
+<h3 id="sec-6-3"><span class="no">6.3</span>具体例2：関数の引数</h3>
+<div class="box" id="abbr-arg"><span class="label">省略の段階：関数の引数</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても困らない理由</th></tr>
+<tr><td>S0</td><td>$\sin(x)$</td><td>（省略なし）</td><td>―</td></tr>
+<tr><td>S1</td><td>$\sin x$</td><td>括弧を省く</td><td>$\sin$ の直後に文字が来たら、その文字が引数と約束した</td></tr>
+</table>
+<p>S1 は、引数が<em>1つの文字か数のとき</em>だけ許される。引数が $x+1$ のような式のときは、$\sin(x+1)$ と括弧が必要。（$\sin x+1$ と書くと、「$(\sin x)+1$」と読まれる。）多変数関数の引数の省略（$\psi(x,t)\to\psi$）は、第3回で扱う。</p>
+</div>
+
+<h3 id="sec-6-4"><span class="no">6.4</span>具体例3：恒等式の「すべての」</h3>
+<div class="box" id="abbr-forall"><span class="label">省略の段階：恒等式</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th></tr>
+<tr><td>S0</td><td>「すべての実数 $x$ について、$(x+1)^2=x^2+2x+1$ が成り立つ」</td><td>（省略なし）</td></tr>
+<tr><td>S1</td><td>$(x+1)^2\equiv x^2+2x+1$</td><td>「すべての $x$ について」を $\equiv$ に折りたたむ</td></tr>
+<tr><td>S2</td><td>$(x+1)^2=x^2+2x+1$</td><td>$\equiv$ ですらなく、ただの $=$ で書く。「すべての $x$」は読者が文脈から補う</td></tr>
+</table>
+<p>S2 が最も多く使われ、最も困る。<a href="#sym-equal">2.1</a> で見たとおり、<strong>$=$ は3つの顔がある</strong>ため、(a) 条件か (b) 恒等式かは、読者が文脈から判断しなければならない。</p>
+</div>
+
+<h3 id="sec-6-5"><span class="no">6.5</span>この資料の約束</h3>
+<div class="thm"><span class="label">この資料の約束（省略についての4か条）</span>
+<ol>
+<li><strong>初出の記号は、必ず「記号」の枠で説明する</strong>（読み方・意味・省略前・出会う場所）。</li>
+<li><strong>省略形は、「省略の段階」の箱で S0 から S1, S2, … と並べてから使う</strong>。</li>
+<li><strong>前に出た記号や概念を使うときは、毎回リンクを張る</strong>。</li>
+<li><strong>「明らか」「同様に」では飛ばさない</strong>。式は1行に1操作だけ進め、理由を書く。</li>
+</ol>
+</div>
+<p>これからの全51回は、この4か条で書かれている。もし、どこかで説明が省かれていたら、それはこの資料の<strong>誤り</strong>なので、教えてほしい（ティーチングモードで質問すれば、その場で追記される）。</p>
+
+<div class="why"><span class="label">ひとことで</span>数学の本は、掛け算の記号・括弧・「すべての」・引数などを省略して書く。この資料では、省略を S0（完全形）から S1, S2 … と段階に分けて示し、いつでも元の形に戻れるようにする。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="../img/a2_diophantus.jpg" alt="ディオファントス『算術』の写本の一頁。文章の途中に記号が混じる" loading="lazy"></div>
+<p class="cap">ディオファントス『算術』の写本の一頁。語の略号と記号が、文章の途中に混じっている。</p>
+<p class="cr">Diophantus of Alexandria（写本）／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:Diophantus,_Arithmetica,_Vaticanus_graecus_191.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="../img/b2_sogana.png" alt="漢字（黒）とそれを崩した形（赤）、そしてひらがなの対応表" loading="lazy"></div>
+<p class="cap">漢字（黒）を崩した形（赤）が、ひらがなになった。省略は一足飛びでなく、一段ずつ進んだ。</p>
+<p class="cr">Fastpunkk／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Sogana.png">Wikimedia Commons</a></p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>練習：式を声に出して文として読む</h2>
+<p>最後に、ここまでの記号を使って、式を日本語の文に直す練習をする。これができれば、<strong>式が読める</strong>。</p>
+
+<h3 id="sec-7-1"><span class="no">7.1</span>手順</h3>
+<ol>
+<li>式の中の<strong>関係の記号</strong>（$=,\lt,\le,\approx,\propto$ など）を探す。これが述語。</li>
+<li>関係の記号の左と右を、それぞれ1つの<strong>式（名詞）</strong>として読む。</li>
+<li>「左は右に〔関係〕」という文にする。</li>
+</ol>
+
+<div class="ex"><span class="label">例題1（式を日本語に直す）</span>
+<p>次の式を、日本語の文に直せ。(1) $v := \dfrac{\Delta x}{\Delta t}$　(2) $\sin x \approx x\quad(x\text{ が小さいとき})$　(3) $T\propto\sqrt{\ell}$　(4) $x_1\neq x_2$</p>
+<p><strong>解答</strong></p>
+<p>① (1)：関係の記号は $:=$。左は「$v$」、右は「$\Delta x$ を $\Delta t$ で割ったもの」。<a href="#sym-defeq">2.2</a> により、$:=$ は「左を右のことと決める」。→ <strong>「$v$ とは、$\Delta x$ を $\Delta t$ で割ったもののことである（と定める）」</strong>。</p>
+<p>② (2)：関係の記号は $\approx$。左は「$\sin x$」、右は「$x$」。<a href="#sym-approx">2.4</a> により「ほぼ等しい」。条件は括弧の中。→ <strong>「$x$ が小さいとき、$\sin x$ は $x$ にほぼ等しい」</strong>。</p>
+<p>③ (3)：関係の記号は $\propto$。左は「$T$」、右は「$\ell$ の平方根」。<a href="#sym-propto">2.5</a> により、「ある定数 $k$ があって $T=k\sqrt{\ell}$」。→ <strong>「$T$ は $\ell$ の平方根に比例する」</strong>。</p>
+<p>④ (4)：関係の記号は $\neq$。左は「$x_1$」（<a href="#sym-subscript">4.1</a> により $x$ の1番目）、右は「$x_2$」。→ <strong>「$x$ の1番目と2番目は、等しくない」</strong>。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-8"><span class="no">8</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_01.py）。</p>
+
+<div class="ex"><span class="label">例題2（A 確認：等号の種類）</span>
+<p>次の (1)〜(3) の等号は、<a href="#sym-equal">2.1</a> の (a)〜(c)、または <a href="#sym-defeq">2.2</a> の定義のうちのどれか。理由とともに答えよ。<br>(1) $x^2=4$　(2) $(a+b)(a-b)=a^2-b^2$　(3) $k:=\dfrac12 m v^2$</p>
+<p><strong>解答</strong></p>
+<p>① (1)：$x$ が未知数で、$x=2$ や $x=-2$ のときだけ正しい。例えば $x=3$ では $9\ne 4$。→ <strong>(a) 条件（方程式）</strong>。</p>
+<p>② (2)：$a=3,\;b=1$ を入れると、左は $(3+1)(3-1)=4\times 2=8$、右は $9-1=8$。$a=5,\;b=2$ では、左は $7\times 3=21$、右は $25-4=21$。どれを入れても一致するので、<strong>(b) 恒等式</strong>（展開すれば確かめられる：$(a+b)(a-b)=a^2-ab+ba-b^2=a^2-b^2$）。</p>
+<p>③ (3)：コロンがついている。$k$ という名前を、右辺のことと決めている。→ <strong>定義（命名）</strong>。</p>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：括弧の有無で値が変わる）</span>
+<p>$x=-2$ のとき、次の4つの値を求めよ。(1) $x^2$　(2) $-x^2$　(3) $(-x)^2$　(4) $3x^2$</p>
+<p><strong>解答</strong></p>
+<p>① (1)：$x=-2$ を入れる。$x^2=(-2)^2$（<em>負の数を入れるときは括弧をつける</em>。そうしないと $-2^2$ になり、<a href="#rule-order">優先順位</a>により $-(2^2)$ と読まれてしまうため）。$(-2)\times(-2)=4$。</p>
+<p>② (2)：$-x^2=-(x^2)$（<a href="#rule-order">優先順位</a>：冪が先、符号は後）。$x^2=4$ だから、$-4$。</p>
+<p>③ (3)：$(-x)^2$。括弧の中が先。$-x=-(-2)=2$。$2^2=4$。</p>
+<p>④ (4)：$3x^2=3\times(x^2)=3\times 4=12$。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-9"><span class="no">9</span>演習問題</h2>
+
+<div class="box"><span class="label">問1（A 確認）</span>次の関係式のうち、いつでも正しいもの・いつでも正しくないもの・値しだいで変わるものに分けよ。(1) $2+3=5$　(2) $2+3=6$　(3) $2x=6$　(4) $2(x+1)=2x+2$
+<details><summary>解答</summary>
+<p>(1) いつでも正しい（文字がなく、$2+3=5$ は成り立つ）。</p>
+<p>(2) いつでも正しくない（$2+3=5\neq 6$）。</p>
+<p>(3) 値しだいで変わる（$x=3$ のときだけ。$x=4$ では左は $8$ で右は $6$）。</p>
+<p>(4) いつでも正しい（恒等式）。$x=0$ で左 $2$、右 $2$。$x=5$ で左 $12$、右 $12$。展開すれば $2(x+1)=2x+2\cdot 1=2x+2$。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認）</span>$x=3$ のとき、(1) $x^3$ と (2) $x^{(3)}$ のうち、値が決まるのはどちらか。理由を述べよ。
+<details><summary>解答</summary>
+<p>(1) $x^3=3\times 3\times 3=27$ と決まる（<a href="#sym-superscript">4.2</a>）。</p>
+<p>(2) $x^{(3)}$ は冪ではない（<a href="#sym-bracket-sup">4.3</a>）。「3番目の $x$」などの意味なので、<strong>その本が何と宣言しているか</strong>がわからなければ、値は決まらない。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認）</span>次の式を、省略していない形（S0）に書き直せ。(1) $3ab^2$　(2) $\sin 2x$
+<details><summary>解答</summary>
+<p>(1) $3ab^2$：まず冪をほどく（<a href="#abbr-mult">省略の段階：掛け算</a>の S3→S2）。$b^2=b\times b$ だから、$3ab^2=3abb$。掛け算の記号を補う（S2→S0）。$3\times a\times b\times b$。</p>
+<p>(2) $\sin 2x$：関数の引数の括弧を補う（<a href="#abbr-arg">省略の段階：関数の引数</a>）。引数は「$2x$」全体。$\sin(2x)$。さらに掛け算の記号を補う。$\sin(2\times x)$。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（B 標準）</span>「$1/2x$」と書かれた式を、(1) $(1/2)\times x$、(2) $1/(2x)$ の2通りに読む。$x=4$ のとき、それぞれ何になるか。
+<details><summary>解答</summary>
+<p>(1) $(1/2)\times 4=0.5\times 4=2$。</p>
+<p>(2) $1/(2\times 4)=1/8=0.125$。</p>
+<p>値が違う。<a href="#sec-5-3">5.3</a> のとおり、書くときは括弧か分数で区別する。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準）</span>$\sin x\approx x$ が使える範囲について、$x=0.1$ と $x=1$ のそれぞれで、ずれ $x-\sin x$ を求め、$\approx$ が使えるかを判断せよ。（$\sin 0.1=0.0998334\ldots$、$\sin 1=0.841471\ldots$）
+<details><summary>解答</summary>
+<p>$x=0.1$：ずれ $=0.1-0.0998334=0.0001666$。元の値 $0.1$ の約0.17%。→ ほとんど同じ。</p>
+<p>$x=1$：ずれ $=1-0.841471=0.158529$。元の値 $1$ の約16%。→ 目的によっては使えない。</p>
+<p><a href="#sym-approx">2.4</a> のとおり、$\approx$ は「どれくらい近いか」を書いていない。<strong>使ってよい範囲は、目的の精度から自分で決める</strong>。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（C 発展：式を読む・書く）</span>日本語の文を、記号を使った関係式にせよ。(1)「$y$ は $x$ の2乗に比例する」　(2)「$a_3$ とは、$a_1$ と $a_2$ の和のことと定める」　(3)「$x$ が小さいとき、$\ln(1+x)$ は $x$ にほぼ等しい」
+<details><summary>解答</summary>
+<p>(1) $y\propto x^2$（<a href="#sym-propto">2.5</a>。$x^2$ は <a href="#sym-superscript">4.2</a> の冪）。</p>
+<p>(2) $a_3 := a_1+a_2$（<a href="#sym-defeq">2.2</a> の定義の等号。$a_1,a_2,a_3$ は <a href="#sym-subscript">4.1</a> の添字）。</p>
+<p>(3) $\ln(1+x)\approx x\quad(x\text{ が小さいとき})$（<a href="#sym-approx">2.4</a>）。</p>
+<p class="meta">※自作の問題と解答。この種の問題は、<a href="https://richardhammack.github.io/BookOfProof/">Book of Proof</a>（CC BY-NC-ND 4.0）の第1〜2章にも多数ある（改変不可のため全文は載せない）。</p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 「式（名詞）」と「関係式（文）」を区別できる。</li>
+<li>□ 関係式が「いつでも正しい／いつでも正しくない／値しだいで変わる」のどれかを判断できる。</li>
+<li>□ 等号 $=$ の3つの顔（条件・恒等式・結果の記述）を、文字が未知数かどうかで見分けられる。</li>
+<li>□ $:=$、$\equiv$、$\approx$、$\propto$、$\neq$ を、日本語で読み、省略前の言い方に戻せる。</li>
+<li>□ 主要なギリシャ文字を声に出して読める。</li>
+<li>□ $x_1$、$x^2$、$x^{(2)}$、$x'$、$\cdots$ の違いを説明できる。</li>
+<li>□ $2x^2$ と $(2x)^2$、$\sin^2 x$ と $\sin x^2$ のように、括弧の有無で値が変わる例を書ける。</li>
+<li>□ 「省略の段階（S0, S1, …）」の考え方を説明でき、省略形を S0 に戻せる。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第2回）</strong>：集合と論理。この回で何度か「第2回で説明する」と書いた $\forall$（すべての）、$\exists$（存在する）、$\Rightarrow$（ならば）、$\Leftrightarrow$（同値）、$\lor$（または）、そして集合の記号 $\in,\ \subset,\ \cup,\ \cap$ を扱う。<br>
+<a href="../index.html">← 目次へ</a>　｜　<a href="../symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：記号の意味と流派の整理は、Hammack, <em>Book of Proof</em>（CC BY-NC-ND 4.0）の序・第1章、OpenStax <em>Calculus Volume 1</em>（CC BY-NC-SA 4.0）の記法の章、各科目の教材の書き方（量子力学・機械力学・電磁気学・応用数学Ⅱ）を参照して、本教材向けに書き直したもの。例題・演習・表は自作。</p>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

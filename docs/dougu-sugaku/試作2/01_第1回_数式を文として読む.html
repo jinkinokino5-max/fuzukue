@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回 数式を文として読む</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="../img/01_hero_rosetta.jpg" alt="ロゼッタ・ストーンの上半分。黒い石の面に、上の段はヒエログリフ、下の段はデモティックの文字が細かく刻まれ、左上は欠けている">
+<div class="ttl" style="left:4%;top:7%"><p class="vol">第1回</p><h1>数式を文として読む</h1></div>
+<figcaption><p class="cap">上の段で楕円の枠に囲まれた一群が王の名だと見抜かれたとき、石の刻み目は文として読まれはじめた。</p><p class="cr">Hans Hillewaert／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Rosetta_Stone.JPG">Wikimedia Commons</a>（ロゼッタ・ストーン、前196年、大英博物館。上半分を横長に切り出した）</p></figcaption>
+</figure>
+<p class="lead">第0部「記号と言葉」の最初の回。数式は「主語と述語のある文」であること、等号の種類、文字の読み方、そして<strong>省略の段階</strong>という考え方を、ゆっくり確かめる。以後のすべての回は、この回の記号と「省略の段階」にリンクして戻れる。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：数式には<em>名詞にあたるもの（式）</em>と<em>文にあたるもの（関係式）</em>がある → 文を作る記号は「等号」だけではなく、種類ごとに意味が違う → 文字は読み方・添字・肩の数字で意味が変わる → 数学の本は、約束ごとを使って書き方を<strong>省略</strong>している。その省略を1段ずつ元に戻して読めるようになる。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>この教材は、数学の本で<strong>説明されないまま使われている約束ごと</strong>を、全部ことばにして書く。「こんなこと知っている」と思う部分は、飛ばして次へ進んでよい。ただし、飛ばしたはずの記号が後の回でわからなくなったら、その記号のところへリンクで戻れるようになっている。</p>
+<p>記号が出てくるたびに、緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。全部の記号は <a href="../symbols.html">記号索引</a> からも探せる。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>まず、この回で新しく説明する記号の一覧。右の列の「→」で、説明のある節へ飛べる。（第1回は最初の回なので、「前の回で出た記号」はない。）</p>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$=$</td><td>イコール</td><td>左と右が同じ値</td><td><a href="#sym-equal">→2.1</a></td></tr>
+<tr><td>$:=$</td><td>コロンイコール</td><td>左の名前を、右の式で<em>決める</em></td><td><a href="#sym-defeq">→2.2</a></td></tr>
+<tr><td>$\equiv$</td><td>合同／恒等</td><td>どんな値でも常に同じ</td><td><a href="#sym-identical">→2.3</a></td></tr>
+<tr><td>$\approx$</td><td>ニアリーイコール</td><td>だいたい同じ</td><td><a href="#sym-approx">→2.4</a></td></tr>
+<tr><td>$\propto$</td><td>比例</td><td>左は右の定数倍</td><td><a href="#sym-propto">→2.5</a></td></tr>
+<tr><td>$\neq$</td><td>ノットイコール</td><td>等しくない</td><td><a href="#sym-neq">→2.6</a></td></tr>
+<tr><td>$\lt\ \gt\ \le\ \ge$</td><td>未満・より大きい・以下・以上</td><td>大小の関係</td><td><a href="#sym-order">→2.6</a></td></tr>
+<tr><td>$x_1$（添字）</td><td>エックス・いち（エックス・ワン）</td><td>名前に番号やラベルをつける</td><td><a href="#sym-subscript">→4.1</a></td></tr>
+<tr><td>$x^2$（肩の数字）</td><td>エックスの二乗</td><td>冪（べき）</td><td><a href="#sym-superscript">→4.2</a></td></tr>
+<tr><td>$x^{(2)}$</td><td>エックスの括弧二</td><td>2<em>番目</em>の何か（冪ではない）</td><td><a href="#sym-bracket-sup">→4.3</a></td></tr>
+<tr><td>$x'$</td><td>エックス・プライム</td><td>別のもの、または微分</td><td><a href="#sym-prime">→4.4</a></td></tr>
+<tr><td>$\cdots$（三点リーダー）</td><td>てんてんてん</td><td>同じ規則で続く部分を省く</td><td><a href="#sym-dots">→4.5</a></td></tr>
+<tr><td>ギリシャ文字</td><td>アルファ、ベータ…</td><td>文字の足りない分を補う</td><td><a href="#sec-3">→3</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>数式は「文」でできている</h2>
+
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：読めないのは「文の切れ目」がわからないから</h3>
+<p>数学の本のページを開くと、記号が並んでいる。これを「なんとなく雰囲気で」眺めていると、1行がどこで切れて、どの部分が主張で、どの部分が材料なのか、わからなくなる。それが「記号がわからない」という感覚の、かなり大きな原因になっている。</p>
+<p>日本語の文には、「何が（主語）」「どうする／どうだ（述語）」がある。数式にも、これと同じものがある。それを最初に区別しておく。</p>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>定義：式と関係式</h3>
+<div class="def" id="sym-expression"><span class="label">記号：式（しき）と関係式（かんけいしき）</span>
+<p><strong>①読み方</strong>：「しき」「かんけいしき」。</p>
+<p><strong>②日本語での意味</strong>：<strong>式</strong>とは、計算した結果として<em>1つの値（または1つの量）</em>になる記号の並び。日本語でいえば<em>名詞（のかたまり）</em>。<strong>関係式</strong>とは、2つの式を等号や不等号などでつないで、<em>正しいか正しくないか</em>を言える形にしたもの。日本語でいえば<em>文</em>。</p>
+<p><strong>③省略していない書き方</strong>：この区別そのものに略記はない。ただし本によっては、関係式のことも単に「式」と呼ぶ。この教材では<strong>区別して書く</strong>。</p>
+<p><strong>④どこで出会うか</strong>：すべての科目。</p>
+</div>
+
+<p>例を並べる。</p>
+<table class="tb">
+<tr><th>書いたもの</th><th>式か関係式か</th><th>日本語に直すと</th></tr>
+<tr><td>$x+1$</td><td>式（名詞）</td><td>「$x$ に1を足したもの」</td></tr>
+<tr><td>$3$</td><td>式（名詞）</td><td>「3」</td></tr>
+<tr><td>$x+1=3$</td><td>関係式（文）</td><td>「$x$ に1を足したものは、3に等しい」</td></tr>
+<tr><td>$x+1\lt 3$</td><td>関係式（文）</td><td>「$x$ に1を足したものは、3より小さい」</td></tr>
+<tr><td>$x+1=3$ ならば $x=2$</td><td>関係式をつないだ文</td><td>「前の文が正しいなら、後ろの文も正しい」</td></tr>
+</table>
+<p>「$x+1$」だけを書いて止まるのは、日本語で「りんごの」とだけ言って止まるのに近い。何も主張していない。主張は、<strong>関係式</strong>になって初めて生まれる。</p>
+<p>上の表の3行目を、日本語の文と部品ごとに対応させると、図1.1 のようになる。語順は入れかわるが、部品の役割（名詞か、関係を言う語か）は一対一に対応している。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 308" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="日本語の文と数式の文の対応" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>日本語の文と数式の文の対応</title>
+<rect x="0" y="0" width="440" height="308" fill="#fffdf7"/>
+<text x="10.0" y="22.0" font-size="14" fill="#6b645a" text-anchor="start">日本語の文</text>
+<rect x="10" y="32" width="172" height="42" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.5"/>
+<text x="96.0" y="59.0" font-size="15" fill="#2a2723" text-anchor="middle">x に 1 を足したもの</text>
+<text x="198.0" y="59.0" font-size="15" fill="#6b645a" text-anchor="middle">は</text>
+<rect x="214" y="32" width="44" height="42" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.5"/>
+<text x="236.0" y="59.0" font-size="16" fill="#2a2723" text-anchor="middle">3</text>
+<rect x="272" y="32" width="100" height="42" rx="5" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.5"/>
+<text x="322.0" y="59.0" font-size="15" fill="#2a2723" text-anchor="middle">に等しい</text>
+<line x1="96.0" y1="76.0" x2="96.0" y2="150.0" stroke="#5f7f4f" stroke-width="1.5" stroke-dasharray="4 3"/>
+<path d="M236 76 C236 112 322 116 322 150" stroke="#5f7f4f" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+<path d="M322 76 C322 112 236 116 236 150" stroke="#a8322a" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+<text x="10.0" y="142.0" font-size="14" fill="#6b645a" text-anchor="start">数式の文</text>
+<rect x="10" y="152" width="172" height="46" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.5"/>
+<text x="96.0" y="183.0" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan> + 1</text>
+<rect x="214" y="152" width="44" height="46" rx="5" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.5"/>
+<text x="236.0" y="184.0" font-size="26" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>=</text>
+<rect x="272" y="152" width="100" height="46" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.5"/>
+<text x="322.0" y="184.0" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>3</text>
+<text x="96.0" y="220.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">式（名詞）</text>
+<text x="236.0" y="220.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">関係の記号</text>
+<text x="322.0" y="220.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">式（名詞）</text>
+<path d="M10 236 L10 246 L372 246 L372 236" stroke="#2b3a67" stroke-width="1.6" fill="none"/>
+<text x="191.0" y="272.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">全体で1つの文＝関係式</text>
+<text x="191.0" y="294.0" font-size="14" fill="#6b645a" text-anchor="middle">「正しい」か「正しくない」かが言える</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　「$x$ に1を足したもの」と「3」が式（名詞）、「に等しい」が記号 $=$ にあたる。式だけでは何も主張せず、関係の記号でつないだ全体が初めて文になる。</figcaption>
+</figure>
+
+<div class="why"><span class="label">ひとことで</span>数式の中には、名詞にあたる「式」と、文にあたる「関係式」がある。関係式は「正しいか正しくないか」が言える。</div>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>最小の具体例：正しい文・正しくない文・まだわからない文</h3>
+<p>関係式には、次の3つの状態がある。</p>
+<ol>
+<li><strong>いつでも正しい</strong>：$1+1=2$。</li>
+<li><strong>いつでも正しくない</strong>：$1+1=3$。（これも「文」である。正しくない文を書くことはできる。）</li>
+<li><strong>文字の値しだいで変わる</strong>：$x+1=3$。$x=2$ のときだけ正しい。</li>
+</ol>
+<p>3番目の「文字の値しだいで変わる文」を、<strong>条件</strong>と呼ぶ。「$x+1=3$ を解く」とは、「この文が正しくなるような $x$ の値をすべて探す」ことである。答え「$x=2$」もまた1つの関係式（文）で、「$x$ は2である」と読む。</p>
+<p>図1.2 で、文 $x+1=3$ に $x$ の値を1つずつ入れて確かめる。左辺（等号の左側の式）を計算し、右辺（右側の式）の3と比べる。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 440 252" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="x+1=3 に値を入れて正しさを確かめる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>x+1=3 に値を入れて正しさを確かめる</title>
+<rect x="0" y="0" width="440" height="252" fill="#fffdf7"/>
+<text x="10.0" y="24.0" font-size="14" fill="#6b645a" text-anchor="start">x に 0, 1, 2, 3, 4 を順に入れて、文「x + 1 = 3」を確かめる</text>
+<rect x="16" y="40" width="72" height="170" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="52.0" y="70.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan> = 0</text>
+<text x="52.0" y="98.0" font-size="13" fill="#6b645a" text-anchor="middle">左辺</text>
+<text x="52.0" y="122.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>1</text>
+<text x="52.0" y="146.0" font-size="13" fill="#6b645a" text-anchor="middle">右辺</text>
+<text x="52.0" y="168.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>3</text>
+<text x="52.0" y="200.0" font-size="12.5" fill="#6b645a" text-anchor="middle">正しくない</text>
+<rect x="100" y="40" width="72" height="170" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="136.0" y="70.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan> = 1</text>
+<text x="136.0" y="98.0" font-size="13" fill="#6b645a" text-anchor="middle">左辺</text>
+<text x="136.0" y="122.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<text x="136.0" y="146.0" font-size="13" fill="#6b645a" text-anchor="middle">右辺</text>
+<text x="136.0" y="168.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>3</text>
+<text x="136.0" y="200.0" font-size="12.5" fill="#6b645a" text-anchor="middle">正しくない</text>
+<rect x="184" y="40" width="72" height="170" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="2"/>
+<text x="220.0" y="70.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan> = 2</text>
+<text x="220.0" y="98.0" font-size="13" fill="#6b645a" text-anchor="middle">左辺</text>
+<text x="220.0" y="122.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>3</text>
+<text x="220.0" y="146.0" font-size="13" fill="#6b645a" text-anchor="middle">右辺</text>
+<text x="220.0" y="168.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>3</text>
+<text x="220.0" y="200.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">正しい</text>
+<rect x="268" y="40" width="72" height="170" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="304.0" y="70.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan> = 3</text>
+<text x="304.0" y="98.0" font-size="13" fill="#6b645a" text-anchor="middle">左辺</text>
+<text x="304.0" y="122.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>4</text>
+<text x="304.0" y="146.0" font-size="13" fill="#6b645a" text-anchor="middle">右辺</text>
+<text x="304.0" y="168.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>3</text>
+<text x="304.0" y="200.0" font-size="12.5" fill="#6b645a" text-anchor="middle">正しくない</text>
+<rect x="352" y="40" width="72" height="170" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="388.0" y="70.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan> = 4</text>
+<text x="388.0" y="98.0" font-size="13" fill="#6b645a" text-anchor="middle">左辺</text>
+<text x="388.0" y="122.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>5</text>
+<text x="388.0" y="146.0" font-size="13" fill="#6b645a" text-anchor="middle">右辺</text>
+<text x="388.0" y="168.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>3</text>
+<text x="388.0" y="200.0" font-size="12.5" fill="#6b645a" text-anchor="middle">正しくない</text>
+<text x="220.0" y="238.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">正しくなるのは x = 2 のときだけ。これが「方程式を解く」の答え。</text>
+</svg>
+<figcaption><strong>図 1.2</strong>　同じ文 $x+1=3$ でも、$x$ の値によって正しかったり正しくなかったりする。このような文を<strong>条件</strong>と呼ぶ。</figcaption>
+</figure>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「$=$ の右に答えを書く記号だ」と思っていると、$x+1=3$ を「$x+1$ を計算して3を出せ」と読んでしまう。正しくは「$x+1$ と $3$ が同じ値になっている」という<strong>主張（または条件）</strong>である。計算の指示ではない。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>関係式は3種類ある：いつでも正しい／いつでも正しくない／値しだいで変わる。「方程式を解く」は、3番目の文が正しくなる値を探すこと。</div>
+
+<!-- ============================================================ -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="../img/a2_diophantus.jpg" alt="ギリシャ語の手書きの文字が、ページいっぱいに行をなして続く写本の一頁" loading="lazy"></div>
+<p class="cap">ディオファントス『算術』の写本では、方程式は記号の行としてではなく、文章の流れの中に書かれている。</p>
+<p class="cr">Diophantus of Alexandria（写本）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Diophantus,_Arithmetica,_Vaticanus_graecus_191.jpg">Wikimedia Commons</a>（ヴァチカン図書館 Vat. gr. 191）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="../img/01_b1_kunten.jpg" alt="漢文の刊本の見開き。漢字の左右に、レ点や一・二の返り点と、カタカナの送り仮名・読みが小さく添えられている" loading="lazy"></div>
+<p class="cap">レ点と一二点は、語順の違う文を、自分の言葉の文として読み下すための小さな記号である。</p>
+<p class="cr">風来山人 訳『刪笑府』（撮影 WikiTaro）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Xiaofu_digest_edition_1776.jpg">Wikimedia Commons</a>（安永5年＝1776年刊）</p></div>
+</figure>
+<h2 id="sec-2"><span class="no">2</span>等号は1種類ではない</h2>
+
+<h3 id="sec-2-0"><span class="no">2.0</span>動機</h3>
+<p>多くの人が「$=$」を1種類の記号だと思っている。ところが数学の本は、同じ「$=$」の形で<strong>まったく違う3つの用法</strong>を、説明なしに混ぜて書く。ここがわからなくなる、最初の落とし穴になる。以下、1つずつ区別する。</p>
+
+<h3 id="sec-2-1"><span class="no">2.1</span>イコール $=$（主張・条件・恒等式の3つの顔）</h3>
+<div class="def" id="sym-equal"><span class="label">記号：$=$</span>
+<p><strong>①読み方</strong>：「イコール」。文として読むときは「〜は…に等しい」「〜は…である」。</p>
+<p><strong>②日本語での意味</strong>：左の式と右の式が、<em>同じ値になっている</em>という主張。</p>
+<p><strong>③省略していない書き方</strong>：$=$ 自体は省略形ではない。ただし<strong>3つの顔</strong>がある（下の表）。どの顔なのかは、記号に書いていない。<strong>文脈から読み取る</strong>約束になっている。</p>
+<p><strong>④どこで出会うか</strong>：すべての科目。</p>
+</div>
+
+<table class="tb">
+<tr><th>顔</th><th>例</th><th>日本語で言うと</th><th>見分け方</th></tr>
+<tr><td>(a) 条件（方程式）</td><td>$x+1=3$</td><td>「$x$ がこの値のときだけ正しい」</td><td>$x$ が<em>求めたい未知数</em>のとき</td></tr>
+<tr><td>(b) 恒等式</td><td>$(x+1)^2=x^2+2x+1$</td><td>「$x$ が何であっても常に正しい」</td><td>$x$ が<em>どんな値でも</em>よいとき。「展開する」「公式」</td></tr>
+<tr><td>(c) 結果の記述</td><td>$2+3=5$</td><td>「計算した結果は5である」</td><td>文字がなく、数だけのとき</td></tr>
+</table>
+
+<p>(a) と (b) の違いを、実際に確かめる。$x=2$ を入れてみる。</p>
+<ol>
+<li>(a) $x+1=3$：左は $2+1=3$、右は $3$。一致する。<strong>ただし $x=5$ を入れると</strong>、左は $5+1=6$、右は $3$ で一致しない。→ 値しだいで変わる。</li>
+<li>(b) $(x+1)^2=x^2+2x+1$：$x=2$ では、左は $(2+1)^2=9$、右は $2^2+2\cdot 2+1=4+4+1=9$。一致する。$x=5$ では、左は $(5+1)^2=36$、右は $25+10+1=36$。一致する。<strong>どの値を入れても一致する</strong>。</li>
+</ol>
+<p>(a) と (b) の違いをグラフにすると、図2.1 になる。左辺と右辺をそれぞれ $y=\ldots$ のグラフとして描き、2本がどこで重なるかを見る。重なっている $x$ では、文が正しい。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 500" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="条件と恒等式をグラフで比べる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>条件と恒等式をグラフで比べる</title>
+<rect x="0" y="0" width="440" height="500" fill="#fffdf7"/>
+<text x="10.0" y="22.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(a) 条件　x + 1 = 3</text>
+<line x1="50.0" y1="177.7" x2="390.0" y2="177.7" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 180.7 L390.0 177.7 L383.7 174.6" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="116.0" y1="206.0" x2="116.0" y2="26.0" stroke="#2a2723" stroke-width="1.3"/><path d="M119.0 32.3 L116.0 26.0 L113.0 32.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="182.0" y1="173.7" x2="182.0" y2="181.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="182.0" y="197.7" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="248.0" y1="173.7" x2="248.0" y2="181.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="248.0" y="197.7" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="314.0" y1="173.7" x2="314.0" y2="181.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="314.0" y="197.7" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="112.0" y1="149.3" x2="120.0" y2="149.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="108.0" y="154.3" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="112.0" y1="92.7" x2="120.0" y2="92.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="108.0" y="97.7" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<line x1="112.0" y1="36.0" x2="120.0" y2="36.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="108.0" y="41.0" font-size="14" fill="#6b645a" text-anchor="end">5</text>
+<text x="394.0" y="199.7" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="130.0" y="32.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'></text>
+<polyline points="50.0,177.7 215.0,106.8 380.0,36.0" fill="none" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="50.0,92.7 215.0,92.7 380.0,92.7" fill="none" stroke="#a8322a" stroke-width="2.2" stroke-dasharray="7 4" stroke-linejoin="round"/>
+<text x="333.8" y="49.8" font-size="14" fill="#2b3a67" text-anchor="end">y = x + 1（左辺）</text>
+<text x="380.0" y="84.7" font-size="14" fill="#a8322a" text-anchor="end">y = 3（右辺）</text>
+<circle cx="248.0" cy="92.7" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="248.0" y1="92.7" x2="248.0" y2="177.7" stroke="#a8322a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="258.0" y="167.7" font-size="14" fill="#a8322a" text-anchor="start">交わるのは x = 2 の1点だけ</text>
+<text x="10.0" y="272.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(b) 恒等式　(x + 1)² = x² + 2x + 1</text>
+<line x1="50.0" y1="439.0" x2="390.0" y2="439.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 442.0 L390.0 439.0 L383.7 436.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="248.0" y1="456.0" x2="248.0" y2="276.0" stroke="#2a2723" stroke-width="1.3"/><path d="M251.0 282.3 L248.0 276.0 L245.0 282.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="116.0" y1="435.0" x2="116.0" y2="443.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="116.0" y="459.0" font-size="14" fill="#6b645a" text-anchor="middle">-2</text>
+<line x1="182.0" y1="435.0" x2="182.0" y2="443.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="182.0" y="459.0" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="314.0" y1="435.0" x2="314.0" y2="443.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="314.0" y="459.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="380.0" y1="435.0" x2="380.0" y2="443.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="380.0" y="459.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="244.0" y1="371.0" x2="252.0" y2="371.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="240.0" y="376.0" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="394.0" y="461.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="262.0" y="282.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'></text>
+<polyline points="50.0,371.0 51.6,372.7 53.3,374.4 55.0,376.0 56.6,377.6 58.2,379.2 59.9,380.8 61.5,382.4 63.2,383.9 64.9,385.4 66.5,386.9 68.1,388.4 69.8,389.9 71.5,391.3 73.1,392.7 74.8,394.1 76.4,395.5 78.0,396.8 79.7,398.2 81.4,399.5 83.0,400.8 84.6,402.0 86.3,403.3 88.0,404.5 89.6,405.7 91.2,406.9 92.9,408.0 94.5,409.2 96.2,410.3 97.9,411.4 99.5,412.4 101.1,413.5 102.8,414.5 104.5,415.5 106.1,416.5 107.8,417.5 109.4,418.4 111.0,419.4 112.7,420.3 114.4,421.1 116.0,422.0 117.6,422.8 119.3,423.7 121.0,424.5 122.6,425.2 124.2,426.0 125.9,426.7 127.6,427.4 129.2,428.1 130.9,428.8 132.5,429.4 134.2,430.1 135.8,430.7 137.4,431.3 139.1,431.8 140.8,432.4 142.4,432.9 144.1,433.4 145.7,433.9 147.4,434.3 149.0,434.8 150.6,435.2 152.3,435.6 153.9,435.9 155.6,436.3 157.2,436.6 158.9,436.9 160.6,437.2 162.2,437.5 163.9,437.7 165.5,437.9 167.1,438.1 168.8,438.3 170.4,438.5 172.1,438.6 173.8,438.7 175.4,438.8 177.1,438.9 178.7,439.0 180.3,439.0 182.0,439.0 183.6,439.0 185.3,439.0 187.0,438.9 188.6,438.8 190.2,438.7 191.9,438.6 193.5,438.5 195.2,438.3 196.8,438.1 198.5,437.9 200.1,437.7 201.8,437.5 203.5,437.2 205.1,436.9 206.8,436.6 208.4,436.3 210.0,435.9 211.7,435.6 213.3,435.2 215.0,434.8 216.7,434.3 218.3,433.9 220.0,433.4 221.6,432.9 223.2,432.4 224.9,431.8 226.5,431.3 228.2,430.7 229.9,430.1 231.5,429.4 233.1,428.8 234.8,428.1 236.5,427.4 238.1,426.7 239.7,426.0 241.4,425.2 243.0,424.5 244.7,423.7 246.3,422.8 248.0,422.0 249.7,421.1 251.3,420.3 252.9,419.4 254.6,418.4 256.2,417.5 257.9,416.5 259.6,415.5 261.2,414.5 262.9,413.5 264.5,412.4 266.1,411.4 267.8,410.3 269.5,409.2 271.1,408.0 272.8,406.9 274.4,405.7 276.0,404.5 277.7,403.3 279.4,402.0 281.0,400.8 282.6,399.5 284.3,398.2 286.0,396.8 287.6,395.5 289.2,394.1 290.9,392.7 292.5,391.3 294.2,389.9 295.9,388.4 297.5,386.9 299.1,385.4 300.8,383.9 302.5,382.4 304.1,380.8 305.8,379.2 307.4,377.6 309.0,376.0 310.7,374.4 312.4,372.7 314.0,371.0 315.7,369.3 317.3,367.6 319.0,365.8 320.6,364.0 322.2,362.2 323.9,360.4 325.6,358.6 327.2,356.7 328.8,354.8 330.5,352.9 332.2,351.0 333.8,349.1 335.4,347.1 337.1,345.1 338.8,343.1 340.4,341.1 342.1,339.0 343.7,337.0 345.3,334.9 347.0,332.8 348.7,330.6 350.3,328.5 351.9,326.3 353.6,324.1 355.2,321.9 356.9,319.6 358.5,317.4 360.2,315.1 361.8,312.8 363.5,310.4 365.2,308.1 366.8,305.7 368.5,303.3 370.1,300.9 371.8,298.5 373.4,296.0 375.1,293.6 376.7,291.1 378.3,288.5 380.0,286.0" fill="none" stroke="#2b3a67" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="50.0,371.0 51.6,372.7 53.3,374.4 55.0,376.0 56.6,377.6 58.2,379.2 59.9,380.8 61.5,382.4 63.2,383.9 64.9,385.4 66.5,386.9 68.1,388.4 69.8,389.9 71.5,391.3 73.1,392.7 74.8,394.1 76.4,395.5 78.0,396.8 79.7,398.2 81.4,399.5 83.0,400.8 84.6,402.0 86.3,403.3 88.0,404.5 89.6,405.7 91.2,406.9 92.9,408.0 94.5,409.2 96.2,410.3 97.9,411.4 99.5,412.4 101.1,413.5 102.8,414.5 104.5,415.5 106.1,416.5 107.8,417.5 109.4,418.4 111.0,419.4 112.7,420.3 114.4,421.1 116.0,422.0 117.6,422.8 119.3,423.7 121.0,424.5 122.6,425.2 124.2,426.0 125.9,426.7 127.6,427.4 129.2,428.1 130.9,428.8 132.5,429.4 134.2,430.1 135.8,430.7 137.4,431.3 139.1,431.8 140.8,432.4 142.4,432.9 144.1,433.4 145.7,433.9 147.4,434.3 149.0,434.8 150.6,435.2 152.3,435.6 153.9,435.9 155.6,436.3 157.2,436.6 158.9,436.9 160.6,437.2 162.2,437.5 163.9,437.7 165.5,437.9 167.1,438.1 168.8,438.3 170.4,438.5 172.1,438.6 173.8,438.7 175.4,438.8 177.1,438.9 178.7,439.0 180.3,439.0 182.0,439.0 183.6,439.0 185.3,439.0 187.0,438.9 188.6,438.8 190.2,438.7 191.9,438.6 193.5,438.5 195.2,438.3 196.8,438.1 198.5,437.9 200.1,437.7 201.8,437.5 203.5,437.2 205.1,436.9 206.8,436.6 208.4,436.3 210.0,435.9 211.7,435.6 213.3,435.2 215.0,434.8 216.7,434.3 218.3,433.9 220.0,433.4 221.6,432.9 223.2,432.4 224.9,431.8 226.5,431.3 228.2,430.7 229.9,430.1 231.5,429.4 233.1,428.8 234.8,428.1 236.5,427.4 238.1,426.7 239.7,426.0 241.4,425.2 243.0,424.5 244.7,423.7 246.3,422.8 248.0,422.0 249.7,421.1 251.3,420.3 252.9,419.4 254.6,418.4 256.2,417.5 257.9,416.5 259.6,415.5 261.2,414.5 262.9,413.5 264.5,412.4 266.1,411.4 267.8,410.3 269.5,409.2 271.1,408.0 272.8,406.9 274.4,405.7 276.0,404.5 277.7,403.3 279.4,402.0 281.0,400.8 282.6,399.5 284.3,398.2 286.0,396.8 287.6,395.5 289.2,394.1 290.9,392.7 292.5,391.3 294.2,389.9 295.9,388.4 297.5,386.9 299.1,385.4 300.8,383.9 302.5,382.4 304.1,380.8 305.8,379.2 307.4,377.6 309.0,376.0 310.7,374.4 312.4,372.7 314.0,371.0 315.7,369.3 317.3,367.6 319.0,365.8 320.6,364.0 322.2,362.2 323.9,360.4 325.6,358.6 327.2,356.7 328.8,354.8 330.5,352.9 332.2,351.0 333.8,349.1 335.4,347.1 337.1,345.1 338.8,343.1 340.4,341.1 342.1,339.0 343.7,337.0 345.3,334.9 347.0,332.8 348.7,330.6 350.3,328.5 351.9,326.3 353.6,324.1 355.2,321.9 356.9,319.6 358.5,317.4 360.2,315.1 361.8,312.8 363.5,310.4 365.2,308.1 366.8,305.7 368.5,303.3 370.1,300.9 371.8,298.5 373.4,296.0 375.1,293.6 376.7,291.1 378.3,288.5 380.0,286.0" fill="none" stroke="#b07a3e" stroke-width="2.2" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<text x="53.3" y="296.2" font-size="14" fill="#2b3a67" text-anchor="start">太い線：y = (x + 1)²（左辺）</text>
+<text x="53.3" y="316.6" font-size="14" fill="#b07a3e" text-anchor="start">点線：y = x² + 2x + 1（右辺）</text>
+<text x="53.3" y="337.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">→ どこでも重なる</text>
+</svg>
+<figcaption><strong>図 2.1</strong>　(a) 条件では、2本のグラフは1点（$x=2$）でしか交わらない。(b) 恒等式では、2本のグラフはすべての $x$ で重なり、1本にしか見えない。</figcaption>
+</figure>
+<p>なお、2.1 で使った <a href="#sec-6-1">掛け算の「$\cdot$」と、記号を書かずに並べる書き方は、第6節の「省略の段階」</a>でまとめて説明する。</p>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p>(a) と (b) を取り違えると、「$x$ を求めよ」と言われていないのに $(x+1)^2=x^2+2x+1$ を解こうとして、「$x$ は任意」という答えになって混乱する。逆に、(a) を恒等式のつもりで使うと、「$x+1=3$ だから $x$ に何を入れても $x+1$ は3だ」という誤りにつながる。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>同じ「$=$」でも、「この値のときだけ正しい（条件）」「どの値でも正しい（恒等式）」「計算結果の記述」の3つの顔がある。文字が<em>未知数</em>か<em>何でもよい文字</em>かで見分ける。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="../img/a1_recorde.png" alt="16世紀の黒字体の英文。行の途中に長い二本線が引かれ、その下に二本線を使った最初の等式が組まれている" loading="lazy"></div>
+<p class="cap">1557年、レコードは「これほど等しい二つのものはない」として平行な二本線を等号に選び、その下に最初の等式を組んだ。</p>
+<p class="cr">Robert Recorde, <em>The Whetstone of Witte</em>／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Equals_sign_in_Robert_Recorde,_The_Whetstone_of_Witte,_London_1557,_p.238.png">Wikimedia Commons</a>（1557年、p.238）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="../img/01_b2_koomote.jpg" alt="灰緑の地に、能面の小面を正面から写した写真。白い顔、細い目、赤い唇、中央で分けた黒髪" loading="lazy"></div>
+<p class="cap">同じ一枚の面が、少し上を向けば笑みを、少し伏せれば憂いを帯びる。</p>
+<p class="cr">東京国立博物館（ColBase）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Ko-omote_(Noh_mask),_Tokyo_National_Museum_C-1551.jpg">Wikimedia Commons</a>（小面、C-1551）</p></div>
+</figure>
+<h3 id="sec-2-2"><span class="no">2.2</span>定義の等号 $:=$</h3>
+<p>「$x+1=3$」の $=$ は、<em>正しいかどうかを問える</em>文を作った。しかし、次のような書き方もある。</p>
+<p>$$ v := \frac{\Delta x}{\Delta t} $$</p>
+<p>これは「$v$ は $\Delta x/\Delta t$ に等しい」という主張ではない。「<strong>$v$ という名前を、右の式のことにする</strong>」という<em>命名（約束）</em>である。正しいか正しくないかを問う文ではない。</p>
+<p>$=$ と $:=$ の働きの違いを、図2.2 に並べる。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 358" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="等号と定義の等号の違い" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>等号と定義の等号の違い</title>
+<rect x="0" y="0" width="440" height="358" fill="#fffdf7"/>
+<text x="10.0" y="22.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">等号 =：左と右を比べる</text>
+<rect x="40" y="36" width="120" height="48" rx="5" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="100.0" y="68.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan> + 1</text>
+<text x="220.0" y="69.0" font-size="26" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>=</text>
+<rect x="280" y="36" width="120" height="48" rx="5" fill="#fff" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="340.0" y="68.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>3</text>
+<line x1="165.0" y1="96.0" x2="275.0" y2="96.0" stroke="#2b3a67" stroke-width="1.6"/><path d="M267.8 99.5 L275.0 96.0 L267.8 92.5" fill="none" stroke="#2b3a67" stroke-width="1.6"/>
+<line x1="275.0" y1="96.0" x2="165.0" y2="96.0" stroke="#2b3a67" stroke-width="1.6"/><path d="M172.2 92.5 L165.0 96.0 L172.2 99.5" fill="none" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="220.0" y="120.0" font-size="14" fill="#6b645a" text-anchor="middle">両方の値を計算して比べる</text>
+<text x="220.0" y="142.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">→「正しい／正しくない」を問える文</text>
+<line x1="10.0" y1="172.0" x2="430.0" y2="172.0" stroke="#ddd6c8" stroke-width="1"/>
+<text x="10.0" y="202.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">定義の等号 :=：右の中身に、左の名前をつける</text>
+<path d="M40 218 L130 218 L160 242 L130 266 L40 266 Z" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.5"/>
+<text x="92.0" y="250.0" font-size="26" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan></text>
+<text x="92.0" y="284.0" font-size="13" fill="#5f7f4f" text-anchor="middle">新しい名前（札）</text>
+<text x="220.0" y="251.0" font-size="26" fill="#5f7f4f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>:=</text>
+<rect x="280" y="218" width="120" height="48" rx="5" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="340.0" y="250.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">Δ</tspan><tspan font-style="italic">x</tspan> / Δ<tspan font-style="italic">t</tspan></text>
+<text x="340.0" y="284.0" font-size="13" fill="#6b645a" text-anchor="middle">もう意味のわかる式</text>
+<line x1="276.0" y1="298.0" x2="170.0" y2="298.0" stroke="#5f7f4f" stroke-width="1.8"/><path d="M177.2 294.5 L170.0 298.0 L177.2 301.5" fill="none" stroke="#5f7f4f" stroke-width="1.8"/>
+<text x="220.0" y="322.0" font-size="14" fill="#6b645a" text-anchor="middle">コロンのある側（左）が、これから決まる名前</text>
+<text x="220.0" y="344.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">→ 正しいかどうかは問わない（約束）</text>
+</svg>
+<figcaption><strong>図 2.2</strong>　$=$ は、左右の値を比べて正しいかどうかを問う。$:=$ は比べない。右の式に、左の名前を札のように掛ける宣言である。</figcaption>
+</figure>
+<div class="def" id="sym-defeq"><span class="label">記号：$:=$</span>
+<p><strong>①読み方</strong>：「コロンイコール」。文として読むときは「左を、右で定義する」。</p>
+<p><strong>②日本語での意味</strong>：<strong>左の名前を、右の式のことだと決める</strong>。コロンのある側（左）が、これから決められる名前である。</p>
+<p><strong>③省略していない書き方</strong>：次のように日本語で書いたものを、記号1つにまとめている。<br>「$v$ を、$\Delta x/\Delta t$ のことと定める」または「$v$ とは $\Delta x/\Delta t$ のことである」。</p>
+<p><strong>④どこで出会うか</strong>：物理・工学の教科書の「定義」。量子力学・機械力学・制御工学。</p>
+</div>
+
+<div class="warn"><span class="label">流派の違い：定義の等号の書き方</span>
+<p>教科書によって、定義の等号は次のように書き分けられる。<strong>どれも同じ意味</strong>で、「$=$」とも区別されないことがある。</p>
+<ul>
+<li>$v := \dfrac{\Delta x}{\Delta t}$（コロンの側が新しい名前。この教材ではこれを使う）</li>
+<li>$v \equiv \dfrac{\Delta x}{\Delta t}$（三本線を定義に使う流派）</li>
+<li>$v \overset{\text{def}}{=} \dfrac{\Delta x}{\Delta t}$（等号の上に def と書く流派）</li>
+<li>$v = \dfrac{\Delta x}{\Delta t}$（何も区別せず「$=$」で書く流派）</li>
+</ul>
+<p>最後のものが最も困る。「これは定義なのか、導かれた結果なのか」が、文脈からしか読み取れない。本を読むときは、「この等号の右辺は、さっき使った記号だけで書けているか（結果）、それともまだ名前のなかったものに名前をつけているか（定義）」を確かめるとよい。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$:=$ は「左の名前を、右の式で決める」。正しいか正しくないかを問う文ではなく、名前をつける宣言。</div>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>恒等の記号 $\equiv$</h3>
+<div class="def" id="sym-identical"><span class="label">記号：$\equiv$</span>
+<p><strong>①読み方</strong>：「合同」「恒等的に等しい」。文として読むときは「いつでも等しい」。</p>
+<p><strong>②日本語での意味</strong>：<em>文字にどんな値を入れても</em>等しい。2.1 の(b)（恒等式）をわざわざ強調するときに使う。例：$(x+1)^2\equiv x^2+2x+1$。</p>
+<p><strong>③省略していない書き方</strong>：「すべての $x$ について、$(x+1)^2=x^2+2x+1$」。つまり、「すべての…について」を<strong>記号 $\equiv$ の中に折りたたんでいる</strong>。（「すべての」を表す記号 $\forall$ は第2回で扱う。）</p>
+<p><strong>④どこで出会うか</strong>：微分方程式（「$f(x)\equiv 0$」は「すべての $x$ で $f(x)=0$」の意味）、線形代数、数論（別の意味：合同式）。</p>
+</div>
+
+<div class="warn"><span class="label">注意：$\equiv$ は流派で意味が違う</span>
+<p>$\equiv$ には少なくとも3つの用法がある。</p>
+<ul>
+<li>恒等的に等しい（ここで説明した意味）</li>
+<li>定義する（2.2 の流派）</li>
+<li>合同式（整数の割り算の余りが等しい。$7\equiv 1 \pmod 3$）。この教材では扱わない。</li>
+</ul>
+<p>どの意味かは、<strong>その本が最初に宣言している</strong>ことが多い。読み始めに「記号の約束」のページがないかを探す習慣をつける。</p>
+</div>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>だいたい等しい $\approx$</h3>
+<div class="def" id="sym-approx"><span class="label">記号：$\approx$</span>
+<p><strong>①読み方</strong>：「ニアリーイコール」。文として読むときは「ほぼ等しい」「近似的に等しい」。</p>
+<p><strong>②日本語での意味</strong>：<em>厳密には等しくない</em>が、目的に対して<em>十分近い</em>。「どれくらい近いのか」は、この記号には書かれていない。</p>
+<p><strong>③省略していない書き方</strong>：書かれていない部分を補うと、「差の絶対値が、問題にしている誤差の範囲より小さい」。例：$\sin 0.1 \approx 0.1$ は、「$|\sin 0.1 - 0.1|$ は小さい」の省略。</p>
+<p><strong>④どこで出会うか</strong>：物理（微小振動の近似）、数値計算、テイラー展開（第9回）。</p>
+</div>
+
+<p>実際にどれくらい近いのかを、数で確かめる。</p>
+<table class="tb">
+<tr><th>$x$</th><th>$\sin x$</th><th>$x-\sin x$（ずれ）</th></tr>
+<tr><td>$0.5$</td><td>$0.479426$</td><td>$0.020574$</td></tr>
+<tr><td>$0.1$</td><td>$0.099833$</td><td>$0.000167$</td></tr>
+<tr><td>$0.01$</td><td>$0.0099998$</td><td>$0.00000017$</td></tr>
+</table>
+<p>$x$ が小さいほど、ずれはさらに急に小さくなる。だから「$x$ が小さいとき $\sin x\approx x$」と書ける。<strong>$x=3$ では使えない</strong>（$\sin 3 = 0.1411\ldots$、$3$ とはまったく違う）。$\approx$ は<em>どの範囲で成り立つかを必ず確認して使う</em>記号である。</p>
+<p>表の数を、図2.3 のグラフで見る。2本の線のあいだの幅が、ずれ $x-\sin x$ である。</p>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 300" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="y=x と y=sin x のずれ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>y=x と y=sin x のずれ</title>
+<rect x="0" y="0" width="440" height="300" fill="#fffdf7"/>
+<polygon points="50.0,270.0 53.2,267.7 56.4,265.3 59.6,263.0 62.8,260.6 65.9,258.3 69.1,255.9 72.3,253.6 75.5,251.2 78.7,248.9 81.9,246.6 85.1,244.2 88.2,241.9 91.4,239.5 94.6,237.2 97.8,234.8 101.0,232.5 104.2,230.2 107.4,227.8 110.6,225.5 113.8,223.1 116.9,220.8 120.1,218.4 123.3,216.1 126.5,213.8 129.7,211.4 132.9,209.1 136.1,206.7 139.2,204.4 142.4,202.0 145.6,199.7 148.8,197.3 152.0,195.0 155.2,192.7 158.4,190.3 161.6,188.0 164.8,185.6 167.9,183.3 171.1,180.9 174.3,178.6 177.5,176.2 180.7,173.9 183.9,171.6 187.1,169.2 190.2,166.9 193.4,164.5 196.6,162.2 199.8,159.8 203.0,157.5 206.2,155.2 209.4,152.8 212.6,150.5 215.8,148.1 218.9,145.8 222.1,143.4 225.3,141.1 228.5,138.8 231.7,136.4 234.9,134.1 238.1,131.7 241.2,129.4 244.4,127.0 247.6,124.7 250.8,122.3 254.0,120.0 257.2,117.7 260.4,115.3 263.6,113.0 266.8,110.6 269.9,108.3 273.1,105.9 276.3,103.6 279.5,101.2 282.7,98.9 285.9,96.6 289.1,94.2 292.2,91.9 295.4,89.5 298.6,87.2 301.8,84.8 305.0,82.5 308.2,80.2 311.4,77.8 314.6,75.5 317.8,73.1 320.9,70.8 324.1,68.4 327.3,66.1 330.5,63.8 333.7,61.4 336.9,59.1 340.1,56.7 343.2,54.4 346.4,52.0 349.6,49.7 352.8,47.3 356.0,45.0 359.2,42.7 362.4,40.3 365.6,38.0 368.8,35.6 368.8,259.0 365.6,256.7 362.4,254.4 359.2,252.1 356.0,249.8 352.8,247.5 349.6,245.3 346.4,243.1 343.2,240.9 340.1,238.7 336.9,236.6 333.7,234.5 330.5,232.4 327.3,230.4 324.1,228.4 320.9,226.4 317.8,224.5 314.6,222.6 311.4,220.8 308.2,219.0 305.0,217.2 301.8,215.5 298.6,213.9 295.4,212.3 292.2,210.7 289.1,209.2 285.9,207.8 282.7,206.4 279.5,205.0 276.3,203.8 273.1,202.6 269.9,201.4 266.8,200.3 263.6,199.3 260.4,198.3 257.2,197.4 254.0,196.6 250.8,195.8 247.6,195.1 244.4,194.5 241.2,193.9 238.1,193.4 234.9,193.0 231.7,192.6 228.5,192.3 225.3,192.1 222.1,192.0 218.9,191.9 215.8,191.9 212.6,191.9 209.4,192.1 206.2,192.3 203.0,192.5 199.8,192.9 196.6,193.3 193.4,193.8 190.2,194.3 187.1,194.9 183.9,195.6 180.7,196.4 177.5,197.2 174.3,198.1 171.1,199.0 167.9,200.0 164.8,201.1 161.6,202.2 158.4,203.4 155.2,204.7 152.0,206.0 148.8,207.4 145.6,208.8 142.4,210.3 139.2,211.8 136.1,213.4 132.9,215.1 129.7,216.7 126.5,218.5 123.3,220.3 120.1,222.1 116.9,224.0 113.8,225.9 110.6,227.8 107.4,229.8 104.2,231.9 101.0,233.9 97.8,236.0 94.6,238.1 91.4,240.3 88.2,242.5 85.1,244.7 81.9,246.9 78.7,249.2 75.5,251.4 72.3,253.7 69.1,256.0 65.9,258.3 62.8,260.6 59.6,263.0 56.4,265.3 53.2,267.7 50.0,270.0" fill="#f6e4e1" stroke="none"/>
+<line x1="50.0" y1="270.0" x2="400.0" y2="270.0" stroke="#2a2723" stroke-width="1.3"/><path d="M393.7 273.0 L400.0 270.0 L393.7 267.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="50.0" y1="270.0" x2="50.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M53.0 16.3 L50.0 10.0 L47.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="103.1" y1="266.0" x2="103.1" y2="274.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="103.1" y="290.0" font-size="14" fill="#6b645a" text-anchor="middle">0.5</text>
+<line x1="156.2" y1="266.0" x2="156.2" y2="274.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="156.2" y="290.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="262.5" y1="266.0" x2="262.5" y2="274.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="262.5" y="290.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="368.8" y1="266.0" x2="368.8" y2="274.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="368.8" y="290.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="46.0" y1="191.9" x2="54.0" y2="191.9" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="196.9" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="46.0" y1="113.8" x2="54.0" y2="113.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="118.8" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="46.0" y1="35.6" x2="54.0" y2="35.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="40.6" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="404.0" y="292.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="64.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="50.0,270.0 220.0,145.0 390.0,20.0" fill="none" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="50.0,270.0 51.7,268.8 53.4,267.5 55.1,266.3 56.8,265.0 58.5,263.8 60.2,262.5 61.9,261.3 63.6,260.0 65.3,258.8 67.0,257.6 68.7,256.3 70.4,255.1 72.1,253.9 73.8,252.6 75.5,251.4 77.2,250.2 78.9,249.0 80.6,247.8 82.3,246.6 84.0,245.4 85.7,244.2 87.4,243.1 89.1,241.9 90.8,240.7 92.5,239.6 94.2,238.4 95.9,237.3 97.6,236.2 99.3,235.0 101.0,233.9 102.7,232.8 104.4,231.7 106.1,230.6 107.8,229.6 109.5,228.5 111.2,227.4 112.9,226.4 114.6,225.4 116.3,224.4 118.0,223.3 119.7,222.3 121.4,221.4 123.1,220.4 124.8,219.4 126.5,218.5 128.2,217.6 129.9,216.6 131.6,215.7 133.3,214.8 135.0,214.0 136.7,213.1 138.4,212.2 140.1,211.4 141.8,210.6 143.5,209.8 145.2,209.0 146.9,208.2 148.6,207.5 150.3,206.7 152.0,206.0 153.7,205.3 155.4,204.6 157.1,203.9 158.8,203.3 160.5,202.6 162.2,202.0 163.9,201.4 165.6,200.8 167.3,200.2 169.0,199.7 170.7,199.1 172.4,198.6 174.1,198.1 175.8,197.6 177.5,197.2 179.2,196.7 180.9,196.3 182.6,195.9 184.3,195.5 186.0,195.2 187.7,194.8 189.4,194.5 191.1,194.2 192.8,193.9 194.5,193.6 196.2,193.4 197.9,193.1 199.6,192.9 201.3,192.7 203.0,192.5 204.7,192.4 206.4,192.3 208.1,192.1 209.8,192.0 211.5,192.0 213.2,191.9 214.9,191.9 216.6,191.9 218.3,191.9 220.0,191.9 221.7,192.0 223.4,192.0 225.1,192.1 226.8,192.2 228.5,192.3 230.2,192.5 231.9,192.7 233.6,192.8 235.3,193.0 237.0,193.3 238.7,193.5 240.4,193.8 242.1,194.1 243.8,194.4 245.5,194.7 247.2,195.0 248.9,195.4 250.6,195.8 252.3,196.2 254.0,196.6 255.7,197.0 257.4,197.5 259.1,198.0 260.8,198.5 262.5,199.0 264.2,199.5 265.9,200.0 267.6,200.6 269.3,201.2 271.0,201.8 272.7,202.4 274.4,203.0 276.1,203.7 277.8,204.4 279.5,205.0 281.2,205.8 282.9,206.5 284.6,207.2 286.3,208.0 288.0,208.7 289.7,209.5 291.4,210.3 293.1,211.1 294.8,212.0 296.5,212.8 298.2,213.7 299.9,214.5 301.6,215.4 303.3,216.3 305.0,217.2 306.7,218.2 308.4,219.1 310.1,220.1 311.8,221.0 313.5,222.0 315.2,223.0 316.9,224.0 318.6,225.0 320.3,226.0 322.0,227.1 323.7,228.1 325.4,229.2 327.1,230.3 328.8,231.3 330.5,232.4 332.2,233.5 333.9,234.6 335.6,235.8 337.3,236.9 339.0,238.0 340.7,239.2 342.4,240.3 344.1,241.5 345.8,242.7 347.5,243.8 349.2,245.0 350.9,246.2 352.6,247.4 354.3,248.6 356.0,249.8 357.7,251.0 359.4,252.2 361.1,253.4 362.8,254.7 364.5,255.9 366.2,257.1 367.9,258.4 369.6,259.6 371.3,260.8 373.0,262.1 374.7,263.3 376.4,264.6 378.1,265.8 379.8,267.1 381.5,268.3 383.2,269.6 384.9,270.8 386.6,272.1 388.3,273.3 390.0,274.6" fill="none" stroke="#b07a3e" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="320.9" y="31.7" font-size="15" fill="#2b3a67" text-anchor="end">y = x</text>
+<text x="262.5" y="234.8" font-size="15" fill="#b07a3e" text-anchor="middle">y = sin x</text>
+<line x1="103.1" y1="230.9" x2="103.1" y2="232.5" stroke="#a8322a" stroke-width="2.2"/>
+<text x="97.1" y="236.7" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">ずれ 0.02</text>
+<line x1="156.2" y1="191.9" x2="156.2" y2="204.3" stroke="#a8322a" stroke-width="2.2"/>
+<text x="164.2" y="203.1" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">ずれ 0.16</text>
+<line x1="368.8" y1="35.6" x2="368.8" y2="259.0" stroke="#a8322a" stroke-width="2.2"/>
+<text x="360.8" y="152.3" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">ずれ 2.86</text>
+<text x="62.8" y="59.1" font-size="14" fill="#a8322a" text-anchor="start">色の部分＝ずれ x − sin x</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　$x$ が0に近いところでは2本の線はほとんど重なり（$x=0.5$ でずれ約0.02）、$x$ が大きくなると離れていく（$x=3$ でずれ約2.86）。$\sin x\approx x$ が使えるのは左端の狭い範囲だけである。</figcaption>
+</figure>
+
+<div class="why"><span class="label">ひとことで</span>$\approx$ は「ほぼ等しい」。ただし「どれくらいほぼか」「どの範囲でか」は記号に書かれていない。範囲は自分で確かめる。</div>
+
+<h3 id="sec-2-5"><span class="no">2.5</span>比例 $\propto$</h3>
+<div class="def" id="sym-propto"><span class="label">記号：$\propto$</span>
+<p><strong>①読み方</strong>：「比例」。$y\propto x$ は「$y$ は $x$ に比例する」。</p>
+<p><strong>②日本語での意味</strong>：<em>ある定数 $k$ があって</em>、$y=kx$ と書ける。</p>
+<p><strong>③省略していない書き方</strong>：「$y\propto x$」$\;\Leftrightarrow\;$「ある定数 $k$ が存在して、$y=kx$」。定数 $k$ の値は記号に書かれていない。（$\Leftrightarrow$ と「存在して」は第2回で説明する。）</p>
+<p><strong>④どこで出会うか</strong>：物理・工学のスケーリング（$F\propto m$、$T\propto \sqrt{\ell}$）。</p>
+</div>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>$y\propto x$ と $y=x$ は違う。$y\propto x$ は、右辺に定数倍がついている可能性を含む。一方、「$y\propto x+1$」のように書くと、$y=k(x+1)$ という意味になる。$x=0$ のとき $y=k\neq 0$ なので、いわゆる「正比例」（原点を通る）とは別物になる。</p>
+</div>
+
+<p>$y\propto x$ のグラフを、定数 $k$ を変えて何本か描くと、図2.4 になる。</p>
+<figure class="fig" id="fig-2-4">
+<svg viewBox="0 0 440 310" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="比例 y=kx と y=k(x+1) のグラフ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>比例 y=kx と y=k(x+1) のグラフ</title>
+<rect x="0" y="0" width="440" height="310" fill="#fffdf7"/>
+<line x1="50.0" y1="215.0" x2="360.0" y2="215.0" stroke="#2a2723" stroke-width="1.3"/><path d="M353.7 218.0 L360.0 215.0 L353.7 212.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="150.0" y1="280.0" x2="150.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M153.0 16.3 L150.0 10.0 L147.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="83.3" y1="211.0" x2="83.3" y2="219.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="83.3" y="235.0" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="216.7" y1="211.0" x2="216.7" y2="219.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="216.7" y="235.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="283.3" y1="211.0" x2="283.3" y2="219.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="283.3" y="235.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="350.0" y1="211.0" x2="350.0" y2="219.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="350.0" y="235.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="146.0" y1="258.3" x2="154.0" y2="258.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="142.0" y="263.3" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="146.0" y1="171.7" x2="154.0" y2="171.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="142.0" y="176.7" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="146.0" y1="128.3" x2="154.0" y2="128.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="142.0" y="133.3" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="146.0" y1="85.0" x2="154.0" y2="85.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="142.0" y="90.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<line x1="146.0" y1="41.7" x2="154.0" y2="41.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="142.0" y="46.7" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="364.0" y="237.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="164.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="103.3,275.7 200.0,150.0 296.7,24.3" fill="none" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="300.7" y="20.3" font-size="14" fill="#2b3a67" text-anchor="start">y = 2x</text>
+<polyline points="103.3,245.3 226.7,165.2 350.0,85.0" fill="none" stroke="#5f7f4f" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="354.0" y="81.0" font-size="14" fill="#5f7f4f" text-anchor="start">y = x</text>
+<polyline points="103.3,230.2 226.7,190.1 350.0,150.0" fill="none" stroke="#7d6aa0" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="354.0" y="164.0" font-size="14" fill="#7d6aa0" text-anchor="start">y = 0.5x</text>
+<polyline points="50.0,236.7 200.0,139.2 350.0,41.7" fill="none" stroke="#b07a3e" stroke-width="2.2" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<text x="53.3" y="145.7" font-size="14" fill="#b07a3e" text-anchor="start">y = 1·(x + 1)</text>
+<circle cx="150.0" cy="215.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="150.0" cy="171.7" r="5" fill="#fff" stroke="#b07a3e" stroke-width="2"/>
+<text x="158.0" y="235.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">原点</text>
+</svg>
+<figcaption><strong>図 2.4</strong>　実線は $y=kx$（$k=2,\ 1,\ 0.5$）。$k$ が何であっても原点を通る直線になる。点線の $y=1\cdot(x+1)$ は「$y\propto x+1$」の一例で、原点を通らない。</figcaption>
+</figure>
+<h3 id="sec-2-6"><span class="no">2.6</span>等しくない・大小の関係</h3>
+<div class="def" id="sym-neq"><span class="label">記号：$\neq$</span>
+<p><strong>①読み方</strong>：「ノットイコール」。「〜は…に等しくない」。</p>
+<p><strong>②日本語での意味</strong>：左と右が<em>違う値</em>である。</p>
+<p><strong>③省略していない書き方</strong>：「$a\neq b$」は「『$a=b$』という文が<em>正しくない</em>」の省略。</p>
+<p><strong>④どこで出会うか</strong>：割り算の条件（「$x\neq 0$」）、固有値の議論（第20回）。</p>
+</div>
+<div class="def" id="sym-order"><span class="label">記号：$\lt\ \gt\ \le\ \ge$</span>
+<p><strong>①読み方</strong>：$a\lt b$ は「$a$ は $b$ より小さい」（$a$ は $b$ 未満）。$a\gt b$ は「$a$ は $b$ より大きい」。$a\le b$ は「$a$ は $b$ 以下」。$a\ge b$ は「$a$ は $b$ 以上」。</p>
+<p><strong>②日本語での意味</strong>：数の<em>大小の順序</em>を表す。$\lt\ \gt$ は等しい場合を含まず、$\le\ \ge$ は等しい場合を含む。</p>
+<p><strong>③省略していない書き方</strong>：$a\le b$ は「$a\lt b$ または $a=b$」。「または」は第2回で記号 $\lor$ として扱う。</p>
+<p><strong>④どこで出会うか</strong>：区間（第2回）、極限の定義（第6回）、不等式の評価。</p>
+</div>
+
+<p>$\lt$ と $\le$ の違いは、数直線に描くと1点だけの違いとして見える（図2.5）。</p>
+<figure class="fig" id="fig-2-5">
+<svg viewBox="0 0 440 190" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="x&lt;2 と x≤2 の数直線" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>x&lt;2 と x≤2 の数直線</title>
+<rect x="0" y="0" width="440" height="190" fill="#fffdf7"/>
+<text x="10.0" y="30.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">x &lt; 2：x は 2 より小さい</text>
+<line x1="30.0" y1="60.0" x2="410.0" y2="60.0" stroke="#2a2723" stroke-width="1.3"/><path d="M403.7 63.0 L410.0 60.0 L403.7 57.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="50.0" y1="55.0" x2="50.0" y2="65.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="50.0" y="84.0" font-size="14" fill="#6b645a" text-anchor="middle">0</text>
+<line x1="120.0" y1="55.0" x2="120.0" y2="65.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="120.0" y="84.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="190.0" y1="55.0" x2="190.0" y2="65.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="190.0" y="84.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="260.0" y1="55.0" x2="260.0" y2="65.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="260.0" y="84.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="330.0" y1="55.0" x2="330.0" y2="65.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="330.0" y="84.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="32" y1="48" x2="190" y2="48" stroke="#a8322a" stroke-width="5"/>
+<line x1="60.0" y1="48.0" x2="30.0" y2="48.0" stroke="#a8322a" stroke-width="2.5"/><path d="M38.1 44.1 L30.0 48.0 L38.1 51.9" fill="none" stroke="#a8322a" stroke-width="2.5"/>
+<circle cx="190.0" cy="48.0" r="7" fill="#fff" stroke="#a8322a" stroke-width="2.2"/>
+<text x="204.0" y="53.0" font-size="14" fill="#a8322a" text-anchor="start">2 を含まない（白丸）</text>
+<text x="10.0" y="120.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">x ≤ 2：x は 2 以下（2 より小さい、または 2）</text>
+<line x1="30.0" y1="150.0" x2="410.0" y2="150.0" stroke="#2a2723" stroke-width="1.3"/><path d="M403.7 153.0 L410.0 150.0 L403.7 147.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="50.0" y1="145.0" x2="50.0" y2="155.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="50.0" y="174.0" font-size="14" fill="#6b645a" text-anchor="middle">0</text>
+<line x1="120.0" y1="145.0" x2="120.0" y2="155.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="120.0" y="174.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="190.0" y1="145.0" x2="190.0" y2="155.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="190.0" y="174.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="260.0" y1="145.0" x2="260.0" y2="155.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="260.0" y="174.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="330.0" y1="145.0" x2="330.0" y2="155.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="330.0" y="174.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="32" y1="138" x2="190" y2="138" stroke="#a8322a" stroke-width="5"/>
+<line x1="60.0" y1="138.0" x2="30.0" y2="138.0" stroke="#a8322a" stroke-width="2.5"/><path d="M38.1 134.1 L30.0 138.0 L38.1 141.9" fill="none" stroke="#a8322a" stroke-width="2.5"/>
+<circle cx="190.0" cy="138.0" r="7" fill="#a8322a" stroke="#a8322a" stroke-width="2.2"/>
+<text x="204.0" y="143.0" font-size="14" fill="#a8322a" text-anchor="start">2 を含む（黒丸）</text>
+</svg>
+<figcaption><strong>図 2.5</strong>　色の帯が、文を正しくする $x$ の範囲である。$x\lt 2$ と $x\le 2$ の違いは、端の2を含むかどうかの1点だけである。白丸は含まない、黒丸は含むという描き方の約束である。</figcaption>
+</figure>
+<div class="warn"><span class="label">流派の違い：$\le$ の別の書き方</span>
+<p>$\le$ を $\leqq$（二重線）や $\leqslant$（斜め線）と書く本がある。<strong>意味は同じ</strong>。$\ge$ にも別の書き方がある。この教材では $\le\ \ge$ で統一する。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>$\neq$ は「等しくない」、$\le$ は「小さいか等しい」。どちらも「関係式（文）」を作る記号。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>文字をどう読むか：ギリシャ文字</h2>
+<h3 id="sec-3-1"><span class="no">3.1</span>動機</h3>
+<p>数学や物理では、$a,b,c,\ldots,x,y,z$ だけでは文字が足りなくなる。そこで<strong>ギリシャ文字</strong>を借りる。読み方を知らないと、声に出して読めないため、式を<em>文として</em>読む練習ができない。最初に表を作っておく。</p>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>表：よく使うギリシャ文字</h3>
+<div class="def" id="sym-greek"><span class="label">記号：ギリシャ文字</span>
+<p><strong>①読み方</strong>：下の表のとおり。</p>
+<p><strong>②日本語での意味</strong>：文字にすぎない。特定の意味が決まっているわけではなく、<em>慣習として使われる場所</em>がある。</p>
+<p><strong>③省略していない書き方</strong>：略記ではない。ただし、物理・工学の本では、慣習により文字を読む前から意味が想像される。<strong>慣習は慣習であり、その本が別の使い方を宣言していたら、そちらが優先</strong>。</p>
+<p><strong>④どこで出会うか</strong>：すべて。</p>
+</div>
+<table class="tb">
+<tr><th>小文字</th><th>大文字</th><th>読み</th><th>よくある使われ方（慣習）</th></tr>
+<tr><td>$\alpha$</td><td>$A$</td><td>アルファ</td><td>角度、係数、加速度（角）</td></tr>
+<tr><td>$\beta$</td><td>$B$</td><td>ベータ</td><td>角度、係数</td></tr>
+<tr><td>$\gamma$</td><td>$\Gamma$</td><td>ガンマ</td><td>せん断ひずみ、比熱比、ガンマ関数</td></tr>
+<tr><td>$\delta$</td><td>$\Delta$</td><td>デルタ</td><td>微小量（$\delta$）、変化量（$\Delta$）、クロネッカー、ディラック</td></tr>
+<tr><td>$\varepsilon$（$\epsilon$）</td><td>$E$</td><td>イプシロン</td><td>微小量、ひずみ、誘電率</td></tr>
+<tr><td>$\zeta$</td><td>$Z$</td><td>ゼータ</td><td>減衰比</td></tr>
+<tr><td>$\eta$</td><td>$H$</td><td>イータ</td><td>効率、粘性</td></tr>
+<tr><td>$\theta$（$\vartheta$）</td><td>$\Theta$</td><td>シータ</td><td>角度</td></tr>
+<tr><td>$\kappa$</td><td>$K$</td><td>カッパ</td><td>曲率、熱伝導</td></tr>
+<tr><td>$\lambda$</td><td>$\Lambda$</td><td>ラムダ</td><td>固有値、波長</td></tr>
+<tr><td>$\mu$</td><td>$M$</td><td>ミュー</td><td>平均、摩擦係数、$10^{-6}$（マイクロ）</td></tr>
+<tr><td>$\nu$</td><td>$N$</td><td>ニュー</td><td>動粘度、ポアソン比、振動数</td></tr>
+<tr><td>$\xi$</td><td>$\Xi$</td><td>クシー</td><td>座標、変数</td></tr>
+<tr><td>$\pi$</td><td>$\Pi$</td><td>パイ</td><td>円周率（小文字）、総乗（大文字、第4回）</td></tr>
+<tr><td>$\rho$</td><td>$P$</td><td>ロー</td><td>密度、相関係数</td></tr>
+<tr><td>$\sigma$</td><td>$\Sigma$</td><td>シグマ</td><td>応力、標準偏差（小文字）、総和（大文字、第4回）</td></tr>
+<tr><td>$\tau$</td><td>$T$</td><td>タウ</td><td>せん断応力、時定数</td></tr>
+<tr><td>$\phi$（$\varphi$）</td><td>$\Phi$</td><td>ファイ</td><td>角度、位相、ポテンシャル</td></tr>
+<tr><td>$\chi$</td><td>$X$</td><td>カイ</td><td>感受率、カイ二乗分布</td></tr>
+<tr><td>$\psi$</td><td>$\Psi$</td><td>プサイ</td><td>波動関数</td></tr>
+<tr><td>$\omega$</td><td>$\Omega$</td><td>オメガ</td><td>角振動数、角速度（小文字）、オーム（大文字）</td></tr>
+</table>
+<div class="warn"><span class="label">注意：似た文字</span>
+<ul>
+<li>$\epsilon$ と $\varepsilon$ は<strong>同じ文字の別の書体</strong>。本によって使い分けが決まっている場合がある。</li>
+<li>$\phi$ と $\varphi$、$\theta$ と $\vartheta$ も同様。</li>
+<li>$v$（ブイ）、$\nu$（ニュー）、$\upsilon$（ウプシロン）、$\omega$（オメガ）と $w$（ダブリュー）は、<strong>形が似ている</strong>。ノートに手書きするときは区別して書く。</li>
+</ul>
+</div>
+<div class="why"><span class="label">ひとことで</span>ギリシャ文字は「アルファ、ベータ…」と声に出して読む。意味は慣習で、その本の宣言が優先。</div>
+
+<!-- ============================================================ -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="../img/01_a3_abecedary.jpg" alt="取っ手のついた素焼きの杯の内側を、ギリシャ文字のアルファ、ベータ、ガンマ…が順に円く一周している" loading="lazy"></div>
+<p class="cap">前420年ごろのアテネの杯の内側を、Α Β Γ Δ … と並んだ文字がひと巡りしている。</p>
+<p class="cr">Marsyas／<a href="https://creativecommons.org/licenses/by/2.5/">CC BY 2.5</a>／<a href="https://commons.wikimedia.org/wiki/File:NAMA_Alphabet_grec.jpg">Wikimedia Commons</a>（アテネ国立考古学博物館）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="../img/01_b3_iroha.jpg" alt="机に立てかけた手習いの清書手本の錦絵。最上段に、いろは歌の仮名が一行に並び、その下に漢字の手本が続く" loading="lazy"></div>
+<p class="cap">手習いの清書手本では、いろはの仮名が、いちばん上の段に一行で並んでいる。</p>
+<p class="cr">歌川豊国（三代）「清書七以呂波」目録／Public domain／<a href="https://commons.wikimedia.org/wiki/File:NDL-DC_1312167_清書七つ以呂波_crd.jpg">Wikimedia Commons</a>（国立国会図書館。上下を切り詰めた）</p></div>
+</figure>
+<h2 id="sec-4"><span class="no">4</span>文字のまわりについている数字：添字・肩の数字・プライム</h2>
+<h3 id="sec-4-0"><span class="no">4.0</span>動機</h3>
+<p>文字の右下や右上に小さな数字や記号がついていることがある。これを<strong>同じものだと思って区別しない</strong>と、$x_2$、$x^2$、$x^{(2)}$、$x'$ が全部「$x$ に何かがついたもの」としか見えない。しかし、<em>意味はまったく違う</em>。1つずつ区別する。</p>
+
+<p>この章で区別する4つを、図4.1 に並べる。<strong>位置</strong>（右下か右上か）と<strong>形</strong>（数字だけか、括弧つきか、点か）の2つで見分ける。</p>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 390" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="文字のまわりの小さな記号の4種類" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>文字のまわりの小さな記号の4種類</title>
+<rect x="0" y="0" width="440" height="390" fill="#fffdf7"/>
+<rect x="10" y="10" width="205" height="180" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<rect x="10" y="10" width="205" height="5" rx="2" fill="#5f7f4f"/>
+<text x="22.0" y="38.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">右下</text>
+<text x="80" y="102" font-size="52" fill="#2a2723" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif' font-style="italic">x</text>
+<text x="108" y="114" font-size="28" fill="#5f7f4f" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif' font-weight="bold">1</text>
+<text x="22.0" y="140.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">添字</text>
+<text x="22.0" y="162.0" font-size="13.5" fill="#2a2723" text-anchor="start">番号・ラベル</text>
+<text x="22.0" y="181.0" font-size="13.5" fill="#2a2723" text-anchor="start">「1番目の x」</text>
+<rect x="225" y="10" width="205" height="180" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<rect x="225" y="10" width="205" height="5" rx="2" fill="#2b3a67"/>
+<text x="237.0" y="38.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">右上の数字</text>
+<text x="295" y="102" font-size="52" fill="#2a2723" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif' font-style="italic">x</text>
+<text x="323" y="72" font-size="28" fill="#2b3a67" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif' font-weight="bold">2</text>
+<text x="237.0" y="140.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">冪（べき）</text>
+<text x="237.0" y="162.0" font-size="13.5" fill="#2a2723" text-anchor="start">x を2回かける</text>
+<text x="237.0" y="181.0" font-size="13.5" fill="#2a2723" text-anchor="start">x × x</text>
+<rect x="10" y="200" width="205" height="180" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<rect x="10" y="200" width="205" height="5" rx="2" fill="#b07a3e"/>
+<text x="22.0" y="228.0" font-size="14" fill="#b07a3e" text-anchor="start" font-weight="bold">右上の括弧つき</text>
+<text x="80" y="292" font-size="52" fill="#2a2723" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif' font-style="italic">x</text>
+<text x="108" y="262" font-size="28" fill="#b07a3e" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif' font-weight="bold">(2)</text>
+<text x="22.0" y="330.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">冪ではない</text>
+<text x="22.0" y="352.0" font-size="13.5" fill="#2a2723" text-anchor="start">意味は本が決める</text>
+<text x="22.0" y="371.0" font-size="13.5" fill="#2a2723" text-anchor="start">「2番目」「2回微分」など</text>
+<rect x="225" y="200" width="205" height="180" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<rect x="225" y="200" width="205" height="5" rx="2" fill="#a8322a"/>
+<text x="237.0" y="228.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">右上のプライム</text>
+<text x="295" y="292" font-size="52" fill="#2a2723" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif' font-style="italic">x</text>
+<text x="323" y="266" font-size="36" fill="#a8322a" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif' font-weight="bold">′</text>
+<text x="237.0" y="330.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">プライム</text>
+<text x="237.0" y="352.0" font-size="13.5" fill="#2a2723" text-anchor="start">別の似た量</text>
+<text x="237.0" y="371.0" font-size="13.5" fill="#2a2723" text-anchor="start">または微分</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　右下の数字は番号（4.1）、右上の数字は冪（4.2）、右上の括弧つきの数字は冪ではない（4.3）、右上の点はプライム（4.4）。同じ「2」でも、位置と括弧で意味が変わる。</figcaption>
+</figure>
+<h3 id="sec-4-1"><span class="no">4.1</span>添字 $x_1$</h3>
+<div class="def" id="sym-subscript"><span class="label">記号：添字（そえじ）$x_1$</span>
+<p><strong>①読み方</strong>：$x_1$ は「エックス・いち」または「エックス・ワン」。$x_i$ は「エックス・アイ」。</p>
+<p><strong>②日本語での意味</strong>：名前 $x$ の<em>仲間のうちの、1番目</em>。数に限らず、ラベルでもよい（$x_{\max}$ は「$x$ の最大値」、$v_{\text{初}}$ は「初めの $v$」）。</p>
+<p><strong>③省略していない書き方</strong>：次のように書く本もある。「$x$ の 1番目」→ $x(1)$ または $x[1]$（コンピュータ）。つまり<strong>関数の引数のかわりに、右下に小さく書く</strong>のが添字。</p>
+<p><strong>④どこで出会うか</strong>：数列、ベクトルの成分（第5回）、総和（第4回）。</p>
+</div>
+<p>例：3つの数 $3,\;5,\;8$ を並べて名前をつけるとき、</p>
+<p>$$ x_1 := 3,\qquad x_2 := 5,\qquad x_3 := 8 $$</p>
+<p>と書く。（ここで使った $:=$ は <a href="#sym-defeq">2.2</a> で説明した、名前をつける等号である。）「$x_2$ は5である」と読む。$x_i$ の $i$ は「どの番号でもよい」を表す<strong>仮の文字</strong>で、「$i=1,2,3$ のどれか」と思えばよい。</p>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>肩の数字（冪）$x^2$</h3>
+<div class="def" id="sym-superscript"><span class="label">記号：肩の数字（冪）$x^2$</span>
+<p><strong>①読み方</strong>：$x^2$ は「エックスの二乗」。$x^3$ は「エックスの三乗」。$x^n$ は「エックスの $n$ 乗」。</p>
+<p><strong>②日本語での意味</strong>：$x$ を<em>$n$ 回かけたもの</em>。</p>
+<p><strong>③省略していない書き方</strong>：$x^3 = x\times x\times x$（$x$ を3つかけ合わせる）。ここで $x\times x\times x$ は、$x\cdot x\cdot x$ とも書き、さらに省略すると $x^3$ になる。</p>
+<p><strong>④どこで出会うか</strong>：すべて。</p>
+</div>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>括弧つきの肩の数字 $x^{(2)}$</h3>
+<div class="def" id="sym-bracket-sup"><span class="label">記号：括弧つきの肩の数字 $x^{(2)}$</span>
+<p><strong>①読み方</strong>：「エックスの括弧に」「エックス・上付き括弧に」。</p>
+<p><strong>②日本語での意味</strong>：<em>冪ではない</em>。「2番目の $x$」「2回目の繰り返しの $x$」「2階微分」など、<strong>書いた本が決める</strong>。</p>
+<p><strong>③省略していない書き方</strong>：本が宣言している意味に展開する。例：$f^{(2)}(x)$ は「$f$ を2回微分したもの」。$x^{(k)}$ は「$k$ 回目の反復で得られた $x$」。</p>
+<p><strong>④どこで出会うか</strong>：テイラー展開の $f^{(n)}(a)$（第9回）、反復法（第50回）。</p>
+</div>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>$x^2$（二乗）と $x^{(2)}$（「2番目」など）を同じと見てはいけない。括弧がつくだけで、「冪ではない」というサインになっている。</p>
+</div>
+
+<h3 id="sec-4-4"><span class="no">4.4</span>プライム $x'$</h3>
+<div class="def" id="sym-prime"><span class="label">記号：プライム $x'$</span>
+<p><strong>①読み方</strong>：「エックス・プライム」。$f'$ は「エフ・プライム」。$x''$ は「エックス・ダブルプライム」。</p>
+<p><strong>②日本語での意味</strong>：<em>文脈によって2つの意味がある</em>。(a) 「$x$ とは別の、似た量」（別の座標系の $x$ など）。(b) 「$f$ の導関数（微分したもの）」。</p>
+<p><strong>③省略していない書き方</strong>：(b) の場合、$f'(x) := \dfrac{df}{dx}(x)$ の省略。つまり「$f$ を $x$ で微分した関数」。</p>
+<p><strong>④どこで出会うか</strong>：(a) 座標変換、(b) 微積分（第7回で詳しく）。</p>
+</div>
+<div class="warn"><span class="label">注意：どちらの意味か</span>
+<p>(a) と (b) は、記号は同じでも意味が違う。見分けるには、「$f$ が関数かどうか」を見る。$x'$ が「$x$ を $t$ で微分したもの」なのか「別の座標」なのかは、<strong>その本のその節の冒頭で宣言されている</strong>。第7回で、微分の記号の流派（$f'$、$\dfrac{df}{dx}$、$\dot x$）を並べて整理する。</p>
+</div>
+
+<h3 id="sec-4-5"><span class="no">4.5</span>三点リーダー $\cdots$</h3>
+<div class="def" id="sym-dots"><span class="label">記号：三点リーダー $\cdots$、$\ldots$</span>
+<p><strong>①読み方</strong>：「てんてんてん」。意味としては「以下、同じ規則で続く」。</p>
+<p><strong>②日本語での意味</strong>：<em>同じ規則で続く部分を、書かずに省く</em>。</p>
+<p><strong>③省略していない書き方</strong>：$1+2+\cdots+5 = 1+2+3+4+5$。つまり<strong>「規則を読み取って、省かれた項を補う」責任は読者側にある</strong>。</p>
+<p><strong>④どこで出会うか</strong>：数列、総和（第4回）、行列の成分（第5回）。</p>
+</div>
+<div class="warn"><span class="label">注意：$\cdots$ は規則が複数ありうる</span>
+<p>「$1,\;2,\;4,\;\cdots$」の次は、$8$（2倍）かもしれないし、$7$（差が1,2,3,…と増える）かもしれない。<strong>規則が1つに決まるように、最初の何項かを十分に書く</strong>のが書く側の責任である。最初の3項だけで規則を決めつけてよいのかは、読むときに注意する。この問題を避けるために、第4回で扱う総和記号 $\sum$ が作られた。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>文字のまわりの小さな記号は、位置と形で意味が違う。右下＝番号やラベル、右上の数字＝冪、右上の括弧つき＝冪ではない、右上のプライム＝別のもの／微分、点々＝規則で続く。</div>
+
+<!-- ============================================================ -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="../img/01_a4_recorde_cossike.jpg" alt="16世紀の黒字体の英文のページ。左の列に z や c を組み合わせた記号が並び、右に Square of squares、Cube of Cubes などの意味が書かれている" loading="lazy"></div>
+<p class="cap">肩の数字が広まる前、レコードは「平方の平方」「立方の立方」にまで、それぞれ別の記号の組み合わせを当てていた。</p>
+<p class="cr">Robert Recorde, <em>The Whetstone of Witte</em>／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Whetstone-of-Witte-pp-150-151.jpg">Wikimedia Commons</a>（1557年、見開きの右頁）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="../img/01_b4_antiphonary.jpg" alt="開いた手書きの聖歌集。右のページに赤い4本線の譜表が引かれ、黒い四角い音符がその上下に置かれている" loading="lazy"></div>
+<p class="cap">四本の赤い線の上では、同じ四角い音符が、置かれた高さだけで別の音になる。</p>
+<p class="cr">作者不詳（イタリア、1736年の聖歌集）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Antiphonary_MET_cdi25-120-345-129r.jpg">Wikimedia Commons</a>（メトロポリタン美術館）</p></div>
+</figure>
+<h2 id="sec-5"><span class="no">5</span>演算の順序：書き方が曖昧になる場所</h2>
+
+<h3 id="sec-5-1"><span class="no">5.1</span>動機</h3>
+<p>式を「文」として読むためには、「どこからどこまでが1つのまとまりか」が決まっていなければならない。これを決めている約束を、<strong>演算の優先順位</strong>という。この約束は、本には書かれていないことが多い。</p>
+
+<h3 id="sec-5-2"><span class="no">5.2</span>約束のリスト</h3>
+<div class="box" id="rule-order"><span class="label">演算の優先順位（上ほど先に計算する）</span>
+<ol>
+<li>括弧の中</li>
+<li>冪（肩の数字）と関数（$\sin,\ln$ など）の「引数の確定」</li>
+<li>掛け算・割り算（左から順に）</li>
+<li>足し算・引き算（左から順に）</li>
+<li>関係の記号（$=,\lt,\le,\approx$ など）。ここで文になる。</li>
+</ol>
+</div>
+<p>この約束のとおりに読むと、次のことが起きる。</p>
+<table class="tb">
+<tr><th>書いたもの</th><th>約束に従った読み</th><th>$x=3$ のときの値</th></tr>
+<tr><td>$2x^2$</td><td>$2\times(x^2)$</td><td>$2\times 9=18$</td></tr>
+<tr><td>$(2x)^2$</td><td>$(2\times x)^2$</td><td>$6^2=36$</td></tr>
+<tr><td>$-x^2$</td><td>$-(x^2)$</td><td>$-9$</td></tr>
+<tr><td>$(-x)^2$</td><td>$(-x)\times(-x)$</td><td>$(-3)^2=9$</td></tr>
+</table>
+<p>$2x^2$ と $(2x)^2$ では値が2倍ちがう。$-x^2$ と $(-x)^2$ では符号が逆になる。<strong>括弧があるかないかだけで、値が変わる</strong>。</p>
+<p>どの順に計算するかは、<strong>式の木</strong>で描くと見える（図5.1）。丸の中の記号が演算である（「×」は掛け算、「^」は冪＝肩に乗せる、「−」は符号を反対にする。「^」はコンピュータで冪を書くときの記号）。演算は、その下にぶら下がっているものに対して行う。下から計算して、上へ結果を渡す。</p>
+<figure class="fig" id="fig-5-1">
+<svg viewBox="0 0 440 494" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="式の木で比べる 2x² と (2x)²、−x² と (−x)²" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>式の木で比べる 2x² と (2x)²、−x² と (−x)²</title>
+<rect x="0" y="0" width="440" height="494" fill="#fffdf7"/>
+<text x="10.0" y="20.0" font-size="13.5" fill="#6b645a" text-anchor="start">x = 3 のとき。下（葉）から順に計算し、いちばん上（根）が答え</text>
+<rect x="10" y="30" width="205" height="222" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="112.0" y="60.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2<tspan font-style="italic">x</tspan>²</text>
+<line x1="90.0" y1="96.0" x2="50.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="90.0" y1="96.0" x2="130.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="130.0" y1="150.0" x2="100.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="130.0" y1="150.0" x2="160.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="90.0" cy="96.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="90.0" y="102.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>×</text>
+<circle cx="50.0" cy="150.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="50.0" y="156.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<circle cx="130.0" cy="150.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="130.0" y="156.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>^</text>
+<circle cx="100.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="100.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<circle cx="160.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="160.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<text x="154.0" y="155.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">9</text>
+<text x="114.0" y="101.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">18</text>
+<text x="112.0" y="240.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">答え 18</text>
+<rect x="225" y="30" width="205" height="222" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="327.0" y="60.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>(2<tspan font-style="italic">x</tspan>)²</text>
+<line x1="305.0" y1="96.0" x2="265.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="305.0" y1="96.0" x2="345.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="265.0" y1="150.0" x2="245.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="265.0" y1="150.0" x2="295.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="305.0" cy="96.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="305.0" y="102.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>^</text>
+<circle cx="265.0" cy="150.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="265.0" y="156.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>×</text>
+<circle cx="345.0" cy="150.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="345.0" y="156.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<circle cx="245.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="245.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<circle cx="295.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="295.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="289.0" y="155.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">6</text>
+<text x="329.0" y="101.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">36</text>
+<text x="327.0" y="240.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">答え 36</text>
+<rect x="10" y="262" width="205" height="222" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="112.0" y="292.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>−<tspan font-style="italic">x</tspan>²</text>
+<line x1="70.0" y1="328.0" x2="110.0" y2="382.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="110.0" y1="382.0" x2="80.0" y2="436.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="110.0" y1="382.0" x2="140.0" y2="436.0" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="70.0" cy="328.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="70.0" y="334.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>−</text>
+<circle cx="110.0" cy="382.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="110.0" y="388.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>^</text>
+<circle cx="80.0" cy="436.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="80.0" y="442.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<circle cx="140.0" cy="436.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="140.0" y="442.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<text x="134.0" y="387.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">9</text>
+<text x="94.0" y="333.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">−9</text>
+<text x="112.0" y="472.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">答え −9</text>
+<rect x="225" y="262" width="205" height="222" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="327.0" y="292.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>(−<tspan font-style="italic">x</tspan>)²</text>
+<line x1="325.0" y1="328.0" x2="285.0" y2="382.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="325.0" y1="328.0" x2="365.0" y2="382.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="285.0" y1="382.0" x2="285.0" y2="436.0" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="325.0" cy="328.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="325.0" y="334.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>^</text>
+<circle cx="285.0" cy="382.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="285.0" y="388.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>−</text>
+<circle cx="365.0" cy="382.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="365.0" y="388.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<circle cx="285.0" cy="436.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="285.0" y="442.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="309.0" y="387.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">−3</text>
+<text x="349.0" y="333.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">9</text>
+<text x="327.0" y="472.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">答え 9</text>
+</svg>
+<figcaption><strong>図 5.1</strong>　括弧がないと、冪が木の下（先）に来る。括弧をつけると、括弧の中が木の下に入り、先に計算される。同じ数字と記号でも、木の形が変われば答えが変わる。</figcaption>
+</figure>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="../img/01_a5_descartes_vinculum.jpg" alt="17世紀フランス語の印刷のページ。a² のように右肩に数字が組まれ、根号の上に長い横線が引かれて、その下に a² + b² などの式が入っている" loading="lazy"></div>
+<p class="cap">1637年、デカルトは根号の上に長い横線を引き、どこまでをひとかたまりとして根に入れるかを示した。</p>
+<p class="cr">René Descartes, <em>La Géométrie</em>／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Descartes_La_Géométrie.djvu">Wikimedia Commons</a>（1637年、p.299の左半分）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="../img/01_b5_matryoshka.jpg" alt="上から見たマトリョーシカ。開いた胴が何重もの同心円に入れ子になり、中心に一番小さな人形がいる" loading="lazy"></div>
+<p class="cap">いちばん内側から順に閉じていかなければ、外側のふたは閉まらない。</p>
+<p class="cr">BrokenSphere／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Floral_matryoshka_set_2_smallest_doll_nested.JPG">Wikimedia Commons</a></p></div>
+</figure>
+<h3 id="sec-5-3"><span class="no">5.3</span>割り算の曖昧さ</h3>
+<p>「$1/2x$」と書かれたら、どう読むか。2通りある。</p>
+<ul>
+<li>$(1/2)\times x = \dfrac{1}{2}x$：$x=3$ のとき $1.5$。</li>
+<li>$1/(2x) = \dfrac{1}{2x}$：$x=3$ のとき $\dfrac{1}{6}\approx 0.1667$。</li>
+</ul>
+<p>上の「優先順位の約束」に従えば、掛け算と割り算は<strong>左から順に</strong>だから、$1/2x$ は $(1/2)\times x$ である。しかし、<strong>多くの人は $1/(2x)$ のつもりで書く</strong>。この曖昧さのために、本によっては「$1/2x$」を使わない。<em>括弧を省略しない</em>か、<em>分数の形</em>で書くとよい。</p>
+<p>2通りの読みを、図5.1 と同じ式の木で描くと図5.2 になる。</p>
+<figure class="fig" id="fig-5-2">
+<svg viewBox="0 0 440 262" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="1/2x の2通りの読み" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>1/2x の2通りの読み</title>
+<rect x="0" y="0" width="440" height="262" fill="#fffdf7"/>
+<text x="10.0" y="20.0" font-size="13.5" fill="#6b645a" text-anchor="start">「1/2x」を x = 3 で。どちらの木と読むかで答えが変わる</text>
+<rect x="10" y="30" width="205" height="222" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="112.0" y="60.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>(1/2) × <tspan font-style="italic">x</tspan></text>
+<line x1="110.0" y1="96.0" x2="65.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="110.0" y1="96.0" x2="160.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="65.0" y1="150.0" x2="40.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="65.0" y1="150.0" x2="95.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="110.0" cy="96.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="110.0" y="102.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>×</text>
+<circle cx="65.0" cy="150.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="65.0" y="156.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>÷</text>
+<circle cx="160.0" cy="150.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="160.0" y="156.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<circle cx="40.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="40.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>1</text>
+<circle cx="95.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="95.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<text x="89.0" y="155.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">0.5</text>
+<text x="134.0" y="101.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">1.5</text>
+<text x="112.0" y="240.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">左から順の約束 → 1.5</text>
+<rect x="225" y="30" width="205" height="222" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="327.0" y="60.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>1 / (2<tspan font-style="italic">x</tspan>)</text>
+<line x1="325.0" y1="96.0" x2="280.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="325.0" y1="96.0" x2="375.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="375.0" y1="150.0" x2="345.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="375.0" y1="150.0" x2="400.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="325.0" cy="96.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="325.0" y="102.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>÷</text>
+<circle cx="280.0" cy="150.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="280.0" y="156.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>1</text>
+<circle cx="375.0" cy="150.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="375.0" y="156.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>×</text>
+<circle cx="345.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="345.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<circle cx="400.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="400.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="399.0" y="155.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">6</text>
+<text x="349.0" y="101.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">1/6</text>
+<text x="327.0" y="240.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">2x をまとめる読み → 1/6</text>
+</svg>
+<figcaption><strong>図 5.2</strong>　左は $(1/2)\times x$、右は $1/(2x)$。書いた文字は同じでも、木の形が違うので答えが9倍違う（$1.5$ と $1/6$）。分数の形 $\frac{1}{2}x$ または $\frac{1}{2x}$ で書けば、木は1つに決まる。</figcaption>
+</figure>
+<div class="warn"><span class="label">流派の違い</span>
+<p>$a/bc$ の読みについて、「$bc$ をまとめて1つのかたまりとして割る」という約束を採る流派（物理の一部）と、「左から順」の約束を採る流派（プログラミング言語・多くの電卓）がある。<strong>この教材では、曖昧な書き方はしない</strong>（必ず括弧か分数で書く）。他の本を読むときは、前後の計算でどちらの意味か確かめる。</p>
+</div>
+
+<h3 id="sec-5-4"><span class="no">5.4</span>関数名と肩の数字：$\sin^2 x$</h3>
+<p>三角関数では、さらに別の約束がある。</p>
+<ul>
+<li>$\sin^2 x$ は $(\sin x)^2$、つまり「$\sin x$ を二乗したもの」。</li>
+<li>$\sin x^2$ は $\sin(x^2)$、つまり「$x^2$ を $\sin$ に入れたもの」。</li>
+</ul>
+<p>$x=\pi/6$（$30^\circ$）で比べる。</p>
+<table class="tb">
+<tr><th>書いたもの</th><th>読み</th><th>値</th></tr>
+<tr><td>$\sin^2 x$</td><td>$(\sin x)^2$</td><td>$(1/2)^2=0.25$</td></tr>
+<tr><td>$\sin x^2$</td><td>$\sin(x^2)=\sin(0.2742\ldots)$</td><td>$0.2707\ldots$</td></tr>
+</table>
+<p>値がちがう。$\sin^2 x$ の肩の「2」は、<strong>$\sin$ にではなく、$\sin x$ という結果に</strong>かかっている。（ところが、$\sin^{-1}x$ は「$\sin x$ の $-1$ 乗」ではなく<em>逆関数</em>$\arcsin x$を意味する流派もあり、さらに混乱する。第3回で、関数の肩の数字をまとめて整理する。）</p>
+<p>2つの書き方の木を、図5.3 に並べる。</p>
+<figure class="fig" id="fig-5-3">
+<svg viewBox="0 0 440 262" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="sin²x と sin x² の式の木" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>sin²x と sin x² の式の木</title>
+<rect x="0" y="0" width="440" height="262" fill="#fffdf7"/>
+<text x="10.0" y="20.0" font-size="13.5" fill="#6b645a" text-anchor="start">x = π/6 のとき（π/6 ≈ 0.5236）</text>
+<rect x="10" y="30" width="205" height="222" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="112.0" y="60.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>sin² <tspan font-style="italic">x</tspan></text>
+<line x1="110.0" y1="96.0" x2="65.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="110.0" y1="96.0" x2="160.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="65.0" y1="150.0" x2="65.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="110.0" cy="96.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="110.0" y="102.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>^</text>
+<circle cx="65.0" cy="150.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="65.0" y="156.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>sin</text>
+<circle cx="160.0" cy="150.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="160.0" y="156.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<circle cx="65.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="65.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="89.0" y="155.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">0.5</text>
+<text x="134.0" y="101.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">0.25</text>
+<text x="112.0" y="240.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">(sin x)² → 0.25</text>
+<rect x="225" y="30" width="205" height="222" rx="6" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="327.0" y="60.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>sin <tspan font-style="italic">x</tspan>²</text>
+<line x1="305.0" y1="96.0" x2="305.0" y2="150.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="305.0" y1="150.0" x2="275.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="305.0" y1="150.0" x2="335.0" y2="204.0" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="305.0" cy="96.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="305.0" y="102.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>sin</text>
+<circle cx="305.0" cy="150.0" r="19" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="305.0" y="156.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>^</text>
+<circle cx="275.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="275.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<circle cx="335.0" cy="204.0" r="19" fill="#fff" stroke="#2a2723" stroke-width="1.5"/>
+<text x="335.0" y="210.0" font-size="18" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2</text>
+<text x="329.0" y="155.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">0.2742</text>
+<text x="329.0" y="101.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">0.2707</text>
+<text x="327.0" y="240.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">sin(x²) → 0.2707</text>
+</svg>
+<figcaption><strong>図 5.3</strong>　$\sin^2 x$ では $\sin$ が先（木の下）で、二乗は最後。$\sin x^2$ では二乗が先で、$\sin$ は最後。肩の2がどこにかかるかで、木の上下が入れかわる。</figcaption>
+</figure>
+
+<div class="why"><span class="label">ひとことで</span>括弧を書かない式には、「優先順位の約束」が隠れている。約束を知らないと、$2x^2$ と $(2x)^2$ のように値が変わるものを同じに見てしまう。曖昧なときは括弧を補って読む。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>省略の段階：この資料全体を貫く考え方</h2>
+
+<h3 id="sec-6-1"><span class="no">6.1</span>省略とは何か</h3>
+<p>これまで見てきたことを、まとめて言い直す。数学の本は、次のようなことを<strong>説明なしに省略している</strong>。</p>
+<ul>
+<li>掛け算の記号 $\times$ や $\cdot$ を書かない（$2x$ は $2\times x$）。</li>
+<li>括弧を書かない（優先順位の約束を読者が補う）。</li>
+<li>「すべての $x$ について」を書かない（恒等式の $=$）。</li>
+<li>関数の引数を書かない（$\sin x$ は $\sin(x)$）。</li>
+<li>規則の続きを書かない（$\cdots$）。</li>
+</ul>
+<p>省略は悪いことではない。短く書けるから、<strong>慣れた人には読みやすい</strong>。問題は、<em>慣れる前の人には、何が省かれたのかわからない</em>こと。さらに、<strong>省略の上に省略が重なる</strong>と、元の形に戻れなくなる。</p>
+
+<div class="box" id="abbr-stages"><span class="label">省略の段階（この資料の用語）</span>
+<p>この資料では、書き方の「省略の度合い」を<strong>段階</strong>で呼ぶ。数字が大きいほど、省略が多い。</p>
+<ul>
+<li><strong>S0（完全形）</strong>：何も省略していない書き方。</li>
+<li><strong>S1</strong>：S0 から<em>1つ</em>の省略をした形。</li>
+<li><strong>S2</strong>：S1 からさらに1つ省略した形。以下同様。</li>
+</ul>
+<p>各段階で、<strong>何を省いたか</strong>と<strong>省いても誤解が起きない理由</strong>を書く。以降の回で省略形が出てくるたびに、この箱にリンクして戻れる。</p>
+</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 6｜現実</p>
+<div class="ph"><img src="../img/b2_sogana.png" alt="表の各ますに、漢字（黒）、それを崩した形（赤）、ひらがな（黒）が縦に並んでいる" loading="lazy"></div>
+<p class="cap">安が崩れて あ に、以が崩れて い になるまで、文字の省略は一足飛びではなく一段ずつ進んだ。</p>
+<p class="cr">Fastpunkk／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Sogana.png">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 6｜見立て</p>
+<div class="ph"><img src="../img/01_b6_ryakuga.jpg" alt="北斎の絵手本の一頁。円をいくつも重ねて犬を組み立てた下図と、その仕上がりの絵が並ぶ" loading="lazy"></div>
+<p class="cap">北斎は、犬をいくつかの丸にまで戻してみせ、そこからもう一度描き上げる。</p>
+<p class="cr">葛飾北斎『略画早指南』／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Ryakuga_hayaoshie_-_Hokusai_-_btv1b7200132p_(11_of_54).jpg">Wikimedia Commons</a>（1812年、フランス国立図書館）</p></div>
+</figure>
+<h3 id="sec-6-2"><span class="no">6.2</span>具体例1：掛け算の省略</h3>
+<div class="box" id="abbr-mult"><span class="label">省略の段階：掛け算</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても困らない理由</th></tr>
+<tr><td>S0</td><td>$2\times x\times x$</td><td>（省略なし）</td><td>―</td></tr>
+<tr><td>S1</td><td>$2\cdot x\cdot x$</td><td>$\times$ を $\cdot$ に替える</td><td>$\times$ は文字 $x$ と紛らわしいため</td></tr>
+<tr><td>S2</td><td>$2xx$</td><td>$\cdot$ を書かない</td><td>数と文字、文字と文字が並んだら「掛ける」と約束した</td></tr>
+<tr><td>S3</td><td>$2x^2$</td><td>同じ文字の掛け算を肩の数字でまとめる</td><td>冪の定義（<a href="#sym-superscript">4.2</a>）</td></tr>
+</table>
+<p>注意：「文字と文字が並んだら掛ける」という約束は、$xy$ を「$x\times y$」と読む。しかし「$\sin x$」のように、関数名と文字が並んだ場合は<strong>掛け算ではなく、関数に値を入れる</strong>と読む。また、数を並べたもの（$23$）は「2かける3」ではなく「二十三」である。<strong>並べて書く意味は、並ぶ記号の種類で決まる</strong>。</p>
+</div>
+
+<p>上の表を階段にしたのが図6.1 である。1段降りるごとに、何を省いたかと、省いても困らない理由を矢印の横に書いた。</p>
+<figure class="fig" id="fig-6-1">
+<svg viewBox="0 0 440 412" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="省略の段階：掛け算 S0からS3" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>省略の段階：掛け算 S0からS3</title>
+<rect x="0" y="0" width="440" height="412" fill="#fffdf7"/>
+<rect x="10" y="10" width="180" height="48" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="22.0" y="40.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">S0</text>
+<text x="115.0" y="43.0" font-size="23" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2 × <tspan font-style="italic">x</tspan> × <tspan font-style="italic">x</tspan></text>
+<line x1="40.0" y1="62.0" x2="40.0" y2="106.0" stroke="#a8322a" stroke-width="1.8"/><path d="M36.5 98.8 L40.0 106.0 L43.5 98.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="56.0" y="80.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">省く：× を · に替える</text>
+<text x="56.0" y="100.0" font-size="13.5" fill="#6b645a" text-anchor="start">困らない理由：× は文字 x と紛らわしい</text>
+<rect x="50" y="110" width="180" height="48" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="62.0" y="140.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">S1</text>
+<text x="155.0" y="143.0" font-size="23" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2 · <tspan font-style="italic">x</tspan> · <tspan font-style="italic">x</tspan></text>
+<line x1="80.0" y1="162.0" x2="80.0" y2="206.0" stroke="#a8322a" stroke-width="1.8"/><path d="M76.5 198.8 L80.0 206.0 L83.5 198.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="96.0" y="180.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">省く：· も書かない</text>
+<text x="96.0" y="200.0" font-size="13.5" fill="#6b645a" text-anchor="start">困らない理由：数と文字を並べたら掛けると約束した</text>
+<rect x="90" y="210" width="180" height="48" rx="6" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="102.0" y="240.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">S2</text>
+<text x="195.0" y="243.0" font-size="23" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2<tspan font-style="italic">x</tspan><tspan font-style="italic">x</tspan></text>
+<line x1="120.0" y1="262.0" x2="120.0" y2="306.0" stroke="#a8322a" stroke-width="1.8"/><path d="M116.5 298.8 L120.0 306.0 L123.5 298.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="136.0" y="280.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">省く：同じ文字の掛け算を肩の数字に</text>
+<text x="136.0" y="300.0" font-size="13.5" fill="#6b645a" text-anchor="start">困らない理由：冪の定義（4.2）</text>
+<rect x="130" y="310" width="180" height="48" rx="6" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="142.0" y="340.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">S3</text>
+<text x="235.0" y="343.0" font-size="23" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>2<tspan font-style="italic">x</tspan>²</text>
+<text x="430.0" y="30.0" font-size="14" fill="#5f7f4f" text-anchor="end" font-weight="bold">省略なし</text>
+<text x="430.0" y="342.0" font-size="14" fill="#b07a3e" text-anchor="end" font-weight="bold">いちばん短い</text>
+<text x="220.0" y="396.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">下へ降りると短くなる。読むときは、矢印を逆にたどって上へ戻る。</text>
+</svg>
+<figcaption><strong>図 6.1</strong>　$2\times x\times x$（S0）から $2x^2$（S3）まで、1段に1つずつ省く。どの段からでも、1段ずつ上へ戻れば完全形 S0 に戻れる。</figcaption>
+</figure>
+<h3 id="sec-6-3"><span class="no">6.3</span>具体例2：関数の引数</h3>
+<div class="box" id="abbr-arg"><span class="label">省略の段階：関数の引数</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても困らない理由</th></tr>
+<tr><td>S0</td><td>$\sin(x)$</td><td>（省略なし）</td><td>―</td></tr>
+<tr><td>S1</td><td>$\sin x$</td><td>括弧を省く</td><td>$\sin$ の直後に文字が来たら、その文字が引数と約束した</td></tr>
+</table>
+<p>S1 は、引数が<em>1つの文字か数のとき</em>だけ許される。引数が $x+1$ のような式のときは、$\sin(x+1)$ と括弧が必要。（$\sin x+1$ と書くと、「$(\sin x)+1$」と読まれる。）多変数関数の引数の省略（$\psi(x,t)\to\psi$）は、第3回で扱う。</p>
+</div>
+
+<h3 id="sec-6-4"><span class="no">6.4</span>具体例3：恒等式の「すべての」</h3>
+<div class="box" id="abbr-forall"><span class="label">省略の段階：恒等式</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th></tr>
+<tr><td>S0</td><td>「すべての実数 $x$ について、$(x+1)^2=x^2+2x+1$ が成り立つ」</td><td>（省略なし）</td></tr>
+<tr><td>S1</td><td>$(x+1)^2\equiv x^2+2x+1$</td><td>「すべての $x$ について」を $\equiv$ に折りたたむ</td></tr>
+<tr><td>S2</td><td>$(x+1)^2=x^2+2x+1$</td><td>$\equiv$ ですらなく、ただの $=$ で書く。「すべての $x$」は読者が文脈から補う</td></tr>
+</table>
+<p>S2 が最も多く使われ、最も困る。<a href="#sym-equal">2.1</a> で見たとおり、<strong>$=$ は3つの顔がある</strong>ため、(a) 条件か (b) 恒等式かは、読者が文脈から判断しなければならない。</p>
+</div>
+
+<h3 id="sec-6-5"><span class="no">6.5</span>この資料の約束</h3>
+<div class="thm"><span class="label">この資料の約束（省略についての4か条）</span>
+<ol>
+<li><strong>初出の記号は、必ず「記号」の枠で説明する</strong>（読み方・意味・省略前・出会う場所）。</li>
+<li><strong>省略形は、「省略の段階」の箱で S0 から S1, S2, … と並べてから使う</strong>。</li>
+<li><strong>前に出た記号や概念を使うときは、毎回リンクを張る</strong>。</li>
+<li><strong>「明らか」「同様に」では飛ばさない</strong>。式は1行に1操作だけ進め、理由を書く。</li>
+</ol>
+</div>
+<p>これからの全51回は、この4か条で書かれている。もし、どこかで説明が省かれていたら、それはこの資料の<strong>誤り</strong>なので、教えてほしい（ティーチングモードで質問すれば、その場で追記される）。</p>
+
+<div class="why"><span class="label">ひとことで</span>数学の本は、掛け算の記号・括弧・「すべての」・引数などを省略して書く。この資料では、省略を S0（完全形）から S1, S2 … と段階に分けて示し、いつでも元の形に戻れるようにする。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>練習：式を声に出して文として読む</h2>
+<p>最後に、ここまでの記号を使って、式を日本語の文に直す練習をする。これができれば、<strong>式が読める</strong>。</p>
+
+<h3 id="sec-7-1"><span class="no">7.1</span>手順</h3>
+<ol>
+<li>式の中の<strong>関係の記号</strong>（$=,\lt,\le,\approx,\propto$ など）を探す。これが述語。</li>
+<li>関係の記号の左と右を、それぞれ1つの<strong>式（名詞）</strong>として読む。</li>
+<li>「左は右に〔関係〕」という文にする。</li>
+</ol>
+
+<p>手順を、例題1の (3) $T\propto\sqrt{\ell}$ に当てはめると、図7.1 のようになる。</p>
+<figure class="fig" id="fig-7-1">
+<svg viewBox="0 0 440 266" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="T∝√ℓ を文に直す手順" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>T∝√ℓ を文に直す手順</title>
+<rect x="0" y="0" width="440" height="266" fill="#fffdf7"/>
+<rect x="104" y="22" width="60" height="58" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2" stroke-dasharray="5 3"/>
+<text x="134.0" y="64.0" font-size="38" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">T</tspan></text>
+<rect x="190" y="22" width="60" height="58" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="2"/>
+<text x="220.0" y="64.0" font-size="38" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>∝</text>
+<rect x="276" y="22" width="74" height="58" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2" stroke-dasharray="5 3"/>
+<path d="M286 52 L292 48 L299 68 L307 30 L340 30" fill="none" stroke="#2a2723" stroke-width="2"/>
+<text x="323.0" y="64.0" font-size="32" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ℓ</tspan></text>
+<text x="220.0" y="104.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">① 関係の記号＝述語</text>
+<text x="220.0" y="124.0" font-size="14" fill="#a8322a" text-anchor="middle">「比例する」（2.5）</text>
+<text x="134.0" y="154.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">② 左の式</text>
+<text x="134.0" y="174.0" font-size="14" fill="#2a2723" text-anchor="middle">「T」</text>
+<text x="313.0" y="154.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">② 右の式</text>
+<text x="313.0" y="174.0" font-size="14" fill="#2a2723" text-anchor="middle">「ℓ の平方根」</text>
+<rect x="20" y="196" width="400" height="56" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="220.0" y="220.0" font-size="15" fill="#2b3a67" text-anchor="middle" font-weight="bold">③ つなぐ：「T は、ℓ の平方根に比例する」</text>
+<text x="220.0" y="241.0" font-size="13.5" fill="#6b645a" text-anchor="middle">省略前：ある定数 k があって T = k√ℓ</text>
+</svg>
+<figcaption><strong>図 7.1</strong>　①関係の記号（述語）を見つけ、②その左右をそれぞれ名詞として読み、③「左は右に〔関係〕」とつなぐ。</figcaption>
+</figure>
+<div class="ex"><span class="label">例題1（式を日本語に直す）</span>
+<p>次の式を、日本語の文に直せ。(1) $v := \dfrac{\Delta x}{\Delta t}$　(2) $\sin x \approx x\quad(x\text{ が小さいとき})$　(3) $T\propto\sqrt{\ell}$　(4) $x_1\neq x_2$</p>
+<p><strong>解答</strong></p>
+<p>① (1)：関係の記号は $:=$。左は「$v$」、右は「$\Delta x$ を $\Delta t$ で割ったもの」。<a href="#sym-defeq">2.2</a> により、$:=$ は「左を右のことと決める」。→ <strong>「$v$ とは、$\Delta x$ を $\Delta t$ で割ったもののことである（と定める）」</strong>。</p>
+<p>② (2)：関係の記号は $\approx$。左は「$\sin x$」、右は「$x$」。<a href="#sym-approx">2.4</a> により「ほぼ等しい」。条件は括弧の中。→ <strong>「$x$ が小さいとき、$\sin x$ は $x$ にほぼ等しい」</strong>。</p>
+<p>③ (3)：関係の記号は $\propto$。左は「$T$」、右は「$\ell$ の平方根」。<a href="#sym-propto">2.5</a> により、「ある定数 $k$ があって $T=k\sqrt{\ell}$」。→ <strong>「$T$ は $\ell$ の平方根に比例する」</strong>。</p>
+<p>④ (4)：関係の記号は $\neq$。左は「$x_1$」（<a href="#sym-subscript">4.1</a> により $x$ の1番目）、右は「$x_2$」。→ <strong>「$x$ の1番目と2番目は、等しくない」</strong>。</p>
+</div>
+
+<!-- ============================================================ -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 7｜現実</p>
+<div class="ph"><img src="../img/01_a7_blackboard.jpg" alt="茶色の古い黒板。波括弧でまとめた2本の微分方程式と、枠で囲んだ式がチョークで書かれている" loading="lazy"></div>
+<p class="cap">波括弧でまとめた方程式も、一行ずつ「左は右に等しい」と読み下せる文の集まりである。</p>
+<p class="cr">Roman Mager／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Formulas_on_an_old_blackboard_(Unsplash).jpg">Wikimedia Commons</a>（2016年）</p></div>
+<div class="side b"><p class="kick">MITATE 7｜見立て</p>
+<div class="ph"><img src="../img/01_b7_terakoya.jpg" alt="寺子屋の二枚続きの錦絵。机に向かって手本を写す子どもと、ふざけて騒ぐ子どもたち、左右に師匠" loading="lazy"></div>
+<p class="cap">手本を写す子も騒ぐ子もいる手習いの部屋は、声で満ちていた。</p>
+<p class="cr">一寸子花里「文学ばんだいの宝」／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Bungaku-Bandai_no-Takara-Terakoya-School-by-Issunshi-Hanasato.png">Wikimedia Commons</a>（弘化年間、東京都立図書館）</p></div>
+</figure>
+<h2 id="sec-8"><span class="no">8</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_01.py）。</p>
+
+<div class="ex"><span class="label">例題2（A 確認：等号の種類）</span>
+<p>次の (1)〜(3) の等号は、<a href="#sym-equal">2.1</a> の (a)〜(c)、または <a href="#sym-defeq">2.2</a> の定義のうちのどれか。理由とともに答えよ。<br>(1) $x^2=4$　(2) $(a+b)(a-b)=a^2-b^2$　(3) $k:=\dfrac12 m v^2$</p>
+<p><strong>解答</strong></p>
+<p>① (1)：$x$ が未知数で、$x=2$ や $x=-2$ のときだけ正しい。例えば $x=3$ では $9\ne 4$。→ <strong>(a) 条件（方程式）</strong>。</p>
+<p>② (2)：$a=3,\;b=1$ を入れると、左は $(3+1)(3-1)=4\times 2=8$、右は $9-1=8$。$a=5,\;b=2$ では、左は $7\times 3=21$、右は $25-4=21$。どれを入れても一致するので、<strong>(b) 恒等式</strong>（展開すれば確かめられる：$(a+b)(a-b)=a^2-ab+ba-b^2=a^2-b^2$）。</p>
+<p>③ (3)：コロンがついている。$k$ という名前を、右辺のことと決めている。→ <strong>定義（命名）</strong>。</p>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：括弧の有無で値が変わる）</span>
+<p>$x=-2$ のとき、次の4つの値を求めよ。(1) $x^2$　(2) $-x^2$　(3) $(-x)^2$　(4) $3x^2$</p>
+<p><strong>解答</strong></p>
+<p>① (1)：$x=-2$ を入れる。$x^2=(-2)^2$（<em>負の数を入れるときは括弧をつける</em>。そうしないと $-2^2$ になり、<a href="#rule-order">優先順位</a>により $-(2^2)$ と読まれてしまうため）。$(-2)\times(-2)=4$。</p>
+<p>② (2)：$-x^2=-(x^2)$（<a href="#rule-order">優先順位</a>：冪が先、符号は後）。$x^2=4$ だから、$-4$。</p>
+<p>③ (3)：$(-x)^2$。括弧の中が先。$-x=-(-2)=2$。$2^2=4$。</p>
+<p>④ (4)：$3x^2=3\times(x^2)=3\times 4=12$。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-9"><span class="no">9</span>演習問題</h2>
+
+<div class="box"><span class="label">問1（A 確認）</span>次の関係式のうち、いつでも正しいもの・いつでも正しくないもの・値しだいで変わるものに分けよ。(1) $2+3=5$　(2) $2+3=6$　(3) $2x=6$　(4) $2(x+1)=2x+2$
+<details><summary>解答</summary>
+<p>(1) いつでも正しい（文字がなく、$2+3=5$ は成り立つ）。</p>
+<p>(2) いつでも正しくない（$2+3=5\neq 6$）。</p>
+<p>(3) 値しだいで変わる（$x=3$ のときだけ。$x=4$ では左は $8$ で右は $6$）。</p>
+<p>(4) いつでも正しい（恒等式）。$x=0$ で左 $2$、右 $2$。$x=5$ で左 $12$、右 $12$。展開すれば $2(x+1)=2x+2\cdot 1=2x+2$。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認）</span>$x=3$ のとき、(1) $x^3$ と (2) $x^{(3)}$ のうち、値が決まるのはどちらか。理由を述べよ。
+<details><summary>解答</summary>
+<p>(1) $x^3=3\times 3\times 3=27$ と決まる（<a href="#sym-superscript">4.2</a>）。</p>
+<p>(2) $x^{(3)}$ は冪ではない（<a href="#sym-bracket-sup">4.3</a>）。「3番目の $x$」などの意味なので、<strong>その本が何と宣言しているか</strong>がわからなければ、値は決まらない。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認）</span>次の式を、省略していない形（S0）に書き直せ。(1) $3ab^2$　(2) $\sin 2x$
+<details><summary>解答</summary>
+<p>(1) $3ab^2$：まず冪をほどく（<a href="#abbr-mult">省略の段階：掛け算</a>の S3→S2）。$b^2=b\times b$ だから、$3ab^2=3abb$。掛け算の記号を補う（S2→S0）。$3\times a\times b\times b$。</p>
+<p>(2) $\sin 2x$：関数の引数の括弧を補う（<a href="#abbr-arg">省略の段階：関数の引数</a>）。引数は「$2x$」全体。$\sin(2x)$。さらに掛け算の記号を補う。$\sin(2\times x)$。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（B 標準）</span>「$1/2x$」と書かれた式を、(1) $(1/2)\times x$、(2) $1/(2x)$ の2通りに読む。$x=4$ のとき、それぞれ何になるか。
+<details><summary>解答</summary>
+<p>(1) $(1/2)\times 4=0.5\times 4=2$。</p>
+<p>(2) $1/(2\times 4)=1/8=0.125$。</p>
+<p>値が違う。<a href="#sec-5-3">5.3</a> のとおり、書くときは括弧か分数で区別する。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準）</span>$\sin x\approx x$ が使える範囲について、$x=0.1$ と $x=1$ のそれぞれで、ずれ $x-\sin x$ を求め、$\approx$ が使えるかを判断せよ。（$\sin 0.1=0.0998334\ldots$、$\sin 1=0.841471\ldots$）
+<details><summary>解答</summary>
+<p>$x=0.1$：ずれ $=0.1-0.0998334=0.0001666$。元の値 $0.1$ の約0.17%。→ ほとんど同じ。</p>
+<p>$x=1$：ずれ $=1-0.841471=0.158529$。元の値 $1$ の約16%。→ 目的によっては使えない。</p>
+<p><a href="#sym-approx">2.4</a> のとおり、$\approx$ は「どれくらい近いか」を書いていない。<strong>使ってよい範囲は、目的の精度から自分で決める</strong>。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（C 発展：式を読む・書く）</span>日本語の文を、記号を使った関係式にせよ。(1)「$y$ は $x$ の2乗に比例する」　(2)「$a_3$ とは、$a_1$ と $a_2$ の和のことと定める」　(3)「$x$ が小さいとき、$\ln(1+x)$ は $x$ にほぼ等しい」
+<details><summary>解答</summary>
+<p>(1) $y\propto x^2$（<a href="#sym-propto">2.5</a>。$x^2$ は <a href="#sym-superscript">4.2</a> の冪）。</p>
+<p>(2) $a_3 := a_1+a_2$（<a href="#sym-defeq">2.2</a> の定義の等号。$a_1,a_2,a_3$ は <a href="#sym-subscript">4.1</a> の添字）。</p>
+<p>(3) $\ln(1+x)\approx x\quad(x\text{ が小さいとき})$（<a href="#sym-approx">2.4</a>）。</p>
+<p class="meta">※自作の問題と解答。この種の問題は、<a href="https://richardhammack.github.io/BookOfProof/">Book of Proof</a>（CC BY-NC-ND 4.0）の第1〜2章にも多数ある（改変不可のため全文は載せない）。</p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 「式（名詞）」と「関係式（文）」を区別できる。</li>
+<li>□ 関係式が「いつでも正しい／いつでも正しくない／値しだいで変わる」のどれかを判断できる。</li>
+<li>□ 等号 $=$ の3つの顔（条件・恒等式・結果の記述）を、文字が未知数かどうかで見分けられる。</li>
+<li>□ $:=$、$\equiv$、$\approx$、$\propto$、$\neq$ を、日本語で読み、省略前の言い方に戻せる。</li>
+<li>□ 主要なギリシャ文字を声に出して読める。</li>
+<li>□ $x_1$、$x^2$、$x^{(2)}$、$x'$、$\cdots$ の違いを説明できる。</li>
+<li>□ $2x^2$ と $(2x)^2$、$\sin^2 x$ と $\sin x^2$ のように、括弧の有無で値が変わる例を書ける。</li>
+<li>□ 「省略の段階（S0, S1, …）」の考え方を説明でき、省略形を S0 に戻せる。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第2回）</strong>：集合と論理。この回で何度か「第2回で説明する」と書いた $\forall$（すべての）、$\exists$（存在する）、$\Rightarrow$（ならば）、$\Leftrightarrow$（同値）、$\lor$（または）、そして集合の記号 $\in,\ \subset,\ \cup,\ \cap$ を扱う。<br>
+<a href="../index.html">← 目次へ</a>　｜　<a href="../symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：記号の意味と流派の整理は、Hammack, <em>Book of Proof</em>（CC BY-NC-ND 4.0）の序・第1章、OpenStax <em>Calculus Volume 1</em>（CC BY-NC-SA 4.0）の記法の章、各科目の教材の書き方（量子力学・機械力学・電磁気学・応用数学Ⅱ）を参照して、本教材向けに書き直したもの。例題・演習・表は自作。</p>
+
+<nav class="switch"><a href="../index.html"><small>INDEX</small>目次</a><a class="to" href="../symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

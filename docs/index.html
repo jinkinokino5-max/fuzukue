@@ -27,7 +27,7 @@
   /* 棚：墨の細線一本の上に七冊を立てる */
   main{ flex:1; display:flex; flex-direction:column; justify-content:center; }
   .shelf{ list-style:none; margin:0 auto; padding:0 clamp(10px,3vw,32px); max-width:100%;
-          width:calc(950 * min(1px, (100vh - 250px) / 450)); /* 七冊の幅＋すき間＋左右の余り */
+          width:calc(1075 * min(1px, (100vh - 250px) / 450)); /* 八冊の幅＋すき間＋左右の余り */
           display:flex; align-items:flex-end; justify-content:center; gap:clamp(5px,1.4vw,12px);
           border-bottom:1.5px solid var(--ink); }
   /* 低い画面でも棚全体が一画面に収まるよう、背の高さを画面の高さで頭打ちにする */
@@ -117,6 +117,10 @@
     <span class="face spine"><img src="img/spine/heart.jpg" alt=""><span class="ttl">「闇の奥」を原文で読む</span></span>
     <span class="face cover" aria-hidden="true"><img src="img/spine/heart_cover.jpg" alt="" loading="lazy"><span class="ttl">「闇の奥」を原文で読む</span></span>
   </a></li>
+  <li style="--w:114;--h:432"><a class="book" href="dougu-sugaku/index.html">
+    <span class="face spine"><img src="img/spine/dougu.jpg" alt=""><span class="ttl">道具としての数学</span></span>
+    <span class="face cover" aria-hidden="true"><img src="img/spine/dougu_cover.jpg" alt="" loading="lazy"><span class="ttl">道具としての数学</span></span>
+  </a></li>
 </ul>
 </main>
 
@@ -138,6 +142,8 @@
     <span class="why">潮と潮とがぶつかり、重なり合って渦を巻く。いくつもの波を足し合わせたものとして世界を描く、重ね合わせの見立て。</span></li>
   <li><b>「闇の奥」を原文で読む</b>　J. A. グリムショー《Thames Moonlight》／Public domain／<a href="https://commons.wikimedia.org/wiki/File:John_Atkinson_Grimshaw_(1836-1893)_-_Thames_Moonlight_-_LEEUA_2009.025_-_Stanley_%5E_Audrey_Burton_Gallery.jpg">Wikimedia Commons</a>
     <span class="why">語り手が船上で見ているのは、日没のテムズ。月夜の河口に帆柱が立ち並ぶ、この物語の入口の景色。</span></li>
+  <li><b>道具としての数学</b>　プリンプトン322（粘土板、紀元前1800年ごろ）、コロンビア大学所蔵／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Plimpton_322.jpg">Wikimedia Commons</a>
+    <span class="why">刻まれた楔形は、読み方を知らなければただの傷。記号の読み方を一つずつ身につけていく、この講義の入口の見立て。</span></li>
 </ol>
 </details>
 </footer>

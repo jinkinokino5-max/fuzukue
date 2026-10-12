@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第27回 添字記法と曲線座標</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="img/27_hero_catalog.jpg" alt="木製の引き出しが並び、ひとつが引き出されて、白い目録カードの束が見える。見出しの札はドイツ語">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第27回</p><h1>添字記法と曲線座標</h1></div>
+<figcaption><p class="cap">引き出しの見出しの札の並びで、探すものの場所が決まる。</p><p class="cr">Marcus Gossler（2005年、グラーツ大学図書館の件名カード目録）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Schlagwortkatalog.jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
+</figure>
+<p class="lead">第24回では、発散や回転の恒等式を、成分を3本ずつ書き並べて確かめた。この回は、その書き方を短くする道具を2つ作る。1つは<strong>添字記法</strong>：同じ添字が2回出たら足す約束（アインシュタインの規約）と、2つの記号 $\delta_{ij}$、$\varepsilon_{ijk}$ だけで、外積・回転・行列式を1行で書き、ベクトル解析の恒等式を一本の計算で証明する。もう1つは<strong>曲線座標</strong>：極・円柱・球座標で $\nabla$、発散、回転、ラプラシアンがどう書き換わるかを、第24回と同じ「小さな箱の出入りを数える」やり方で導く。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：成分を並べる書き方は長い → 同じ添字が2回出たら足す（規約）→ 足す記号 $\sum$ を書かずに済む → 外積と回転を表す記号 $\varepsilon_{ijk}$ と、単位行列を表す $\delta_{ij}$ → $\varepsilon\varepsilon=\delta\delta-\delta\delta$ → 恒等式が一本の計算で証明できる（$\nabla\times\nabla\phi=\boldsymbol 0$ は「反対称×対称＝0」）→ ここまでは直交座標の話 → 球や円柱の問題では座標を替えたい → 座標の向きが場所で変わる（曲線座標）→ 長さの倍率 $h_i$（スケール因子）→ 勾配・発散・回転・ラプラシアンの公式を、小さな箱の出入りから導く。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>第1回から続く約束どおり、新しい記号は緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。この回の主役は、<strong>省略の約束</strong>（規約）である。省略は便利だが、苦手の原因は「何を省いたのか分からなくなること」だったので、省略の段階を 1.2 に一度表にし、以後はこの表に戻れるようにしておく。</p>
+<p>各節は、「なぜ必要か → 定義 → 数値で一度手を動かす → 導出 → 確かめ → よくある誤解」の順に進む。高校・1年で習った内容も、短く一度は書く。覚えている部分は飛ばしてよい。</p>
+<p>前提：総和記号と添字（<a href="04_第4回_総和・総乗と添字.html">第4回</a>）、ベクトルと行列の成分（<a href="05_第5回_ベクトルと行列の書き方.html">第5回</a>）、発散・回転・ラプラシアン（<a href="24_第24回_発散と回転.html">第24回</a>）。第25回（線積分と面積分）・第26回（ガウスとストークスの定理）は作成中で、この回では使わない。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で<strong>新しく説明する記号</strong>と、<strong>前の回で説明済みの記号</strong>を分けて並べる。右の列の「→」で説明のある場所へ飛べる。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>縮約（アインシュタインの規約）：$a_ib_i$</td><td>エー・アイ・ビー・アイ</td><td>同じ添字が1つの項に2回出たら、その添字について足す、という約束</td><td><a href="#sym-einstein">→1.2</a></td></tr>
+<tr><td>縮約の書き方の省略の段階（S0〜S3）</td><td>―</td><td>$\displaystyle\sum_{i=1}^3a_ib_i$ から $a_ib_i$ までの段階</td><td><a href="#abbr-einstein">→1.2</a></td></tr>
+<tr><td>自由添字、ダミー添字</td><td>じゆうそえじ、ダミーそえじ</td><td>1回だけ出る添字（式の「行き先」を決める）、2回出る添字（足されて消える）</td><td><a href="#sym-free-index">→1.3</a></td></tr>
+<tr><td>$\partial_i$</td><td>デル・アイ</td><td>$i$ 番目の座標での偏微分 $\dfrac{\partial}{\partial x_i}$</td><td><a href="#sym-partial-i">→1.4</a></td></tr>
+<tr><td>$\varepsilon_{ijk}$（レヴィ・チヴィタの記号）</td><td>イプシロン・アイ・ジェイ・ケイ</td><td>$i,j,k$ が 1,2,3 の巡回なら $+1$、逆の並びなら $-1$、重なりがあれば $0$</td><td><a href="#sym-levi-civita">→2.2</a></td></tr>
+<tr><td>曲線座標 $(q_1,q_2,q_3)$</td><td>キュー・イチ、キュー・ニ、キュー・サン</td><td>$x,y,z$ の代わりに使う3つの座標の総称（極・円柱・球座標など）</td><td><a href="#sym-curvilinear">→4.1</a></td></tr>
+<tr><td>スケール因子 $h_i$</td><td>エイチ・アイ</td><td>座標 $q_i$ を少し動かしたとき、実際の長さが何倍になるか</td><td><a href="#sym-scale-factor">→4.2</a></td></tr>
+<tr><td>$\hat{\boldsymbol e}_i$（座標方向の単位ベクトル）</td><td>イー・ハット・アイ</td><td>座標 $q_i$ が増える向きの、長さ1のベクトル</td><td><a href="#sym-unit-basis">→4.2</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出た記号（リンクで戻れる）</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>初出</th></tr>
+<tr><td>$:=$、$=$</td><td>左の名前を右の式で決める／等しい</td><td><a href="01_第1回_数式を文として読む.html#sym-defeq">第1回 2.2</a>、<a href="01_第1回_数式を文として読む.html#sym-equal">2.1</a></td></tr>
+<tr><td>総和 $\displaystyle\sum_{i=1}^n$、ダミー添字、省略の段階（$\sum$ の範囲）</td><td>番号を動かして足す、和の中だけの文字、範囲を省く段階</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回 2.1</a>、<a href="04_第4回_総和・総乗と添字.html#sym-dummy-index">3.2</a>、<a href="04_第4回_総和・総乗と添字.html#abbr-sum">2.5</a></td></tr>
+<tr><td>二重和、添字をまとめる省略</td><td>内側の和を先に計算する</td><td><a href="04_第4回_総和・総乗と添字.html#sym-doublesum">第4回 5.2</a>、<a href="04_第4回_総和・総乗と添字.html#abbr-sum-index">5.3</a></td></tr>
+<tr><td>クロネッカーのデルタ $\delta_{ij}$</td><td>添字が等しければ1、違えば0</td><td><a href="04_第4回_総和・総乗と添字.html#sym-kronecker">第4回 9.2</a></td></tr>
+<tr><td>太字ベクトル $\boldsymbol a$、成分 $a_i$、行列の成分 $A_{ij}$、転置 $\mathsf T$、単位行列 $I$</td><td>数の組、その中の数、行列の中の数、縦横を入れ替える、対角が1の行列</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-vector">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-component">3.1</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix-entry">4.3</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">5.2</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-identity">4.5</a></td></tr>
+<tr><td>内積 $\boldsymbol a\cdot\boldsymbol b$、外積 $\boldsymbol a\times\boldsymbol b$、ノルム $\|\boldsymbol a\|$、単位ベクトル</td><td>成分を掛けて足した数、両方に直角なベクトル、長さ、長さ1のベクトル</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">第5回 7.2</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-cross">9.2</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">6.1</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-unit-vector">6.2</a></td></tr>
+<tr><td>$\dfrac{\partial f}{\partial x}$、$\partial_xf$、高階偏微分と順序交換</td><td>他の変数を止めて1つだけ動かした微分、$f_{xy}=f_{yx}$（連続なら）</td><td><a href="11_第11回_偏微分.html#sym-partial">第11回 2.1</a>、<a href="11_第11回_偏微分.html#sym-partial-short">3.1</a>、<a href="11_第11回_偏微分.html#sym-mixed-partial">5.1</a></td></tr>
+<tr><td>連鎖律</td><td>合成関数の微分</td><td><a href="12_第12回_全微分と連鎖律.html#sym-chain-rule">第12回</a></td></tr>
+<tr><td>極座標 $(r,\theta)$、円柱座標 $(r,\theta,z)$、球座標 $(r,\theta,\varphi)$、ヤコビアン</td><td>距離と角で点を表す座標、面積（体積）の拡大率</td><td><a href="13_第13回_重積分と変数変換.html#sym-polar">第13回 7.1</a>、<a href="13_第13回_重積分と変数変換.html#sym-cylindrical">9.1</a>、<a href="13_第13回_重積分と変数変換.html#sym-spherical">10.1</a>、<a href="13_第13回_重積分と変数変換.html#sym-jacobian">8.3</a></td></tr>
+<tr><td>行列式 $\det$、置換の符号 $\operatorname{sgn}\sigma$</td><td>面積・体積の拡大率、並べ替えの偶奇</td><td><a href="18_第18回_行列式.html#sym-det">第18回</a>、<a href="18_第18回_行列式.html#sym-perm-sign">置換の符号</a></td></tr>
+<tr><td>正規直交基底</td><td>長さ1で互いに直交するベクトルの組</td><td><a href="19_第19回_内積・直交・射影.html#sym-orthonormal">第19回</a></td></tr>
+<tr><td>位置ベクトル $\boldsymbol r$、$\nabla$、勾配 $\nabla f$</td><td>点の位置、偏微分を並べる命令、偏微分を並べたベクトル</td><td><a href="23_第23回_場と勾配.html#sym-position-vector">第23回 1.1</a>、<a href="23_第23回_場と勾配.html#sym-nabla">3.2</a>、<a href="23_第23回_場と勾配.html#sym-gradient">3.2</a></td></tr>
+<tr><td>発散 $\nabla\cdot\boldsymbol v$、回転 $\nabla\times\boldsymbol v$、ラプラシアン $\nabla^2f$</td><td>湧き出し、渦、勾配の発散</td><td><a href="24_第24回_発散と回転.html#sym-divergence">第24回 2.1</a>、<a href="24_第24回_発散と回転.html#sym-curl">3.1</a>、<a href="24_第24回_発散と回転.html#sym-laplacian">4.1</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>添字記法：足す記号を書かない約束</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/27_a1_einstein.jpg" alt="クリーム色の紙に、「Die Grundlage der allgemeinen Relativitätstheorie」「von A. Einstein」と印刷され、下に飾り模様と出版社名、1916年の文字がある表題頁" loading="lazy"></div>
+<p class="cap">1916年に印刷された、アインシュタインの一般相対性理論の論文の、表題頁である。</p>
+<p class="cr">アルベルト・アインシュタイン『一般相対性理論の基礎』（1916年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Einstein_Die_Grundlage_der_allgemeinen_Relativitätstheorie_Sonderdruck_1916_Titel.jpg">Wikimedia Commons</a>（一部を切り出した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/27_b1_katagami.jpg" alt="茶色の紙に、階段状の帯と、小さな扇形の飾りを、細かく切り抜いた文様の型紙" loading="lazy"></div>
+<p class="cap">ひとつの形の繰り返しを、切り抜いた型紙一枚で、布に染め出す。</p>
+<p class="cr">伊勢型紙の幾何文様（作者不詳、19世紀後半）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Japanese_Katagami_Stencil_Geometric_Ornament.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：成分を3本ずつ書くのは、長くて間違えやすい</h3>
+<p><a href="24_第24回_発散と回転.html#sec-3-6">第24回 3.6</a> では、「勾配場の回転は $\boldsymbol 0$」を示すために、回転の3つの成分を書き下し、偏微分の順序交換で打ち消し合う様子を3回確かめた。恒等式が1つ増えるたびに、同じ作業が3倍になる。2つのベクトル場がからむ恒等式になると、成分は 3 × 3 = 9 個を超え、書き間違いの場所が増える。</p>
+<p>成分を書き並べて長くなる原因は、実は<strong>足し算の記号 $\sum$ を、その都度ていねいに書いている</strong>ことにある。たとえば内積は</p>
+<p>$$ \boldsymbol a\cdot\boldsymbol b=\sum_{i=1}^{3}a_ib_i $$</p>
+<p>（<a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">第5回 7.2</a>、総和は<a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回 2.1</a>）と書いた。内積だけでなく、行列とベクトルの積、行列の積、発散、トレース、……のどれも、$\sum$ が付き、動かす添字が <strong>2回ずつ</strong>出てくる。そこで、アインシュタイン（A. Einstein、20世紀の物理学者）が一般相対性理論の計算で使い始めた次の約束を採用する。</p>
+<p><strong>「同じ添字が1つの項に2回出てきたら、その添字について足す、と読む。$\sum$ は書かない。」</strong></p>
+<p>省略は、苦手の原因になりやすい。そこでまず、約束をきちんと文にしてから、何を省いたのかを段階ごとに見る。</p>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>定義：アインシュタインの規約（縮約）</h3>
+
+<div class="def" id="sym-einstein"><span class="label">記号：アインシュタインの規約（縮約）　$a_ib_i$</span>
+<p><strong>①読み方</strong>：$a_ib_i$ は「エー・アイ・ビー・アイ」。約束そのものは「アインシュタインの規約」「総和規約」。足すことを「縮約（しゅくやく）」と呼ぶ。</p>
+<p><strong>②日本語での意味</strong>：<strong>1つの項（掛け算のまとまり）の中で、同じ添字の文字が2回出てきたら、その文字を $1$ から $3$ まで動かして足す</strong>、という約束。$\sum$ を書かない代わりに、「2回出てきたら足す」と読む。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$ a_ib_i\ :=\ \sum_{i=1}^{3}a_ib_i\ =\ a_1b_1+a_2b_2+a_3b_3 $$</p>
+<p>ここで $a_i$ は<a href="05_第5回_ベクトルと行列の書き方.html#sym-component">ベクトル $\boldsymbol a$ の第 $i$ 成分</a>、動く範囲の「3」は空間の次元（平面なら2）である。$A_{ij}v_j$ なら $\displaystyle\sum_{j=1}^3A_{ij}v_j$ のこと。足した結果は、残った添字の個数に応じて、数（0個）・ベクトル（1個）・行列（2個）になる。</p>
+<p><strong>④どこで出会うか</strong>：電磁気学・流体力学・連続体力学（応力とひずみ）・量子力学のスピン、機械学習（テンソルの計算 <code>einsum</code>）。</p>
+</div>
+
+<div class="box" id="abbr-einstein"><span class="label">省略の段階：$\displaystyle\sum_{i=1}^{3}a_ib_i$ から $a_ib_i$ まで</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても困らない理由（と、困る場面）</th></tr>
+<tr><td>S0</td><td>$\displaystyle\sum_{i=1}^{3}a_ib_i$</td><td>（省略なし。動かす添字、下限、上限、一般項がすべてある）</td><td>―（<a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回の完成形</a>）</td></tr>
+<tr><td>S1</td><td>$\displaystyle\sum_{i}a_ib_i$</td><td>下限と上限（動く範囲）</td><td>空間が3次元と決まっていれば、$i$ の動く範囲は $1,2,3$ の全部。<strong>2次元や4次元の話が混ざるときは、省略してはいけない</strong>（<a href="04_第4回_総和・総乗と添字.html#abbr-sum">第4回 2.5</a> と同じ段階）。</td></tr>
+<tr><td>S2</td><td>$a_ib_i$</td><td>$\sum$ の記号そのもの</td><td>「同じ添字が2回出てきた」という見た目だけで、足すことが分かる。<strong>困る場面</strong>：足したくないのに同じ添字が2回出る式（例：「$i$ 番目の成分どうしの積」をそのまま見たい）。その場合は「（$i$ について和をとらない）」と文で添える。</td></tr>
+<tr><td>S3</td><td>$\boldsymbol a\cdot\boldsymbol b$</td><td>添字そのもの</td><td>添字記法をやめて、ベクトルの記号に戻る。成分を扱う計算（恒等式の証明）には使えない。</td></tr>
+</table>
+<p>この回では、S2（$\sum$ なし）で書く。意味が分からなくなったら、S0 に戻って $\sum_{i=1}^3$ を書き足せばよい。以後、式の中の「2回出た添字」を見たら、毎回ここに戻る。</p>
+</div>
+<p>図 1.1 を見る。上から下へ、1段ごとに何かを省く。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 400" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="内積の書き方の省略の階段 S0〜S3" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>内積の書き方の省略の階段 S0〜S3</title>
+<rect x="0" y="0" width="440" height="400" fill="#fffdf7"/>
+<rect x="10" y="8" width="420" height="88" rx="6" fill="#fff" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="24.0" y="34.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">S0</text>
+<text x="66.0" y="34.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">省略なし</text>
+<text x="220.0" y="64.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∑</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">i</tspan><tspan font-size="15.4">=1〜3</tspan><tspan dy="-6.2" font-style="italic">a</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">i</tspan><tspan dy="-6.2" font-style="italic">b</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">i</tspan></text>
+<text x="220.0" y="88.0" font-size="18" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>= </tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">1</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">1</tspan><tspan dy="-5.0">+</tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">2</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">2</tspan><tspan dy="-5.0">+</tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">3</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">3</tspan></text>
+<rect x="10" y="104" width="420" height="88" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="24.0" y="130.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">S1</text>
+<text x="66.0" y="130.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">範囲を省く</text>
+<text x="220.0" y="162.0" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∑</tspan><tspan dy="6.7" font-size="16.8" font-style="italic">i</tspan><tspan dy="-6.7" font-style="italic">a</tspan><tspan dy="6.7" font-size="16.8" font-style="italic">i</tspan><tspan dy="-6.7" font-style="italic">b</tspan><tspan dy="6.7" font-size="16.8" font-style="italic">i</tspan></text>
+<text x="20.0" y="184.0" font-size="14" fill="#a8322a" text-anchor="start">省いたもの：1〜3（空間が3次元と決まっているから）</text>
+<rect x="10" y="200" width="420" height="88" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="24.0" y="226.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">S2</text>
+<text x="66.0" y="226.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">∑ を省く（アインシュタインの規約）</text>
+<text x="220.0" y="258.0" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="6.7" font-size="16.8" font-style="italic">i</tspan><tspan dy="-6.7" font-style="italic">b</tspan><tspan dy="6.7" font-size="16.8" font-style="italic">i</tspan></text>
+<text x="20.0" y="280.0" font-size="14" fill="#a8322a" text-anchor="start">省いたもの：∑ そのもの（同じ添字が2回 → 足す）</text>
+<rect x="10" y="296" width="420" height="88" rx="6" fill="#fff" stroke="#2b3a67" stroke-width="1.6"/>
+<text x="24.0" y="322.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">S3</text>
+<text x="66.0" y="322.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">添字も省く</text>
+<text x="220.0" y="354.0" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan> · </tspan><tspan font-style="italic">b</tspan></text>
+<text x="20.0" y="376.0" font-size="14" fill="#a8322a" text-anchor="start">省いたもの：添字（成分を扱う計算には使えない）</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　S2 が規約の書き方。意味が分からなくなったら、S0 まで戻って $\sum_{i=1}^{3}$ を書き足せばよい。</figcaption>
+</figure>
+
+<p>約束は、次の3つに分けて言える。</p>
+<ul>
+<li><strong>規則1（足す）</strong>：1つの項の中で同じ添字が<strong>ちょうど2回</strong>出たら、足す。</li>
+<li><strong>規則2（残す）</strong>：1つの項の中で<strong>1回だけ</strong>出る添字は、足さずに残す。残った添字は、式全体の「行き先」（ベクトルの何番目の成分か、行列の何行何列か）を表す。</li>
+<li><strong>規則3（そろえる）</strong>：等号の両辺、および和のすべての項で、残る添字は<strong>同じ文字の組</strong>でなければならない。</li>
+</ul>
+<p>同じ添字が3回以上出る式は、この約束の範囲外である（1.6 で見る）。</p>
+<p>図 1.2 を見る。規約の3つの規則で、式を1本ずつ判定する。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 440 418" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="規約の判定表" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>規約の判定表</title>
+<rect x="0" y="0" width="440" height="418" fill="#fffdf7"/>
+<text x="16.0" y="26.0" font-size="14" fill="#6b645a" text-anchor="start" font-weight="bold">式</text>
+<text x="160.0" y="26.0" font-size="14" fill="#6b645a" text-anchor="start" font-weight="bold">判定</text>
+<text x="218.0" y="26.0" font-size="14" fill="#6b645a" text-anchor="start" font-weight="bold">理由</text>
+<rect x="8" y="38" width="424" height="60" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.3"/>
+<text x="18.0" y="76.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan dy="-5.6" font-style="italic">b</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan></text>
+<text x="176.0" y="78.0" font-size="30" fill="#5f7f4f" text-anchor="middle" font-weight="bold">○</text>
+<text x="212.0" y="63.0" font-size="14" fill="#2a2723" text-anchor="start">i が2回 → 足す。</text>
+<text x="212.0" y="85.0" font-size="14" fill="#6b645a" text-anchor="start">自由添字なし：数</text>
+<rect x="8" y="104" width="424" height="60" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.3"/>
+<text x="18.0" y="142.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan dy="-5.6" font-style="italic">b</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">j</tspan></text>
+<text x="176.0" y="144.0" font-size="30" fill="#5f7f4f" text-anchor="middle" font-weight="bold">○</text>
+<text x="212.0" y="129.0" font-size="14" fill="#2a2723" text-anchor="start">どちらも1回 → 足さない。</text>
+<text x="212.0" y="151.0" font-size="14" fill="#6b645a" text-anchor="start">自由添字 i, j：3×3 の表</text>
+<rect x="8" y="170" width="424" height="60" rx="5" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.3"/>
+<text x="18.0" y="208.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan font-size="14.0" font-style="italic">j</tspan><tspan dy="-5.6" font-style="italic">v</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">j</tspan></text>
+<text x="176.0" y="210.0" font-size="30" fill="#5f7f4f" text-anchor="middle" font-weight="bold">○</text>
+<text x="212.0" y="195.0" font-size="14" fill="#2a2723" text-anchor="start">j が2回 → 足す。</text>
+<text x="212.0" y="217.0" font-size="14" fill="#6b645a" text-anchor="start">自由添字 i：ベクトル</text>
+<rect x="8" y="236" width="424" height="60" rx="5" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.3"/>
+<text x="18.0" y="274.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan dy="-5.6" font-style="italic">b</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan dy="-5.6" font-style="italic">c</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan></text>
+<text x="176.0" y="276.0" font-size="30" fill="#a8322a" text-anchor="middle" font-weight="bold">×</text>
+<text x="212.0" y="261.0" font-size="14" fill="#2a2723" text-anchor="start">i が3回で規約の外。</text>
+<text x="212.0" y="283.0" font-size="14" fill="#6b645a" text-anchor="start">∑ を書いて意味を決める</text>
+<rect x="8" y="302" width="424" height="60" rx="5" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.3"/>
+<text x="18.0" y="340.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan dy="-5.6" font-style="italic">b</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">j</tspan><tspan dy="-5.6"> = </tspan><tspan font-style="italic">c</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan></text>
+<text x="176.0" y="342.0" font-size="30" fill="#a8322a" text-anchor="middle" font-weight="bold">×</text>
+<text x="212.0" y="327.0" font-size="14" fill="#2a2723" text-anchor="start">左辺は i, j、右辺は i。</text>
+<text x="212.0" y="349.0" font-size="14" fill="#6b645a" text-anchor="start">自由添字がそろわない</text>
+<text x="16.0" y="386.0" font-size="14" fill="#2a2723" text-anchor="start">規則：①2回出たら足す　②1回だけの添字は残す</text>
+<text x="16.0" y="406.0" font-size="14" fill="#2a2723" text-anchor="start">③両辺で残る添字をそろえる</text>
+</svg>
+<figcaption><strong>図 1.2</strong>　○は規約として読める式、×は読めない式。判定は「各添字が1つの項に何回出るか」を数えるだけで決まる。</figcaption>
+</figure>
+
+<div class="def" id="sym-free-index"><span class="label">記号：自由添字・ダミー添字</span>
+<p><strong>①読み方</strong>：「じゆうそえじ」「ダミーそえじ」。</p>
+<p><strong>②日本語での意味</strong>：1つの項の中で<strong>1回だけ</strong>出る添字を<strong>自由添字</strong>と呼ぶ。式の外に「結果が何番目か」を伝える添字である。<strong>2回出て足される</strong>添字を<strong>ダミー添字</strong>（<a href="04_第4回_総和・総乗と添字.html#sym-dummy-index">第4回 3.2</a>。仮の添字、動く文字）と呼ぶ。ダミー添字は和の中だけの名前なので、<strong>別の文字に書き換えてよい</strong>。自由添字は式の外へ出る名前なので、勝手には書き換えられない（両辺でそろえて書き換えるのは可）。</p>
+<p><strong>③省略していない書き方</strong>：$(A\boldsymbol v)_i=A_{ij}v_j$ を完全形で書くと</p>
+<p>$$ (A\boldsymbol v)_i=\sum_{j=1}^{3}A_{ij}\,v_j\qquad(i=1,2,3) $$</p>
+<p>自由添字 $i$ は「$i=1,2,3$ のそれぞれについて」という<strong>3本の式</strong>を1本で書いている印である。ダミー添字 $j$ は和の中に閉じていて、$A_{ij}v_j=A_{ik}v_k$ のように書き換えられる。</p>
+<p><strong>④どこで出会うか</strong>：式の「型」を確かめる習慣として。（物理の計算では、自由添字の数でスカラー・ベクトル・行列を見分ける。0個ならスカラー、1個ならベクトル、2個なら行列。）</p>
+</div>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>最小の具体例：数値で手を動かす</h3>
+<p>$\boldsymbol a=(1,2,3)^{\mathsf T}$、$\boldsymbol b=(4,5,6)^{\mathsf T}$ とする。</p>
+<p>① $a_ib_i$（$i$ が2回 → ダミー。自由添字なし → 結果は数）：S0 に戻して、$a_1b_1+a_2b_2+a_3b_3=1\cdot4+2\cdot5+3\cdot6=4+10+18=32$。　<span class="meta">第5回の内積 $\boldsymbol a\cdot\boldsymbol b$ と同じ値</span></p>
+<p>② $a_ib_j$（$i$ も $j$ も1回ずつ → 足さない。自由添字が2個 → 結果は 3×3 の表）：たとえば $i=1,\ j=2$ のとき $a_1b_2=1\cdot5=5$。$i=2,\ j=1$ のとき $a_2b_1=2\cdot4=8$。$i$ と $j$ の組が 9 通りあるので、9個の数ができる。　<span class="meta">$a_ib_j$ と $a_jb_i$ は別の表（転置の関係）</span></p>
+<p>③ 行列 $A=\begin{pmatrix}1&2\\3&4\end{pmatrix}$（2次元なので $i,j$ は $1,2$）、$\boldsymbol v=(5,6)^{\mathsf T}$：$(A\boldsymbol v)_i=A_{ij}v_j$。自由添字 $i$ が1個 → 結果は2成分のベクトル。$i=1$：$A_{11}v_1+A_{12}v_2=1\cdot5+2\cdot6=17$。$i=2$：$A_{21}v_1+A_{22}v_2=3\cdot5+4\cdot6=39$。したがって $A\boldsymbol v=(17,39)^{\mathsf T}$。これは<a href="16_第16回_行列は線形写像.html#sym-matvec">第16回の行列とベクトルの積</a>の計算そのものである。</p>
+<p>④ $A_{ii}$（同じ添字 $i$ が行にも列にも → 足す）：$A_{11}+A_{22}=1+4=5$。対角成分の和（トレース）である。</p>
+<p>⑤ 確かめ：①は内積、③は行列とベクトルの積、④はトレースで、どれも第5・16回で $\sum$ を書いて計算した結果と一致する。規約は、新しい計算を作ったのではなく、書き方を短くしただけである。</p>
+<p>図 1.3 を見る。$(A\boldsymbol v)_i=A_{ij}v_j$ を、数値の表で読む。</p>
+<figure class="fig" id="fig-1-3">
+<svg viewBox="0 0 440 272" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="行列とベクトルの積を添字で読む" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>行列とベクトルの積を添字で読む</title>
+<rect x="0" y="0" width="440" height="272" fill="#fffdf7"/>
+<text x="118.0" y="36.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan font-size="14.0" font-style="italic">j</tspan></text>
+<text x="246.0" y="36.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">v</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">j</tspan></text>
+<text x="360.0" y="36.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">A</tspan><tspan font-style="italic">v</tspan><tspan>)</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan></text>
+<text x="90.0" y="60.0" font-size="14" fill="#6b645a" text-anchor="middle">j=1</text>
+<text x="146.0" y="60.0" font-size="14" fill="#6b645a" text-anchor="middle">j=2</text>
+<text x="54.0" y="98.0" font-size="14" fill="#6b645a" text-anchor="end">i=1</text>
+<text x="54.0" y="144.0" font-size="14" fill="#6b645a" text-anchor="end">i=2</text>
+<rect x="62" y="70" width="56" height="46" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="90.0" y="99.0" font-size="20" fill="#2a2723" text-anchor="middle">1</text>
+<rect x="118" y="70" width="56" height="46" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="146.0" y="99.0" font-size="20" fill="#2a2723" text-anchor="middle">2</text>
+<rect x="62" y="116" width="56" height="46" rx="3" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.3"/><text x="90.0" y="145.0" font-size="20" fill="#2a2723" text-anchor="middle">3</text>
+<rect x="118" y="116" width="56" height="46" rx="3" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.3"/><text x="146.0" y="145.0" font-size="20" fill="#2a2723" text-anchor="middle">4</text>
+<text x="210.0" y="98.0" font-size="14" fill="#6b645a" text-anchor="end">j=1</text>
+<rect x="218" y="70" width="56" height="46" rx="3" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.3"/><text x="246.0" y="99.0" font-size="20" fill="#2a2723" text-anchor="middle">5</text>
+<text x="210.0" y="144.0" font-size="14" fill="#6b645a" text-anchor="end">j=2</text>
+<rect x="218" y="116" width="56" height="46" rx="3" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.3"/><text x="246.0" y="145.0" font-size="20" fill="#2a2723" text-anchor="middle">6</text>
+<rect x="332" y="70" width="56" height="46" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="360.0" y="99.0" font-size="20" fill="#2a2723" text-anchor="middle">17</text>
+<rect x="332" y="116" width="56" height="46" rx="3" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.3"/><text x="360.0" y="145.0" font-size="20" fill="#a8322a" text-anchor="middle" font-weight="bold">39</text>
+<text x="182.0" y="122.0" font-size="24" fill="#2a2723" text-anchor="middle">×</text>
+<text x="310.0" y="122.0" font-size="24" fill="#2a2723" text-anchor="middle">=</text>
+<text x="16.0" y="196.0" font-size="15" fill="#2a2723" text-anchor="start">i = 2 を固定する（自由添字：結果の2番目の成分）</text>
+<text x="16.0" y="220.0" font-size="15" fill="#2a2723" text-anchor="start">j = 1, 2 を動かして足す（ダミー添字：和の中で消える）</text>
+<text x="16.0" y="252.0" font-size="20" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan dy="5.6" font-size="14.0">21</tspan><tspan dy="-5.6" font-style="italic">v</tspan><tspan dy="5.6" font-size="14.0">1</tspan><tspan dy="-5.6">+</tspan><tspan font-style="italic">A</tspan><tspan dy="5.6" font-size="14.0">22</tspan><tspan dy="-5.6" font-style="italic">v</tspan><tspan dy="5.6" font-size="14.0">2</tspan><tspan dy="-5.6"> = 3·5+4·6 = 39</tspan></text>
+</svg>
+<figcaption><strong>図 1.3</strong>　橙色が $i=2$ の行、緑色が足し合わされるベクトルの成分。$j$ は動いて足され、結果には現れない。$i$ は結果の何番目かを決めるので残る。</figcaption>
+</figure>
+
+<div class="why"><span class="label">ひとことで</span>同じ添字が2回出たら足す（$\sum$ は書かない）。1回だけ出る添字は「結果の何番目か」を表す。省略したら不安になったときに S0 に戻って $\sum_{i=1}^3$ を書き足せばよい。</div>
+
+<h3 id="sec-1-4"><span class="no">1.4</span>偏微分も添字で書く：$\partial_i$</h3>
+<p>座標 $(x,y,z)$ を $(x_1,x_2,x_3)$ と呼び替える（添字で番号づけする）と、座標が何番目かを添字で言える。偏微分も同じ番号で呼ぶ。</p>
+
+<div class="def" id="sym-partial-i"><span class="label">記号：$\partial_i$（$i$ 番目の座標での偏微分）</span>
+<p><strong>①読み方</strong>：「デル・アイ」「パーシャル・アイ」。</p>
+<p><strong>②日本語での意味</strong>：<strong>$i$ 番目の座標だけを動かして、ほかの座標は止めたときの変化率</strong>をとる操作。$i=1,2,3$ が $x,y,z$ に対応する。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$ \partial_if\ :=\ \frac{\partial f}{\partial x_i}\qquad\Bigl(\partial_1f=\frac{\partial f}{\partial x}=\partial_xf,\ \ \partial_2f=\frac{\partial f}{\partial y},\ \ \partial_3f=\frac{\partial f}{\partial z}\Bigr) $$</p>
+<p>右辺は<a href="11_第11回_偏微分.html#sym-partial">第11回の偏微分</a>、$\partial_xf$ という書き方は<a href="11_第11回_偏微分.html#sym-partial-short">第11回 3.1</a> の省略形である。$\partial_i$ はその番号版で、$\partial_1,\partial_2,\partial_3$ をまとめて1つの文字で呼べる。</p>
+<p><strong>④どこで出会うか</strong>：ベクトル解析（この回以降）、連続体力学、場の理論、機械学習（勾配の成分 $\partial_i L$）。</p>
+</div>
+
+<p>これを使うと、第23・24回の記号が1本の式になる。成分の名前は $\boldsymbol v=(v_1,v_2,v_3)^{\mathsf T}$（第24回の $P,Q,R$ にあたる）。</p>
+<p>$$ (\nabla f)_i=\partial_if\qquad(\text{勾配の第 }i\text{ 成分}),\qquad \nabla\cdot\boldsymbol v=\partial_iv_i\qquad(\text{発散}),\qquad \nabla^2f=\partial_i\partial_if\qquad(\text{ラプラシアン}) $$</p>
+<p>各式を S0 に戻す。発散：$\partial_iv_i=\displaystyle\sum_{i=1}^{3}\frac{\partial v_i}{\partial x_i}=\frac{\partial v_1}{\partial x_1}+\frac{\partial v_2}{\partial x_2}+\frac{\partial v_3}{\partial x_3}$（<a href="24_第24回_発散と回転.html#sym-divergence">第24回 2.1</a> の $P_x+Q_y+R_z$ と同じ）。ラプラシアン：$\partial_i\partial_if=\partial_1\partial_1f+\partial_2\partial_2f+\partial_3\partial_3f=f_{xx}+f_{yy}+f_{zz}$（<a href="24_第24回_発散と回転.html#sym-laplacian">第24回 4.1</a>）。</p>
+
+<p><strong>数値で手を動かす（座標を座標で微分する）。</strong>座標 $x_j$ を座標 $x_i$ で微分する。$x_1,x_2,x_3$ は互いに独立な変数だから、</p>
+<p>① $i=j$ のとき：$\partial_ix_i=\dfrac{\partial x_i}{\partial x_i}=1$（例：$\partial_2x_2=\dfrac{\partial y}{\partial y}=1$）。</p>
+<p>② $i\ne j$ のとき：$\partial_ix_j=0$（例：$\partial_1x_2=\dfrac{\partial y}{\partial x}=0$。$y$ は $x$ を動かしても変わらない）。</p>
+<p>③ ①と②をまとめると $\partial_ix_j=\delta_{ij}$（<a href="04_第4回_総和・総乗と添字.html#sym-kronecker">第4回のクロネッカーのデルタ</a>。添字が等しければ1、違えば0）。</p>
+<p>次に、この式を使って $r^2=x_jx_j$（$x^2+y^2+z^2$ の添字版）を $x_i$ で微分する。</p>
+<p>④ 積の微分規則（<a href="07_第7回_微分.html">第7回</a>）：$\partial_i(x_jx_j)=(\partial_ix_j)\,x_j+x_j\,(\partial_ix_j)$。</p>
+<p>⑤ ③を代入：$=\delta_{ij}x_j+x_j\delta_{ij}$。　<span class="meta">ここで $j$ は2回出るので足す。$\delta_{ij}x_j$ は $j=i$ の項だけが残る（第4回 9.3）</span></p>
+<p>⑥ $\delta_{ij}x_j=x_i$ だから、$\partial_i(x_jx_j)=x_i+x_i=2x_i$。</p>
+<p>⑦ 確かめ：$\partial_x(x^2+y^2+z^2)=2x$。⑥で $i=1$ とした $2x_1=2x$ と一致する。</p>
+
+<div class="why"><span class="label">ひとことで</span>$\partial_i$ は「$i$ 番目の座標での偏微分」。勾配は $\partial_if$、発散は $\partial_iv_i$、ラプラシアンは $\partial_i\partial_if$。座標を座標で微分すると $\partial_ix_j=\delta_{ij}$。</div>
+
+<h3 id="sec-1-5"><span class="no">1.5</span>線形代数の式を規約で読む</h3>
+<p>第5・16回で習った式を、規約で書き直す。左が完全形（S0）、右が規約（S2）。</p>
+<table class="tb">
+<tr><th>計算</th><th>S0（$\sum$ を書く）</th><th>S2（規約）</th><th>自由添字</th></tr>
+<tr><td>内積</td><td>$\boldsymbol a\cdot\boldsymbol b=\displaystyle\sum_{i=1}^3a_ib_i$</td><td>$\boldsymbol a\cdot\boldsymbol b=a_ib_i$</td><td>なし（数）</td></tr>
+<tr><td>行列×ベクトル</td><td>$(A\boldsymbol v)_i=\displaystyle\sum_{j=1}^3A_{ij}v_j$</td><td>$(A\boldsymbol v)_i=A_{ij}v_j$</td><td>$i$（ベクトル）</td></tr>
+<tr><td>行列×行列</td><td>$(AB)_{ik}=\displaystyle\sum_{j=1}^3A_{ij}B_{jk}$</td><td>$(AB)_{ik}=A_{ij}B_{jk}$</td><td>$i,k$（行列）</td></tr>
+<tr><td>トレース</td><td>$\operatorname{tr}A=\displaystyle\sum_{i=1}^3A_{ii}$</td><td>$\operatorname{tr}A=A_{ii}$</td><td>なし（数）</td></tr>
+<tr><td>転置</td><td>$(A^{\mathsf T})_{ij}=A_{ji}$</td><td>（和なし。添字の入れ替えだけ）</td><td>$i,j$</td></tr>
+<tr><td>二次形式</td><td>$\boldsymbol v^{\mathsf T}A\boldsymbol v=\displaystyle\sum_{i=1}^3\sum_{j=1}^3v_iA_{ij}v_j$</td><td>$\boldsymbol v^{\mathsf T}A\boldsymbol v=v_iA_{ij}v_j$</td><td>なし（数）</td></tr>
+</table>
+<p>二次形式（<a href="21_第21回_対角化と二次形式.html">第21回</a>）の行は、$i$ と $j$ の<strong>2つ</strong>のダミー添字が同時に出る。これは<a href="04_第4回_総和・総乗と添字.html#sym-doublesum">第4回の二重和</a>の省略形である（<a href="04_第4回_総和・総乗と添字.html#abbr-sum-index">添字をまとめる省略</a>の、もう一段先）。</p>
+<p>確かめ（行列の積）：$A=\begin{pmatrix}1&2\\3&4\end{pmatrix}$、$B=\begin{pmatrix}0&1\\1&0\end{pmatrix}$。$(AB)_{12}=A_{1j}B_{j2}=A_{11}B_{12}+A_{12}B_{22}=1\cdot1+2\cdot0=1$。行列の積の「1行目と2列目の内積」（<a href="05_第5回_ベクトルと行列の書き方.html#abbr-matrix-product">第5回の省略の段階</a>）と同じである。</p>
+
+<h3 id="sec-1-6"><span class="no">1.6</span>よくある誤解と、流派の違い</h3>
+<div class="warn"><span class="label">よくある誤解</span>
+<p><strong>誤解1：「同じ添字が3回出ても足せる」</strong>。$a_ib_ic_i$ は規約の範囲外である。$\sum_ia_ib_ic_i$ と書きたいのか、$(a_ib_i)c_i$ のように「$a_ib_i$ を足した数に $c_i$ を掛けたもの」のつもりなのかが決まらない。後者なら $c_i$ の $i$ は<strong>自由添字</strong>になるが、前者ならダミー。<strong>3回出る式は、$\sum$ を書いて意味をはっきりさせる</strong>。</p>
+<p><strong>誤解2：「残る添字は、辺ごとに違ってもよい」</strong>。$a_ib_j=c_i$ は誤りである。左辺の自由添字は $i,j$ の2個（3×3 の表）、右辺は $i$ の1個（3成分のベクトル）で、型が違う。等号の両辺は、自由添字の組を<strong>同じ文字でそろえる</strong>（規則3）。</p>
+<p><strong>誤解3：「どの添字も好きな文字に書き換えてよい」</strong>。書き換えてよいのは<strong>ダミー添字</strong>だけである。$a_ib_i=a_kb_k$ は正しい（どちらも 32）が、$a_ib_j$ の $j$ を勝手に $i$ に書き換えると、$a_ib_i$（足す）に変わって意味が変わる。自由添字を書き換えるときは、式全体で同時に（両辺とも）書き換える。</p>
+<p><strong>誤解4：「$A_{ii}$ と $A_{ij}$ は同じようなもの」</strong>。$A_{ii}$ は足されて1個の数（トレース）。$A_{ij}$ は足されず、9個の数の表そのもの。</p>
+<p><strong>誤解5：「微分記号の位置は自由」</strong>。$\partial_i$ は<strong>右にあるものすべて</strong>に働く演算子である。$\partial_i(a_jb_j)$ は積全体の微分（積の微分規則が必要）であり、$(\partial_ia_j)b_j$ とは別物。順序も大事で、$a_i\partial_i$（「$\boldsymbol a$ の向きの方向微分」の演算子）と $\partial_ia_i$（$\boldsymbol a$ の発散）は別である。</p>
+</div>
+<div class="warn"><span class="label">流派の違い</span>
+<p>アインシュタイン自身の規約は、添字を上付き・下付きで使い分け（$a^ib_i$ のように、<strong>上と下に1回ずつ</strong>出たら足す）、座標変換に対する成分の変わり方の違い（反変・共変）を区別する。この教材は直交座標で添字をすべて<strong>下付き</strong>にし、「同じ添字が2回出たら足す」と読む流派（機械・電気・物理の入門書の多く）に従う。曲線座標を一般に扱う微分幾何・一般相対性理論の本では、上付き・下付きの区別が必須になる。</p>
+</div>
+<p>次の章では、この書き方に2つの「部品」を加える。</p>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>2つの部品：$\delta_{ij}$ と $\varepsilon_{ijk}$</h2>
+
+<h3 id="sec-2-1"><span class="no">2.1</span>$\delta_{ij}$ を規約で使う（復習）</h3>
+<p>$\delta_{ij}$ は<a href="04_第4回_総和・総乗と添字.html#sym-kronecker">第4回 9.2</a> で定義した。添字が等しければ1、違えば0である。9個の値を表にすると、対角線が1の 3×3 の表、つまり<a href="05_第5回_ベクトルと行列の書き方.html#sym-identity">単位行列 $I$</a> の成分になる。</p>
+<p>図 2.1 を見る。$\delta_{ij}$ の9個の値を表にする。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 340" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="δ_ij の表" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>δ_ij の表</title>
+<rect x="0" y="0" width="440" height="340" fill="#fffdf7"/>
+<text x="48.0" y="46.0" font-size="22" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">δ</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">i</tspan><tspan font-size="15.4" font-style="italic">j</tspan></text>
+<text x="137.0" y="60.0" font-size="14" fill="#6b645a" text-anchor="middle">j=1</text>
+<text x="191.0" y="60.0" font-size="14" fill="#6b645a" text-anchor="middle">j=2</text>
+<text x="245.0" y="60.0" font-size="14" fill="#6b645a" text-anchor="middle">j=3</text>
+<text x="100.0" y="102.0" font-size="14" fill="#6b645a" text-anchor="end">i=1</text>
+<rect x="110" y="70" width="54" height="54" rx="3" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.3"/><text x="137.0" y="103.0" font-size="22" fill="#5f7f4f" text-anchor="middle" font-weight="bold">1</text>
+<rect x="164" y="70" width="54" height="54" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="191.0" y="103.0" font-size="20" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="218" y="70" width="54" height="54" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="245.0" y="103.0" font-size="20" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="100.0" y="156.0" font-size="14" fill="#6b645a" text-anchor="end">i=2</text>
+<rect x="110" y="124" width="54" height="54" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="137.0" y="157.0" font-size="20" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="164" y="124" width="54" height="54" rx="3" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.3"/><text x="191.0" y="157.0" font-size="22" fill="#5f7f4f" text-anchor="middle" font-weight="bold">1</text>
+<rect x="218" y="124" width="54" height="54" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="245.0" y="157.0" font-size="20" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="100.0" y="210.0" font-size="14" fill="#6b645a" text-anchor="end">i=3</text>
+<rect x="110" y="178" width="54" height="54" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="137.0" y="211.0" font-size="20" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="164" y="178" width="54" height="54" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="191.0" y="211.0" font-size="20" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="218" y="178" width="54" height="54" rx="3" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.3"/><text x="245.0" y="211.0" font-size="22" fill="#5f7f4f" text-anchor="middle" font-weight="bold">1</text>
+<text x="16.0" y="264.0" font-size="15" fill="#2a2723" text-anchor="start">対角線（i = j）だけが 1。ほかは 0。</text>
+<text x="16.0" y="294.0" font-size="20" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">δ</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan font-size="14.0" font-style="italic">i</tspan><tspan dy="-5.6"> = </tspan><tspan font-style="italic">δ</tspan><tspan dy="5.6" font-size="14.0">11</tspan><tspan dy="-5.6">+</tspan><tspan font-style="italic">δ</tspan><tspan dy="5.6" font-size="14.0">22</tspan><tspan dy="-5.6">+</tspan><tspan font-style="italic">δ</tspan><tspan dy="5.6" font-size="14.0">33</tspan><tspan dy="-5.6"> = 3</tspan></text>
+<text x="16.0" y="324.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">δ</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan font-size="14.0" font-style="italic">j</tspan><tspan dy="-5.6" font-style="italic">a</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">j</tspan><tspan dy="-5.6"> = </tspan><tspan font-style="italic">a</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">i</tspan><tspan dy="-5.6">　（</tspan><tspan font-style="italic">j</tspan><tspan> = </tspan><tspan font-style="italic">i</tspan><tspan> の項だけが残る）</tspan></text>
+</svg>
+<figcaption><strong>図 2.1</strong>　この表は単位行列そのもの。$\delta_{ij}a_j$ は「$i$ 行目の1だけが選ばれる」ので $a_i$ に等しい。</figcaption>
+</figure>
+<p>規約と組み合わせた3つの使い方を、数値で確かめる。$\boldsymbol a=(7,8,9)^{\mathsf T}$ とする。</p>
+<p>① <strong>添字を取り替える</strong>：$\delta_{ij}a_j$（$j$ が2回 → 足す。自由添字は $i$）。$i=2$ のとき、S0 に戻して $\delta_{21}a_1+\delta_{22}a_2+\delta_{23}a_3=0\cdot7+1\cdot8+0\cdot9=8=a_2$。一般に <strong>$\delta_{ij}a_j=a_i$</strong>（$j=i$ の1項だけが残る。第4回 9.3）。</p>
+<p>② <strong>つなぐ</strong>：$\delta_{ij}\delta_{jk}=\delta_{ik}$。$i=1,\ k=1$ のとき $\delta_{11}\delta_{11}+\delta_{12}\delta_{21}+\delta_{13}\delta_{31}=1+0+0=1=\delta_{11}$。$i=1,\ k=2$ のとき $\delta_{11}\delta_{12}+\delta_{12}\delta_{22}+\delta_{13}\delta_{32}=0+0+0=0=\delta_{12}$。（行列では $II=I$。）</p>
+<p>③ <strong>対角を足す</strong>：$\delta_{ii}=\delta_{11}+\delta_{22}+\delta_{33}=3$。次元が $n$ なら $n$。2次元の話なら $2$ である。</p>
+<p>この3つは、以後ほとんどの式変形で使う。<strong>「$\delta$ のついた添字は、相手の添字に取り替わって $\delta$ が消える」</strong>と覚えておく。</p>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>動機と定義：外積の符号を1つの記号に入れる</h3>
+<p>外積の成分は、<a href="05_第5回_ベクトルと行列の書き方.html#sym-cross">第5回 9.2</a> で次のように書いた。</p>
+<p>$$ \boldsymbol a\times\boldsymbol b=\begin{pmatrix}a_2b_3-a_3b_2\\ a_3b_1-a_1b_3\\ a_1b_2-a_2b_1\end{pmatrix} $$</p>
+<p>3つの成分は、見た目は別々でも、同じ形をしている。どれも「$a_jb_k$ の形の2項の差」で、<strong>$j,k$ が $i$ から見て「次、その次」の順なら $+$、逆の順なら $-$</strong> である。この符号の規則を表にしたのが次の記号である。</p>
+
+<div class="def" id="sym-levi-civita"><span class="label">記号：$\varepsilon_{ijk}$（レヴィ・チヴィタの記号）</span>
+<p><strong>①読み方</strong>：「イプシロン・アイ・ジェイ・ケイ」。「レヴィ・チヴィタの記号」「完全反対称記号」。（イタリアの数学者 T. レヴィ・チヴィタの名による。）</p>
+<p><strong>②日本語での意味</strong>：添字 $i,j,k$ に 1,2,3 を入れたときの値が、<strong>$(i,j,k)$ が 1,2,3 の並べ替えなら、その並べ替えの符号（偶なら $+1$、奇なら $-1$）</strong>、<strong>1,2,3 に重なりがあれば $0$</strong>、という3つの添字の記号。1,2,3 を円周に並べて、$1\to2\to3\to1$ の向きに読める並びなら $+1$、逆向きなら $-1$ と覚えてもよい。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$ \varepsilon_{ijk}:=\begin{cases}+1 &amp; ((i,j,k)=(1,2,3),\ (2,3,1),\ (3,1,2)\ \text{のとき})\\ -1 &amp; ((i,j,k)=(1,3,2),\ (2,1,3),\ (3,2,1)\ \text{のとき})\\ 0 &amp; (\text{それ以外：}i,j,k\text{ のうち2つ以上が等しいとき})\end{cases} $$</p>
+<p>$3\times3\times3=27$ 個の値のうち、$\pm1$ は6個、残りの21個は $0$ である。+1 の3つは、$(1,2,3)$ を左へ1つずつずらしたもの（巡回）。−1 の3つは、そのうち2つの添字を入れ替えたもの。これは<a href="18_第18回_行列式.html#sym-perm-sign">第18回の置換の符号 $\operatorname{sgn}\sigma$</a> と同じ数で、$\varepsilon_{ijk}=\operatorname{sgn}$（$1\mapsto i,\ 2\mapsto j,\ 3\mapsto k$ という並べ替え）である。たとえば $(2,1,3)$ は転倒数が1（2が1より前にある）なので $(-1)^1=-1$、$(2,3,1)$ は転倒数が2（2と3がどちらも1より前にある）なので $(-1)^2=+1$。</p>
+<p><strong>④どこで出会うか</strong>：外積と回転（この回）、行列式（第18回の公式の添字版）、角運動量（機械力学・量子力学の交換関係 $[L_i,L_j]=i\hbar\varepsilon_{ijk}L_k$）、電磁気学のローレンツ力、連続体力学の回転テンソル。</p>
+</div>
+<p>図 2.2 を見る。27個の値を、$i$ ごとの3枚の表（行 $j$、列 $k$）にして描く。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 432" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="ε_ijk の3枚の表" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>ε_ijk の3枚の表</title>
+<rect x="0" y="0" width="440" height="432" fill="#fffdf7"/>
+<text x="16.0" y="50.0" font-size="22" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="6.2" font-size="15.4">1</tspan><tspan font-size="15.4" font-style="italic">j</tspan><tspan font-size="15.4" font-style="italic">k</tspan></text>
+<text x="101.0" y="30.0" font-size="14" fill="#6b645a" text-anchor="middle">k=1</text>
+<text x="135.0" y="30.0" font-size="14" fill="#6b645a" text-anchor="middle">k=2</text>
+<text x="169.0" y="30.0" font-size="14" fill="#6b645a" text-anchor="middle">k=3</text>
+<text x="78.0" y="58.0" font-size="14" fill="#6b645a" text-anchor="end">j=1</text>
+<rect x="84" y="36" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="101.0" y="59.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="118" y="36" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="135.0" y="59.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="152" y="36" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="169.0" y="59.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="78.0" y="92.0" font-size="14" fill="#6b645a" text-anchor="end">j=2</text>
+<rect x="84" y="70" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="101.0" y="93.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="118" y="70" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="135.0" y="93.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="152" y="70" width="34" height="34" rx="3" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.3"/><text x="169.0" y="93.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">+1</text>
+<text x="78.0" y="126.0" font-size="14" fill="#6b645a" text-anchor="end">j=3</text>
+<rect x="84" y="104" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="101.0" y="127.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="118" y="104" width="34" height="34" rx="3" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.3"/><text x="135.0" y="127.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1</text>
+<rect x="152" y="104" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="169.0" y="127.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="206.0" y="60.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">(j, k) = (2, 3) → +1</text>
+<text x="206.0" y="86.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(j, k) = (3, 2) → −1</text>
+<text x="206.0" y="120.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>×</tspan><tspan font-style="italic">b</tspan><tspan>)</tspan><tspan dy="5.0" font-size="12.6">1</tspan><tspan dy="-5.0"> = </tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">2</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">3</tspan><tspan dy="-5.0"> − </tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">3</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">2</tspan></text>
+<text x="16.0" y="184.0" font-size="22" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="6.2" font-size="15.4">2</tspan><tspan font-size="15.4" font-style="italic">j</tspan><tspan font-size="15.4" font-style="italic">k</tspan></text>
+<text x="101.0" y="164.0" font-size="14" fill="#6b645a" text-anchor="middle">k=1</text>
+<text x="135.0" y="164.0" font-size="14" fill="#6b645a" text-anchor="middle">k=2</text>
+<text x="169.0" y="164.0" font-size="14" fill="#6b645a" text-anchor="middle">k=3</text>
+<text x="78.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="end">j=1</text>
+<rect x="84" y="170" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="101.0" y="193.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="118" y="170" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="135.0" y="193.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="152" y="170" width="34" height="34" rx="3" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.3"/><text x="169.0" y="193.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1</text>
+<text x="78.0" y="226.0" font-size="14" fill="#6b645a" text-anchor="end">j=2</text>
+<rect x="84" y="204" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="101.0" y="227.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="118" y="204" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="135.0" y="227.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="152" y="204" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="169.0" y="227.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="78.0" y="260.0" font-size="14" fill="#6b645a" text-anchor="end">j=3</text>
+<rect x="84" y="238" width="34" height="34" rx="3" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.3"/><text x="101.0" y="261.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">+1</text>
+<rect x="118" y="238" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="135.0" y="261.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="152" y="238" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="169.0" y="261.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="206.0" y="194.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">(j, k) = (3, 1) → +1</text>
+<text x="206.0" y="220.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(j, k) = (1, 3) → −1</text>
+<text x="206.0" y="254.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>×</tspan><tspan font-style="italic">b</tspan><tspan>)</tspan><tspan dy="5.0" font-size="12.6">2</tspan><tspan dy="-5.0"> = </tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">3</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">1</tspan><tspan dy="-5.0"> − </tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">1</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">3</tspan></text>
+<text x="16.0" y="318.0" font-size="22" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="6.2" font-size="15.4">3</tspan><tspan font-size="15.4" font-style="italic">j</tspan><tspan font-size="15.4" font-style="italic">k</tspan></text>
+<text x="101.0" y="298.0" font-size="14" fill="#6b645a" text-anchor="middle">k=1</text>
+<text x="135.0" y="298.0" font-size="14" fill="#6b645a" text-anchor="middle">k=2</text>
+<text x="169.0" y="298.0" font-size="14" fill="#6b645a" text-anchor="middle">k=3</text>
+<text x="78.0" y="326.0" font-size="14" fill="#6b645a" text-anchor="end">j=1</text>
+<rect x="84" y="304" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="101.0" y="327.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="118" y="304" width="34" height="34" rx="3" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.3"/><text x="135.0" y="327.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">+1</text>
+<rect x="152" y="304" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="169.0" y="327.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="78.0" y="360.0" font-size="14" fill="#6b645a" text-anchor="end">j=2</text>
+<rect x="84" y="338" width="34" height="34" rx="3" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.3"/><text x="101.0" y="361.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1</text>
+<rect x="118" y="338" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="135.0" y="361.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="152" y="338" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="169.0" y="361.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="78.0" y="394.0" font-size="14" fill="#6b645a" text-anchor="end">j=3</text>
+<rect x="84" y="372" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="101.0" y="395.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="118" y="372" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="135.0" y="395.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="152" y="372" width="34" height="34" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="169.0" y="395.0" font-size="15" fill="#a39b8c" text-anchor="middle">0</text>
+<text x="206.0" y="328.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">(j, k) = (1, 2) → +1</text>
+<text x="206.0" y="354.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(j, k) = (2, 1) → −1</text>
+<text x="206.0" y="388.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>×</tspan><tspan font-style="italic">b</tspan><tspan>)</tspan><tspan dy="5.0" font-size="12.6">3</tspan><tspan dy="-5.0"> = </tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">1</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">2</tspan><tspan dy="-5.0"> − </tspan><tspan font-style="italic">a</tspan><tspan dy="5.0" font-size="12.6">2</tspan><tspan dy="-5.0" font-style="italic">b</tspan><tspan dy="5.0" font-size="12.6">1</tspan></text>
+</svg>
+<figcaption><strong>図 2.2</strong>　各表で $0$ でない成分は2つだけ（朱：$+1$、藍：$-1$）。$3\times3\times3=27$ 個のうち、$\pm1$ は6個、残る21個は $0$。</figcaption>
+</figure>
+<p>図 2.3 を見る。1, 2, 3 を円周に並べ、3つの添字がどちらの向きに読めるかで符号を決める。</p>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 368" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="ε_ijk の巡回の見方" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>ε_ijk の巡回の見方</title>
+<rect x="0" y="0" width="440" height="368" fill="#fffdf7"/>
+<line x1="209.0" y1="61.1" x2="165.2" y2="136.9" stroke="#a8322a" stroke-width="2.6"/><path d="M165.9 127.0 L165.2 136.9 L173.5 131.3" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="176.2" y1="156.0" x2="263.8" y2="156.0" stroke="#a8322a" stroke-width="2.6"/><path d="M254.8 160.3 L263.8 156.0 L254.8 151.7" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="274.8" y1="136.9" x2="231.0" y2="61.1" stroke="#a8322a" stroke-width="2.6"/><path d="M239.3 66.7 L231.0 61.1 L231.7 71.0" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="223.0" y1="87.2" x2="248.2" y2="130.8" stroke="#2b3a67" stroke-width="2.0"/><path d="M241.6 126.3 L248.2 130.8 L247.6 122.8" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<line x1="245.2" y1="136.0" x2="194.8" y2="136.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M202.0 132.5 L194.8 136.0 L202.0 139.5" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<line x1="191.8" y1="130.8" x2="217.0" y2="87.2" stroke="#2b3a67" stroke-width="2.0"/><path d="M216.4 95.2 L217.0 87.2 L210.4 91.7" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="220.0" cy="42.0" r="18" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<text x="220.0" y="48.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">1</text>
+<circle cx="154.2" cy="156.0" r="18" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<text x="154.2" y="162.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<circle cx="285.8" cy="156.0" r="18" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<text x="285.8" y="162.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">3</text>
+<text x="16.0" y="240.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">朱の外側：1→2→3→1 の向きに読める並び</text>
+<text x="16.0" y="264.0" font-size="16" fill="#2a2723" text-anchor="start">(1,2,3)　(2,3,1)　(3,1,2)　→　ε = +1</text>
+<text x="16.0" y="296.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">藍の内側：逆向きにしか読めない並び</text>
+<text x="16.0" y="320.0" font-size="16" fill="#2a2723" text-anchor="start">(1,3,2)　(3,2,1)　(2,1,3)　→　ε = −1</text>
+<text x="16.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="start">数が重なる並び（例：(1,1,2)）は読めない → ε = 0</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　並びの最初の数から順に、円周上を $1\to2\to3\to1$ の向きに進めるなら $+1$、逆向きに進むなら $-1$。</figcaption>
+</figure>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>$\varepsilon_{ijk}$ で外積・回転・行列式を1行で書く</h3>
+<p><strong>外積。</strong>次の式を主張する。</p>
+<p>$$ (\boldsymbol a\times\boldsymbol b)_i=\varepsilon_{ijk}\,a_jb_k\qquad(j,k\text{ は 2回ずつ出るので足す。自由添字は }i) $$</p>
+<p>これが第5回の成分の式と一致することを、$i=1,2,3$ の順に確かめる。S0 に戻すと $\varepsilon_{ijk}a_jb_k=\displaystyle\sum_{j=1}^3\sum_{k=1}^3\varepsilon_{ijk}a_jb_k$、つまり 9 個の項の和である。ただし $\varepsilon_{ijk}$ が $0$ でない $(j,k)$ だけが残る。</p>
+<p>① $i=1$：$\varepsilon_{1jk}\ne0$ となるのは、$j,k$ が 2,3 の並べ替えのとき、つまり $(j,k)=(2,3)$ と $(3,2)$ だけ。$\varepsilon_{123}=+1$、$\varepsilon_{132}=-1$ だから $(\boldsymbol a\times\boldsymbol b)_1=\varepsilon_{123}a_2b_3+\varepsilon_{132}a_3b_2=a_2b_3-a_3b_2$。</p>
+<p>② $i=2$：$(j,k)=(3,1)$ と $(1,3)$。$\varepsilon_{231}=+1$、$\varepsilon_{213}=-1$ だから $a_3b_1-a_1b_3$。</p>
+<p>③ $i=3$：$(j,k)=(1,2)$ と $(2,1)$。$\varepsilon_{312}=+1$、$\varepsilon_{321}=-1$ だから $a_1b_2-a_2b_1$。</p>
+<p>④ ①〜③は第5回の成分の式と一致する。　<span class="meta">9項の和のうち7項は $\varepsilon=0$ で消える。残る2項の符号が、外積の「差」の形を作っている</span></p>
+<p>数値例：$\boldsymbol a=(2,1,0)^{\mathsf T}$、$\boldsymbol b=(0,3,1)^{\mathsf T}$。$i=2$：$\varepsilon_{231}a_3b_1+\varepsilon_{213}a_1b_3=1\cdot0\cdot0+(-1)\cdot2\cdot1=-2$。同じ計算を $i=1,3$ でも行うと、$i=1$：$a_2b_3-a_3b_2=1\cdot1-0\cdot3=1$、$i=3$：$a_1b_2-a_2b_1=2\cdot3-1\cdot0=6$。したがって $\boldsymbol a\times\boldsymbol b=(1,-2,6)^{\mathsf T}$。</p>
+<p>図 2.4 を見る。基本ベクトル $\boldsymbol e_1,\boldsymbol e_2,\boldsymbol e_3$ の外積が、$\varepsilon_{ijk}$ の $+1$ の並びに対応する。</p>
+<figure class="fig" id="fig-2-4">
+<svg viewBox="0 0 440 476" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="基本ベクトルの外積と ε" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>基本ベクトルの外積と ε</title>
+<rect x="0" y="0" width="440" height="476" fill="#fffdf7"/>
+<line x1="170.0" y1="238.0" x2="86.0" y2="292.0" stroke="#2a2723" stroke-width="2.6"/><path d="M91.7 282.6 L86.0 292.0 L96.9 290.7" fill="none" stroke="#2a2723" stroke-width="2.6"/>
+<text x="16.0" y="310.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="5.6" font-size="14.0">1</tspan><tspan dy="-5.6">（</tspan><tspan font-style="italic">x</tspan><tspan>）</tspan></text>
+<line x1="170.0" y1="238.0" x2="310.0" y2="238.0" stroke="#2a2723" stroke-width="2.6"/><path d="M300.1 242.8 L310.0 238.0 L300.1 233.2" fill="none" stroke="#2a2723" stroke-width="2.6"/>
+<text x="316.0" y="260.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="5.6" font-size="14.0">2</tspan><tspan dy="-5.6">（</tspan><tspan font-style="italic">y</tspan><tspan>）</tspan></text>
+<line x1="170.0" y1="238.0" x2="170.0" y2="88.0" stroke="#2a2723" stroke-width="2.6"/><path d="M174.8 97.9 L170.0 88.0 L165.2 97.9" fill="none" stroke="#2a2723" stroke-width="2.6"/>
+<text x="180.0" y="88.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="5.6" font-size="14.0">3</tspan><tspan dy="-5.6">（</tspan><tspan font-style="italic">z</tspan><tspan>）</tspan></text>
+<circle cx="170.0" cy="238.0" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<polyline points="126.3,266.1 130.2,271.5 134.8,276.3 140.0,280.5 145.7,284.0 151.8,286.7 158.2,288.6 164.8,289.7 171.5,290.0 178.1,289.4 184.7,287.9 190.9,285.6 196.9,282.5 202.3,278.7 207.3,274.2 211.6,269.2 215.3,263.6 218.2,257.6 220.3,251.2 221.6,244.7 222.0,238.0" fill="none" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="221.6" y1="244.7" x2="222.0" y2="238.0" stroke="#a8322a" stroke-width="2.2"/><path d="M225.0 245.4 L222.0 238.0 L218.1 245.0" fill="none" stroke="#a8322a" stroke-width="2.2"/>
+<text x="16.0" y="28.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">右手系：e1 から e2 へ右ねじを回すと e3 の向きに進む</text>
+<text x="16.0" y="346.0" font-size="19" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">1</tspan><tspan dy="-5.3">×</tspan><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">2</tspan><tspan dy="-5.3"> = </tspan><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">3</tspan><tspan dy="-5.3">　（成分で見ると </tspan><tspan font-style="italic">ε</tspan><tspan dy="5.3" font-size="13.3">312</tspan><tspan dy="-5.3"> = +1）</tspan></text>
+<text x="16.0" y="374.0" font-size="19" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">2</tspan><tspan dy="-5.3">×</tspan><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">3</tspan><tspan dy="-5.3"> = </tspan><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">1</tspan><tspan dy="-5.3">　（成分で見ると </tspan><tspan font-style="italic">ε</tspan><tspan dy="5.3" font-size="13.3">123</tspan><tspan dy="-5.3"> = +1）</tspan></text>
+<text x="16.0" y="402.0" font-size="19" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">3</tspan><tspan dy="-5.3">×</tspan><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">1</tspan><tspan dy="-5.3"> = </tspan><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3">2</tspan><tspan dy="-5.3">　（成分で見ると </tspan><tspan font-style="italic">ε</tspan><tspan dy="5.3" font-size="13.3">231</tspan><tspan dy="-5.3"> = +1）</tspan></text>
+<text x="16.0" y="430.0" font-size="19" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3" font-style="italic">j</tspan><tspan dy="-5.3">×</tspan><tspan font-style="italic">e</tspan><tspan dy="5.3" font-size="13.3" font-style="italic">k</tspan><tspan dy="-5.3">)</tspan><tspan dy="5.3" font-size="13.3" font-style="italic">i</tspan><tspan dy="-5.3"> = </tspan><tspan font-style="italic">ε</tspan><tspan dy="5.3" font-size="13.3" font-style="italic">i</tspan><tspan font-size="13.3" font-style="italic">j</tspan><tspan font-size="13.3" font-style="italic">k</tspan></text>
+</svg>
+<figcaption><strong>図 2.4</strong>　$\boldsymbol e_j\times\boldsymbol e_k$ の第 $i$ 成分が $\varepsilon_{ijk}$。外積の「次・その次なら $+$」の規則が、$1\to2\to3\to1$ の巡回そのものになっている。</figcaption>
+</figure>
+<p><strong>回転。</strong>外積の $\boldsymbol a\to\nabla$（成分は $\partial_j$）、$\boldsymbol b\to\boldsymbol v$ とおき換える。<a href="24_第24回_発散と回転.html#sec-3-2">第24回 3.2</a> で、回転は形式的に $\nabla\times\boldsymbol v$ と書けることを見た。その成分は</p>
+<p>$$ (\nabla\times\boldsymbol v)_i=\varepsilon_{ijk}\,\partial_jv_k $$</p>
+<p>$i=1$：$\varepsilon_{123}\partial_2v_3+\varepsilon_{132}\partial_3v_2=\partial_yR-\partial_zQ$（$\boldsymbol v=(P,Q,R)^{\mathsf T}$）。<a href="24_第24回_発散と回転.html#sym-curl">第24回 3.1</a> の回転の第1成分と一致する。　<span class="meta">外積の $a_j$ が $\partial_j$ に替わっただけ。ただし $\partial_j$ は後ろの $v_k$ に作用する演算子（1.6 誤解5）。外積と違い、$\partial_j$ と $v_k$ の順序を入れ替えてはいけない</span></p>
+<p><strong>行列式。</strong>3×3 の行列 $A$ について</p>
+<p>$$ \det A=\varepsilon_{ijk}\,A_{1i}\,A_{2j}\,A_{3k} $$</p>
+<p>（$i,j,k$ はすべてダミー。自由添字なし → 数）。数値で確かめる。$A=\begin{pmatrix}1&2&0\\0&1&3\\2&0&1\end{pmatrix}$。$\varepsilon\ne0$ の6項だけを書く。</p>
+<p>① $(i,j,k)=(1,2,3)$（$+1$）：$A_{11}A_{22}A_{33}=1\cdot1\cdot1=1$。② $(2,3,1)$（$+1$）：$A_{12}A_{23}A_{31}=2\cdot3\cdot2=12$。③ $(3,1,2)$（$+1$）：$A_{13}A_{21}A_{32}=0\cdot0\cdot0=0$。</p>
+<p>④ $(1,3,2)$（$-1$）：$-A_{11}A_{23}A_{32}=-1\cdot3\cdot0=0$。⑤ $(3,2,1)$（$-1$）：$-A_{13}A_{22}A_{31}=-0\cdot1\cdot2=0$。⑥ $(2,1,3)$（$-1$）：$-A_{12}A_{21}A_{33}=-2\cdot0\cdot1=0$。</p>
+<p>⑦ 合計：$1+12+0+0+0+0=13$。確かめ：第1行で展開すると $1\cdot(1\cdot1-3\cdot0)-2\cdot(0\cdot1-3\cdot2)+0=1+12=13$。一致する。これは<a href="18_第18回_行列式.html#sym-det">第18回のライプニッツの公式</a>（置換の符号×成分の積を全部足す）の添字版である。同じ数 13 は、3つの行ベクトルのスカラー三重積 $\boldsymbol a\cdot(\boldsymbol b\times\boldsymbol c)=\varepsilon_{ijk}a_ib_jc_k$ にもなる（行が $\boldsymbol a=(1,2,0)^{\mathsf T}$、$\boldsymbol b=(0,1,3)^{\mathsf T}$、$\boldsymbol c=(2,0,1)^{\mathsf T}$ のとき）。</p>
+
+<div class="why"><span class="label">ひとことで</span>$\varepsilon_{ijk}$ は、外積の「次・その次なら $+$、逆なら $-$」を表にした記号。外積は $\varepsilon_{ijk}a_jb_k$、回転は $\varepsilon_{ijk}\partial_jv_k$、行列式は $\varepsilon_{ijk}A_{1i}A_{2j}A_{3k}$。</div>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>$\varepsilon_{ijk}$ の性質</h3>
+<p>定義から直ちに言える3つを、理由つきで並べる。</p>
+<ul>
+<li><strong>反対称</strong>：任意の2つの添字を入れ替えると符号が変わる。$\varepsilon_{ijk}=-\varepsilon_{jik}=-\varepsilon_{ikj}=-\varepsilon_{kji}$。理由：2つの添字の入れ替えは、置換の符号を $-1$ 倍する（第18回）。例：$\varepsilon_{123}=1$、$\varepsilon_{213}=-1$。</li>
+<li><strong>巡回</strong>：$\varepsilon_{ijk}=\varepsilon_{jki}=\varepsilon_{kij}$。理由：3つの添字を1つずつずらすのは「入れ替え」2回で、$(-1)^2=+1$ 倍。例：$\varepsilon_{231}=\varepsilon_{123}=1$。</li>
+<li><strong>重なれば0</strong>：2つ以上の添字が等しければ $0$。例：$\varepsilon_{112}=0$。（これは反対称からも出る：$\varepsilon_{112}=-\varepsilon_{112}$ だから $0$。）</li>
+</ul>
+
+<h3 id="sec-2-5"><span class="no">2.5</span>$\varepsilon$ を2つ掛けると $\delta$ になる</h3>
+<p>恒等式の証明で最もよく使うのが次の等式である。添字 $i$ が2回出るので足す。自由添字は $j,k,l,m$ の4つで、$3^4=81$ 通りの等式を1本で書いている。</p>
+
+<div class="thm"><span class="label">定理2.1（$\varepsilon$-$\delta$ 恒等式）</span>
+<p>$$ \varepsilon_{ijk}\,\varepsilon_{ilm}=\delta_{jl}\,\delta_{km}-\delta_{jm}\,\delta_{kl}\qquad(i\text{ について足す}) $$</p>
+</div>
+<p>先に数値で見る。</p>
+<p>① $j=l=2,\ k=m=3$：左辺は $\varepsilon_{i23}\varepsilon_{i23}$ の $i$ についての和。$\varepsilon_{i23}\ne0$ は $i=1$ だけ（$\varepsilon_{123}=1$）なので $1\cdot1=1$。右辺 $\delta_{22}\delta_{33}-\delta_{23}\delta_{32}=1-0=1$。一致する。</p>
+<p>② $j=m=2,\ k=l=3$：左辺 $\varepsilon_{i23}\varepsilon_{i32}$（$i=1$ だけ）$=\varepsilon_{123}\varepsilon_{132}=1\cdot(-1)=-1$。右辺 $\delta_{23}\delta_{32}-\delta_{22}\delta_{33}=0-1=-1$。一致する。</p>
+<p>③ $j=k=2,\ l=m=3$：左辺 $\varepsilon_{i22}\varepsilon_{i33}$ は $\varepsilon_{i22}=0$ ですべて $0$。右辺 $\delta_{23}\delta_{23}-\delta_{23}\delta_{23}=0$。一致する。</p>
+
+<div class="proof">
+<p><strong>証明</strong>：$j,k,l,m$ を固定して、左辺を場合分けする。</p>
+<p>① $j=k$ のとき：$\varepsilon_{ijk}=0$ なので左辺 $=0$。右辺は $\delta_{jl}\delta_{jm}-\delta_{jm}\delta_{jl}=0$（掛け算の順序を入れ替えただけで、同じ数の引き算）。一致する。$l=m$ のときも、$\varepsilon_{ilm}=0$ で左辺 $0$、右辺 $\delta_{jl}\delta_{kl}-\delta_{jl}\delta_{kl}=0$。一致する。</p>
+<p>② $j\ne k$ かつ $l\ne m$ のとき：$\varepsilon_{ijk}\ne0$ となる $i$ は、$j,k$ のどちらとも違う<strong>ただ1つの値</strong>（1,2,3 のうち残りの1つ）。また、$\varepsilon_{ilm}\ne0$ となる $i$ は $l,m$ のどちらとも違う1つの値。したがって、$\{j,k\}$ と $\{l,m\}$ が<strong>異なる2要素の集合</strong>ならば、2つの条件を同時に満たす $i$ は存在せず、和は $0$ になる。</p>
+<p>③ $\{j,k\}=\{l,m\}$ のとき：$i$ は共通の「残りの1つ」に決まる。(a) $(l,m)=(j,k)$ なら、$\varepsilon_{ijk}\varepsilon_{ijk}=(\pm1)^2=+1$。(b) $(l,m)=(k,j)$ なら、$\varepsilon_{ijk}\varepsilon_{ikj}=\varepsilon_{ijk}\cdot(-\varepsilon_{ijk})=-1$（反対称）。</p>
+<p>④ 右辺を同じ場合に当てはめる。(a) $(l,m)=(j,k)$，$j\ne k$：$\delta_{jj}\delta_{kk}-\delta_{jk}\delta_{kj}=1-0=1$。(b) $(l,m)=(k,j)$，$j\ne k$：$\delta_{jk}\delta_{kj}-\delta_{jj}\delta_{kk}=0-1=-1$。②の場合（$\{j,k\}\ne\{l,m\}$）：$\delta_{jl}\delta_{km}=1$ には $(l,m)=(j,k)$ が、$\delta_{jm}\delta_{kl}=1$ には $(l,m)=(k,j)$ が必要で、どちらも満たさないので右辺は $0-0=0$。</p>
+<p>⑤ すべての場合で左辺と右辺が一致する。<span class="qed">∎</span>　<span class="meta">式の全体の見た目は恒等式だが、証明の中身は「$i$ が残りの1つに決まる」ことだけ。81通りの確認は <code>draft/check_27.py</code> でも行った</span></p>
+</div>
+<p>図 2.5 を見る。定理2.1 の証明の中身は、「$i$ が決まれば残りの2つの組が決まる」ことだけである。</p>
+<figure class="fig" id="fig-2-5">
+<svg viewBox="0 0 440 324" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="ε-δ 恒等式の証明の見取り図" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>ε-δ 恒等式の証明の見取り図</title>
+<rect x="0" y="0" width="440" height="324" fill="#fffdf7"/>
+<text x="16.0" y="26.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">i</text>
+<text x="70.0" y="26.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">残る2つ {j, k}</text>
+<text x="190.0" y="26.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">(j, k) の順</text>
+<text x="318.0" y="26.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(k, j) の順</text>
+<rect x="8" y="38" width="424" height="52" rx="5" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/>
+<circle cx="30.0" cy="64.0" r="15" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="30.0" y="70.0" font-size="18" fill="#a8322a" text-anchor="middle" font-weight="bold">1</text>
+<text x="70.0" y="70.0" font-size="18" fill="#2a2723" text-anchor="start">{2, 3}</text>
+<text x="190.0" y="70.0" font-size="18" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="5.0" font-size="12.6">123</tspan><tspan dy="-5.0"> = +1</tspan></text>
+<text x="318.0" y="70.0" font-size="18" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="5.0" font-size="12.6">132</tspan><tspan dy="-5.0"> = −1</tspan></text>
+<rect x="8" y="98" width="424" height="52" rx="5" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/>
+<circle cx="30.0" cy="124.0" r="15" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="30.0" y="130.0" font-size="18" fill="#a8322a" text-anchor="middle" font-weight="bold">2</text>
+<text x="70.0" y="130.0" font-size="18" fill="#2a2723" text-anchor="start">{3, 1}</text>
+<text x="190.0" y="130.0" font-size="18" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="5.0" font-size="12.6">231</tspan><tspan dy="-5.0"> = +1</tspan></text>
+<text x="318.0" y="130.0" font-size="18" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="5.0" font-size="12.6">213</tspan><tspan dy="-5.0"> = −1</tspan></text>
+<rect x="8" y="158" width="424" height="52" rx="5" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/>
+<circle cx="30.0" cy="184.0" r="15" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="30.0" y="190.0" font-size="18" fill="#a8322a" text-anchor="middle" font-weight="bold">3</text>
+<text x="70.0" y="190.0" font-size="18" fill="#2a2723" text-anchor="start">{1, 2}</text>
+<text x="190.0" y="190.0" font-size="18" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="5.0" font-size="12.6">312</tspan><tspan dy="-5.0"> = +1</tspan></text>
+<text x="318.0" y="190.0" font-size="18" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="5.0" font-size="12.6">321</tspan><tspan dy="-5.0"> = −1</tspan></text>
+<text x="16.0" y="244.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">i</tspan><tspan font-size="12.6" font-style="italic">j</tspan><tspan font-size="12.6" font-style="italic">k</tspan><tspan dy="-5.0" font-style="italic">ε</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">i</tspan><tspan font-size="12.6" font-style="italic">l</tspan><tspan font-size="12.6" font-style="italic">m</tspan><tspan dy="-5.0"> ≠ 0 になるのは {</tspan><tspan font-style="italic">l</tspan><tspan>, </tspan><tspan font-style="italic">m</tspan><tspan>} = {</tspan><tspan font-style="italic">j</tspan><tspan>, </tspan><tspan font-style="italic">k</tspan><tspan>} のときだけ</tspan></text>
+<text x="16.0" y="274.0" font-size="18" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">l</tspan><tspan>, </tspan><tspan font-style="italic">m</tspan><tspan>) = (</tspan><tspan font-style="italic">j</tspan><tspan>, </tspan><tspan font-style="italic">k</tspan><tspan>)：(±1)(±1) = +1　　(</tspan><tspan font-style="italic">l</tspan><tspan>, </tspan><tspan font-style="italic">m</tspan><tspan>) = (</tspan><tspan font-style="italic">k</tspan><tspan>, </tspan><tspan font-style="italic">j</tspan><tspan>)：−1</tspan></text>
+<text x="16.0" y="304.0" font-size="18" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>これが </tspan><tspan font-style="italic">δ</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">j</tspan><tspan font-size="12.6" font-style="italic">l</tspan><tspan dy="-5.0" font-style="italic">δ</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">k</tspan><tspan font-size="12.6" font-style="italic">m</tspan><tspan dy="-5.0"> − </tspan><tspan font-style="italic">δ</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">j</tspan><tspan font-size="12.6" font-style="italic">m</tspan><tspan dy="-5.0" font-style="italic">δ</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">k</tspan><tspan font-size="12.6" font-style="italic">l</tspan><tspan dy="-5.0"> の2項に対応する</tspan></text>
+</svg>
+<figcaption><strong>図 2.5</strong>　各行は、$i$ を決めたときに $\varepsilon$ が $0$ でない2つの並び。2つの $\varepsilon$ の積が $+1$ になるのは同じ並びどうし、$-1$ になるのは入れ替えた並びどうし。</figcaption>
+</figure>
+
+<p><strong>系（よく使う2つ）。</strong>$l=j$ とおいて $j$ について足す（$j$ は2回出る）：</p>
+<p>① $\varepsilon_{ijk}\varepsilon_{ijm}=\delta_{jj}\delta_{km}-\delta_{jm}\delta_{kj}$。　<span class="meta">定理2.1 で $l\to j$ とした</span></p>
+<p>② $\delta_{jj}=3$、$\delta_{jm}\delta_{kj}=\delta_{km}$（2.1 ①で $j$ を取り替えた）なので、$=3\delta_{km}-\delta_{km}=2\delta_{km}$。</p>
+<p>③ さらに $k=m$ として足す：$\varepsilon_{ijk}\varepsilon_{ijk}=2\delta_{kk}=2\cdot3=6$。確かめ：$\varepsilon$ の $\pm1$ は6個で、2乗するとどれも1。足して6。一致する。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>定理2.1 は、<strong>2つの $\varepsilon$ が共有する添字 $i$ が同じ位置（どちらも先頭）</strong>にあるときの形である。$\varepsilon_{ijk}\varepsilon_{lmk}$ のように共有添字が末尾にあるときは、巡回（2.4）で先頭に移してから使う：$\varepsilon_{ijk}=\varepsilon_{kij}$、$\varepsilon_{lmk}=\varepsilon_{klm}$ なので $\varepsilon_{ijk}\varepsilon_{lmk}=\varepsilon_{kij}\varepsilon_{klm}=\delta_{il}\delta_{jm}-\delta_{im}\delta_{jl}$。位置を見ずに「$i$ が共通ならこの形」と覚えると、符号を間違える。</p>
+</div>
+<div class="why"><span class="label">ひとことで</span>$\varepsilon_{ijk}\varepsilon_{ilm}=\delta_{jl}\delta_{km}-\delta_{jm}\delta_{kl}$。2つの $\varepsilon$ の共有添字を足すと、$(j,k)$ と $(l,m)$ が同じ組なら $+$、入れ替わっていれば $-$、それ以外は $0$。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>添字記法で、ベクトル解析の恒等式を証明する</h2>
+
+<h3 id="sec-3-1"><span class="no">3.1</span>動機と手順</h3>
+<p>成分を3本ずつ書くと、ベクトルの恒等式の証明は9個以上の項の追跡になる。添字記法では、次の4手で終わる。</p>
+<p>① 左辺の<strong>第 $i$ 成分</strong>を書く（自由添字 $i$ を1つ立てる）。</p>
+<p>② $\times$ を $\varepsilon$、$\cdot$ を同じ添字の2回出現に直す。</p>
+<p>③ $\varepsilon\varepsilon$ があれば定理2.1 で $\delta\delta-\delta\delta$ にし、$\delta$ で添字を取り替えて $\delta$ を消す。</p>
+<p>④ 残った式を、ベクトルの記号に読み戻す。1行に1操作だけ進める。</p>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>例1：$\boldsymbol a\times(\boldsymbol b\times\boldsymbol c)=\boldsymbol b(\boldsymbol a\cdot\boldsymbol c)-\boldsymbol c(\boldsymbol a\cdot\boldsymbol b)$</h3>
+<p>力学（回転運動）、電磁気学（ローレンツ力の変形）で出る公式である。成分で証明すると長いが、添字なら次のとおり。</p>
+<p>① 左辺の第 $i$ 成分：$\bigl[\boldsymbol a\times(\boldsymbol b\times\boldsymbol c)\bigr]_i=\varepsilon_{ijk}\,a_j\,(\boldsymbol b\times\boldsymbol c)_k$。　<span class="meta">外積 $\boldsymbol a\times\boldsymbol w$ の第 $i$ 成分 $=\varepsilon_{ijk}a_jw_k$（2.3）。$\boldsymbol w=\boldsymbol b\times\boldsymbol c$</span></p>
+<p>② $(\boldsymbol b\times\boldsymbol c)_k=\varepsilon_{klm}\,b_lc_m$ を代入：$=\varepsilon_{ijk}\,\varepsilon_{klm}\,a_jb_lc_m$。　<span class="meta">$k$ は2回出る → 足す。同じ文字 $k$ が2つの外積で別々に使われないよう、2つ目の外積の添字には $l,m$ を選んだ</span></p>
+<p>③ $\varepsilon_{ijk}=\varepsilon_{kij}$（巡回、2.4）：$=\varepsilon_{kij}\,\varepsilon_{klm}\,a_jb_lc_m$。　<span class="meta">共有添字 $k$ を先頭にそろえた。定理2.1 の形にするため</span></p>
+<p>④ 定理2.1（$i\to k$、$j\to i$、$k\to j$ と読み替える）：$\varepsilon_{kij}\varepsilon_{klm}=\delta_{il}\delta_{jm}-\delta_{im}\delta_{jl}$。代入して $=(\delta_{il}\delta_{jm}-\delta_{im}\delta_{jl})\,a_jb_lc_m$。</p>
+<p>⑤ 分配する：$=\delta_{il}\delta_{jm}\,a_jb_lc_m-\delta_{im}\delta_{jl}\,a_jb_lc_m$。</p>
+<p>⑥ 第1項：$\delta_{il}b_l=b_i$（$l$ を $i$ に取り替える）、$\delta_{jm}a_jc_m=a_jc_j$（$m$ を $j$ に取り替える）。よって第1項 $=b_i\,(a_jc_j)$。</p>
+<p>⑦ 第2項：$\delta_{im}c_m=c_i$、$\delta_{jl}a_jb_l=a_jb_j$。よって第2項 $=c_i\,(a_jb_j)$。</p>
+<p>⑧ ベクトルに読み戻す：$a_jc_j=\boldsymbol a\cdot\boldsymbol c$、$a_jb_j=\boldsymbol a\cdot\boldsymbol b$ なので $\bigl[\ldots\bigr]_i=b_i(\boldsymbol a\cdot\boldsymbol c)-c_i(\boldsymbol a\cdot\boldsymbol b)$。$i$ は任意だから、ベクトルの等式として証明された。<span class="qed">∎</span></p>
+<p><strong>数値で確かめ。</strong>$\boldsymbol a=(2,1,0)^{\mathsf T}$、$\boldsymbol b=(3,1,0)^{\mathsf T}$、$\boldsymbol c=(1,2,0)^{\mathsf T}$（どれも $xy$ 平面内）。$\boldsymbol b\times\boldsymbol c=(0,0,3\cdot2-1\cdot1)^{\mathsf T}=(0,0,5)^{\mathsf T}$。$\boldsymbol a\times(0,0,5)^{\mathsf T}=(1\cdot5-0,\ 0-2\cdot5,\ 0)^{\mathsf T}=(5,-10,0)^{\mathsf T}$。右辺：$\boldsymbol a\cdot\boldsymbol c=2+2=4$、$\boldsymbol a\cdot\boldsymbol b=6+1=7$ なので $4\boldsymbol b-7\boldsymbol c=(12-7,\ 4-14,\ 0)^{\mathsf T}=(5,-10,0)^{\mathsf T}$。一致する。</p>
+<p>図 3.1 を見る。3本のベクトルを $xy$ 平面に置き、$\boldsymbol b\times\boldsymbol c$ が $z$ 方向を向くことを使って、結果 $\boldsymbol w$ を描く。</p>
+<figure class="fig" id="fig-3-1">
+<svg viewBox="0 0 440 450" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="a×(b×c) = b(a·c) − c(a·b) の数値例" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>a×(b×c) = b(a·c) − c(a·b) の数値例</title>
+<rect x="0" y="0" width="440" height="450" fill="#fffdf7"/>
+<line x1="54.0" y1="128.0" x2="372.0" y2="128.0" stroke="#2a2723" stroke-width="1.3"/><path d="M365.7 131.0 L372.0 128.0 L365.7 125.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="76.0" y1="370.0" x2="76.0" y2="8.0" stroke="#2a2723" stroke-width="1.3"/><path d="M79.0 14.3 L76.0 8.0 L73.0 14.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="186.0" y1="124.0" x2="186.0" y2="132.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="186.0" y="148.0" font-size="14" fill="#6b645a" text-anchor="middle">5</text>
+<line x1="296.0" y1="124.0" x2="296.0" y2="132.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="296.0" y="148.0" font-size="14" fill="#6b645a" text-anchor="middle">10</text>
+<line x1="72.0" y1="348.0" x2="80.0" y2="348.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="68.0" y="353.0" font-size="14" fill="#6b645a" text-anchor="end">-10</text>
+<line x1="72.0" y1="238.0" x2="80.0" y2="238.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="68.0" y="243.0" font-size="14" fill="#6b645a" text-anchor="end">-5</text>
+<line x1="72.0" y1="18.0" x2="80.0" y2="18.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="68.0" y="23.0" font-size="14" fill="#6b645a" text-anchor="end">5</text>
+<text x="376.0" y="150.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="90.0" y="14.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="76.0" y1="128.0" x2="340.0" y2="40.0" stroke="#c9c2b2" stroke-width="2.0"/><path d="M333.5 46.3 L340.0 40.0 L331.1 38.8" fill="none" stroke="#c9c2b2" stroke-width="2.0"/>
+<line x1="340.0" y1="40.0" x2="186.0" y2="348.0" stroke="#c9c2b2" stroke-width="2.0"/><path d="M186.1 339.0 L186.0 348.0 L193.1 342.5" fill="none" stroke="#c9c2b2" stroke-width="2.0"/>
+<line x1="76.0" y1="128.0" x2="142.0" y2="106.0" stroke="#5f7f4f" stroke-width="2.8"/><path d="M134.8 113.0 L142.0 106.0 L132.1 104.7" fill="none" stroke="#5f7f4f" stroke-width="2.8"/>
+<line x1="76.0" y1="128.0" x2="98.0" y2="84.0" stroke="#b07a3e" stroke-width="2.8"/><path d="M97.9 94.0 L98.0 84.0 L90.1 90.1" fill="none" stroke="#b07a3e" stroke-width="2.8"/>
+<line x1="76.0" y1="128.0" x2="120.0" y2="106.0" stroke="#2b3a67" stroke-width="2.8"/><path d="M113.9 113.9 L120.0 106.0 L110.0 106.1" fill="none" stroke="#2b3a67" stroke-width="2.8"/>
+<line x1="76.0" y1="128.0" x2="186.0" y2="348.0" stroke="#a8322a" stroke-width="3.2"/><path d="M177.3 341.3 L186.0 348.0 L185.8 337.0" fill="none" stroke="#a8322a" stroke-width="3.2"/>
+<rect x="145.0" y="110.0" width="90.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="148.0" y="124.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">b = (3, 1)</text>
+<rect x="59.0" y="62.0" width="90.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="62.0" y="76.0" font-size="14" fill="#b07a3e" text-anchor="start" font-weight="bold">c = (1, 2)</text>
+<rect x="123.0" y="78.0" width="90.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="126.0" y="92.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">a = (2, 1)</text>
+<rect x="267.0" y="16.0" width="106.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="270.0" y="30.0" font-size="14" fill="#6b645a" text-anchor="start">4b = (12, 4)</text>
+<rect x="257.0" y="180.0" width="36.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="260.0" y="194.0" font-size="14" fill="#6b645a" text-anchor="start">−7c</text>
+<rect x="193.0" y="338.0" width="112.4" height="20" fill="#fffdf7" opacity="0.92"/><text x="196.0" y="352.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">w = (5, −10)</text>
+<text x="16.0" y="410.0" font-size="15" fill="#2a2723" text-anchor="start">w = a×(b×c) = 4b − 7c　（4 = a·c、7 = a·b）</text>
+<text x="16.0" y="434.0" font-size="15" fill="#2a2723" text-anchor="start">a·w = 2·5 + 1·(−10) = 0　→　w は a に垂直</text>
+</svg>
+<figcaption><strong>図 3.1</strong>　灰色の2本が $4\boldsymbol b$ と $-7\boldsymbol c$。つなぐと $\boldsymbol w$ になる（$\boldsymbol w=\boldsymbol b(\boldsymbol a\cdot\boldsymbol c)-\boldsymbol c(\boldsymbol a\cdot\boldsymbol b)$）。$\boldsymbol a$ に垂直で、$\boldsymbol b,\boldsymbol c$ の張る平面の中にある。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>外積は<strong>結合法則を満たさない</strong>。$\boldsymbol a\times(\boldsymbol b\times\boldsymbol c)\ne(\boldsymbol a\times\boldsymbol b)\times\boldsymbol c$。反例：$\boldsymbol a=(1,0,0)^{\mathsf T}$、$\boldsymbol b=(1,1,0)^{\mathsf T}$、$\boldsymbol c=(0,0,1)^{\mathsf T}$。左辺は、$\boldsymbol b\times\boldsymbol c=(1,-1,0)^{\mathsf T}$ なので $\boldsymbol a\times(1,-1,0)^{\mathsf T}=(0,0,-1)^{\mathsf T}$。右辺は、$\boldsymbol a\times\boldsymbol b=(0,0,1)^{\mathsf T}$ なので $(0,0,1)^{\mathsf T}\times\boldsymbol c=\boldsymbol 0$。違う値になる。括弧は省けない。</p>
+</div>
+
+<h3 id="sec-3-3"><span class="no">3.3</span>例2：勾配の回転は $\boldsymbol 0$、回転の発散は $0$（反対称 × 対称）</h3>
+<p><a href="24_第24回_発散と回転.html#sec-3-6">第24回 3.6</a> で、成分を書き並べて示した2つの等式を、添字で示す。キーワードは<strong>反対称の記号と対称な量を掛けて足すと $0$</strong>である。</p>
+<p>① $\nabla\times(\nabla\phi)$ の第 $i$ 成分：$\varepsilon_{ijk}\,\partial_j(\nabla\phi)_k=\varepsilon_{ijk}\,\partial_j\partial_k\phi$。　<span class="meta">$(\nabla\phi)_k=\partial_k\phi$（1.4）</span></p>
+<p>② この和を $S_i:=\varepsilon_{ijk}\,\partial_j\partial_k\phi$ とおく。ダミー添字 $j,k$ の名前を入れ替えて書く（ダミーなので書き換えてよい。1.2）：$S_i=\varepsilon_{ikj}\,\partial_k\partial_j\phi$。</p>
+<p>③ $\varepsilon_{ikj}=-\varepsilon_{ijk}$（反対称、2.4）、$\partial_k\partial_j\phi=\partial_j\partial_k\phi$（偏微分の順序交換。<a href="11_第11回_偏微分.html#sym-mixed-partial">第11回 5.1</a>。$\phi$ の2階偏微分が連続という仮定）：$S_i=-\varepsilon_{ijk}\,\partial_j\partial_k\phi=-S_i$。</p>
+<p>④ $S_i=-S_i$ ならば $2S_i=0$、よって $S_i=0$。$i$ は任意だから $\nabla\times(\nabla\phi)=\boldsymbol 0$。<span class="qed">∎</span></p>
+<p>同じ型で、$\nabla\cdot(\nabla\times\boldsymbol v)=\partial_i\bigl(\varepsilon_{ijk}\partial_jv_k\bigr)=\varepsilon_{ijk}\,\partial_i\partial_jv_k$。ここでも $\varepsilon_{ijk}$ は $i,j$ の入れ替えで符号が変わり（反対称）、$\partial_i\partial_j$ は入れ替えても変わらない（対称）。ダミー添字 $i\leftrightarrow j$ を入れ替えて同じ議論をすると、和 $=-$ 和 となり $0$。</p>
+<p>図 3.2 を見る。$S_i=\varepsilon_{ijk}\,\partial_j\partial_k\phi$ の和を、$i=1$ について表で読む。</p>
+<figure class="fig" id="fig-3-2">
+<svg viewBox="0 0 440 510" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="反対称と対称を掛けて足すと0" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>反対称と対称を掛けて足すと0</title>
+<rect x="0" y="0" width="440" height="510" fill="#fffdf7"/>
+<text x="16.0" y="38.0" font-size="20" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">ε</tspan><tspan dy="5.6" font-size="14.0">1</tspan><tspan font-size="14.0" font-style="italic">j</tspan><tspan font-size="14.0" font-style="italic">k</tspan><tspan dy="-5.6">（反対称）</tspan></text>
+<text x="16.0" y="228.0" font-size="20" fill="#2b3a67" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">j</tspan><tspan dy="-5.6">∂</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">k</tspan><tspan dy="-5.6" font-style="italic">φ</tspan><tspan>（対称）</tspan></text>
+<rect x="100" y="78" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="122.0" y="106.0" font-size="18" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="100" y="268" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="122.0" y="296.0" font-size="18" fill="#a39b8c" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<rect x="144" y="78" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="166.0" y="106.0" font-size="18" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="144" y="268" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="166.0" y="296.0" font-size="18" fill="#a39b8c" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">z</tspan></text>
+<rect x="188" y="78" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="210.0" y="106.0" font-size="18" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="188" y="268" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="210.0" y="296.0" font-size="18" fill="#a39b8c" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<rect x="100" y="122" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="122.0" y="150.0" font-size="18" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="100" y="312" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="122.0" y="340.0" font-size="18" fill="#a39b8c" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">z</tspan></text>
+<rect x="144" y="122" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="166.0" y="150.0" font-size="18" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="144" y="312" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="166.0" y="340.0" font-size="18" fill="#a39b8c" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<rect x="188" y="122" width="44" height="44" rx="3" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.3"/><text x="210.0" y="150.0" font-size="18" fill="#a8322a" text-anchor="middle" font-weight="bold">+1</text>
+<rect x="188" y="312" width="44" height="44" rx="3" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.3"/><text x="210.0" y="340.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<rect x="100" y="166" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="122.0" y="194.0" font-size="18" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="100" y="356" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="122.0" y="384.0" font-size="18" fill="#a39b8c" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<rect x="144" y="166" width="44" height="44" rx="3" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.3"/><text x="166.0" y="194.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-weight="bold">−1</text>
+<rect x="144" y="356" width="44" height="44" rx="3" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.3"/><text x="166.0" y="384.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<rect x="188" y="166" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="210.0" y="194.0" font-size="18" fill="#a39b8c" text-anchor="middle">0</text>
+<rect x="188" y="356" width="44" height="44" rx="3" fill="#fff" stroke="#ddd6c8" stroke-width="1.3"/><text x="210.0" y="384.0" font-size="18" fill="#a39b8c" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="122.0" y="72.0" font-size="14" fill="#6b645a" text-anchor="middle">k=1</text>
+<text x="122.0" y="262.0" font-size="14" fill="#6b645a" text-anchor="middle">k=1</text>
+<text x="166.0" y="72.0" font-size="14" fill="#6b645a" text-anchor="middle">k=2</text>
+<text x="166.0" y="262.0" font-size="14" fill="#6b645a" text-anchor="middle">k=2</text>
+<text x="210.0" y="72.0" font-size="14" fill="#6b645a" text-anchor="middle">k=3</text>
+<text x="210.0" y="262.0" font-size="14" fill="#6b645a" text-anchor="middle">k=3</text>
+<text x="94.0" y="105.0" font-size="14" fill="#6b645a" text-anchor="end">j=1</text>
+<text x="94.0" y="295.0" font-size="14" fill="#6b645a" text-anchor="end">j=1</text>
+<text x="94.0" y="149.0" font-size="14" fill="#6b645a" text-anchor="end">j=2</text>
+<text x="94.0" y="339.0" font-size="14" fill="#6b645a" text-anchor="end">j=2</text>
+<text x="94.0" y="193.0" font-size="14" fill="#6b645a" text-anchor="end">j=3</text>
+<text x="94.0" y="383.0" font-size="14" fill="#6b645a" text-anchor="end">j=3</text>
+<text x="16.0" y="434.0" font-size="15" fill="#2a2723" text-anchor="start">φ = xyz の場合。橙色の2つの組で、掛けて足す：</text>
+<text x="16.0" y="464.0" font-size="22" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(+1)·</tspan><tspan font-style="italic">x</tspan><tspan> + (−1)·</tspan><tspan font-style="italic">x</tspan><tspan> = 0</tspan></text>
+<text x="16.0" y="492.0" font-size="15" fill="#2a2723" text-anchor="start">どの i でも打ち消し合う → rot grad φ = 0</text>
+</svg>
+<figcaption><strong>図 3.2</strong>　上の表（反対称）と下の表（対称）の同じ位置を掛けて、9個すべてを足す。$(2,3)$ と $(3,2)$ の項は、符号が逆で値が同じなので消える。残りは $\varepsilon=0$ で消える。</figcaption>
+</figure>
+<p><strong>数値で確かめ。</strong>$\phi=xyz$。$\partial_1\partial_2\phi=\partial_x\partial_y(xyz)=z$、$\partial_2\partial_1\phi=\partial_y\partial_x(xyz)=z$ で等しい（対称）。第1成分：$S_1=\varepsilon_{123}\partial_2\partial_3\phi+\varepsilon_{132}\partial_3\partial_2\phi=x-x=0$（$\partial_y\partial_z(xyz)=x$）。打ち消し合っている。</p>
+
+<h3 id="sec-3-4"><span class="no">3.4</span>例3：$\nabla\times(\nabla\times\boldsymbol v)=\nabla(\nabla\cdot\boldsymbol v)-\nabla^2\boldsymbol v$</h3>
+<p>電磁波の波動方程式を導くときに使う。左辺は回転を2回かけたもの。</p>
+<p>① 第 $i$ 成分：$\varepsilon_{ijk}\,\partial_j(\nabla\times\boldsymbol v)_k$。</p>
+<p>② $(\nabla\times\boldsymbol v)_k=\varepsilon_{klm}\,\partial_lv_m$ を代入：$=\varepsilon_{ijk}\,\varepsilon_{klm}\,\partial_j\partial_lv_m$。</p>
+<p>③ 共有添字 $k$ を先頭へ（巡回）：$\varepsilon_{ijk}=\varepsilon_{kij}$。定理2.1：$\varepsilon_{kij}\varepsilon_{klm}=\delta_{il}\delta_{jm}-\delta_{im}\delta_{jl}$。よって $=(\delta_{il}\delta_{jm}-\delta_{im}\delta_{jl})\,\partial_j\partial_lv_m$。</p>
+<p>④ 第1項：$\delta_{il}$ で $l\to i$、$\delta_{jm}$ で $m\to j$：$\partial_j\partial_iv_j$。第2項：$\delta_{im}$ で $m\to i$、$\delta_{jl}$ で $l\to j$：$\partial_j\partial_jv_i$。よって $=\partial_j\partial_iv_j-\partial_j\partial_jv_i$。</p>
+<p>⑤ 第1項は順序交換で $\partial_i(\partial_jv_j)=\bigl[\nabla(\nabla\cdot\boldsymbol v)\bigr]_i$。第2項 $\partial_j\partial_jv_i=\nabla^2v_i$（各成分に<a href="24_第24回_発散と回転.html#sym-laplacian">ラプラシアン</a>）。</p>
+<p>⑥ 読み戻す：$\nabla\times(\nabla\times\boldsymbol v)=\nabla(\nabla\cdot\boldsymbol v)-\nabla^2\boldsymbol v$。<span class="qed">∎</span>（$\nabla^2\boldsymbol v$ は各成分のラプラシアンを並べたベクトル。直交座標でのみ、この意味で使える。4.9 で曲線座標との違いを述べる。）</p>
+<p><strong>数値で確かめ。</strong>$\boldsymbol v=(y^2,0,0)^{\mathsf T}$。$\nabla\times\boldsymbol v=(0,0,-2y)^{\mathsf T}$（第3成分 $\partial_xv_2-\partial_yv_1=0-2y$）。もう一度回転：$(\partial_y(-2y),\ -\partial_x(-2y),\ 0)^{\mathsf T}=(-2,0,0)^{\mathsf T}$。右辺：$\nabla\cdot\boldsymbol v=\partial_x(y^2)=0$ なので第1項は $\boldsymbol 0$。$\nabla^2\boldsymbol v=(\partial_y^2(y^2),0,0)^{\mathsf T}=(2,0,0)^{\mathsf T}$。$\boldsymbol 0-(2,0,0)^{\mathsf T}=(-2,0,0)^{\mathsf T}$。一致する。</p>
+
+<h3 id="sec-3-5"><span class="no">3.5</span>例4：積の規則（$\nabla$ は積の微分規則に従う）</h3>
+<p>$\nabla\times(\phi\boldsymbol v)=\phi\,\nabla\times\boldsymbol v+\nabla\phi\times\boldsymbol v$ を示す。</p>
+<p>① 第 $i$ 成分：$\varepsilon_{ijk}\,\partial_j(\phi v_k)$。</p>
+<p>② 積の微分規則（$\partial_j$ は1変数の微分と同じく積に働く。第7回）：$=\varepsilon_{ijk}\,(\partial_j\phi)\,v_k+\varepsilon_{ijk}\,\phi\,\partial_jv_k$。</p>
+<p>③ 第1項は $(\nabla\phi\times\boldsymbol v)_i$（外積 $\boldsymbol a\times\boldsymbol b$ の $a_j\to\partial_j\phi$）、第2項は $\phi\,(\nabla\times\boldsymbol v)_i$。<span class="qed">∎</span></p>
+<p>もう1つ：$\nabla\cdot(\boldsymbol v\times\boldsymbol w)=\boldsymbol w\cdot(\nabla\times\boldsymbol v)-\boldsymbol v\cdot(\nabla\times\boldsymbol w)$。</p>
+<p>① $\partial_i\bigl(\varepsilon_{ijk}v_jw_k\bigr)=\varepsilon_{ijk}(\partial_iv_j)w_k+\varepsilon_{ijk}v_j(\partial_iw_k)$。　<span class="meta">積の微分規則。$\varepsilon_{ijk}$ は定数なので外に出た</span></p>
+<p>② 第1項：$\varepsilon_{ijk}=\varepsilon_{kij}$ （巡回）で $\varepsilon_{kij}\partial_iv_j=(\nabla\times\boldsymbol v)_k$。よって $(\nabla\times\boldsymbol v)_kw_k=\boldsymbol w\cdot(\nabla\times\boldsymbol v)$。</p>
+<p>③ 第2項：$\varepsilon_{ijk}=-\varepsilon_{jik}$ （反対称）で $\varepsilon_{ijk}\partial_iw_k=-\varepsilon_{jik}\partial_iw_k=-(\nabla\times\boldsymbol w)_j$。よって $-v_j(\nabla\times\boldsymbol w)_j=-\boldsymbol v\cdot(\nabla\times\boldsymbol w)$。<span class="qed">∎</span></p>
+<p><strong>数値で確かめ。</strong>$\phi=xy$、$\boldsymbol v=(x,y,z)^{\mathsf T}$（$\nabla\times\boldsymbol v=\boldsymbol 0$）。$\phi\boldsymbol v=(x^2y,\ xy^2,\ xyz)^{\mathsf T}$、その回転の第3成分は $\partial_x(xy^2)-\partial_y(x^2y)=y^2-x^2$。右辺の第3成分：$\phi\cdot0+(\nabla\phi\times\boldsymbol v)_3=(y,x,0)^{\mathsf T}\times(x,y,z)^{\mathsf T}$ の第3成分 $=y\cdot y-x\cdot x=y^2-x^2$。一致する。</p>
+<div class="why"><span class="label">ひとことで</span>恒等式の証明は「第 $i$ 成分を書く → $\times$ を $\varepsilon$ にする → $\varepsilon\varepsilon$ を $\delta\delta-\delta\delta$ にする → $\delta$ で添字を取り替える → 読み戻す」の4手。$\nabla\times\nabla\phi=\boldsymbol 0$ は「反対称×対称＝0」で、3行で終わる。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>曲線座標：極・円柱・球座標での $\nabla$</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/27_a4_armillary.jpg" alt="ガラスケースの中、彫刻のある台に、金属の輪を何重にも組んだ球形の天球儀が載っている" loading="lazy"></div>
+<p class="cap">輪を重ねて、天のどこにあるかを指す、1450年ごろの天球儀である。</p>
+<p class="cr">The wub（2023年、ケンブリッジ・ホイップル科学史博物館のアーミラリ天球儀）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Armillary_sphere_c_1450,_Whipple_Museum,_Cambridge.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/27_b4_potter.jpg" alt="屋外の木の作業台に、円盤と軸の台、小さな壺や道具が並ぶ、陶工のろくろ" loading="lazy"></div>
+<p class="cap">中心の軸のまわりを、円盤が回る道具である。</p>
+<p class="cr">Oliver Kurmis（2005年、エアフルトの陶器市のろくろ）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Töpferscheibe.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-4-1"><span class="no">4.1</span>動機：境界の形に座標を合わせる</h3>
+<p>ここまでは、座標 $(x,y,z)$ の3本の軸が、場所によらず同じ向きを向いている<strong>直交座標</strong>の話だった。しかし、工学の問題は、円筒の管、球形のタンク、回転する軸のように、<strong>円や球が境界</strong>であることが多い。たとえば半径 $R$ の円板の縁は、$(x,y)$ で書けば $x^2+y^2=R^2$ という曲線の式だが、<a href="13_第13回_重積分と変数変換.html#sym-polar">極座標</a>で書けば $r=R$ という「1つの座標を固定するだけ」の式になる。境界条件を扱いやすくするために、境界に合った座標へ替えたい。</p>
+<p>替えるときに困るのは、<strong>$\nabla$、発散、回転、ラプラシアンの形</strong>が変わることである。これらは偏微分の組み合わせだから、$x,y$ の偏微分を $r,\theta$ の偏微分に直す必要がある（第12回の連鎖律）。連鎖律で直接計算する方法もある（<a href="12_第12回_全微分と連鎖律.html#sec-3-7">第12回 3.7</a>）が、この回では第24回と同じ<strong>「小さな箱を置いて、出入りを数える」</strong>やり方で、3つの座標系にまとめて通用する公式を導く。</p>
+<p>もう1つの困りごとがある。極座標で「外向き」「ぐるっと回る向き」を考えたいとき、その向きのベクトルは<strong>場所によって向きが違う</strong>。直交座標の $\boldsymbol e_x=(1,0)^{\mathsf T}$ はどの点でも同じだが、「外向き」の単位ベクトルは、点 $(1,0)$ では $(1,0)^{\mathsf T}$、点 $(0,1)$ では $(0,1)^{\mathsf T}$ である。この「基底が動く」ことが、曲線座標のすべての注意点の原因になる。</p>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>定義：曲線座標、スケール因子、座標方向の単位ベクトル</h3>
+
+<div class="def" id="sym-curvilinear"><span class="label">記号：曲線座標 $(q_1,q_2,q_3)$</span>
+<p><strong>①読み方</strong>：「キュー・イチ、キュー・ニ、キュー・サン」。「曲線座標」。</p>
+<p><strong>②日本語での意味</strong>：直交座標 $(x,y,z)$ の代わりに、空間の点を指定する3つの数。極・円柱・球座標などの総称。点の位置ベクトルが $(q_1,q_2,q_3)$ の関数 $\boldsymbol r(q_1,q_2,q_3)$ として決まっている。<strong>ほかの2つを止めて $q_i$ だけを動かしたとき、点が描く曲線</strong>を、$q_i$ の<strong>座標曲線</strong>と呼ぶ（直交座標なら $x$ 軸に平行な直線）。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$ \boldsymbol r(q_1,q_2,q_3)=\begin{pmatrix}x(q_1,q_2,q_3)\\ y(q_1,q_2,q_3)\\ z(q_1,q_2,q_3)\end{pmatrix} $$</p>
+<p>例：球座標 $(q_1,q_2,q_3)=(r,\theta,\varphi)$ なら、$x=r\sin\theta\cos\varphi$、$y=r\sin\theta\sin\varphi$、$z=r\cos\theta$（<a href="13_第13回_重積分と変数変換.html#sym-spherical">第13回 10.1</a>）。円柱座標は $(q_1,q_2,q_3)=(r,\theta,z)$（<a href="13_第13回_重積分と変数変換.html#sym-cylindrical">第13回 9.1</a>）、極座標は $(q_1,q_2)=(r,\theta)$。<strong>この教材は第13回の文字づかいに従う</strong>：円柱座標の方位角は $\theta$、球座標の方位角は $\varphi$ で、$\theta$ は $z$ 軸からの角。</p>
+<p><strong>④どこで出会うか</strong>：偏微分方程式を境界に合わせて解くとき（第40回以降）、流体力学（管の流れ）、電磁気学（球・円筒導体）、機械力学（回転体）。</p>
+</div>
+
+<div class="def" id="sym-scale-factor"><span class="label">記号：スケール因子 $h_i$</span>
+<p><strong>①読み方</strong>：「エイチ・アイ」。「スケール因子」「ラメ係数」「計量係数」。</p>
+<p><strong>②日本語での意味</strong>：<strong>座標 $q_i$ を $1$ 動かしたときの、実際の（直交座標での）移動の長さ</strong>。$q_i$ を少し動かすと、点は座標曲線に沿って動く。その「座標の1あたりの長さ」が $h_i$ である。単位に注意：$q_i$ が長さでない（角度など）とき、$h_i$ は「長さ÷座標の単位」になる。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$ h_i:=\Bigl\|\frac{\partial\boldsymbol r}{\partial q_i}\Bigr\|=\sqrt{\Bigl(\frac{\partial x}{\partial q_i}\Bigr)^2+\Bigl(\frac{\partial y}{\partial q_i}\Bigr)^2+\Bigl(\frac{\partial z}{\partial q_i}\Bigr)^2}\qquad(i=1,2,3) $$</p>
+<p>ここで $\dfrac{\partial\boldsymbol r}{\partial q_i}$ は、位置ベクトルの各成分を $q_i$ で偏微分して並べたベクトル（<a href="11_第11回_偏微分.html#sym-partial">第11回</a>）、$\|\cdot\|$ は<a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">ノルム</a>。</p>
+<p><strong>④どこで出会うか</strong>：曲線座標の公式のすべて（4.4〜4.7）、線素・面積要素・体積要素（第13回の $r$、$r^2\sin\theta$ は $h_i$ の積）。</p>
+</div>
+
+<div class="def" id="sym-unit-basis"><span class="label">記号：$\hat{\boldsymbol e}_i$（座標方向の単位ベクトル）</span>
+<p><strong>①読み方</strong>：「イー・ハット・アイ」。「ハット」は、長さ1のベクトルにつける帽子。</p>
+<p><strong>②日本語での意味</strong>：<strong>座標 $q_i$ が増える向きの、長さ1のベクトル</strong>。その点での座標曲線の接線方向。<strong>点が変わると向きが変わる</strong>。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$ \hat{\boldsymbol e}_i:=\frac{1}{h_i}\,\frac{\partial\boldsymbol r}{\partial q_i}\qquad\Bigl(\text{長さは }\Bigl\|\frac1{h_i}\frac{\partial\boldsymbol r}{\partial q_i}\Bigr\|=\frac{h_i}{h_i}=1\Bigr) $$</p>
+<p>この教材で扱う曲線座標は、<strong>3本の $\hat{\boldsymbol e}_1,\hat{\boldsymbol e}_2,\hat{\boldsymbol e}_3$ が各点で互いに直交し、この順で右手系</strong>（$\hat{\boldsymbol e}_1\times\hat{\boldsymbol e}_2=\hat{\boldsymbol e}_3$）になっているもの（<strong>直交曲線座標</strong>）に限る。つまり、各点で<a href="19_第19回_内積・直交・射影.html#sym-orthonormal">正規直交基底</a>になる。</p>
+<p><strong>④どこで出会うか</strong>：ベクトル場を「外向き成分」「回る成分」に分けるとき（流体の速度、電場、磁場）、機械力学の遠心力・コリオリ力。</p>
+</div>
+
+<p><strong>最小の具体例（極座標）。</strong>$\boldsymbol r(r,\theta)=(r\cos\theta,\ r\sin\theta)^{\mathsf T}$。</p>
+<p>① $r$ で偏微分：$\dfrac{\partial\boldsymbol r}{\partial r}=(\cos\theta,\ \sin\theta)^{\mathsf T}$。長さ：$h_r=\sqrt{\cos^2\theta+\sin^2\theta}=1$。単位ベクトル：$\hat{\boldsymbol e}_r=(\cos\theta,\ \sin\theta)^{\mathsf T}$（原点から外向き）。</p>
+<p>② $\theta$ で偏微分：$\dfrac{\partial\boldsymbol r}{\partial\theta}=(-r\sin\theta,\ r\cos\theta)^{\mathsf T}$。長さ：$h_\theta=\sqrt{r^2\sin^2\theta+r^2\cos^2\theta}=r$。単位ベクトル：$\hat{\boldsymbol e}_\theta=(-\sin\theta,\ \cos\theta)^{\mathsf T}$（反時計回りに回る向き）。</p>
+<p>③ 直交の確認：$\hat{\boldsymbol e}_r\cdot\hat{\boldsymbol e}_\theta=-\cos\theta\sin\theta+\sin\theta\cos\theta=0$。</p>
+<p>④ 数値：$(r,\theta)=(2,\ \pi/6)$ の点で、$\hat{\boldsymbol e}_r=(\tfrac{\sqrt3}2,\ \tfrac12)^{\mathsf T}$、$\hat{\boldsymbol e}_\theta=(-\tfrac12,\ \tfrac{\sqrt3}2)^{\mathsf T}$。$\theta$ だけを $d\theta=0.1$ 動かすと、点は $\hat{\boldsymbol e}_\theta$ の向きにおよそ $h_\theta\,d\theta=2\times0.1=0.2$ 動く。確かめ：実際の移動の長さ（弦）は $2\cdot2\sin(0.05)=0.19995\ldots\approx0.2$。一致する。</p>
+<p>⑤ 位置の違い：$(r,\theta)=(2,\ \pi/2)$ の点（真上）では $\hat{\boldsymbol e}_r=(0,1)^{\mathsf T}$、$\hat{\boldsymbol e}_\theta=(-1,0)^{\mathsf T}$。④の点とは向きが違う。</p>
+<p>図 4.1 を見る。極座標では、座標曲線が円（$r$ 一定）と半直線（$\theta$ 一定）になる。</p>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 268" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="極座標の座標曲線" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>極座標の座標曲線</title>
+<rect x="0" y="0" width="440" height="268" fill="#fffdf7"/>
+<polyline points="282.0,238.0 282.0,235.8 281.8,233.7 281.7,231.5 281.4,229.4 281.1,227.2 280.6,225.1 280.2,223.0 279.6,220.9 279.0,218.8 278.3,216.8 277.5,214.8 276.6,212.8 275.7,210.8 274.7,208.9 273.7,207.0 272.6,205.1 271.4,203.3 270.2,201.6 268.9,199.8 267.5,198.1 266.1,196.5 264.6,194.9 263.1,193.4 261.5,191.9 259.9,190.5 258.2,189.1 256.4,187.8 254.7,186.6 252.9,185.4 251.0,184.3 249.1,183.3 247.2,182.3 245.2,181.4 243.2,180.5 241.2,179.7 239.2,179.0 237.1,178.4 235.0,177.8 232.9,177.4 230.8,176.9 228.6,176.6 226.5,176.3 224.3,176.2 222.2,176.0 220.0,176.0 217.8,176.0 215.7,176.2 213.5,176.3 211.4,176.6 209.2,176.9 207.1,177.4 205.0,177.8 202.9,178.4 200.8,179.0 198.8,179.7 196.8,180.5 194.8,181.4 192.8,182.3 190.9,183.3 189.0,184.3 187.1,185.4 185.3,186.6 183.6,187.8 181.8,189.1 180.1,190.5 178.5,191.9 176.9,193.4 175.4,194.9 173.9,196.5 172.5,198.1 171.1,199.8 169.8,201.6 168.6,203.3 167.4,205.1 166.3,207.0 165.3,208.9 164.3,210.8 163.4,212.8 162.5,214.8 161.7,216.8 161.0,218.8 160.4,220.9 159.8,223.0 159.4,225.1 158.9,227.2 158.6,229.4 158.3,231.5 158.2,233.7 158.0,235.8 158.0,238.0" fill="none" stroke="#d6cfbf" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="344.0,238.0 343.9,233.7 343.7,229.4 343.3,225.0 342.8,220.7 342.1,216.5 341.3,212.2 340.3,208.0 339.2,203.8 337.9,199.7 336.5,195.6 335.0,191.5 333.3,187.6 331.5,183.6 329.5,179.8 327.4,176.0 325.2,172.3 322.8,168.7 320.3,165.1 317.7,161.7 315.0,158.3 312.1,155.0 309.2,151.9 306.1,148.8 303.0,145.9 299.7,143.0 296.3,140.3 292.9,137.7 289.3,135.2 285.7,132.8 282.0,130.6 278.2,128.5 274.4,126.5 270.4,124.7 266.5,123.0 262.4,121.5 258.3,120.1 254.2,118.8 250.0,117.7 245.8,116.7 241.5,115.9 237.3,115.2 233.0,114.7 228.6,114.3 224.3,114.1 220.0,114.0 215.7,114.1 211.4,114.3 207.0,114.7 202.7,115.2 198.5,115.9 194.2,116.7 190.0,117.7 185.8,118.8 181.7,120.1 177.6,121.5 173.5,123.0 169.6,124.7 165.6,126.5 161.8,128.5 158.0,130.6 154.3,132.8 150.7,135.2 147.1,137.7 143.7,140.3 140.3,143.0 137.0,145.9 133.9,148.8 130.8,151.9 127.9,155.0 125.0,158.3 122.3,161.7 119.7,165.1 117.2,168.7 114.8,172.3 112.6,176.0 110.5,179.8 108.5,183.6 106.7,187.6 105.0,191.5 103.5,195.6 102.1,199.7 100.8,203.8 99.7,208.0 98.7,212.2 97.9,216.5 97.2,220.7 96.7,225.0 96.3,229.4 96.1,233.7 96.0,238.0" fill="none" stroke="#d6cfbf" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="406.0,238.0 405.9,231.5 405.5,225.0 405.0,218.6 404.2,212.1 403.2,205.7 401.9,199.3 400.5,193.0 398.8,186.7 396.9,180.5 394.8,174.4 392.5,168.3 389.9,162.3 387.2,156.5 384.2,150.7 381.1,145.0 377.7,139.4 374.2,134.0 370.5,128.7 366.6,123.5 362.5,118.4 358.2,113.5 353.8,108.8 349.2,104.2 344.5,99.8 339.6,95.5 334.5,91.4 329.3,87.5 324.0,83.8 318.6,80.3 313.0,76.9 307.3,73.8 301.5,70.8 295.7,68.1 289.7,65.5 283.6,63.2 277.5,61.1 271.3,59.2 265.0,57.5 258.7,56.1 252.3,54.8 245.9,53.8 239.4,53.0 233.0,52.5 226.5,52.1 220.0,52.0 213.5,52.1 207.0,52.5 200.6,53.0 194.1,53.8 187.7,54.8 181.3,56.1 175.0,57.5 168.7,59.2 162.5,61.1 156.4,63.2 150.3,65.5 144.3,68.1 138.5,70.8 132.7,73.8 127.0,76.9 121.4,80.3 116.0,83.8 110.7,87.5 105.5,91.4 100.4,95.5 95.5,99.8 90.8,104.2 86.2,108.8 81.8,113.5 77.5,118.4 73.4,123.5 69.5,128.7 65.8,134.0 62.3,139.4 58.9,145.0 55.8,150.7 52.8,156.5 50.1,162.3 47.5,168.3 45.2,174.4 43.1,180.5 41.2,186.7 39.5,193.0 38.1,199.3 36.8,205.7 35.8,212.1 35.0,218.6 34.5,225.0 34.1,231.5 34.0,238.0" fill="none" stroke="#d6cfbf" stroke-width="1.2" stroke-linejoin="round"/>
+<line x1="220.0" y1="238.0" x2="415.3" y2="238.0" stroke="#d6cfbf" stroke-width="1.0"/>
+<line x1="220.0" y1="238.0" x2="317.7" y2="68.9" stroke="#d6cfbf" stroke-width="1.0"/>
+<line x1="220.0" y1="238.0" x2="220.0" y2="42.7" stroke="#d6cfbf" stroke-width="1.0"/>
+<line x1="220.0" y1="238.0" x2="122.4" y2="68.9" stroke="#d6cfbf" stroke-width="1.0"/>
+<line x1="220.0" y1="238.0" x2="50.9" y2="140.4" stroke="#d6cfbf" stroke-width="1.0"/>
+<line x1="220.0" y1="238.0" x2="24.7" y2="238.0" stroke="#d6cfbf" stroke-width="1.0"/>
+<polyline points="344.0,238.0 343.9,233.7 343.7,229.4 343.3,225.0 342.8,220.7 342.1,216.5 341.3,212.2 340.3,208.0 339.2,203.8 337.9,199.7 336.5,195.6 335.0,191.5 333.3,187.6 331.5,183.6 329.5,179.8 327.4,176.0 325.2,172.3 322.8,168.7 320.3,165.1 317.7,161.7 315.0,158.3 312.1,155.0 309.2,151.9 306.1,148.8 303.0,145.9 299.7,143.0 296.3,140.3 292.9,137.7 289.3,135.2 285.7,132.8 282.0,130.6 278.2,128.5 274.4,126.5 270.4,124.7 266.5,123.0 262.4,121.5 258.3,120.1 254.2,118.8 250.0,117.7 245.8,116.7 241.5,115.9 237.3,115.2 233.0,114.7 228.6,114.3 224.3,114.1 220.0,114.0 215.7,114.1 211.4,114.3 207.0,114.7 202.7,115.2 198.5,115.9 194.2,116.7 190.0,117.7 185.8,118.8 181.7,120.1 177.6,121.5 173.5,123.0 169.6,124.7 165.6,126.5 161.8,128.5 158.0,130.6 154.3,132.8 150.7,135.2 147.1,137.7 143.7,140.3 140.3,143.0 137.0,145.9 133.9,148.8 130.8,151.9 127.9,155.0 125.0,158.3 122.3,161.7 119.7,165.1 117.2,168.7 114.8,172.3 112.6,176.0 110.5,179.8 108.5,183.6 106.7,187.6 105.0,191.5 103.5,195.6 102.1,199.7 100.8,203.8 99.7,208.0 98.7,212.2 97.9,216.5 97.2,220.7 96.7,225.0 96.3,229.4 96.1,233.7 96.0,238.0" fill="none" stroke="#a8322a" stroke-width="3.0" stroke-linejoin="round"/>
+<line x1="220.0" y1="238.0" x2="389.1" y2="140.4" stroke="#2b3a67" stroke-width="3.0"/>
+<line x1="26.0" y1="238.0" x2="424.0" y2="238.0" stroke="#2a2723" stroke-width="1.3"/><path d="M417.7 241.0 L424.0 238.0 L417.7 235.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="220.0" y1="246.0" x2="220.0" y2="34.0" stroke="#2a2723" stroke-width="1.3"/><path d="M223.0 40.3 L220.0 34.0 L217.0 40.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<text x="414.0" y="260.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="234.0" y="40.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<circle cx="327.4" cy="176.0" r="5.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<rect x="336.4" y="186.0" width="90.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="339.4" y="200.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">P (2, π/6)</text>
+<rect x="86.1" y="111.0" width="84.4" height="20" fill="#fffdf7" opacity="0.92"/><text x="167.5" y="125.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">r = 2 の円</text>
+<rect x="256.9" y="114.4" width="129.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="383.1" y="128.4" font-size="14" fill="#2b3a67" text-anchor="end" font-weight="bold">θ = π/6 の半直線</text>
+<text x="16.0" y="30.0" font-size="14" fill="#6b645a" text-anchor="start">灰色の円：r = 1, 2, 3　灰色の線：θ = 0°, 30°, …</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　点 $P$ から、$\theta$ を止めて $r$ だけ動かすと半直線（藍）、$r$ を止めて $\theta$ だけ動かすと円（朱）を進む。この2本の曲線が $P$ で直交する。</figcaption>
+</figure>
+<p>図 4.2 を見る。円 $r=2$ の上の4点で、$\hat{\boldsymbol e}_r$ と $\hat{\boldsymbol e}_\theta$ を描く。</p>
+<figure class="fig" id="fig-4-2">
+<svg viewBox="0 0 440 312" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="ê_r と ê_θ は場所で向きが変わる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>ê_r と ê_θ は場所で向きが変わる</title>
+<rect x="0" y="0" width="440" height="312" fill="#fffdf7"/>
+<polyline points="344.0,238.0 343.9,233.7 343.7,229.4 343.3,225.0 342.8,220.7 342.1,216.5 341.3,212.2 340.3,208.0 339.2,203.8 337.9,199.7 336.5,195.6 335.0,191.5 333.3,187.6 331.5,183.6 329.5,179.8 327.4,176.0 325.2,172.3 322.8,168.7 320.3,165.1 317.7,161.7 315.0,158.3 312.1,155.0 309.2,151.9 306.1,148.8 303.0,145.9 299.7,143.0 296.3,140.3 292.9,137.7 289.3,135.2 285.7,132.8 282.0,130.6 278.2,128.5 274.4,126.5 270.4,124.7 266.5,123.0 262.4,121.5 258.3,120.1 254.2,118.8 250.0,117.7 245.8,116.7 241.5,115.9 237.3,115.2 233.0,114.7 228.6,114.3 224.3,114.1 220.0,114.0 215.7,114.1 211.4,114.3 207.0,114.7 202.7,115.2 198.5,115.9 194.2,116.7 190.0,117.7 185.8,118.8 181.7,120.1 177.6,121.5 173.5,123.0 169.6,124.7 165.6,126.5 161.8,128.5 158.0,130.6 154.3,132.8 150.7,135.2 147.1,137.7 143.7,140.3 140.3,143.0 137.0,145.9 133.9,148.8 130.8,151.9 127.9,155.0 125.0,158.3 122.3,161.7 119.7,165.1 117.2,168.7 114.8,172.3 112.6,176.0 110.5,179.8 108.5,183.6 106.7,187.6 105.0,191.5 103.5,195.6 102.1,199.7 100.8,203.8 99.7,208.0 98.7,212.2 97.9,216.5 97.2,220.7 96.7,225.0 96.3,229.4 96.1,233.7 96.0,238.0" fill="none" stroke="#d6cfbf" stroke-width="1.4" stroke-linejoin="round"/>
+<line x1="26.0" y1="238.0" x2="424.0" y2="238.0" stroke="#2a2723" stroke-width="1.3"/><path d="M417.7 241.0 L424.0 238.0 L417.7 235.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="220.0" y1="246.0" x2="220.0" y2="34.0" stroke="#2a2723" stroke-width="1.3"/><path d="M223.0 40.3 L220.0 34.0 L217.0 40.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<text x="414.0" y="260.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="234.0" y="40.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="344.0" y1="238.0" x2="390.0" y2="238.0" stroke="#a8322a" stroke-width="2.8"/><path d="M381.0 242.3 L390.0 238.0 L381.0 233.7" fill="none" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="344.0" y1="238.0" x2="344.0" y2="192.0" stroke="#2b3a67" stroke-width="2.8"/><path d="M348.3 201.0 L344.0 192.0 L339.7 201.0" fill="none" stroke="#2b3a67" stroke-width="2.8"/>
+<circle cx="344.0" cy="238.0" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="307.7" y1="150.3" x2="340.2" y2="117.8" stroke="#a8322a" stroke-width="2.8"/><path d="M336.9 127.2 L340.2 117.8 L330.8 121.1" fill="none" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="307.7" y1="150.3" x2="275.2" y2="117.8" stroke="#2b3a67" stroke-width="2.8"/><path d="M284.6 121.1 L275.2 117.8 L278.4 127.2" fill="none" stroke="#2b3a67" stroke-width="2.8"/>
+<circle cx="307.7" cy="150.3" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="220.0" y1="114.0" x2="220.0" y2="68.0" stroke="#a8322a" stroke-width="2.8"/><path d="M224.3 77.0 L220.0 68.0 L215.7 77.0" fill="none" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="220.0" y1="114.0" x2="174.0" y2="114.0" stroke="#2b3a67" stroke-width="2.8"/><path d="M183.0 109.7 L174.0 114.0 L183.0 118.3" fill="none" stroke="#2b3a67" stroke-width="2.8"/>
+<circle cx="220.0" cy="114.0" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="132.3" y1="150.3" x2="99.8" y2="117.8" stroke="#a8322a" stroke-width="2.8"/><path d="M109.2 121.1 L99.8 117.8 L103.1 127.2" fill="none" stroke="#a8322a" stroke-width="2.8"/>
+<line x1="132.3" y1="150.3" x2="99.8" y2="182.8" stroke="#2b3a67" stroke-width="2.8"/><path d="M103.1 173.4 L99.8 182.8 L109.2 179.6" fill="none" stroke="#2b3a67" stroke-width="2.8"/>
+<circle cx="132.3" cy="150.3" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="374.0" y="226.0" font-size="18" fill="#a8322a" text-anchor="start" font-weight="bold">ê_r</text>
+<text x="316.0" y="184.0" font-size="18" fill="#2b3a67" text-anchor="start" font-weight="bold">ê_θ</text>
+<text x="16.0" y="276.0" font-size="15" fill="#2a2723" text-anchor="start">朱：ê_r（外向き）　藍：ê_θ（反時計回り）</text>
+<text x="16.0" y="300.0" font-size="15" fill="#6b645a" text-anchor="start">各点で ê_r ⟂ ê_θ。点が変わると向きも変わる</text>
+</svg>
+<figcaption><strong>図 4.2</strong>　直交座標の $\hat{\boldsymbol e}_x,\hat{\boldsymbol e}_y$ はどの点でも同じ向きだが、$\hat{\boldsymbol e}_r,\hat{\boldsymbol e}_\theta$ は点ごとに違う。ただし、どの点でも長さ1で互いに直交している。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>曲線座標では、座標を1動かすと実際には $h_i$ だけ進み、その向きは $\hat{\boldsymbol e}_i$ で、点ごとに違う。極座標では $h_r=1$、$h_\theta=r$。</div>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>極・円柱・球座標のスケール因子と、小さな箱</h3>
+<p>座標を $dq_i$ だけ動かしたときの移動は、1次近似（<a href="08_第8回_微分を使う・近似と極値.html#sym-linear-approx">第8回</a>）で $\dfrac{\partial\boldsymbol r}{\partial q_i}dq_i=h_i\,dq_i\,\hat{\boldsymbol e}_i$ になる。3つの座標を同時に $dq_1,dq_2,dq_3$ 動かして得られる小さな箱は、辺の長さが $h_1dq_1,\ h_2dq_2,\ h_3dq_3$ で、辺どうしが直交する。したがって</p>
+<p>$$ \text{(辺の長さ)}=h_i\,dq_i,\qquad \text{(体積)}=h_1h_2h_3\,dq_1\,dq_2\,dq_3 $$</p>
+<p>確かめ：<a href="13_第13回_重積分と変数変換.html#sym-jacobian">ヤコビアン</a>は、$\partial\boldsymbol r/\partial q_i$ を3列に並べた行列の行列式。3列が直交していて長さが $h_i$ なので、箱の体積と同じ $h_1h_2h_3$ になる。</p>
+<p>3つの座標系のスケール因子を求める。極座標の結果は 4.2 で出した。円柱座標は $\boldsymbol r=(r\cos\theta,\ r\sin\theta,\ z)^{\mathsf T}$ なので、$\partial_r\boldsymbol r=(\cos\theta,\sin\theta,0)^{\mathsf T}$、$\partial_\theta\boldsymbol r=(-r\sin\theta,\ r\cos\theta,\ 0)^{\mathsf T}$、$\partial_z\boldsymbol r=(0,0,1)^{\mathsf T}$。球座標は $\boldsymbol r=(r\sin\theta\cos\varphi,\ r\sin\theta\sin\varphi,\ r\cos\theta)^{\mathsf T}$ なので</p>
+<p>① $\partial_r\boldsymbol r=(\sin\theta\cos\varphi,\ \sin\theta\sin\varphi,\ \cos\theta)^{\mathsf T}$。長さ $\sqrt{\sin^2\theta(\cos^2\varphi+\sin^2\varphi)+\cos^2\theta}=1$。$h_r=1$。</p>
+<p>② $\partial_\theta\boldsymbol r=(r\cos\theta\cos\varphi,\ r\cos\theta\sin\varphi,\ -r\sin\theta)^{\mathsf T}$。長さ $\sqrt{r^2\cos^2\theta+r^2\sin^2\theta}=r$。$h_\theta=r$。</p>
+<p>③ $\partial_\varphi\boldsymbol r=(-r\sin\theta\sin\varphi,\ r\sin\theta\cos\varphi,\ 0)^{\mathsf T}$。長さ $\sqrt{r^2\sin^2\theta}=r\sin\theta$（$0\le\theta\le\pi$ で $\sin\theta\ge0$）。$h_\varphi=r\sin\theta$。</p>
+<p>④ 3本の内積を取ると、どの2本も $0$（円柱座標、球座標とも。4.2 ③と同じ計算）。直交曲線座標になっている。</p>
+<table class="tb">
+<tr><th>座標系</th><th>$(q_1,q_2,q_3)$</th><th>$(h_1,h_2,h_3)$</th><th>体積（面積）要素 $h_1h_2h_3$</th><th>$\hat{\boldsymbol e}_1,\hat{\boldsymbol e}_2,\hat{\boldsymbol e}_3$</th></tr>
+<tr><td>直交座標</td><td>$(x,y,z)$</td><td>$(1,\ 1,\ 1)$</td><td>$1$</td><td>$\hat{\boldsymbol e}_x,\hat{\boldsymbol e}_y,\hat{\boldsymbol e}_z$（どこでも同じ）</td></tr>
+<tr><td>極座標（平面）</td><td>$(r,\theta)$</td><td>$(1,\ r)$</td><td>$r$</td><td>外向き、反時計回り</td></tr>
+<tr><td>円柱座標</td><td>$(r,\theta,z)$</td><td>$(1,\ r,\ 1)$</td><td>$r$</td><td>$z$ 軸から遠ざかる向き、方位角が増える向き、$+z$</td></tr>
+<tr><td>球座標</td><td>$(r,\theta,\varphi)$</td><td>$(1,\ r,\ r\sin\theta)$</td><td>$r^2\sin\theta$</td><td>原点から遠ざかる向き、$\theta$ が増える向き（南向き）、$\varphi$ が増える向き（東向き）</td></tr>
+</table>
+<p>体積要素は、第13回の $dV=r\,dr\,d\theta\,dz$（円柱）、$dV=r^2\sin\theta\,dr\,d\theta\,d\varphi$（球、<a href="13_第13回_重積分と変数変換.html#sec-10-3">第13回 10.3</a>）と同じ形である。</p>
+<p>数値で意味を見る。球座標で $r=2$ の球面上、$\varphi$ を $d\varphi=0.1$ 動かす。赤道（$\theta=\pi/2$）では $h_\varphi=2\sin(\pi/2)=2$ なので $0.2$ 進む。緯度が高く $\theta=\pi/6$（北極から $30^\circ$）では $h_\varphi=2\sin(\pi/6)=1$ なので $0.1$ しか進まない。同じ経度の変化でも、北極に近いほど実際の距離は短い。</p>
+<p>図 4.3 を見る。極座標の小さな箱の辺の長さを、実際の長さで書き込む。</p>
+<figure class="fig" id="fig-4-3">
+<svg viewBox="0 0 440 356" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="極座標の小さな箱" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>極座標の小さな箱</title>
+<rect x="0" y="0" width="440" height="356" fill="#fffdf7"/>
+<line x1="36.0" y1="338.0" x2="315.4" y2="268.3" stroke="#d6cfbf" stroke-width="1.2" stroke-dasharray="5 4"/>
+<line x1="36.0" y1="338.0" x2="221.1" y2="117.4" stroke="#d6cfbf" stroke-width="1.2" stroke-dasharray="5 4"/>
+<polygon points="181.5,301.7 181.0,299.4 180.3,297.2 179.7,294.9 179.0,292.6 178.2,290.4 177.5,288.2 176.7,286.0 175.8,283.8 175.0,281.6 174.1,279.4 173.1,277.2 172.2,275.1 171.2,273.0 170.1,270.8 169.1,268.7 167.9,266.7 166.8,264.6 165.6,262.5 164.4,260.5 163.2,258.5 161.9,256.5 160.6,254.6 159.3,252.6 158.0,250.7 156.6,248.8 155.2,246.9 153.7,245.0 152.2,243.2 150.7,241.4 149.2,239.6 147.6,237.8 146.1,236.1 144.4,234.4 142.8,232.7 141.1,231.0 139.4,229.4 137.7,227.8 136.0,226.2 134.2,224.6 132.4,223.1 209.6,131.2 212.8,133.9 216.0,136.7 219.1,139.6 222.2,142.5 225.2,145.4 228.2,148.4 231.2,151.5 234.1,154.6 237.0,157.7 239.8,160.9 242.5,164.1 245.2,167.4 247.9,170.7 250.5,174.0 253.0,177.4 255.5,180.8 258.0,184.3 260.4,187.8 262.7,191.3 265.0,194.9 267.2,198.5 269.4,202.2 271.5,205.9 273.5,209.6 275.5,213.3 277.4,217.1 279.3,220.9 281.1,224.7 282.8,228.6 284.5,232.5 286.2,236.4 287.7,240.4 289.2,244.3 290.7,248.3 292.0,252.3 293.4,256.4 294.6,260.4 295.8,264.5 296.9,268.6 298.0,272.7" fill="#e8ecf4" stroke="#6b645a" stroke-width="2"/>
+<circle cx="36.0" cy="338.0" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="28.0" y="330.0" font-size="15" fill="#2a2723" text-anchor="end">O</text>
+<polyline points="103.9,321.1 103.4,318.9 102.7,316.8 102.0,314.7 101.3,312.7 100.4,310.6 99.5,308.6 98.6,306.7 97.6,304.7 96.5,302.8 95.4,300.9 94.2,299.1 92.9,297.3 91.6,295.5 90.2,293.8 88.8,292.1 87.4,290.4 85.8,288.8 84.3,287.3 82.7,285.8 81.0,284.4" fill="none" stroke="#6b645a" stroke-width="1.6" stroke-linejoin="round"/>
+<rect x="102.4" y="291.9" width="24.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="105.4" y="306.9" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">dθ</text>
+<rect x="52.2" y="252.5" width="109.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="55.2" y="266.5" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">内側の弧：r dθ</text>
+<rect x="274.0" y="172.9" width="151.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="277.0" y="186.9" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">外側の弧：(r+dr) dθ</text>
+<rect x="238.8" y="297.2" width="87.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="241.8" y="311.2" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">辺の長さ dr</text>
+<line x1="36.0" y1="338.0" x2="181.5" y2="301.7" stroke="#aaa293" stroke-width="1.3" stroke-dasharray="3 3"/>
+<rect x="95.3" y="326.9" width="15.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="102.8" y="341.9" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">r</text>
+<text x="16.0" y="28.0" font-size="15" fill="#2a2723" text-anchor="start">r を dr、θ を dθ だけ動かしてできる小さな箱</text>
+<text x="16.0" y="52.0" font-size="18" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>辺の長さ：</tspan><tspan font-style="italic">h</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">r</tspan><tspan dy="-5.0" font-style="italic">d</tspan><tspan font-style="italic">r</tspan><tspan> = </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">r</tspan><tspan>、</tspan><tspan font-style="italic">h</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">θ</tspan><tspan dy="-5.0" font-style="italic">d</tspan><tspan font-style="italic">θ</tspan><tspan> = </tspan><tspan font-style="italic">r</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">θ</tspan></text>
+</svg>
+<figcaption><strong>図 4.3</strong>　$\theta$ を $d\theta$ 動かしたときの移動は、原点から遠い外側の弧ほど長い（$r\,d\theta$ から $(r+dr)\,d\theta$ まで）。ゆえに $h_\theta=r$。箱は縮めれば長方形とみなせ、面積は $r\,dr\,d\theta$。</figcaption>
+</figure>
+<p>図 4.4 を見る。球座標の小さな箱は、3つの辺の長さがすべて違う。</p>
+<figure class="fig" id="fig-4-4">
+<svg viewBox="0 0 440 400" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="球座標の小さな箱" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>球座標の小さな箱</title>
+<rect x="0" y="0" width="440" height="400" fill="#fffdf7"/>
+<polygon points="70.0,150.0 230.0,150.0 308.0,96.0 148.0,96.0" fill="#f1f3f8" stroke="#6b645a" stroke-width="1.5"/>
+<polygon points="230.0,262.0 308.0,208.0 308.0,96.0 230.0,150.0" fill="#e4e9f2" stroke="#6b645a" stroke-width="1.5"/>
+<polygon points="70.0,262.0 230.0,262.0 230.0,150.0 70.0,150.0" fill="#e8ecf4" stroke="#6b645a" stroke-width="2"/>
+<line x1="70.0" y1="262.0" x2="148.0" y2="208.0" stroke="#aaa293" stroke-width="1.3" stroke-dasharray="4 3"/>
+<line x1="148.0" y1="208.0" x2="308.0" y2="208.0" stroke="#aaa293" stroke-width="1.3" stroke-dasharray="4 3"/>
+<line x1="148.0" y1="208.0" x2="148.0" y2="96.0" stroke="#aaa293" stroke-width="1.3" stroke-dasharray="4 3"/>
+<line x1="70.0" y1="278.0" x2="230.0" y2="278.0" stroke="#2b3a67" stroke-width="2.2"/><path d="M221.9 281.9 L230.0 278.0 L221.9 274.1" fill="none" stroke="#2b3a67" stroke-width="2.2"/>
+<text x="150.0" y="302.0" font-size="18" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">r</tspan><tspan> </tspan><tspan>sin</tspan><tspan font-style="italic">θ</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">φ</tspan><tspan>（ê_</tspan><tspan font-style="italic">φ</tspan><tspan> の向き）</tspan></text>
+<line x1="56.0" y1="262.0" x2="56.0" y2="150.0" stroke="#a8322a" stroke-width="2.2"/><path d="M59.9 158.1 L56.0 150.0 L52.1 158.1" fill="none" stroke="#a8322a" stroke-width="2.2"/>
+<text x="50.0" y="198.0" font-size="18" fill="#a8322a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">r</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">θ</tspan></text>
+<text x="50.0" y="218.0" font-size="15" fill="#a8322a" text-anchor="end">(ê_θ)</text>
+<line x1="238.0" y1="148.0" x2="316.0" y2="94.0" stroke="#5f7f4f" stroke-width="2.2"/><path d="M311.6 101.8 L316.0 94.0 L307.1 95.4" fill="none" stroke="#5f7f4f" stroke-width="2.2"/>
+<text x="322.0" y="100.0" font-size="18" fill="#5f7f4f" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">d</tspan><tspan font-style="italic">r</tspan><tspan>（ê_</tspan><tspan font-style="italic">r</tspan><tspan>）</tspan></text>
+<text x="16.0" y="332.0" font-size="20" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">h</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">r</tspan><tspan dy="-5.6">=1，</tspan><tspan font-style="italic">h</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">θ</tspan><tspan dy="-5.6">=</tspan><tspan font-style="italic">r</tspan><tspan>，</tspan><tspan font-style="italic">h</tspan><tspan dy="5.6" font-size="14.0" font-style="italic">φ</tspan><tspan dy="-5.6">=</tspan><tspan font-style="italic">r</tspan><tspan> </tspan><tspan>sin</tspan><tspan font-style="italic">θ</tspan></text>
+<text x="16.0" y="362.0" font-size="20" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>体積 = </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">r</tspan><tspan> · </tspan><tspan font-style="italic">r</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">θ</tspan><tspan> · </tspan><tspan font-style="italic">r</tspan><tspan> </tspan><tspan>sin</tspan><tspan font-style="italic">θ</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">φ</tspan><tspan> = </tspan><tspan font-style="italic">r</tspan><tspan>²</tspan><tspan>sin</tspan><tspan font-style="italic">θ</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">r</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">θ</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">φ</tspan></text>
+</svg>
+<figcaption><strong>図 4.4</strong>　$\theta$ 方向の辺は $r\,d\theta$、$\varphi$ 方向の辺は $r\sin\theta\,d\varphi$。$\varphi$ の辺が $\sin\theta$ 倍になるのは、$z$ 軸（北極）に近いほど経度の円が小さいから。</figcaption>
+</figure>
+<div class="warn"><span class="label">流派の違い</span>
+<p>球座標の文字は本によって逆になる。数学の本には、$\theta$ を方位角、$\varphi$ を $z$ 軸からの角とするものがある。この教材は物理・工学の本の多くに合わせた <a href="13_第13回_重積分と変数変換.html#sec-10-2">第13回 10.2</a> の流儀（$\theta$ が $z$ 軸からの角、$\varphi$ が方位角）に従う。また、円柱座標の距離を $\rho$、方位角を $\varphi$ と書く本もある。公式を他の本から引用するときは、文字の役割を先に照合する。</p>
+</div>
+
+<h3 id="sec-4-4"><span class="no">4.4</span>勾配</h3>
+<p>勾配 $\nabla f$ を、基底 $\hat{\boldsymbol e}_i$ の成分で書く。</p>
+<div class="thm"><span class="label">定理4.1（曲線座標での勾配）</span>
+<p>$$ \nabla f=\sum_{i=1}^{3}\frac{1}{h_i}\frac{\partial f}{\partial q_i}\,\hat{\boldsymbol e}_i $$</p>
+</div>
+<p>ここだけは、足し算の記号 $\sum$ を書いた。$\hat{\boldsymbol e}_i$ が場所で変わるので、同じ添字 $i$ が「成分」と「基底」の両方に出る。規約（1.2）の「同じ添字を2回」の形に見えるが、今は成分（数）と基底ベクトルの組を足している。慣れるまでは $\sum$ を残しておく。</p>
+<div class="proof">
+<p><strong>証明</strong>：① 座標を $q_i$ だけ $dq_i$ 動かす。位置は $d\boldsymbol r=h_i\,dq_i\,\hat{\boldsymbol e}_i$ だけ変わる（4.3）。</p>
+<p>② 関数 $f$ の変化を2通りに表す。(a) $q_i$ で偏微分した定義そのものから $df=\dfrac{\partial f}{\partial q_i}dq_i$。(b) 勾配の定義（<a href="23_第23回_場と勾配.html#sym-gradient">第23回</a>：$df=\nabla f\cdot d\boldsymbol r$）から $df=\nabla f\cdot(h_i\,dq_i\,\hat{\boldsymbol e}_i)=h_i\,(\nabla f\cdot\hat{\boldsymbol e}_i)\,dq_i$。</p>
+<p>③ (a)=(b) を $dq_i$ で割る：$\nabla f\cdot\hat{\boldsymbol e}_i=\dfrac1{h_i}\dfrac{\partial f}{\partial q_i}$。　<span class="meta">$\nabla f$ の $\hat{\boldsymbol e}_i$ 方向の成分が求まった</span></p>
+<p>④ $\hat{\boldsymbol e}_1,\hat{\boldsymbol e}_2,\hat{\boldsymbol e}_3$ は正規直交基底なので、任意のベクトル $\boldsymbol w$ は $\boldsymbol w=\sum_i(\boldsymbol w\cdot\hat{\boldsymbol e}_i)\hat{\boldsymbol e}_i$（第19回）。$\boldsymbol w=\nabla f$ に③を使えば定理が得られる。<span class="qed">∎</span></p>
+</div>
+<p>極・円柱・球座標では</p>
+<p>$$ \nabla f=\partial_rf\ \hat{\boldsymbol e}_r+\frac1r\partial_\theta f\ \hat{\boldsymbol e}_\theta\ (+\partial_zf\ \hat{\boldsymbol e}_z)\ ,\qquad \nabla f=\partial_rf\ \hat{\boldsymbol e}_r+\frac1r\partial_\theta f\ \hat{\boldsymbol e}_\theta+\frac1{r\sin\theta}\partial_\varphi f\ \hat{\boldsymbol e}_\varphi\ (\text{球}) $$</p>
+<p><strong>数値で確かめ。</strong>① $f=x^2+y^2=r^2$：$\nabla f=2r\,\hat{\boldsymbol e}_r+\frac1r\cdot0\cdot\hat{\boldsymbol e}_\theta=2r\,\hat{\boldsymbol e}_r$。直交座標で $\nabla f=(2x,2y)^{\mathsf T}=2r(\cos\theta,\sin\theta)^{\mathsf T}=2r\,\hat{\boldsymbol e}_r$。一致する。</p>
+<p>② $f=y=r\sin\theta$：$\partial_rf=\sin\theta$、$\frac1r\partial_\theta f=\frac1r\,r\cos\theta=\cos\theta$。$\nabla f=\sin\theta\,\hat{\boldsymbol e}_r+\cos\theta\,\hat{\boldsymbol e}_\theta=\sin\theta(\cos\theta,\sin\theta)^{\mathsf T}+\cos\theta(-\sin\theta,\cos\theta)^{\mathsf T}=(0,\ \sin^2\theta+\cos^2\theta)^{\mathsf T}=(0,1)^{\mathsf T}$。直交座標の $\nabla y=(0,1)^{\mathsf T}$ と一致する。　<span class="meta">$\nabla y$ は場所によらず一定なのに、$\hat{\boldsymbol e}_r,\hat{\boldsymbol e}_\theta$ の成分は場所で変わる。基底が動いているから</span></p>
+<p>③ $f=\theta$（方位角そのもの）：$\nabla\theta=\frac1r\hat{\boldsymbol e}_\theta$。直交座標で $\theta=\arctan(y/x)$ を偏微分した $(-y,x)^{\mathsf T}/r^2=\frac1r(-\sin\theta,\cos\theta)^{\mathsf T}$ と一致する。</p>
+<div class="why"><span class="label">ひとことで</span>曲線座標の勾配は、各座標方向に「座標の変化率 ÷ スケール因子」を並べる。$\theta$ 方向は $\frac1r\partial_\theta$ と、$r$ で割る。</div>
+
+<h3 id="sec-4-5"><span class="no">4.5</span>発散：小さな箱から出ていく量</h3>
+<p>第24回 1.2 の「小さな正方形から出ていく量」を、4.3 の小さな箱で数え直す。</p>
+<div class="thm"><span class="label">定理4.2（曲線座標での発散）</span>
+<p>$$ \nabla\cdot\boldsymbol v=\frac{1}{h_1h_2h_3}\sum_{i=1}^{3}\frac{\partial}{\partial q_i}\Bigl(\frac{h_1h_2h_3}{h_i}\,v_i\Bigr),\qquad \boldsymbol v=\sum_iv_i\hat{\boldsymbol e}_i $$</p>
+</div>
+<div class="proof">
+<p><strong>証明</strong>：点 $(q_1,q_2,q_3)$ を角とする小さな箱（辺 $h_idq_i$）から出ていく量を、6つの面で数える。</p>
+<p>① $q_1$ 方向の2つの面。面は $\hat{\boldsymbol e}_1$ に垂直で、面積は $h_2dq_2\times h_3dq_3=h_2h_3\,dq_2dq_3$。<strong>この面積は、面の置かれた場所の $h_2h_3$ の値</strong>で決まる。遠い面（$q_1+dq_1$ の位置）は外向きが $+\hat{\boldsymbol e}_1$ で、出ていく量は $v_1h_2h_3\big|_{q_1+dq_1}\,dq_2dq_3$。近い面（$q_1$ の位置）は外向きが $-\hat{\boldsymbol e}_1$ で、$-v_1h_2h_3\big|_{q_1}\,dq_2dq_3$。</p>
+<p>② 2つを足す：$\bigl[v_1h_2h_3\big|_{q_1+dq_1}-v_1h_2h_3\big|_{q_1}\bigr]dq_2dq_3\approx\dfrac{\partial(h_2h_3v_1)}{\partial q_1}\,dq_1dq_2dq_3$。　<span class="meta">1次近似（第8回）。<strong>$v_1$ だけでなく、$h_2h_3$ も $q_1$ で変わる</strong>から、積 $h_2h_3v_1$ をまとめて微分する</span></p>
+<p>③ $q_2,q_3$ 方向の面も、番号を入れ替えて、$\dfrac{\partial(h_3h_1v_2)}{\partial q_2}\,dq_1dq_2dq_3$、$\dfrac{\partial(h_1h_2v_3)}{\partial q_3}\,dq_1dq_2dq_3$。</p>
+<p>④ 6面の合計を体積 $h_1h_2h_3\,dq_1dq_2dq_3$ で割り、箱を縮める。第24回 2.1 で、「単位体積あたりに出ていく量」が発散だった。　<span class="meta">$h_2h_3=\dfrac{h_1h_2h_3}{h_1}$ などに書き直すと定理の形になる</span><span class="qed">　∎</span></p>
+</div>
+<p>極・円柱・球座標では</p>
+<p>$$ \text{極：}\ \frac1r\partial_r(rv_r)+\frac1r\partial_\theta v_\theta,\qquad \text{円柱：}\ \frac1r\partial_r(rv_r)+\frac1r\partial_\theta v_\theta+\partial_zv_z, $$
+$$ \text{球：}\ \frac1{r^2}\partial_r(r^2v_r)+\frac1{r\sin\theta}\partial_\theta(\sin\theta\,v_\theta)+\frac1{r\sin\theta}\partial_\varphi v_\varphi $$</p>
+<p>導出（球の第2項）：$h_1h_2h_3=r^2\sin\theta$、$i=2$（$\theta$）のとき $\dfrac{h_1h_2h_3}{h_\theta}=\dfrac{r^2\sin\theta}{r}=r\sin\theta$。定理は $\dfrac1{r^2\sin\theta}\partial_\theta(r\sin\theta\,v_\theta)=\dfrac1{r\sin\theta}\partial_\theta(\sin\theta\,v_\theta)$（$r$ は $\theta$ に依存しないので外に出る）。</p>
+<p>図 4.5 を見る。$v_r$ が一定でも、内側の面より外側の面のほうが長い。</p>
+<figure class="fig" id="fig-4-5">
+<svg viewBox="0 0 440 356" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="発散の導出：面の長さが違う" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>発散の導出：面の長さが違う</title>
+<rect x="0" y="0" width="440" height="356" fill="#fffdf7"/>
+<line x1="36.0" y1="338.0" x2="315.4" y2="268.3" stroke="#d6cfbf" stroke-width="1.2" stroke-dasharray="5 4"/>
+<line x1="36.0" y1="338.0" x2="221.1" y2="117.4" stroke="#d6cfbf" stroke-width="1.2" stroke-dasharray="5 4"/>
+<polygon points="181.5,301.7 181.0,299.4 180.3,297.2 179.7,294.9 179.0,292.6 178.2,290.4 177.5,288.2 176.7,286.0 175.8,283.8 175.0,281.6 174.1,279.4 173.1,277.2 172.2,275.1 171.2,273.0 170.1,270.8 169.1,268.7 167.9,266.7 166.8,264.6 165.6,262.5 164.4,260.5 163.2,258.5 161.9,256.5 160.6,254.6 159.3,252.6 158.0,250.7 156.6,248.8 155.2,246.9 153.7,245.0 152.2,243.2 150.7,241.4 149.2,239.6 147.6,237.8 146.1,236.1 144.4,234.4 142.8,232.7 141.1,231.0 139.4,229.4 137.7,227.8 136.0,226.2 134.2,224.6 132.4,223.1 209.6,131.2 212.8,133.9 216.0,136.7 219.1,139.6 222.2,142.5 225.2,145.4 228.2,148.4 231.2,151.5 234.1,154.6 237.0,157.7 239.8,160.9 242.5,164.1 245.2,167.4 247.9,170.7 250.5,174.0 253.0,177.4 255.5,180.8 258.0,184.3 260.4,187.8 262.7,191.3 265.0,194.9 267.2,198.5 269.4,202.2 271.5,205.9 273.5,209.6 275.5,213.3 277.4,217.1 279.3,220.9 281.1,224.7 282.8,228.6 284.5,232.5 286.2,236.4 287.7,240.4 289.2,244.3 290.7,248.3 292.0,252.3 293.4,256.4 294.6,260.4 295.8,264.5 296.9,268.6 298.0,272.7" fill="#fdf3f1" stroke="#6b645a" stroke-width="2"/>
+<circle cx="36.0" cy="338.0" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="148.8" y1="297.0" x2="190.1" y2="281.9" stroke="#2b3a67" stroke-width="2.6"/><path d="M183.8 288.4 L190.1 281.9 L181.2 281.0" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="137.8" y1="274.4" x2="175.1" y2="251.1" stroke="#2b3a67" stroke-width="2.6"/><path d="M170.3 258.7 L175.1 251.1 L166.1 252.1" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="122.3" y1="254.6" x2="154.0" y2="224.1" stroke="#2b3a67" stroke-width="2.6"/><path d="M150.9 232.5 L154.0 224.1 L145.4 226.9" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="280.0" y1="260.6" x2="325.8" y2="246.1" stroke="#a8322a" stroke-width="2.6"/><path d="M319.2 252.3 L325.8 246.1 L316.9 244.8" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="268.4" y1="230.6" x2="312.0" y2="210.5" stroke="#a8322a" stroke-width="2.6"/><path d="M306.2 217.4 L312.0 210.5 L303.0 210.3" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="253.1" y1="202.3" x2="293.8" y2="176.9" stroke="#a8322a" stroke-width="2.6"/><path d="M289.0 184.5 L293.8 176.9 L284.9 177.9" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="234.4" y1="176.2" x2="271.6" y2="145.9" stroke="#a8322a" stroke-width="2.6"/><path d="M267.8 154.0 L271.6 145.9 L262.8 148.0" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="212.5" y1="152.6" x2="245.6" y2="117.9" stroke="#a8322a" stroke-width="2.6"/><path d="M242.9 126.4 L245.6 117.9 L237.2 121.0" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<rect x="11.0" y="298.0" width="146.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="14.0" y="312.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">入る量：v_r · r dθ</text>
+<rect x="218.0" y="140.9" width="188.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="221.0" y="154.9" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">出る量：v_r · (r+dr) dθ</text>
+<text x="16.0" y="28.0" font-size="15" fill="#2a2723" text-anchor="start">同じ強さ v_r の外向きの流れが、内側の面と外側の面を通る</text>
+<text x="16.0" y="52.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">面が長いほど、通る量は多い</text>
+</svg>
+<figcaption><strong>図 4.5</strong>　矢印の太さ（強さ）は内側も外側も同じ。外側の面を通る矢印のほうが多い（面が長い）ので、$v_r$ が一定でもセル全体では出ていく量が入る量を上回る。これが $\partial_r v_r$ だけでなく $\partial_r(r\,v_r)$ が現れる理由。</figcaption>
+</figure>
+<p><strong>数値で確かめ（極座標）。</strong></p>
+<p>① $\boldsymbol v=r\,\hat{\boldsymbol e}_r=(x,y)^{\mathsf T}$：$\dfrac1r\partial_r(r\cdot r)=\dfrac1r\cdot2r=2$。直交座標で $\partial_xx+\partial_yy=2$。一致する。</p>
+<p>② $\boldsymbol v=\hat{\boldsymbol e}_r$（どこでも長さ1で外向き）：$\dfrac1r\partial_r(r\cdot1)=\dfrac1r$。<strong>0 ではない</strong>。直交座標で $\boldsymbol v=(x,y)^{\mathsf T}/r$、$\partial_x(x/r)+\partial_y(y/r)=\bigl(\tfrac1r-\tfrac{x^2}{r^3}\bigr)+\bigl(\tfrac1r-\tfrac{y^2}{r^3}\bigr)=\tfrac2r-\tfrac1r=\tfrac1r$。一致する。　<span class="meta">大きさが一定でも、外へ行くほど面（円周）が長くなるので、湧き出しがある。$\partial_rv_r=0$ だけを見ると見落とす</span></p>
+<p>③ 球座標：$\boldsymbol v=\dfrac{1}{r^2}\hat{\boldsymbol e}_r$（逆2乗の場）：$\dfrac1{r^2}\partial_r\bigl(r^2\cdot\tfrac1{r^2}\bigr)=\dfrac1{r^2}\partial_r(1)=0$。原点以外で湧き出しなし（<a href="24_第24回_発散と回転.html#sec-2-4">第24回 2.4</a> と同じ結論を、1行で）。</p>
+<div class="why"><span class="label">ひとことで</span>発散は「面積を含めて微分する」。小さな箱の向かい合う面の面積が違う（外側の面のほうが大きい）ので、$\partial_rv_r$ だけでなく $\partial_r(r\,v_r)$ や $\partial_r(r^2v_r)$ の形になる。</div>
+
+<h3 id="sec-4-6"><span class="no">4.6</span>ラプラシアン</h3>
+<p>ラプラシアンは勾配の発散（<a href="24_第24回_発散と回転.html#sym-laplacian">第24回 4.1</a>）だから、定理4.1 の成分 $v_i=\dfrac1{h_i}\partial_if$ を定理4.2 に入れる。</p>
+<p>① $v_i=\dfrac1{h_i}\dfrac{\partial f}{\partial q_i}$ を定理4.2 に代入：$\nabla^2f=\dfrac1{h_1h_2h_3}\displaystyle\sum_{i=1}^3\dfrac{\partial}{\partial q_i}\Bigl(\dfrac{h_1h_2h_3}{h_i}\cdot\dfrac1{h_i}\dfrac{\partial f}{\partial q_i}\Bigr)$。</p>
+<p>② $\dfrac{h_1h_2h_3}{h_i}\cdot\dfrac1{h_i}=\dfrac{h_1h_2h_3}{h_i^2}$：</p>
+<p>$$ \nabla^2f=\frac{1}{h_1h_2h_3}\sum_{i=1}^{3}\frac{\partial}{\partial q_i}\Bigl(\frac{h_1h_2h_3}{h_i^2}\,\frac{\partial f}{\partial q_i}\Bigr) $$</p>
+<p>③ 3つの座標系に当てはめる（計算は $\dfrac{h_1h_2h_3}{h_i^2}$ を求めるだけ）。球座標で $h_1h_2h_3=r^2\sin\theta$：$i=r$：$r^2\sin\theta$。$i=\theta$：$\dfrac{r^2\sin\theta}{r^2}=\sin\theta$。$i=\varphi$：$\dfrac{r^2\sin\theta}{r^2\sin^2\theta}=\dfrac1{\sin\theta}$。</p>
+<p>$$ \text{極：}\ \nabla^2f=\frac1r\partial_r(r\,\partial_rf)+\frac1{r^2}\partial_\theta^2f,\qquad \text{円柱：}\ \frac1r\partial_r(r\,\partial_rf)+\frac1{r^2}\partial_\theta^2f+\partial_z^2f, $$
+$$ \text{球：}\ \frac1{r^2}\partial_r(r^2\partial_rf)+\frac1{r^2\sin\theta}\partial_\theta(\sin\theta\,\partial_\theta f)+\frac1{r^2\sin^2\theta}\partial_\varphi^2f $$</p>
+<p>確かめ：直交座標では $h_i=1$ なので②は $\sum_i\partial_i\partial_if=f_{xx}+f_{yy}+f_{zz}$ に戻る。</p>
+<table class="tb">
+<tr><th>$f$</th><th>座標系</th><th>計算</th><th>$\nabla^2f$</th></tr>
+<tr><td>$r^2=x^2+y^2$</td><td>極</td><td>$\frac1r\partial_r(r\cdot2r)=\frac1r\cdot4r$</td><td>$4$</td></tr>
+<tr><td>$r^2\cos2\theta=x^2-y^2$</td><td>極</td><td>$\frac1r\partial_r(r\cdot2r\cos2\theta)+\frac1{r^2}(-4r^2\cos2\theta)=4\cos2\theta-4\cos2\theta$</td><td>$0$（調和）</td></tr>
+<tr><td>$r^3\cos\theta=x^3+xy^2$</td><td>極</td><td>$\frac1r\partial_r(r\cdot3r^2\cos\theta)+\frac1{r^2}(-r^3\cos\theta)=9r\cos\theta-r\cos\theta$</td><td>$8r\cos\theta=8x$</td></tr>
+<tr><td>$\ln r$</td><td>極</td><td>$\frac1r\partial_r(r\cdot\frac1r)=\frac1r\partial_r(1)$</td><td>$0$（調和）</td></tr>
+<tr><td>$r^n$</td><td>球</td><td>$\frac1{r^2}\partial_r(r^2\cdot nr^{n-1})=\frac1{r^2}n(n+1)r^n$</td><td>$n(n+1)r^{n-2}$</td></tr>
+<tr><td>$1/r$（$n=-1$）</td><td>球</td><td>上の式で $n=-1$</td><td>$0$（調和）</td></tr>
+</table>
+<p>3行目は直交座標の $\nabla^2(x^3+xy^2)=6x+2x=8x$ と一致する。5行目は、<a href="24_第24回_発散と回転.html">第24回</a>で導いた $\nabla^2r^n=n(n+1)r^{n-2}$ と一致する。（極座標で $\ln r$ が調和なのは2次元、球座標で $1/r$ が調和なのは3次元の話である。）</p>
+<p>図 4.6 を見る。ラプラシアンが0になる関数では、「面の大きさ × $\partial_r f$」が $r$ によらず一定になる。</p>
+<figure class="fig" id="fig-4-6">
+<svg viewBox="0 0 440 492" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="調和関数の面積×勾配" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>調和関数の面積×勾配</title>
+<rect x="0" y="0" width="440" height="492" fill="#fffdf7"/>
+<line x1="60.0" y1="178.0" x2="400.0" y2="178.0" stroke="#2a2723" stroke-width="1.3"/><path d="M393.7 181.0 L400.0 178.0 L393.7 175.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="178.0" x2="60.0" y2="38.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 44.3 L60.0 38.0 L57.0 44.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="170.0" y1="174.0" x2="170.0" y2="182.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="170.0" y="198.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="280.0" y1="174.0" x2="280.0" y2="182.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="280.0" y="198.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="390.0" y1="174.0" x2="390.0" y2="182.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="390.0" y="198.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="56.0" y1="152.0" x2="64.0" y2="152.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="157.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="126.0" x2="64.0" y2="126.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="131.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="56.0" y1="100.0" x2="64.0" y2="100.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="105.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<line x1="56.0" y1="74.0" x2="64.0" y2="74.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="79.0" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="404.0" y="200.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">r</tspan></text>
+<text x="74.0" y="44.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'></text>
+<text x="16.0" y="36.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">2次元（円周 ∝ r）：r ∂_r f</text>
+<polyline points="62.2,152.0 66.3,152.0 70.4,152.0 74.5,152.0 78.6,152.0 82.7,152.0 86.8,152.0 90.9,152.0 95.0,152.0 99.1,152.0 103.2,152.0 107.3,152.0 111.4,152.0 115.5,152.0 119.6,152.0 123.7,152.0 127.8,152.0 131.9,152.0 136.0,152.0 140.1,152.0 144.2,152.0 148.2,152.0 152.3,152.0 156.4,152.0 160.5,152.0 164.6,152.0 168.7,152.0 172.8,152.0 176.9,152.0 181.0,152.0 185.1,152.0 189.2,152.0 193.3,152.0 197.4,152.0 201.5,152.0 205.6,152.0 209.7,152.0 213.8,152.0 217.9,152.0 222.0,152.0 226.1,152.0 230.2,152.0 234.3,152.0 238.4,152.0 242.5,152.0 246.6,152.0 250.7,152.0 254.8,152.0 258.9,152.0 263.0,152.0 267.1,152.0 271.2,152.0 275.3,152.0 279.4,152.0 283.5,152.0 287.6,152.0 291.7,152.0 295.8,152.0 299.9,152.0 304.0,152.0 308.1,152.0 312.1,152.0 316.2,152.0 320.3,152.0 324.4,152.0 328.5,152.0 332.6,152.0 336.7,152.0 340.8,152.0 344.9,152.0 349.0,152.0 353.1,152.0 357.2,152.0 361.3,152.0 365.4,152.0 369.5,152.0 373.6,152.0 377.7,152.0 381.8,152.0 385.9,152.0 390.0,152.0" fill="none" stroke="#5f7f4f" stroke-width="3.0" stroke-linejoin="round"/>
+<polyline points="62.2,178.0 66.3,178.0 70.4,177.9 74.5,177.8 78.6,177.6 82.7,177.4 86.8,177.2 90.9,177.0 95.0,176.7 99.1,176.4 103.2,176.0 107.3,175.6 111.4,175.2 115.5,174.7 119.6,174.2 123.7,173.6 127.8,173.1 131.9,172.5 136.0,171.8 140.1,171.1 144.2,170.4 148.2,169.6 152.3,168.8 156.4,168.0 160.5,167.1 164.6,166.2 168.7,165.3 172.8,164.3 176.9,163.3 181.0,162.3 185.1,161.2 189.2,160.1 193.3,158.9 197.4,157.7 201.5,156.5 205.6,155.2 209.7,153.9 213.8,152.6 217.9,151.2 222.0,149.8 226.1,148.4 230.2,146.9 234.3,145.4 238.4,143.8 242.5,142.2 246.6,140.6 250.7,138.9 254.8,137.2 258.9,135.5 263.0,133.7 267.1,131.9 271.2,130.1 275.3,128.2 279.4,126.3 283.5,124.3 287.6,122.4 291.7,120.3 295.8,118.3 299.9,116.2 304.0,114.1 308.1,111.9 312.1,109.7 316.2,107.5 320.3,105.2 324.4,102.9 328.5,100.5 332.6,98.1 336.7,95.7 340.8,93.3 344.9,90.8 349.0,88.3 353.1,85.7 357.2,83.1 361.3,80.5 365.4,77.8 369.5,75.1 373.6,72.3 377.7,69.6 381.8,66.7 385.9,63.9 390.0,61.0" fill="none" stroke="#a8322a" stroke-width="3.0" stroke-linejoin="round"/>
+<text x="70.0" y="216.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">f = ln r　（∇²f = 0）</text>
+<text x="70.0" y="236.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">f = r²/4　（∇²f = 1）</text>
+<line x1="60.0" y1="422.0" x2="400.0" y2="422.0" stroke="#2a2723" stroke-width="1.3"/><path d="M393.7 425.0 L400.0 422.0 L393.7 419.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="422.0" x2="60.0" y2="282.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 288.3 L60.0 282.0 L57.0 288.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="170.0" y1="418.0" x2="170.0" y2="426.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="170.0" y="442.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="280.0" y1="418.0" x2="280.0" y2="426.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="280.0" y="442.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="390.0" y1="418.0" x2="390.0" y2="426.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="390.0" y="442.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="56.0" y1="396.0" x2="64.0" y2="396.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="401.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="370.0" x2="64.0" y2="370.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="375.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="56.0" y1="344.0" x2="64.0" y2="344.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="349.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<line x1="56.0" y1="318.0" x2="64.0" y2="318.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="323.0" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="404.0" y="444.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">r</tspan></text>
+<text x="74.0" y="288.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'></text>
+<text x="16.0" y="280.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">3次元（球面 ∝ r²）：r² ∂_r f</text>
+<polyline points="62.2,396.0 66.3,396.0 70.4,396.0 74.5,396.0 78.6,396.0 82.7,396.0 86.8,396.0 90.9,396.0 95.0,396.0 99.1,396.0 103.2,396.0 107.3,396.0 111.4,396.0 115.5,396.0 119.6,396.0 123.7,396.0 127.8,396.0 131.9,396.0 136.0,396.0 140.1,396.0 144.2,396.0 148.2,396.0 152.3,396.0 156.4,396.0 160.5,396.0 164.6,396.0 168.7,396.0 172.8,396.0 176.9,396.0 181.0,396.0 185.1,396.0 189.2,396.0 193.3,396.0 197.4,396.0 201.5,396.0 205.6,396.0 209.7,396.0 213.8,396.0 217.9,396.0 222.0,396.0 226.1,396.0 230.2,396.0 234.3,396.0 238.4,396.0 242.5,396.0 246.6,396.0 250.7,396.0 254.8,396.0 258.9,396.0 263.0,396.0 267.1,396.0 271.2,396.0 275.3,396.0 279.4,396.0 283.5,396.0 287.6,396.0 291.7,396.0 295.8,396.0 299.9,396.0 304.0,396.0 308.1,396.0 312.1,396.0 316.2,396.0 320.3,396.0 324.4,396.0 328.5,396.0 332.6,396.0 336.7,396.0 340.8,396.0 344.9,396.0 349.0,396.0 353.1,396.0 357.2,396.0 361.3,396.0 365.4,396.0 369.5,396.0 373.6,396.0 377.7,396.0 381.8,396.0 385.9,396.0 390.0,396.0" fill="none" stroke="#5f7f4f" stroke-width="3.0" stroke-linejoin="round"/>
+<polyline points="62.2,422.0 66.3,422.0 70.4,422.0 74.5,422.0 78.6,422.0 82.7,421.9 86.8,421.9 90.9,421.8 95.0,421.7 99.1,421.6 103.2,421.5 107.3,421.3 111.4,421.1 115.5,420.9 119.6,420.6 123.7,420.3 127.8,420.0 131.9,419.6 136.0,419.1 140.1,418.7 144.2,418.1 148.2,417.5 152.3,416.9 156.4,416.2 160.5,415.4 164.6,414.5 168.7,413.6 172.8,412.6 176.9,411.6 181.0,410.5 185.1,409.2 189.2,407.9 193.3,406.6 197.4,405.1 201.5,403.5 205.6,401.9 209.7,400.2 213.8,398.3 217.9,396.4 222.0,394.3 226.1,392.2 230.2,389.9 234.3,387.5 238.4,385.0 242.5,382.4 246.6,379.7 250.7,376.9 254.8,373.9 258.9,370.8 263.0,367.5 267.1,364.2 271.2,360.7 275.3,357.0 279.4,353.3 283.5,349.3 287.6,345.3 291.7,341.0 295.8,336.7 299.9,332.1 304.0,327.5 308.1,322.6 312.1,317.6 316.2,312.4 320.3,307.1 324.4,301.6 328.5,295.9" fill="none" stroke="#a8322a" stroke-width="3.0" stroke-linejoin="round"/>
+<text x="70.0" y="460.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">f = −1/r　（∇²f = 0）</text>
+<text x="70.0" y="480.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">f = r²/6　（∇²f = 1）</text>
+</svg>
+<figcaption><strong>図 4.6</strong>　$\nabla^2f=\frac1{(\text{面})}\partial_r\bigl((\text{面})\,\partial_rf\bigr)$ の中身が「面 × $\partial_rf$」。これが一定（傾き0）なら $\nabla^2f=0$。$\ln r$ と $-1/r$ は、それぞれ2次元と3次元で、その条件を満たす。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>ラプラシアンは「勾配の成分（÷$h_i$）を発散の公式に入れた」もの。$r$ の項が $\frac1r\partial_r(r\partial_r)$、$\frac1{r^2}\partial_r(r^2\partial_r)$ の形になるのは、箱の面積が $r$ や $r^2$ に比例して増えるから。</div>
+
+<h3 id="sec-4-7"><span class="no">4.7</span>回転：小さな長方形のまわりを回る量</h3>
+<div class="thm"><span class="label">定理4.3（曲線座標での回転）</span>
+<p>$$ (\nabla\times\boldsymbol v)_1=\frac{1}{h_2h_3}\Bigl[\frac{\partial(h_3v_3)}{\partial q_2}-\frac{\partial(h_2v_2)}{\partial q_3}\Bigr] $$</p>
+<p>第2成分、第3成分は添字を $1\to2\to3\to1$ とずらす（巡回）：$(\nabla\times\boldsymbol v)_2=\dfrac{1}{h_3h_1}\Bigl[\dfrac{\partial(h_1v_1)}{\partial q_3}-\dfrac{\partial(h_3v_3)}{\partial q_1}\Bigr]$、$(\nabla\times\boldsymbol v)_3=\dfrac{1}{h_1h_2}\Bigl[\dfrac{\partial(h_2v_2)}{\partial q_1}-\dfrac{\partial(h_1v_1)}{\partial q_2}\Bigr]$。</p>
+</div>
+<div class="proof">
+<p><strong>証明</strong>：第1成分を求める。(第24回 3.1 で、回転の第1成分は「$\hat{\boldsymbol e}_1$ に垂直な小さな面のまわりを反時計回りに回る量 ÷ 面積」だった。) 面は $q_2,q_3$ 方向に張る辺 $h_2dq_2$、$h_3dq_3$ の小さな長方形。$q_1$ は止める。</p>
+<p>① $q_2$ 方向の2辺。近い辺（$q_3$ の位置）を $+\hat{\boldsymbol e}_2$ の向きに進む：辺に沿った成分 $v_2$、長さ $h_2dq_2$。量は $(h_2v_2)\big|_{q_3}dq_2$。遠い辺（$q_3+dq_3$ の位置）は逆向きに進む：$-(h_2v_2)\big|_{q_3+dq_3}dq_2$。足す：$-\dfrac{\partial(h_2v_2)}{\partial q_3}\,dq_2dq_3$。</p>
+<p>② $q_3$ 方向の2辺。$q_2+dq_2$ の位置を $+\hat{\boldsymbol e}_3$ の向きに進む：$(h_3v_3)\big|_{q_2+dq_2}dq_3$。$q_2$ の位置を逆向き：$-(h_3v_3)\big|_{q_2}dq_3$。足す：$+\dfrac{\partial(h_3v_3)}{\partial q_2}\,dq_2dq_3$。</p>
+<p>③ 4辺の合計 $=\Bigl[\dfrac{\partial(h_3v_3)}{\partial q_2}-\dfrac{\partial(h_2v_2)}{\partial q_3}\Bigr]dq_2dq_3$。面積 $h_2h_3\,dq_2dq_3$ で割ると定理の式。　<span class="meta">第24回 1.3 の $Q_x-P_y$ と同じ形。$P\to h_2v_2$、$Q\to h_3v_3$ とおき換えただけで、$h$ を掛けるのは辺の長さ $h_idq_i$ を含めるため</span><span class="qed">　∎</span></p>
+</div>
+<p>円柱座標では $(h_r,h_\theta,h_z)=(1,r,1)$ なので</p>
+<p>$$ (\nabla\times\boldsymbol v)_r=\frac1r\partial_\theta v_z-\partial_zv_\theta,\quad (\nabla\times\boldsymbol v)_\theta=\partial_zv_r-\partial_rv_z,\quad (\nabla\times\boldsymbol v)_z=\frac1r\bigl[\partial_r(r\,v_\theta)-\partial_\theta v_r\bigr] $$</p>
+<p>導出（第3成分）：定理4.3 の第3成分で $h_1=h_r=1$，$h_2=h_\theta=r$：$\dfrac{1}{1\cdot r}\Bigl[\partial_r(r\,v_\theta)-\partial_\theta(1\cdot v_r)\Bigr]$。球座標は $h=(1,r,r\sin\theta)$ を入れて得られる：$(\nabla\times\boldsymbol v)_r=\dfrac1{r\sin\theta}\bigl[\partial_\theta(\sin\theta\,v_\varphi)-\partial_\varphi v_\theta\bigr]$、$(\nabla\times\boldsymbol v)_\theta=\dfrac1r\Bigl[\dfrac1{\sin\theta}\partial_\varphi v_r-\partial_r(r\,v_\varphi)\Bigr]$、$(\nabla\times\boldsymbol v)_\varphi=\dfrac1r\bigl[\partial_r(r\,v_\theta)-\partial_\theta v_r\bigr]$。</p>
+<p>図 4.7 を見る。極座標の小さな箱のまわりを反時計回りに一周して、回る量を数える。</p>
+<figure class="fig" id="fig-4-7">
+<svg viewBox="0 0 440 356" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="回転の導出：箱のまわりの循環" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>回転の導出：箱のまわりの循環</title>
+<rect x="0" y="0" width="440" height="356" fill="#fffdf7"/>
+<line x1="36.0" y1="338.0" x2="315.4" y2="268.3" stroke="#d6cfbf" stroke-width="1.2" stroke-dasharray="5 4"/>
+<line x1="36.0" y1="338.0" x2="221.1" y2="117.4" stroke="#d6cfbf" stroke-width="1.2" stroke-dasharray="5 4"/>
+<polygon points="181.5,301.7 181.0,299.4 180.3,297.2 179.7,294.9 179.0,292.6 178.2,290.4 177.5,288.2 176.7,286.0 175.8,283.8 175.0,281.6 174.1,279.4 173.1,277.2 172.2,275.1 171.2,273.0 170.1,270.8 169.1,268.7 167.9,266.7 166.8,264.6 165.6,262.5 164.4,260.5 163.2,258.5 161.9,256.5 160.6,254.6 159.3,252.6 158.0,250.7 156.6,248.8 155.2,246.9 153.7,245.0 152.2,243.2 150.7,241.4 149.2,239.6 147.6,237.8 146.1,236.1 144.4,234.4 142.8,232.7 141.1,231.0 139.4,229.4 137.7,227.8 136.0,226.2 134.2,224.6 132.4,223.1 209.6,131.2 212.8,133.9 216.0,136.7 219.1,139.6 222.2,142.5 225.2,145.4 228.2,148.4 231.2,151.5 234.1,154.6 237.0,157.7 239.8,160.9 242.5,164.1 245.2,167.4 247.9,170.7 250.5,174.0 253.0,177.4 255.5,180.8 258.0,184.3 260.4,187.8 262.7,191.3 265.0,194.9 267.2,198.5 269.4,202.2 271.5,205.9 273.5,209.6 275.5,213.3 277.4,217.1 279.3,220.9 281.1,224.7 282.8,228.6 284.5,232.5 286.2,236.4 287.7,240.4 289.2,244.3 290.7,248.3 292.0,252.3 293.4,256.4 294.6,260.4 295.8,264.5 296.9,268.6 298.0,272.7" fill="#f6f1e2" stroke="#6b645a" stroke-width="2"/>
+<circle cx="36.0" cy="338.0" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="187.4" y1="300.3" x2="292.2" y2="274.1" stroke="#5f7f4f" stroke-width="3.2"/><path d="M283.7 281.2 L292.2 274.1 L281.4 271.9" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<polyline points="295.9,264.9 294.5,259.9 292.9,255.1 291.3,250.2 289.6,245.4 287.8,240.6 285.9,235.8 283.9,231.1 281.9,226.5 279.7,221.8 277.5,217.2 275.1,212.7 272.7,208.2 270.2,203.7 267.6,199.3 265.0,194.9 262.2,190.6 259.4,186.4 256.5,182.1 253.5,178.0 250.4,173.9 247.3,169.9 244.0,165.9 240.7,162.0 237.4,158.1 233.9,154.4 230.4,150.6 226.8,147.0 223.2,143.4 219.5,139.9" fill="none" stroke="#a8322a" stroke-width="3.2" stroke-linejoin="round"/>
+<line x1="219.5" y1="139.9" x2="215.7" y2="136.5" stroke="#a8322a" stroke-width="3.2"/><path d="M226.2 139.6 L215.7 136.5 L219.8 146.7" fill="none" stroke="#a8322a" stroke-width="3.2"/>
+<line x1="205.7" y1="135.8" x2="136.3" y2="218.5" stroke="#5f7f4f" stroke-width="3.2"/><path d="M139.0 207.8 L136.3 218.5 L146.3 214.0" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<polyline points="135.8,226.0 137.9,227.9 140.0,229.9 142.0,231.9 144.0,233.9 146.0,236.0 147.9,238.1 149.7,240.2 151.6,242.4 153.4,244.6 155.1,246.8 156.8,249.1 158.5,251.4 160.1,253.8 161.7,256.1 163.2,258.5 164.7,260.9 166.1,263.4 167.5,265.9 168.9,268.4 170.2,270.9 171.4,273.5 172.6,276.0 173.7,278.6 174.8,281.2 175.9,283.9 176.9,286.5 177.8,289.2 178.7,291.9 179.6,294.6" fill="none" stroke="#2b3a67" stroke-width="3.2" stroke-linejoin="round"/>
+<line x1="179.6" y1="294.6" x2="180.4" y2="297.4" stroke="#2b3a67" stroke-width="3.2"/><path d="M173.0 289.2 L180.4 297.4 L182.2 286.5" fill="none" stroke="#2b3a67" stroke-width="3.2"/>
+<rect x="276.0" y="170.9" width="165.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="279.0" y="184.9" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">+ (r v_θ)|r+dr · dθ</text>
+<rect x="11.0" y="282.0" width="146.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="14.0" y="296.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">− (r v_θ)|r · dθ</text>
+<rect x="244.8" y="299.2" width="73.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="247.8" y="313.2" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">+ v_r dr</text>
+<rect x="88.0" y="149.1" width="78.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="91.0" y="163.1" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">− v_r dr</text>
+<text x="16.0" y="28.0" font-size="15" fill="#2a2723" text-anchor="start">反時計回りに一周：辺に沿った成分 × 辺の長さ</text>
+<text x="16.0" y="54.0" font-size="18" fill="#a8322a" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>合計 = [∂</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">r</tspan><tspan dy="-5.0">(</tspan><tspan font-style="italic">r</tspan><tspan> </tspan><tspan font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">θ</tspan><tspan dy="-5.0">) − ∂</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">θ</tspan><tspan dy="-5.0" font-style="italic">v</tspan><tspan dy="5.0" font-size="12.6" font-style="italic">r</tspan><tspan dy="-5.0">] </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">r</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">θ</tspan></text>
+</svg>
+<figcaption><strong>図 4.7</strong>　外側の弧では辺の長さが $(r+dr)\,d\theta$ になるので、$v_\theta$ に $r$ を掛けたもの（$r\,v_\theta$）を内外で引き算する。箱の面積 $r\,dr\,d\theta$ で割ると、回転の $z$ 成分 $\frac1r[\partial_r(rv_\theta)-\partial_\theta v_r]$ になる。</figcaption>
+</figure>
+<p><strong>数値で確かめ（円柱・極座標、$z$ 成分）。</strong></p>
+<p>① 回る剛体：$\boldsymbol v=\omega r\,\hat{\boldsymbol e}_\theta$（$v_\theta=\omega r$，$v_r=0$）。$\dfrac1r\partial_r(r\cdot\omega r)=\dfrac1r\cdot2\omega r=2\omega$。第24回 3.4 の「回転する剛体の回転は角速度の2倍」と一致する。</p>
+<p>② 渦なしの渦：$\boldsymbol v=\dfrac1r\hat{\boldsymbol e}_\theta=\dfrac{(-y,x)^{\mathsf T}}{r^2}$。$\dfrac1r\partial_r\bigl(r\cdot\tfrac1r\bigr)=\dfrac1r\partial_r(1)=0$。回って見えるのに回転は $0$。（<a href="24_第24回_発散と回転.html#sec-3-5">第24回 3.5</a>）</p>
+<p>③ 一般に $v_\theta=r^k$：$\dfrac1r\partial_r(r^{k+1})=(k+1)r^{k-1}$。$k=1$ で $2$（①，$\omega=1$）、$k=-1$ で $0$（②）。</p>
+<div class="why"><span class="label">ひとことで</span>回転は、辺に沿った成分に<strong>辺の長さの倍率 $h$ を掛けて</strong>から差を取る。$r$ 方向に並んだ渦では $r\,v_\theta$ の変化が効くので、$v_\theta=1/r$ のとき $r\,v_\theta=1$ で一定、回転 $0$。</div>
+<p>図 4.8 を見る。$r\,v_\theta$ を $r$ の関数として描く。回転 $\frac1r\partial_r(rv_\theta)$ は、この曲線の傾きを $r$ で割ったものである。</p>
+<figure class="fig" id="fig-4-8">
+<svg viewBox="0 0 440 384" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="r v_θ のグラフと回転" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>r v_θ のグラフと回転</title>
+<rect x="0" y="0" width="440" height="384" fill="#fffdf7"/>
+<line x1="60.0" y1="280.0" x2="400.0" y2="280.0" stroke="#2a2723" stroke-width="1.3"/><path d="M393.7 283.0 L400.0 280.0 L393.7 277.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="280.0" x2="60.0" y2="20.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 26.3 L60.0 20.0 L57.0 26.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="192.0" y1="276.0" x2="192.0" y2="284.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="192.0" y="300.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="324.0" y1="276.0" x2="324.0" y2="284.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="324.0" y="300.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="56.0" y1="241.5" x2="64.0" y2="241.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="246.5" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="203.1" x2="64.0" y2="203.1" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="208.1" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="56.0" y1="164.6" x2="64.0" y2="164.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="169.6" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<line x1="56.0" y1="126.2" x2="64.0" y2="126.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="131.2" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<line x1="56.0" y1="87.7" x2="64.0" y2="87.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="92.7" font-size="14" fill="#6b645a" text-anchor="end">5</text>
+<line x1="56.0" y1="49.2" x2="64.0" y2="49.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="54.2" font-size="14" fill="#6b645a" text-anchor="end">6</text>
+<text x="404.0" y="302.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">r</tspan></text>
+<text x="74.0" y="26.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">r</tspan> <tspan font-style="italic">v</tspan>_θ</text>
+<polyline points="60.0,280.0 63.3,280.0 66.6,279.9 69.9,279.8 73.2,279.6 76.5,279.4 79.8,279.1 83.1,278.8 86.4,278.5 89.7,278.1 93.0,277.6 96.3,277.1 99.6,276.5 102.9,275.9 106.2,275.3 109.5,274.6 112.8,273.8 116.1,273.1 119.4,272.2 122.7,271.3 126.0,270.4 129.3,269.4 132.6,268.4 135.9,267.3 139.2,266.2 142.5,265.0 145.8,263.8 149.1,262.5 152.4,261.2 155.7,259.8 159.0,258.4 162.3,256.9 165.6,255.4 168.9,253.8 172.2,252.2 175.5,250.6 178.8,248.8 182.1,247.1 185.4,245.3 188.7,243.4 192.0,241.5 195.3,239.6 198.6,237.6 201.9,235.6 205.2,233.5 208.5,231.3 211.8,229.1 215.1,226.9 218.4,224.6 221.7,222.3 225.0,219.9 228.3,217.5 231.6,215.0 234.9,212.5 238.2,209.9 241.5,207.3 244.8,204.6 248.1,201.9 251.4,199.1 254.7,196.3 258.0,193.5 261.3,190.6 264.6,187.6 267.9,184.6 271.2,181.5 274.5,178.4 277.8,175.3 281.1,172.1 284.4,168.8 287.7,165.6 291.0,162.2 294.3,158.8 297.6,155.4 300.9,151.9 304.2,148.4 307.5,144.8 310.8,141.2 314.1,137.5 317.4,133.8 320.7,130.0 324.0,126.2 327.3,122.3 330.6,118.4 333.9,114.4 337.2,110.4 340.5,106.3 343.8,102.2 347.1,98.1 350.4,93.8 353.7,89.6 357.0,85.3 360.3,80.9 363.6,76.5 366.9,72.1 370.2,67.6 373.5,63.1 376.8,58.5 380.1,53.8 383.4,49.1 386.7,44.4 390.0,39.6" fill="none" stroke="#a8322a" stroke-width="3.2" stroke-linejoin="round"/>
+<polyline points="62.6,241.5 68.1,241.5 73.6,241.5 79.0,241.5 84.5,241.5 89.9,241.5 95.4,241.5 100.8,241.5 106.3,241.5 111.7,241.5 117.2,241.5 122.7,241.5 128.1,241.5 133.6,241.5 139.0,241.5 144.5,241.5 149.9,241.5 155.4,241.5 160.8,241.5 166.3,241.5 171.8,241.5 177.2,241.5 182.7,241.5 188.1,241.5 193.6,241.5 199.0,241.5 204.5,241.5 210.0,241.5 215.4,241.5 220.9,241.5 226.3,241.5 231.8,241.5 237.2,241.5 242.7,241.5 248.1,241.5 253.6,241.5 259.1,241.5 264.5,241.5 270.0,241.5 275.4,241.5 280.9,241.5 286.3,241.5 291.8,241.5 297.2,241.5 302.7,241.5 308.2,241.5 313.6,241.5 319.1,241.5 324.5,241.5 330.0,241.5 335.4,241.5 340.9,241.5 346.4,241.5 351.8,241.5 357.3,241.5 362.7,241.5 368.2,241.5 373.6,241.5 379.1,241.5 384.5,241.5 390.0,241.5" fill="none" stroke="#2b3a67" stroke-width="3.2" stroke-linejoin="round"/>
+<rect x="90.2" y="171.5" width="162.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="250.0" y="185.5" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">v_θ = r　（回る剛体）</text>
+<rect x="241.8" y="217.5" width="193.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="244.8" y="231.5" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">v_θ = 1/r　（渦なしの渦）</text>
+<text x="16.0" y="316.0" font-size="15" fill="#2a2723" text-anchor="start">回転 = (1/r) × 曲線の傾き</text>
+<text x="16.0" y="340.0" font-size="15" fill="#a8322a" text-anchor="start">朱：傾き 2r　→　回転 2（一定）</text>
+<text x="16.0" y="364.0" font-size="15" fill="#2b3a67" text-anchor="start">藍：傾き 0　→　回転 0（回って見えても渦なし）</text>
+</svg>
+<figcaption><strong>図 4.8</strong>　朱（$v_\theta=r$）は $r\,v_\theta=r^2$ で傾きが $2r$、回転は $\frac1r\cdot2r=2$。藍（$v_\theta=1/r$）は $r\,v_\theta=1$ で傾きが0、回転は0。</figcaption>
+</figure>
+
+<h3 id="sec-4-8"><span class="no">4.8</span>確かめのまとめ</h3>
+<ul>
+<li><strong>直交座標に戻る</strong>：$h_1=h_2=h_3=1$ なら、定理4.1〜4.3 は第23・24回の公式に一致する。</li>
+<li><strong>座標を替えても同じ数</strong>：4.4〜4.7 の数値例は、直交座標で計算した値と一致した。スカラー（発散・ラプラシアン）の値は座標に依存しない。ベクトル（勾配・回転）は成分の見かけが変わるが、同じベクトルである。</li>
+<li><strong>次元</strong>：$\nabla$ の項はどれも「$f$ の単位 ÷ 長さ」。$\frac1r\partial_\theta f$ は $\theta$ が無次元（角度）で $r$ が長さだから、長さの逆数が付く。$\partial_\theta f$ だけでは長さの逆数にならず、勾配の成分として不適切（$\frac1r$ が必要な理由）。</li>
+</ul>
+
+<h3 id="sec-4-9"><span class="no">4.9</span>注意：基底が動くと、成分ごとの計算が通用しなくなる</h3>
+<p>直交座標では、ベクトル場の各成分に別々に演算を施して（たとえば $\nabla^2\boldsymbol v=(\nabla^2v_1,\nabla^2v_2,\nabla^2v_3)^{\mathsf T}$ と）構わない。曲線座標では、<strong>基底ベクトル $\hat{\boldsymbol e}_i$ そのものが座標で変わる</strong>ので、そうはいかない。極座標で確かめる。</p>
+<p>① $\hat{\boldsymbol e}_r=(\cos\theta,\sin\theta)^{\mathsf T}$ を $\theta$ で微分：$\partial_\theta\hat{\boldsymbol e}_r=(-\sin\theta,\cos\theta)^{\mathsf T}=\hat{\boldsymbol e}_\theta$。$\hat{\boldsymbol e}_\theta=(-\sin\theta,\cos\theta)^{\mathsf T}$ を微分：$\partial_\theta\hat{\boldsymbol e}_\theta=(-\cos\theta,-\sin\theta)^{\mathsf T}=-\hat{\boldsymbol e}_r$。0 ではない。</p>
+<p>② ベクトル場 $\boldsymbol v=\hat{\boldsymbol e}_r$（成分は $v_r=1$，$v_\theta=0$）。「成分ごとのラプラシアン」は $(\nabla^2 1,\nabla^2 0)=(0,0)$。</p>
+<p>③ 一方、本当のベクトルラプラシアンは、直交座標の成分ごとに計算した値。$\hat{\boldsymbol e}_r=(x,y)^{\mathsf T}/r$ の $x$ 成分 $x/r$ の 2次元ラプラシアンは $-x/r^3$（計算：<code>draft/check_27.py</code>）、$y$ 成分も $-y/r^3$。したがって $\nabla^2\hat{\boldsymbol e}_r=-\dfrac{1}{r^2}\hat{\boldsymbol e}_r\ne\boldsymbol 0$。</p>
+<p>④ 成分ごとの値 $\boldsymbol 0$ と、正しい値 $-\hat{\boldsymbol e}_r/r^2$ は一致しない。曲線座標のベクトルラプラシアンは、$\nabla(\nabla\cdot\boldsymbol v)-\nabla\times(\nabla\times\boldsymbol v)$（3.4）の形で計算する。</p>
+<p>同じ理由で、<strong>添字記法の $(\nabla\times\boldsymbol v)_i=\varepsilon_{ijk}\partial_jv_k$ は、直交座標の成分でだけ成り立つ</strong>。曲線座標の成分に $\partial_j$ を当てると、$\partial_j\hat{\boldsymbol e}_k$ の項が抜け落ちる。曲線座標では定理4.1〜4.3 の公式を使う。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p><strong>誤解1：「曲線座標の勾配の $\theta$ 成分は $\partial_\theta f$」</strong>。誤り。$\frac1r$ が付く（4.4）。<strong>誤解2：「$\nabla\cdot\boldsymbol v=\partial_rv_r+\partial_\theta v_\theta$」</strong>。誤り。面積の変化の分だけ項が増える（4.5）。<strong>誤解3：「球座標のラプラシアンは $\partial_r^2+\partial_\theta^2+\partial_\varphi^2$」</strong>。誤り。各項に係数が付き、$\partial_r^2$ の代わりに $\frac1{r^2}\partial_r(r^2\partial_r)$。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>全体像と次回への入口</h2>
+<h3 id="sec-5-1"><span class="no">5.1</span>この回の地図</h3>
+<ul>
+<li><strong>添字記法</strong>：同じ添字が2回出たら足す（$\sum$ を書かない）。自由添字が式の型を決める。</li>
+<li><strong>$\delta_{ij}$</strong>：添字を取り替えて消える。<strong>$\varepsilon_{ijk}$</strong>：外積・回転・行列式の符号。<strong>$\varepsilon\varepsilon=\delta\delta-\delta\delta$</strong>：恒等式の証明の中心。</li>
+<li><strong>曲線座標</strong>：スケール因子 $h_i$ と座標方向の単位ベクトル $\hat{\boldsymbol e}_i$。公式は、第24回と同じ「小さな箱の出入りを面積込みで数える」ことから出る。</li>
+</ul>
+<h3 id="sec-5-2"><span class="no">5.2</span>次回への入口</h3>
+<p>次の第25回「線積分と面積分」では、曲線に沿って足し合わせる量（仕事）と、面を通り抜ける量（流束）を定義する。第24回 1.2・1.3 で「小さな正方形の4辺で数えた」量を、一般の曲線・曲面に広げる。その次の第26回「ガウスとストークスの定理」では、小さな箱を貼り合わせて、発散と回転を積分に結びつける。曲線座標の $h_i$ は、そこで線素・面積要素 $d\boldsymbol r$、$d\boldsymbol S$ を書くときにも使う。</p>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_27.py）。</p>
+
+<div class="ex"><span class="label">例題1（A 確認：規約を読む）</span>
+<p>$\boldsymbol a=(1,2,-1)^{\mathsf T}$、$\boldsymbol b=(3,0,4)^{\mathsf T}$、$A=\begin{pmatrix}1&2\\3&4\end{pmatrix}$、$\boldsymbol v=(5,6)^{\mathsf T}$ とする。次の値を、$\sum$ を書き戻してから求めよ。(1) $a_ib_i$　(2) 3次元での $\delta_{ii}$　(3) $(A\boldsymbol v)_i$（$i=1,2$）　(4) $A_{ii}$（2次元）</p>
+<p><strong>解答</strong></p>
+<p>① (1) $i$ が2回 → 足す。S0：$\sum_{i=1}^3a_ib_i=1\cdot3+2\cdot0+(-1)\cdot4=3+0-4=-1$。自由添字なし → 数。</p>
+<p>② (2) $\delta_{ii}=\delta_{11}+\delta_{22}+\delta_{33}=1+1+1=3$。</p>
+<p>③ (3) $A_{ij}v_j$ の $j$ が2回 → 足す。$i=1$：$A_{11}v_1+A_{12}v_2=1\cdot5+2\cdot6=17$。$i=2$：$A_{21}v_1+A_{22}v_2=3\cdot5+4\cdot6=39$。$A\boldsymbol v=(17,39)^{\mathsf T}$。</p>
+<p>④ (4) $A_{11}+A_{22}=1+4=5$。　<span class="meta">次元が2なので和は2項</span></p>
+<p>⑤ 確かめ：(1) は内積 $\boldsymbol a\cdot\boldsymbol b$、(3) は第16回の行列とベクトルの積、(4) はトレース。どれも $\sum$ を書いた計算と同じ値。</p>
+</div>
+
+<div class="ex"><span class="label">例題2（A 確認：$\varepsilon_{ijk}$ で外積を計算する）</span>
+<p>(1) $\varepsilon_{132}$、$\varepsilon_{312}$、$\varepsilon_{113}$ を求めよ。(2) $\boldsymbol a=(2,1,0)^{\mathsf T}$、$\boldsymbol b=(0,3,1)^{\mathsf T}$ について $(\boldsymbol a\times\boldsymbol b)_i=\varepsilon_{ijk}a_jb_k$ の3成分を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (1) $(1,3,2)$ は $(1,2,3)$ の 2 と 3 を入れ替えた並びなので $-1$。$(3,1,2)$ は $(1,2,3)$ を巡回させた並びで $+1$。$(1,1,3)$ は 1 が重なるので $0$。</p>
+<p>② (2) $i=1$：$\varepsilon\ne0$ は $(j,k)=(2,3),(3,2)$。$\varepsilon_{123}a_2b_3+\varepsilon_{132}a_3b_2=1\cdot1\cdot1-1\cdot0\cdot3=1$。</p>
+<p>③ $i=2$：$(j,k)=(3,1),(1,3)$。$\varepsilon_{231}a_3b_1+\varepsilon_{213}a_1b_3=0\cdot0-2\cdot1=-2$。</p>
+<p>④ $i=3$：$(j,k)=(1,2),(2,1)$。$\varepsilon_{312}a_1b_2+\varepsilon_{321}a_2b_1=2\cdot3-1\cdot0=6$。</p>
+<p>⑤ $\boldsymbol a\times\boldsymbol b=(1,-2,6)^{\mathsf T}$。確かめ：$\boldsymbol a\cdot(\boldsymbol a\times\boldsymbol b)=2\cdot1+1\cdot(-2)+0=0$、$\boldsymbol b\cdot(\boldsymbol a\times\boldsymbol b)=0-6+6=0$。外積は両方に直交する（第5回）。</p>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：積の規則を添字で示す）</span>
+<p>$\nabla\cdot(\phi\boldsymbol v)=\nabla\phi\cdot\boldsymbol v+\phi\,\nabla\cdot\boldsymbol v$ を添字記法で示し、$\phi=xy$、$\boldsymbol v=(x,y,z)^{\mathsf T}$ で数値を確かめよ。</p>
+<p><strong>解答</strong></p>
+<p>① 左辺：$\partial_i(\phi v_i)$（発散は $\partial_iv_i$、1.4）。</p>
+<p>② 積の微分規則：$=(\partial_i\phi)\,v_i+\phi\,\partial_iv_i$。</p>
+<p>③ 読み戻す：$(\partial_i\phi)v_i=\nabla\phi\cdot\boldsymbol v$（内積）、$\partial_iv_i=\nabla\cdot\boldsymbol v$。<span class="qed">∎</span></p>
+<p>④ 数値：$\phi\boldsymbol v=(x^2y,\ xy^2,\ xyz)^{\mathsf T}$。$\partial_x(x^2y)+\partial_y(xy^2)+\partial_z(xyz)=2xy+2xy+xy=5xy$。</p>
+<p>⑤ 右辺：$\nabla\phi=(y,x,0)^{\mathsf T}$ なので $\nabla\phi\cdot\boldsymbol v=yx+xy+0=2xy$。$\nabla\cdot\boldsymbol v=3$ なので $\phi\nabla\cdot\boldsymbol v=3xy$。足して $5xy$。④と一致する。</p>
+</div>
+
+<div class="ex"><span class="label">例題4（B 標準：$\nabla\times\bigl(F(r)\,\boldsymbol r\bigr)=\boldsymbol 0$）</span>
+<p>$r=\|\boldsymbol r\|=\sqrt{x_jx_j}$、$F$ は微分できる1変数関数とする。$\nabla\times\bigl(F(r)\,\boldsymbol r\bigr)=\boldsymbol 0$ を添字記法で示せ。（中心力の場の回転は $0$ という事実。）</p>
+<p><strong>解答</strong></p>
+<p>① $\partial_ir$ を求める。$r^2=x_jx_j$ を $\partial_i$ で微分：$2r\,\partial_ir=2x_i$（1.4 の⑥）。よって $\partial_ir=x_i/r$（$r\ne0$）。</p>
+<p>② 連鎖律（第12回）：$\partial_jF(r)=F'(r)\,\partial_jr=F'(r)\,x_j/r$。</p>
+<p>③ 回転の第 $i$ 成分：$\varepsilon_{ijk}\,\partial_j\bigl(F\,x_k\bigr)=\varepsilon_{ijk}(\partial_jF)\,x_k+\varepsilon_{ijk}\,F\,\partial_jx_k$。　<span class="meta">積の微分規則</span></p>
+<p>④ 第1項：②を入れて $\dfrac{F'}{r}\,\varepsilon_{ijk}\,x_jx_k$。ここで $x_jx_k$ は $j\leftrightarrow k$ で変わらない（対称）、$\varepsilon_{ijk}$ は反対称なので、3.3 と同じく和は $0$。</p>
+<p>⑤ 第2項：$\partial_jx_k=\delta_{jk}$（1.4 ③）なので $F\,\varepsilon_{ijk}\delta_{jk}=F\,\varepsilon_{ijj}=0$（$\varepsilon$ は添字が重なると $0$）。</p>
+<p>⑥ 第1項も第2項も $0$ だから、$\nabla\times(F\boldsymbol r)=\boldsymbol 0$。確かめ：$F=r^2$ なら $F\boldsymbol r=(x^2+y^2+z^2)(x,y,z)^{\mathsf T}$ で、第3成分は $\partial_x\bigl(r^2y\bigr)-\partial_y\bigl(r^2x\bigr)=2xy-2xy=0$（$\partial_xr^2=2x$、$\partial_yr^2=2y$）。</p>
+</div>
+
+<div class="ex"><span class="label">例題5（B 標準：平面の調和関数 $r^n\cos n\theta$）</span>
+<p>極座標のラプラシアン $\nabla^2f=\dfrac1r\partial_r(r\,\partial_rf)+\dfrac1{r^2}\partial_\theta^2f$ を使って、整数 $n\ge1$ について $f=r^n\cos n\theta$ が調和（$\nabla^2f=0$）であることを示せ。$n=3$ のとき、直交座標の式にも直せ。</p>
+<p><strong>解答</strong></p>
+<p>① $\partial_rf=n\,r^{n-1}\cos n\theta$。　<span class="meta">$\theta$ を止めて $r$ で微分</span></p>
+<p>② $r\,\partial_rf=n\,r^n\cos n\theta$。これを $r$ で微分：$\partial_r(r\,\partial_rf)=n^2r^{n-1}\cos n\theta$。　<span class="meta">$\partial_r(r^n)=nr^{n-1}$</span></p>
+<p>③ 第1項：$\dfrac1r\cdot n^2r^{n-1}\cos n\theta=n^2r^{n-2}\cos n\theta$。</p>
+<p>④ $\partial_\theta f=-n\,r^n\sin n\theta$、$\partial_\theta^2f=-n^2r^n\cos n\theta$。第2項：$\dfrac1{r^2}\cdot(-n^2r^n\cos n\theta)=-n^2r^{n-2}\cos n\theta$。</p>
+<p>⑤ 足して $n^2r^{n-2}\cos n\theta-n^2r^{n-2}\cos n\theta=0$。<span class="qed">∎</span></p>
+<p>⑥ $n=3$：$r^3\cos3\theta=r^3(4\cos^3\theta-3\cos\theta)=4x^3-3xr^2=4x^3-3x(x^2+y^2)=x^3-3xy^2$（$x=r\cos\theta$ を使用）。直交座標で確かめ：$\nabla^2(x^3-3xy^2)=6x-6x=0$。一致する。</p>
+</div>
+
+<div class="ex"><span class="label">例題6（B 標準：管の中の流れの回転）</span>
+<p>半径 $a$ の円管の中の流れ $\boldsymbol v=(a^2-r^2)\,\hat{\boldsymbol e}_z$（$r$ は管の軸からの距離、円柱座標）の、発散と回転を求めよ。直交座標の式でも確かめよ。</p>
+<p><strong>解答</strong></p>
+<p>① 成分：$v_r=0$、$v_\theta=0$、$v_z=a^2-r^2$。</p>
+<p>② 発散（4.5、円柱）：$\dfrac1r\partial_r(r\cdot0)+\dfrac1r\partial_\theta0+\partial_zv_z=0+0+0=0$。$v_z$ は $z$ に依存しない。流れは湧き出さない。</p>
+<p>③ 回転（4.7、円柱）：$(\nabla\times\boldsymbol v)_r=\frac1r\partial_\theta v_z-\partial_zv_\theta=0$。$(\nabla\times\boldsymbol v)_\theta=\partial_zv_r-\partial_rv_z=0-(-2r)=2r$。$(\nabla\times\boldsymbol v)_z=\frac1r[\partial_r(r\cdot0)-\partial_\theta0]=0$。</p>
+<p>④ よって $\nabla\times\boldsymbol v=2r\,\hat{\boldsymbol e}_\theta$。管の壁に近いほど渦が強い。</p>
+<p>⑤ 確かめ（直交座標）：$\boldsymbol v=(0,0,a^2-x^2-y^2)^{\mathsf T}$。$\nabla\times\boldsymbol v=(\partial_yv_3,\ -\partial_xv_3,\ 0)^{\mathsf T}=(-2y,\ 2x,\ 0)^{\mathsf T}$。$2r\hat{\boldsymbol e}_\theta=2r(-y/r,\ x/r,\ 0)^{\mathsf T}=(-2y,2x,0)^{\mathsf T}$。一致する。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>演習問題</h2>
+<p class="meta">A 確認／B 標準（定期試験水準）／C 発展。解答はクリックで開く。問題・解答はすべて本教材の自作で、数値は draft/check_27.py で検算した（公式の解答集とは照合していない）。C 発展は OpenStax Calculus Vol.3 の 6 章（ベクトル解析）、Mathematics for Machine Learning の 5 章に関連する内容だが、原問題の引用はしていない。</p>
+
+<div class="box"><span class="label">問1（A 確認：規約を読む）</span>$\boldsymbol a=(1,2,3)^{\mathsf T}$、$\boldsymbol b=(1,1,1)^{\mathsf T}$ として、(1) $\delta_{ij}a_ib_j$　(2) $\delta_{ij}\delta_{ij}$（3次元）を求めよ。
+<details><summary>解答</summary>
+<p>① (1) $\delta_{ij}a_ib_j$：$\delta_{ij}b_j=b_i$ なので $a_ib_i=1+2+3=6$。S0：$i,j$ の二重和で、$i=j$ の3項 $a_1b_1+a_2b_2+a_3b_3$ だけが残る。</p>
+<p>② (2) $\delta_{ij}\delta_{ij}$：$\delta_{ij}\delta_{ij}=\delta_{ii}=3$（$\delta_{ij}\delta_{jk}=\delta_{ik}$ で $k=i$）。S0：$i=j$ の3項が $1\cdot1$ なので $3$。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認：規約の使い方の判定）</span>次の式のうち、規約として正しいものを選び、正しいものは自由添字を答えよ。(1) $a_ib_jc_j$　(2) $a_ib_ic_i$　(3) $a_ib_j=c_i$　(4) $\partial_i\partial_if$　(5) $A_{ij}B_{jk}C_{kl}$
+<details><summary>解答</summary>
+<p>① (1) 正しい。$j$ が2回 → 足す。自由添字は $i$。$=a_i(\boldsymbol b\cdot\boldsymbol c)$。</p>
+<p>② (2) 誤り（規約の範囲外）。$i$ が3回出る（1.6 誤解1）。</p>
+<p>③ (3) 誤り。左辺の自由添字は $i,j$、右辺は $i$ だけで、そろっていない（規則3）。</p>
+<p>④ (4) 正しい。$i$ が2回、自由添字なし。ラプラシアン $\nabla^2f$。</p>
+<p>⑤ (5) 正しい。$j,k$ が2回ずつ。自由添字は $i,l$。行列の積 $ABC$ の $(i,l)$ 成分。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認：$\varepsilon_{ijk}$ の値）</span>(1) $\varepsilon_{231}$、$\varepsilon_{321}$、$\varepsilon_{221}$ を求めよ。(2) $\varepsilon_{ijk}$ の27個の値のうち、$+1$、$-1$、$0$ はそれぞれ何個か。
+<details><summary>解答</summary>
+<p>① (1) $\varepsilon_{231}$：$(2,3,1)$ は巡回で $+1$。$\varepsilon_{321}$：$(3,2,1)$ は $(1,2,3)$ の 1 と 3 を入れ替えた並びで $-1$。$\varepsilon_{221}$：2 が重なるので $0$。</p>
+<p>② (2) $+1$ が $(1,2,3),(2,3,1),(3,1,2)$ の3個、$-1$ が $(1,3,2),(2,1,3),(3,2,1)$ の3個。残りは $27-6=21$ 個が $0$。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認：スケール因子と実際の長さ）</span>(1) 円柱座標で $r=3$ のとき、$\theta$ を $d\theta=0.2$ だけ動かすと、点はおよそ何だけ動くか。(2) 球座標で $r=4$、$\theta=\pi/6$ のとき、$\varphi$ を $d\varphi=0.1$ だけ動かすと、およそ何だけ動くか。
+<details><summary>解答</summary>
+<p>① (1) $h_\theta=r=3$。$h_\theta\,d\theta=3\times0.2=0.6$。</p>
+<p>② (2) $h_\varphi=r\sin\theta=4\sin(\pi/6)=4\times\tfrac12=2$。$h_\varphi\,d\varphi=2\times0.1=0.2$。</p>
+<p>③ 確かめ：(2) の点は $z$ 軸から $r\sin\theta=2$ の距離にあり、$\varphi$ を $0.1$ 回すと半径2の円周上を弧 $2\times0.1=0.2$ 動く。一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準：スカラー三重積）</span>$\boldsymbol a\cdot(\boldsymbol b\times\boldsymbol c)=\varepsilon_{ijk}a_ib_jc_k$ を示し、$\boldsymbol a=(1,0,2)^{\mathsf T}$、$\boldsymbol b=(0,1,1)^{\mathsf T}$、$\boldsymbol c=(1,1,0)^{\mathsf T}$ の値を求めよ。行列式との関係も確かめよ。
+<details><summary>解答</summary>
+<p>① $(\boldsymbol b\times\boldsymbol c)_i=\varepsilon_{ijk}b_jc_k$（2.3）。内積は $a_i(\boldsymbol b\times\boldsymbol c)_i$ だから $a_i\varepsilon_{ijk}b_jc_k=\varepsilon_{ijk}a_ib_jc_k$。<span class="qed">∎</span></p>
+<p>② 数値：$\boldsymbol b\times\boldsymbol c=(1\cdot0-1\cdot1,\ 1\cdot1-0\cdot0,\ 0\cdot1-1\cdot1)^{\mathsf T}=(-1,1,-1)^{\mathsf T}$。$\boldsymbol a\cdot(\boldsymbol b\times\boldsymbol c)=-1+0-2=-3$。</p>
+<p>③ 行列式（行が $\boldsymbol a,\boldsymbol b,\boldsymbol c$）：$\det\begin{pmatrix}1&0&2\\0&1&1\\1&1&0\end{pmatrix}=1\cdot(0-1)-0+2\cdot(0-1)=-1-2=-3$。一致する（2.3 の $\det A=\varepsilon_{ijk}A_{1i}A_{2j}A_{3k}$）。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準：外積の長さ）</span>$|\boldsymbol a\times\boldsymbol b|^2=|\boldsymbol a|^2|\boldsymbol b|^2-(\boldsymbol a\cdot\boldsymbol b)^2$ を $\varepsilon$-$\delta$ 恒等式で示し、$\boldsymbol a=(1,2,3)^{\mathsf T}$、$\boldsymbol b=(0,1,1)^{\mathsf T}$ で確かめよ。
+<details><summary>解答</summary>
+<p>① $|\boldsymbol a\times\boldsymbol b|^2=(\varepsilon_{ijk}a_jb_k)(\varepsilon_{ilm}a_lb_m)$。　<span class="meta">自由添字 $i$ の成分を2乗して $i$ について足す。$j,k,l,m$ も別々の名前にしておく</span></p>
+<p>② 定理2.1：$\varepsilon_{ijk}\varepsilon_{ilm}=\delta_{jl}\delta_{km}-\delta_{jm}\delta_{kl}$。代入：$(\delta_{jl}\delta_{km}-\delta_{jm}\delta_{kl})\,a_jb_ka_lb_m$。</p>
+<p>③ 第1項：$\delta_{jl}$ で $l\to j$、$\delta_{km}$ で $m\to k$：$a_jb_ka_jb_k=(a_ja_j)(b_kb_k)=|\boldsymbol a|^2|\boldsymbol b|^2$。第2項：$\delta_{jm}$ で $m\to j$、$\delta_{kl}$ で $l\to k$：$a_jb_ka_kb_j=(a_jb_j)(a_kb_k)=(\boldsymbol a\cdot\boldsymbol b)^2$。<span class="qed">∎</span></p>
+<p>④ 数値：$\boldsymbol a\times\boldsymbol b=(2\cdot1-3\cdot1,\ 3\cdot0-1\cdot1,\ 1\cdot1-2\cdot0)^{\mathsf T}=(-1,-1,1)^{\mathsf T}$、$|\cdot|^2=3$。右辺：$|\boldsymbol a|^2=14$、$|\boldsymbol b|^2=2$、$\boldsymbol a\cdot\boldsymbol b=0+2+3=5$。$14\cdot2-25=3$。一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準：ラグランジュの恒等式）</span>$(\boldsymbol a\times\boldsymbol b)\cdot(\boldsymbol c\times\boldsymbol d)=(\boldsymbol a\cdot\boldsymbol c)(\boldsymbol b\cdot\boldsymbol d)-(\boldsymbol a\cdot\boldsymbol d)(\boldsymbol b\cdot\boldsymbol c)$ を示せ。$\boldsymbol a=(1,0,0)^{\mathsf T}$，$\boldsymbol b=(0,1,0)^{\mathsf T}$，$\boldsymbol c=(1,1,0)^{\mathsf T}$，$\boldsymbol d=(0,1,1)^{\mathsf T}$ で確かめよ。
+<details><summary>解答</summary>
+<p>① 左辺 $=(\varepsilon_{ijk}a_jb_k)(\varepsilon_{ilm}c_ld_m)=\varepsilon_{ijk}\varepsilon_{ilm}\,a_jb_kc_ld_m$。</p>
+<p>② 定理2.1：$(\delta_{jl}\delta_{km}-\delta_{jm}\delta_{kl})\,a_jb_kc_ld_m$。</p>
+<p>③ 第1項：$l\to j$、$m\to k$：$a_jc_j\cdot b_kd_k=(\boldsymbol a\cdot\boldsymbol c)(\boldsymbol b\cdot\boldsymbol d)$。第2項：$m\to j$、$l\to k$：$a_jd_j\cdot b_kc_k=(\boldsymbol a\cdot\boldsymbol d)(\boldsymbol b\cdot\boldsymbol c)$。<span class="qed">∎</span></p>
+<p>④ 数値：$\boldsymbol a\times\boldsymbol b=(0,0,1)^{\mathsf T}$、$\boldsymbol c\times\boldsymbol d=(1\cdot1-0\cdot1,\ 0\cdot0-1\cdot1,\ 1\cdot1-1\cdot0)^{\mathsf T}=(1,-1,1)^{\mathsf T}$。内積 $=1$。右辺：$(\boldsymbol a\cdot\boldsymbol c)(\boldsymbol b\cdot\boldsymbol d)-(\boldsymbol a\cdot\boldsymbol d)(\boldsymbol b\cdot\boldsymbol c)=1\cdot1-0\cdot1=1$。一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準：$\nabla\cdot(\nabla\phi\times\nabla\psi)=0$）</span>これを添字記法で示せ。
+<details><summary>解答</summary>
+<p>① $\partial_i\bigl(\varepsilon_{ijk}\,\partial_j\phi\,\partial_k\psi\bigr)$。　<span class="meta">$(\boldsymbol a\times\boldsymbol b)_i=\varepsilon_{ijk}a_jb_k$ に $a_j=\partial_j\phi$、$b_k=\partial_k\psi$</span></p>
+<p>② 積の微分規則：$=\varepsilon_{ijk}(\partial_i\partial_j\phi)(\partial_k\psi)+\varepsilon_{ijk}(\partial_j\phi)(\partial_i\partial_k\psi)$。</p>
+<p>③ 第1項：$\partial_i\partial_j\phi$ は $i\leftrightarrow j$ で対称、$\varepsilon_{ijk}$ は反対称 → 和は $0$（3.3 と同じ）。第2項：$\partial_i\partial_k\psi$ は $i\leftrightarrow k$ で対称、$\varepsilon_{ijk}$ は $i,k$ について反対称 → 和は $0$。</p>
+<p>④ したがって $0+0=0$。<span class="qed">∎</span>　<span class="meta">仮定：$\phi,\psi$ は2階偏微分が連続</span></p>
+</details></div>
+
+<div class="box"><span class="label">問9（B 標準：$\nabla^2r^n$ を添字で）</span>$\nabla^2r^n=n(n+1)\,r^{n-2}$ を、$\partial_ir=x_i/r$ から添字記法で導け。（直交座標、$r\ne0$）
+<details><summary>解答</summary>
+<p>① $\partial_ir^n=n\,r^{n-1}\partial_ir=n\,r^{n-1}\dfrac{x_i}r=n\,r^{n-2}x_i$。　<span class="meta">連鎖律</span></p>
+<p>② $\nabla^2r^n=\partial_i(n\,r^{n-2}x_i)=n\bigl[(\partial_ir^{n-2})\,x_i+r^{n-2}\,\partial_ix_i\bigr]$。　<span class="meta">積の微分規則</span></p>
+<p>③ $\partial_ir^{n-2}=(n-2)\,r^{n-4}x_i$（①の $n\to n-2$）。$(\partial_ir^{n-2})x_i=(n-2)\,r^{n-4}x_ix_i=(n-2)\,r^{n-4}r^2=(n-2)\,r^{n-2}$。</p>
+<p>④ $\partial_ix_i=\delta_{ii}=3$。よって②の括弧の中 $=(n-2)r^{n-2}+3r^{n-2}=(n+1)\,r^{n-2}$。</p>
+<p>⑤ したがって $\nabla^2r^n=n(n+1)\,r^{n-2}$。球座標の 4.6 の表の値と一致する。<span class="qed">∎</span></p>
+</details></div>
+
+<div class="box"><span class="label">問10（C 発展：放物線座標のスケール因子とラプラシアン）</span>平面の座標 $(u,v)$ を $x=\dfrac{u^2-v^2}2$、$y=uv$ で定める。(1) 2つの座標曲線が直交することを示し、$h_u,h_v$ を求めよ。(2) $\nabla^2f$ を $u,v$ で表せ。(3) $f=x$ が調和であることを確かめよ。
+<details><summary>解答</summary>
+<p>① (1) $\partial_u\boldsymbol r=(u,\ v)^{\mathsf T}$、$\partial_v\boldsymbol r=(-v,\ u)^{\mathsf T}$。内積 $-uv+vu=0$ で直交。</p>
+<p>② $h_u=\sqrt{u^2+v^2}$、$h_v=\sqrt{v^2+u^2}$。2つとも同じ値 $h:=\sqrt{u^2+v^2}$。</p>
+<p>③ (2) 2次元版の公式（4.6 で $q_3$ なし）：$\nabla^2f=\dfrac1{h_uh_v}\Bigl[\partial_u\bigl(\tfrac{h_uh_v}{h_u^2}\partial_uf\bigr)+\partial_v\bigl(\tfrac{h_uh_v}{h_v^2}\partial_vf\bigr)\Bigr]$。$h_u=h_v=h$ だから $\dfrac{h_uh_v}{h_u^2}=1$。よって $\nabla^2f=\dfrac1{u^2+v^2}\bigl(\partial_u^2f+\partial_v^2f\bigr)$。</p>
+<p>④ (3) $f=x=(u^2-v^2)/2$：$\partial_u^2f=1$、$\partial_v^2f=-1$。和 $0$。よって $\nabla^2f=0$。直交座標で $\nabla^2x=0$ と一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問11（C 発展：湧き出しも渦もない2つの流れ）</span>平面の極座標（$r\ne0$）で、$\boldsymbol v_1=\dfrac1r\hat{\boldsymbol e}_r$（点源）と $\boldsymbol v_2=\dfrac1r\hat{\boldsymbol e}_\theta$（渦糸）の発散と回転（$z$ 成分）を求め、それぞれ $\nabla\ln r$、$\nabla\theta$ に等しいことを確かめよ。
+<details><summary>解答</summary>
+<p>① $\boldsymbol v_1$：$v_r=1/r$，$v_\theta=0$。発散 $\dfrac1r\partial_r\bigl(r\cdot\tfrac1r\bigr)+\dfrac1r\partial_\theta0=0$。回転（$z$ 成分）$\dfrac1r\bigl[\partial_r(r\cdot0)-\partial_\theta\tfrac1r\bigr]=0$。</p>
+<p>② $\boldsymbol v_2$：$v_r=0$，$v_\theta=1/r$。発散 $\dfrac1r\partial_r(0)+\dfrac1r\partial_\theta\bigl(\tfrac1r\bigr)=0$。回転 $\dfrac1r\bigl[\partial_r\bigl(r\cdot\tfrac1r\bigr)-0\bigr]=0$。</p>
+<p>③ 勾配（4.4）：$\nabla\ln r=\partial_r(\ln r)\hat{\boldsymbol e}_r+\frac1r\partial_\theta(\ln r)\hat{\boldsymbol e}_\theta=\frac1r\hat{\boldsymbol e}_r=\boldsymbol v_1$。$\nabla\theta=\partial_r\theta\,\hat{\boldsymbol e}_r+\frac1r\partial_\theta\theta\,\hat{\boldsymbol e}_\theta=\frac1r\hat{\boldsymbol e}_\theta=\boldsymbol v_2$。</p>
+<p>④ 読み取り：どちらも勾配場なので回転は $0$（第24回 3.6）。発散も $0$ なのは、$\ln r$ も $\theta$ も調和関数だから（$\nabla^2\ln r=0$、$\nabla^2\theta=\frac1{r^2}\partial_\theta^2\theta=0$）。　<span class="meta">$\theta$ は 1 周すると $2\pi$ 増えて元の値に戻らないので、全域で定義された関数ではない。この点は第25・26回で重要になる</span></p>
+</details></div>
+
+<div class="box"><span class="label">問12（C 発展：球座標で調和な関数）</span>(1) $f=r\cos\theta\ (=z)$ と (2) $f=r^2\dfrac{3\cos^2\theta-1}{2}\ (=\tfrac12(2z^2-x^2-y^2))$ が、球座標のラプラシアンで調和になることを確かめよ。
+<details><summary>解答</summary>
+<p>① (1) $\partial_rf=\cos\theta$。$\dfrac1{r^2}\partial_r(r^2\cos\theta)=\dfrac{2\cos\theta}r$。$\partial_\theta f=-r\sin\theta$。$\dfrac1{r^2\sin\theta}\partial_\theta(\sin\theta\cdot(-r\sin\theta))=\dfrac1{r^2\sin\theta}(-r\cdot2\sin\theta\cos\theta)=-\dfrac{2\cos\theta}r$。$\varphi$ に依存しない。足して $0$。</p>
+<p>② (2) $P(\theta)=\tfrac12(3\cos^2\theta-1)$ とおく。$f=r^2P$。動径部分：$\dfrac1{r^2}\partial_r(r^2\cdot2rP)=\dfrac1{r^2}\cdot6r^2P=6P$。</p>
+<p>③ 角度部分：$P'=-3\cos\theta\sin\theta$。$\sin\theta\,P'=-3\cos\theta\sin^2\theta$。$\theta$ で微分：$-3(-\sin^3\theta+2\sin\theta\cos^2\theta)=3\sin^3\theta-6\sin\theta\cos^2\theta$。$\dfrac1{r^2\sin\theta}\cdot r^2\cdot(\ldots)=3\sin^2\theta-6\cos^2\theta$。</p>
+<p>④ 足す：$6P+3\sin^2\theta-6\cos^2\theta=9\cos^2\theta-3+3-3\cos^2\theta-6\cos^2\theta=0$。　<span class="meta">$\sin^2\theta=1-\cos^2\theta$ を使った</span></p>
+<p>⑤ 確かめ（直交座標）：$\nabla^2\tfrac12(2z^2-x^2-y^2)=\tfrac12(4-2-2)=0$。一致する。</p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 「同じ添字が1つの項に2回出たら足す」という規約を、$\sum$ を書き戻して（S0 に戻って）説明できる。3回出る式は規約の外と言える。</li>
+<li>□ 自由添字とダミー添字を見分け、両辺で自由添字がそろっているかを確かめられる。ダミー添字は書き換えてよいと言える。</li>
+<li>□ 内積・行列とベクトルの積・行列の積・トレース・勾配・発散・ラプラシアンを添字で書ける（$\partial_if$、$\partial_iv_i$、$\partial_i\partial_if$）。</li>
+<li>□ $\delta_{ij}$ で添字を取り替えて消す計算ができる（$\delta_{ij}a_j=a_i$、$\delta_{ii}=3$、$\partial_ix_j=\delta_{ij}$）。</li>
+<li>□ $\varepsilon_{ijk}$ の27個の値（$+1$ が3、$-1$ が3、$0$ が21）を言え、外積・回転・行列式を書ける。</li>
+<li>□ $\varepsilon_{ijk}\varepsilon_{ilm}=\delta_{jl}\delta_{km}-\delta_{jm}\delta_{kl}$ を使い、$\boldsymbol a\times(\boldsymbol b\times\boldsymbol c)$ や $\nabla\times(\nabla\times\boldsymbol v)$ を証明できる。</li>
+<li>□ $\nabla\times\nabla\phi=\boldsymbol 0$ と $\nabla\cdot(\nabla\times\boldsymbol v)=0$ を「反対称×対称＝0」で説明できる。</li>
+<li>□ スケール因子 $h_i$ と座標方向の単位ベクトル $\hat{\boldsymbol e}_i$ を、$\partial\boldsymbol r/\partial q_i$ から求められる。極 $(1,r)$、円柱 $(1,r,1)$、球 $(1,r,r\sin\theta)$ を導ける。</li>
+<li>□ 曲線座標の勾配・発散・ラプラシアン・回転の公式が、小さな箱の出入り（面積込み）から出ることを説明できる。</li>
+<li>□ 基底ベクトルが場所で変わるために、成分ごとの計算（$\nabla^2\boldsymbol v$ や $\varepsilon_{ijk}\partial_jv_k$）が曲線座標では通用しないことを言える。</li>
+</ul></div>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第47回 最小二乗法</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero plain">
+<div class="ttl"><p class="vol">第47回</p><h1>最小二乗法</h1></div>
+</figure>
+<p class="lead">測定点が一直線に並ばないとき、「いちばんよく合う直線」をどう決めるか。ずれ（残差）を2乗して足した量 $S$ を最小にする、という決め方が<strong>最小二乗法</strong>である。その答えは、微分で求めても、行列の勾配で求めても、「残差が各列に直交する」という幾何で求めても、同じ連立方程式 $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$（<strong>正規方程式</strong>）に行き着く。第19回の射影と第22回の特異値分解がここで合流し、第36回で予告したフーリエ級数の部分和の性質もこの回で回収する。記号は1つずつ、途中の式変形は1行1操作で追う。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：測定点が一直線に乗らない（式の数が未知数より多い連立方程式 $A\boldsymbol x=\boldsymbol b$ に解がない）→ 「ぴったり」はあきらめて、ずれ $\boldsymbol r=\boldsymbol b-A\boldsymbol x$ の<strong>長さの2乗</strong> $\|\boldsymbol r\|^2$ を最小にする $\boldsymbol x$ を答えにする（最小二乗解）→ 3点・2変数の例で $S(a,b)$ を偏微分して $0$ とおくと、2本の連立方程式が出る → 行列で書き直すと $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$（正規方程式）→ 一般の $A$ でも $\|A\boldsymbol x-\boldsymbol b\|^2$ を展開して勾配が $\boldsymbol 0$ とおくと同じ式 → しかも、この式は $A^{\mathsf T}(\boldsymbol b-A\boldsymbol x)=\boldsymbol 0$、すなわち<strong>「残差が $A$ の像に直交する」</strong>と書き直せる → 最小二乗は、$\boldsymbol b$ を $\operatorname{im}A$ に射影することだった（第19回 5.5）→ 列が従属なら解は無数にあり、その中で最短のものが $A^{+}\boldsymbol b$（第22回）→ 応用として直線回帰（重心を通る）、多項式の当てはめ、決定係数 $R^2$。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>第1回から続く約束どおり、新しい記号は緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。この回の中心の省略は<strong>「3点分の長い和 $(y_1-a-bx_1)^2+\cdots$」を $\|\boldsymbol b-A\boldsymbol x\|^2$ の1つの記号にまとめた</strong>ことなので、<a href="#abbr-lsq">2.4 の省略の段階</a>で S0 から S3 まで1段ずつ並べる。以後この箱にリンクして使う。</p>
+<p>この回は、<a href="19_第19回_内積・直交・射影.html#sym-projection">第19回の射影</a>・<a href="19_第19回_内積・直交・射影.html#sym-proj-matrix">射影行列</a>・<a href="19_第19回_内積・直交・射影.html#sym-qr">QR分解</a>、<a href="22_第22回_特異値分解.html#sym-pseudoinverse">第22回の擬似逆行列</a>、<a href="11_第11回_偏微分.html#sym-partial">第11回の偏微分</a>と<a href="23_第23回_場と勾配.html#sym-gradient">第23回の勾配</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-rank">第17回のランク・核・像</a>を<strong>合わせて使う回</strong>である。使うたびにリンクを張るので、忘れていても元の説明に戻れる。すべての計算は<strong>先に3点の具体例</strong>で手を動かし、そのあと文字の式に進む。</p>
+<p>第36回の 3.5 は、フーリエ級数の部分和を「後の回の最小二乗と同じ形」と予告していた。その約束はこの回の <a href="#sec-4-5">4.5</a> で果たす。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で<strong>新しく説明する記号</strong>と、<strong>前の回で説明済みの記号</strong>を分けて並べる。右の列の「→」で説明のある場所へ飛べる。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$r_i$、$\boldsymbol r$（残差）</td><td>アール・アイ、アール</td><td>測定値と、直線が予想する値との縦のずれ</td><td><a href="#sym-residual">→1.2</a></td></tr>
+<tr><td>$S(a,b)$（残差平方和）</td><td>エス・エー・ビー</td><td>残差を2乗して全部足した量</td><td><a href="#sym-rss">→1.3</a></td></tr>
+<tr><td>$\|\boldsymbol v\|^2$（長さの2乗）</td><td>ノルム・ブイ・の・にじょう</td><td>ベクトルの成分の2乗の和（$=\boldsymbol v^{\mathsf T}\boldsymbol v$）</td><td><a href="#sym-sqnorm">→1.3</a></td></tr>
+<tr><td>$\min$、$\operatorname{arg\,min}$</td><td>ミン、アーグ・ミン</td><td>最小の値／最小にする入力</td><td><a href="#sym-argmin">→1.4</a></td></tr>
+<tr><td>$\hat{\boldsymbol x}$（最小二乗解）</td><td>エックス・ハット</td><td>$\|\boldsymbol b-A\boldsymbol x\|^2$ を最小にする $\boldsymbol x$</td><td><a href="#sym-hat">→2.3</a></td></tr>
+<tr><td>$A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$（正規方程式）</td><td>せいきほうていしき</td><td>最小二乗解が満たす連立方程式</td><td><a href="#sym-normal-eq">→2.3</a></td></tr>
+<tr><td>$\bar x$、$\bar y$（平均）</td><td>エックス・バー</td><td>データの平均値</td><td><a href="#sym-mean">→5.1</a></td></tr>
+<tr><td>$R^2$（決定係数）</td><td>アール・にじょう</td><td>ばらつきのうち、直線で説明できた割合</td><td><a href="#sym-r2">→5.3</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出た記号（リンクで戻れる）</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>初出</th></tr>
+<tr><td>$=$、$:=$</td><td>等しい／左の名前を右の式で決める</td><td><a href="01_第1回_数式を文として読む.html#sym-equal">第1回 2.1</a>、<a href="01_第1回_数式を文として読む.html#sym-defeq">第1回 2.2</a></td></tr>
+<tr><td>$\in$、$\forall$、$\exists$、$\Rightarrow$、$\Leftrightarrow$</td><td>要素である／すべての／存在する／ならば／同値</td><td><a href="02_第2回_集合と論理.html#sym-in">第2回</a>、<a href="02_第2回_集合と論理.html#sym-forall">第2回</a>、<a href="02_第2回_集合と論理.html#sym-exists">第2回</a>、<a href="02_第2回_集合と論理.html#sym-implies">第2回</a>、<a href="02_第2回_集合と論理.html#sym-iff">第2回</a></td></tr>
+<tr><td>$\displaystyle\sum$（総和）</td><td>足し合わせ</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a></td></tr>
+<tr><td>太字 $\boldsymbol v$、成分、$A\in\mathbb R^{m\times n}$、$A^{\mathsf T}$（転置）、$I$</td><td>数の組／その中の数／$m$ 行 $n$ 列の行列／行と列を入れ替えた行列／単位行列</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-vector">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-component">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-identity">第5回</a></td></tr>
+<tr><td>$\|\boldsymbol a\|$（ノルム）、内積 $\boldsymbol a\cdot\boldsymbol b$</td><td>ベクトルの長さ／成分ごとの積の和</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">第5回</a>、<a href="19_第19回_内積・直交・射影.html#sym-norm-induced">第19回</a></td></tr>
+<tr><td>極値、臨界点</td><td>極大・極小／微分が0になる点</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-extremum">第8回</a>、<a href="08_第8回_微分を使う・近似と極値.html#sym-critical-point">第8回</a></td></tr>
+<tr><td>偏微分 $\dfrac{\partial f}{\partial x}$</td><td>他の変数を固定して1つの変数で微分</td><td><a href="11_第11回_偏微分.html#sym-partial">第11回</a></td></tr>
+<tr><td>$\operatorname{span}$、一次独立、基底</td><td>張る空間／冗長がない／座標軸の役目をする組</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-span">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-linear-independent">第15回</a>、<a href="15_第15回_ベクトル空間と基底.html#sym-basis">第15回</a></td></tr>
+<tr><td>$A\boldsymbol x$、$AB$、$A^{-1}$</td><td>列の一次結合／写像の合成／逆の写像</td><td><a href="16_第16回_行列は線形写像.html#sym-matvec">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-matmul">第16回</a>、<a href="16_第16回_行列は線形写像.html#sym-inverse-matrix">第16回</a></td></tr>
+<tr><td>$\operatorname{rank}A$、$\ker A$、$\operatorname{im}A$</td><td>主成分の数／$A\boldsymbol x=\boldsymbol 0$ の解全体／$A\boldsymbol x$ の取りうる値の全体</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-rank">第17回</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-ker">第17回</a>、<a href="17_第17回_連立一次方程式とランク.html#sym-im">第17回</a></td></tr>
+<tr><td>直交 $\perp$、直交補空間 $W^{\perp}$、射影 $\operatorname{proj}$、射影行列 $P$、QR分解</td><td>内積が0／$W$ のすべてに直交するベクトル全体／影を落とす／射影を行列で書いたもの／$A=QR$</td><td><a href="19_第19回_内積・直交・射影.html#sym-orthogonal">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-orth-complement">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-projection">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-proj-matrix">第19回</a>、<a href="19_第19回_内積・直交・射影.html#sym-qr">第19回</a></td></tr>
+<tr><td>対称行列、正定値 $\succ0$、2次形式</td><td>$A^{\mathsf T}=A$／$\boldsymbol x\neq\boldsymbol 0$ で $\boldsymbol x^{\mathsf T}A\boldsymbol x\gt0$／$\boldsymbol x^{\mathsf T}A\boldsymbol x$</td><td><a href="21_第21回_対角化と二次形式.html#sym-symmetric">第21回</a>、<a href="21_第21回_対角化と二次形式.html#sym-pos-def">第21回</a>、<a href="21_第21回_対角化と二次形式.html#sym-quadratic-form">第21回</a></td></tr>
+<tr><td>特異値 $\sigma_i$、特異値分解、擬似逆行列 $A^{+}$</td><td>$A^{\mathsf T}A$ の固有値の平方根／$A=U\Sigma V^{\mathsf T}$／逆行列の代わり</td><td><a href="22_第22回_特異値分解.html#sym-singular-value">第22回</a>、<a href="22_第22回_特異値分解.html#sym-svd">第22回</a>、<a href="22_第22回_特異値分解.html#sym-pseudoinverse">第22回</a></td></tr>
+<tr><td>勾配 $\nabla f$</td><td>各変数での偏微分を並べたベクトル</td><td><a href="23_第23回_場と勾配.html#sym-gradient">第23回</a>、<a href="23_第23回_場と勾配.html#sym-nabla">第23回</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>「いちばんよく合う」を式にする</h2>
+
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：ぴったりの解がない連立方程式</h3>
+<p>理科の実験で、次の3つの測定をしたとする。ある量 $x$ を $0,1,2$ と変えたとき、測れた値 $y$ は $1,2,2$ だった。測定には必ず誤差があるが、「$y$ は $x$ の一次式 $y=a+bx$ に従う」と考えて、傾き $b$ と切片 $a$ を決めたい。</p>
+<p>3点を式にすると、次の3本になる。</p>
+$$ \begin{aligned} a+0\cdot b&=1 &&\text{（$x=0$ のとき $y=1$）}\\ a+1\cdot b&=2 &&\text{（$x=1$ のとき $y=2$）}\\ a+2\cdot b&=2 &&\text{（$x=2$ のとき $y=2$）} \end{aligned} $$
+<p>1本目と2本目から $b=1$、$a=1$。ところがそれを3本目に入れると $1+2\cdot1=3\neq2$。<strong>3本の式を同時に満たす $(a,b)$ はない</strong>。式が3本で未知数が2つなので、一般には解がない。第17回の言葉で言うと、<a href="17_第17回_連立一次方程式とランク.html#sym-linear-system">連立一次方程式</a>の係数行列 $A$ と右辺 $\boldsymbol b$ を使って
+$$ A=\begin{pmatrix}1&0\\1&1\\1&2\end{pmatrix},\qquad \boldsymbol x=\begin{pmatrix}a\\b\end{pmatrix},\qquad \boldsymbol b=\begin{pmatrix}1\\2\\2\end{pmatrix},\qquad A\boldsymbol x=\boldsymbol b $$
+と書いたとき、$\boldsymbol b\notin\operatorname{im}A$（<a href="17_第17回_連立一次方程式とランク.html#sym-im">像</a>に入っていない）、ということである。</p>
+<p>では「解がないから、お手上げ」としてよいか。実際の測定では、式の数（測定の回数）は未知数の数よりずっと多く、解がないのが普通である。<strong>ぴったりは無理でも、「いちばんましな $(a,b)$」はほしい</strong>。そのために、「ましさ」を数で測る必要がある。それがこの節の目的である。</p>
+<p class="meta">補足：この節は第17回（連立一次方程式・像）の復習を兼ねる。覚えている人は 1.2 に進んでよい。</p>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>ずれを測る：残差</h3>
+<p>直線 $y=a+bx$ を1本決めたとする。$x=x_i$ のとき、直線が予想する値は $a+bx_i$ で、実際の測定値は $y_i$ である。両者の差を<strong>残差</strong>と呼ぶ。</p>
+
+<div class="def" id="sym-residual"><span class="label">記号：残差 $r_i$、$\boldsymbol r$</span>
+<p><strong>①読み方</strong>：$r_i$ は「アール・アイ」。$\boldsymbol r$ は「残差ベクトル」と読む。英語では residual（レジデュアル、「残り」）で、頭文字 $r$ をとる。</p>
+<p><strong>②日本語での意味</strong>：測定値から、直線が予想する値を引いた「ずれ」。点が直線より上にあれば正、下にあれば負。</p>
+<p><strong>③省略していない書き方</strong>：$m$ 個の測定点 $(x_1,y_1),\dots,(x_m,y_m)$ と直線 $y=a+bx$ について、$i=1,2,\dots,m$ のそれぞれで
+$$ r_i:=y_i-(a+bx_i). $$
+これを $i=1,\dots,m$ について縦に並べたベクトルを $\boldsymbol r:=(r_1,\dots,r_m)^{\mathsf T}$ とし、1.1 の $A,\boldsymbol x,\boldsymbol b$ を使うと、$\boldsymbol r=\boldsymbol b-A\boldsymbol x$（<a href="16_第16回_行列は線形写像.html#sym-matvec">第16回の $A\boldsymbol x$</a>：$A\boldsymbol x$ の第 $i$ 成分は $a+bx_i$）。</p>
+<p><strong>④どこで出会うか</strong>：回帰分析、誤差解析、数値計算の「残差」（連立方程式の近似解の良さの測定）。</p>
+</div>
+
+<p>図1.1 を見る。最小二乗法で選んだ直線（あとで求める $y=\frac76+\frac12x$）と、3点の残差である。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 316" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="3点と直線と残差" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>3点と直線と残差</title>
+<rect x="0" y="0" width="440" height="316" fill="#fffdf7"/>
+<line x1="52.0" y1="246.0" x2="392.0" y2="246.0" stroke="#2a2723" stroke-width="1.3"/><path d="M385.7 249.0 L392.0 246.0 L385.7 243.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="86.1" y1="246.0" x2="86.1" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M89.2 16.3 L86.1 10.0 L83.1 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="86.1" y1="242.0" x2="86.1" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="86.1" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">0</text>
+<line x1="199.9" y1="242.0" x2="199.9" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="199.9" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="313.7" y1="242.0" x2="313.7" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="313.7" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="82.1" y1="170.7" x2="90.1" y2="170.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="78.1" y="175.7" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="82.1" y1="95.3" x2="90.1" y2="95.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="78.1" y="100.3" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="82.1" y1="20.0" x2="90.1" y2="20.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="78.1" y="25.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="396.0" y="268.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="100.1" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="63.4,165.6 217.0,114.8 370.6,63.9" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="86.1" y1="170.7" x2="86.1" y2="158.1" stroke="#a8322a" stroke-width="3"/>
+<line x1="199.9" y1="95.3" x2="199.9" y2="120.4" stroke="#a8322a" stroke-width="3"/>
+<line x1="313.7" y1="95.3" x2="313.7" y2="82.8" stroke="#a8322a" stroke-width="3"/>
+<circle cx="86.1" cy="170.7" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="199.9" cy="95.3" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="313.7" cy="95.3" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="93.1" y="178.7" width="92.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="96.1" y="192.7" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">r₁ = −1/6</text>
+<rect x="206.9" y="71.3" width="78.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="209.9" y="85.3" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">r₂ = 1/3</text>
+<rect x="215.9" y="105.3" width="92.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="305.7" y="119.3" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">r₃ = −1/6</text>
+<rect x="121.9" y="53.1" width="115.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="234.1" y="67.1" font-size="14" fill="#2b3a67" text-anchor="end" font-weight="bold">y = 7/6 + x/2</text>
+<text x="14.0" y="280.0" font-size="14" fill="#2a2723" text-anchor="start">朱の点：測定点　藍：当てはめた直線</text>
+<text x="14.0" y="302.0" font-size="14" fill="#2a2723" text-anchor="start">朱の縦線：測定点と直線の縦のずれ（残差 r）</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　3点 $(0,1),(1,2),(2,2)$ と、直線 $y=\frac76+\frac12x$。朱の縦線が、各点から直線までの縦のずれ（残差）で、符号は「点が直線より上なら正、下なら負」。この直線は、残差の2乗の和がいちばん小さくなるように選んである。</figcaption>
+</figure>
+
+<p>数値で確かめる。直線 $y=\frac76+\frac12x$ では、</p>
+<ul>
+<li>$x=0$：予想は $\frac76+0=\frac76$、測定値 $1$。$r_1=1-\frac76=-\frac16$。</li>
+<li>$x=1$：予想は $\frac76+\frac12=\frac{7}{6}+\frac{3}{6}=\frac{10}{6}=\frac53$、測定値 $2$。$r_2=2-\frac53=\frac13$。</li>
+<li>$x=2$：予想は $\frac76+1=\frac{13}{6}$、測定値 $2=\frac{12}{6}$。$r_3=\frac{12}{6}-\frac{13}{6}=-\frac16$。</li>
+</ul>
+<p>つまり $\boldsymbol r=\left(-\frac16,\ \frac13,\ -\frac16\right)^{\mathsf T}$。</p>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>なぜ2乗して足すのか：$S(a,b)$ と $\|\cdot\|^2$</h3>
+<p>3つの残差を「1つの数」にまとめて、直線の「悪さ」としたい。まず思いつくのは残差を足すことだが、それではうまくいかない。上の例で足すと $-\frac16+\frac13-\frac16=0$。もっと悪い直線でも、「上にずれた点」と「下にずれた点」が打ち消し合えば合計は $0$ になる。<strong>符号が違うずれは打ち消し合う</strong>ので、足し算では悪さを測れない。</p>
+<p>そこで、符号を消す方法を2つ考える。</p>
+<ul>
+<li>絶対値 $|r_i|$ を足す：符号は消えるが、$|r|$ は $r=0$ でとがっていて（<a href="07_第7回_微分.html#sym-derivative-at">第7回の微分</a>ができない）、微分で最小点を求める道具が使いにくい。</li>
+<li><strong>2乗 $r_i^2$ を足す</strong>：符号は消え、$r^2$ はなめらかな2次式で微分でき、しかも<strong>ベクトルの長さの2乗</strong>（<a href="19_第19回_内積・直交・射影.html#sym-norm-induced">第19回の長さ</a>）と一致する。幾何（第19回の射影、三平方の定理）が使える。</li>
+</ul>
+<p>この2乗の和を、$a,b$ の関数として $S(a,b)$ と書く。</p>
+
+<div class="def" id="sym-rss"><span class="label">記号：残差平方和 $S(a,b)$</span>
+<p><strong>①読み方</strong>：$S(a,b)$ は「エス・エー・ビー」。名前は「残差平方和」（ざんさへいほうわ）。英語の residual sum of squares（RSS）から、sum（和）や square（2乗）の頭文字 $S$ をとったもの。</p>
+<p><strong>②日本語での意味</strong>：直線 $y=a+bx$ が測定点から縦にどれだけずれているかを、1つの数で表したもの。小さいほどよく合う。</p>
+<p><strong>③省略していない書き方</strong>：
+$$ S(a,b):=\sum_{i=1}^{m}r_i^2=\sum_{i=1}^{m}\bigl(y_i-(a+bx_i)\bigr)^2 $$
+（<a href="04_第4回_総和・総乗と添字.html#sym-sum">$\sum$</a> は第4回、$r_i$ は 1.2）。3点なら $S(a,b)=(y_1-a-bx_1)^2+(y_2-a-bx_2)^2+(y_3-a-bx_3)^2$ と、3項を全部書き下す。</p>
+<p><strong>④どこで出会うか</strong>：回帰分析（最小二乗法の目的関数）、数値計算（誤差の大きさ）、機械学習の損失関数（二乗誤差）。</p>
+</div>
+
+<div class="def" id="sym-sqnorm"><span class="label">記号：長さの2乗 $\|\boldsymbol v\|^2$</span>
+<p><strong>①読み方</strong>：$\|\boldsymbol v\|^2$ は「ノルム・ブイ・の・にじょう」。「ブイの長さの2乗」と読んでよい。</p>
+<p><strong>②日本語での意味</strong>：ベクトルの成分をそれぞれ2乗して全部足した数。長さ $\|\boldsymbol v\|$（<a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">第5回</a>）を、もう1回自分に掛けたもの。</p>
+<p><strong>③省略していない書き方</strong>：$\boldsymbol v=(v_1,\dots,v_m)^{\mathsf T}$ のとき
+$$ \|\boldsymbol v\|^2=v_1^2+v_2^2+\cdots+v_m^2=\sum_{i=1}^mv_i^2=\boldsymbol v\cdot\boldsymbol v=\boldsymbol v^{\mathsf T}\boldsymbol v. $$
+（最後の2つは<a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">内積</a>と、行ベクトル $\boldsymbol v^{\mathsf T}$ と列ベクトル $\boldsymbol v$ の行列の積で、どちらも成分の2乗の和になる。）平方根の付かない形なので、$\sqrt{\ }$ を外した扱いやすい式になる。</p>
+<p><strong>④どこで出会うか</strong>：最小二乗法、誤差の評価、パーセバルの等式（<a href="36_第36回_フーリエ級数.html#sym-parseval">第36回</a>）。</p>
+</div>
+
+<p>この2つの記号を使うと、$S(a,b)=\|\boldsymbol r\|^2$。つまり<strong>残差平方和は、残差ベクトルの長さの2乗</strong>である。これで「悪さ」をベクトルの長さ（幾何の量）として扱える。</p>
+
+<h3 id="sec-1-4"><span class="no">1.4</span>記号：$\min$ と $\operatorname{arg\,min}$</h3>
+<p>「$S(a,b)$ を最小にする $(a,b)$」を短く書く記号が必要になる。</p>
+
+<div class="def" id="sym-argmin"><span class="label">記号：$\min$ と $\operatorname{arg\,min}$</span>
+<p><strong>①読み方</strong>：$\min$ は「ミン」または「ミニマム」。$\operatorname{arg\,min}$ は「アーグ・ミン」（argument of the minimum、「最小になるときの引数」の略）。</p>
+<p><strong>②日本語での意味</strong>：$\min_x f(x)$ は「$f(x)$ がとる最小の<strong>値</strong>」。$\operatorname*{arg\,min}_xf(x)$ は「その最小の値をとるときの<strong>$x$</strong>」。値と、それをとる場所を区別する。</p>
+<p><strong>③省略していない書き方</strong>：関数 $f$ について、
+$$ \min_xf(x):=\text{「すべての }x\text{ について }f(x)\ge m\text{ となり、かつ }f(x_0)=m\text{ となる }x_0\text{ がある」ときの }m, $$
+$$ \operatorname*{arg\,min}_xf(x):=\{\,x_0\mid f(x_0)=\min_xf(x)\,\}\quad(\text{最小をとる }x\text{ の集合}). $$
+最小をとる $x$ が1つだけなら、集合の波かっこを外して、その1つの $x$ を表す。$\min$ の下に書いた $x$ は「どの変数を動かすか」を示す。</p>
+<p><strong>④どこで出会うか</strong>：最小二乗法、最適化（第51回）、機械学習（学習＝損失を最小にするパラメータ探し）。最大にする側の記号 $\max$、$\operatorname{arg\,max}$ も、向きが逆なだけで同じ読み方。</p>
+</div>
+
+<p>最も簡単な例で、値と場所の違いを見る。$f(x)=(x-2)^2+3$。すべての $x$ で $(x-2)^2\ge0$ だから $f(x)\ge3$。等号は $x=2$ のとき。したがって
+$$ \min_xf(x)=3\quad(\text{値}),\qquad \operatorname*{arg\,min}_xf(x)=2\quad(\text{場所}). $$
+<strong>最小値は 3、最小をとる場所は 2</strong>。混同しやすいので、この回では「$\min$ は値、$\operatorname{arg\,min}$ は場所」と読み分ける。</p>
+<p>これで目標が書ける。
+$$ (\hat a,\hat b):=\operatorname*{arg\,min}_{(a,b)}S(a,b). $$
+$\hat a$ の記号（ハット）の意味は <a href="#sym-hat">2.3</a> で決める。この回の問いは、「この $\operatorname{arg\,min}$ を実際に求める方法」である。</p>
+
+<h3 id="sec-1-5"><span class="no">1.5</span>数値で比べる：どちらの直線が「よく合う」か</h3>
+<p>3点 $(0,1),(1,2),(2,2)$ に、2本の直線を当てて $S$ を計算する。</p>
+<ul>
+<li>直線A：$y=\frac76+\frac12x$（1.2 で残差を出した）。$S=\left(-\frac16\right)^2+\left(\frac13\right)^2+\left(-\frac16\right)^2=\frac1{36}+\frac4{36}+\frac1{36}=\frac{6}{36}=\frac16\approx0.167$。</li>
+<li>直線B：$y=1+\frac12x$。$x=0$ で予想 $1$、$r_1=1-1=0$。$x=1$ で予想 $\frac32$、$r_2=2-\frac32=\frac12$。$x=2$ で予想 $2$、$r_3=2-2=0$。$S=0+\frac14+0=\frac14=0.25$。</li>
+</ul>
+<p>$\frac16\lt\frac14$ なので、A の方がよく合う、と判定する。図1.2 は、この比較を「残差を1辺とする正方形の面積」として見せたものである。<strong>$S$ は、正方形の面積の和</strong>と読める。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 440 490" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="2本の直線を比べる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>2本の直線を比べる</title>
+<rect x="0" y="0" width="440" height="490" fill="#fffdf7"/>
+<rect x="8" y="8" width="424" height="226" rx="4" fill="#fffdf7" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="42.8" y1="121.2" x2="201.2" y2="42.0" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="56.0" y1="125.6" x2="56.0" y2="114.6" stroke="#a8322a" stroke-width="2.4"/>
+<rect x="56.0" y="114.6" width="11.0" height="11.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6" opacity="0.95"/>
+<circle cx="56.0" cy="125.6" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="122.0" y1="59.6" x2="122.0" y2="81.6" stroke="#a8322a" stroke-width="2.4"/>
+<rect x="122.0" y="59.6" width="22.0" height="22.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6" opacity="0.95"/>
+<circle cx="122.0" cy="59.6" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="188.0" y1="59.6" x2="188.0" y2="48.6" stroke="#a8322a" stroke-width="2.4"/>
+<rect x="188.0" y="48.6" width="11.0" height="11.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6" opacity="0.95"/>
+<circle cx="188.0" cy="59.6" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="250.0" y="52.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">直線A：y = 7/6 + x/2</text>
+<text x="250.0" y="80.0" font-size="14" fill="#2a2723" text-anchor="start">各点の残差 r：</text>
+<text x="250.0" y="104.0" font-size="14" fill="#2a2723" text-anchor="start">(−0.167, 0.333, −0.167)</text>
+<text x="250.0" y="132.0" font-size="14" fill="#2a2723" text-anchor="start">正方形の面積の和：</text>
+<text x="250.0" y="156.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">S = 1/6 ≈ 0.167</text>
+<text x="250.0" y="186.0" font-size="14" fill="#6b645a" text-anchor="start">正方形は、各残差を</text>
+<text x="250.0" y="206.0" font-size="14" fill="#6b645a" text-anchor="start">1辺とした r² の面積</text>
+<rect x="8" y="246" width="424" height="226" rx="4" fill="#fffdf7" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="42.8" y1="370.2" x2="201.2" y2="291.0" stroke="#b07a3e" stroke-width="2.6"/>
+<line x1="56.0" y1="363.6" x2="56.0" y2="363.6" stroke="#a8322a" stroke-width="2.4"/>
+<circle cx="56.0" cy="363.6" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="122.0" y1="297.6" x2="122.0" y2="330.6" stroke="#a8322a" stroke-width="2.4"/>
+<rect x="122.0" y="297.6" width="33.0" height="33.0" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6" opacity="0.95"/>
+<circle cx="122.0" cy="297.6" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="188.0" y1="297.6" x2="188.0" y2="297.6" stroke="#a8322a" stroke-width="2.4"/>
+<circle cx="188.0" cy="297.6" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="250.0" y="290.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">直線B：y = 1 + x/2</text>
+<text x="250.0" y="318.0" font-size="14" fill="#2a2723" text-anchor="start">各点の残差 r：</text>
+<text x="250.0" y="342.0" font-size="14" fill="#2a2723" text-anchor="start">(0, 0.5, 0)</text>
+<text x="250.0" y="370.0" font-size="14" fill="#2a2723" text-anchor="start">正方形の面積の和：</text>
+<text x="250.0" y="394.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">S = 1/4 = 0.25</text>
+<text x="250.0" y="424.0" font-size="14" fill="#6b645a" text-anchor="start">正方形は、各残差を</text>
+<text x="250.0" y="444.0" font-size="14" fill="#6b645a" text-anchor="start">1辺とした r² の面積</text>
+</svg>
+<figcaption><strong>図 1.2</strong>　同じ3点に2本の直線を引き、各点の残差を1辺とする正方形を描いた。正方形の面積の和 $S$ が小さい直線ほど、点によく合っている。上（直線A）の方が小さいので、A の方が「よく合う」と判定される。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>「残差を足して $0$ になれば最良の直線」は誤り。残差の合計が $0$ になる直線は無数にある（例：水平な直線 $y=\frac53$ の残差は $\left(-\frac23,\frac13,\frac13\right)$ で合計はちょうど $0$ だが、$S=\frac49+\frac19+\frac19=\frac23$ で、直線A の $S=\frac16$ よりずっと大きい）。合計が $0$ なのは、最良の直線が満たす条件の1つ（この回の 4.1 で確かめる）にすぎず、それだけで最良とは決まらない。</p>
+</div>
+<div class="why"><span class="label">ひとことで</span>
+<p>ずれ（残差）を2乗して足した $S$ は、ずれの正負が打ち消し合わず、微分も幾何（長さ）も使える「悪さの尺度」である。最小二乗法は、この $S$ を最小にする $(a,b)=\operatorname{arg\,min}S$ を答えにする、という決め方である。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>微分で解く：正規方程式をつくる（その1）</h2>
+
+<h3 id="sec-2-1"><span class="no">2.1</span>$S(a,b)$ を $a$ と $b$ で偏微分する</h3>
+<p>$S(a,b)$ は、$a,b$ の2変数の関数である。<a href="08_第8回_微分を使う・近似と極値.html#sym-critical-point">第8回</a>では、1変数の関数の最小点は「微分が0になる点」の中にあった。2変数なら、<a href="11_第11回_偏微分.html#sym-partial">第11回の偏微分</a>（他の変数を固定して1つで微分）がともに $0$ になる点が候補になる。3点の例で実行する。</p>
+<p>まず $S$ を具体的に書く（$y_1,y_2,y_3=1,2,2$、$x_1,x_2,x_3=0,1,2$ を入れる）。</p>
+$$ S(a,b)=(1-a-0\cdot b)^2+(2-a-1\cdot b)^2+(2-a-2\cdot b)^2 $$
+<p><strong>$a$ で偏微分する</strong>（$b$ は定数と見る）。合成関数の微分（<a href="07_第7回_微分.html#sym-diff-rules">第7回の微分の規則</a>）：$\frac{d}{da}(\text{中身})^2=2(\text{中身})\cdot\frac{d(\text{中身})}{da}$、中身を $a$ で微分すると $-1$ なので、</p>
+$$ \begin{aligned} \frac{\partial S}{\partial a}&=2(1-a)(-1)+2(2-a-b)(-1)+2(2-a-2b)(-1) &&\text{（各項に上の規則）}\\ &=-2\bigl[(1-a)+(2-a-b)+(2-a-2b)\bigr] &&\text{（共通の }-2\text{ をくくる）}\\ &=-2\,(5-3a-3b) &&\text{（定数 }1+2+2=5\text{、}a\text{ が3個、}b\text{ が }1+2=3\text{ 個）} \end{aligned} $$
+<p><strong>$b$ で偏微分する</strong>（$a$ は定数）。中身を $b$ で微分すると、各項で $-x_i$ すなわち $0,-1,-2$ になる。</p>
+$$ \begin{aligned} \frac{\partial S}{\partial b}&=2(1-a)\cdot0+2(2-a-b)(-1)+2(2-a-2b)(-2) &&\text{（各項に上の規則）}\\ &=-2\bigl[(2-a-b)+2(2-a-2b)\bigr] &&\text{（共通の }-2\text{ をくくる）}\\ &=-2\,(6-3a-5b) &&\text{（定数 }2+4=6\text{、}a\text{ が }1+2=3\text{ 個、}b\text{ が }1+4=5\text{ 個）} \end{aligned} $$
+<p>最小点では2つとも $0$ になるので、</p>
+$$ \begin{cases}3a+3b=5\\ 3a+5b=6\end{cases} $$
+<p>これを解く。下の式から上の式を引く（左辺どうし、右辺どうし）：$(3a+5b)-(3a+3b)=6-5$、すなわち $2b=1$、$b=\frac12$。上の式に戻す：$3a+3\cdot\frac12=5$、$3a=5-\frac32=\frac72$、$a=\frac76$。</p>
+<p>これで $(\hat a,\hat b)=\left(\frac76,\frac12\right)$。1.2 で使った直線 $y=\frac76+\frac12x$ が、実は最小の $S$ の直線である。$S\left(\frac76,\frac12\right)=\frac16$（1.5）。</p>
+<p>図2.1 は、$S(a,b)$ の等高線（$S$ の値が等しい点をつないだ線）を $(a,b)$ 平面に描き、2つの偏微分が $0$ になる線を重ねたものである。2本の線の交点が、等高線の中心になっている。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 330" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="S(a,b) の等高線" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>S(a,b) の等高線</title>
+<rect x="0" y="0" width="440" height="330" fill="#fffdf7"/>
+<line x1="119.0" y1="216.6" x2="119.0" y2="16.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="178.0" y1="216.6" x2="178.0" y2="16.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="237.0" y1="216.6" x2="237.0" y2="16.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="296.0" y1="216.6" x2="296.0" y2="16.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="60.0" y1="169.4" x2="331.4" y2="169.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="60.0" y1="110.4" x2="331.4" y2="110.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="60.0" y1="51.4" x2="331.4" y2="51.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="60.0" y1="169.4" x2="341.4" y2="169.4" stroke="#2a2723" stroke-width="1.3"/><path d="M335.1 172.4 L341.4 169.4 L335.1 166.4" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="216.6" x2="60.0" y2="6.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 12.3 L60.0 6.0 L57.0 12.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="119.0" y1="165.4" x2="119.0" y2="173.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="119.0" y="189.4" font-size="14" fill="#6b645a" text-anchor="middle">0.5</text>
+<line x1="178.0" y1="165.4" x2="178.0" y2="173.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="178.0" y="189.4" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="237.0" y1="165.4" x2="237.0" y2="173.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="237.0" y="189.4" font-size="14" fill="#6b645a" text-anchor="middle">1.5</text>
+<line x1="296.0" y1="165.4" x2="296.0" y2="173.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="296.0" y="189.4" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="56.0" y1="169.4" x2="64.0" y2="169.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="174.4" font-size="14" fill="#6b645a" text-anchor="end">0</text>
+<line x1="56.0" y1="110.4" x2="64.0" y2="110.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="115.4" font-size="14" fill="#6b645a" text-anchor="end">0.5</text>
+<line x1="56.0" y1="51.4" x2="64.0" y2="51.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="56.4" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<text x="345.4" y="191.4" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan></text>
+<text x="74.0" y="12.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">b</tspan></text>
+<polyline points="190.4,120.5 188.8,119.4 187.3,118.2 185.8,117.1 184.4,115.9 183.0,114.7 181.6,113.4 180.3,112.2 179.0,111.0 177.7,109.7 176.6,108.5 175.4,107.3 174.4,106.1 173.4,104.8 172.5,103.7 171.6,102.5 170.8,101.3 170.1,100.2 169.4,99.1 168.9,98.0 168.4,97.0 168.0,96.0 167.7,95.0 167.4,94.1 167.3,93.2 167.2,92.4 167.2,91.6 167.3,90.9 167.5,90.3 167.7,89.6 168.1,89.1 168.5,88.6 169.0,88.1 169.6,87.8 170.2,87.4 171.0,87.2 171.8,87.0 172.7,86.9 173.6,86.8 174.6,86.8 175.7,86.9 176.8,87.0 178.0,87.2 179.3,87.5 180.6,87.8 181.9,88.2 183.3,88.6 184.7,89.1 186.2,89.7 187.7,90.3 189.2,91.0 190.7,91.7 192.3,92.5 193.9,93.3 195.5,94.2 197.1,95.1 198.6,96.1 200.2,97.1 201.8,98.1 203.4,99.2 205.0,100.3 206.5,101.4 208.0,102.6 209.5,103.7 210.9,104.9 212.4,106.1 213.7,107.4 215.1,108.6 216.4,109.8 217.6,111.1 218.8,112.3 219.9,113.5 221.0,114.7 222.0,116.0 222.9,117.1 223.7,118.3 224.5,119.5 225.2,120.6 225.9,121.7 226.4,122.8 226.9,123.8 227.3,124.8 227.7,125.8 227.9,126.7 228.1,127.6 228.1,128.4 228.1,129.2 228.0,129.9 227.8,130.5 227.6,131.2 227.2,131.7 226.8,132.2 226.3,132.7 225.7,133.0 225.1,133.4 224.4,133.6 223.5,133.8 222.7,133.9 221.7,134.0 220.7,134.0 219.6,133.9 218.5,133.8 217.3,133.6 216.1,133.3 214.8,133.0 213.4,132.6 212.0,132.2 210.6,131.7 209.2,131.1 207.7,130.5 206.1,129.8 204.6,129.1 203.0,128.3 201.5,127.5 199.9,126.6 198.3,125.7 196.7,124.7 195.1,123.7 193.5,122.7 191.9,121.6 190.4,120.5" fill="none" stroke="#c9b9a0" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="183.5,130.0 180.6,127.8 177.6,125.6 174.8,123.3 171.9,121.0 169.2,118.6 166.5,116.3 164.0,113.9 161.5,111.5 159.1,109.1 156.8,106.7 154.6,104.3 152.6,102.0 150.6,99.6 148.8,97.3 147.2,95.1 145.6,92.8 144.3,90.6 143.0,88.5 141.9,86.4 141.0,84.4 140.2,82.5 139.6,80.6 139.1,78.9 138.8,77.2 138.7,75.6 138.7,74.1 138.9,72.7 139.2,71.4 139.7,70.2 140.4,69.1 141.2,68.1 142.2,67.3 143.3,66.6 144.6,65.9 146.0,65.4 147.5,65.1 149.2,64.8 151.1,64.7 153.0,64.7 155.1,64.8 157.3,65.1 159.6,65.5 162.0,66.0 164.5,66.6 167.1,67.4 169.8,68.2 172.6,69.2 175.4,70.3 178.3,71.5 181.3,72.8 184.2,74.2 187.3,75.7 190.3,77.3 193.4,79.0 196.5,80.8 199.6,82.7 202.7,84.6 205.7,86.6 208.8,88.7 211.8,90.8 214.8,93.0 217.7,95.2 220.6,97.5 223.4,99.8 226.1,102.2 228.8,104.5 231.4,106.9 233.9,109.3 236.3,111.7 238.5,114.1 240.7,116.5 242.8,118.8 244.7,121.2 246.5,123.5 248.2,125.7 249.7,128.0 251.1,130.2 252.3,132.3 253.4,134.4 254.3,136.4 255.1,138.3 255.7,140.2 256.2,141.9 256.5,143.6 256.7,145.2 256.6,146.7 256.5,148.1 256.1,149.4 255.6,150.6 255.0,151.7 254.1,152.7 253.2,153.5 252.0,154.2 250.8,154.9 249.3,155.4 247.8,155.7 246.1,156.0 244.3,156.1 242.3,156.1 240.2,156.0 238.0,155.7 235.7,155.3 233.3,154.8 230.8,154.2 228.2,153.4 225.5,152.6 222.7,151.6 219.9,150.5 217.0,149.3 214.1,148.0 211.1,146.6 208.1,145.1 205.0,143.5 201.9,141.8 198.9,140.0 195.8,138.1 192.7,136.2 189.6,134.2 186.6,132.1 183.5,130.0" fill="none" stroke="#b8a587" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="174.6,142.4 169.7,138.8 165.0,135.2 160.3,131.5 155.7,127.7 151.2,123.9 146.8,120.0 142.6,116.1 138.6,112.2 134.7,108.3 130.9,104.4 127.4,100.5 124.0,96.7 120.9,92.8 117.9,89.1 115.2,85.3 112.7,81.7 110.5,78.1 108.4,74.7 106.7,71.3 105.1,68.0 103.8,64.8 102.8,61.8 102.1,58.9 101.6,56.2 101.3,53.6 101.4,51.1 101.7,48.8 102.2,46.7 103.0,44.7 104.1,43.0 105.5,41.4 107.0,40.0 108.9,38.8 111.0,37.8 113.3,37.0 115.8,36.4 118.6,36.0 121.6,35.8 124.8,35.8 128.2,36.0 131.8,36.4 135.5,37.0 139.5,37.9 143.6,38.9 147.8,40.1 152.2,41.5 156.7,43.1 161.3,44.9 166.1,46.8 170.9,49.0 175.7,51.3 180.7,53.7 185.7,56.4 190.7,59.1 195.7,62.0 200.8,65.1 205.8,68.3 210.8,71.5 215.8,74.9 220.7,78.4 225.6,82.0 230.4,85.6 235.1,89.3 239.7,93.1 244.2,96.9 248.5,100.8 252.7,104.7 256.8,108.6 260.7,112.5 264.4,116.4 268.0,120.3 271.3,124.1 274.5,128.0 277.4,131.7 280.1,135.5 282.6,139.1 284.9,142.7 286.9,146.1 288.7,149.5 290.2,152.8 291.5,156.0 292.5,159.0 293.3,161.9 293.8,164.6 294.0,167.2 294.0,169.7 293.7,172.0 293.1,174.1 292.3,176.1 291.2,177.8 289.9,179.4 288.3,180.8 286.5,182.0 284.4,183.0 282.1,183.8 279.5,184.4 276.7,184.8 273.7,185.0 270.5,185.0 267.2,184.8 263.6,184.4 259.8,183.8 255.9,182.9 251.8,181.9 247.5,180.7 243.1,179.3 238.6,177.7 234.0,175.9 229.3,174.0 224.5,171.8 219.6,169.5 214.6,167.1 209.7,164.4 204.6,161.7 199.6,158.8 194.6,155.7 189.5,152.5 184.5,149.3 179.5,145.9 174.6,142.4" fill="none" stroke="#a38e6c" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="165.1,155.6 158.2,150.6 151.4,145.4 144.8,140.2 138.3,134.8 131.9,129.4 125.8,124.0 119.8,118.5 114.1,112.9 108.5,107.4 103.3,101.9 98.3,96.4 93.5,91.0 89.1,85.6 84.9,80.2 81.1,75.0 77.5,69.8 74.3,64.8 71.5,59.9 69.0,55.1 66.8,50.4 65.0,46.0 63.5,41.7 62.5,37.6 61.8,33.7 61.4,30.0 61.5,26.5 61.9,23.3 62.7,20.3 63.8,17.5 65.4,15.0 67.3,12.8 69.5,10.8 72.1,9.1 75.0,7.7 78.3,6.6 81.9,5.7 85.8,5.2 90.1,4.9 94.6,4.9 99.4,5.2 104.5,5.8 109.8,6.7 115.4,7.8 121.2,9.3 127.2,11.0 133.4,13.0 139.8,15.2 146.3,17.7 153.0,20.5 159.8,23.5 166.7,26.8 173.6,30.3 180.7,34.0 187.8,37.9 194.9,42.0 202.1,46.3 209.2,50.8 216.3,55.4 223.3,60.2 230.3,65.2 237.2,70.2 243.9,75.4 250.6,80.6 257.1,86.0 263.4,91.4 269.6,96.8 275.5,102.3 281.3,107.9 286.8,113.4 292.1,118.9 297.1,124.4 301.8,129.8 306.3,135.2 310.4,140.6 314.3,145.8 317.8,151.0 321.0,156.0 323.9,160.9 326.4,165.7 328.5,170.4 330.3,174.8 331.8,179.1 332.9,183.2 333.6,187.1 333.9,190.8 333.9,194.3 333.4,197.5 332.6,200.5 331.5,203.3 330.0,205.8 328.1,208.0 325.8,210.0 323.2,211.7 320.3,213.1 317.0,214.2 313.4,215.1 309.5,215.6 305.3,215.9 300.7,215.9 295.9,215.6 290.9,215.0 285.5,214.1 280.0,213.0 274.2,211.5 268.2,209.8 262.0,207.8 255.6,205.6 249.0,203.1 242.4,200.3 235.6,197.3 228.7,194.0 221.7,190.5 214.6,186.8 207.5,182.9 200.4,178.8 193.3,174.5 186.2,170.0 179.1,165.4 172.0,160.6 165.1,155.6" fill="none" stroke="#8a7452" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="103.3,16.0 303.9,216.6" fill="none" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="60.0,27.8 331.4,190.6" fill="none" stroke="#a8322a" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="197.7" cy="110.4" r="6" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<rect x="204.7" y="84.4" width="90.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="207.7" y="98.4" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">(7/6, 1/2)</text>
+<rect x="175.0" y="194.3" width="162.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="178.0" y="208.3" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">3a+3b=5（∂S/∂a=0）</text>
+<rect x="92.4" y="7.9" width="162.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="95.4" y="21.9" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">3a+5b=6（∂S/∂b=0）</text>
+<text x="14.0" y="276.0" font-size="14" fill="#2a2723" text-anchor="start">茶の閉曲線：S(a, b) が等しい点をつないだ線（等高線）</text>
+<text x="14.0" y="298.0" font-size="14" fill="#2a2723" text-anchor="start">内側ほど S が小さい。中心が最小点</text>
+</svg>
+<figcaption><strong>図 2.1</strong>　傾き $b$ と切片 $a$ を横軸・縦軸にとり、$S(a,b)$ の等高線を描いた。中心が最小点 $(a,b)=(\frac76,\frac12)$。藍の線は $\frac{\partial S}{\partial a}=0$、朱の線は $\frac{\partial S}{\partial b}=0$ を満たす点の集まりで、その交点がちょうど等高線の中心になる。</figcaption>
+</figure>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>1つずつ動かすと：2次式の底</h3>
+<p>図2.2 は、$b=\frac12$ に固定して $a$ だけ動かしたときの $S$、$a=\frac76$ に固定して $b$ だけ動かしたときの $S$ である。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 424" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="片方だけ動かした S の断面" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>片方だけ動かした S の断面</title>
+<rect x="0" y="0" width="440" height="424" fill="#fffdf7"/>
+<text x="14.0" y="30.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">b = 1/2 に固定して a を動かす</text>
+<line x1="60.0" y1="174.0" x2="380.0" y2="174.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 177.0 L380.0 174.0 L373.7 171.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="174.0" x2="60.0" y2="44.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 50.3 L60.0 44.0 L57.0 50.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="106.5" y1="170.0" x2="106.5" y2="178.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="106.5" y="194.0" font-size="14" fill="#6b645a" text-anchor="middle">0.5</text>
+<line x1="184.0" y1="170.0" x2="184.0" y2="178.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="184.0" y="194.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="261.5" y1="170.0" x2="261.5" y2="178.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="261.5" y="194.0" font-size="14" fill="#6b645a" text-anchor="middle">1.5</text>
+<line x1="339.0" y1="170.0" x2="339.0" y2="178.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="339.0" y="194.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="56.0" y1="124.0" x2="64.0" y2="124.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="129.0" font-size="14" fill="#6b645a" text-anchor="end">0.5</text>
+<line x1="56.0" y1="74.0" x2="64.0" y2="74.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="79.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<text x="384.0" y="196.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan></text>
+<text x="74.0" y="50.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">S</tspan></text>
+<polyline points="120.1,56.7 122.0,61.0 123.9,65.2 125.9,69.3 127.8,73.3 129.8,77.2 131.7,81.1 133.6,84.8 135.6,88.5 137.5,92.0 139.4,95.5 141.4,98.8 143.3,102.1 145.2,105.2 147.2,108.3 149.1,111.3 151.1,114.2 153.0,117.0 154.9,119.7 156.9,122.3 158.8,124.8 160.8,127.3 162.7,129.6 164.6,131.8 166.6,134.0 168.5,136.0 170.4,138.0 172.4,139.8 174.3,141.6 176.2,143.2 178.2,144.8 180.1,146.3 182.1,147.7 184.0,149.0 185.9,150.2 187.9,151.3 189.8,152.3 191.8,153.2 193.7,154.1 195.6,154.8 197.6,155.5 199.5,156.0 201.4,156.5 203.4,156.8 205.3,157.1 207.2,157.2 209.2,157.3 211.1,157.3 213.1,157.2 215.0,157.0 216.9,156.7 218.9,156.3 220.8,155.8 222.8,155.2 224.7,154.6 226.6,153.8 228.6,153.0 230.5,152.0 232.4,151.0 234.4,149.8 236.3,148.6 238.2,147.2 240.2,145.8 242.1,144.3 244.1,142.7 246.0,141.0 247.9,139.2 249.9,137.3 251.8,135.3 253.8,133.2 255.7,131.1 257.6,128.8 259.6,126.5 261.5,124.0 263.4,121.5 265.4,118.8 267.3,116.1 269.2,113.2 271.2,110.3 273.1,107.3 275.1,104.2 277.0,101.0 278.9,97.7 280.9,94.3 282.8,90.8 284.8,87.3 286.7,83.6 288.6,79.8 290.6,76.0 292.5,72.0 294.4,68.0 296.4,63.8 298.3,59.6 300.2,55.2" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="124.6" y1="157.3" x2="295.1" y2="157.3" stroke="#a8322a" stroke-width="2.2"/>
+<circle cx="209.8" cy="157.3" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="214.8" y="131.3" width="137.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="217.8" y="145.3" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">a = 7/6：S = 1/6</text>
+<text x="14.0" y="240.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">a = 7/6 に固定して b を動かす</text>
+<line x1="60.0" y1="384.0" x2="380.0" y2="384.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 387.0 L380.0 384.0 L373.7 381.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="118.1" y1="384.0" x2="118.1" y2="254.0" stroke="#2a2723" stroke-width="1.3"/><path d="M121.2 260.3 L118.1 254.0 L115.1 260.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="118.1" y1="380.0" x2="118.1" y2="388.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="118.1" y="404.0" font-size="14" fill="#6b645a" text-anchor="middle">0</text>
+<line x1="215.0" y1="380.0" x2="215.0" y2="388.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="215.0" y="404.0" font-size="14" fill="#6b645a" text-anchor="middle">0.5</text>
+<line x1="311.9" y1="380.0" x2="311.9" y2="388.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="311.9" y="404.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="114.1" y1="334.0" x2="122.1" y2="334.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="110.1" y="339.0" font-size="14" fill="#6b645a" text-anchor="end">0.5</text>
+<line x1="114.1" y1="284.0" x2="122.1" y2="284.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="110.1" y="289.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<text x="384.0" y="406.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">b</tspan></text>
+<text x="132.1" y="260.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">S</tspan></text>
+<polyline points="127.8,266.1 129.8,270.5 131.7,274.9 133.6,279.1 135.6,283.3 137.5,287.3 139.4,291.3 141.4,295.1 143.3,298.9 145.2,302.5 147.2,306.1 149.1,309.5 151.1,312.9 153.0,316.1 154.9,319.3 156.9,322.3 158.8,325.3 160.8,328.1 162.7,330.9 164.6,333.5 166.6,336.1 168.5,338.5 170.4,340.9 172.4,343.1 174.3,345.3 176.2,347.3 178.2,349.3 180.1,351.1 182.1,352.9 184.0,354.5 185.9,356.1 187.9,357.5 189.8,358.9 191.8,360.1 193.7,361.3 195.6,362.3 197.6,363.3 199.5,364.1 201.4,364.9 203.4,365.5 205.3,366.1 207.2,366.5 209.2,366.9 211.1,367.1 213.1,367.3 215.0,367.3 216.9,367.3 218.9,367.1 220.8,366.9 222.8,366.5 224.7,366.1 226.6,365.5 228.6,364.9 230.5,364.1 232.4,363.3 234.4,362.3 236.3,361.3 238.3,360.1 240.2,358.9 242.1,357.5 244.1,356.1 246.0,354.5 247.9,352.9 249.9,351.1 251.8,349.3 253.8,347.3 255.7,345.3 257.6,343.1 259.6,340.9 261.5,338.5 263.4,336.1 265.4,333.5 267.3,330.9 269.2,328.1 271.2,325.3 273.1,322.3 275.1,319.3 277.0,316.1 278.9,312.9 280.9,309.5 282.8,306.1 284.8,302.5 286.7,298.9 288.6,295.1 290.6,291.3 292.5,287.3 294.4,283.3 296.4,279.1 298.3,274.9 300.2,270.5 302.2,266.1" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="108.4" y1="367.3" x2="321.6" y2="367.3" stroke="#a8322a" stroke-width="2.2"/>
+<circle cx="215.0" cy="367.3" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="220.0" y="341.3" width="137.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="223.0" y="355.3" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">b = 1/2：S = 1/6</text>
+</svg>
+<figcaption><strong>図 2.2</strong>　$S$ の等高線の中心を、$a$ の向き・$b$ の向きの2本の線で切った断面。どちらも下に凸の放物線（2次式）で、底は $\frac{\partial S}{\partial a}=0$、$\frac{\partial S}{\partial b}=0$ のところ。朱の水平線は、底での接線（傾き0）。</figcaption>
+</figure>
+<p>どちらも<strong>下に凸の放物線</strong>になっている。理由は、$S(a,b)$ が $a,b$ の2次式で、2乗の項 $3a^2$ や $5b^2$ の係数が正だからである（後の 3.3 で、これが一般に成り立つことを示す）。放物線の底では接線が水平、すなわち偏微分が $0$。そして放物線の底は最小点である。したがって、<strong>偏微分が $0$ になる点は確かに最小点</strong>であり、極大や鞍点（あんてん）ではない。</p>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>連立方程式を、行列で書き直す：正規方程式</h3>
+<p>2.1 の連立方程式の係数を並べる。</p>
+$$ \begin{pmatrix}3&3\\3&5\end{pmatrix}\begin{pmatrix}a\\b\end{pmatrix}=\begin{pmatrix}5\\6\end{pmatrix} $$
+<p>この左の行列 $\begin{pmatrix}3&3\\3&5\end{pmatrix}$ と右辺 $\begin{pmatrix}5\\6\end{pmatrix}$ は、1.1 の $A$ と $\boldsymbol b$ から作れる。実際に計算する。</p>
+<p>まず $A^{\mathsf T}$（<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">転置</a>：行と列を入れ替える）：$A^{\mathsf T}=\begin{pmatrix}1&1&1\\0&1&2\end{pmatrix}$。</p>
+$$ A^{\mathsf T}A=\begin{pmatrix}1&1&1\\0&1&2\end{pmatrix}\begin{pmatrix}1&0\\1&1\\1&2\end{pmatrix}=\begin{pmatrix}1\cdot1+1\cdot1+1\cdot1&1\cdot0+1\cdot1+1\cdot2\\0\cdot1+1\cdot1+2\cdot1&0\cdot0+1\cdot1+2\cdot2\end{pmatrix}=\begin{pmatrix}3&3\\3&5\end{pmatrix} $$
+$$ A^{\mathsf T}\boldsymbol b=\begin{pmatrix}1&1&1\\0&1&2\end{pmatrix}\begin{pmatrix}1\\2\\2\end{pmatrix}=\begin{pmatrix}1+2+2\\0+2+4\end{pmatrix}=\begin{pmatrix}5\\6\end{pmatrix} $$
+<p>どちらも、偏微分から出た連立方程式の左辺・右辺と一致した。つまり、$\hat{\boldsymbol x}=(\hat a,\hat b)^{\mathsf T}$ は次の式を満たす。</p>
+
+<div class="def" id="sym-normal-eq"><span class="label">記号：正規方程式 $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$</span>
+<p><strong>①読み方</strong>：「エー・トランスポーズ・エー・エックス・イコール・エー・トランスポーズ・ビー」。名前は「正規方程式」（せいきほうていしき）。英語の normal equations。ここでの「正規」は「直交する（法線の）」という意味で、「正規分布」の正規とは関係ない。</p>
+<p><strong>②日本語での意味</strong>：解のない連立方程式 $A\boldsymbol x=\boldsymbol b$ の両辺に、左から $A^{\mathsf T}$ を掛けてできる連立方程式。これには（多くの場合）ちゃんと解があり、その解が「いちばんましな $\boldsymbol x$」になる。</p>
+<p><strong>③省略していない書き方</strong>：$A\in\mathbb R^{m\times n}$、$\boldsymbol b\in\mathbb R^m$ のとき、未知数 $\boldsymbol x\in\mathbb R^n$ についての $n$ 本の連立方程式
+$$ (A^{\mathsf T}A)\,\boldsymbol x=A^{\mathsf T}\boldsymbol b,\qquad A^{\mathsf T}A\in\mathbb R^{n\times n},\quad A^{\mathsf T}\boldsymbol b\in\mathbb R^n. $$
+未知数の数 $n$ と式の数が同じ（$n$ 本）になる。</p>
+<p><strong>④どこで出会うか</strong>：回帰分析、測定データの当てはめ、GPS の位置計算、計算機の最小二乗ルーチン。</p>
+</div>
+
+<div class="def" id="sym-hat"><span class="label">記号：ハット $\hat{\boldsymbol x}$（最小二乗解）</span>
+<p><strong>①読み方</strong>：$\hat{\boldsymbol x}$ は「エックス・ハット」。$\hat a$ は「エー・ハット」。ハットは帽子の形の記号。</p>
+<p><strong>②日本語での意味</strong>：データから求めた「推定値」「最適解」であることを示す印。「まだ決めていない変数 $\boldsymbol x$」と「データから求めた具体的な値 $\hat{\boldsymbol x}$」を区別する。</p>
+<p><strong>③省略していない書き方</strong>：この回では
+$$ \hat{\boldsymbol x}:=\operatorname*{arg\,min}_{\boldsymbol x\in\mathbb R^n}\|\boldsymbol b-A\boldsymbol x\|^2. $$
+すなわち「$\|\boldsymbol b-A\boldsymbol x\|^2$ を最小にする $\boldsymbol x$」。これを<strong>最小二乗解</strong>と呼ぶ。</p>
+<p><strong>④どこで出会うか</strong>：統計・機械学習の推定値（$\hat\theta$ など。第46回）、制御の状態推定。</p>
+</div>
+
+<p>この回の主張を、まず3点の例で確かめた形で書いておく。</p>
+<div class="thm"><span class="label">定理2.1（正規方程式、2変数・3点の場合）</span>
+<p>3点 $(0,1),(1,2),(2,2)$ に対し、$S(a,b)$ を最小にする $(a,b)$ は $\begin{pmatrix}3&3\\3&5\end{pmatrix}\begin{pmatrix}a\\b\end{pmatrix}=\begin{pmatrix}5\\6\end{pmatrix}$、すなわち $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$ の解 $(\frac76,\frac12)$ である。</p>
+</div>
+<p>一般の $m$ 点でも、$S$ の偏微分から同じ形が出る。$\frac{\partial S}{\partial a}=0$ と $\frac{\partial S}{\partial b}=0$ から、</p>
+$$ \begin{cases} m\,a+\Bigl(\displaystyle\sum_ix_i\Bigr)b=\displaystyle\sum_iy_i\\[2mm] \Bigl(\displaystyle\sum_ix_i\Bigr)a+\Bigl(\displaystyle\sum_ix_i^2\Bigr)b=\displaystyle\sum_ix_iy_i \end{cases} $$
+<p>（$m=3$ のとき、$\sum x_i=3$、$\sum x_i^2=5$、$\sum y_i=5$、$\sum x_iy_i=6$ で、上の連立方程式と一致する。）次の章では、この一般の形を、行列だけで導く。</p>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>省略の段階：長い和から $\|\boldsymbol b-A\boldsymbol x\|^2$ へ</h3>
+<p>この回で、最小二乗法の「悪さ」$S$ を、4つの書き方で使い分ける。書き方によって何が省かれているかを、先に並べておく。以後、省略形を使うときは、この箱にリンクする。</p>
+<div class="box" id="abbr-lsq"><span class="label">省略の段階：残差平方和</span>
+<p><strong>S0（完全形、3点の場合）</strong>：$(y_1-a-bx_1)^2+(y_2-a-bx_2)^2+(y_3-a-bx_3)^2$。測定値・直線・2乗・足し算を、全部書き下す。</p>
+<p><strong>S1</strong>：$r_1^2+r_2^2+r_3^2=\sum_{i=1}^3r_i^2$。「$y_i-a-bx_i$」を $r_i$ という名前にした。<em>省いたもの</em>：残差が何の差だったか。<em>誤解が起きない理由</em>：$r_i:=y_i-(a+bx_i)$ という定義（1.2）がすぐ上にあり、定義に戻れる。</p>
+<p><strong>S2</strong>：$\|\boldsymbol r\|^2$。足し算の記号 $\sum$ を、ベクトルの長さの2乗にまとめた。<em>省いたもの</em>：何個足すか、各成分が何か。<em>誤解が起きない理由</em>：$\|\boldsymbol v\|^2=\sum v_i^2$ という定義（1.3）が決まっている。</p>
+<p><strong>S3</strong>：$\|\boldsymbol b-A\boldsymbol x\|^2$。$\boldsymbol r=\boldsymbol b-A\boldsymbol x$ を代入した。<em>省いたもの</em>：$A$ の中身（各 $i$ の行 $(1,x_i)$）。<em>誤解が起きない理由</em>：$A\boldsymbol x$ の第 $i$ 成分が $a+bx_i$ になること（1.2、<a href="16_第16回_行列は線形写像.html#sym-matvec">第16回</a>）が決まっている。</p>
+<p>以後、S3 の形は「データ全体を行列でまとめる」ときに、S1 の形は「点ごとの計算」をするときに使う。</p>
+</div>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 380" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="省略の階段" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>省略の階段</title>
+<rect x="0" y="0" width="440" height="380" fill="#fffdf7"/>
+<rect x="10" y="14" width="420" height="78" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="24.0" y="40.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">S0</text>
+<text x="220.0" y="42.0" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">y</tspan><tspan dy="4.2" font-size="10.5">1</tspan><tspan dy="-4.2">−</tspan><tspan font-style="italic">a</tspan><tspan>−</tspan><tspan font-style="italic">b</tspan><tspan font-style="italic">x</tspan><tspan dy="4.2" font-size="10.5">1</tspan><tspan dy="-4.2">)</tspan><tspan dy="-6.3" font-size="10.5">2</tspan><tspan dy="6.3">+(</tspan><tspan font-style="italic">y</tspan><tspan dy="4.2" font-size="10.5">2</tspan><tspan dy="-4.2">−</tspan><tspan font-style="italic">a</tspan><tspan>−</tspan><tspan font-style="italic">b</tspan><tspan font-style="italic">x</tspan><tspan dy="4.2" font-size="10.5">2</tspan><tspan dy="-4.2">)</tspan><tspan dy="-6.3" font-size="10.5">2</tspan><tspan dy="6.3">+(</tspan><tspan font-style="italic">y</tspan><tspan dy="4.2" font-size="10.5">3</tspan><tspan dy="-4.2">−</tspan><tspan font-style="italic">a</tspan><tspan>−</tspan><tspan font-style="italic">b</tspan><tspan font-style="italic">x</tspan><tspan dy="4.2" font-size="10.5">3</tspan><tspan dy="-4.2">)</tspan><tspan dy="-6.3" font-size="10.5">2</tspan></text>
+<text x="24.0" y="76.0" font-size="14" fill="#6b645a" text-anchor="start">何も省かない（3点の場合）</text>
+<line x1="220.0" y1="92.0" x2="220.0" y2="106.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 99.7 L220.0 106.0 L223.0 99.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="106" width="420" height="78" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="24.0" y="132.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">S1</text>
+<text x="220.0" y="136.0" font-size="19" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">r</tspan><tspan dy="5.3" font-size="13.3">1</tspan><tspan dy="-13.3" font-size="13.3">2</tspan><tspan dy="8.0">+</tspan><tspan font-style="italic">r</tspan><tspan dy="5.3" font-size="13.3">2</tspan><tspan dy="-13.3" font-size="13.3">2</tspan><tspan dy="8.0">+</tspan><tspan font-style="italic">r</tspan><tspan dy="5.3" font-size="13.3">3</tspan><tspan dy="-13.3" font-size="13.3">2</tspan></text>
+<text x="24.0" y="168.0" font-size="14" fill="#6b645a" text-anchor="start">「y − a − bx」を r という名前にした</text>
+<line x1="220.0" y1="184.0" x2="220.0" y2="198.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 191.7 L220.0 198.0 L223.0 191.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="198" width="420" height="78" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="24.0" y="224.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">S2</text>
+<text x="220.0" y="228.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>‖</tspan><tspan font-style="italic">r</tspan><tspan>‖</tspan><tspan dy="-8.4" font-size="14.0">2</tspan></text>
+<text x="24.0" y="260.0" font-size="14" fill="#6b645a" text-anchor="start">足し算を、ベクトル r の長さの2乗にまとめた</text>
+<line x1="220.0" y1="276.0" x2="220.0" y2="290.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 283.7 L220.0 290.0 L223.0 283.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="290" width="420" height="78" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.8"/>
+<text x="24.0" y="316.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">S3</text>
+<text x="220.0" y="320.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>‖</tspan><tspan font-style="italic">b</tspan><tspan>−</tspan><tspan font-style="italic">A</tspan><tspan font-style="italic">x</tspan><tspan>‖</tspan><tspan dy="-8.4" font-size="14.0">2</tspan></text>
+<text x="24.0" y="352.0" font-size="14" fill="#6b645a" text-anchor="start">r を、b − Ax という行列の式にまとめた</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　残差の2乗の和の書き方は、4段階で短くなる。式の意味は同じで、短くなるぶんだけ「何を省いたか」を覚えておく必要がある（この回の省略の段階を参照）。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>
+<p>$S(a,b)$ を $a$ と $b$ で偏微分して $0$ とおくと、$n=2$ 本の連立方程式が出る。係数を行列で書くと、これは $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$（正規方程式）になっていた。次の章では、2変数でなく一般の $n$ 変数で、同じ式を行列だけで導く。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>行列で一般に導く：正規方程式をつくる（その2）</h2>
+
+<h3 id="sec-3-1"><span class="no">3.1</span>ごく簡単な場合：定数の当てはめは平均</h3>
+<p>一般の導出に入る前に、いちばん簡単な場合を先に見る。未知数が1つ（$n=1$）で、$A$ が全部 $1$ の列だけ、$A=(1,1,1)^{\mathsf T}$ とする。モデルは「$y$ は定数 $c$」である。3点の $y$ の値 $\boldsymbol b=(1,2,2)^{\mathsf T}$ に対し、</p>
+$$ S(c)=(1-c)^2+(2-c)^2+(2-c)^2=3c^2-10c+9 $$
+<p>（各項を展開して足した：$c^2$ が3個、$c$ の係数が $-2-4-4=-10$、定数が $1+4+4=9$）。これを $c$ で微分して $0$ とおく：$S'(c)=6c-10=0$、$c=\frac{10}{6}=\frac53$。</p>
+<p>正規方程式で解くと、$A^{\mathsf T}A=(1)(1)+(1)(1)+(1)(1)=3$、$A^{\mathsf T}\boldsymbol b=1+2+2=5$。$3c=5$、$c=\frac53$。同じ答えである。そして $\frac53$ は、$y$ の値 $1,2,2$ の<strong>平均</strong>$\frac{1+2+2}3=\frac53$ である。図3.1 を見る。</p>
+<figure class="fig" id="fig-3-1">
+<svg viewBox="0 0 440 336" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="定数を当てはめる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>定数を当てはめる</title>
+<rect x="0" y="0" width="440" height="336" fill="#fffdf7"/>
+<text x="14.0" y="22.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">データ y₁, y₂, y₃ を数直線に置く</text>
+<line x1="40.0" y1="92.0" x2="410.0" y2="92.0" stroke="#2a2723" stroke-width="1.3"/><path d="M403.7 95.0 L410.0 92.0 L403.7 89.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="130.0" y1="88.0" x2="130.0" y2="96.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="130.0" y="114.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="220.0" y1="88.0" x2="220.0" y2="96.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="220.0" y="114.0" font-size="14" fill="#6b645a" text-anchor="middle">1.5</text>
+<line x1="310.0" y1="88.0" x2="310.0" y2="96.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="310.0" y="114.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<circle cx="130.0" cy="92.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="121.0" y="64.0" width="45.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="124.0" y="78.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">y₁=1</text>
+<circle cx="310.0" cy="92.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="231.0" y="56.0" width="76.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="304.0" y="70.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">y₂=y₃=2</text>
+<polygon points="250.0,92 243.0,108 257.0,108" fill="#2b3a67"/>
+<rect x="216.2" y="120.0" width="67.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="250.0" y="134.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">平均 5/3</text>
+<text x="14.0" y="172.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">c を動かすときの S(c) = (1−c)² + (2−c)² + (2−c)²</text>
+<line x1="60.0" y1="300.0" x2="390.0" y2="300.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 303.0 L390.0 300.0 L383.7 297.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="300.0" x2="60.0" y2="190.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 196.3 L60.0 190.0 L57.0 196.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="140.0" y1="296.0" x2="140.0" y2="304.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="140.0" y="320.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="220.0" y1="296.0" x2="220.0" y2="304.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="220.0" y="320.0" font-size="14" fill="#6b645a" text-anchor="middle">1.5</text>
+<line x1="300.0" y1="296.0" x2="300.0" y2="304.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="300.0" y="320.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="56.0" y1="268.8" x2="64.0" y2="268.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="273.8" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="237.5" x2="64.0" y2="237.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="242.5" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="56.0" y1="206.2" x2="64.0" y2="206.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="211.2" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="394.0" y="322.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">c</tspan></text>
+<text x="74.0" y="196.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">S</tspan></text>
+<polyline points="100.0,200.4 102.0,202.5 104.0,204.6 106.0,206.7 108.0,208.8 110.0,210.8 112.0,212.8 114.0,214.7 116.0,216.6 118.0,218.5 120.0,220.4 122.0,222.3 124.0,224.1 126.0,225.8 128.0,227.6 130.0,229.3 132.0,231.0 134.0,232.7 136.0,234.3 138.0,235.9 140.0,237.5 142.0,239.0 144.0,240.6 146.0,242.1 148.0,243.5 150.0,244.9 152.0,246.3 154.0,247.7 156.0,249.1 158.0,250.4 160.0,251.7 162.0,252.9 164.0,254.1 166.0,255.3 168.0,256.5 170.0,257.6 172.0,258.8 174.0,259.8 176.0,260.9 178.0,261.9 180.0,262.9 182.0,263.9 184.0,264.8 186.0,265.7 188.0,266.6 190.0,267.4 192.0,268.2 194.0,269.0 196.0,269.8 198.0,270.5 200.0,271.2 202.0,271.9 204.0,272.5 206.0,273.1 208.0,273.7 210.0,274.2 212.0,274.8 214.0,275.3 216.0,275.7 218.0,276.2 220.0,276.6 222.0,276.9 224.0,277.3 226.0,277.6 228.0,277.9 230.0,278.1 232.0,278.4 234.0,278.6 236.0,278.8 238.0,278.9 240.0,279.0 242.0,279.1 244.0,279.1 246.0,279.2 248.0,279.2 250.0,279.1 252.0,279.1 254.0,279.0 256.0,278.8 258.0,278.7 260.0,278.5 262.0,278.3 264.0,278.1 266.0,277.8 268.0,277.5 270.0,277.2 272.0,276.8 274.0,276.4 276.0,276.0 278.0,275.6 280.0,275.1 282.0,274.6 284.0,274.1 286.0,273.5 288.0,272.9 290.0,272.3 292.0,271.6 294.0,271.0 296.0,270.3 298.0,269.5 300.0,268.8 302.0,268.0 304.0,267.1 306.0,266.3 308.0,265.4 310.0,264.5 312.0,263.5 314.0,262.6 316.0,261.6 318.0,260.5 320.0,259.5 322.0,258.4 324.0,257.3 326.0,256.1 328.0,254.9 330.0,253.7 332.0,252.5 334.0,251.2 336.0,249.9 338.0,248.6 340.0,247.3 342.0,245.9 344.0,244.5 346.0,243.0 348.0,241.6 350.0,240.1 352.0,238.5 354.0,237.0 356.0,235.4 358.0,233.8 360.0,232.1 362.0,230.5 364.0,228.8 366.0,227.0 368.0,225.3 370.0,223.5 372.0,221.6 374.0,219.8 376.0,217.9 378.0,216.0 380.0,214.1" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<circle cx="246.7" cy="279.2" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="251.7" y="249.2" width="137.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="254.7" y="263.2" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">c = 5/3：S = 2/3</text>
+</svg>
+<figcaption><strong>図 3.1</strong>　未知数が1つだけ（$A=(1,1,1)^{\mathsf T}$、$n=1$）の最小二乗は、データの平均を求めることに一致する。$S(c)$ は $c$ の2次式で、底は平均 $\frac53$ にある。</figcaption>
+</figure>
+<p>つまり、<strong>「データの平均」は、最小二乗法の一番簡単な例</strong>だった。「平均より大きいずれと小さいずれが打ち消し合う」という平均の性質（ずれの合計が $0$）も、正規方程式 $A^{\mathsf T}(\boldsymbol b-A\hat c)=0$ から来ている（ここでは $A=(1,1,1)^{\mathsf T}$ なので、$A^{\mathsf T}$ を掛けるとは全成分を足すことで、$\sum_i(y_i-\hat c)=0$ となる）。</p>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>$\|A\boldsymbol x-\boldsymbol b\|^2$ を展開する</h3>
+<p>一般の $A\in\mathbb R^{m\times n}$、$\boldsymbol b\in\mathbb R^m$ で、$f(\boldsymbol x):=\|A\boldsymbol x-\boldsymbol b\|^2$ を $\boldsymbol x$ の関数とみなす（$\|\boldsymbol b-A\boldsymbol x\|^2$ と同じ。差の順序を入れ替えても長さは変わらない）。1行に1操作で展開する。</p>
+$$ \begin{aligned} f(\boldsymbol x)&=\|A\boldsymbol x-\boldsymbol b\|^2\\ &=(A\boldsymbol x-\boldsymbol b)^{\mathsf T}(A\boldsymbol x-\boldsymbol b) &&\text{（}\|\boldsymbol v\|^2=\boldsymbol v^{\mathsf T}\boldsymbol v\text{、1.3）}\\ &=\bigl((A\boldsymbol x)^{\mathsf T}-\boldsymbol b^{\mathsf T}\bigr)(A\boldsymbol x-\boldsymbol b) &&\text{（転置は和・差に分配する）}\\ &=(\boldsymbol x^{\mathsf T}A^{\mathsf T}-\boldsymbol b^{\mathsf T})(A\boldsymbol x-\boldsymbol b) &&\text{（}(XY)^{\mathsf T}=Y^{\mathsf T}X^{\mathsf T}\text{、第5回）}\\ &=\boldsymbol x^{\mathsf T}A^{\mathsf T}A\boldsymbol x-\boldsymbol x^{\mathsf T}A^{\mathsf T}\boldsymbol b-\boldsymbol b^{\mathsf T}A\boldsymbol x+\boldsymbol b^{\mathsf T}\boldsymbol b &&\text{（かっこを展開）} \end{aligned} $$
+<p>ここで、真ん中の2つは等しい。$\boldsymbol x^{\mathsf T}A^{\mathsf T}\boldsymbol b$ は、$(1\times n)(n\times m)(m\times 1)$ の積で、$1\times1$、つまり<strong>ただの数</strong>である。数を転置しても変わらないので、</p>
+$$ \boldsymbol x^{\mathsf T}A^{\mathsf T}\boldsymbol b=(\boldsymbol x^{\mathsf T}A^{\mathsf T}\boldsymbol b)^{\mathsf T}=\boldsymbol b^{\mathsf T}A\boldsymbol x. $$
+<p>（転置の順序反転：$(\boldsymbol x^{\mathsf T}A^{\mathsf T}\boldsymbol b)^{\mathsf T}=\boldsymbol b^{\mathsf T}(A^{\mathsf T})^{\mathsf T}(\boldsymbol x^{\mathsf T})^{\mathsf T}=\boldsymbol b^{\mathsf T}A\boldsymbol x$。）したがって</p>
+$$ f(\boldsymbol x)=\boldsymbol x^{\mathsf T}(A^{\mathsf T}A)\boldsymbol x-2\,(A^{\mathsf T}\boldsymbol b)^{\mathsf T}\boldsymbol x+\boldsymbol b^{\mathsf T}\boldsymbol b. $$
+<p>（$\boldsymbol b^{\mathsf T}A\boldsymbol x=(A^{\mathsf T}\boldsymbol b)^{\mathsf T}\boldsymbol x$ と書き直した。）これは $\boldsymbol x$ について、「2次形式（<a href="21_第21回_対角化と二次形式.html#sym-quadratic-form">第21回</a>）」＋「1次の項」＋「定数」の形である。1変数の $ax^2-2cx+d$ と同じ形と思えばよい。</p>
+<p><strong>数値で確かめる</strong>（3点の例）。$A^{\mathsf T}A=\begin{pmatrix}3&3\\3&5\end{pmatrix}$、$A^{\mathsf T}\boldsymbol b=\begin{pmatrix}5\\6\end{pmatrix}$、$\boldsymbol b^{\mathsf T}\boldsymbol b=1+4+4=9$ を入れると
+$$ f(a,b)=3a^2+6ab+5b^2-10a-12b+9. $$
+（2次形式の部分：$\begin{pmatrix}a&b\end{pmatrix}\begin{pmatrix}3&3\\3&5\end{pmatrix}\begin{pmatrix}a\\b\end{pmatrix}=3a^2+3ab+3ba+5b^2$。）一方、2.1 の $S(a,b)$ を直接展開すると、$(1-a)^2+(2-a-b)^2+(2-a-2b)^2$ の各項は
+$a^2-2a+1$、$a^2+b^2+4+2ab-4a-4b$、$a^2+4b^2+4+4ab-4a-8b$。足すと $3a^2+5b^2+6ab-10a-12b+9$ で一致する。</p>
+
+<h3 id="sec-3-3"><span class="no">3.3</span>勾配が $\boldsymbol 0$：正規方程式の導出、そして最小であること</h3>
+<p>2次式の最小点は、微分が $0$ のところである。多変数では、偏微分を縦に並べた<a href="23_第23回_場と勾配.html#sym-gradient">勾配</a> $\nabla f$ が $\boldsymbol 0$ になるところである。必要な規則を2つ、先に確かめる。</p>
+<p>規則(i)：$\boldsymbol c\in\mathbb R^n$ について $\nabla(\boldsymbol c^{\mathsf T}\boldsymbol x)=\boldsymbol c$。</p>
+<p>規則(ii)：対称行列 $M$ について $\nabla(\boldsymbol x^{\mathsf T}M\boldsymbol x)=2M\boldsymbol x$。</p>
+<p><strong>確かめ（$n=2$）</strong>。(i) $\boldsymbol c^{\mathsf T}\boldsymbol x=c_1x_1+c_2x_2$。$x_1$ で偏微分すると $c_1$、$x_2$ で偏微分すると $c_2$。並べて $(c_1,c_2)^{\mathsf T}=\boldsymbol c$ ✓。(ii) $M=\begin{pmatrix}p&q\\q&s\end{pmatrix}$（対称）のとき、$\boldsymbol x^{\mathsf T}M\boldsymbol x=px_1^2+2qx_1x_2+sx_2^2$（$qx_1x_2$ と $qx_2x_1$ が同じなので2倍）。$x_1$ で偏微分：$2px_1+2qx_2$、$x_2$ で偏微分：$2qx_1+2sx_2$。並べると $2\begin{pmatrix}p&q\\q&s\end{pmatrix}\begin{pmatrix}x_1\\x_2\end{pmatrix}=2M\boldsymbol x$ ✓。一般の $n$ でも、成分で同じ計算をすればよい（演習 問9）。</p>
+<p>$A^{\mathsf T}A$ は対称（<a href="22_第22回_特異値分解.html#sec-1-2">第22回 1.2</a>：$(A^{\mathsf T}A)^{\mathsf T}=A^{\mathsf T}A$）なので規則(ii)が使える。3.2 の $f$ に当てはめる。</p>
+$$ \begin{aligned} \nabla f(\boldsymbol x)&=\nabla\bigl(\boldsymbol x^{\mathsf T}A^{\mathsf T}A\boldsymbol x\bigr)-2\nabla\bigl((A^{\mathsf T}\boldsymbol b)^{\mathsf T}\boldsymbol x\bigr)+\nabla(\boldsymbol b^{\mathsf T}\boldsymbol b) &&\text{（勾配は和と定数倍に分配）}\\ &=2A^{\mathsf T}A\boldsymbol x-2A^{\mathsf T}\boldsymbol b+\boldsymbol 0 &&\text{（規則(ii)、(i)。定数 }\boldsymbol b^{\mathsf T}\boldsymbol b\text{ の勾配は }\boldsymbol 0\text{）} \end{aligned} $$
+<p>$\nabla f(\hat{\boldsymbol x})=\boldsymbol 0$ とおく。$2A^{\mathsf T}A\hat{\boldsymbol x}-2A^{\mathsf T}\boldsymbol b=\boldsymbol 0$ の両辺を $2$ で割って $A^{\mathsf T}\boldsymbol b$ を右へ移すと、</p>
+$$ A^{\mathsf T}A\hat{\boldsymbol x}=A^{\mathsf T}\boldsymbol b. $$
+<p>正規方程式が、一般の $A$ で出た。3点の例では $\nabla f=\begin{pmatrix}6a+6b-10\\6a+10b-12\end{pmatrix}$ で、2.1 の $\frac{\partial S}{\partial a}=-2(5-3a-3b)=6a+6b-10$、$\frac{\partial S}{\partial b}=-2(6-3a-5b)=6a+10b-12$ と一致する ✓。</p>
+
+<p>残る問いは、「勾配が $\boldsymbol 0$ の点」が本当に<strong>最小</strong>か、である。次の定理は、勾配を使わずに、最小であることを直接示す。</p>
+<div class="thm"><span class="label">定理3.1（正規方程式の解は最小二乗解）</span>
+<p>$\hat{\boldsymbol x}$ が $A^{\mathsf T}A\hat{\boldsymbol x}=A^{\mathsf T}\boldsymbol b$ を満たすとする。このとき、すべての $\boldsymbol x\in\mathbb R^n$ について
+$$ \|A\boldsymbol x-\boldsymbol b\|^2=\|A\hat{\boldsymbol x}-\boldsymbol b\|^2+\|A(\boldsymbol x-\hat{\boldsymbol x})\|^2. $$
+特に $\|A\boldsymbol x-\boldsymbol b\|^2\ge\|A\hat{\boldsymbol x}-\boldsymbol b\|^2$（$\hat{\boldsymbol x}$ は最小二乗解）。等号は $A\boldsymbol x=A\hat{\boldsymbol x}$ のときに限る。</p>
+</div>
+<div class="proof"><span class="label">証明</span>
+<p>$A\boldsymbol x-\boldsymbol b=A(\boldsymbol x-\hat{\boldsymbol x})+(A\hat{\boldsymbol x}-\boldsymbol b)$ と分ける（右辺で $A\hat{\boldsymbol x}$ が $-$ と $+$ で消える）。$\boldsymbol d:=\boldsymbol x-\hat{\boldsymbol x}$、$\boldsymbol e:=A\hat{\boldsymbol x}-\boldsymbol b$ とおくと、</p>
+$$ \begin{aligned} \|A\boldsymbol d+\boldsymbol e\|^2&=(A\boldsymbol d+\boldsymbol e)^{\mathsf T}(A\boldsymbol d+\boldsymbol e) &&\text{（}\|\boldsymbol v\|^2=\boldsymbol v^{\mathsf T}\boldsymbol v\text{）}\\ &=\|A\boldsymbol d\|^2+2\,\boldsymbol d^{\mathsf T}A^{\mathsf T}\boldsymbol e+\|\boldsymbol e\|^2 &&\text{（展開。真ん中の2項は数どうしで等しい）} \end{aligned} $$
+<p>真ん中の項で、$A^{\mathsf T}\boldsymbol e=A^{\mathsf T}(A\hat{\boldsymbol x}-\boldsymbol b)=A^{\mathsf T}A\hat{\boldsymbol x}-A^{\mathsf T}\boldsymbol b=\boldsymbol 0$（正規方程式）。よって真ん中の項は $0$ で、$\|A\boldsymbol x-\boldsymbol b\|^2=\|A\boldsymbol d\|^2+\|\boldsymbol e\|^2$。$\|A\boldsymbol d\|^2\ge0$ なので $\|\boldsymbol e\|^2$ 以上。等号は $\|A\boldsymbol d\|^2=0$、すなわち $A\boldsymbol d=\boldsymbol 0$（長さ0のベクトルは零ベクトル）のとき。□</p>
+</div>
+<p><strong>数値で確かめる</strong>：$\boldsymbol x=(1,0)^{\mathsf T}$（$a=1,b=0$）を選ぶ。$A\boldsymbol x=(1,1,1)^{\mathsf T}$、$A\boldsymbol x-\boldsymbol b=(0,-1,-1)^{\mathsf T}$ で $\|\cdot\|^2=2$。一方 $\|A\hat{\boldsymbol x}-\boldsymbol b\|^2=\frac16$。$\boldsymbol x-\hat{\boldsymbol x}=(-\frac16,-\frac12)^{\mathsf T}$、$A(\boldsymbol x-\hat{\boldsymbol x})=\left(-\frac16,\ -\frac16-\frac12,\ -\frac16-1\right)^{\mathsf T}=\left(-\frac16,-\frac23,-\frac76\right)^{\mathsf T}$、$\|\cdot\|^2=\frac1{36}+\frac{16}{36}+\frac{49}{36}=\frac{66}{36}=\frac{11}6$。$\frac16+\frac{11}6=\frac{12}6=2$ ✓。</p>
+<p>定理3.1 の等号条件から、$A$ の列が一次独立のとき（$A\boldsymbol d=\boldsymbol 0\Rightarrow\boldsymbol d=\boldsymbol 0$、すなわち $\ker A=\{\boldsymbol 0\}$）は、最小をとる $\boldsymbol x$ は $\hat{\boldsymbol x}$ ただ1つである。</p>
+
+<h3 id="sec-3-4"><span class="no">3.4</span>解はあるか、1つだけか</h3>
+<p>正規方程式 $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$ は、$n\times n$ の連立方程式である。いつ、ただ1つの解をもつか。</p>
+<div class="thm"><span class="label">定理3.2（解の一意性）</span>
+<p>次は同値である：(1) $A^{\mathsf T}A$ が逆行列をもつ　(2) $\ker A=\{\boldsymbol 0\}$　(3) $A$ の列が一次独立　(4) $\operatorname{rank}A=n$。このとき最小二乗解は
+$$ \hat{\boldsymbol x}=(A^{\mathsf T}A)^{-1}A^{\mathsf T}\boldsymbol b $$
+でただ1つである。
+</p></div>
+<div class="proof"><span class="label">証明（概略）</span>
+<p>(2)⇔(3)⇔(4) は第17回・第15回の結果（<a href="17_第17回_連立一次方程式とランク.html#sym-ker">核</a>が $\{\boldsymbol 0\}$ ⇔ 列が一次独立 ⇔ ランクが列の数）。(1)⇔(2)：<a href="22_第22回_特異値分解.html#sec-1-2">第22回 定理1.1(4)</a> より $\ker(A^{\mathsf T}A)=\ker A$。正方行列が逆行列をもつための条件は「核が $\{\boldsymbol 0\}$」（第17回）なので、$A^{\mathsf T}A$ が逆行列をもつことと $\ker A=\{\boldsymbol 0\}$ は同値。逆行列があれば、正規方程式の両辺に左から $(A^{\mathsf T}A)^{-1}$ を掛けて $\hat{\boldsymbol x}=(A^{\mathsf T}A)^{-1}A^{\mathsf T}\boldsymbol b$。□</p>
+</div>
+<p>3点の例では、列 $(1,1,1)^{\mathsf T}$ と $(0,1,2)^{\mathsf T}$ は一次独立。$\det(A^{\mathsf T}A)=15-9=6\neq0$ で、$(A^{\mathsf T}A)^{-1}=\frac16\begin{pmatrix}5&-3\\-3&3\end{pmatrix}$。$\hat{\boldsymbol x}=\frac16\begin{pmatrix}5&-3\\-3&3\end{pmatrix}\begin{pmatrix}5\\6\end{pmatrix}=\frac16\begin{pmatrix}25-18\\-15+18\end{pmatrix}=\frac16\begin{pmatrix}7\\3\end{pmatrix}=\begin{pmatrix}\frac76\\\frac12\end{pmatrix}$ ✓。</p>
+<p><strong>列が一次従属のとき</strong>は、$A^{\mathsf T}A$ が逆行列をもたない。それでも最小二乗解は<strong>無数に</strong>ある（$A\boldsymbol x$ が同じ値になる $\boldsymbol x$ がたくさんあるため）。例：$A=\begin{pmatrix}1&2\\2&4\\3&6\end{pmatrix}$（第2列＝第1列の2倍）、$\boldsymbol b=(1,2,4)^{\mathsf T}$。$A\boldsymbol x=(c_1+2c_2)\,(1,2,3)^{\mathsf T}$ なので、$s:=c_1+2c_2$ とおくと $S=\|s(1,2,3)^{\mathsf T}-\boldsymbol b\|^2=14s^2-34s+21$（$(1,2,3)\cdot(1,2,3)=14$、$(1,2,3)\cdot\boldsymbol b=1+4+12=17$、$\|\boldsymbol b\|^2=21$）。これを最小にするのは $s=\frac{34}{28}=\frac{17}{14}$ で、$c_1+2c_2=\frac{17}{14}$ を満たす $(c_1,c_2)$ はすべて最小二乗解である。図3.2 を見る。</p>
+<figure class="fig" id="fig-3-2">
+<svg viewBox="0 0 440 262" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="列が従属なときの谷" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>列が従属なときの谷</title>
+<rect x="0" y="0" width="440" height="262" fill="#fffdf7"/>
+<line x1="60.0" y1="166.0" x2="370.0" y2="166.0" stroke="#2a2723" stroke-width="1.3"/><path d="M363.7 169.0 L370.0 166.0 L363.7 163.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="130.0" y1="216.0" x2="130.0" y2="6.0" stroke="#2a2723" stroke-width="1.3"/><path d="M133.0 12.3 L130.0 6.0 L127.0 12.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="130.0" y1="162.0" x2="130.0" y2="170.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="130.0" y="186.0" font-size="14" fill="#6b645a" text-anchor="middle">0</text>
+<line x1="230.0" y1="162.0" x2="230.0" y2="170.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="230.0" y="186.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="330.0" y1="162.0" x2="330.0" y2="170.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="330.0" y="186.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="126.0" y1="166.0" x2="134.0" y2="166.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="122.0" y="171.0" font-size="14" fill="#6b645a" text-anchor="end">0</text>
+<line x1="126.0" y1="66.0" x2="134.0" y2="66.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="122.0" y="71.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<text x="374.0" y="188.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">c</tspan>₁</text>
+<text x="144.0" y="12.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">c</tspan>₂</text>
+<polygon points="359.9,216.0 -40.1,16.0 -57.0,16.0 343.0,216.0" fill="#d4c7b0" opacity="0.7"/>
+<polygon points="370.3,216.0 -29.7,16.0 -67.5,16.0 332.5,216.0" fill="#e6ddcd" opacity="0.7"/>
+<polyline points="351.4,216.0 -48.6,16.0" fill="none" stroke="#a8322a" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="130.0" y1="166.0" x2="154.3" y2="117.4" stroke="#2b3a67" stroke-width="2.4" stroke-dasharray="5 4"/>
+<circle cx="154.3" cy="117.4" r="6" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<rect x="163.3" y="143.4" width="190.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="166.3" y="157.4" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">最短の解（17/70, 17/35）</text>
+<rect x="270.2" y="62.0" width="92.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="360.0" y="76.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">S が最小の線</text>
+<rect x="211.4" y="82.0" width="151.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="360.0" y="96.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">c₁ + 2c₂ = 17/14</text>
+<text x="14.0" y="244.0" font-size="14" fill="#2a2723" text-anchor="start">色の帯：S が小さい範囲（谷）。谷の底は一本の直線</text>
+</svg>
+<figcaption><strong>図 3.2</strong>　$A$ の2列が定数倍の関係（第2列＝第1列の2倍）のとき、$S$ の最小点は1点でなく、直線 $c_1+2c_2=\frac{17}{14}$ 全体になる（谷の底）。その直線のうち原点にいちばん近い点が、擬似逆行列 $A^{+}\boldsymbol b$ の与える解である。</figcaption>
+</figure>
+<p>無数の解のうち、<strong>原点に最も近い</strong>（$\|\boldsymbol x\|$ が最小の）ものが、<a href="22_第22回_特異値分解.html#sym-pseudoinverse">擬似逆行列</a>が与える解 $\hat{\boldsymbol x}=A^{+}\boldsymbol b$ である（<a href="22_第22回_特異値分解.html#sec-5-4">第22回 定理5.1</a>）。ここでは $A=\boldsymbol a\,(1\ \ 2)$（$\boldsymbol a=(1,2,3)^{\mathsf T}$）と書け、$A^{+}=\frac1{70}\begin{pmatrix}1&2&3\\2&4&6\end{pmatrix}$ なので、$A^{+}\boldsymbol b=\frac1{70}(17,34)^{\mathsf T}=\left(\frac{17}{70},\frac{17}{35}\right)^{\mathsf T}$。これは直線 $c_1+2c_2=\frac{17}{14}$ 上にあり（$\frac{17}{70}+\frac{34}{35}=\frac{17}{70}+\frac{68}{70}=\frac{85}{70}=\frac{17}{14}$ ✓）、方向 $(1,2)$（直線に垂直）上にある。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<ul>
+<li>「$A^{\mathsf T}A$ は常に逆行列をもつ」は誤り。$A$ の列が一次独立のときだけである（定理3.2）。</li>
+<li>「$(A^{\mathsf T}A)^{-1}A^{\mathsf T}=A^{-1}$」は誤り。$A$ が正方で逆行列をもつときは確かに一致するが、長方形の $A$ には $A^{-1}$ がない。$(A^{\mathsf T}A)^{-1}A^{\mathsf T}$ は $A^{+}$ の特別な場合（列が一次独立のとき）である（第22回 5.5）。</li>
+<li>「正規方程式の解があれば、$A\boldsymbol x=\boldsymbol b$ の解である」は誤り。$\boldsymbol b\in\operatorname{im}A$ のときだけ。そうでなければ、正規方程式の解は「近似解」にとどまる（残差 $\boldsymbol r\neq\boldsymbol 0$）。</li>
+</ul>
+</div>
+<div class="why"><span class="label">ひとことで</span>
+<p>$\|A\boldsymbol x-\boldsymbol b\|^2$ を展開して勾配を $\boldsymbol 0$ とおくと、一般の $A$ でも $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$ が出る。その解が最小であることは、$\|A\boldsymbol x-\boldsymbol b\|^2=\|A\hat{\boldsymbol x}-\boldsymbol b\|^2+\|A(\boldsymbol x-\hat{\boldsymbol x})\|^2$ という式で直接示せる。列が一次独立なら解は1つ、そうでなければ無数で、最短の解が $A^{+}\boldsymbol b$。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>射影として見る：幾何の意味</h2>
+
+<h3 id="sec-4-1"><span class="no">4.1</span>残差は、$A$ の像に直交する</h3>
+<p>正規方程式 $A^{\mathsf T}A\hat{\boldsymbol x}=A^{\mathsf T}\boldsymbol b$ の右辺を左へ移し、$A^{\mathsf T}$ でくくる。</p>
+$$ \begin{aligned} A^{\mathsf T}A\hat{\boldsymbol x}-A^{\mathsf T}\boldsymbol b&=\boldsymbol 0 &&\text{（右辺を左へ移す）}\\ A^{\mathsf T}(A\hat{\boldsymbol x}-\boldsymbol b)&=\boldsymbol 0 &&\text{（}A^{\mathsf T}\text{ でくくる）}\\ A^{\mathsf T}(\boldsymbol b-A\hat{\boldsymbol x})&=\boldsymbol 0 &&\text{（両辺に }-1\text{ を掛ける）} \end{aligned} $$
+<p>最後の式 $A^{\mathsf T}\boldsymbol r=\boldsymbol 0$（$\boldsymbol r=\boldsymbol b-A\hat{\boldsymbol x}$ は残差ベクトル）が、何を意味するかを読む。$A^{\mathsf T}$ の第 $j$ 行は、$A$ の第 $j$ 列 $\boldsymbol a_j$ を横に寝かせたものなので、$A^{\mathsf T}\boldsymbol r$ の第 $j$ 成分は $\boldsymbol a_j\cdot\boldsymbol r$（内積）。すなわち
+$$ A^{\mathsf T}\boldsymbol r=\boldsymbol 0\iff\text{すべての }j\text{ で }\boldsymbol a_j\cdot\boldsymbol r=0\iff\boldsymbol r\perp\boldsymbol a_j\ (j=1,\dots,n). $$</p>
+<p>$\operatorname{im}A=\operatorname{span}\{\boldsymbol a_1,\dots,\boldsymbol a_n\}$（<a href="17_第17回_連立一次方程式とランク.html#sym-im">像</a>は列の張る空間）で、すべての列に直交するベクトルは、列の一次結合にも直交する。したがって</p>
+$$ A^{\mathsf T}\boldsymbol r=\boldsymbol 0\iff\boldsymbol r\in(\operatorname{im}A)^{\perp}. $$
+<p>ここで $(\operatorname{im}A)^{\perp}$ は<a href="19_第19回_内積・直交・射影.html#sym-orth-complement">直交補空間</a>（$\operatorname{im}A$ のすべてのベクトルに直交するベクトル全体）である。</p>
+<p>3点の例で確かめる。$\boldsymbol r=\left(-\frac16,\frac13,-\frac16\right)^{\mathsf T}$。第1列 $(1,1,1)$ との内積：$-\frac16+\frac13-\frac16=0$。第2列 $(0,1,2)$ との内積：$0+\frac13-\frac26=\frac13-\frac13=0$。図4.2 は、この内積を「成分ごとの積」の棒で見せたものである（上向きと下向きが打ち消し合う）。</p>
+<figure class="fig" id="fig-4-2">
+<svg viewBox="0 0 440 450" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="残差と各列の内積" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>残差と各列の内積</title>
+<rect x="0" y="0" width="440" height="450" fill="#fffdf7"/>
+<text x="14.0" y="30.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">第1列 (1, 1, 1) との成分ごとの積　r_i · 1</text>
+<line x1="30.0" y1="104.0" x2="410.0" y2="104.0" stroke="#2a2723" stroke-width="1.3"/><path d="M403.7 107.0 L410.0 104.0 L403.7 101.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<rect x="78" y="104.0" width="44" height="25.0" fill="#a8322a" opacity="0.8"/>
+<text x="100.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle">i = 1</text>
+<text x="100.0" y="147.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">−1/6</text>
+<rect x="188" y="54.0" width="44" height="50.0" fill="#2b3a67" opacity="0.8"/>
+<text x="210.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle">i = 2</text>
+<text x="210.0" y="46.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">1/3</text>
+<rect x="298" y="104.0" width="44" height="25.0" fill="#a8322a" opacity="0.8"/>
+<text x="320.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle">i = 3</text>
+<text x="320.0" y="147.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">−1/6</text>
+<text x="14.0" y="216.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">合計 = −1/6 + 1/3 − 1/6 = 0</text>
+<text x="14.0" y="255.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">第2列 (0, 1, 2) との成分ごとの積　r_i · x_i</text>
+<line x1="30.0" y1="329.0" x2="410.0" y2="329.0" stroke="#2a2723" stroke-width="1.3"/><path d="M403.7 332.0 L410.0 329.0 L403.7 326.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<rect x="78" y="329.0" width="44" height="0.0" fill="#2b3a67" opacity="0.8"/>
+<text x="100.0" y="417.0" font-size="14" fill="#6b645a" text-anchor="middle">i = 1</text>
+<text x="100.0" y="321.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">0</text>
+<rect x="188" y="279.0" width="44" height="50.0" fill="#2b3a67" opacity="0.8"/>
+<text x="210.0" y="417.0" font-size="14" fill="#6b645a" text-anchor="middle">i = 2</text>
+<text x="210.0" y="271.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">1/3</text>
+<rect x="298" y="329.0" width="44" height="50.0" fill="#a8322a" opacity="0.8"/>
+<text x="320.0" y="417.0" font-size="14" fill="#6b645a" text-anchor="middle">i = 3</text>
+<text x="320.0" y="397.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">−1/3</text>
+<text x="14.0" y="441.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">合計 = 0 + 1/3 − 1/3 = 0</text>
+</svg>
+<figcaption><strong>図 4.2</strong>　残差 $\boldsymbol r=(-\frac16,\frac13,-\frac16)^{\mathsf T}$ と各列の内積は、成分ごとの積の合計である。棒の上向き・下向きがちょうど打ち消し合って、どちらも0。これが「$\boldsymbol r$ が $\operatorname{im}A$ に直交する」の中身である。</figcaption>
+</figure>
+<p>これは第19回の<a href="19_第19回_内積・直交・射影.html#sec-5-5">5.5（射影は、いちばん近い点を与える）</a>の主張そのものである。$W:=\operatorname{im}A$ とおくと、$\boldsymbol b$ の $W$ への射影 $\boldsymbol p$ は「$\boldsymbol b-\boldsymbol p\in W^{\perp}$ となる $W$ の点」、そして $W$ のなかで $\boldsymbol b$ に最も近い点だった。今の $\boldsymbol p=A\hat{\boldsymbol x}$ は $W$ の点で、$\boldsymbol b-\boldsymbol p=\boldsymbol r\in W^{\perp}$ だから、まさに射影である。</p>
+<div class="thm"><span class="label">定理4.1（最小二乗法＝像への射影）</span>
+<p>$\hat{\boldsymbol x}$ が最小二乗解であるとき、$A\hat{\boldsymbol x}$ は $\boldsymbol b$ の $\operatorname{im}A$ への射影 $\operatorname{proj}_{\operatorname{im}A}\boldsymbol b$ である。逆に $\boldsymbol p:=\operatorname{proj}_{\operatorname{im}A}\boldsymbol b$ は $\operatorname{im}A$ の点なので $\boldsymbol p=A\hat{\boldsymbol x}$ となる $\hat{\boldsymbol x}$ が存在し、その $\hat{\boldsymbol x}$ が最小二乗解になる。特に、最小二乗解は<strong>いつも存在する</strong>。</p>
+</div>
+<p>図4.1 は、3点の例を「$\boldsymbol b$ が $\operatorname{im}A$ に落ちる」様子として、実際の長さで描いたものである。</p>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 344" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="射影の断面図" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>射影の断面図</title>
+<rect x="0" y="0" width="440" height="344" fill="#fffdf7"/>
+<line x1="14.0" y1="170.0" x2="426.0" y2="170.0" stroke="#6b645a" stroke-width="2.2"/>
+<text x="426.0" y="248.0" font-size="14" fill="#6b645a" text-anchor="end">im A（A の2列が張る平面を、横から見た線）</text>
+<line x1="30.0" y1="170.0" x2="356.9" y2="170.0" stroke="#2b3a67" stroke-width="3.2"/><path d="M347.9 174.3 L356.9 170.0 L347.9 165.7" fill="none" stroke="#2b3a67" stroke-width="3.2"/>
+<line x1="30.0" y1="170.0" x2="356.9" y2="125.1" stroke="#2a2723" stroke-width="3.0"/><path d="M348.6 130.6 L356.9 125.1 L347.4 122.0" fill="none" stroke="#2a2723" stroke-width="3.0"/>
+<line x1="356.9" y1="170.0" x2="356.9" y2="135.1" stroke="#a8322a" stroke-width="3.2"/>
+<circle cx="30.0" cy="170.0" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="356.9" cy="170.0" r="6" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="356.9" cy="125.1" r="6" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<polyline points="344.9,170.0 344.9,158.0 356.9,158.0" fill="none" stroke="#2a2723" stroke-width="1.4" stroke-linejoin="round"/>
+<rect x="33.0" y="116.0" width="16.8" height="24" fill="#fffdf7" opacity="0.92"/><text x="36.0" y="134.0" font-size="18" fill="#2a2723" text-anchor="start" font-weight="bold">b</text>
+<rect x="47.0" y="181.0" width="168.0" height="21" fill="#fffdf7" opacity="0.92"/><text x="50.0" y="196.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">p：b にいちばん近い点</text>
+<rect x="363.9" y="137.5" width="15.6" height="22" fill="#fffdf7" opacity="0.92"/><text x="366.9" y="153.5" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">r</text>
+<text x="14.0" y="24.0" font-size="14" fill="#6b645a" text-anchor="start">実際の長さで描いた（1 = 110 px）</text>
+<text x="14.0" y="306.0" font-size="14" fill="#2a2723" text-anchor="start">‖b‖² = 9　‖p‖² = 53/6 ≈ 8.833　‖r‖² = 1/6 ≈ 0.167</text>
+<text x="14.0" y="328.0" font-size="14" fill="#2a2723" text-anchor="start">9 = 53/6 + 1/6：直角三角形のピタゴラス</text>
+<circle cx="257.9" cy="170.0" r="5" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<line x1="356.9" y1="125.1" x2="257.9" y2="170.0" stroke="#5f7f4f" stroke-width="1.6" stroke-dasharray="5 4"/>
+<rect x="234.9" y="206.0" width="95.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="237.9" y="220.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">Ax（他の x）</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　$\boldsymbol b=(1,2,2)^{\mathsf T}$ を、$A=\begin{pmatrix}1&0\\1&1\\1&2\end{pmatrix}$ の列が張る平面 $\operatorname{im}A$ に落とす。垂線の足 $\boldsymbol p=A\hat{\boldsymbol x}$ が最も近い点で、残差 $\boldsymbol r$ は平面に直交する。緑の点（他の $x$）までの破線は、直角三角形の斜辺になるので $\boldsymbol r$ より長い（緑の点の位置は模式的）。</figcaption>
+</figure>
+<p><strong>長さを確かめる</strong>。$\boldsymbol p=A\hat{\boldsymbol x}=\left(\frac76,\frac53,\frac{13}6\right)^{\mathsf T}$ で、$\|\boldsymbol p\|^2=\frac{49}{36}+\frac{100}{36}+\frac{169}{36}=\frac{318}{36}=\frac{53}6$。$\|\boldsymbol r\|^2=\frac16$。$\|\boldsymbol b\|^2=1+4+4=9$。$\frac{53}6+\frac16=\frac{54}6=9$ ✓。$\boldsymbol p\perp\boldsymbol r$（$\boldsymbol p\in\operatorname{im}A$、$\boldsymbol r\in(\operatorname{im}A)^{\perp}$）なので、三平方の定理（<a href="19_第19回_内積・直交・射影.html#sec-3-2">第19回 定理3.1</a>）$\|\boldsymbol b\|^2=\|\boldsymbol p\|^2+\|\boldsymbol r\|^2$ が成り立っていることを数値で確認した。</p>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>3つの道が同じ式に着く</h3>
+<p>正規方程式には、ここまでに3つの導出があった。</p>
+<ul>
+<li>偏微分で（2章）：$\frac{\partial S}{\partial a}=0$、$\frac{\partial S}{\partial b}=0$ から、</li>
+<li>勾配で（3章）：$\nabla f=2A^{\mathsf T}A\boldsymbol x-2A^{\mathsf T}\boldsymbol b=\boldsymbol 0$ から、</li>
+<li>直交で（4.1）：残差が像に直交する、すなわち $A^{\mathsf T}(\boldsymbol b-A\boldsymbol x)=\boldsymbol 0$ から。</li>
+</ul>
+<figure class="fig" id="fig-4-3">
+<svg viewBox="0 0 440 252" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="3つの導出" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>3つの導出</title>
+<rect x="0" y="0" width="440" height="252" fill="#fffdf7"/>
+<rect x="10" y="14" width="250" height="64" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="22.0" y="38.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">偏微分で（2章）</text>
+<text x="22.0" y="63.0" font-size="14" fill="#2a2723" text-anchor="start">∂S/∂a = 0,　∂S/∂b = 0</text>
+<line x1="260.0" y1="46.0" x2="296.0" y2="124.0" stroke="#a8322a" stroke-width="2.2"/><path d="M289.8 118.9 L296.0 124.0 L296.1 116.0" fill="none" stroke="#a8322a" stroke-width="2.2"/>
+<rect x="10" y="92" width="250" height="64" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="22.0" y="116.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">勾配で（3章）</text>
+<text x="22.0" y="141.0" font-size="14" fill="#2a2723" text-anchor="start">∇f(x) = 2AᵀAx − 2Aᵀb = 0</text>
+<line x1="260.0" y1="124.0" x2="296.0" y2="124.0" stroke="#a8322a" stroke-width="2.2"/><path d="M288.8 127.5 L296.0 124.0 L288.8 120.5" fill="none" stroke="#a8322a" stroke-width="2.2"/>
+<rect x="10" y="170" width="250" height="64" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<text x="22.0" y="194.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">直交で（4章）</text>
+<text x="22.0" y="219.0" font-size="14" fill="#2a2723" text-anchor="start">Aᵀ(b − Ax) = 0</text>
+<line x1="260.0" y1="202.0" x2="296.0" y2="124.0" stroke="#a8322a" stroke-width="2.2"/><path d="M296.1 132.0 L296.0 124.0 L289.8 129.1" fill="none" stroke="#a8322a" stroke-width="2.2"/>
+<rect x="298" y="94" width="134" height="60" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="2.2"/>
+<text x="365.0" y="118.0" font-size="15" fill="#a8322a" text-anchor="middle" font-weight="bold">正規方程式</text>
+<text x="365.0" y="142.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">A</tspan><tspan dy="-7.1" font-size="11.9" font-style="italic">T</tspan><tspan dy="7.1" font-style="italic">A</tspan><tspan font-style="italic">x</tspan><tspan>=</tspan><tspan font-style="italic">A</tspan><tspan dy="-7.1" font-size="11.9" font-style="italic">T</tspan><tspan dy="7.1" font-style="italic">b</tspan></text>
+</svg>
+<figcaption><strong>図 4.3</strong>　正規方程式 $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$ には、微積分（偏微分・勾配）からも、幾何（直交）からも着く。3通りの道が同じ式に着くことが、この式への信頼を支える。</figcaption>
+</figure>
+<p>3通りが同じ式に着くのは偶然ではない。偏微分や勾配は「$S$ が動かなくなる場所」を表し、直交は「$\boldsymbol b$ に最も近い点」を表す。2次式の最小点は、この2つが同じ場所を指す。だから、手計算のときは<strong>最も簡単な道を選べばよい</strong>。点が2、3個なら偏微分、行列で一般の議論をするなら勾配、そして「なぜ解けるか」を考えるなら射影。</p>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>射影行列で $\boldsymbol b$ を分ける</h3>
+<p>列が一次独立なら、$\boldsymbol p=A\hat{\boldsymbol x}=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}\boldsymbol b$。この $\boldsymbol b$ に掛かる行列が、<a href="19_第19回_内積・直交・射影.html#sym-proj-matrix">第19回の射影行列</a>である。</p>
+$$ P:=A(A^{\mathsf T}A)^{-1}A^{\mathsf T} $$
+<p>3点の例で計算する。$(A^{\mathsf T}A)^{-1}=\frac16\begin{pmatrix}5&-3\\-3&3\end{pmatrix}$ なので、まず $A(A^{\mathsf T}A)^{-1}=\frac16\begin{pmatrix}1&0\\1&1\\1&2\end{pmatrix}\begin{pmatrix}5&-3\\-3&3\end{pmatrix}=\frac16\begin{pmatrix}5&-3\\2&0\\-1&3\end{pmatrix}$。次に右から $A^{\mathsf T}=\begin{pmatrix}1&1&1\\0&1&2\end{pmatrix}$ を掛ける：</p>
+$$ P=\frac16\begin{pmatrix}5&-3\\2&0\\-1&3\end{pmatrix}\begin{pmatrix}1&1&1\\0&1&2\end{pmatrix}=\frac16\begin{pmatrix}5&2&-1\\2&2&2\\-1&2&5\end{pmatrix}=\begin{pmatrix}\frac56&\frac13&-\frac16\\\frac13&\frac13&\frac13\\-\frac16&\frac13&\frac56\end{pmatrix} $$
+<p>確かめ。(i) $P\boldsymbol b=\frac16(5+4-2,\ 2+4+4,\ -1+4+10)^{\mathsf T}=\frac16(7,10,13)^{\mathsf T}=\left(\frac76,\frac53,\frac{13}6\right)^{\mathsf T}=\boldsymbol p$ ✓。(ii) 対角成分の和（<a href="20_第20回_固有値と固有ベクトル.html#sym-trace">トレース</a>）：$\frac56+\frac13+\frac56=2=\operatorname{rank}A$。射影行列のトレースは、射影先の次元に等しい。(iii) $P^{\mathsf T}=P$（対称）。(iv) $P^2=P$（2度射影しても同じ。演習 問9）。残差は $\boldsymbol r=(I-P)\boldsymbol b$。</p>
+
+<h3 id="sec-4-4"><span class="no">4.4</span>特異値分解・擬似逆行列との関係</h3>
+<p>列が一次独立でないとき、$(A^{\mathsf T}A)^{-1}$ は使えない。しかし<a href="22_第22回_特異値分解.html#sec-5-4">第22回 定理5.1</a>は、<strong>どんな $A$ でも</strong>最小二乗解の1つが $\hat{\boldsymbol x}=A^{+}\boldsymbol b$ で、複数あるときは最短のものであることを示している。この回の言葉で言うと、$\operatorname{proj}_{\operatorname{im}A}$ は特異値分解 $A=U\Sigma V^{\mathsf T}$ の $U$ の最初の $r$ 列（$r=\operatorname{rank}A$）を $U_r$ とすると、$AA^{+}=U_rU_r^{\mathsf T}$ が $\operatorname{im}A$ への射影行列になる（<a href="22_第22回_特異値分解.html#sec-5-5">第22回 5.5</a>）。</p>
+<p>数値的な注意がある。3.2 の導出のとおり、正規方程式は $A^{\mathsf T}A$ を作る。このとき<a href="22_第22回_特異値分解.html#sym-svd">特異値</a>は2乗され、<strong>条件数 $\kappa=\sigma_1/\sigma_2$</strong>（最大の特異値と最小の特異値の比。大きいほど、入力の小さな誤差が出力で大きく増える）が2乗になる。</p>
+<p>例：3点 $x=100,101,102$ に直線を当てはめる。列は $(1,1,1)^{\mathsf T}$ と $(100,101,102)^{\mathsf T}$ で、ほとんど平行である。$A$ の特異値は約 $175$ と約 $0.014$ で、比 $\kappa(A)$ は約 $1.2\times10^{4}$。$A^{\mathsf T}A$ の特異値は $A$ の特異値の2乗なので、$\kappa(A^{\mathsf T}A)$ は約 $1.6\times10^{8}$。計算機の倍精度は有効数字約16桁なので、$10^{8}$ のぶん、約8桁を失う（目安）。図4.5 を見る。</p>
+<figure class="fig" id="fig-4-5">
+<svg viewBox="0 0 440 268" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="条件数が2乗になる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>条件数が2乗になる</title>
+<rect x="0" y="0" width="440" height="268" fill="#fffdf7"/>
+<text x="14.0" y="22.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">列が (1,1,1) と (100,101,102) の A</text>
+<text x="14.0" y="46.0" font-size="14" fill="#6b645a" text-anchor="start">対数の目盛（1目盛 = 10 倍）で、条件数 κ = σ₁/σ₂ を比べる</text>
+<rect x="40" y="70" width="163.9" height="34" fill="#2b3a67" opacity="0.85"/>
+<text x="209.9" y="93.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">A　κ ≈ 12,496</text>
+<rect x="40" y="124" width="327.7" height="34" fill="#a8322a" opacity="0.85"/>
+<text x="373.7" y="147.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">AᵀA　κ ≈ 156,141,609</text>
+<line x1="40.0" y1="166.0" x2="40.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="40.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle">10^0</text>
+<line x1="80.0" y1="166.0" x2="80.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="80.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle"></text>
+<line x1="120.0" y1="166.0" x2="120.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="120.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle">10^2</text>
+<line x1="160.0" y1="166.0" x2="160.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="160.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle"></text>
+<line x1="200.0" y1="166.0" x2="200.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="200.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle">10^4</text>
+<line x1="240.0" y1="166.0" x2="240.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="240.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle"></text>
+<line x1="280.0" y1="166.0" x2="280.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="280.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle">10^6</text>
+<line x1="320.0" y1="166.0" x2="320.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="320.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle"></text>
+<line x1="360.0" y1="166.0" x2="360.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="360.0" y="192.0" font-size="14" fill="#6b645a" text-anchor="middle">10^8</text>
+<line x1="40.0" y1="170.0" x2="370.0" y2="170.0" stroke="#2a2723" stroke-width="1.3"/>
+<text x="14.0" y="226.0" font-size="14" fill="#2a2723" text-anchor="start">κ が 10 のk乗なら、答えの桁が約 k 桁失われる（目安）</text>
+<text x="14.0" y="248.0" font-size="14" fill="#2a2723" text-anchor="start">AᵀA を作ると κ が 2乗 → 失う桁数が倍</text>
+</svg>
+<figcaption><strong>図 4.5</strong>　$A^{\mathsf T}A$ の特異値は $A$ の特異値の2乗なので、条件数も2乗になる。列が似通ったデータでは、正規方程式を解くより、$A$ に直接 QR 分解や特異値分解を使う方が精度を保てる。</figcaption>
+</figure>
+<p>実用上は、$A^{\mathsf T}A$ を作らずに、<a href="19_第19回_内積・直交・射影.html#sym-qr">QR分解</a> $A=QR$ を使う。$Q$ は列が正規直交、$R$ は上三角で、$\|A\boldsymbol x-\boldsymbol b\|=\|QR\boldsymbol x-\boldsymbol b\|$ から、最小二乗解は <strong>$R\hat{\boldsymbol x}=Q^{\mathsf T}\boldsymbol b$</strong>（上三角の連立方程式。後ろから順に解ける）。3点の例で試す。グラム・シュミット（第19回 6.2）で、$\boldsymbol a_1=(1,1,1)^{\mathsf T}$、$\boldsymbol a_2=(0,1,2)^{\mathsf T}$：</p>
+$$ \begin{aligned} \boldsymbol q_1&=\tfrac1{\sqrt3}(1,1,1)^{\mathsf T},\quad r_{11}=\sqrt3 &&\text{（}\boldsymbol a_1\text{ の長さで割る）}\\ r_{12}&=\boldsymbol q_1\cdot\boldsymbol a_2=\tfrac{0+1+2}{\sqrt3}=\sqrt3 &&\text{（}\boldsymbol a_2\text{ の }\boldsymbol q_1\text{ 方向の成分）}\\ \boldsymbol a_2-r_{12}\boldsymbol q_1&=(0,1,2)^{\mathsf T}-(1,1,1)^{\mathsf T}=(-1,0,1)^{\mathsf T} &&\text{（}\boldsymbol q_1\text{ 成分を引く）}\\ r_{22}&=\sqrt2,\quad\boldsymbol q_2=\tfrac1{\sqrt2}(-1,0,1)^{\mathsf T} &&\text{（長さで割る）} \end{aligned} $$
+<p>$R=\begin{pmatrix}\sqrt3&\sqrt3\\0&\sqrt2\end{pmatrix}$、$Q^{\mathsf T}\boldsymbol b=\begin{pmatrix}\boldsymbol q_1\cdot\boldsymbol b\\\boldsymbol q_2\cdot\boldsymbol b\end{pmatrix}=\begin{pmatrix}5/\sqrt3\\1/\sqrt2\end{pmatrix}$（$\boldsymbol q_1\cdot\boldsymbol b=\frac{1+2+2}{\sqrt3}$、$\boldsymbol q_2\cdot\boldsymbol b=\frac{-1+0+2}{\sqrt2}$）。$R\hat{\boldsymbol x}=Q^{\mathsf T}\boldsymbol b$ の2行目：$\sqrt2\,\hat b=\frac1{\sqrt2}$、$\hat b=\frac12$。1行目：$\sqrt3\,\hat a+\sqrt3\cdot\frac12=\frac5{\sqrt3}$、両辺を $\sqrt3$ で割って $\hat a+\frac12=\frac53$、$\hat a=\frac53-\frac12=\frac{10}{6}-\frac36=\frac76$ ✓。$A^{\mathsf T}A$ を作らずに、同じ答えが出た。</p>
+
+<h3 id="sec-4-5"><span class="no">4.5</span>第36回の回収：フーリエ級数の部分和は、列が直交する最小二乗</h3>
+<p>第36回の <a href="36_第36回_フーリエ級数.html#sec-3-5">3.5</a> は、フーリエ級数の部分和 $S_N$ が「$f$ に最も近い次数 $N$ の三角関数の和」であり、「後の回の最小二乗と同じ形」だと書いていた。ここで中身を確かめる。</p>
+<p>簡単のため、関数 $f$ のかわりに4つの標本点 $x=0,\frac\pi2,\pi,\frac{3\pi}2$ での値 $\boldsymbol b$ を考え、モデルを $c_0+c_1\cos x+c_2\sin x$ とする。$A$ の3つの列は、$1,\cos x,\sin x$ をその4点で取った値である。</p>
+$$ A=\begin{pmatrix}1&1&0\\1&0&1\\1&-1&0\\1&0&-1\end{pmatrix}\quad\text{（行が }x=0,\tfrac\pi2,\pi,\tfrac{3\pi}2\text{）} $$
+<p>3つの列は、どの2つも直交する（例：第1列と第2列の内積 $1+0-1+0=0$、第2列と第3列 $0+0+0+0=0$）。長さの2乗は $4,2,2$。したがって</p>
+$$ A^{\mathsf T}A=\begin{pmatrix}4&0&0\\0&2&0\\0&0&2\end{pmatrix} $$
+<p>は<strong>対角行列</strong>で、正規方程式 $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$ は連立ではなく、3本の独立な式になる：$\hat c_j=\dfrac{\boldsymbol a_j\cdot\boldsymbol b}{\boldsymbol a_j\cdot\boldsymbol a_j}$。これは<a href="19_第19回_内積・直交・射影.html#sym-projection">第19回の1本のベクトルへの射影</a>の係数であり、<a href="36_第36回_フーリエ級数.html#sym-fourier-coefficients">第36回のフーリエ係数</a>が「内積1回」で出る理由そのものである。図4.4 を見る。</p>
+<figure class="fig" id="fig-4-4">
+<svg viewBox="0 0 440 330" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="AᵀA が対角" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>AᵀA が対角</title>
+<rect x="0" y="0" width="440" height="330" fill="#fffdf7"/>
+<text x="14.0" y="22.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">一般の A：AᵀA は全成分が効く</text>
+<rect x="40" y="40" width="40" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="60.0" y="65.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">3</text>
+<rect x="80" y="40" width="40" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="100.0" y="65.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">3</text>
+<rect x="40" y="80" width="40" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="60.0" y="105.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">3</text>
+<rect x="80" y="80" width="40" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="100.0" y="105.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">5</text>
+<rect x="40" y="40" width="80" height="80" rx="2" fill="none" stroke="#2a2723" stroke-width="2"/>
+<text x="140.0" y="70.0" font-size="14" fill="#6b645a" text-anchor="start">連立方程式を解く</text>
+<text x="140.0" y="92.0" font-size="14" fill="#6b645a" text-anchor="start">必要がある（第2章の例）</text>
+<text x="14.0" y="160.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">列が直交する A：AᵀA は対角</text>
+<rect x="40" y="178" width="40" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="60.0" y="203.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">4</text>
+<rect x="80" y="178" width="40" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="100.0" y="203.0" font-size="14" fill="#2a2723" text-anchor="middle">0</text>
+<rect x="120" y="178" width="40" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="140.0" y="203.0" font-size="14" fill="#2a2723" text-anchor="middle">0</text>
+<rect x="40" y="218" width="40" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="60.0" y="243.0" font-size="14" fill="#2a2723" text-anchor="middle">0</text>
+<rect x="80" y="218" width="40" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="100.0" y="243.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<rect x="120" y="218" width="40" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="140.0" y="243.0" font-size="14" fill="#2a2723" text-anchor="middle">0</text>
+<rect x="40" y="258" width="40" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="60.0" y="283.0" font-size="14" fill="#2a2723" text-anchor="middle">0</text>
+<rect x="80" y="258" width="40" height="40" rx="0" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="100.0" y="283.0" font-size="14" fill="#2a2723" text-anchor="middle">0</text>
+<rect x="120" y="258" width="40" height="40" rx="0" fill="#f6e4e1" stroke="#ddd6c8" stroke-width="1.2"/>
+<text x="140.0" y="283.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">2</text>
+<rect x="40" y="178" width="120" height="120" rx="2" fill="none" stroke="#2a2723" stroke-width="2"/>
+<text x="172.0" y="198.0" font-size="14" fill="#6b645a" text-anchor="start">列：1, cos x, sin x を</text>
+<text x="172.0" y="218.0" font-size="14" fill="#6b645a" text-anchor="start">x = 0, π/2, π, 3π/2 で取った A</text>
+<text x="172.0" y="244.0" font-size="14" fill="#2a2723" text-anchor="start">解は連立にならず、各成分が</text>
+<text x="172.0" y="264.0" font-size="14" fill="#2a2723" text-anchor="start">(列と b の内積) ÷ (列の長さ²)</text>
+</svg>
+<figcaption><strong>図 4.4</strong>　列どうしが直交していれば $A^{\mathsf T}A$ は対角行列で、正規方程式は1つずつ独立に解ける。第36回のフーリエ係数が「内積1回」で出たのは、この特別な場合だったからである。</figcaption>
+</figure>
+<p>数値例。$\boldsymbol b=(2,3,1,-1)^{\mathsf T}$ とする。$\hat c_0=\frac{2+3+1-1}4=\frac54$、$\hat c_1=\frac{2\cdot1+3\cdot0+1\cdot(-1)+(-1)\cdot0}2=\frac12$、$\hat c_2=\frac{0+3+0+1}2=2$。当てはめた値 $\frac54+\frac12\cos x+2\sin x$ は、4点で $\frac74,\frac{13}4,\frac34,-\frac34$。残差は $\left(\frac14,-\frac14,\frac14,-\frac14\right)^{\mathsf T}$ で、3つの列のどれとも内積が $0$（第1列：$\frac14-\frac14+\frac14-\frac14=0$、第2列：$\frac14-\frac14=0$、第3列：$-\frac14+\frac14=0$）✓。</p>
+<p>第36回の指摘「$N$ を増やすとき、すでに決まった係数は変わらない」も、ここで説明できる。列が直交していれば $A^{\mathsf T}A$ は対角で、各係数は<strong>他の列と無関係</strong>に決まる。直交していない列（たとえば $1,x,x^2$）では、$A^{\mathsf T}A$ に非対角成分があるので、列を1本足すと、既存の係数もすべて計算し直しになる（5.2 の放物線の例で見る）。</p>
+<div class="why"><span class="label">ひとことで</span>
+<p>最小二乗法は、$\boldsymbol b$ を $\operatorname{im}A$ に射影する操作である。正規方程式は「残差が各列に直交する」の言い換えで、微分で求めても幾何で求めても同じになる。列が直交していれば $A^{\mathsf T}A$ が対角で、フーリエ係数のように「内積1回」で出る。実際の計算では、条件数が2乗になるのを避けて、QR分解や特異値分解を使う。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>回帰：統計の言葉と応用</h2>
+
+<h3 id="sec-5-1"><span class="no">5.1</span>直線回帰の公式：重心を通る</h3>
+<p>$m$ 点への直線 $y=a+bx$ の当てはめを、統計では<strong>単回帰</strong>と呼ぶ。2.3 の一般の連立方程式
+$$ \begin{cases} m\,a+\Bigl(\displaystyle\sum x_i\Bigr)b=\displaystyle\sum y_i\\[2mm] \Bigl(\displaystyle\sum x_i\Bigr)a+\Bigl(\displaystyle\sum x_i^2\Bigr)b=\displaystyle\sum x_iy_i \end{cases} $$
+を解く。平均を表す記号を先に決める。</p>
+
+<div class="def" id="sym-mean"><span class="label">記号：平均 $\bar x$、$\bar y$</span>
+<p><strong>①読み方</strong>：$\bar x$ は「エックス・バー」（バー＝上線）。</p>
+<p><strong>②日本語での意味</strong>：データ $x_1,\dots,x_m$ を全部足して、個数 $m$ で割った値。</p>
+<p><strong>③省略していない書き方</strong>：$\bar x:=\dfrac1m\displaystyle\sum_{i=1}^mx_i=\dfrac{x_1+x_2+\cdots+x_m}{m}$。$\bar y$ も$y$ の平均も、$y_1,\dots,y_m$ について同じ形で書く。3点の例では $\bar x=\frac{0+1+2}3=1$、$\bar y=\frac{1+2+2}3=\frac53$。</p>
+<p><strong>④どこで出会うか</strong>：統計（標本平均。第46回）、回帰、誤差の評価。</p>
+</div>
+
+<p>導出を1行1操作で進める。第1式を $m$ で割ると、$\sum x_i=m\bar x$、$\sum y_i=m\bar y$ だから</p>
+$$ \begin{aligned} a+\bar x\,b&=\bar y &&\text{（第1式を }m\text{ で割った）}\\ a&=\bar y-b\,\bar x &&\text{（}b\bar x\text{ を右辺へ移した）}\quad\cdots(*) \end{aligned} $$
+<p>(*) は、直線 $y=a+bx$ に $x=\bar x$ を代入すると $y=a+b\bar x=\bar y$ になる、すなわち<strong>直線が重心 $(\bar x,\bar y)$ を通る</strong>ことを表す。第2式に (*) を代入する。</p>
+$$ \begin{aligned} (m\bar x)(\bar y-b\bar x)+\Bigl(\sum x_i^2\Bigr)b&=\sum x_iy_i &&\text{（第2式に }\sum x_i=m\bar x\text{ と }(*)\text{ を代入）}\\ m\bar x\bar y-mb\bar x^2+b\sum x_i^2&=\sum x_iy_i &&\text{（かっこを展開）}\\ b\Bigl(\sum x_i^2-m\bar x^2\Bigr)&=\sum x_iy_i-m\bar x\bar y &&\text{（}b\text{ の項を左、他を右へ）} \end{aligned} $$
+<p>左右のかっこの中を書き換える。</p>
+$$ \sum(x_i-\bar x)^2=\sum x_i^2-2\bar x\sum x_i+m\bar x^2=\sum x_i^2-2m\bar x^2+m\bar x^2=\sum x_i^2-m\bar x^2 $$
+$$ \sum(x_i-\bar x)(y_i-\bar y)=\sum x_iy_i-\bar y\sum x_i-\bar x\sum y_i+m\bar x\bar y=\sum x_iy_i-m\bar x\bar y-m\bar x\bar y+m\bar x\bar y=\sum x_iy_i-m\bar x\bar y $$
+<p>この2つの量に名前を付けて $S_{xx}:=\sum(x_i-\bar x)^2$、$S_{xy}:=\sum(x_i-\bar x)(y_i-\bar y)$ とおくと、</p>
+<div class="thm"><span class="label">定理5.1（直線回帰）</span>
+<p>$S_{xx}\neq0$（$x_i$ が全部同じ値ではない）のとき、最小二乗の直線 $y=\hat a+\hat bx$ は
+$$ \hat b=\frac{S_{xy}}{S_{xx}},\qquad \hat a=\bar y-\hat b\,\bar x $$
+で、重心 $(\bar x,\bar y)$ を通る。
+</p></div>
+<p>3点の例：$S_{xx}=(0-1)^2+(1-1)^2+(2-1)^2=2$。$S_{xy}=(0-1)\left(1-\frac53\right)+(1-1)\left(2-\frac53\right)+(2-1)\left(2-\frac53\right)=(-1)\left(-\frac23\right)+0+\frac13=\frac23+\frac13=1$。$\hat b=\frac12$、$\hat a=\frac53-\frac12\cdot1=\frac{10}6-\frac36=\frac76$ ✓。2章・3章の答えと一致した。図5.1 を見る。</p>
+<figure class="fig" id="fig-5-1">
+<svg viewBox="0 0 440 300" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="回帰直線は重心を通る" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>回帰直線は重心を通る</title>
+<rect x="0" y="0" width="440" height="300" fill="#fffdf7"/>
+<line x1="52.0" y1="246.0" x2="392.0" y2="246.0" stroke="#2a2723" stroke-width="1.3"/><path d="M385.7 249.0 L392.0 246.0 L385.7 243.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="86.1" y1="246.0" x2="86.1" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M89.2 16.3 L86.1 10.0 L83.1 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="86.1" y1="242.0" x2="86.1" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="86.1" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">0</text>
+<line x1="199.9" y1="242.0" x2="199.9" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="199.9" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="313.7" y1="242.0" x2="313.7" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="313.7" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="82.1" y1="170.7" x2="90.1" y2="170.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="78.1" y="175.7" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="82.1" y1="95.3" x2="90.1" y2="95.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="78.1" y="100.3" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="82.1" y1="20.0" x2="90.1" y2="20.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="78.1" y="25.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="396.0" y="268.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="100.1" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="63.4,165.6 217.0,114.8 370.6,63.9" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="199.9" y1="246.0" x2="199.9" y2="120.4" stroke="#5f7f4f" stroke-width="1.8" stroke-dasharray="5 4"/>
+<line x1="52.0" y1="120.4" x2="199.9" y2="120.4" stroke="#5f7f4f" stroke-width="1.8" stroke-dasharray="5 4"/>
+<circle cx="86.1" cy="170.7" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="199.9" cy="95.3" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="313.7" cy="95.3" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="199.9" cy="120.4" r="7" fill="#5f7f4f" stroke="#5f7f4f" stroke-width="1.5"/>
+<rect x="206.9" y="128.4" width="174.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="209.9" y="142.4" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">重心（平均）= (1, 5/3)</text>
+<line x1="268.2" y1="97.8" x2="336.5" y2="97.8" stroke="#6b645a" stroke-width="1.5"/>
+<line x1="336.5" y1="97.8" x2="336.5" y2="75.2" stroke="#6b645a" stroke-width="1.5"/>
+<rect x="268.5" y="103.8" width="67.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="302.3" y="117.8" font-size="14" fill="#6b645a" text-anchor="middle">右へ 0.6</text>
+<rect x="339.5" y="78.5" width="67.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="342.5" y="92.5" font-size="14" fill="#6b645a" text-anchor="start">上へ 0.3</text>
+<text x="14.0" y="282.0" font-size="14" fill="#2a2723" text-anchor="start">緑：平均の位置（直線は必ずここを通る）　傾き b = 1/2</text>
+</svg>
+<figcaption><strong>図 5.1</strong>　最小二乗の直線は、測定点の重心 $(\bar x,\bar y)=(1,\frac53)$ を必ず通る。傾きは $b=S_{xy}/S_{xx}=\frac12$ で、右へ $0.6$ 進むと $0.3$ 上がる。</figcaption>
+</figure>
+<p class="meta">記号「$S_{xx}$、$S_{xy}$」は、この回の残差平方和 $S(a,b)$ とは別のもの（添字がついている）。教科書では $S_{xx}$ を「偏差平方和」、$S_{xy}$ を「偏差積和」と呼ぶ。</p>
+
+<h3 id="sec-5-2"><span class="no">5.2</span>直線でなくてもよい：多項式の当てはめ</h3>
+<p>最小二乗法の「線形」は、<strong>$x$ について</strong>でなく、<strong>求めたい係数について</strong>1次ということである。$y=c_0+c_1x+c_2x^2$ は $x$ については2次式だが、係数 $c_0,c_1,c_2$ については1次なので、$A\boldsymbol c=\boldsymbol b$ の形に書ける。</p>
+<p>4点 $(-1,1),(0,0),(1,1),(2,3)$ に放物線 $y=c_0+c_1x+c_2x^2$ を当てはめる。各点で $c_0+c_1x_i+c_2x_i^2=y_i$ だから、</p>
+$$ A=\begin{pmatrix}1&-1&1\\1&0&0\\1&1&1\\1&2&4\end{pmatrix},\quad \boldsymbol b=\begin{pmatrix}1\\0\\1\\3\end{pmatrix} $$
+<p>（列は $1,x,x^2$ の値）。正規方程式の左辺を計算する：$A^{\mathsf T}A$ の $(j,k)$ 成分は第 $j$ 列と第 $k$ 列の内積。</p>
+$$ A^{\mathsf T}A=\begin{pmatrix}4&2&6\\2&6&8\\6&8&18\end{pmatrix},\qquad A^{\mathsf T}\boldsymbol b=\begin{pmatrix}1+0+1+3\\-1+0+1+6\\1+0+1+12\end{pmatrix}=\begin{pmatrix}5\\6\\14\end{pmatrix} $$
+<p>（例：$(1,3)$ 成分は第1列 $(1,1,1,1)$ と第3列 $(1,0,1,4)$ の内積 $1+0+1+4=6$、$(2,3)$ 成分は第2列 $(-1,0,1,2)$ と第3列の内積 $-1+0+1+8=8$、$(3,3)$ 成分は第3列どうしの内積 $1+0+1+16=18$。）これを解くと $\hat c_0=\frac3{20}$、$\hat c_1=-\frac1{20}$、$\hat c_2=\frac34$。確かめ：第1式 $4\cdot\frac3{20}+2\cdot\left(-\frac1{20}\right)+6\cdot\frac34=\frac{12}{20}-\frac2{20}+\frac{90}{20}=\frac{100}{20}=5$ ✓。第2式：$\frac{6}{20}-\frac{6}{20}+6=6$ ✓。第3式：$6\cdot\frac3{20}+8\cdot\left(-\frac1{20}\right)+18\cdot\frac34=\frac{18-8}{20}+\frac{27}2=\frac12+\frac{27}2=14$ ✓。</p>
+<p>残差は $\boldsymbol b-A\hat{\boldsymbol c}=\left(\frac1{20},-\frac3{20},\frac3{20},-\frac1{20}\right)^{\mathsf T}$、$S=\frac{1+9+9+1}{400}=\frac{20}{400}=\frac1{20}$。図5.2 を見る。</p>
+<figure class="fig" id="fig-5-2">
+<svg viewBox="0 0 440 300" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="放物線の当てはめ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>放物線の当てはめ</title>
+<rect x="0" y="0" width="440" height="300" fill="#fffdf7"/>
+<line x1="52.0" y1="222.8" x2="392.0" y2="222.8" stroke="#2a2723" stroke-width="1.3"/><path d="M385.7 225.9 L392.0 222.8 L385.7 219.8" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="172.7" y1="246.0" x2="172.7" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M175.8 16.3 L172.7 10.0 L169.7 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="92.2" y1="218.8" x2="92.2" y2="226.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="92.2" y="242.8" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="172.7" y1="218.8" x2="172.7" y2="226.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="172.7" y="242.8" font-size="14" fill="#6b645a" text-anchor="middle">0</text>
+<line x1="253.2" y1="218.8" x2="253.2" y2="226.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="253.2" y="242.8" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="333.7" y1="218.8" x2="333.7" y2="226.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="333.7" y="242.8" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="168.7" y1="164.9" x2="176.7" y2="164.9" stroke="#2a2723" stroke-width="1.2"/>
+<text x="164.7" y="169.9" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="168.7" y1="106.9" x2="176.7" y2="106.9" stroke="#2a2723" stroke-width="1.2"/>
+<text x="164.7" y="111.9" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="168.7" y1="49.0" x2="176.7" y2="49.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="164.7" y="54.0" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="396.0" y="244.8" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="186.7" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="60.0,124.9 61.6,127.3 63.2,129.7 64.8,132.0 66.3,134.3 67.9,136.6 69.5,138.9 71.0,141.1 72.6,143.3 74.2,145.4 75.7,147.5 77.3,149.6 78.9,151.7 80.5,153.7 82.0,155.7 83.6,157.6 85.2,159.5 86.7,161.4 88.3,163.3 89.9,165.1 91.4,166.9 93.0,168.6 94.6,170.3 96.1,172.0 97.7,173.7 99.3,175.3 100.9,176.9 102.4,178.4 104.0,180.0 105.6,181.4 107.1,182.9 108.7,184.3 110.3,185.7 111.8,187.1 113.4,188.4 115.0,189.7 116.6,190.9 118.1,192.2 119.7,193.3 121.3,194.5 122.8,195.6 124.4,196.7 126.0,197.8 127.5,198.8 129.1,199.8 130.7,200.7 132.2,201.7 133.8,202.6 135.4,203.4 137.0,204.3 138.5,205.0 140.1,205.8 141.7,206.5 143.2,207.2 144.8,207.9 146.4,208.5 147.9,209.1 149.5,209.7 151.1,210.2 152.7,210.7 154.2,211.2 155.8,211.6 157.4,212.0 158.9,212.4 160.5,212.7 162.1,213.0 163.6,213.2 165.2,213.5 166.8,213.7 168.3,213.8 169.9,214.0 171.5,214.1 173.1,214.1 174.6,214.2 176.2,214.2 177.8,214.1 179.3,214.1 180.9,214.0 182.5,213.8 184.0,213.7 185.6,213.5 187.2,213.2 188.7,213.0 190.3,212.7 191.9,212.4 193.5,212.0 195.0,211.6 196.6,211.2 198.2,210.7 199.7,210.2 201.3,209.7 202.9,209.1 204.4,208.5 206.0,207.9 207.6,207.2 209.2,206.5 210.7,205.8 212.3,205.1 213.9,204.3 215.4,203.4 217.0,202.6 218.6,201.7 220.1,200.8 221.7,199.8 223.3,198.8 224.8,197.8 226.4,196.7 228.0,195.6 229.6,194.5 231.1,193.4 232.7,192.2 234.3,190.9 235.8,189.7 237.4,188.4 239.0,187.1 240.5,185.7 242.1,184.3 243.7,182.9 245.3,181.5 246.8,180.0 248.4,178.4 250.0,176.9 251.5,175.3 253.1,173.7 254.7,172.0 256.2,170.4 257.8,168.6 259.4,166.9 260.9,165.1 262.5,163.3 264.1,161.4 265.7,159.5 267.2,157.6 268.8,155.7 270.4,153.7 271.9,151.7 273.5,149.6 275.1,147.5 276.6,145.4 278.2,143.3 279.8,141.1 281.4,138.9 282.9,136.6 284.5,134.4 286.1,132.0 287.6,129.7 289.2,127.3 290.8,124.9 292.3,122.5 293.9,120.0 295.5,117.5 297.0,114.9 298.6,112.3 300.2,109.7 301.8,107.1 303.3,104.4 304.9,101.7 306.5,99.0 308.0,96.2 309.6,93.4 311.2,90.5 312.7,87.7 314.3,84.8 315.9,81.8 317.4,78.8 319.0,75.8 320.6,72.8 322.2,69.7 323.7,66.6 325.3,63.5 326.9,60.3 328.4,57.1 330.0,53.8 331.6,50.6 333.1,47.3 334.7,43.9 336.3,40.6 337.9,37.2 339.4,33.7 341.0,30.3 342.6,26.7 344.1,23.2" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="92.2" y1="164.9" x2="92.2" y2="167.8" stroke="#a8322a" stroke-width="3"/>
+<line x1="172.7" y1="222.8" x2="172.7" y2="214.1" stroke="#a8322a" stroke-width="3"/>
+<line x1="253.2" y1="164.9" x2="253.2" y2="173.6" stroke="#a8322a" stroke-width="3"/>
+<line x1="333.7" y1="49.0" x2="333.7" y2="46.1" stroke="#a8322a" stroke-width="3"/>
+<circle cx="92.2" cy="164.9" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="172.7" cy="222.8" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="253.2" cy="164.9" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="333.7" cy="49.0" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="57.0" y="69.7" width="204.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="60.0" y="83.7" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">y = 3/20 − x/20 + 3x²/4</text>
+<text x="14.0" y="282.0" font-size="14" fill="#2a2723" text-anchor="start">4点を、2次式（放物線）で最小二乗に当てはめた。S = 1/20</text>
+</svg>
+<figcaption><strong>図 5.2</strong>　4点 $(-1,1),(0,0),(1,1),(2,3)$ に $y=c_0+c_1x+c_2x^2$ を当てはめた。未知数は $c_0,c_1,c_2$ の3つで、$x^2$ が入っていても、$c$ について1次なので正規方程式（3×3）がそのまま使える。</figcaption>
+</figure>
+<p>3つの列 $1,x,x^2$ は直交しておらず、$A^{\mathsf T}A$ には $0$ でない非対角成分がある。それが、4.5 で述べた「列を増やすと係数が全部変わる」理由である。実際、この4点を直線（列 $1,x$ のみ）で当てはめると $(\hat a,\hat b)=(0.9,0.7)$ で、放物線の $(\hat c_0,\hat c_1)=(0.15,-0.05)$ とは大きく違う（演習 問10 で確かめる）。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<ul>
+<li>「次数を上げれば上げるほどよい」は誤り。$S$ は小さくなるが、n 点に n−1 次式を当てはめると $S=0$（全点を通る）になり、測定の誤差まで写し取ってしまう（過剰適合）。次数は、データの数よりずっと小さくする。</li>
+<li>「$x^2$ が入るから最小二乗法は使えない」は誤り。係数に対して1次ならよい。使えないのは、たとえば $y=a e^{bx}$ のように係数 $b$ が非線形に入る場合（その場合は、対数をとって線形にするか、第51回の最適化の方法を使う）。</li>
+</ul>
+</div>
+
+<h3 id="sec-5-3"><span class="no">5.3</span>当てはまりの良さ：決定係数 $R^2$</h3>
+<p>最小二乗の直線が見つかっても、「その直線がどれだけデータを説明できているか」は別の問題である。$S$ は単位に依存し（$y$ を 10 倍すれば $S$ は 100 倍）、大きさの判断ができない。そこで、「$y$ 自身のばらつき」との比をとる。</p>
+<div class="def" id="sym-r2"><span class="label">記号：決定係数 $R^2$</span>
+<p><strong>①読み方</strong>：「アール・にじょう」。「決定係数」（けっていけいすう）。</p>
+<p><strong>②日本語での意味</strong>：$y$ の平均まわりのばらつきのうち、当てはめた直線（モデル）で説明できた割合。$1$ に近いほど、よく当てはまっている。</p>
+<p><strong>③省略していない書き方</strong>：$\boldsymbol 1:=(1,\dots,1)^{\mathsf T}$（全成分1）、$\bar y$ を $y_i$ の平均として、
+$$ R^2:=1-\frac{\|\boldsymbol b-A\hat{\boldsymbol x}\|^2}{\|\boldsymbol b-\bar y\boldsymbol 1\|^2}=1-\frac{\sum_{i=1}^m\bigl(y_i-\hat y_i\bigr)^2}{\sum_{i=1}^m\bigl(y_i-\bar y\bigr)^2}. $$
+ここで $\hat y_i:=\hat a+\hat bx_i$ は直線の予想値。分母は「全データを平均 $\bar y$ 1つで済ませたとき」の悪さ（3.1 の $S(c)$ の最小値）、分子は直線を使ったときの悪さ。</p>
+<p><strong>④どこで出会うか</strong>：回帰分析の結果報告、モデルの良さの比較。</p>
+</div>
+<p>3点の例：$\bar y=\frac53$。分母 $\|\boldsymbol b-\bar y\boldsymbol 1\|^2=\left(1-\frac53\right)^2+\left(2-\frac53\right)^2+\left(2-\frac53\right)^2=\frac49+\frac19+\frac19=\frac69=\frac23$（3.1 の $S$ の最小値 $\frac23$ ✓）。分子 $=\|\boldsymbol r\|^2=\frac16$。$R^2=1-\frac{1/6}{2/3}=1-\frac14=\frac34$。</p>
+<p>なぜ $0\le R^2\le1$ なのか。直線のモデルは「全部同じ値 $c$」を含む（$b=0$ としたもの）ので、$S$ の最小値は、定数だけのモデルの最小値 $\|\boldsymbol b-\bar y\boldsymbol 1\|^2$ 以下。さらに、$\boldsymbol 1\in\operatorname{im}A$ なので、4.1 の直交性から $\boldsymbol r\perp\boldsymbol 1$、$\boldsymbol r\perp A\hat{\boldsymbol x}-\bar y\boldsymbol 1$（どちらも $\operatorname{im}A$ の点）。三平方の定理で</p>
+$$ \|\boldsymbol b-\bar y\boldsymbol 1\|^2=\|A\hat{\boldsymbol x}-\bar y\boldsymbol 1\|^2+\|\boldsymbol r\|^2 $$
+<p>（「全体のばらつき」＝「直線で説明できた部分」＋「残差」）。3点の例で数値：$A\hat{\boldsymbol x}-\bar y\boldsymbol 1=\left(\frac76-\frac53,\frac53-\frac53,\frac{13}6-\frac53\right)=\left(-\frac12,0,\frac12\right)$、$\|\cdot\|^2=\frac12$。$\frac12+\frac16=\frac46=\frac23$ ✓。図5.3 を見る。</p>
+<figure class="fig" id="fig-5-3">
+<svg viewBox="0 0 440 236" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="決定係数" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>決定係数</title>
+<rect x="0" y="0" width="440" height="236" fill="#fffdf7"/>
+<text x="14.0" y="24.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">全体のばらつき：‖y − 平均‖²</text>
+<rect x="50.0" y="34" width="330.0" height="38" fill="#a8a094" opacity="0.85" stroke="#fffdf7" stroke-width="2"/>
+<text x="215.0" y="59.0" font-size="14" fill="#2a2723" text-anchor="middle" font-weight="bold">2/3</text>
+<text x="14.0" y="110.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">分解すると</text>
+<rect x="50.0" y="120" width="247.5" height="38" fill="#2b3a67" opacity="0.85" stroke="#fffdf7" stroke-width="2"/>
+<text x="173.8" y="145.0" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">直線で説明できた 1/2</text>
+<rect x="297.5" y="120" width="82.5" height="38" fill="#a8322a" opacity="0.85" stroke="#fffdf7" stroke-width="2"/>
+<text x="338.8" y="145.0" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">残差 1/6</text>
+<text x="14.0" y="190.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">R² = 1/2 ÷ 2/3 = 1 − (1/6) ÷ (2/3) = 3/4</text>
+<text x="14.0" y="216.0" font-size="14" fill="#2a2723" text-anchor="start">全体のばらつきの 75% を、直線で説明できた</text>
+</svg>
+<figcaption><strong>図 5.3</strong>　データ $y$ の平均まわりのばらつき $\|\boldsymbol y-\bar y\boldsymbol 1\|^2=\frac23$ は、直線で説明できる部分 $\frac12$ と、残差 $\frac16$ に分かれる（ピタゴラス）。説明できた割合が決定係数 $R^2=\frac34$。</figcaption>
+</figure>
+<p>したがって $R^2=\dfrac{\|A\hat{\boldsymbol x}-\bar y\boldsymbol 1\|^2}{\|\boldsymbol b-\bar y\boldsymbol 1\|^2}=\dfrac{1/2}{2/3}=\dfrac34$ とも書ける（説明された割合）。</p>
+
+<h3 id="sec-5-4"><span class="no">5.4</span>最小二乗法の弱点と、よくある誤解</h3>
+<p>残差を<strong>2乗</strong>するということは、大きなずれを特に重く扱うということである。外れ値（他と大きくずれた1点）があると、直線がそちらへ引っぱられる。5点 $(0,1),(1,1),(2,3),(3,3),(4,4)$ の最小二乗の直線は $y=0.8+0.8x$（$\hat a=\hat b=\frac45$）。右端の1点だけを $(4,7)$ に動かすと、直線は $y=0.2+1.4x$ に変わる。傾きが $0.8\to1.4$ と、大きく動く。図5.4 を見る。</p>
+<figure class="fig" id="fig-5-4">
+<svg viewBox="0 0 440 314" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="外れ値の影響" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>外れ値の影響</title>
+<rect x="0" y="0" width="440" height="314" fill="#fffdf7"/>
+<line x1="52.0" y1="246.0" x2="392.0" y2="246.0" stroke="#2a2723" stroke-width="1.3"/><path d="M385.7 249.0 L392.0 246.0 L385.7 243.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="78.4" y1="246.0" x2="78.4" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M81.4 16.3 L78.4 10.0 L75.4 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="78.4" y1="242.0" x2="78.4" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="78.4" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">0</text>
+<line x1="144.4" y1="242.0" x2="144.4" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="144.4" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="210.4" y1="242.0" x2="210.4" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="210.4" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="276.4" y1="242.0" x2="276.4" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="276.4" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="342.4" y1="242.0" x2="342.4" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="342.4" y="266.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="74.4" y1="188.1" x2="82.4" y2="188.1" stroke="#2a2723" stroke-width="1.2"/>
+<text x="70.4" y="193.1" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="74.4" y1="130.1" x2="82.4" y2="130.1" stroke="#2a2723" stroke-width="1.2"/>
+<text x="70.4" y="135.1" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<line x1="74.4" y1="72.2" x2="82.4" y2="72.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="70.4" y="77.2" font-size="14" fill="#6b645a" text-anchor="end">6</text>
+<text x="396.0" y="268.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="92.4" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="65.2,227.5 220.3,173.0 375.4,118.5" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<polyline points="65.2,248.3 220.3,153.0 375.4,57.7" fill="none" stroke="#a8322a" stroke-width="2.6" stroke-linejoin="round"/>
+<circle cx="78.4" cy="217.0" r="5.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="144.4" cy="217.0" r="5.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="210.4" cy="159.1" r="5.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="276.4" cy="159.1" r="5.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="342.4" cy="130.1" r="6" fill="#fff" stroke="#2b3a67" stroke-width="2"/>
+<circle cx="342.4" cy="43.2" r="6.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="263.0" y="23.2" width="70.4" height="20" fill="#fffdf7" opacity="0.92"/><text x="330.4" y="37.2" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">ずれた1点</text>
+<rect x="85.3" y="52.4" width="151.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="88.3" y="66.4" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">朱：y = 0.2 + 1.4x</text>
+<rect x="243.7" y="203.0" width="151.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="246.7" y="217.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">藍：y = 0.8 + 0.8x</text>
+<text x="14.0" y="296.0" font-size="14" fill="#2a2723" text-anchor="start">藍：元の5点（白丸が元の位置）　朱：1点を 4 → 7 に動かした後</text>
+</svg>
+<figcaption><strong>図 5.4</strong>　5点のうち右端の1点だけを $y=4$ から $y=7$ に動かすと、最小二乗の直線の傾きは $0.8$ から $1.4$ へ大きく変わる。残差を2乗するので、大きくずれた1点が全体を引っぱる。</figcaption>
+</figure>
+<div class="warn"><span class="label">よくある誤解</span>
+<ul>
+<li>「$x$ を $y$ で回帰した直線と、$y$ を $x$ で回帰した直線は、同じ直線」は誤り。前者は<strong>横方向</strong>のずれ、後者は<strong>縦方向</strong>のずれの2乗和を最小にするので、一般に別の直線になる（データが完全に一直線に乗るとき以外）。</li>
+<li>「最小二乗の直線は、点から直線への<strong>垂直な距離</strong>を最小にする」は誤り。最小にするのは<strong>縦方向</strong>のずれである。垂直な距離を最小にする直線は「全最小二乗」「主成分分析」で、特異値分解で解く（第22回の応用。後の回）。</li>
+<li>「$R^2$ が 1 に近ければ、直線が正しい」は誤り。放物線状のデータでも、直線の $R^2$ が高いことがある。残差のグラフを見て、規則的に偏っていないかも確認する。</li>
+<li>「回帰直線は因果関係を示す」は誤り。当てはまりの良さと、原因と結果は別の問題である。</li>
+</ul>
+</div>
+<div class="why"><span class="label">ひとことで</span>
+<p>直線回帰は $\hat b=S_{xy}/S_{xx}$、$\hat a=\bar y-\hat b\bar x$（重心を通る）。多項式でも、係数について1次なら同じ正規方程式で解ける。当てはまりの良さは $R^2=1-\|\boldsymbol r\|^2/\|\boldsymbol b-\bar y\boldsymbol 1\|^2$。2乗を使うので外れ値に弱い。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>手順のまとめ、流派の違い</h2>
+<p>最小二乗法の手順を、図6.1 にまとめる。</p>
+<figure class="fig" id="fig-6-1">
+<svg viewBox="0 0 440 344" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="最小二乗法の手順" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>最小二乗法の手順</title>
+<rect x="0" y="0" width="440" height="344" fill="#fffdf7"/>
+<rect x="10" y="12" width="420" height="54" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<circle cx="40.0" cy="39.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="45.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">1</text>
+<text x="66.0" y="36.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">データから A と b を作る</text>
+<text x="66.0" y="56.0" font-size="14" fill="#6b645a" text-anchor="start">1 行 = 1 つの測定点</text>
+<line x1="220.0" y1="66.0" x2="220.0" y2="78.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 71.7 L220.0 78.0 L223.0 71.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="78" width="420" height="54" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<circle cx="40.0" cy="105.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="111.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">2</text>
+<text x="66.0" y="102.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">正規方程式 AᵀA x = Aᵀ b を作る</text>
+<text x="66.0" y="122.0" font-size="14" fill="#6b645a" text-anchor="start">AᵀA は n×n、Aᵀb は n 個の数</text>
+<line x1="220.0" y1="132.0" x2="220.0" y2="144.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 137.7 L220.0 144.0 L223.0 137.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="144" width="420" height="54" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<circle cx="40.0" cy="171.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="177.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">3</text>
+<text x="66.0" y="168.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">解く（連立方程式／QR／特異値分解）</text>
+<text x="66.0" y="188.0" font-size="14" fill="#6b645a" text-anchor="start">列が従属なら A⁺ b（第22回）</text>
+<line x1="220.0" y1="198.0" x2="220.0" y2="210.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 203.7 L220.0 210.0 L223.0 203.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="210" width="420" height="54" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.8"/>
+<circle cx="40.0" cy="237.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="243.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">4</text>
+<text x="66.0" y="234.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">確かめる：Aᵀ(残差) = 0 か</text>
+<text x="66.0" y="254.0" font-size="14" fill="#6b645a" text-anchor="start">残差が各列と直交していればよい</text>
+<line x1="220.0" y1="264.0" x2="220.0" y2="276.0" stroke="#a8322a" stroke-width="2"/><path d="M217.0 269.7 L220.0 276.0 L223.0 269.7" fill="none" stroke="#a8322a" stroke-width="2"/>
+<rect x="10" y="276" width="420" height="54" rx="6" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.8"/>
+<circle cx="40.0" cy="303.0" r="15" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="40.0" y="309.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">5</text>
+<text x="66.0" y="300.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">ばらつきを見る：S と R²</text>
+<text x="66.0" y="320.0" font-size="14" fill="#6b645a" text-anchor="start">外れ値と当てはめの範囲に注意</text>
+</svg>
+<figcaption><strong>図 6.1</strong>　最小二乗法の手順。4 番の確かめ（残差が列と直交するか）は、計算ミスを見つける手がかりとして強力で、手計算でも必ず行う。</figcaption>
+</figure>
+<div class="warn"><span class="label">流派の違い</span>
+<ul>
+<li><strong>文字</strong>：この教材は連立方程式の流儀で $A\boldsymbol x\approx\boldsymbol b$ と書いた。統計・機械学習では、データ行列（計画行列）を $X$、係数を $\boldsymbol\beta$ や $\boldsymbol w$ や $\boldsymbol\theta$、観測値を $\boldsymbol y$ として $\boldsymbol y\approx X\boldsymbol\beta$ と書き、正規方程式は $X^{\mathsf T}X\boldsymbol\beta=X^{\mathsf T}\boldsymbol y$。MML 第9章は $\boldsymbol y=\Phi\boldsymbol\theta$、$\Phi^{\mathsf T}\Phi\boldsymbol\theta=\Phi^{\mathsf T}\boldsymbol y$ と書く。文字が違うだけで、中身は同じである。</li>
+<li><strong>切片の扱い</strong>：切片 $a$ を表すために、$A$ の第1列を全部 $1$ にする（この教材）か、データの平均を引いて「平均のまわりの回帰」にして切片を消す（5.1 の導出）か。どちらでも同じ直線になる。</li>
+<li><strong>評価関数の係数</strong>：$S$ に $\frac12$ や $\frac1m$ をつけて $\frac12\|\boldsymbol b-A\boldsymbol x\|^2$ や $\frac1m\sum r_i^2$ とする流儀がある。最小点は変わらない（定数倍しても最小になる場所は同じ）。微分したときの係数 $2$ を消すために、$\frac12$ をつけることが多い。</li>
+<li><strong>転置</strong>：この教材は $A^{\mathsf T}$。ほかに $A^{t}$、$A'$、$A^{\top}$ も同じ意味で使われる。</li>
+</ul>
+</div>
+<div class="warn"><span class="label">よくある誤解（まとめ）</span>
+<ul>
+<li>「残差の合計が $0$ なら最良」は誤り（1.5）。</li>
+<li>「最小二乗は、点から直線への垂直な距離を最小にする」は誤り。縦方向のずれ（5.4）。</li>
+<li>「$A^{\mathsf T}A$ は常に逆行列をもつ」は誤り。列が一次独立のときだけ（3.4）。</li>
+<li>「最小二乗解は $A\boldsymbol x=\boldsymbol b$ の解である」は誤り。$\boldsymbol b\in\operatorname{im}A$ のときだけ（3.4）。</li>
+<li>「$\min$ と $\operatorname{arg\,min}$ は同じ」は誤り。値と場所の違い（1.4）。</li>
+<li>「正規方程式を $A^{\mathsf T}A$ を作って解くのが一番よい」は誤り。条件数が2乗になる。QR分解や特異値分解の方が安定（4.4）。</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_47.py）。</p>
+
+<div class="ex"><span class="label">例題1（A 確認：3点の直線を正規方程式で求め、直交性で確かめる）</span>
+<p>3点 $(1,2),(2,3),(3,5)$ に直線 $y=a+bx$ を最小二乗法で当てはめよ。</p>
+<p>① 各点を式にする：$a+b=2$、$a+2b=3$、$a+3b=5$。$A=\begin{pmatrix}1&1\\1&2\\1&3\end{pmatrix}$、$\boldsymbol b=(2,3,5)^{\mathsf T}$。式3本、未知数2つで解なし。　<span class="meta">1.1</span></p>
+<p>② $A^{\mathsf T}A=\begin{pmatrix}1&1&1\\1&2&3\end{pmatrix}\begin{pmatrix}1&1\\1&2\\1&3\end{pmatrix}=\begin{pmatrix}3&6\\6&14\end{pmatrix}$（$1+4+9=14$）。$A^{\mathsf T}\boldsymbol b=\begin{pmatrix}2+3+5\\2+6+15\end{pmatrix}=\begin{pmatrix}10\\23\end{pmatrix}$。　<span class="meta">2.3</span></p>
+<p>③ $\det=42-36=6$、$(A^{\mathsf T}A)^{-1}=\frac16\begin{pmatrix}14&-6\\-6&3\end{pmatrix}$。$\begin{pmatrix}a\\b\end{pmatrix}=\frac16\begin{pmatrix}140-138\\-60+69\end{pmatrix}=\frac16\begin{pmatrix}2\\9\end{pmatrix}=\begin{pmatrix}\frac13\\\frac32\end{pmatrix}$。　<span class="meta">3.4</span></p>
+<p>④ 確かめ（5.1 の公式でも）：$\bar x=2$、$\bar y=\frac{10}3$、$S_{xx}=1+0+1=2$、$S_{xy}=(-1)\left(2-\frac{10}3\right)+0+(1)\left(5-\frac{10}3\right)=\frac43+\frac53=3$。$\hat b=\frac32$、$\hat a=\frac{10}3-\frac32\cdot2=\frac13$ ✓。</p>
+<p>⑤ 残差：予想値は $\frac13+\frac32=\frac{11}6$、$\frac13+3=\frac{10}3$、$\frac13+\frac92=\frac{29}6$。$\boldsymbol r=\left(2-\frac{11}6,\ 3-\frac{10}3,\ 5-\frac{29}6\right)^{\mathsf T}=\left(\frac16,-\frac13,\frac16\right)^{\mathsf T}$。第1列との内積 $\frac16-\frac13+\frac16=0$、第2列との内積 $\frac16-\frac23+\frac12=0$ ✓（4.1）。$S=\frac1{36}+\frac4{36}+\frac1{36}=\frac16$。　答：$y=\frac13+\frac32x$。</p>
+</div>
+
+<div class="ex"><span class="label">例題2（B 標準：放物線 $y=c_0+c_1x+c_2x^2$ の当てはめ）</span>
+<p>4点 $(-1,2),(0,0),(1,1),(2,3)$ に放物線を最小二乗法で当てはめよ。</p>
+<p>① $A=\begin{pmatrix}1&-1&1\\1&0&0\\1&1&1\\1&2&4\end{pmatrix}$（5.2 と同じ）、$\boldsymbol b=(2,0,1,3)^{\mathsf T}$。　<span class="meta">$A$ は5.2と同じ。$\boldsymbol b$ だけ違う</span></p>
+<p>② $A^{\mathsf T}A=\begin{pmatrix}4&2&6\\2&6&8\\6&8&18\end{pmatrix}$（5.2）。$A^{\mathsf T}\boldsymbol b=\begin{pmatrix}2+0+1+3\\-2+0+1+6\\2+0+1+12\end{pmatrix}=\begin{pmatrix}6\\5\\15\end{pmatrix}$。</p>
+<p>③ 解の候補 $(\frac3{10},-\frac35,1)$ を入れて確かめる（解き方は掃き出し法〔第17回〕でよい）。第1式：$4\cdot\frac3{10}+2\cdot\left(-\frac35\right)+6\cdot1=\frac65-\frac65+6=6$ ✓。第2式：$2\cdot\frac3{10}+6\cdot\left(-\frac35\right)+8=\frac35-\frac{18}5+8=-3+8=5$ ✓。第3式：$6\cdot\frac3{10}+8\cdot\left(-\frac35\right)+18=\frac95-\frac{24}5+18=-3+18=15$ ✓。</p>
+<p>④ 残差：予想値は $x=-1$ で $\frac3{10}+\frac35+1=\frac{19}{10}$、$x=0$ で $\frac3{10}$、$x=1$ で $\frac3{10}-\frac35+1=\frac7{10}$、$x=2$ で $\frac3{10}-\frac65+4=\frac{31}{10}$。$\boldsymbol r=\left(\frac1{10},-\frac3{10},\frac3{10},-\frac1{10}\right)^{\mathsf T}$、$S=\frac{1+9+9+1}{100}=\frac15$。第1列との内積 $0$ ✓、第2列：$-\frac1{10}+0+\frac3{10}-\frac2{10}=0$ ✓、第3列：$\frac1{10}+0+\frac3{10}-\frac4{10}=0$ ✓。　答：$y=\frac3{10}-\frac35x+x^2$。</p>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：列が一次従属なときの最小ノルム解）</span>
+<p>$A=\begin{pmatrix}1&2\\2&4\\3&6\end{pmatrix}$、$\boldsymbol b=(1,2,4)^{\mathsf T}$ の最小二乗解をすべて求め、そのうち $\|\boldsymbol x\|$ が最小のものを求めよ。</p>
+<p>① $A\boldsymbol x=(c_1+2c_2)(1,2,3)^{\mathsf T}$。$s:=c_1+2c_2$ とおくと $S=\|s\boldsymbol a-\boldsymbol b\|^2$（$\boldsymbol a=(1,2,3)^{\mathsf T}$）$=14s^2-34s+21$。　<span class="meta">3.4</span></p>
+<p>② $S'(s)=28s-34=0$、$s=\frac{17}{14}$。$S$ の最小値：$14\cdot\frac{289}{196}-34\cdot\frac{17}{14}+21=\frac{289}{14}-\frac{578}{14}+\frac{294}{14}=\frac5{14}$。　最小二乗解は $c_1+2c_2=\frac{17}{14}$ を満たすすべての $(c_1,c_2)$。</p>
+<p>③ このうち $\|\boldsymbol x\|^2=c_1^2+c_2^2$ が最小なのは、原点から直線へ下ろした垂線の足。$c_1=\frac{s}{5}\cdot1$、$c_2=\frac s5\cdot2$（方向 $(1,2)$ 上の点で $c_1+2c_2=s$ を満たすのは $\frac s5(1,2)$）。$\left(\frac{17}{70},\frac{17}{35}\right)$。　<span class="meta">図3.2</span></p>
+<p>④ 確かめ：擬似逆行列〔第22回〕$A^{+}\boldsymbol b=\frac1{70}\begin{pmatrix}1&2&3\\2&4&6\end{pmatrix}\begin{pmatrix}1\\2\\4\end{pmatrix}=\frac1{70}\begin{pmatrix}1+4+12\\2+8+24\end{pmatrix}=\frac1{70}\begin{pmatrix}17\\34\end{pmatrix}$ ✓。　答：$\left(\frac{17}{70},\frac{17}{35}\right)^{\mathsf T}$。</p>
+</div>
+
+<div class="ex"><span class="label">例題4（B 標準：射影行列と残差の分解）</span>
+<p>5.1 の3点 $(0,1),(1,2),(2,2)$ で、$\boldsymbol b=(1,2,2)^{\mathsf T}$ を $\operatorname{im}A$ の成分と $(\operatorname{im}A)^{\perp}$ の成分に分け、$P^2=P$ を確かめよ。</p>
+<p>① 4.3 の $P=\frac16\begin{pmatrix}5&2&-1\\2&2&2\\-1&2&5\end{pmatrix}$、$\boldsymbol p=P\boldsymbol b=\left(\frac76,\frac53,\frac{13}6\right)^{\mathsf T}$、$\boldsymbol r=\boldsymbol b-\boldsymbol p=\left(-\frac16,\frac13,-\frac16\right)^{\mathsf T}$。</p>
+<p>② $P^2$ の第1行 $\cdot$ 第1列：$\frac1{36}(5\cdot5+2\cdot2+(-1)(-1))=\frac{30}{36}=\frac56$ ✓（$P$ の $(1,1)$ 成分）。第1行 $\cdot$ 第2列：$\frac1{36}(5\cdot2+2\cdot2+(-1)\cdot2)=\frac{12}{36}=\frac13$ ✓。第2行 $\cdot$ 第2列：$\frac1{36}(2\cdot2+2\cdot2+2\cdot2)=\frac{12}{36}=\frac13$ ✓。（残りの成分も1つずつ同じ計算をする。全成分は check_47.py で確認した。）</p>
+<p>③ $\boldsymbol p\cdot\boldsymbol r=\frac76\cdot\left(-\frac16\right)+\frac53\cdot\frac13+\frac{13}6\cdot\left(-\frac16\right)=-\frac7{36}+\frac{20}{36}-\frac{13}{36}=0$ ✓。$\|\boldsymbol p\|^2+\|\boldsymbol r\|^2=\frac{53}6+\frac16=9=\|\boldsymbol b\|^2$ ✓（4.1）。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-8"><span class="no">8</span>演習問題</h2>
+<p class="meta">※A は記号を読み書きできるか、B は定期試験水準、C は発展。解答は折りたたんである。自作の問題で、公式解答とは照合していない（出典は本章末）。</p>
+
+<div class="box"><span class="label">問1（A 確認：$\min$ と $\operatorname{arg\,min}$）</span>(1) $f(x)=(x+1)^2-5$ について、$\min_xf(x)$ と $\operatorname*{arg\,min}_xf(x)$ を求めよ。(2) 1.5 の3点 $(0,1),(1,2),(2,2)$ と直線 $y=x+1$ について、残差と $S$ を求めよ。
+<details><summary>解答</summary>
+<p>(1) $(x+1)^2\ge0$ で、$x=-1$ のとき $0$。よって $\min f=-5$（値）、$\operatorname{arg\,min}f=-1$（場所）。</p>
+<p>(2) 予想値は $x=0,1,2$ で $1,2,3$。残差 $r=(1-1,\ 2-2,\ 2-3)=(0,0,-1)$。$S=0+0+1=1$。最良の直線の $S=\frac16$ より大きい。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認：平均は定数の最小二乗）</span>データ $3,5,6,8$ に定数 $c$ を当てはめる。$S(c)=\sum(y_i-c)^2$ を最小にする $c$ と、そのときの $S$ を求めよ。
+<details><summary>解答</summary>
+<p>$A=(1,1,1,1)^{\mathsf T}$、$A^{\mathsf T}A=4$、$A^{\mathsf T}\boldsymbol b=3+5+6+8=22$。$4c=22$、$c=\frac{11}2=5.5$（平均）。残差 $(-2.5,-0.5,0.5,2.5)$、$S=6.25+0.25+0.25+6.25=13$。残差の合計は $0$ ✓（3.1）。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認：$A$ と $\boldsymbol b$ を作る）</span>3点 $(1,3),(2,5),(4,6)$ に直線 $y=a+bx$ を当てはめるときの $A$、$\boldsymbol b$、$A^{\mathsf T}A$、$A^{\mathsf T}\boldsymbol b$ を書け（解かなくてよい）。
+<details><summary>解答</summary>
+<p>$A=\begin{pmatrix}1&1\\1&2\\1&4\end{pmatrix}$、$\boldsymbol b=(3,5,6)^{\mathsf T}$。$A^{\mathsf T}A=\begin{pmatrix}3&7\\7&21\end{pmatrix}$（$1+4+16=21$）。$A^{\mathsf T}\boldsymbol b=\begin{pmatrix}14\\3+10+24\end{pmatrix}=\begin{pmatrix}14\\37\end{pmatrix}$。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認：正規方程式を解き、直交性を確かめる）</span>$A=\begin{pmatrix}1&0\\0&1\\1&1\end{pmatrix}$、$\boldsymbol b=(1,2,0)^{\mathsf T}$ の最小二乗解 $\hat{\boldsymbol x}$ と残差を求め、残差が $A$ の各列に直交することを確かめよ。
+<details><summary>解答</summary>
+<p>$A^{\mathsf T}A=\begin{pmatrix}1+0+1&0+0+1\\1&0+1+1\end{pmatrix}=\begin{pmatrix}2&1\\1&2\end{pmatrix}$、$A^{\mathsf T}\boldsymbol b=\begin{pmatrix}1+0+0\\0+2+0\end{pmatrix}=\begin{pmatrix}1\\2\end{pmatrix}$。$\det=3$、逆行列 $\frac13\begin{pmatrix}2&-1\\-1&2\end{pmatrix}$。$\hat{\boldsymbol x}=\frac13(2-2,\ -1+4)^{\mathsf T}=(0,1)^{\mathsf T}$。</p>
+<p>$A\hat{\boldsymbol x}=(0,1,1)^{\mathsf T}$、$\boldsymbol r=(1,1,-1)^{\mathsf T}$。第1列 $(1,0,1)$ との内積 $1+0-1=0$、第2列 $(0,1,1)$ との内積 $0+1-1=0$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準：問3の直線を求める）</span>問3の3点の最小二乗直線を求めよ。
+<details><summary>解答</summary>
+<p>$\det\begin{pmatrix}3&7\\7&21\end{pmatrix}=63-49=14$、逆行列 $\frac1{14}\begin{pmatrix}21&-7\\-7&3\end{pmatrix}$。$\begin{pmatrix}a\\b\end{pmatrix}=\frac1{14}\begin{pmatrix}21\cdot14-7\cdot37\\-7\cdot14+3\cdot37\end{pmatrix}=\frac1{14}\begin{pmatrix}294-259\\-98+111\end{pmatrix}=\frac1{14}\begin{pmatrix}35\\13\end{pmatrix}$。$y=\frac52+\frac{13}{14}x$。</p>
+<p>確かめ：予想値 $x=1,2,4$ で $\frac{48}{14},\frac{61}{14},\frac{87}{14}$。残差 $\left(3-\frac{48}{14},5-\frac{61}{14},6-\frac{87}{14}\right)=\left(-\frac6{14},\frac9{14},-\frac3{14}\right)$。合計 $0$ ✓、$x_i$ との積の和 $-\frac6{14}+\frac{18}{14}-\frac{12}{14}=0$ ✓。　<span class="meta">自作の解答</span></p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準：原点を通る直線）</span>3点 $(1,2),(2,3),(3,7)$ に、原点を通る直線 $y=bx$ を当てはめよ。$S$ を $b$ で微分する方法と、正規方程式の方法の両方で求めよ。
+<details><summary>解答</summary>
+<p>$S(b)=(2-b)^2+(3-2b)^2+(7-3b)^2=14b^2-2(2+6+21)b+(4+9+49)=14b^2-58b+62$。$S'(b)=28b-58=0$、$b=\frac{29}{14}$。</p>
+<p>正規方程式：$A=(1,2,3)^{\mathsf T}$、$A^{\mathsf T}A=14$、$A^{\mathsf T}\boldsymbol b=2+6+21=29$。$14b=29$、$b=\frac{29}{14}$ ✓。　一般に $\hat b=\dfrac{\sum x_iy_i}{\sum x_i^2}$。切片を入れる場合と答えが違うことに注意（5.1 の公式は使えない）。</p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準：$R^2$）</span>問5 の直線の $R^2$ を求めよ。
+<details><summary>解答</summary>
+<p>$\bar y=\frac{14}3$。$\|\boldsymbol b-\bar y\boldsymbol 1\|^2=\left(3-\frac{14}3\right)^2+\left(5-\frac{14}3\right)^2+\left(6-\frac{14}3\right)^2=\frac{25+1+16}9=\frac{42}9=\frac{14}3$。残差の2乗和 $\|\boldsymbol r\|^2=\frac{36+81+9}{196}=\frac{126}{196}=\frac9{14}$。$R^2=1-\frac{9/14}{14/3}=1-\frac{27}{196}=\frac{169}{196}\approx0.862$。　確かめ：$R^2=\hat b^2\cdot S_{xx}/S_{yy}$（単回帰の場合）、$\hat b^2=\frac{169}{196}$、$S_{xx}=\frac{14}3$（$x=1,2,4$、$\bar x=\frac73$、$\frac{16+1+25}{9}=\frac{14}3$）、$S_{yy}=\frac{14}3$。比 $1$ なので $R^2=\frac{169}{196}$ ✓。　<span class="meta">自作の解答</span></p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準：偶関数のモデル）</span>4点 $(-2,5),(-1,2),(1,3),(2,5)$ に $y=c_0+c_1x^2$ を当てはめよ。
+<details><summary>解答</summary>
+<p>列は $1$ と $x^2$：$A=\begin{pmatrix}1&4\\1&1\\1&1\\1&4\end{pmatrix}$、$\boldsymbol b=(5,2,3,5)^{\mathsf T}$。$A^{\mathsf T}A=\begin{pmatrix}4&10\\10&34\end{pmatrix}$（$16+1+1+16=34$）、$A^{\mathsf T}\boldsymbol b=\begin{pmatrix}15\\20+2+3+20\end{pmatrix}=\begin{pmatrix}15\\45\end{pmatrix}$。$\det=136-100=36$。$\begin{pmatrix}c_0\\c_1\end{pmatrix}=\frac1{36}\begin{pmatrix}34&-10\\-10&4\end{pmatrix}\begin{pmatrix}15\\45\end{pmatrix}=\frac1{36}\begin{pmatrix}510-450\\-150+180\end{pmatrix}=\frac1{36}\begin{pmatrix}60\\30\end{pmatrix}=\begin{pmatrix}\frac53\\\frac56\end{pmatrix}$。</p>
+<p>確かめ：予想値は $x^2=4$ で $\frac53+\frac{10}3=5$、$x^2=1$ で $\frac53+\frac56=\frac52$。残差 $\left(0,-\frac12,\frac12,0\right)$。第1列との内積 $0$、第2列（$4,1,1,4$）との内積 $-\frac12+\frac12=0$ ✓。　<span class="meta">自作の解答</span></p>
+</details></div>
+
+<div class="box"><span class="label">問9（C 発展：勾配の規則と射影行列）</span>(1) $M$ を対称な $n\times n$ 行列とするとき、$\nabla(\boldsymbol x^{\mathsf T}M\boldsymbol x)=2M\boldsymbol x$ を成分で示せ。(2) $A$ の列が一次独立のとき、$P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}$ が $P^2=P$、$P^{\mathsf T}=P$ を満たすことを示せ。
+<details><summary>解答</summary>
+<p>(1) $\boldsymbol x^{\mathsf T}M\boldsymbol x=\sum_i\sum_jM_{ij}x_ix_j$。$x_k$ で偏微分する。$x_k$ を含む項は、$i=k$ の項と $j=k$ の項（$i=j=k$ は両方に含まれる）。積の微分で、$\frac{\partial}{\partial x_k}(x_ix_j)=\delta_{ik}x_j+x_i\delta_{jk}$（$\delta$ は、添字が等しいとき1、そうでなければ0）。よって $\frac{\partial}{\partial x_k}\sum_{i,j}M_{ij}x_ix_j=\sum_jM_{kj}x_j+\sum_iM_{ik}x_i$。$M$ が対称なら $M_{ik}=M_{ki}$ なので第2項も $\sum_iM_{ki}x_i=(M\boldsymbol x)_k$。合わせて $2(M\boldsymbol x)_k$。これを $k=1,\dots,n$ で並べると $2M\boldsymbol x$。□</p>
+<p>(2) $P^2=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}\cdot A(A^{\mathsf T}A)^{-1}A^{\mathsf T}$。真ん中の $A^{\mathsf T}A(A^{\mathsf T}A)^{-1}=I$ で消えて、$=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}=P$。転置：$P^{\mathsf T}=(A^{\mathsf T})^{\mathsf T}\bigl((A^{\mathsf T}A)^{-1}\bigr)^{\mathsf T}A^{\mathsf T}$（積の転置は順序反転）。$A^{\mathsf T}A$ は対称なので、その逆行列も対称（$((A^{\mathsf T}A)^{-1})^{\mathsf T}=((A^{\mathsf T}A)^{\mathsf T})^{-1}=(A^{\mathsf T}A)^{-1}$）。よって $P^{\mathsf T}=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}=P$。□　<span class="meta">自作の解答</span></p>
+</details></div>
+
+<div class="box"><span class="label">問10（C 発展：次数を上げると係数が変わる）</span>5.2 の4点 $(-1,1),(0,0),(1,1),(2,3)$ を、直線 $y=a+bx$ で当てはめた場合の $\hat a,\hat b$ を求め、放物線の $\hat c_0=\frac3{20}$、$\hat c_1=-\frac1{20}$ と比べよ。
+<details><summary>解答</summary>
+<p>$A=\begin{pmatrix}1&-1\\1&0\\1&1\\1&2\end{pmatrix}$。$A^{\mathsf T}A=\begin{pmatrix}4&2\\2&6\end{pmatrix}$、$A^{\mathsf T}\boldsymbol b=\begin{pmatrix}5\\6\end{pmatrix}$。$\det=24-4=20$。$\begin{pmatrix}a\\b\end{pmatrix}=\frac1{20}\begin{pmatrix}6&-2\\-2&4\end{pmatrix}\begin{pmatrix}5\\6\end{pmatrix}=\frac1{20}\begin{pmatrix}30-12\\-10+24\end{pmatrix}=\frac1{20}\begin{pmatrix}18\\14\end{pmatrix}=\begin{pmatrix}\frac9{10}\\\frac7{10}\end{pmatrix}$。</p>
+<p>直線では $(\hat a,\hat b)=(0.9,0.7)$、放物線では $(\hat c_0,\hat c_1)=(0.15,-0.05)$。列 $x^2$ を足すと、$\hat c_0,\hat c_1$ も大きく変わった（4.5：列が直交していないため）。　<span class="meta">自作の解答</span></p>
+</details></div>
+
+<div class="box"><span class="label">問11（C 発展：重み付き最小二乗）</span>各測定に重み $w_i\gt0$ をつけた $S_w(\boldsymbol x)=\sum_iw_ir_i^2$ を最小にする $\hat{\boldsymbol x}$ が満たす式を、$W=\operatorname{diag}(w_1,\dots,w_m)$ を使って導け。
+<details><summary>解答</summary>
+<p>$\sum_iw_ir_i^2=\boldsymbol r^{\mathsf T}W\boldsymbol r$（$W$ は対角で、$\boldsymbol r^{\mathsf T}W\boldsymbol r=\sum_i w_i r_i^2$）。$\boldsymbol r=\boldsymbol b-A\boldsymbol x$ を入れて、3.2 と同じ展開：$f_w(\boldsymbol x)=\boldsymbol x^{\mathsf T}A^{\mathsf T}WA\boldsymbol x-2\boldsymbol b^{\mathsf T}WA\boldsymbol x+\boldsymbol b^{\mathsf T}W\boldsymbol b$（$W$ が対称なので中央の2項は等しい）。$A^{\mathsf T}WA$ は対称。3.3 の規則(i)(ii)で $\nabla f_w=2A^{\mathsf T}WA\boldsymbol x-2A^{\mathsf T}W\boldsymbol b=\boldsymbol 0$。よって <strong>$A^{\mathsf T}WA\hat{\boldsymbol x}=A^{\mathsf T}W\boldsymbol b$</strong>。$W=I$ なら正規方程式に戻る。幾何では、内積を $\langle\boldsymbol u,\boldsymbol v\rangle_W=\boldsymbol u^{\mathsf T}W\boldsymbol v$ に変えたときの射影である（第19回の「重みつきの内積」）。　<span class="meta">自作の解答。MML 9.2 の最尤推定で、ノイズの大きさが測定ごとに違うときに現れる形</span></p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 残差 $r_i=y_i-(a+bx_i)$ と、残差平方和 $S=\sum r_i^2=\|\boldsymbol b-A\boldsymbol x\|^2$ の意味（符号が打ち消し合わない理由）を言える（1.2, 1.3）。</li>
+<li>□ $\min$（値）と $\operatorname{arg\,min}$（場所）を区別して読み書きできる（1.4）。</li>
+<li>□ 3点の例で $S(a,b)$ を偏微分して、連立方程式を作って解ける（2.1）。</li>
+<li>□ $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$（正規方程式）を、行列だけで導ける（展開 → 勾配 $=\boldsymbol 0$、3.2〜3.3）。省略の段階（S0〜S3、<a href="#abbr-lsq">2.4</a>）を言える。</li>
+<li>□ 解が最小であることを $\|A\boldsymbol x-\boldsymbol b\|^2=\|A\hat{\boldsymbol x}-\boldsymbol b\|^2+\|A(\boldsymbol x-\hat{\boldsymbol x})\|^2$ で示せる（定理3.1）。</li>
+<li>□ $A^{\mathsf T}A$ が可逆なのは列が一次独立なときで、そうでないとき解は無数、最短が $A^{+}\boldsymbol b$（3.4）。</li>
+<li>□ 正規方程式が「残差が $\operatorname{im}A$ に直交する」と同じこと、$A\hat{\boldsymbol x}$ が $\boldsymbol b$ の射影であることを言える（4.1, 定理4.1）。</li>
+<li>□ 射影行列 $P=A(A^{\mathsf T}A)^{-1}A^{\mathsf T}$ の性質（$P^2=P$、対称、トレース＝ランク）と、3点の例での計算（4.3）。</li>
+<li>□ 条件数が2乗になる理由と、QR分解による解法 $R\hat{\boldsymbol x}=Q^{\mathsf T}\boldsymbol b$（4.4）。</li>
+<li>□ 直線回帰 $\hat b=S_{xy}/S_{xx}$、$\hat a=\bar y-\hat b\bar x$ と、重心を通ること（5.1）。</li>
+<li>□ 多項式の当てはめが、係数について線形だから同じ形になること（5.2）。決定係数 $R^2$ の意味と求め方（5.3）。</li>
+<li>□ 外れ値に弱いこと、縦方向のずれを最小にしていること、$R^2$ の読み方の落とし穴（5.4）。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第48回）</strong>：数値計算の誤差・数値微分と数値積分。この回の「条件数が2乗になる」は、次回の「丸め誤差が結果をどれだけ狂わせるか」の最初の具体例である。最小二乗法は、<a href="23_第23回_場と勾配.html#sym-gradient-descent">勾配降下法</a>や第51回の最適化の、いちばん基本的な練習問題でもある（$f(\boldsymbol x)=\|A\boldsymbol x-\boldsymbol b\|^2$ の最小化）。また、確率の回で出てくる「ばらつき」「推定」とは、残差の2乗和・平均・$R^2$ を通じてつながる。<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：最小二乗法と正規方程式の導出、射影との関係、回帰（直線・多項式）は、<em>Mathematics for Machine Learning</em>（Deisenroth, Faisal, Ong, 2020）第9章（9.2 Parameter Estimation、9.4 Maximum Likelihood as Orthogonal Projection）の順序と主題を参照し、本教材向けに書き直したもの。射影と最良近似は本教材の第19回 5.5、擬似逆行列は第22回 5.4 に基づく。Hefferon <em>Linear Algebra</em>（GFDL／CC BY-SA）の最小二乗の節も照合した。例題・演習・図・表は自作で、数値は検算済み（draft/check_47.py、draft/v2/check_figs47.py）。演習の C は公式解答とは照合していない。MML の演習問題は載せていない（MML は全文転載できない規定のため）。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

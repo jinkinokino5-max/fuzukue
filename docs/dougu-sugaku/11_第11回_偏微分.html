@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第11回 偏微分</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="img/11_hero_redfuji.jpg" alt="いわし雲の浮かぶ青空の下に、赤く染まった富士山の裾が左右へ長く伸び、手前に樹海がある">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第11回</p><h1>偏微分</h1></div>
+<figcaption><p class="cap">同じ山でも、東へ登るのと北へ登るのとでは、傾きが違う。</p><p class="cr">葛飾北斎『冨嶽三十六景 凱風快晴』（約1830年）の一部／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Katsushika_Hokusai_-_Fine_Wind,_Clear_Morning_(Gaifū_kaisei)_-_Google_Art_Project.jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
+</figure>
+<p class="lead">変数が 2 つ以上ある関数を微分するときの最重要の問いは、「<strong>何を固定して</strong>、どの変数を動かしているか」である。偏微分 $\partial f/\partial x$ を、他の変数を固定した 1 変数の微分として定義し、書き方の流派（$\partial_x f$、$f_x$、熱力学の $(\partial f/\partial x)_y$）と、固定の省略の段階を並べ、高階偏微分と順序交換（成り立つ条件と反例）までを、数で確かめながら進む。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：変数が 2 つ以上あると、「$x$ を動かすと $f$ がどれだけ変わるか」は<em>他の変数をどうするか</em>で答えが変わる → 他の変数を<strong>固定</strong>すれば、1 変数の微分（第7回）に戻る。これが偏微分 → 書き方は流派によって違い、多くは「何を固定したか」を<em>書かない</em>（省略の段階）→ 変数の取り方を変えると、同じ量・同じ記号でも値が変わる。だから熱力学は添字で固定を書く → 偏微分をもう一度行うと高階偏微分。$x$ と $y$ の順序は、なめらかな関数では交換できるが、そうでない反例もある。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>第1回から続けて、新しい記号は緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。この回でいちばん省略が多いのは、<strong>偏微分の記号が「何を固定したか」を書かない</strong>ことである。<a href="#abbr-partial">省略の段階</a>の箱で 1 段ずつ示し、以後その箱にリンクして戻れるようにする。</p>
+<p>1 変数の微分（第7回）で習った内容は、使うたびにリンクを張る。覚えている人は飛ばしてよい。導出は、文字だけでなく<strong>具体的な数で一度ためして</strong>から一般の場合に進む。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で<strong>新しく説明する記号</strong>と、<strong>前の回で説明済みの記号</strong>を分けて並べる。右の列の「→」で説明のある場所へ飛べる。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$\dfrac{\partial f}{\partial x}$</td><td>デル・エフ・デル・エックス（パーシャル）</td><td>$y$ などの他の変数を固定して、$x$ で微分したもの</td><td><a href="#sym-partial">→2.1</a></td></tr>
+<tr><td>$\partial_x f$、$f_x$</td><td>デル・エックス・エフ、エフ・エックス</td><td>$\dfrac{\partial f}{\partial x}$ の短い書き方</td><td><a href="#sym-partial-short">→3.1</a></td></tr>
+<tr><td>省略の段階（偏微分）</td><td></td><td>点・引数・固定した変数・分数の形を、1 つずつ省く</td><td><a href="#abbr-partial">→3.2</a></td></tr>
+<tr><td>$\left(\dfrac{\partial f}{\partial x}\right)_y$</td><td>デル・エフ・デル・エックス、$y$ 固定</td><td>$y$ を固定して $x$ で微分したもの（熱力学の流儀）</td><td><a href="#sym-partial-fixed">→4.2</a></td></tr>
+<tr><td>$\dfrac{\partial^2f}{\partial x^2}$、$\dfrac{\partial^2f}{\partial x\,\partial y}$、$f_{xy}$</td><td>デル・に・エフ・デル・エックス・に乗 など</td><td>もう一度偏微分したもの（高階偏微分）</td><td><a href="#sym-mixed-partial">→5.1</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出た記号（リンクで戻れる）</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>初出</th></tr>
+<tr><td>$=$、$:=$、$\approx$</td><td>等しい／左の名前を右の式で決める／ほぼ等しい</td><td><a href="01_第1回_数式を文として読む.html#sym-equal">第1回 2.1</a>、<a href="01_第1回_数式を文として読む.html#sym-defeq">2.2</a>、<a href="01_第1回_数式を文として読む.html#sym-approx">2.4</a></td></tr>
+<tr><td>$x_i$（添字）、$x^2$（冪）、$f'$（プライム）</td><td>番号・ラベル／冪／導関数または別のもの</td><td><a href="01_第1回_数式を文として読む.html#sym-subscript">第1回 4.1</a>、<a href="01_第1回_数式を文として読む.html#sym-superscript">4.2</a>、<a href="01_第1回_数式を文として読む.html#sym-prime">4.4</a></td></tr>
+<tr><td>省略の段階（S0, S1, …）</td><td>省略の度合いを段階で呼ぶ</td><td><a href="01_第1回_数式を文として読む.html#abbr-stages">第1回 6.1</a></td></tr>
+<tr><td>$\in$、$\forall$、$\exists$</td><td>属する／すべての／存在する</td><td><a href="02_第2回_集合と論理.html#sym-in">第2回</a>、<a href="02_第2回_集合と論理.html#sym-forall">第2回</a>、<a href="02_第2回_集合と論理.html#sym-exists">第2回</a></td></tr>
+<tr><td>$\mathbb R,\ \mathbb R^2$（直積）</td><td>実数全体／実数の組 $(x,y)$ 全体</td><td><a href="02_第2回_集合と論理.html#sym-numsets">第2回</a>、<a href="02_第2回_集合と論理.html#sym-cartesian">第2回</a></td></tr>
+<tr><td>$f\colon A\to B$、$f(x)$、$f\circ g$</td><td>関数、関数の値、合成</td><td><a href="03_第3回_関数と写像.html#sym-function">第3回</a>、<a href="03_第3回_関数と写像.html#sym-fx">第3回</a>、<a href="03_第3回_関数と写像.html#sym-compose">第3回</a></td></tr>
+<tr><td>多変数関数 $f(x,y)$</td><td>入力が 2 つ以上の関数</td><td><a href="03_第3回_関数と写像.html#sym-multivar">第3回 6.1</a></td></tr>
+<tr><td>引数の省略（$\psi(x,t)\to\psi(x)\to\psi$）</td><td>関数の引数を書かない</td><td><a href="03_第3回_関数と写像.html#abbr-fn-args">第3回 7.1</a></td></tr>
+<tr><td>$\displaystyle\lim_{h\to0}$（極限）、連続</td><td>限りなく近づく／つながったグラフ</td><td><a href="06_第6回_極限と連続.html#sym-lim">第6回</a>、<a href="06_第6回_極限と連続.html#sym-continuous">第6回</a></td></tr>
+<tr><td>$\dfrac{df}{dx}$、$f'$（導関数）</td><td>1 変数の微分</td><td><a href="07_第7回_微分.html#sym-derivative-leibniz">第7回</a>、<a href="07_第7回_微分.html#sym-derivative-lagrange">第7回</a></td></tr>
+<tr><td>$\Delta x$（変化量）</td><td>$x$ の変化の大きさ</td><td><a href="07_第7回_微分.html#sym-delta-x">第7回</a></td></tr>
+<tr><td>微分の規則（積・商・合成）</td><td>積の微分、合成関数の微分など</td><td><a href="07_第7回_微分.html#sym-diff-rules">第7回</a></td></tr>
+<tr><td>$df$、$dx$（微分）</td><td>$dx$ を独立した記号として扱う見方</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-differential">第8回</a></td></tr>
+<tr><td>$\displaystyle\int f\,dx$ の省略（どの変数で積分するか）</td><td>積分変数は $dx$ が決める</td><td><a href="10_第10回_積分.html#abbr-integral">第10回 3.3</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>動機：変数が 2 つあると、「変化の割合」が決まらない</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/11_a1_contour.png" alt="白地の地図に、道路が赤、池が青で描かれ、細い茶色の線が等高線として、起伏にそって巻いている" loading="lazy"></div>
+<p class="cap">同じ高さの点をつないだ等高線が、起伏を地図の上に描き出す。</p>
+<p class="cr">Belg4mit（2008年、米国マサチューセッツ州ブルーヒルズの池のあたりの地形図）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Hypsocontours.png">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/11_b1_sandgarden.jpg" alt="木々の茂る山を背に、白砂に長い筋が弧を描いて並んでいる" loading="lazy"></div>
+<p class="cap">砂に引いた長い筋が、ゆるい曲線を描いて並んでいる。</p>
+<p class="cr">Basile Morin（2019年、銀閣寺の砂の庭）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Dry-sand_Zen_garden_made_of_beige_stripes_a_sunny_day_at_Higashiyama_Jisho-ji_Buddhist_temple_Ginkaku-ji_Kyoto_Japan.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-1-1"><span class="no">1.1</span>1 変数の微分でできたこと、できないこと</h3>
+<p>第7回で、1 変数の関数 $f(x)$ の微分（<a href="07_第7回_微分.html#sym-derivative-leibniz">$\frac{df}{dx}$</a>）を学んだ。それは「$x$ を少し動かしたとき、$f$ がどれだけ変わるか」を表す。ところが、現実の量は変数が 1 つとは限らない。</p>
+<ul>
+<li>山の高さ $h$ は、東西の位置 $x$ と南北の位置 $y$ で決まる：$h(x,y)$。</li>
+<li>気体の圧力 $p$ は、体積 $V$ と温度 $T$ で決まる：$p(V,T)$。</li>
+<li>弦の変位 $u$ は、位置 $x$ と時刻 $t$ で決まる：$u(x,t)$（<a href="03_第3回_関数と写像.html#abbr-fn-args">第3回の $u(x,t)$</a>）。</li>
+</ul>
+<p>これらを<a href="03_第3回_関数と写像.html#sym-multivar">第3回の多変数関数</a>と呼ぶ。このとき、「$x$ を少し動かしたとき、$f$ がどれだけ変わるか」と聞かれても、答えが 1 つに決まらない。山の例なら、「東へ 1 歩進むと高さが何 m 変わるか」は、<em>北へ進まず東だけに進む</em>と決めて初めて答えが出る。「東へ 1 歩、同時に北へ 1 歩」では、別の答えになる。</p>
+<p>そこで最初の方針を決める：<strong>1 つの変数だけを動かし、他の変数は動かさない（固定する）</strong>。こうすれば、動くのは 1 変数だけなので、第7回の微分がそのまま使える。これが偏微分の考え方のすべてである。</p>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>最小の具体例：$f(x,y)=x^2+3xy$</h3>
+<p>2 変数の関数 $f(x,y):=x^2+3xy$ を考える（<a href="01_第1回_数式を文として読む.html#sym-defeq">$:=$</a>、<a href="01_第1回_数式を文として読む.html#sym-superscript">冪</a>、掛け算の省略は<a href="01_第1回_数式を文として読む.html#abbr-mult">第1回</a>）。点 $(x,y)=(1,2)$ での値は</p>
+<p>$$f(1,2)=1^2+3\cdot1\cdot2=1+6=7$$</p>
+<p><strong>$y$ を $2$ に固定して、$x$ だけを動かす</strong>。$x$ を $1$ から $1.1$ に増やすと、</p>
+<p>$$f(1.1,\,2)=1.1^2+3\cdot1.1\cdot2=1.21+6.6=7.81$$</p>
+<p>変化の割合（<a href="07_第7回_微分.html#sym-delta-x">$\Delta x$</a> あたりの $f$ の増え方）は $\dfrac{7.81-7}{1.1-1}=\dfrac{0.81}{0.1}=8.1$。$x$ の増やし方を $0.01$ にすると、$f(1.01,2)=1.0201+6.06=7.0801$ で、$\dfrac{7.0801-7}{0.01}=\dfrac{0.0801}{0.01}=8.01$。増やし方を小さくすると $8$ に近づく。</p>
+<p>次に、<strong>$x$ を $1$ に固定して、$y$ だけを動かす</strong>。$y$ を $2$ から $2.1$ に増やすと、$f(1,2.1)=1+3\cdot1\cdot2.1=1+6.3=7.3$。変化の割合は $\dfrac{7.3-7}{0.1}=\dfrac{0.3}{0.1}=3$。</p>
+<table class="tb">
+<tr><th>動かす変数</th><th>固定する変数</th><th>変化の割合（点 $(1,2)$）</th></tr>
+<tr><td>$x$</td><td>$y=2$</td><td>$8$ に近づく</td></tr>
+<tr><td>$y$</td><td>$x=1$</td><td>$3$</td></tr>
+</table>
+<p>同じ点 $(1,2)$ でも、<strong>どちらを動かすかで、変化の割合は $8$ と $3$ に分かれる</strong>。これを 1 つの数にまとめることはできない。だから、「どの変数を動かして、何を固定したか」を毎回区別して書く必要がある。</p>
+<p>表の2行を、$xy$ 平面の上に描くと図1.1 になる。同じ点 $(1,2)$ から、横（$x$ だけ）と縦（$y$ だけ）の2通りに $0.1$ ずつ進む。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 340" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="点(1,2)から x だけ、y だけ動かしたときの f=x²+3xy の値" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>点(1,2)から x だけ、y だけ動かしたときの f=x²+3xy の値</title>
+<rect x="0" y="0" width="440" height="340" fill="#fffdf7"/>
+<line x1="130.0" y1="260.0" x2="130.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="190.0" y1="260.0" x2="190.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="250.0" y1="260.0" x2="250.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="310.0" y1="260.0" x2="310.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="70.0" y1="200.0" x2="370.0" y2="200.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="70.0" y1="140.0" x2="370.0" y2="140.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="70.0" y1="80.0" x2="370.0" y2="80.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="70.0" y1="260.0" x2="380.0" y2="260.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 263.0 L380.0 260.0 L373.7 257.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="70.0" y1="260.0" x2="70.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M73.0 16.3 L70.0 10.0 L67.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="130.0" y1="256.0" x2="130.0" y2="264.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="130.0" y="280.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="250.0" y1="256.0" x2="250.0" y2="264.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="250.0" y="280.0" font-size="14" fill="#6b645a" text-anchor="middle">1.1</text>
+<line x1="66.0" y1="200.0" x2="74.0" y2="200.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="205.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="66.0" y1="80.0" x2="74.0" y2="80.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="85.0" font-size="14" fill="#6b645a" text-anchor="end">2.1</text>
+<text x="384.0" y="282.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="84.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="130.0" y1="200.0" x2="243.0" y2="200.0" stroke="#a8322a" stroke-width="2.6"/><path d="M234.0 204.3 L243.0 200.0 L234.0 195.7" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="130.0" y1="200.0" x2="130.0" y2="87.0" stroke="#2a5d8f" stroke-width="2.6"/><path d="M134.3 96.0 L130.0 87.0 L125.7 96.0" fill="none" stroke="#2a5d8f" stroke-width="2.6"/>
+<circle cx="130.0" cy="200.0" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="250.0" cy="200.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="130.0" cy="80.0" r="5" fill="#2a5d8f" stroke="#2a5d8f" stroke-width="1.5"/>
+<text x="120.0" y="224.0" font-size="17" fill="#2a2723" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan> = 7</tspan></text>
+<text x="254.0" y="186.0" font-size="17" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan> = 7.81</tspan></text>
+<text x="142.0" y="85.0" font-size="17" fill="#2a5d8f" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan> = 7.3</tspan></text>
+<text x="190.0" y="222.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">x だけ動かす</text>
+<text x="190.0" y="240.0" font-size="14" fill="#a8322a" text-anchor="middle">（y = 2 のまま）</text>
+<text x="140.0" y="128.0" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">y だけ動かす</text>
+<text x="140.0" y="146.0" font-size="14" fill="#2a5d8f" text-anchor="start">（x = 1 のまま）</text>
+<text x="10.0" y="304.0" font-size="14" fill="#a8322a" text-anchor="start">横へ 0.1：f は 0.81 増える → 割合 0.81 ÷ 0.1 = 8.1</text>
+<text x="10.0" y="326.0" font-size="14" fill="#2a5d8f" text-anchor="start">縦へ 0.1：f は 0.3 増える　→ 割合 0.3 ÷ 0.1 = 3</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　$f(x,y)=x^2+3xy$。点 $(1,2)$ の近くを拡大して描いた（目盛りは $0.05$ ごと）。横へ進むか縦へ進むかで、$f$ の増え方が違う。どちらへ進んだかを言わなければ、「変化の割合」は1つに決まらない。</figcaption>
+</figure>
+
+<div class="why"><span class="label">ひとことで</span>変数が 2 つ以上あると、「変化の割合」はどの変数を動かすかで変わる。そこで 1 つだけ動かし、他は固定して、1 変数の微分に戻す。これが偏微分。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>偏微分の定義と計算</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/11_a2_ct.jpg" alt="黒い背景に、体を縦に写した像（左）と、その一つの高さで体を輪切りにした断面（右）が並んでいる" loading="lazy"></div>
+<p class="cap">体を一つの高さで輪切りにした断面が、右の像である。</p>
+<p class="cr">Ptrump16（2022年、胸部のCT像）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Axial_plane_CT_scan_of_the_thorax_illustrative_image.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/11_b2_kintaro.jpg" alt="円筒形の飴を輪切りにした断面が並び、果物の絵や人の顔の絵が、どれも同じ図柄で現れている" loading="lazy"></div>
+<p class="cap">どこで切っても同じ絵が出る飴の、切り口である。</p>
+<p class="cr">Asanagi（2013年、金太郎飴）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Kintaro-ame_2013-09-12.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-2-1"><span class="no">2.1</span>定義</h3>
+<p>1.2 の計算を、一般の点 $(a,b)$ で式にする。$x$ を動かして $y=b$ を固定すると、$f(x,b)$ は $x$ だけの関数になる。この 1 変数関数に、第7回の微分の定義（<a href="07_第7回_微分.html#abbr-derivative">$\frac{df}{dx}$ の S0</a>、<a href="06_第6回_極限と連続.html#sym-lim">極限</a>）を使う。</p>
+<div class="def" id="sym-partial"><span class="label">記号：偏微分 $\dfrac{\partial f}{\partial x}(a,b)$</span>
+<p><strong>①読み方</strong>：「デル・エフ・デル・エックス、$a,b$ での値」。「パーシャル・エフ・パーシャル・エックス」とも読む。記号 $\partial$ は「デル」「ラウンド・ディー」「パーシャル」と読む（小文字の d の筆記体ではなく、第7回の $d$ とは<strong>別の記号</strong>）。</p>
+<p><strong>②日本語での意味</strong>：<strong>$y$ を $b$ に固定したまま、$x$ だけを $a$ のまわりで動かしたときの、$f$ の瞬間の変化の割合</strong>。1 変数関数 $g(x):=f(x,b)$ の、$x=a$ での微分係数 $g'(a)$ と同じ。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$\frac{\partial f}{\partial x}(a,b):=\lim_{h\to0}\frac{f(a+h,\,b)-f(a,\,b)}{h}$$</p>
+<p>$y$ の方向についても、$x=a$ を固定して</p>
+<p>$$\frac{\partial f}{\partial y}(a,b):=\lim_{k\to0}\frac{f(a,\,b+k)-f(a,\,b)}{k}$$</p>
+<p>と定める。第7回の $\frac{df}{dx}$ の定義と見比べると、<strong>分子の 2 つの項で、動かさない変数の値（$b$ や $a$）が同じ</strong>ことだけが違う。ここで $h,k$ は $x,y$ の変化量（<a href="07_第7回_微分.html#sym-delta-x">$\Delta x$</a> にあたる）、$\lim$ は<a href="06_第6回_極限と連続.html#sym-lim">第6回の極限</a>。</p>
+<p><strong>④どこで出会うか</strong>：熱力学、波動方程式・熱方程式（第40〜43回）、勾配（第23回）、最適化（第51回）、誤差伝播（第45回）。</p>
+</div>
+
+<p>最小の具体例で、定義を実行する。$f(x,y)=x^2+3xy$、点 $(a,b)=(1,2)$。</p>
+<ol>
+<li>$f(a+h,b)=f(1+h,2)=(1+h)^2+3(1+h)\cdot2$。</li>
+<li>展開する：$(1+h)^2=1+2h+h^2$、$3(1+h)\cdot2=6+6h$。足して $7+8h+h^2$。</li>
+<li>$f(a,b)=f(1,2)=7$ を引く：$f(1+h,2)-f(1,2)=8h+h^2$。</li>
+<li>$h$ で割る：$\dfrac{8h+h^2}{h}=8+h$（$h\ne0$）。</li>
+<li>$h\to0$ とする：$8+h\to8$。</li>
+</ol>
+<p>したがって $\dfrac{\partial f}{\partial x}(1,2)=8$。1.2 の差分の値 $8.1,\ 8.01$ が $8$ に近づいていたこととつながっている。$y$ 方向は、$f(1,2+k)=1+3(2+k)=7+3k$ なので、$\dfrac{f(1,2+k)-f(1,2)}{k}=\dfrac{3k}{k}=3$ （$k$ によらず $3$）。よって $\dfrac{\partial f}{\partial y}(1,2)=3$。</p>
+<p>定義の分数 $\dfrac{f(1+h,2)-f(1,2)}{h}$ は、$y=2$ に固定した曲線 $z=f(x,2)$ の上の2点を結ぶ直線（割線）の傾きである。$h$ を小さくしていくと、図2.1 のように割線は接線に近づく。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 558" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="y=2 で固定した曲線の割線が接線に近づく" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>y=2 で固定した曲線の割線が接線に近づく</title>
+<rect x="0" y="0" width="440" height="558" fill="#fffdf7"/>
+<line x1="56.0" y1="294.0" x2="396.0" y2="294.0" stroke="#2a2723" stroke-width="1.3"/><path d="M389.7 297.0 L396.0 294.0 L389.7 291.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="56.0" y1="294.0" x2="56.0" y2="14.0" stroke="#2a2723" stroke-width="1.3"/><path d="M59.0 20.3 L56.0 14.0 L53.0 20.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="199.5" y1="290.0" x2="199.5" y2="298.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="199.5" y="314.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="271.2" y1="290.0" x2="271.2" y2="298.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="271.2" y="314.0" font-size="14" fill="#6b645a" text-anchor="middle">1.5</text>
+<line x1="343.0" y1="290.0" x2="343.0" y2="298.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="343.0" y="314.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="52.0" y1="189.0" x2="60.0" y2="189.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="194.0" font-size="14" fill="#6b645a" text-anchor="end">7</text>
+<line x1="52.0" y1="125.2" x2="60.0" y2="125.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="130.2" font-size="14" fill="#6b645a" text-anchor="end">11.25</text>
+<line x1="52.0" y1="54.0" x2="60.0" y2="54.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="59.0" font-size="14" fill="#6b645a" text-anchor="end">16</text>
+<text x="400.0" y="316.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="70.0" y="20.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">z</tspan></text>
+<polyline points="56.0,294.0 57.3,293.2 58.7,292.3 60.0,291.5 61.4,290.6 62.7,289.7 64.1,288.9 65.4,288.0 66.8,287.2 68.1,286.3 69.5,285.4 70.8,284.6 72.1,283.7 73.5,282.8 74.8,281.9 76.2,281.0 77.5,280.2 78.9,279.3 80.2,278.4 81.6,277.5 82.9,276.6 84.2,275.7 85.6,274.8 86.9,273.9 88.3,273.0 89.6,272.1 91.0,271.2 92.3,270.3 93.7,269.3 95.0,268.4 96.4,267.5 97.7,266.6 99.0,265.6 100.4,264.7 101.7,263.8 103.1,262.9 104.4,261.9 105.8,261.0 107.1,260.0 108.5,259.1 109.8,258.1 111.1,257.2 112.5,256.2 113.8,255.3 115.2,254.3 116.5,253.4 117.9,252.4 119.2,251.4 120.6,250.5 121.9,249.5 123.3,248.5 124.6,247.5 125.9,246.6 127.3,245.6 128.6,244.6 130.0,243.6 131.3,242.6 132.7,241.6 134.0,240.6 135.4,239.6 136.7,238.6 138.1,237.6 139.4,236.6 140.7,235.6 142.1,234.6 143.4,233.6 144.8,232.6 146.1,231.6 147.5,230.5 148.8,229.5 150.2,228.5 151.5,227.4 152.8,226.4 154.2,225.4 155.5,224.3 156.9,223.3 158.2,222.3 159.6,221.2 160.9,220.2 162.3,219.1 163.6,218.1 165.0,217.0 166.3,215.9 167.6,214.9 169.0,213.8 170.3,212.8 171.7,211.7 173.0,210.6 174.4,209.5 175.7,208.5 177.1,207.4 178.4,206.3 179.8,205.2 181.1,204.1 182.4,203.0 183.8,201.9 185.1,200.8 186.5,199.8 187.8,198.7 189.2,197.5 190.5,196.4 191.9,195.3 193.2,194.2 194.5,193.1 195.9,192.0 197.2,190.9 198.6,189.7 199.9,188.6 201.3,187.5 202.6,186.4 204.0,185.2 205.3,184.1 206.7,183.0 208.0,181.8 209.3,180.7 210.7,179.5 212.0,178.4 213.4,177.2 214.7,176.1 216.1,174.9 217.4,173.8 218.8,172.6 220.1,171.4 221.4,170.3 222.8,169.1 224.1,167.9 225.5,166.8 226.8,165.6 228.2,164.4 229.5,163.2 230.9,162.0 232.2,160.8 233.6,159.7 234.9,158.5 236.2,157.3 237.6,156.1 238.9,154.9 240.3,153.7 241.6,152.5 243.0,151.2 244.3,150.0 245.7,148.8 247.0,147.6 248.4,146.4 249.7,145.2 251.0,143.9 252.4,142.7 253.7,141.5 255.1,140.2 256.4,139.0 257.8,137.8 259.1,136.5 260.5,135.3 261.8,134.0 263.1,132.8 264.5,131.5 265.8,130.3 267.2,129.0 268.5,127.8 269.9,126.5 271.2,125.2 272.6,124.0 273.9,122.7 275.3,121.4 276.6,120.2 277.9,118.9 279.3,117.6 280.6,116.3 282.0,115.0 283.3,113.8 284.7,112.5 286.0,111.2 287.4,109.9 288.7,108.6 290.0,107.3 291.4,106.0 292.7,104.7 294.1,103.4 295.4,102.0 296.8,100.7 298.1,99.4 299.5,98.1 300.8,96.8 302.2,95.4 303.5,94.1 304.8,92.8 306.2,91.5 307.5,90.1 308.9,88.8 310.2,87.4 311.6,86.1 312.9,84.7 314.3,83.4 315.6,82.0 317.0,80.7 318.3,79.3 319.6,78.0 321.0,76.6 322.3,75.3 323.7,73.9 325.0,72.5 326.4,71.1 327.7,69.8 329.1,68.4 330.4,67.0 331.7,65.6 333.1,64.2 334.4,62.9 335.8,61.5 337.1,60.1 338.5,58.7 339.8,57.3 341.2,55.9 342.5,54.5 343.9,53.1 345.2,51.7 346.5,50.2 347.9,48.8 349.2,47.4 350.6,46.0 351.9,44.6 353.3,43.1 354.6,41.7 356.0,40.3 357.3,38.8 358.6,37.4 360.0,36.0 361.3,34.5 362.7,33.1 364.0,31.6 365.4,30.2 366.7,28.7 368.1,27.3 369.4,25.8 370.8,24.4" fill="none" stroke="#2a2723" stroke-width="2.6" stroke-linejoin="round"/>
+<polyline points="134.9,249.8 256.9,135.0" fill="none" stroke="#b07a3e" stroke-width="1.8" stroke-linejoin="round"/>
+<circle cx="343.0" cy="54.0" r="4.5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<polyline points="134.9,246.4 256.9,138.0 378.8,29.6" fill="none" stroke="#7d6aa0" stroke-width="1.8" stroke-linejoin="round"/>
+<circle cx="271.2" cy="125.2" r="4.5" fill="#7d6aa0" stroke="#7d6aa0" stroke-width="1.5"/>
+<polyline points="113.4,261.0 246.1,150.0 378.8,39.0" fill="none" stroke="#a8322a" stroke-width="2.4" stroke-dasharray="8 5" stroke-linejoin="round"/>
+<circle cx="199.5" cy="189.0" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="199.5" y1="189.0" x2="199.5" y2="294.0" stroke="#6b645a" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="70.0" y="46.0" font-size="14" fill="#b07a3e" text-anchor="start" font-weight="bold">h = 1　　：割線の傾き 9</text>
+<text x="70.0" y="66.0" font-size="14" fill="#7d6aa0" text-anchor="start" font-weight="bold">h = 0.5：割線の傾き 8.5</text>
+<text x="70.0" y="86.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">h → 0　 ：接線の傾き 8</text>
+<text x="378.8" y="159.0" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">z = f(x, 2)</text>
+<text x="378.8" y="179.0" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">= x² + 6x</text>
+<line x1="10.0" y1="336.0" x2="430.0" y2="336.0" stroke="#ddd6c8" stroke-width="1"/>
+<text x="10.0" y="362.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(b) 割線の傾きを h ごとに並べる</text>
+<line x1="56.0" y1="492.5" x2="386.0" y2="492.5" stroke="#a8322a" stroke-width="1.6" stroke-dasharray="7 4"/>
+<line x1="56.0" y1="530.0" x2="396.0" y2="530.0" stroke="#2a2723" stroke-width="1.3"/><path d="M389.7 533.0 L396.0 530.0 L389.7 527.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="56.0" y1="530.0" x2="56.0" y2="370.0" stroke="#2a2723" stroke-width="1.3"/><path d="M59.0 376.3 L56.0 370.0 L53.0 376.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="86.0" y1="526.0" x2="86.0" y2="534.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="86.0" y="550.0" font-size="14" fill="#6b645a" text-anchor="middle">0.1</text>
+<line x1="206.0" y1="526.0" x2="206.0" y2="534.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="206.0" y="550.0" font-size="14" fill="#6b645a" text-anchor="middle">0.5</text>
+<line x1="356.0" y1="526.0" x2="356.0" y2="534.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="356.0" y="550.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="52.0" y1="492.5" x2="60.0" y2="492.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="497.5" font-size="14" fill="#6b645a" text-anchor="end">8</text>
+<line x1="52.0" y1="445.6" x2="60.0" y2="445.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="450.6" font-size="14" fill="#6b645a" text-anchor="end">8.5</text>
+<line x1="52.0" y1="398.7" x2="60.0" y2="398.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="403.7" font-size="14" fill="#6b645a" text-anchor="end">9</text>
+<text x="400.0" y="552.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">h</tspan></text>
+<text x="70.0" y="376.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'></text>
+<text x="66.0" y="378.0" font-size="14" fill="#6b645a" text-anchor="start">割線の傾き</text>
+<polyline points="56.0,492.5 213.5,443.3 371.0,394.1" fill="none" stroke="#6b645a" stroke-width="1.2" stroke-dasharray="3 3" stroke-linejoin="round"/>
+<circle cx="356.0" cy="398.7" r="5" fill="#b07a3e" stroke="#b07a3e" stroke-width="1.5"/>
+<circle cx="206.0" cy="445.6" r="5" fill="#7d6aa0" stroke="#7d6aa0" stroke-width="1.5"/>
+<circle cx="86.0" cy="483.1" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="59.0" cy="491.6" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="94.0" y="473.1" font-size="14" fill="#2a2723" text-anchor="start">8.1</text>
+<text x="67.0" y="513.6" font-size="14" fill="#2a2723" text-anchor="start">8.01</text>
+<text x="386.0" y="512.5" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">h → 0 で 8 に近づく</text>
+</svg>
+<figcaption><strong>図 2.1</strong>　(a) $h=1$ のとき割線の傾きは $\frac{f(2,2)-f(1,2)}{1}=16-7=9$、$h=0.5$ のとき $\frac{11.25-7}{0.5}=8.5$。上の手順 4. のとおり割線の傾きは $8+h$ で、手順 5. で $h\to0$ とすると接線の傾き $8=\frac{\partial f}{\partial x}(1,2)$ になる。(a) では割線と接線がほとんど重なって見えるので、(b) に傾きの値だけを取り出した。</figcaption>
+</figure>
+
+<div class="warn"><span class="label">よくある誤解：$\partial$ と $d$ は別の記号</span>
+<p>$\dfrac{df}{dx}$ （<a href="07_第7回_微分.html#sym-derivative-leibniz">第7回</a>）は、$f$ が $x$ <em>だけ</em>の関数のときの微分。$\dfrac{\partial f}{\partial x}$ は、$f$ が複数の変数をもち、<em>他を固定して</em>微分するときの記号。形が似ているのは、「$f$ の中に他の変数があるかもしれない」ことを示すために、わざと $d$ と区別して書くから。$f$ が $x$ だけの関数なら、$\frac{\partial f}{\partial x}=\frac{df}{dx}$ で、どちらを書いても同じ。</p>
+</div>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>計算の手順：他の文字を「定数だと思って」微分する</h3>
+<p>定義どおりに毎回極限を取るのは大変なので、1 変数の微分の規則（<a href="07_第7回_微分.html#sym-diff-rules">第7回</a>）を使う。手順は</p>
+<ol>
+<li>微分する変数（たとえば $x$）以外の文字を、<strong>そのあいだだけ定数</strong>とみなす。</li>
+<li>$x$ の関数として、第7回の規則で微分する。</li>
+<li>定数とみなしていた文字を、そのまま残す（数に置き換えるのは、値を求めるときだけ）。</li>
+</ol>
+<p>理由：2.1 の定義で、$y=b$ は<em>動かさない</em>。動かさないものは、微分の計算の中では定数と同じように扱える。</p>
+<p>$f(x,y)=x^2+3xy$ で確かめる。</p>
+<ol>
+<li>$x$ で偏微分：$y$ を定数とみなす。$x^2$ を $x$ で微分して $2x$。$3xy=(3y)\cdot x$ は、$x$ の 1 次式で係数が $3y$ なので、微分して $3y$。足して $\dfrac{\partial f}{\partial x}=2x+3y$。</li>
+<li>$y$ で偏微分：$x$ を定数とみなす。$x^2$ は定数なので微分して $0$。$3xy=(3x)\cdot y$ は係数 $3x$ の 1 次式なので、微分して $3x$。足して $\dfrac{\partial f}{\partial y}=3x$。</li>
+<li>点 $(1,2)$ での値：$2\cdot1+3\cdot2=8$、$3\cdot1=3$。2.1 で定義から求めた $8$ と $3$ に一致する ✓。</li>
+</ol>
+<p>「定数とみなす」を目で見えるようにしたのが図2.2 である。動かさない文字を点線の箱に入れ、箱の中は数と同じように扱う。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 386" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="定数とみなす文字を箱に入れて偏微分する" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>定数とみなす文字を箱に入れて偏微分する</title>
+<rect x="0" y="0" width="440" height="386" fill="#fffdf7"/>
+<text x="10.0" y="26.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">(a) x で偏微分：y を定数の箱に入れる</text>
+<text x="60.0" y="72.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan> =</tspan></text>
+<text x="120.0" y="72.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="-9.2" font-size="15.4">2</tspan></text>
+<text x="160.0" y="72.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>+</tspan></text>
+<text x="205.0" y="72.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<rect x="224.5" y="48" width="31" height="34" rx="5" fill="#ece7dc" stroke="#a8322a" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="240.0" y="72.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<text x="272.0" y="72.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<line x1="170.0" y1="92.0" x2="170.0" y2="124.0" stroke="#a8322a" stroke-width="1.8"/><path d="M166.5 116.8 L170.0 124.0 L173.5 116.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="190.0" y="113.0" font-size="14" fill="#6b645a" text-anchor="start">箱の中は数（係数）と同じに扱う</text>
+<text x="60.0" y="160.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">x</tspan><tspan dy="-6.2"> =</tspan></text>
+<text x="120.0" y="160.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>2</tspan><tspan font-style="italic">x</tspan></text>
+<text x="160.0" y="160.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>+</tspan></text>
+<text x="205.0" y="160.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<rect x="224.5" y="136" width="31" height="34" rx="5" fill="#ece7dc" stroke="#a8322a" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="240.0" y="160.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<text x="276.0" y="160.0" font-size="14" fill="#6b645a" text-anchor="start">← 3y は x の係数</text>
+<line x1="10.0" y1="200.0" x2="430.0" y2="200.0" stroke="#ddd6c8" stroke-width="1"/>
+<text x="10.0" y="230.0" font-size="15" fill="#2a5d8f" text-anchor="start" font-weight="bold">(b) y で偏微分：x を定数の箱に入れる</text>
+<text x="60.0" y="276.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan> =</tspan></text>
+<rect x="98.0" y="252" width="44" height="34" rx="5" fill="#ece7dc" stroke="#2a5d8f" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="120.0" y="276.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan dy="-9.2" font-size="15.4">2</tspan></text>
+<text x="160.0" y="276.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>+</tspan></text>
+<text x="205.0" y="276.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<rect x="224.5" y="252" width="31" height="34" rx="5" fill="#ece7dc" stroke="#2a5d8f" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="240.0" y="276.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="272.0" y="276.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="170.0" y1="296.0" x2="170.0" y2="328.0" stroke="#2a5d8f" stroke-width="1.8"/><path d="M166.5 320.8 L170.0 328.0 L173.5 320.8" fill="none" stroke="#2a5d8f" stroke-width="1.8"/>
+<text x="190.0" y="317.0" font-size="14" fill="#6b645a" text-anchor="start">定数だけの項は微分すると 0</text>
+<text x="60.0" y="364.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">y</tspan><tspan dy="-6.2"> =</tspan></text>
+<text x="120.0" y="364.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>0</tspan></text>
+<text x="160.0" y="364.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>+</tspan></text>
+<text x="205.0" y="364.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>3</tspan></text>
+<rect x="224.5" y="340" width="31" height="34" rx="5" fill="#ece7dc" stroke="#2a5d8f" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="240.0" y="364.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+</svg>
+<figcaption><strong>図 2.2</strong>　同じ $f=x^2+3xy$ でも、(a) では $y$ が箱に入り、(b) では $x$ が箱に入る。箱に入れるのは<em>その計算のあいだだけ</em>で、計算が終われば箱は外す。</figcaption>
+</figure>
+<p>他の例を並べる。右の列は、被積分関数を見るときのように、<strong>どの文字を定数とみなしたか</strong>が分かるように書いてある。</p>
+<table class="tb">
+<tr><th>$f(x,y)$</th><th>$\dfrac{\partial f}{\partial x}$（$y$ を定数とみなす）</th><th>$\dfrac{\partial f}{\partial y}$（$x$ を定数とみなす）</th></tr>
+<tr><td>$x^2y^3$</td><td>$2xy^3$（$y^3$ は係数）</td><td>$3x^2y^2$（$x^2$ は係数）</td></tr>
+<tr><td>$\sin(xy)$</td><td>$y\cos(xy)$（合成関数の微分：内側 $xy$ を $x$ で微分すると $y$）</td><td>$x\cos(xy)$</td></tr>
+<tr><td>$\dfrac xy$</td><td>$\dfrac1y$（$\frac1y$ は係数）</td><td>$-\dfrac{x}{y^2}$（$y^{-1}$ の微分は $-y^{-2}$）</td></tr>
+<tr><td>$e^{xy}$</td><td>$y\,e^{xy}$</td><td>$x\,e^{xy}$</td></tr>
+</table>
+<p>（検算は draft/check_11.py。たとえば $\sin(xy)$ の $x$ 偏微分は、合成関数の微分〔<a href="07_第7回_微分.html#sym-diff-rules">第7回</a>〕で $\cos(xy)\cdot\frac{\partial(xy)}{\partial x}=\cos(xy)\cdot y$。）</p>
+<p>変数が 3 つ以上でも同じ。$f(x,y,z)=xyz+z^2$ なら、$\dfrac{\partial f}{\partial x}=yz$（$y,z$ を定数）、$\dfrac{\partial f}{\partial y}=xz$、$\dfrac{\partial f}{\partial z}=xy+2z$ （$z^2$ を $z$ で微分して $2z$）。</p>
+
+<div class="warn"><span class="label">よくある誤解：「定数とみなす」と「定数である」は違う</span>
+<p>「$y$ を定数とみなす」は、<em>$x$ で微分している間だけ</em>の約束である。$y$ が定数になったわけではない。次に $y$ で微分するときは、今度は $x$ を定数とみなす。同じ式 $f(x,y)$ から、$\frac{\partial f}{\partial x}$ と $\frac{\partial f}{\partial y}$ の<em>2 つの別の関数</em>が得られる。</p>
+<p>また、$y$ が実は $x$ に依存している（たとえば $y=x^2$ のように、$x$ が動くと $y$ も動く）場合は、「$y$ を固定」の前提が成り立たない。その場合は第12回の連鎖律（<a href="12_第12回_全微分と連鎖律.html#sym-chain-rule">連鎖律</a>）を使う。</p>
+</div>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>幾何学の見方：曲面を切った断面の傾き</h3>
+<p>$z=f(x,y)$ のグラフは、$xy$ 平面の上に浮かぶ<em>曲面</em>になる。$y=b$ に固定するとは、この曲面を平面 $y=b$ で<strong>切る</strong>ことで、切り口は $z=f(x,b)$ という<em>曲線</em>（$x$ だけの関数）になる。偏微分 $\frac{\partial f}{\partial x}(a,b)$ は、この切り口の曲線の $x=a$ での<strong>接線の傾き</strong>である。</p>
+<p>曲面 $z=f(x,y)$ を上から見て、高さの等しい点を線で結ぶと<strong>等高線</strong>の図になる（地図の等高線と同じ）。図2.3 は $f(x,y)=x^2+3xy$ の等高線に、切る位置の2本の直線を重ねたものである。</p>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 362" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="f=x²+3xy の等高線と切る位置" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>f=x²+3xy の等高線と切る位置</title>
+<rect x="0" y="0" width="440" height="362" fill="#fffdf7"/>
+<line x1="56.0" y1="320.0" x2="406.0" y2="320.0" stroke="#2a2723" stroke-width="1.3"/><path d="M399.7 323.0 L406.0 320.0 L399.7 317.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="56.0" y1="320.0" x2="56.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M59.0 16.3 L56.0 10.0 L53.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="186.8" y1="316.0" x2="186.8" y2="324.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="186.8" y="340.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="317.5" y1="316.0" x2="317.5" y2="324.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="317.5" y="340.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="52.0" y1="231.8" x2="60.0" y2="231.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="236.8" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="52.0" y1="143.5" x2="60.0" y2="143.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="148.5" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="52.0" y1="55.3" x2="60.0" y2="55.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="60.3" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="410.0" y="342.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="70.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="81.7,26.6 82.5,36.2 83.4,45.2 84.2,53.7 85.0,61.7 85.9,69.3 86.7,76.5 87.5,83.3 88.4,89.7 89.2,95.9 90.0,101.7 90.9,107.3 91.7,112.7 92.6,117.8 93.4,122.6 94.2,127.3 95.1,131.8 95.9,136.1 96.7,140.2 97.6,144.2 98.4,148.0 99.2,151.7 100.1,155.3 100.9,158.7 101.7,162.0 102.6,165.2 103.4,168.3 104.2,171.3 105.1,174.2 105.9,177.0 106.7,179.8 107.6,182.4 108.4,185.0 109.2,187.4 110.1,189.9 110.9,192.2 111.7,194.5 112.6,196.7 113.4,198.9 114.2,201.0 115.1,203.0 115.9,205.0 116.7,207.0 117.6,208.9 118.4,210.7 119.2,212.6 120.1,214.3 120.9,216.1 121.7,217.8 122.6,219.4 123.4,221.0 124.2,222.6 125.1,224.2 125.9,225.7 126.7,227.2 127.6,228.6 128.4,230.0 129.2,231.4 130.1,232.8 130.9,234.1 131.7,235.5 132.6,236.8 133.4,238.0 134.2,239.3 135.1,240.5 135.9,241.7 136.7,242.9 137.6,244.0 138.4,245.2 139.2,246.3 140.1,247.4 140.9,248.5 141.7,249.6 142.6,250.6 143.4,251.6 144.2,252.7 145.1,253.7 145.9,254.7 146.7,255.6 147.6,256.6 148.4,257.5 149.2,258.5 150.1,259.4 150.9,260.3 151.7,261.2 152.6,262.1 153.4,262.9 154.2,263.8 155.1,264.6 155.9,265.5 156.7,266.3 157.6,267.1 158.4,267.9 159.2,268.7 160.1,269.5 160.9,270.3 161.7,271.0 162.6,271.8 163.4,272.5 164.2,273.3 165.1,274.0 165.9,274.7 166.7,275.4 167.6,276.2 168.4,276.9 169.2,277.5 170.1,278.2 170.9,278.9 171.7,279.6 172.6,280.2 173.4,280.9 174.2,281.5 175.1,282.2 175.9,282.8 176.7,283.5 177.6,284.1 178.4,284.7 179.3,285.3 180.1,285.9 180.9,286.5 181.8,287.1 182.6,287.7 183.4,288.3 184.3,288.9 185.1,289.4 185.9,290.0 186.8,290.6 187.6,291.1 188.4,291.7 189.3,292.2 190.1,292.8 190.9,293.3 191.8,293.9 192.6,294.4 193.4,294.9 194.3,295.5 195.1,296.0 195.9,296.5 196.8,297.0 197.6,297.5 198.4,298.0 199.3,298.5 200.1,299.0 200.9,299.5 201.8,300.0 202.6,300.5 203.4,301.0 204.3,301.5 205.1,301.9 205.9,302.4 206.8,302.9 207.6,303.4 208.4,303.8 209.3,304.3 210.1,304.7 210.9,305.2 211.8,305.6 212.6,306.1 213.4,306.5 214.3,307.0 215.1,307.4 215.9,307.9 216.8,308.3 217.6,308.7 218.4,309.2 219.3,309.6 220.1,310.0 220.9,310.5 221.8,310.9 222.6,311.3 223.4,311.7 224.3,312.1 225.1,312.5 225.9,313.0 226.8,313.4 227.6,313.8 228.4,314.2 229.3,314.6 230.1,315.0 230.9,315.4 231.8,315.8 232.6,316.2 233.4,316.6 234.3,316.9 235.1,317.3 235.9,317.7 236.8,318.1 237.6,318.5 238.4,318.9 239.3,319.2 240.1,319.6" fill="none" stroke="#9a9184" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="105.9,22.8 106.7,28.1 107.6,33.2 108.4,38.1 109.2,42.9 110.1,47.6 110.9,52.1 111.7,56.4 112.6,60.7 113.4,64.8 114.2,68.9 115.1,72.8 115.9,76.6 116.7,80.3 117.6,83.9 118.4,87.5 119.2,90.9 120.1,94.3 120.9,97.5 121.7,100.7 122.6,103.8 123.4,106.9 124.2,109.9 125.1,112.8 125.9,115.6 126.7,118.4 127.6,121.1 128.4,123.8 129.2,126.4 130.1,128.9 130.9,131.4 131.7,133.9 132.6,136.3 133.4,138.6 134.2,140.9 135.1,143.2 135.9,145.4 136.7,147.6 137.6,149.7 138.4,151.8 139.2,153.9 140.1,155.9 140.9,157.9 141.7,159.8 142.6,161.8 143.4,163.6 144.2,165.5 145.1,167.3 145.9,169.1 146.7,170.9 147.6,172.6 148.4,174.3 149.2,176.0 150.1,177.6 150.9,179.2 151.7,180.8 152.6,182.4 153.4,184.0 154.2,185.5 155.1,187.0 155.9,188.5 156.7,189.9 157.6,191.4 158.4,192.8 159.2,194.2 160.1,195.6 160.9,196.9 161.7,198.3 162.6,199.6 163.4,200.9 164.2,202.2 165.1,203.5 165.9,204.7 166.7,206.0 167.6,207.2 168.4,208.4 169.2,209.6 170.1,210.8 170.9,212.0 171.7,213.1 172.6,214.3 173.4,215.4 174.2,216.5 175.1,217.6 175.9,218.7 176.7,219.7 177.6,220.8 178.4,221.9 179.3,222.9 180.1,223.9 180.9,224.9 181.8,225.9 182.6,226.9 183.4,227.9 184.3,228.9 185.1,229.9 185.9,230.8 186.8,231.7 187.6,232.7 188.4,233.6 189.3,234.5 190.1,235.4 190.9,236.3 191.8,237.2 192.6,238.1 193.4,239.0 194.3,239.8 195.1,240.7 195.9,241.5 196.8,242.4 197.6,243.2 198.4,244.0 199.3,244.8 200.1,245.6 200.9,246.4 201.8,247.2 202.6,248.0 203.4,248.8 204.3,249.6 205.1,250.3 205.9,251.1 206.8,251.9 207.6,252.6 208.4,253.4 209.3,254.1 210.1,254.8 210.9,255.5 211.8,256.3 212.6,257.0 213.4,257.7 214.3,258.4 215.1,259.1 215.9,259.8 216.8,260.5 217.6,261.1 218.4,261.8 219.3,262.5 220.1,263.2 220.9,263.8 221.8,264.5 222.6,265.1 223.4,265.8 224.3,266.4 225.1,267.1 225.9,267.7 226.8,268.3 227.6,268.9 228.4,269.6 229.3,270.2 230.1,270.8 230.9,271.4 231.8,272.0 232.6,272.6 233.4,273.2 234.3,273.8 235.1,274.4 235.9,275.0 236.8,275.6 237.6,276.1 238.4,276.7 239.3,277.3 240.1,277.8 240.9,278.4 241.8,279.0 242.6,279.5 243.4,280.1 244.3,280.6 245.1,281.2 245.9,281.7 246.8,282.3 247.6,282.8 248.4,283.3 249.3,283.9 250.1,284.4 250.9,284.9 251.8,285.5 252.6,286.0 253.4,286.5 254.3,287.0 255.1,287.5 255.9,288.0 256.8,288.5 257.6,289.0 258.4,289.5 259.3,290.0 260.1,290.5 260.9,291.0 261.8,291.5 262.6,292.0 263.4,292.5 264.3,293.0 265.1,293.5 266.0,293.9 266.8,294.4 267.6,294.9 268.5,295.4 269.3,295.8 270.1,296.3 271.0,296.8 271.8,297.2 272.6,297.7 273.5,298.2 274.3,298.6 275.1,299.1 276.0,299.5 276.8,300.0 277.6,300.4 278.5,300.9 279.3,301.3 280.1,301.8 281.0,302.2 281.8,302.6 282.6,303.1 283.5,303.5 284.3,304.0 285.1,304.4 286.0,304.8 286.8,305.2 287.6,305.7 288.5,306.1 289.3,306.5 290.1,306.9 291.0,307.4 291.8,307.8 292.6,308.2 293.5,308.6 294.3,309.0 295.1,309.4 296.0,309.9 296.8,310.3 297.6,310.7 298.5,311.1 299.3,311.5 300.1,311.9 301.0,312.3 301.8,312.7 302.6,313.1 303.5,313.5 304.3,313.9 305.1,314.3 306.0,314.7 306.8,315.1 307.6,315.5 308.5,315.8 309.3,316.2 310.1,316.6 311.0,317.0 311.8,317.4 312.6,317.8 313.5,318.2 314.3,318.5 315.1,318.9 316.0,319.3 316.8,319.7" fill="none" stroke="#9a9184" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="140.9,22.0 141.7,25.3 142.6,28.5 143.4,31.6 144.2,34.7 145.1,37.8 145.9,40.8 146.7,43.7 147.6,46.6 148.4,49.4 149.2,52.2 150.1,55.0 150.9,57.7 151.7,60.3 152.6,62.9 153.4,65.5 154.2,68.0 155.1,70.5 155.9,73.0 156.7,75.4 157.6,77.8 158.4,80.1 159.2,82.4 160.1,84.7 160.9,87.0 161.7,89.2 162.6,91.4 163.4,93.5 164.2,95.6 165.1,97.7 165.9,99.8 166.7,101.8 167.6,103.8 168.4,105.8 169.2,107.7 170.1,109.7 170.9,111.6 171.7,113.4 172.6,115.3 173.4,117.1 174.2,118.9 175.1,120.7 175.9,122.5 176.7,124.2 177.6,125.9 178.4,127.6 179.3,129.3 180.1,130.9 180.9,132.6 181.8,134.2 182.6,135.8 183.4,137.4 184.3,138.9 185.1,140.5 185.9,142.0 186.8,143.5 187.6,145.0 188.4,146.5 189.3,147.9 190.1,149.4 190.9,150.8 191.8,152.2 192.6,153.6 193.4,155.0 194.3,156.4 195.1,157.7 195.9,159.1 196.8,160.4 197.6,161.7 198.4,163.0 199.3,164.3 200.1,165.6 200.9,166.8 201.8,168.1 202.6,169.3 203.4,170.5 204.3,171.8 205.1,173.0 205.9,174.1 206.8,175.3 207.6,176.5 208.4,177.7 209.3,178.8 210.1,179.9 210.9,181.1 211.8,182.2 212.6,183.3 213.4,184.4 214.3,185.5 215.1,186.6 215.9,187.6 216.8,188.7 217.6,189.7 218.4,190.8 219.3,191.8 220.1,192.8 220.9,193.9 221.8,194.9 222.6,195.9 223.4,196.9 224.3,197.8 225.1,198.8 225.9,199.8 226.8,200.7 227.6,201.7 228.4,202.6 229.3,203.6 230.1,204.5 230.9,205.4 231.8,206.4 232.6,207.3 233.4,208.2 234.3,209.1 235.1,210.0 235.9,210.8 236.8,211.7 237.6,212.6 238.4,213.5 239.3,214.3 240.1,215.2 240.9,216.0 241.8,216.9 242.6,217.7 243.4,218.5 244.3,219.3 245.1,220.2 245.9,221.0 246.8,221.8 247.6,222.6 248.4,223.4 249.3,224.2 250.1,225.0 250.9,225.7 251.8,226.5 252.6,227.3 253.4,228.1 254.3,228.8 255.1,229.6 255.9,230.3 256.8,231.1 257.6,231.8 258.4,232.5 259.3,233.3 260.1,234.0 260.9,234.7 261.8,235.4 262.6,236.2 263.4,236.9 264.3,237.6 265.1,238.3 266.0,239.0 266.8,239.7 267.6,240.4 268.5,241.1 269.3,241.7 270.1,242.4 271.0,243.1 271.8,243.8 272.6,244.4 273.5,245.1 274.3,245.8 275.1,246.4 276.0,247.1 276.8,247.7 277.6,248.4 278.5,249.0 279.3,249.6 280.1,250.3 281.0,250.9 281.8,251.5 282.6,252.2 283.5,252.8 284.3,253.4 285.1,254.0 286.0,254.6 286.8,255.3 287.6,255.9 288.5,256.5 289.3,257.1 290.1,257.7 291.0,258.3 291.8,258.9 292.6,259.4 293.5,260.0 294.3,260.6 295.1,261.2 296.0,261.8 296.8,262.3 297.6,262.9 298.5,263.5 299.3,264.1 300.1,264.6 301.0,265.2 301.8,265.7 302.6,266.3 303.5,266.9 304.3,267.4 305.1,268.0 306.0,268.5 306.8,269.1 307.6,269.6 308.5,270.1 309.3,270.7 310.1,271.2 311.0,271.8 311.8,272.3 312.6,272.8 313.5,273.3 314.3,273.9 315.1,274.4 316.0,274.9 316.8,275.4 317.6,275.9 318.5,276.5 319.3,277.0 320.1,277.5 321.0,278.0 321.8,278.5 322.6,279.0 323.5,279.5 324.3,280.0 325.1,280.5 326.0,281.0 326.8,281.5 327.6,282.0 328.5,282.5 329.3,283.0 330.1,283.4 331.0,283.9 331.8,284.4 332.6,284.9 333.5,285.4 334.3,285.9 335.1,286.3 336.0,286.8 336.8,287.3 337.6,287.8 338.5,288.2 339.3,288.7 340.1,289.2 341.0,289.6 341.8,290.1 342.6,290.5 343.5,291.0 344.3,291.5 345.1,291.9 346.0,292.4 346.8,292.8 347.6,293.3 348.5,293.7 349.3,294.2 350.1,294.6 351.0,295.1 351.8,295.5 352.6,296.0 353.5,296.4 354.3,296.8 355.2,297.3 356.0,297.7 356.8,298.2 357.7,298.6 358.5,299.0 359.3,299.5 360.2,299.9 361.0,300.3 361.8,300.7 362.7,301.2 363.5,301.6 364.3,302.0 365.2,302.4 366.0,302.9 366.8,303.3 367.7,303.7 368.5,304.1 369.3,304.5 370.2,305.0 371.0,305.4 371.8,305.8 372.7,306.2 373.5,306.6 374.3,307.0 375.2,307.4 376.0,307.8 376.8,308.2 377.7,308.6 378.5,309.0 379.3,309.5 380.2,309.9 381.0,310.3 381.8,310.7 382.7,311.1 383.5,311.4 384.3,311.8 385.2,312.2 386.0,312.6 386.8,313.0 387.7,313.4 388.5,313.8 389.3,314.2 390.2,314.6 391.0,315.0 391.8,315.4 392.7,315.8 393.5,316.1 394.3,316.5 395.2,316.9 396.0,317.3" fill="none" stroke="#2a2723" stroke-width="2.0" stroke-linejoin="round"/>
+<polyline points="195.9,21.6 196.8,23.8 197.6,25.9 198.4,28.0 199.3,30.0 200.1,32.1 200.9,34.1 201.8,36.1 202.6,38.1 203.4,40.1 204.3,42.0 205.1,44.0 205.9,45.9 206.8,47.8 207.6,49.6 208.4,51.5 209.3,53.3 210.1,55.1 210.9,56.9 211.8,58.7 212.6,60.5 213.4,62.2 214.3,64.0 215.1,65.7 215.9,67.4 216.8,69.1 217.6,70.7 218.4,72.4 219.3,74.0 220.1,75.7 220.9,77.3 221.8,78.9 222.6,80.4 223.4,82.0 224.3,83.6 225.1,85.1 225.9,86.6 226.8,88.1 227.6,89.6 228.4,91.1 229.3,92.6 230.1,94.1 230.9,95.5 231.8,97.0 232.6,98.4 233.4,99.8 234.3,101.2 235.1,102.6 235.9,104.0 236.8,105.3 237.6,106.7 238.4,108.1 239.3,109.4 240.1,110.7 240.9,112.0 241.8,113.3 242.6,114.6 243.4,115.9 244.3,117.2 245.1,118.5 245.9,119.7 246.8,121.0 247.6,122.2 248.4,123.5 249.3,124.7 250.1,125.9 250.9,127.1 251.8,128.3 252.6,129.5 253.4,130.7 254.3,131.8 255.1,133.0 255.9,134.1 256.8,135.3 257.6,136.4 258.4,137.6 259.3,138.7 260.1,139.8 260.9,140.9 261.8,142.0 262.6,143.1 263.4,144.2 264.3,145.3 265.1,146.3 266.0,147.4 266.8,148.4 267.6,149.5 268.5,150.5 269.3,151.6 270.1,152.6 271.0,153.6 271.8,154.6 272.6,155.7 273.5,156.7 274.3,157.7 275.1,158.7 276.0,159.6 276.8,160.6 277.6,161.6 278.5,162.6 279.3,163.5 280.1,164.5 281.0,165.4 281.8,166.4 282.6,167.3 283.5,168.2 284.3,169.2 285.1,170.1 286.0,171.0 286.8,171.9 287.6,172.8 288.5,173.7 289.3,174.6 290.1,175.5 291.0,176.4 291.8,177.3 292.6,178.2 293.5,179.0 294.3,179.9 295.1,180.8 296.0,181.6 296.8,182.5 297.6,183.3 298.5,184.2 299.3,185.0 300.1,185.9 301.0,186.7 301.8,187.5 302.6,188.3 303.5,189.2 304.3,190.0 305.1,190.8 306.0,191.6 306.8,192.4 307.6,193.2 308.5,194.0 309.3,194.8 310.1,195.5 311.0,196.3 311.8,197.1 312.6,197.9 313.5,198.6 314.3,199.4 315.1,200.2 316.0,200.9 316.8,201.7 317.6,202.4 318.5,203.2 319.3,203.9 320.1,204.7 321.0,205.4 321.8,206.1 322.6,206.9 323.5,207.6 324.3,208.3 325.1,209.0 326.0,209.8 326.8,210.5 327.6,211.2 328.5,211.9 329.3,212.6 330.1,213.3 331.0,214.0 331.8,214.7 332.6,215.4 333.5,216.1 334.3,216.8 335.1,217.4 336.0,218.1 336.8,218.8 337.6,219.5 338.5,220.1 339.3,220.8 340.1,221.5 341.0,222.1 341.8,222.8 342.6,223.5 343.5,224.1 344.3,224.8 345.1,225.4 346.0,226.1 346.8,226.7 347.6,227.3 348.5,228.0 349.3,228.6 350.1,229.3 351.0,229.9 351.8,230.5 352.6,231.1 353.5,231.8 354.3,232.4 355.2,233.0 356.0,233.6 356.8,234.2 357.7,234.8 358.5,235.5 359.3,236.1 360.2,236.7 361.0,237.3 361.8,237.9 362.7,238.5 363.5,239.1 364.3,239.7 365.2,240.2 366.0,240.8 366.8,241.4 367.7,242.0 368.5,242.6 369.3,243.2 370.2,243.7 371.0,244.3 371.8,244.9 372.7,245.5 373.5,246.0 374.3,246.6 375.2,247.2 376.0,247.7 376.8,248.3 377.7,248.9 378.5,249.4 379.3,250.0 380.2,250.5 381.0,251.1 381.8,251.6 382.7,252.2 383.5,252.7 384.3,253.3 385.2,253.8 386.0,254.4 386.8,254.9 387.7,255.4 388.5,256.0 389.3,256.5 390.2,257.0 391.0,257.6 391.8,258.1 392.7,258.6 393.5,259.2 394.3,259.7 395.2,260.2 396.0,260.7" fill="none" stroke="#9a9184" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="256.8,20.3 257.6,22.0 258.4,23.6 259.3,25.2 260.1,26.7 260.9,28.3 261.8,29.9 262.6,31.4 263.4,32.9 264.3,34.5 265.1,36.0 266.0,37.5 266.8,39.0 267.6,40.4 268.5,41.9 269.3,43.4 270.1,44.8 271.0,46.3 271.8,47.7 272.6,49.1 273.5,50.5 274.3,51.9 275.1,53.3 276.0,54.7 276.8,56.1 277.6,57.5 278.5,58.8 279.3,60.2 280.1,61.5 281.0,62.8 281.8,64.2 282.6,65.5 283.5,66.8 284.3,68.1 285.1,69.4 286.0,70.7 286.8,71.9 287.6,73.2 288.5,74.5 289.3,75.7 290.1,77.0 291.0,78.2 291.8,79.4 292.6,80.6 293.5,81.9 294.3,83.1 295.1,84.3 296.0,85.5 296.8,86.6 297.6,87.8 298.5,89.0 299.3,90.2 300.1,91.3 301.0,92.5 301.8,93.6 302.6,94.8 303.5,95.9 304.3,97.0 305.1,98.1 306.0,99.3 306.8,100.4 307.6,101.5 308.5,102.6 309.3,103.7 310.1,104.7 311.0,105.8 311.8,106.9 312.6,108.0 313.5,109.0 314.3,110.1 315.1,111.1 316.0,112.2 316.8,113.2 317.6,114.2 318.5,115.3 319.3,116.3 320.1,117.3 321.0,118.3 321.8,119.3 322.6,120.3 323.5,121.3 324.3,122.3 325.1,123.3 326.0,124.3 326.8,125.3 327.6,126.2 328.5,127.2 329.3,128.2 330.1,129.1 331.0,130.1 331.8,131.0 332.6,132.0 333.5,132.9 334.3,133.8 335.1,134.8 336.0,135.7 336.8,136.6 337.6,137.5 338.5,138.4 339.3,139.4 340.1,140.3 341.0,141.2 341.8,142.1 342.6,143.0 343.5,143.8 344.3,144.7 345.1,145.6 346.0,146.5 346.8,147.3 347.6,148.2 348.5,149.1 349.3,149.9 350.1,150.8 351.0,151.7 351.8,152.5 352.6,153.3 353.5,154.2 354.3,155.0 355.2,155.9 356.0,156.7 356.8,157.5 357.7,158.3 358.5,159.2 359.3,160.0 360.2,160.8 361.0,161.6 361.8,162.4 362.7,163.2 363.5,164.0 364.3,164.8 365.2,165.6 366.0,166.4 366.8,167.2 367.7,168.0 368.5,168.7 369.3,169.5 370.2,170.3 371.0,171.1 371.8,171.8 372.7,172.6 373.5,173.4 374.3,174.1 375.2,174.9 376.0,175.6 376.8,176.4 377.7,177.1 378.5,177.9 379.3,178.6 380.2,179.3 381.0,180.1 381.8,180.8 382.7,181.5 383.5,182.3 384.3,183.0 385.2,183.7 386.0,184.4 386.8,185.1 387.7,185.9 388.5,186.6 389.3,187.3 390.2,188.0 391.0,188.7 391.8,189.4 392.7,190.1 393.5,190.8 394.3,191.5 395.2,192.2 396.0,192.9" fill="none" stroke="#9a9184" stroke-width="1.3" stroke-linejoin="round"/>
+<text x="112.3" y="178.7" font-size="14" fill="#6b645a" text-anchor="start">f = 2</text>
+<text x="125.4" y="93.4" font-size="14" fill="#6b645a" text-anchor="start">f = 4</text>
+<text x="367.3" y="232.9" font-size="14" fill="#6b645a" text-anchor="start">f = 12</text>
+<text x="386.9" y="175.8" font-size="14" fill="#6b645a" text-anchor="start">f = 18</text>
+<text x="347.7" y="282.9" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">f = 7</text>
+<line x1="56.0" y1="143.5" x2="396.0" y2="143.5" stroke="#a8322a" stroke-width="3"/>
+<line x1="186.8" y1="320.0" x2="186.8" y2="20.0" stroke="#2a5d8f" stroke-width="3"/>
+<circle cx="186.8" cy="143.5" r="6" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="396.0" y="135.5" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">y = 2 で切る</text>
+<text x="194.8" y="34.0" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">x = 1 で切る</text>
+<text x="196.8" y="163.5" font-size="14" fill="#2a2723" text-anchor="start">(1, 2)</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　灰色の線は $f$ の値が $2,4,7,12,18$ になる点の集まり（$x\gt0,\ y\gt0$ の部分）。点 $(1,2)$ は $f=7$ の線の上にある。赤い横線 $y=2$ に沿って右へ進むと等高線を次々に横切り（$f$ が急に増える）、青い縦線 $x=1$ に沿って上へ進むと、横切り方がゆるやか（$f$ の増え方が小さい）。</figcaption>
+</figure>
+
+<p>図2.3 の赤い線・青い線に沿って $f$ の値を読み、横軸をその線の向きにとって描いたのが図2.4 である。</p>
+<figure class="fig" id="fig-2-4">
+<svg viewBox="0 0 440 546" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="f=x²+3xy の2つの切り口と接線の傾き" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>f=x²+3xy の2つの切り口と接線の傾き</title>
+<rect x="0" y="0" width="440" height="546" fill="#fffdf7"/>
+<text x="10.0" y="24.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">(a) y = 2 で切る：z = x² + 6x</text>
+<line x1="60.0" y1="226.0" x2="390.0" y2="226.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 229.0 L390.0 226.0 L383.7 223.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="226.0" x2="60.0" y2="40.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 46.3 L60.0 40.0 L57.0 46.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="205.5" y1="222.0" x2="205.5" y2="230.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="205.5" y="246.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="350.9" y1="222.0" x2="350.9" y2="230.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="350.9" y="246.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="56.0" y1="153.5" x2="64.0" y2="153.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="158.5" font-size="14" fill="#6b645a" text-anchor="end">7</text>
+<line x1="56.0" y1="60.4" x2="64.0" y2="60.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="65.4" font-size="14" fill="#6b645a" text-anchor="end">16</text>
+<text x="394.0" y="248.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="74.0" y="46.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">z</tspan></text>
+<polyline points="60.0,226.0 61.3,225.4 62.6,224.9 63.9,224.3 65.2,223.8 66.5,223.2 67.8,222.6 69.1,222.1 70.4,221.5 71.7,220.9 73.0,220.4 74.3,219.8 75.6,219.2 76.9,218.6 78.2,218.0 79.5,217.5 80.8,216.9 82.2,216.3 83.5,215.7 84.8,215.1 86.1,214.5 87.4,213.9 88.7,213.4 90.0,212.8 91.3,212.2 92.6,211.6 93.9,211.0 95.2,210.4 96.5,209.8 97.8,209.2 99.1,208.6 100.4,208.0 101.7,207.3 103.0,206.7 104.3,206.1 105.6,205.5 106.9,204.9 108.2,204.3 109.5,203.7 110.8,203.0 112.1,202.4 113.4,201.8 114.7,201.2 116.0,200.5 117.3,199.9 118.6,199.3 119.9,198.6 121.2,198.0 122.5,197.4 123.8,196.7 125.2,196.1 126.5,195.5 127.8,194.8 129.1,194.2 130.4,193.5 131.7,192.9 133.0,192.2 134.3,191.6 135.6,190.9 136.9,190.3 138.2,189.6 139.5,189.0 140.8,188.3 142.1,187.6 143.4,187.0 144.7,186.3 146.0,185.7 147.3,185.0 148.6,184.3 149.9,183.6 151.2,183.0 152.5,182.3 153.8,181.6 155.1,181.0 156.4,180.3 157.7,179.6 159.0,178.9 160.3,178.2 161.6,177.5 162.9,176.9 164.2,176.2 165.5,175.5 166.8,174.8 168.2,174.1 169.5,173.4 170.8,172.7 172.1,172.0 173.4,171.3 174.7,170.6 176.0,169.9 177.3,169.2 178.6,168.5 179.9,167.8 181.2,167.1 182.5,166.4 183.8,165.6 185.1,164.9 186.4,164.2 187.7,163.5 189.0,162.8 190.3,162.0 191.6,161.3 192.9,160.6 194.2,159.9 195.5,159.1 196.8,158.4 198.1,157.7 199.4,156.9 200.7,156.2 202.0,155.5 203.3,154.7 204.6,154.0 205.9,153.3 207.2,152.5 208.5,151.8 209.8,151.0 211.2,150.3 212.5,149.5 213.8,148.8 215.1,148.0 216.4,147.3 217.7,146.5 219.0,145.7 220.3,145.0 221.6,144.2 222.9,143.5 224.2,142.7 225.5,141.9 226.8,141.2 228.1,140.4 229.4,139.6 230.7,138.8 232.0,138.1 233.3,137.3 234.6,136.5 235.9,135.7 237.2,135.0 238.5,134.2 239.8,133.4 241.1,132.6 242.4,131.8 243.7,131.0 245.0,130.2 246.3,129.4 247.6,128.6 248.9,127.8 250.2,127.0 251.5,126.2 252.8,125.4 254.2,124.6 255.5,123.8 256.8,123.0 258.1,122.2 259.4,121.4 260.7,120.6 262.0,119.8 263.3,119.0 264.6,118.2 265.9,117.3 267.2,116.5 268.5,115.7 269.8,114.9 271.1,114.0 272.4,113.2 273.7,112.4 275.0,111.6 276.3,110.7 277.6,109.9 278.9,109.1 280.2,108.2 281.5,107.4 282.8,106.5 284.1,105.7 285.4,104.9 286.7,104.0 288.0,103.2 289.3,102.3 290.6,101.5 291.9,100.6 293.2,99.8 294.5,98.9 295.8,98.1 297.2,97.2 298.5,96.3 299.8,95.5 301.1,94.6 302.4,93.8 303.7,92.9 305.0,92.0 306.3,91.1 307.6,90.3 308.9,89.4 310.2,88.5 311.5,87.7 312.8,86.8 314.1,85.9 315.4,85.0 316.7,84.1 318.0,83.2 319.3,82.4 320.6,81.5 321.9,80.6 323.2,79.7 324.5,78.8 325.8,77.9 327.1,77.0 328.4,76.1 329.7,75.2 331.0,74.3 332.3,73.4 333.6,72.5 334.9,71.6 336.2,70.7 337.5,69.8 338.8,68.9 340.2,68.0 341.5,67.0 342.8,66.1 344.1,65.2 345.4,64.3 346.7,63.4 348.0,62.4 349.3,61.5 350.6,60.6 351.9,59.7 353.2,58.7 354.5,57.8 355.8,56.9 357.1,55.9 358.4,55.0 359.7,54.1 361.0,53.1 362.3,52.2 363.6,51.2 364.9,50.3" fill="none" stroke="#2a2723" stroke-width="2.6" stroke-linejoin="round"/>
+<polyline points="118.2,203.2 216.4,147.3 314.5,91.4" fill="none" stroke="#a8322a" stroke-width="2" stroke-dasharray="7 4" stroke-linejoin="round"/>
+<circle cx="205.5" cy="153.5" r="5.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="217.5" y="179.5" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">傾き 8 = ∂f/∂x (1, 2)</text>
+<text x="10.0" y="286.0" font-size="15" fill="#2a5d8f" text-anchor="start" font-weight="bold">(b) x = 1 で切る：z = 1 + 3y</text>
+<line x1="60.0" y1="488.0" x2="390.0" y2="488.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 491.0 L390.0 488.0 L383.7 485.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="488.0" x2="60.0" y2="302.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 308.3 L60.0 302.0 L57.0 308.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="157.0" y1="484.0" x2="157.0" y2="492.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="157.0" y="508.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="253.9" y1="484.0" x2="253.9" y2="492.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="253.9" y="508.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="350.9" y1="484.0" x2="350.9" y2="492.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="350.9" y="508.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="56.0" y1="415.5" x2="64.0" y2="415.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="420.5" font-size="14" fill="#6b645a" text-anchor="end">7</text>
+<line x1="56.0" y1="384.5" x2="64.0" y2="384.5" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="389.5" font-size="14" fill="#6b645a" text-anchor="end">10</text>
+<text x="394.0" y="510.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<text x="74.0" y="308.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">z</tspan></text>
+<polyline points="60.0,477.6 217.6,427.2 375.2,376.7" fill="none" stroke="#2a2723" stroke-width="2.6" stroke-linejoin="round"/>
+<circle cx="253.9" cy="415.5" r="5.5" fill="#2a5d8f" stroke="#2a5d8f" stroke-width="1.5"/>
+<text x="265.9" y="441.5" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">傾き 3 = ∂f/∂y (1, 2)</text>
+<text x="220.0" y="530.0" font-size="14" fill="#2a2723" text-anchor="middle">同じ点の高さ z = 7 から、切る向きで傾きが違う</text>
+</svg>
+<figcaption><strong>図 2.4</strong>　(a) は図2.3 の赤い横線に沿った高さ $z=f(x,2)=x^2+6x$。$x=1$ での接線の傾きは $2x+6=8$。(b) は青い縦線に沿った高さ $z=f(1,y)=1+3y$ で、直線なので傾きはどこでも $3$。赤い点と青い点は、どちらも点 $(1,2)$ の高さ $7$ を表す。</figcaption>
+</figure>
+
+<p>上の図は、$f(x,y)=x^2+3xy$ の 2 つの断面である。左は $y=2$ で切った曲線 $z=x^2+6x$ （$f(x,2)$ を展開した）で、$x=1$ での傾きは $2x+6=8$。右は $x=1$ で切った直線 $z=1+3y$ で、傾きは $3$。同じ点 $(1,2)$ で、<strong>切る方向によって傾きが違う</strong>。</p>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>注意：偏微分ができても、連続とは限らない</h3>
+<p>1 変数では、「微分可能なら連続」だった（第7回）。偏微分ではこれが成り立たない。例：</p>
+<p>$$f(x,y):=\begin{cases}\dfrac{xy}{x^2+y^2}&(x,y)\ne(0,0)\\[1ex]0&(x,y)=(0,0)\end{cases}$$</p>
+<ol>
+<li>$x$ 軸上では $f(x,0)=\dfrac{x\cdot0}{x^2}=0$。だから $\dfrac{f(h,0)-f(0,0)}{h}=\dfrac{0-0}{h}=0$。したがって $\dfrac{\partial f}{\partial x}(0,0)=0$。</li>
+<li>$y$ 軸上でも同じ理由で $\dfrac{\partial f}{\partial y}(0,0)=0$。偏微分は 2 つとも存在する。</li>
+<li>ところが、直線 $y=x$ に沿って原点に近づくと、$f(x,x)=\dfrac{x^2}{2x^2}=\dfrac12$ で、どんなに原点に近づいても $\dfrac12$ のまま。$f(0,0)=0$ と一致しない。</li>
+<li>したがって $f$ は原点で<strong>連続ではない</strong>（<a href="06_第6回_極限と連続.html#sym-continuous">第6回の連続</a>：近づく方向によらず $f(0,0)$ に近づく、が破れた）。</li>
+</ol>
+<p>この関数の値は、原点からの<em>向き</em>だけで決まり、距離によらない（原点を通る直線の上では一定）。図2.5 に、いくつかの向きでの値を書き込んだ。</p>
+<figure class="fig" id="fig-2-5">
+<svg viewBox="0 0 440 408" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="xy/(x²+y²) の値は向きで決まる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>xy/(x²+y²) の値は向きで決まる</title>
+<rect x="0" y="0" width="440" height="408" fill="#fffdf7"/>
+<circle cx="170.0" cy="190.0" r="140" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="20.0" y1="190.0" x2="320.0" y2="190.0" stroke="#2a5d8f" stroke-width="5"/>
+<line x1="170.0" y1="40.0" x2="170.0" y2="340.0" stroke="#2a5d8f" stroke-width="5"/>
+<line x1="71.0" y1="289.0" x2="269.0" y2="91.0" stroke="#a8322a" stroke-width="4"/>
+<line x1="71.0" y1="91.0" x2="269.0" y2="289.0" stroke="#7d6aa0" stroke-width="4" stroke-dasharray="8 5"/>
+<circle cx="170.0" cy="190.0" r="7" fill="#fff" stroke="#2a2723" stroke-width="2"/>
+<text x="322.0" y="180.0" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">x 軸上</text>
+<text x="322.0" y="200.0" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">f = 0</text>
+<text x="180.0" y="48.0" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">y 軸上：f = 0</text>
+<text x="275.0" y="85.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">y = x 上：f = 1/2</text>
+<text x="275.0" y="305.0" font-size="14" fill="#7d6aa0" text-anchor="start" font-weight="bold">y = −x 上：f = −1/2</text>
+<text x="130.0" y="212.0" font-size="14" fill="#2a2723" text-anchor="end">f(0, 0) = 0</text>
+<text x="10.0" y="372.0" font-size="14" fill="#2a5d8f" text-anchor="start">青い2本の上だけを見ると f はずっと 0（偏微分は 0）。</text>
+<text x="10.0" y="394.0" font-size="14" fill="#a8322a" text-anchor="start">赤い斜めの線では、原点のすぐそばでも 1/2 のまま。</text>
+</svg>
+<figcaption><strong>図 2.5</strong>　$f=\frac{xy}{x^2+y^2}$ は、原点を通る直線 $y=mx$ の上では $\frac{m}{1+m^2}$ で一定になる。偏微分は青い2本（$x$ 軸と $y$ 軸）の上しか調べないので、どちらも $0$ になる。斜めの直線の上では、原点のすぐそばまで $\frac12$ や $-\frac12$ のままで、$f(0,0)=0$ につながらない。</figcaption>
+</figure>
+<p>偏微分は、$x$ 方向と $y$ 方向という<em>2 本の線上</em>だけを見ているので、斜めの方向の様子は分からない。この問題を解決するのが、第12回の全微分である。</p>
+
+<div class="why"><span class="label">ひとことで</span>偏微分 $\frac{\partial f}{\partial x}(a,b)$ は、$y=b$ を固定した 1 変数関数の微分。計算は「他の文字を定数とみなして」第7回の規則を使う。幾何的には、曲面の断面の傾き。偏微分ができても連続とは限らない。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>書き方の流派と、省略の段階</h2>
+
+<h3 id="sec-3-1"><span class="no">3.1</span>$\partial_xf$ と $f_x$</h3>
+<p>$\dfrac{\partial f}{\partial x}$ は長いので、本や分野によっていろいろな短い書き方がある。</p>
+<div class="def" id="sym-partial-short"><span class="label">記号：$\partial_xf$、$f_x$（偏微分の短い書き方）</span>
+<p><strong>①読み方</strong>：$\partial_xf$ は「デル・エックス・エフ」。$f_x$ は「エフ・エックス」（「エフ・サフィックス・エックス」とも）。$f_{xy}$ は「エフ・エックス・ワイ」。</p>
+<p><strong>②日本語での意味</strong>：<strong>$\dfrac{\partial f}{\partial x}$ と同じ</strong>。ほかの変数を固定して、$x$ で偏微分したもの。</p>
+<p><strong>③省略していない書き方</strong>：次のように定める。</p>
+<p>$$\partial_xf:=\frac{\partial f}{\partial x},\qquad f_x:=\frac{\partial f}{\partial x}$$</p>
+<p>$\partial_x$ は「$x$ で偏微分する」という<em>操作</em>（演算子）に名前をつけたもの。$\partial_x f$ は、その操作を $f$ に施した結果。$f_x$ の右下の $x$ は、<a href="01_第1回_数式を文として読む.html#sym-subscript">第1回の添字</a>だが、番号ではなく<strong>「$x$ で偏微分した」というラベル</strong>。</p>
+<p><strong>④どこで出会うか</strong>：$\partial_x$ は物理（場の理論・量子力学）、$f_x$ は解析学・OpenStax Calculus・偏微分方程式（$u_t=u_{xx}$、第40回）、$D_1f$ は数学の教科書（「第 1 引数で偏微分」）。</p>
+</div>
+
+<div class="warn"><span class="label">流派の違い：偏微分の書き方</span>
+<table class="tb">
+<tr><th>書き方</th><th>読み</th><th>よく使う場面</th></tr>
+<tr><td>$\dfrac{\partial f}{\partial x}$</td><td>デル・エフ・デル・エックス</td><td>どの分野でも。この教材の標準</td></tr>
+<tr><td>$\partial_xf$</td><td>デル・エックス・エフ</td><td>物理（場の理論）。式が長いとき</td></tr>
+<tr><td>$f_x$</td><td>エフ・エックス</td><td>解析学、偏微分方程式。OpenStax Calculus Vol.3</td></tr>
+<tr><td>$D_1f$、$\partial_1f$</td><td>ディー・いち・エフ</td><td>数学の教科書。<strong>$x$ という名前ではなく、第 1 引数</strong>で呼ぶ</td></tr>
+<tr><td>$\left(\dfrac{\partial f}{\partial x}\right)_y$</td><td>$y$ 固定のデル・エフ・デル・エックス</td><td>熱力学（4.2 で説明）</td></tr>
+</table>
+<p>$f_x$ には注意が 1 つある。<strong>$F_x$ は「ベクトル場 $\boldsymbol F$ の $x$ 成分」の意味にも使われる</strong>（電磁気学・力学：$F_x$ は力の $x$ 成分、<a href="01_第1回_数式を文として読む.html#sym-subscript">添字 $x$</a> が成分のラベル）。同じ形の記号が、偏微分と成分の 2 つの意味をもつ。見分け方は、$F$ が<em>スカラー関数</em>（偏微分の意味）か<em>ベクトル</em>（成分の意味）か。ベクトルの成分は第5回（<a href="05_第5回_ベクトルと行列の書き方.html#sym-component">成分</a>）で説明した。</p>
+</div>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>省略の段階：偏微分の記号を 1 つずつ短くする</h3>
+<p>偏微分の記号が短くなるたびに、<strong>何かが書かれなくなる</strong>。特に、「何を固定したか」が書かれない。1 段ずつ並べる。</p>
+
+<div class="box" id="abbr-partial"><span class="label">省略の段階：偏微分 $\dfrac{\partial f}{\partial x}$</span>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても困らない理由、困る場面</th></tr>
+<tr><td>S0</td><td>$\displaystyle\frac{\partial f}{\partial x}(a,b):=\lim_{h\to0}\frac{f(a+h,b)-f(a,b)}{h}$</td><td>（省略なし。点 $(a,b)$、固定する $y=b$、極限をすべて書いた）</td><td>—</td></tr>
+<tr><td>S1</td><td>$\displaystyle\frac{\partial f}{\partial x}(x,y)$</td><td>具体的な点 $(a,b)$ を、動く点 $(x,y)$ に替える（偏導関数）</td><td>点ごとに微分係数を対応させる<strong>関数</strong>として扱うため。第7回で $f'(a)$ から $f'(x)$ に進んだのと同じ</td></tr>
+<tr><td>S2</td><td>$\displaystyle\frac{\partial f}{\partial x}$</td><td>引数 $(x,y)$ を省く（<a href="03_第3回_関数と写像.html#abbr-fn-args">第3回の引数の省略</a>）</td><td>$f$ が $x,y$ の関数なのは周知とされる。<strong>どの変数が固定されるか（$y$）は、$f$ の引数から読み取る</strong>約束になった。$f$ が何変数か分からないと困る</td></tr>
+<tr><td>S3</td><td>$\partial_xf$</td><td>分数の形をやめる（演算子 $\partial_x$ を $f$ に施す形）</td><td>$\frac{\partial f}{\partial x}$ は分数ではない（<a href="07_第7回_微分.html#abbr-derivative">第7回</a>と同じ）。「$x$ で偏微分する」という指示だけを残した</td></tr>
+<tr><td>S4</td><td>$f_x$</td><td>演算子の記号 $\partial$ も省き、添字だけにする</td><td>添字 $x$ が「$x$ で偏微分」を表すと約束した。<strong>添字の意味が成分と重なる</strong>（3.1 の注意）</td></tr>
+<tr><td>S5</td><td>$u_t,\ u_{xx}$（偏微分方程式での書き方）</td><td>$f$ を $u$ などの具体的な名前にして、添字を重ねる</td><td>偏微分方程式（第40回）で、式を短く見やすくするため。$u_{xx}$ は $x$ で 2 回偏微分（5.1）</td></tr>
+</table>
+<p><strong>どの段階でも書かれていないこと</strong>：S1 以降では、<em>「何を固定したか」が記号に現れない</em>。S0 では $y=b$ が分子の式 $f(a+h,b)$ に現れていたが、S1 以降は「$f$ の引数のうち、$x$ 以外のもの」と読む約束に変わっている。この約束は、$f$ の変数の組が最初から決まっているときだけ安全である。次の節で、組が変わると何が起きるかを見る。</p>
+</div>
+
+<p>上の表を階段にしたのが図3.1 である（<a href="01_第1回_数式を文として読む.html#fig-6-1">第1回の図6.1</a> と同じ描き方）。</p>
+<figure class="fig" id="fig-3-1">
+<svg viewBox="0 0 440 538" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="省略の段階：偏微分 S0からS5" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>省略の段階：偏微分 S0からS5</title>
+<rect x="0" y="0" width="440" height="538" fill="#fffdf7"/>
+<rect x="10" y="10" width="290" height="46" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="20.0" y="39.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">S0</text>
+<text x="175.0" y="41.0" font-size="15" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>lim</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">h</tspan><tspan font-size="10.5">→0</tspan><tspan dy="-4.2"> [</tspan><tspan font-style="italic">f</tspan><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>+</tspan><tspan font-style="italic">h</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>) − </tspan><tspan font-style="italic">f</tspan><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>)] / </tspan><tspan font-style="italic">h</tspan></text>
+<line x1="36.0" y1="60.0" x2="36.0" y2="92.0" stroke="#a8322a" stroke-width="1.8"/><path d="M32.5 84.8 L36.0 92.0 L39.5 84.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="52.0" y="82.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">省く：点 (a, b) を、動く点 (x, y) に</text>
+<rect x="36" y="96" width="200" height="46" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="46.0" y="125.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">S1</text>
+<text x="156.0" y="127.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂</tspan><tspan font-style="italic">f</tspan><tspan>/∂</tspan><tspan font-style="italic">x</tspan><tspan> (</tspan><tspan font-style="italic">x</tspan><tspan>, </tspan><tspan font-style="italic">y</tspan><tspan>)</tspan></text>
+<line x1="62.0" y1="146.0" x2="62.0" y2="178.0" stroke="#a8322a" stroke-width="1.8"/><path d="M58.5 170.8 L62.0 178.0 L65.5 170.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="78.0" y="168.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">省く：引数 (x, y) を書かない</text>
+<rect x="62" y="182" width="200" height="46" rx="6" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="72.0" y="211.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">S2</text>
+<text x="182.0" y="213.0" font-size="20" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂</tspan><tspan font-style="italic">f</tspan><tspan>/∂</tspan><tspan font-style="italic">x</tspan></text>
+<line x1="88.0" y1="232.0" x2="88.0" y2="264.0" stroke="#a8322a" stroke-width="1.8"/><path d="M84.5 256.8 L88.0 264.0 L91.5 256.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="104.0" y="254.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">省く：分数の形をやめる（演算子の形）</text>
+<rect x="88" y="268" width="200" height="46" rx="6" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="98.0" y="297.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">S3</text>
+<text x="208.0" y="299.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">x</tspan><tspan dy="-5.9"> </tspan><tspan font-style="italic">f</tspan></text>
+<line x1="114.0" y1="318.0" x2="114.0" y2="350.0" stroke="#a8322a" stroke-width="1.8"/><path d="M110.5 342.8 L114.0 350.0 L117.5 342.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="130.0" y="340.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">省く：∂ も省き、添字だけにする</text>
+<rect x="114" y="354" width="200" height="46" rx="6" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="124.0" y="383.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">S4</text>
+<text x="234.0" y="385.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">x</tspan></text>
+<line x1="140.0" y1="404.0" x2="140.0" y2="436.0" stroke="#a8322a" stroke-width="1.8"/><path d="M136.5 428.8 L140.0 436.0 L143.5 428.8" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="156.0" y="426.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">省く：名前を u にし、添字を重ねる</text>
+<rect x="140" y="440" width="200" height="46" rx="6" fill="#f7ecdc" stroke="#b07a3e" stroke-width="1.6"/>
+<text x="150.0" y="469.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">S5</text>
+<text x="260.0" y="471.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">u</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">t</tspan><tspan dy="-6.2"> ,  </tspan><tspan font-style="italic">u</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">x</tspan><tspan font-size="15.4" font-style="italic">x</tspan></text>
+<path d="M424 182 L432 182 L432 486 L424 486" fill="none" stroke="#a8322a" stroke-width="2"/>
+<text x="418.0" y="226.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">固</text>
+<text x="418.0" y="248.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">定</text>
+<text x="418.0" y="270.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">し</text>
+<text x="418.0" y="292.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">た</text>
+<text x="418.0" y="314.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">変</text>
+<text x="418.0" y="336.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">数</text>
+<text x="418.0" y="358.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">が</text>
+<text x="418.0" y="380.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">見</text>
+<text x="418.0" y="402.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">え</text>
+<text x="418.0" y="424.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">な</text>
+<text x="418.0" y="446.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">い</text>
+<text x="220.0" y="522.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">下へ降りると短くなる。読むときは上へ戻る。</text>
+</svg>
+<figcaption><strong>図 3.1</strong>　S0 では、固定する $y=b$ が分子の $f(a+h,b)$ と $f(a,b)$ の両方に<em>書かれている</em>。S2 で引数を書かなくなった段から、固定している変数は記号の上から消え、「$f$ の引数のうち $x$ 以外」と読む約束だけが残る（右の朱の括弧）。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>偏微分の記号は、$\frac{\partial f}{\partial x}\to\partial_xf\to f_x$ と短くなる。意味はすべて同じ。ただし短くなるほど、「他の何を固定しているか」が記号から消えていく。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>何を固定しているか：この回でいちばん大事なこと</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/11_a4_maxwell.jpg" alt="細い曲線が多数交わる素描。左上に座標軸の矢印と小さな記号が描かれている" loading="lazy"></div>
+<p class="cap">マクスウェルは、熱力学の量どうしの関係を、一つの曲面として描いた。</p>
+<p class="cr">ジェームズ・クラーク・マクスウェル（1875年。Commons の題は「本の中の熱力学面の図」）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:James_Clerk_Maxwell_-_Thermodynamic_surface_figure_from_book.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/11_b4_mokume.jpg" alt="銀・銅・真鍮の板と細い棒が白い台に並び、切断面に年輪のような木目模様が現れている" loading="lazy"></div>
+<p class="cap">重ねた金属を一つの面で切ると、層の線が模様として現れる。</p>
+<p class="cr">Mauro Cateb（2010年、木目金の板）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Mokume_gane_sheets.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-4-1"><span class="no">4.1</span>動機：同じ量・同じ記号 $\partial/\partial x$ で、値が変わる例</h3>
+<p>$f(x,y):=x^2+y^2$ を考える。点 $(x,y)=(1,2)$ では $f=1+4=5$。ここで、変数の取り方を変える。$z:=x+y$ という新しい変数を作り、$(x,y)$ のかわりに $(x,z)$ で表す。$y=z-x$ なので、同じ量を</p>
+<p>$$g(x,z):=x^2+(z-x)^2$$</p>
+<p>と書ける（$f$ と $g$ は同じ点で同じ値をとる量。変数の組だけが違う）。点 $(1,2)$ は $z=1+2=3$ に対応する。</p>
+<ol>
+<li>$y$ を固定して $x$ で偏微分する：$\dfrac{\partial f}{\partial x}=2x$。点 $(1,2)$ で $2$。</li>
+<li>$z$ を固定して $x$ で偏微分する：$g=x^2+(z-x)^2$ を $x$ で微分（$z$ は定数、$(z-x)^2$ の微分は合成関数の微分で $2(z-x)\cdot(-1)$）。$\dfrac{\partial g}{\partial x}=2x-2(z-x)=4x-2z$。点 $(x,z)=(1,3)$ で $4-6=-2$。</li>
+</ol>
+<p>同じ量 $f$ を、同じ点で、同じ「$x$ で偏微分」しているのに、<strong>$2$ と $-2$ で符号まで違う</strong>。数でも確かめる。(1,2) から $x$ を $0.01$ 動かす。</p>
+<ul>
+<li>$y$ 固定：点 $(1.01,\,2)$。$f=1.0201+4=5.0201$。変化の割合 $\dfrac{5.0201-5}{0.01}=2.01$ ($\to2$)。</li>
+<li>$z$ 固定：$x$ が $0.01$ 増えたら $y$ は $0.01$ 減る。点 $(1.01,\,1.99)$。$f=1.0201+3.9601=4.9802$。変化の割合 $\dfrac{4.9802-5}{0.01}=-1.98$ ($\to-2$)。</li>
+</ul>
+
+<p>同じ「$x$ を $0.5$ 増やす」を、2つの固定のしかたで $xy$ 平面に描くと図4.1 になる。</p>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 422" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="f=x²+y² の等高線と、固定のしかたで違う2つの進み方" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>f=x²+y² の等高線と、固定のしかたで違う2つの進み方</title>
+<rect x="0" y="0" width="440" height="422" fill="#fffdf7"/>
+<line x1="56.0" y1="320.0" x2="406.0" y2="320.0" stroke="#2a2723" stroke-width="1.3"/><path d="M399.7 323.0 L406.0 320.0 L399.7 317.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="56.0" y1="320.0" x2="56.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M59.0 16.3 L56.0 10.0 L53.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="173.2" y1="316.0" x2="173.2" y2="324.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="173.2" y="340.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="290.5" y1="316.0" x2="290.5" y2="324.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="290.5" y="340.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="52.0" y1="202.8" x2="60.0" y2="202.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="207.8" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="52.0" y1="85.6" x2="60.0" y2="85.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="48.0" y="90.6" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="410.0" y="342.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="70.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="56.0,202.8 56.4,202.8 56.8,202.8 57.2,202.8 57.6,202.8 58.0,202.8 58.3,202.8 58.7,202.8 59.1,202.9 59.5,202.9 59.9,202.9 60.3,202.9 60.7,202.9 61.1,202.9 61.5,202.9 61.9,203.0 62.3,203.0 62.6,203.0 63.0,203.0 63.4,203.0 63.8,203.1 64.2,203.1 64.6,203.1 65.0,203.2 65.4,203.2 65.8,203.2 66.2,203.3 66.6,203.3 66.9,203.3 67.3,203.4 67.7,203.4 68.1,203.4 68.5,203.5 68.9,203.5 69.3,203.6 69.7,203.6 70.1,203.7 70.5,203.7 70.9,203.8 71.2,203.8 71.6,203.9 72.0,203.9 72.4,204.0 72.8,204.0 73.2,204.1 73.6,204.1 74.0,204.2 74.4,204.3 74.8,204.3 75.1,204.4 75.5,204.5 75.9,204.5 76.3,204.6 76.7,204.7 77.1,204.7 77.5,204.8 77.9,204.9 78.3,204.9 78.7,205.0 79.1,205.1 79.4,205.2 79.8,205.3 80.2,205.3 80.6,205.4 81.0,205.5 81.4,205.6 81.8,205.7 82.2,205.8 82.6,205.9 83.0,206.0 83.4,206.0 83.7,206.1 84.1,206.2 84.5,206.3 84.9,206.4 85.3,206.5 85.7,206.6 86.1,206.7 86.5,206.8 86.9,206.9 87.3,207.1 87.7,207.2 88.0,207.3 88.4,207.4 88.8,207.5 89.2,207.6 89.6,207.7 90.0,207.8 90.4,208.0 90.8,208.1 91.2,208.2 91.6,208.3 92.0,208.5 92.3,208.6 92.7,208.7 93.1,208.8 93.5,209.0 93.9,209.1 94.3,209.2 94.7,209.4 95.1,209.5 95.5,209.7 95.9,209.8 96.3,209.9 96.6,210.1 97.0,210.2 97.4,210.4 97.8,210.5 98.2,210.7 98.6,210.8 99.0,211.0 99.4,211.1 99.8,211.3 100.2,211.4 100.6,211.6 100.9,211.8 101.3,211.9 101.7,212.1 102.1,212.3 102.5,212.4 102.9,212.6 103.3,212.8 103.7,212.9 104.1,213.1 104.5,213.3 104.9,213.5 105.2,213.6 105.6,213.8 106.0,214.0 106.4,214.2 106.8,214.4 107.2,214.6 107.6,214.8 108.0,215.0 108.4,215.2 108.8,215.3 109.1,215.5 109.5,215.7 109.9,215.9 110.3,216.2 110.7,216.4 111.1,216.6 111.5,216.8 111.9,217.0 112.3,217.2 112.7,217.4 113.1,217.6 113.4,217.8 113.8,218.1 114.2,218.3 114.6,218.5 115.0,218.7 115.4,219.0 115.8,219.2 116.2,219.4 116.6,219.7 117.0,219.9 117.4,220.1 117.7,220.4 118.1,220.6 118.5,220.9 118.9,221.1 119.3,221.4 119.7,221.6 120.1,221.9 120.5,222.1 120.9,222.4 121.3,222.6 121.7,222.9 122.0,223.2 122.4,223.4 122.8,223.7 123.2,224.0 123.6,224.3 124.0,224.5 124.4,224.8 124.8,225.1 125.2,225.4 125.6,225.7 126.0,226.0 126.3,226.2 126.7,226.5 127.1,226.8 127.5,227.1 127.9,227.4 128.3,227.7 128.7,228.1 129.1,228.4 129.5,228.7 129.9,229.0 130.3,229.3 130.6,229.6 131.0,230.0 131.4,230.3 131.8,230.6 132.2,230.9 132.6,231.3 133.0,231.6 133.4,232.0 133.8,232.3 134.2,232.7 134.6,233.0 134.9,233.4 135.3,233.7 135.7,234.1 136.1,234.4 136.5,234.8 136.9,235.2 137.3,235.6 137.7,235.9 138.1,236.3 138.5,236.7 138.9,237.1 139.2,237.5 139.6,237.9 140.0,238.3 140.4,238.7 140.8,239.1 141.2,239.5 141.6,239.9 142.0,240.3 142.4,240.8 142.8,241.2 143.1,241.6 143.5,242.0 143.9,242.5 144.3,242.9 144.7,243.4 145.1,243.8 145.5,244.3 145.9,244.8 146.3,245.2 146.7,245.7 147.1,246.2 147.4,246.7 147.8,247.2 148.2,247.7 148.6,248.2 149.0,248.7 149.4,249.2 149.8,249.7 150.2,250.2 150.6,250.7 151.0,251.3 151.4,251.8 151.7,252.4 152.1,252.9 152.5,253.5 152.9,254.1 153.3,254.6 153.7,255.2 154.1,255.8 154.5,256.4 154.9,257.0 155.3,257.6 155.7,258.3 156.0,258.9 156.4,259.5 156.8,260.2 157.2,260.9 157.6,261.5 158.0,262.2 158.4,262.9 158.8,263.6 159.2,264.3 159.6,265.1 160.0,265.8 160.3,266.6 160.7,267.3 161.1,268.1 161.5,268.9 161.9,269.7 162.3,270.6 162.7,271.4 163.1,272.3 163.5,273.2 163.9,274.1 164.3,275.0 164.6,276.0 165.0,276.9 165.4,277.9 165.8,279.0 166.2,280.0 166.6,281.1 167.0,282.2 167.4,283.4 167.8,284.6 168.2,285.9 168.6,287.2 168.9,288.6 169.3,290.0 169.7,291.5 170.1,293.1 170.5,294.8 170.9,296.7 171.3,298.7 171.7,300.9 172.1,303.5 172.5,306.5 172.9,310.4 173.2,320.0" fill="none" stroke="#9a9184" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="56.0,85.6 56.8,85.6 57.6,85.6 58.3,85.6 59.1,85.6 59.9,85.7 60.7,85.7 61.5,85.7 62.3,85.7 63.0,85.7 63.8,85.8 64.6,85.8 65.4,85.8 66.2,85.8 66.9,85.9 67.7,85.9 68.5,86.0 69.3,86.0 70.1,86.0 70.9,86.1 71.6,86.1 72.4,86.2 73.2,86.3 74.0,86.3 74.8,86.4 75.5,86.4 76.3,86.5 77.1,86.6 77.9,86.6 78.7,86.7 79.4,86.8 80.2,86.9 81.0,87.0 81.8,87.0 82.6,87.1 83.4,87.2 84.1,87.3 84.9,87.4 85.7,87.5 86.5,87.6 87.3,87.7 88.0,87.8 88.8,87.9 89.6,88.0 90.4,88.2 91.2,88.3 92.0,88.4 92.7,88.5 93.5,88.6 94.3,88.8 95.1,88.9 95.9,89.0 96.6,89.2 97.4,89.3 98.2,89.5 99.0,89.6 99.8,89.7 100.6,89.9 101.3,90.0 102.1,90.2 102.9,90.4 103.7,90.5 104.5,90.7 105.2,90.9 106.0,91.0 106.8,91.2 107.6,91.4 108.4,91.5 109.1,91.7 109.9,91.9 110.7,92.1 111.5,92.3 112.3,92.5 113.1,92.7 113.8,92.9 114.6,93.1 115.4,93.3 116.2,93.5 117.0,93.7 117.7,93.9 118.5,94.1 119.3,94.3 120.1,94.6 120.9,94.8 121.7,95.0 122.4,95.2 123.2,95.5 124.0,95.7 124.8,95.9 125.6,96.2 126.3,96.4 127.1,96.7 127.9,96.9 128.7,97.2 129.5,97.4 130.3,97.7 131.0,97.9 131.8,98.2 132.6,98.5 133.4,98.8 134.2,99.0 134.9,99.3 135.7,99.6 136.5,99.9 137.3,100.2 138.1,100.4 138.9,100.7 139.6,101.0 140.4,101.3 141.2,101.6 142.0,101.9 142.8,102.3 143.5,102.6 144.3,102.9 145.1,103.2 145.9,103.5 146.7,103.9 147.4,104.2 148.2,104.5 149.0,104.9 149.8,105.2 150.6,105.5 151.4,105.9 152.1,106.2 152.9,106.6 153.7,106.9 154.5,107.3 155.3,107.7 156.0,108.0 156.8,108.4 157.6,108.8 158.4,109.2 159.2,109.5 160.0,109.9 160.7,110.3 161.5,110.7 162.3,111.1 163.1,111.5 163.9,111.9 164.6,112.3 165.4,112.7 166.2,113.1 167.0,113.5 167.8,114.0 168.6,114.4 169.3,114.8 170.1,115.3 170.9,115.7 171.7,116.1 172.5,116.6 173.2,117.0 174.0,117.5 174.8,117.9 175.6,118.4 176.4,118.9 177.1,119.3 177.9,119.8 178.7,120.3 179.5,120.8 180.3,121.3 181.1,121.7 181.8,122.2 182.6,122.7 183.4,123.2 184.2,123.7 185.0,124.3 185.7,124.8 186.5,125.3 187.3,125.8 188.1,126.4 188.9,126.9 189.7,127.4 190.4,128.0 191.2,128.5 192.0,129.1 192.8,129.6 193.6,130.2 194.3,130.8 195.1,131.3 195.9,131.9 196.7,132.5 197.5,133.1 198.3,133.7 199.0,134.3 199.8,134.9 200.6,135.5 201.4,136.1 202.2,136.7 202.9,137.4 203.7,138.0 204.5,138.6 205.3,139.3 206.1,139.9 206.9,140.6 207.6,141.2 208.4,141.9 209.2,142.6 210.0,143.2 210.8,143.9 211.5,144.6 212.3,145.3 213.1,146.0 213.9,146.7 214.7,147.4 215.4,148.2 216.2,148.9 217.0,149.6 217.8,150.4 218.6,151.1 219.4,151.9 220.1,152.6 220.9,153.4 221.7,154.2 222.5,155.0 223.3,155.7 224.0,156.5 224.8,157.3 225.6,158.2 226.4,159.0 227.2,159.8 228.0,160.7 228.7,161.5 229.5,162.4 230.3,163.2 231.1,164.1 231.9,165.0 232.6,165.9 233.4,166.8 234.2,167.7 235.0,168.6 235.8,169.5 236.6,170.5 237.3,171.4 238.1,172.4 238.9,173.3 239.7,174.3 240.5,175.3 241.2,176.3 242.0,177.3 242.8,178.3 243.6,179.4 244.4,180.4 245.1,181.5 245.9,182.6 246.7,183.6 247.5,184.7 248.3,185.9 249.1,187.0 249.8,188.1 250.6,189.3 251.4,190.4 252.2,191.6 253.0,192.8 253.7,194.0 254.5,195.3 255.3,196.5 256.1,197.8 256.9,199.1 257.7,200.4 258.4,201.7 259.2,203.1 260.0,204.4 260.8,205.8 261.6,207.2 262.3,208.7 263.1,210.1 263.9,211.6 264.7,213.1 265.5,214.7 266.3,216.2 267.0,217.8 267.8,219.5 268.6,221.1 269.4,222.8 270.2,224.6 270.9,226.3 271.7,228.1 272.5,230.0 273.3,231.9 274.1,233.9 274.9,235.9 275.6,237.9 276.4,240.0 277.2,242.2 278.0,244.5 278.8,246.8 279.5,249.2 280.3,251.8 281.1,254.4 281.9,257.1 282.7,260.0 283.4,263.0 284.2,266.2 285.0,269.7 285.8,273.4 286.6,277.4 287.4,281.9 288.1,286.9 288.9,293.0 289.7,300.9 290.5,320.0" fill="none" stroke="#9a9184" stroke-width="1.3" stroke-linejoin="round"/>
+<polyline points="56.0,71.4 56.8,71.4 57.7,71.4 58.5,71.4 59.3,71.4 60.1,71.4 61.0,71.5 61.8,71.5 62.6,71.5 63.5,71.5 64.3,71.5 65.1,71.6 65.9,71.6 66.8,71.6 67.6,71.7 68.4,71.7 69.3,71.8 70.1,71.8 70.9,71.9 71.8,71.9 72.6,72.0 73.4,72.0 74.2,72.1 75.1,72.1 75.9,72.2 76.7,72.3 77.6,72.3 78.4,72.4 79.2,72.5 80.0,72.6 80.9,72.7 81.7,72.7 82.5,72.8 83.4,72.9 84.2,73.0 85.0,73.1 85.8,73.2 86.7,73.3 87.5,73.4 88.3,73.5 89.2,73.6 90.0,73.7 90.8,73.9 91.6,74.0 92.5,74.1 93.3,74.2 94.1,74.3 95.0,74.5 95.8,74.6 96.6,74.7 97.5,74.9 98.3,75.0 99.1,75.2 99.9,75.3 100.8,75.5 101.6,75.6 102.4,75.8 103.3,75.9 104.1,76.1 104.9,76.3 105.7,76.4 106.6,76.6 107.4,76.8 108.2,77.0 109.1,77.1 109.9,77.3 110.7,77.5 111.5,77.7 112.4,77.9 113.2,78.1 114.0,78.3 114.9,78.5 115.7,78.7 116.5,78.9 117.3,79.1 118.2,79.3 119.0,79.5 119.8,79.7 120.7,80.0 121.5,80.2 122.3,80.4 123.2,80.6 124.0,80.9 124.8,81.1 125.6,81.4 126.5,81.6 127.3,81.8 128.1,82.1 129.0,82.3 129.8,82.6 130.6,82.9 131.4,83.1 132.3,83.4 133.1,83.7 133.9,83.9 134.8,84.2 135.6,84.5 136.4,84.8 137.2,85.0 138.1,85.3 138.9,85.6 139.7,85.9 140.6,86.2 141.4,86.5 142.2,86.8 143.0,87.1 143.9,87.4 144.7,87.8 145.5,88.1 146.4,88.4 147.2,88.7 148.0,89.0 148.9,89.4 149.7,89.7 150.5,90.1 151.3,90.4 152.2,90.7 153.0,91.1 153.8,91.4 154.7,91.8 155.5,92.2 156.3,92.5 157.1,92.9 158.0,93.3 158.8,93.6 159.6,94.0 160.5,94.4 161.3,94.8 162.1,95.2 162.9,95.6 163.8,96.0 164.6,96.4 165.4,96.8 166.3,97.2 167.1,97.6 167.9,98.0 168.7,98.4 169.6,98.8 170.4,99.3 171.2,99.7 172.1,100.1 172.9,100.6 173.7,101.0 174.6,101.5 175.4,101.9 176.2,102.4 177.0,102.8 177.9,103.3 178.7,103.8 179.5,104.2 180.4,104.7 181.2,105.2 182.0,105.7 182.8,106.2 183.7,106.7 184.5,107.2 185.3,107.7 186.2,108.2 187.0,108.7 187.8,109.2 188.6,109.7 189.5,110.2 190.3,110.8 191.1,111.3 192.0,111.8 192.8,112.4 193.6,112.9 194.4,113.5 195.3,114.0 196.1,114.6 196.9,115.2 197.8,115.7 198.6,116.3 199.4,116.9 200.2,117.5 201.1,118.1 201.9,118.7 202.7,119.3 203.6,119.9 204.4,120.5 205.2,121.1 206.1,121.8 206.9,122.4 207.7,123.0 208.5,123.7 209.4,124.3 210.2,125.0 211.0,125.6 211.9,126.3 212.7,126.9 213.5,127.6 214.3,128.3 215.2,129.0 216.0,129.7 216.8,130.4 217.7,131.1 218.5,131.8 219.3,132.5 220.1,133.2 221.0,134.0 221.8,134.7 222.6,135.5 223.5,136.2 224.3,137.0 225.1,137.7 225.9,138.5 226.8,139.3 227.6,140.1 228.4,140.9 229.3,141.7 230.1,142.5 230.9,143.3 231.8,144.1 232.6,144.9 233.4,145.8 234.2,146.6 235.1,147.5 235.9,148.3 236.7,149.2 237.6,150.1 238.4,151.0 239.2,151.9 240.0,152.8 240.9,153.7 241.7,154.6 242.5,155.6 243.4,156.5 244.2,157.5 245.0,158.4 245.8,159.4 246.7,160.4 247.5,161.4 248.3,162.4 249.2,163.4 250.0,164.4 250.8,165.5 251.6,166.5 252.5,167.6 253.3,168.7 254.1,169.7 255.0,170.8 255.8,172.0 256.6,173.1 257.5,174.2 258.3,175.4 259.1,176.5 259.9,177.7 260.8,178.9 261.6,180.1 262.4,181.3 263.3,182.6 264.1,183.8 264.9,185.1 265.7,186.4 266.6,187.7 267.4,189.0 268.2,190.4 269.1,191.8 269.9,193.1 270.7,194.6 271.5,196.0 272.4,197.4 273.2,198.9 274.0,200.4 274.9,201.9 275.7,203.5 276.5,205.0 277.3,206.7 278.2,208.3 279.0,209.9 279.8,211.6 280.7,213.4 281.5,215.1 282.3,216.9 283.2,218.8 284.0,220.6 284.8,222.6 285.6,224.5 286.5,226.6 287.3,228.6 288.1,230.8 289.0,232.9 289.8,235.2 290.6,237.5 291.4,239.9 292.3,242.4 293.1,244.9 293.9,247.6 294.8,250.4 295.6,253.3 296.4,256.4 297.2,259.6 298.1,263.0 298.9,266.6 299.7,270.5 300.6,274.8 301.4,279.5 302.2,284.9 303.0,291.3 303.9,299.7 304.7,320.0" fill="none" stroke="#b07a3e" stroke-width="1.6" stroke-linejoin="round"/>
+<polyline points="56.0,58.0 56.9,58.0 57.7,58.0 58.6,58.0 59.5,58.0 60.4,58.0 61.2,58.0 62.1,58.0 63.0,58.1 63.9,58.1 64.7,58.1 65.6,58.1 66.5,58.2 67.4,58.2 68.2,58.2 69.1,58.3 70.0,58.3 70.9,58.4 71.7,58.4 72.6,58.5 73.5,58.5 74.4,58.6 75.2,58.7 76.1,58.7 77.0,58.8 77.8,58.9 78.7,58.9 79.6,59.0 80.5,59.1 81.3,59.2 82.2,59.3 83.1,59.4 84.0,59.5 84.8,59.6 85.7,59.6 86.6,59.8 87.5,59.9 88.3,60.0 89.2,60.1 90.1,60.2 91.0,60.3 91.8,60.4 92.7,60.5 93.6,60.7 94.5,60.8 95.3,60.9 96.2,61.1 97.1,61.2 97.9,61.3 98.8,61.5 99.7,61.6 100.6,61.8 101.4,61.9 102.3,62.1 103.2,62.2 104.1,62.4 104.9,62.6 105.8,62.7 106.7,62.9 107.6,63.1 108.4,63.3 109.3,63.4 110.2,63.6 111.1,63.8 111.9,64.0 112.8,64.2 113.7,64.4 114.5,64.6 115.4,64.8 116.3,65.0 117.2,65.2 118.0,65.4 118.9,65.6 119.8,65.8 120.7,66.1 121.5,66.3 122.4,66.5 123.3,66.7 124.2,67.0 125.0,67.2 125.9,67.4 126.8,67.7 127.7,67.9 128.5,68.2 129.4,68.4 130.3,68.7 131.2,69.0 132.0,69.2 132.9,69.5 133.8,69.8 134.6,70.0 135.5,70.3 136.4,70.6 137.3,70.9 138.1,71.2 139.0,71.4 139.9,71.7 140.8,72.0 141.6,72.3 142.5,72.6 143.4,72.9 144.3,73.3 145.1,73.6 146.0,73.9 146.9,74.2 147.8,74.5 148.6,74.9 149.5,75.2 150.4,75.5 151.3,75.9 152.1,76.2 153.0,76.6 153.9,76.9 154.7,77.3 155.6,77.6 156.5,78.0 157.4,78.3 158.2,78.7 159.1,79.1 160.0,79.5 160.9,79.8 161.7,80.2 162.6,80.6 163.5,81.0 164.4,81.4 165.2,81.8 166.1,82.2 167.0,82.6 167.9,83.0 168.7,83.4 169.6,83.8 170.5,84.3 171.4,84.7 172.2,85.1 173.1,85.6 174.0,86.0 174.8,86.4 175.7,86.9 176.6,87.3 177.5,87.8 178.3,88.2 179.2,88.7 180.1,89.2 181.0,89.6 181.8,90.1 182.7,90.6 183.6,91.1 184.5,91.6 185.3,92.1 186.2,92.6 187.1,93.1 188.0,93.6 188.8,94.1 189.7,94.6 190.6,95.1 191.4,95.6 192.3,96.2 193.2,96.7 194.1,97.2 194.9,97.8 195.8,98.3 196.7,98.9 197.6,99.5 198.4,100.0 199.3,100.6 200.2,101.2 201.1,101.7 201.9,102.3 202.8,102.9 203.7,103.5 204.6,104.1 205.4,104.7 206.3,105.3 207.2,105.9 208.1,106.5 208.9,107.2 209.8,107.8 210.7,108.4 211.5,109.1 212.4,109.7 213.3,110.4 214.2,111.0 215.0,111.7 215.9,112.4 216.8,113.0 217.7,113.7 218.5,114.4 219.4,115.1 220.3,115.8 221.2,116.5 222.0,117.2 222.9,117.9 223.8,118.7 224.7,119.4 225.5,120.1 226.4,120.9 227.3,121.6 228.2,122.4 229.0,123.1 229.9,123.9 230.8,124.7 231.6,125.5 232.5,126.3 233.4,127.1 234.3,127.9 235.1,128.7 236.0,129.5 236.9,130.3 237.8,131.2 238.6,132.0 239.5,132.9 240.4,133.7 241.3,134.6 242.1,135.5 243.0,136.4 243.9,137.2 244.8,138.2 245.6,139.1 246.5,140.0 247.4,140.9 248.3,141.8 249.1,142.8 250.0,143.8 250.9,144.7 251.7,145.7 252.6,146.7 253.5,147.7 254.4,148.7 255.2,149.7 256.1,150.7 257.0,151.8 257.9,152.8 258.7,153.9 259.6,154.9 260.5,156.0 261.4,157.1 262.2,158.2 263.1,159.3 264.0,160.5 264.9,161.6 265.7,162.8 266.6,163.9 267.5,165.1 268.3,166.3 269.2,167.5 270.1,168.8 271.0,170.0 271.8,171.3 272.7,172.6 273.6,173.8 274.5,175.2 275.3,176.5 276.2,177.8 277.1,179.2 278.0,180.6 278.8,182.0 279.7,183.4 280.6,184.8 281.5,186.3 282.3,187.8 283.2,189.3 284.1,190.8 285.0,192.4 285.8,193.9 286.7,195.5 287.6,197.2 288.4,198.8 289.3,200.5 290.2,202.2 291.1,204.0 291.9,205.8 292.8,207.6 293.7,209.5 294.6,211.4 295.4,213.3 296.3,215.3 297.2,217.3 298.1,219.4 298.9,221.5 299.8,223.7 300.7,225.9 301.6,228.2 302.4,230.6 303.3,233.0 304.2,235.6 305.1,238.2 305.9,240.9 306.8,243.7 307.7,246.6 308.5,249.7 309.4,252.9 310.3,256.3 311.2,259.9 312.0,263.7 312.9,267.9 313.8,272.4 314.7,277.4 315.5,283.0 316.4,289.8 317.3,298.6 318.2,320.0" fill="none" stroke="#2a2723" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="56.0,27.0 57.0,27.0 58.0,27.0 58.9,27.0 59.9,27.1 60.9,27.1 61.9,27.1 62.8,27.1 63.8,27.1 64.8,27.2 65.8,27.2 66.7,27.2 67.7,27.3 68.7,27.3 69.7,27.4 70.7,27.4 71.6,27.4 72.6,27.5 73.6,27.6 74.6,27.6 75.5,27.7 76.5,27.7 77.5,27.8 78.5,27.9 79.4,28.0 80.4,28.1 81.4,28.1 82.4,28.2 83.4,28.3 84.3,28.4 85.3,28.5 86.3,28.6 87.3,28.7 88.2,28.8 89.2,28.9 90.2,29.0 91.2,29.1 92.1,29.3 93.1,29.4 94.1,29.5 95.1,29.6 96.1,29.8 97.0,29.9 98.0,30.1 99.0,30.2 100.0,30.3 100.9,30.5 101.9,30.6 102.9,30.8 103.9,31.0 104.9,31.1 105.8,31.3 106.8,31.5 107.8,31.6 108.8,31.8 109.7,32.0 110.7,32.2 111.7,32.4 112.7,32.6 113.6,32.8 114.6,33.0 115.6,33.2 116.6,33.4 117.6,33.6 118.5,33.8 119.5,34.0 120.5,34.2 121.5,34.4 122.4,34.7 123.4,34.9 124.4,35.1 125.4,35.4 126.3,35.6 127.3,35.8 128.3,36.1 129.3,36.3 130.3,36.6 131.2,36.8 132.2,37.1 133.2,37.4 134.2,37.6 135.1,37.9 136.1,38.2 137.1,38.5 138.1,38.8 139.0,39.0 140.0,39.3 141.0,39.6 142.0,39.9 143.0,40.2 143.9,40.5 144.9,40.8 145.9,41.1 146.9,41.5 147.8,41.8 148.8,42.1 149.8,42.4 150.8,42.8 151.7,43.1 152.7,43.4 153.7,43.8 154.7,44.1 155.7,44.5 156.6,44.8 157.6,45.2 158.6,45.6 159.6,45.9 160.5,46.3 161.5,46.7 162.5,47.1 163.5,47.4 164.4,47.8 165.4,48.2 166.4,48.6 167.4,49.0 168.4,49.4 169.3,49.8 170.3,50.2 171.3,50.6 172.3,51.1 173.2,51.5 174.2,51.9 175.2,52.4 176.2,52.8 177.1,53.2 178.1,53.7 179.1,54.1 180.1,54.6 181.1,55.0 182.0,55.5 183.0,56.0 184.0,56.4 185.0,56.9 185.9,57.4 186.9,57.9 187.9,58.4 188.9,58.9 189.9,59.4 190.8,59.9 191.8,60.4 192.8,60.9 193.8,61.4 194.7,61.9 195.7,62.5 196.7,63.0 197.7,63.5 198.6,64.1 199.6,64.6 200.6,65.2 201.6,65.7 202.6,66.3 203.5,66.8 204.5,67.4 205.5,68.0 206.5,68.6 207.4,69.2 208.4,69.8 209.4,70.4 210.4,71.0 211.3,71.6 212.3,72.2 213.3,72.8 214.3,73.4 215.3,74.0 216.2,74.7 217.2,75.3 218.2,76.0 219.2,76.6 220.1,77.3 221.1,77.9 222.1,78.6 223.1,79.3 224.0,80.0 225.0,80.7 226.0,81.3 227.0,82.0 228.0,82.7 228.9,83.5 229.9,84.2 230.9,84.9 231.9,85.6 232.8,86.4 233.8,87.1 234.8,87.9 235.8,88.6 236.7,89.4 237.7,90.1 238.7,90.9 239.7,91.7 240.7,92.5 241.6,93.3 242.6,94.1 243.6,94.9 244.6,95.7 245.5,96.5 246.5,97.4 247.5,98.2 248.5,99.0 249.4,99.9 250.4,100.8 251.4,101.6 252.4,102.5 253.4,103.4 254.3,104.3 255.3,105.2 256.3,106.1 257.3,107.0 258.2,107.9 259.2,108.9 260.2,109.8 261.2,110.8 262.1,111.7 263.1,112.7 264.1,113.7 265.1,114.7 266.1,115.7 267.0,116.7 268.0,117.7 269.0,118.7 270.0,119.8 270.9,120.8 271.9,121.9 272.9,122.9 273.9,124.0 274.9,125.1 275.8,126.2 276.8,127.3 277.8,128.5 278.8,129.6 279.7,130.7 280.7,131.9 281.7,133.1 282.7,134.3 283.6,135.5 284.6,136.7 285.6,137.9 286.6,139.1 287.6,140.4 288.5,141.6 289.5,142.9 290.5,144.2 291.5,145.5 292.4,146.9 293.4,148.2 294.4,149.6 295.4,150.9 296.3,152.3 297.3,153.7 298.3,155.1 299.3,156.6 300.3,158.1 301.2,159.5 302.2,161.0 303.2,162.6 304.2,164.1 305.1,165.7 306.1,167.3 307.1,168.9 308.1,170.5 309.0,172.2 310.0,173.8 311.0,175.6 312.0,177.3 313.0,179.1 313.9,180.8 314.9,182.7 315.9,184.5 316.9,186.4 317.8,188.3 318.8,190.3 319.8,192.3 320.8,194.3 321.7,196.4 322.7,198.5 323.7,200.7 324.7,202.9 325.7,205.2 326.6,207.5 327.6,209.9 328.6,212.3 329.6,214.8 330.5,217.4 331.5,220.0 332.5,222.8 333.5,225.6 334.4,228.5 335.4,231.5 336.4,234.7 337.4,238.0 338.4,241.4 339.3,245.0 340.3,248.8 341.3,252.8 342.3,257.1 343.2,261.7 344.2,266.7 345.2,272.3 346.2,278.7 347.1,286.2 348.1,296.1 349.1,320.0" fill="none" stroke="#2a5d8f" stroke-width="1.6" stroke-linejoin="round"/>
+<line x1="173.2" y1="85.6" x2="231.9" y2="85.6" stroke="#2a5d8f" stroke-width="2.8"/><path d="M222.9 90.0 L231.9 85.6 L222.9 81.3" fill="none" stroke="#2a5d8f" stroke-width="2.8"/>
+<line x1="173.2" y1="85.6" x2="231.9" y2="144.2" stroke="#a8322a" stroke-width="2.8"/><path d="M222.4 140.9 L231.9 144.2 L228.6 134.8" fill="none" stroke="#a8322a" stroke-width="2.8"/>
+<circle cx="173.2" cy="85.6" r="5.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="231.9" cy="85.6" r="4.5" fill="#2a5d8f" stroke="#2a5d8f" stroke-width="1.5"/>
+<circle cx="231.9" cy="144.2" r="4.5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="109.8" y="59.6" width="56.4" height="20" fill="#fffdf7" opacity="0.92"/><text x="163.2" y="73.6" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">(1, 2)</text>
+<rect x="236.9" y="76.6" width="50.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="239.9" y="90.6" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">y 固定</text>
+<rect x="236.9" y="140.2" width="50.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="239.9" y="154.2" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">z 固定</text>
+<rect x="64.7" y="221.6" width="48.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="67.7" y="235.6" font-size="14" fill="#6b645a" text-anchor="start">f = 1</text>
+<rect x="64.7" y="104.4" width="48.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="67.7" y="118.4" font-size="14" fill="#6b645a" text-anchor="start">f = 4</text>
+<text x="10.0" y="364.0" font-size="14" fill="#2a2723" text-anchor="start">点 (1, 2) は f = 5（黒の太い円）の上。x を 0.5 増やすと：</text>
+<text x="10.0" y="386.0" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">青：y = 2 のまま (1.5, 2) へ。f = 6.25（増える）</text>
+<text x="10.0" y="408.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">赤：z = x + y = 3 のまま (1.5, 1.5) へ。f = 4.5（減る）</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　円は $f=x^2+y^2$ の等高線（黒の太い円が $f=5$）。$y$ を固定すると真横に進み、外側の円（青、$f=6.25$）へ出る。$z=x+y$ を固定すると、$x$ が増えた分だけ $y$ が減るので右下へ進み、内側の円（橙、$f=4.5$）へ入る。同じ「$x$ を増やす」でも、進む向きが違う。</figcaption>
+</figure>
+
+<p>理由は図のとおり。「$x$ を増やす」といっても、$y$ を固定すれば<em>真横</em>に進み（円の外側へ出るので $f$ は増える）、$z$ を固定すれば<em>斜め右下</em>に進む（円の内側へ向かうので $f$ は減る）。進む方向が違うのだから、答えが違って当然である。</p>
+<p>ここから分かること：<strong>$\dfrac{\partial f}{\partial x}$ という記号は、「$x$ と一緒に変数の組に入っている<em>他の変数</em>は何か」を知らなければ、値が決まらない</strong>。</p>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>熱力学の流儀：固定する変数を添字で書く</h3>
+<p>熱力学では、圧力 $p$、体積 $V$、温度 $T$ のうちどの 2 つを独立変数にするかが問題ごとに変わる。そこで、固定するものを記号に書く。</p>
+<div class="def" id="sym-partial-fixed"><span class="label">記号：$\left(\dfrac{\partial f}{\partial x}\right)_y$（固定する変数を添える流儀）</span>
+<p><strong>①読み方</strong>：「$y$ 固定の、デル・エフ・デル・エックス」。「エックスで偏微分、ただし $y$ 一定」。</p>
+<p><strong>②日本語での意味</strong>：<strong>$y$ を一定に保ったまま、$x$ で微分したもの</strong>。</p>
+<p><strong>③省略していない書き方</strong>：括弧の外の添字 $y$ は「固定する変数」を書く。$f$ が $(x,y)$ の関数と見るときは 2.1 の $\frac{\partial f}{\partial x}$ と同じ。変数が 3 つ以上あるときは、固定するもの全部を並べる：$\left(\dfrac{\partial f}{\partial x}\right)_{y,z}$。ここで大事なのは、<strong>括弧の外の添字は<a href="01_第1回_数式を文として読む.html#sym-subscript">第1回の番号の添字</a>とは別物（「一定に保つもの」のラベル）</strong>であること。</p>
+<p><strong>④どこで出会うか</strong>：熱力学（$C_V=(\partial U/\partial T)_V$、$C_p=(\partial H/\partial T)_p$）、統計力学、物理化学。</p>
+</div>
+
+<p>最小の具体例：理想気体 $pV=nRT$。$p$ を $(V,T)$ の関数と見ると $p=\dfrac{nRT}{V}$。</p>
+<ol>
+<li>$T$ を一定にして $V$ で微分する（$\frac{nRT}{V}=nRT\cdot V^{-1}$ の微分）：$\left(\dfrac{\partial p}{\partial V}\right)_T=-\dfrac{nRT}{V^2}$。</li>
+<li>$V$ を一定にして $T$ で微分する：$\left(\dfrac{\partial p}{\partial T}\right)_V=\dfrac{nR}{V}$。</li>
+</ol>
+<p>同じ $pV=nRT$ から、$V$ を $(p,T)$ の関数 $V=\dfrac{nRT}{p}$ と見ると $\left(\dfrac{\partial V}{\partial T}\right)_p=\dfrac{nR}{p}$。$T$ を $(p,V)$ の関数 $T=\dfrac{pV}{nR}$ と見ると $\left(\dfrac{\partial T}{\partial p}\right)_V=\dfrac{V}{nR}$。</p>
+
+<h4>約分してはいけない</h4>
+<p>$\dfrac{\partial p}{\partial V}\cdot\dfrac{\partial V}{\partial T}\cdot\dfrac{\partial T}{\partial p}$ を、分数のように約分して $1$ としたくなる。数値で確かめる。$nR=8\ \mathrm{J/K}$、$T=300\ \mathrm K$、$V=0.04\ \mathrm{m^3}$ のとき、$p=\dfrac{8\cdot300}{0.04}=60000\ \mathrm{Pa}$。</p>
+<table class="tb">
+<tr><th>偏微分</th><th>式</th><th>値</th></tr>
+<tr><td>$\left(\dfrac{\partial p}{\partial V}\right)_T$</td><td>$-\dfrac{nRT}{V^2}=-\dfrac{2400}{0.0016}$</td><td>$-1.5\times10^{6}\ \mathrm{Pa/m^3}$</td></tr>
+<tr><td>$\left(\dfrac{\partial V}{\partial T}\right)_p$</td><td>$\dfrac{nR}{p}=\dfrac{8}{60000}$</td><td>$1.333\ldots\times10^{-4}\ \mathrm{m^3/K}$</td></tr>
+<tr><td>$\left(\dfrac{\partial T}{\partial p}\right)_V$</td><td>$\dfrac{V}{nR}=\dfrac{0.04}{8}$</td><td>$0.005\ \mathrm{K/Pa}$</td></tr>
+</table>
+<p>積：$(-1.5\times10^6)\times(1.333\ldots\times10^{-4})=-200$。$-200\times0.005=-1$。<strong>積は $+1$ ではなく $-1$</strong>。約分できないのは、3 つの偏微分で<em>固定しているものがそれぞれ違う</em>（$T$、$p$、$V$）ので、分母と分子の $\partial V$ が同じものではないから。添字を書いておけば、「同じに見える $\partial V$ が違うもの」だと見て取れる。</p>
+<p>3つの偏微分を、固定している変数ごとに色を分けたカードにすると図4.2 になる。</p>
+<figure class="fig" id="fig-4-2">
+<svg viewBox="0 0 440 360" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="熱力学の3つの偏微分は固定しているものが違う" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>熱力学の3つの偏微分は固定しているものが違う</title>
+<rect x="0" y="0" width="440" height="360" fill="#fffdf7"/>
+<rect x="10" y="14" width="420" height="72" rx="6" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="80.0" y="58.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(∂</tspan><tspan font-style="italic">p</tspan><tspan>/∂</tspan><tspan font-style="italic">V</tspan><tspan>)</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">T</tspan></text>
+<text x="170.0" y="44.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">T を固定</text>
+<text x="170.0" y="68.0" font-size="15" fill="#2a2723" text-anchor="start">値 −1.5 × 10⁶</text>
+<text x="390.0" y="96.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">×</text>
+<rect x="10" y="102" width="420" height="72" rx="6" fill="#e6eef6" stroke="#2a5d8f" stroke-width="1.6"/>
+<text x="80.0" y="146.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(∂</tspan><tspan font-style="italic">V</tspan><tspan>/∂</tspan><tspan font-style="italic">T</tspan><tspan>)</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">p</tspan></text>
+<text x="170.0" y="132.0" font-size="15" fill="#2a5d8f" text-anchor="start" font-weight="bold">p を固定</text>
+<text x="170.0" y="156.0" font-size="15" fill="#2a2723" text-anchor="start">値 1.333… × 10⁻⁴</text>
+<text x="390.0" y="184.0" font-size="18" fill="#2a2723" text-anchor="middle" font-weight="bold">×</text>
+<rect x="10" y="190" width="420" height="72" rx="6" fill="#edf1e8" stroke="#5f7f4f" stroke-width="1.6"/>
+<text x="80.0" y="234.0" font-size="22" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(∂</tspan><tspan font-style="italic">T</tspan><tspan>/∂</tspan><tspan font-style="italic">p</tspan><tspan>)</tspan><tspan dy="6.2" font-size="15.4" font-style="italic">V</tspan></text>
+<text x="170.0" y="220.0" font-size="15" fill="#5f7f4f" text-anchor="start" font-weight="bold">V を固定</text>
+<text x="170.0" y="244.0" font-size="15" fill="#2a2723" text-anchor="start">値 0.005</text>
+<text x="220.0" y="300.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">積 = −1（＋1 ではない）</text>
+<text x="220.0" y="326.0" font-size="14" fill="#6b645a" text-anchor="middle">1枚目の分母の ∂V（T 固定）と、2枚目の分子の ∂V（p 固定）は</text>
+<text x="220.0" y="346.0" font-size="14" fill="#6b645a" text-anchor="middle">固定しているものが違うので、同じものではない</text>
+</svg>
+<figcaption><strong>図 4.2</strong>　$nR=8,\ T=300,\ V=0.04$（$p=60000$）での値。3枚のカードは、固定している変数（括弧の外の添字）がすべて違う。分数のように見えても、色の違う $\partial V$ どうしは消し合えない。</figcaption>
+</figure>
+
+<div class="warn"><span class="label">流派の違い：固定の書き方</span>
+<ul>
+<li><strong>数学の教科書</strong>：$f(x,y)$ と引数が明示されている関数に対して、「$\partial f/\partial x$ は $x$ 以外の引数を固定」と約束する。添字は書かない。変数の組を変えるときは、別の関数名（$f$ と $g$）を使う。</li>
+<li><strong>物理の教科書</strong>：変数の組は文脈で決まっているとして、書かない。同じ量を別の組で見るときだけ、添字をつける。</li>
+<li><strong>熱力学</strong>：変数の組が頻繁に変わるので、必ず添字で書く。</li>
+</ul>
+<p>本を読むときは、まず「この式は、どの変数の組の関数として書かれているか」を確かめる。</p>
+</div>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>第3回の「引数の省略」との関係</h3>
+<p><a href="03_第3回_関数と写像.html#abbr-fn-args">第3回 7.1</a> で、$u(x,t)\to u(x)\to u$ という引数の省略と、その 3 通りの読み方を学んだ。偏微分の「何を固定するか」は、この省略と表裏一体である。</p>
+<ul>
+<li>$\dfrac{\partial u}{\partial x}$ は、$u(x,t)$ の $t$ を固定して $x$ で微分する。結果の関数は、省略すれば $t$ も含む：$\dfrac{\partial u}{\partial x}(x,t)$。</li>
+<li>$t=t_0$ に固定した 1 変数関数 $v(x):=u(x,t_0)$ （第3回の読み方 1）を作って <a href="07_第7回_微分.html#sym-derivative-leibniz">$\frac{dv}{dx}$</a> を取ると、$\dfrac{\partial u}{\partial x}(x,t_0)$ と一致する。偏微分は、この「固定してから微分」を、全部の $t_0$ について一度にやったもの。</li>
+</ul>
+<p>つまり、第3回の「固定して1変数関数にする」操作は、偏微分の定義そのものである。</p>
+<p>問題が起きるのは、<strong>固定したはずの変数が、実は動くとき</strong>。例：$u(x,t):=xt$ とする。</p>
+<ol>
+<li>$t$ で偏微分（$x$ 固定）：$\dfrac{\partial u}{\partial t}=x$。</li>
+<li>ところが、$x$ が時刻に比例して動いている場合（$x(t)=t$）、$u(x(t),t)=t\cdot t=t^2$ を $t$ で微分する：$\dfrac{d}{dt}u=2t$。</li>
+<li>$x=t$ なので、1. は $\dfrac{\partial u}{\partial t}=t$ と書けるが、2. の $2t$ とは<strong>一致しない</strong>。</li>
+</ol>
+<p>2つの計算は、$(t,x)$ 平面の上で<em>違う道</em>を進んでいる。図4.3 で $t=1$（このとき $x=1$）の点から比べる。</p>
+<figure class="fig" id="fig-4-3">
+<svg viewBox="0 0 440 506" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="u=xt を2本の道に沿って見る" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>u=xt を2本の道に沿って見る</title>
+<rect x="0" y="0" width="440" height="506" fill="#fffdf7"/>
+<text x="10.0" y="24.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(a) 時刻 t と位置 x の平面での 2 本の道</text>
+<line x1="60.0" y1="206.0" x2="390.0" y2="206.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 209.0 L390.0 206.0 L383.7 203.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="206.0" x2="60.0" y2="40.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 46.3 L60.0 40.0 L57.0 46.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="212.4" y1="202.0" x2="212.4" y2="210.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.4" y="226.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="364.8" y1="202.0" x2="364.8" y2="210.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="364.8" y="226.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="56.0" y1="131.7" x2="64.0" y2="131.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="136.7" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="57.4" x2="64.0" y2="57.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="62.4" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="394.0" y="228.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">t</tspan></text>
+<text x="74.0" y="46.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<polyline points="60.0,131.7 216.2,131.7 372.4,131.7" fill="none" stroke="#2a5d8f" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="60.0,206.0 216.2,129.9 372.4,53.7" fill="none" stroke="#a8322a" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="212.4" cy="131.7" r="5.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="372.4" y="153.7" font-size="14" fill="#2a5d8f" text-anchor="end" font-weight="bold">x = 1 のまま</text>
+<text x="284.2" y="76.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">x = t</text>
+<text x="10.0" y="260.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(b) それぞれの道の上での u = xt</text>
+<line x1="60.0" y1="472.0" x2="390.0" y2="472.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 475.0 L390.0 472.0 L383.7 469.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="472.0" x2="60.0" y2="276.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 282.3 L60.0 276.0 L57.0 282.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="212.4" y1="468.0" x2="212.4" y2="476.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.4" y="492.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="364.8" y1="468.0" x2="364.8" y2="476.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="364.8" y="492.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="56.0" y1="427.7" x2="64.0" y2="427.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="432.7" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="383.4" x2="64.0" y2="383.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="388.4" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="56.0" y1="294.9" x2="64.0" y2="294.9" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="299.9" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="394.0" y="494.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">t</tspan></text>
+<text x="74.0" y="282.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">u</tspan></text>
+<polyline points="60.0,472.0 216.2,426.6 372.4,381.2" fill="none" stroke="#2a5d8f" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="60.0,472.0 61.3,472.0 62.6,472.0 63.9,472.0 65.2,471.9 66.5,471.9 67.8,471.9 69.1,471.8 70.4,471.8 71.7,471.7 73.0,471.7 74.3,471.6 75.6,471.5 76.9,471.5 78.2,471.4 79.5,471.3 80.8,471.2 82.1,471.1 83.4,471.0 84.7,470.8 86.0,470.7 87.3,470.6 88.6,470.4 89.9,470.3 91.2,470.1 92.5,470.0 93.8,469.8 95.1,469.6 96.4,469.5 97.7,469.3 99.0,469.1 100.3,468.9 101.7,468.7 103.0,468.5 104.3,468.3 105.6,468.0 106.9,467.8 108.2,467.6 109.5,467.3 110.8,467.1 112.1,466.8 113.4,466.6 114.7,466.3 116.0,466.0 117.3,465.7 118.6,465.5 119.9,465.2 121.2,464.9 122.5,464.6 123.8,464.2 125.1,463.9 126.4,463.6 127.7,463.3 129.0,462.9 130.3,462.6 131.6,462.2 132.9,461.9 134.2,461.5 135.5,461.1 136.8,460.8 138.1,460.4 139.4,460.0 140.7,459.6 142.0,459.2 143.3,458.8 144.6,458.3 145.9,457.9 147.2,457.5 148.5,457.1 149.8,456.6 151.1,456.2 152.4,455.7 153.7,455.3 155.0,454.8 156.3,454.3 157.6,453.8 158.9,453.3 160.2,452.8 161.5,452.3 162.8,451.8 164.1,451.3 165.4,450.8 166.7,450.3 168.0,449.7 169.3,449.2 170.6,448.7 171.9,448.1 173.2,447.5 174.5,447.0 175.8,446.4 177.1,445.8 178.4,445.2 179.7,444.7 181.0,444.1 182.3,443.5 183.7,442.8 185.0,442.2 186.3,441.6 187.6,441.0 188.9,440.3 190.2,439.7 191.5,439.0 192.8,438.4 194.1,437.7 195.4,437.1 196.7,436.4 198.0,435.7 199.3,435.0 200.6,434.3 201.9,433.6 203.2,432.9 204.5,432.2 205.8,431.5 207.1,430.7 208.4,430.0 209.7,429.3 211.0,428.5 212.3,427.8 213.6,427.0 214.9,426.2 216.2,425.5 217.5,424.7 218.8,423.9 220.1,423.1 221.4,422.3 222.7,421.5 224.0,420.7 225.3,419.9 226.6,419.1 227.9,418.2 229.2,417.4 230.5,416.6 231.8,415.7 233.1,414.8 234.4,414.0 235.7,413.1 237.0,412.2 238.3,411.4 239.6,410.5 240.9,409.6 242.2,408.7 243.5,407.8 244.8,406.8 246.1,405.9 247.4,405.0 248.7,404.1 250.0,403.1 251.3,402.2 252.6,401.2 253.9,400.3 255.2,399.3 256.5,398.3 257.8,397.3 259.1,396.4 260.4,395.4 261.7,394.4 263.0,393.4 264.3,392.4 265.7,391.3 267.0,390.3 268.3,389.3 269.6,388.2 270.9,387.2 272.2,386.2 273.5,385.1 274.8,384.0 276.1,383.0 277.4,381.9 278.7,380.8 280.0,379.7 281.3,378.6 282.6,377.5 283.9,376.4 285.2,375.3 286.5,374.2 287.8,373.0 289.1,371.9 290.4,370.8 291.7,369.6 293.0,368.5 294.3,367.3 295.6,366.1 296.9,365.0 298.2,363.8 299.5,362.6 300.8,361.4 302.1,360.2 303.4,359.0 304.7,357.8 306.0,356.6 307.3,355.4 308.6,354.1 309.9,352.9 311.2,351.6 312.5,350.4 313.8,349.1 315.1,347.9 316.4,346.6 317.7,345.3 319.0,344.0 320.3,342.8 321.6,341.5 322.9,340.2 324.2,338.9 325.5,337.5 326.8,336.2 328.1,334.9 329.4,333.6 330.7,332.2 332.0,330.9 333.3,329.5 334.6,328.1 335.9,326.8 337.2,325.4 338.5,324.0 339.8,322.6 341.1,321.3 342.4,319.9 343.7,318.4 345.0,317.0 346.3,315.6 347.7,314.2 349.0,312.8 350.3,311.3 351.6,309.9 352.9,308.4 354.2,307.0 355.5,305.5 356.8,304.0 358.1,302.6 359.4,301.1 360.7,299.6 362.0,298.1 363.3,296.6 364.6,295.1 365.9,293.6 367.2,292.0 368.5,290.5 369.8,289.0 371.1,287.4" fill="none" stroke="#a8322a" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="143.8,467.6 223.8,421.1 303.8,374.6" fill="none" stroke="#a8322a" stroke-width="1.6" stroke-dasharray="6 4" stroke-linejoin="round"/>
+<circle cx="212.4" cy="427.7" r="5.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="242.9" y="444.5" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">青：u = t（傾き 1）</text>
+<text x="242.9" y="464.5" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">　 = ∂u/∂t</text>
+<text x="281.0" y="312.6" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">赤：u = t²（傾き 2）= du/dt</text>
+</svg>
+<figcaption><strong>図 4.3</strong>　(a) 青は $x$ を $1$ に止めて $t$ だけ進む道、赤は $x=t$ で $x$ も一緒に動く道。(b) それぞれの道の上で $u=xt$ を描いた。青は $u=t$ で傾き $1$（$=\frac{\partial u}{\partial t}=x$）、赤は $u=t^2$ で $t=1$ での傾き $2$（$=\frac{du}{dt}=2t$）。差の $1$ が、$x$ が動いたことによる分である。</figcaption>
+</figure>
+<p>1. は「$x$ を動かさずに」$t$ を進めた変化、2. は「$x$ も一緒に動いて」$t$ を進めた変化。差の $t$ は、$x$ が動いたことによる分。この区別（$\frac{d}{dt}$ と $\frac{\partial}{\partial t}$）は、第12回の連鎖律（<a href="12_第12回_全微分と連鎖律.html#sym-total-vs-partial">$\frac{d}{dt}$ と $\frac{\partial}{\partial t}$ の違い</a>）で本格的に扱う。</p>
+
+<h3 id="sec-4-4"><span class="no">4.4</span>変数の「名前」と「位置」</h3>
+<p>$\dfrac{\partial f}{\partial x}$ の $x$ は、<em>関数 $f$ の定義に使われた文字</em>を指す。$f(x,y):=x^2+3xy$ に対し、$f(a,b)$ と書いても、$\frac{\partial f}{\partial x}$ は「第 1 引数で微分」を意味する（$a$ で微分、ではない）。数学の教科書が「第 1 引数」という呼び方 $D_1f$ を好むのは、文字の名前に依存しないため。物理の本が「$f(x,y)$ の $x$ に $y^2$ を代入した」ようなことをして、$\frac{\partial f}{\partial x}$ の意味が曖昧になるのを避ける。</p>
+<p>名前と位置の違いを、引数の「席」として図4.4 に描く。</p>
+<figure class="fig" id="fig-4-4">
+<svg viewBox="0 0 440 300" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="引数の名前と位置（席）" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>引数の名前と位置（席）</title>
+<rect x="0" y="0" width="440" height="300" fill="#fffdf7"/>
+<text x="10.0" y="26.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">f の定義：引数には「席」がある</text>
+<text x="60.0" y="74.0" font-size="26" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan>(</tspan></text>
+<rect x="80" y="50" width="52" height="36" rx="6" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="106.0" y="76.0" font-size="24" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="144.0" y="74.0" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>,</tspan></text>
+<rect x="156" y="50" width="52" height="36" rx="6" fill="#fff" stroke="#2a5d8f" stroke-width="2"/>
+<text x="182.0" y="76.0" font-size="24" fill="#2a5d8f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<text x="222.0" y="74.0" font-size="26" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>)</tspan></text>
+<text x="330.0" y="76.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>:= </tspan><tspan font-style="italic">x</tspan><tspan dy="-8.8" font-size="14.7">2</tspan><tspan dy="8.8"> + 3</tspan><tspan font-style="italic">x</tspan><tspan font-style="italic">y</tspan></text>
+<text x="106.0" y="108.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">第1引数</text>
+<text x="182.0" y="108.0" font-size="14" fill="#2a5d8f" text-anchor="middle" font-weight="bold">第2引数</text>
+<text x="60.0" y="172.0" font-size="26" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan>(</tspan></text>
+<rect x="80" y="148" width="52" height="36" rx="6" fill="#fff" stroke="#a8322a" stroke-width="2"/>
+<text x="106.0" y="174.0" font-size="24" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">a</tspan></text>
+<text x="144.0" y="172.0" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>,</tspan></text>
+<rect x="156" y="148" width="52" height="36" rx="6" fill="#fff" stroke="#2a5d8f" stroke-width="2"/>
+<text x="182.0" y="174.0" font-size="24" fill="#2a5d8f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">b</tspan></text>
+<text x="222.0" y="172.0" font-size="26" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>)</tspan></text>
+<text x="250.0" y="160.0" font-size="14" fill="#6b645a" text-anchor="start">席に入る文字が</text>
+<text x="250.0" y="180.0" font-size="14" fill="#6b645a" text-anchor="start">替わっても、席は同じ</text>
+<line x1="106.0" y1="116.0" x2="106.0" y2="144.0" stroke="#6b645a" stroke-width="1.4"/><path d="M102.5 136.8 L106.0 144.0 L109.5 136.8" fill="none" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="182.0" y1="116.0" x2="182.0" y2="144.0" stroke="#6b645a" stroke-width="1.4"/><path d="M178.5 136.8 L182.0 144.0 L185.5 136.8" fill="none" stroke="#6b645a" stroke-width="1.4"/>
+<line x1="10.0" y1="206.0" x2="430.0" y2="206.0" stroke="#ddd6c8" stroke-width="1"/>
+<text x="100.0" y="248.0" font-size="24" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂</tspan><tspan font-style="italic">f</tspan><tspan>/∂</tspan><tspan font-style="italic">x</tspan></text>
+<text x="190.0" y="248.0" font-size="24" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>=</tspan></text>
+<text x="260.0" y="248.0" font-size="24" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">D</tspan><tspan dy="6.7" font-size="16.8">1</tspan><tspan dy="-6.7"> </tspan><tspan font-style="italic">f</tspan></text>
+<text x="220.0" y="284.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">「x という名前の文字」ではなく「第1引数（左の席）」で微分する</text>
+</svg>
+<figcaption><strong>図 4.4</strong>　$f(x,y)$ の $x$ は、左の席に入る文字につけた仮の名前である。$f(a,b)$ と書いても、左の席に $a$ が入っただけで、$\frac{\partial f}{\partial x}$ は「左の席で微分」のまま。$D_1f$ は、この「席の番号」で書く書き方。</figcaption>
+</figure>
+
+<div class="why"><span class="label">ひとことで</span>$\frac{\partial f}{\partial x}$ の値は、「他にどの変数が独立変数の組に入っているか」で決まる。同じ量でも、変数の組を変えると別の値になる（4.1）。熱力学は添字で固定を書く。偏微分の記号は分数ではないので、約分してはいけない（4.2）。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>高階偏微分と順序交換</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/11_a5_chladni.jpg" alt="灰色の板の上に、中心から8方向へ、橙・黄・青の砂の線が曲がりながら伸びている" loading="lazy"></div>
+<p class="cap">震わせた板の上では、砂が、動かない線のところに集まる。</p>
+<p class="cr">Carlos Andrés Reyes（2013年、クラドニ図形）／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Chladni_I_(14937142063).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/11_b5_koto.png" alt="着物を着た女性が、長い箏の前に座り、片手を弦にのばしている白黒の線画" loading="lazy"></div>
+<p class="cap">弦をはじくと、弦が震えて音が出る。</p>
+<p class="cr">『THE KOTO』（1910年）の挿絵（作者不詳）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:THE_KOTO._(1910)_-_illustration_-_page_265.png">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-5-1"><span class="no">5.1</span>もう一度偏微分する</h3>
+<p>偏導関数 $\frac{\partial f}{\partial x}$ も 2 変数の関数なので、さらに偏微分できる。</p>
+<div class="def" id="sym-mixed-partial"><span class="label">記号：高階偏微分 $\dfrac{\partial^2f}{\partial x^2}$、$\dfrac{\partial^2f}{\partial x\,\partial y}$、$f_{xy}$</span>
+<p><strong>①読み方</strong>：$\frac{\partial^2f}{\partial x^2}$ は「デル・二・エフ・デル・エックス二乗」。$\frac{\partial^2f}{\partial x\,\partial y}$ は「デル・二・エフ・デル・エックス・デル・ワイ」。$f_{xx},\ f_{xy}$ は「エフ・エックス・エックス」「エフ・エックス・ワイ」。</p>
+<p><strong>②日本語での意味</strong>：偏微分した結果を、もう一度偏微分したもの。$x$ で 2 回なら $\partial^2f/\partial x^2$、異なる変数なら<strong>混合偏微分</strong>と呼ぶ。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<p>$$\frac{\partial^2f}{\partial x^2}:=\frac{\partial}{\partial x}\!\left(\frac{\partial f}{\partial x}\right),\qquad \frac{\partial^2f}{\partial x\,\partial y}:=\frac{\partial}{\partial x}\!\left(\frac{\partial f}{\partial y}\right)$$</p>
+<p>分数の形では<strong>右の変数から先に</strong>微分する（$\partial x\,\partial y$ の $y$ が先）。添字の形では<strong>左から先に</strong>：$f_{xy}:=(f_x)_y$ （$x$ で先に、次に $y$）。</p>
+<p><strong>④どこで出会うか</strong>：波動方程式・熱方程式・ラプラス方程式（第40〜43回）、ヘッセ行列と極値判定（第21回・第51回）、熱力学のマクスウェルの関係式。</p>
+</div>
+
+<p>2つの書き方の「読む向き」を、操作の流れとして図5.1 に並べる。</p>
+<figure class="fig" id="fig-5-1">
+<svg viewBox="0 0 440 342" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="混合偏微分の読む順序" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>混合偏微分の読む順序</title>
+<rect x="0" y="0" width="440" height="342" fill="#fffdf7"/>
+<text x="10.0" y="24.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">(a) 分数の形：右の y から先に微分する</text>
+<line x1="52.3" y1="96.0" x2="152.5" y2="96.0" stroke="#a8322a" stroke-width="1.8"/><path d="M145.3 99.5 L152.5 96.0 L145.3 92.5" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<line x1="227.5" y1="96.0" x2="321.6" y2="96.0" stroke="#a8322a" stroke-width="1.8"/><path d="M314.4 99.5 L321.6 96.0 L314.4 92.5" fill="none" stroke="#a8322a" stroke-width="1.8"/>
+<text x="40.0" y="104.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan></text>
+<text x="190.0" y="104.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂</tspan><tspan font-style="italic">f</tspan><tspan>/∂</tspan><tspan font-style="italic">y</tspan></text>
+<text x="378.0" y="104.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂²</tspan><tspan font-style="italic">f</tspan><tspan>/∂</tspan><tspan font-style="italic">x</tspan><tspan>∂</tspan><tspan font-style="italic">y</tspan></text>
+<rect x="76" y="50" width="68" height="30" rx="5" fill="#fff" stroke="#a8322a" stroke-width="1.4"/>
+<text x="110.0" y="72.0" font-size="17" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂/∂</tspan><tspan font-style="italic">y</tspan></text>
+<rect x="248" y="50" width="68" height="30" rx="5" fill="#fff" stroke="#a8322a" stroke-width="1.4"/>
+<text x="282.0" y="72.0" font-size="17" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∂/∂</tspan><tspan font-style="italic">x</tspan></text>
+<text x="430.0" y="132.0" font-size="14" fill="#a8322a" text-anchor="end">↑ 先に微分した y は右端</text>
+<line x1="10.0" y1="154.0" x2="430.0" y2="154.0" stroke="#ddd6c8" stroke-width="1"/>
+<text x="10.0" y="182.0" font-size="15" fill="#2a5d8f" text-anchor="start" font-weight="bold">(b) 添字の形：左の x から先に微分する</text>
+<line x1="52.3" y1="254.0" x2="171.4" y2="254.0" stroke="#2a5d8f" stroke-width="1.8"/><path d="M164.2 257.5 L171.4 254.0 L164.2 250.5" fill="none" stroke="#2a5d8f" stroke-width="1.8"/>
+<line x1="208.6" y1="254.0" x2="345.1" y2="254.0" stroke="#2a5d8f" stroke-width="1.8"/><path d="M337.9 257.5 L345.1 254.0 L337.9 250.5" fill="none" stroke="#2a5d8f" stroke-width="1.8"/>
+<text x="40.0" y="262.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan></text>
+<text x="190.0" y="262.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">x</tspan></text>
+<text x="370.0" y="262.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">x</tspan><tspan font-size="14.7" font-style="italic">y</tspan></text>
+<rect x="76" y="208" width="68" height="30" rx="5" fill="#fff" stroke="#2a5d8f" stroke-width="1.4"/>
+<text x="110.0" y="230.0" font-size="17" fill="#2a5d8f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan><tspan> で</tspan></text>
+<rect x="241" y="208" width="68" height="30" rx="5" fill="#fff" stroke="#2a5d8f" stroke-width="1.4"/>
+<text x="275.0" y="230.0" font-size="17" fill="#2a5d8f" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan><tspan> で</tspan></text>
+<text x="430.0" y="290.0" font-size="14" fill="#2a5d8f" text-anchor="end">↑ 先に微分した x は左</text>
+<text x="220.0" y="326.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>だから ∂²</tspan><tspan font-style="italic">f</tspan><tspan>/∂</tspan><tspan font-style="italic">x</tspan><tspan>∂</tspan><tspan font-style="italic">y</tspan><tspan> = </tspan><tspan font-style="italic">f</tspan><tspan dy="4.8" font-size="11.9" font-style="italic">y</tspan><tspan font-size="11.9" font-style="italic">x</tspan><tspan dy="-4.8">（左右の向きが逆）</tspan></text>
+</svg>
+<figcaption><strong>図 5.1</strong>　(a) 分数の形では、$f$ にいちばん近い（右端の）$\partial y$ が先の操作。(b) 添字の形では、$f$ にいちばん近い（左端の）$x$ が先の操作。どちらも「$f$ に近いほうから先」と覚えると取り違えない。</figcaption>
+</figure>
+<div class="warn"><span class="label">流派の違い：混合偏微分の順序の読み方</span>
+<p>$\dfrac{\partial^2f}{\partial x\,\partial y}$ は<strong>右から</strong>（$y$ が先）、$f_{xy}$ は<strong>左から</strong>（$x$ が先）読む。つまり $\dfrac{\partial^2f}{\partial x\,\partial y}=f_{yx}$ （OpenStax Calculus Vol.3 の書き方）。ところが、本によっては $f_{xy}$ を分数のように右から読む。<strong>どちらの流儀の本かで、$f_{xy}$ と $f_{yx}$ が入れ替わる</strong>。幸い、5.3 のとおり、なめらかな関数ではどちらでも同じ値になる。</p>
+<p>3 階以上は、$\dfrac{\partial^3f}{\partial x\,\partial y^2}=\dfrac{\partial}{\partial x}\!\left(\dfrac{\partial^2f}{\partial y^2}\right)$、$f_{xyy}=((f_x)_y)_y$ のように同じ規則で続く（<a href="01_第1回_数式を文として読む.html#sym-dots">…</a>）。</p>
+</div>
+
+<h3 id="sec-5-2"><span class="no">5.2</span>最小の具体例</h3>
+<p>$f(x,y):=x^3y^2+e^{xy}$ の 2 階偏微分を全部求める。</p>
+<ol>
+<li>$f_x$：$y$ を定数として。$x^3y^2\to3x^2y^2$、$e^{xy}\to y\,e^{xy}$。$f_x=3x^2y^2+y\,e^{xy}$。</li>
+<li>$f_y$：$x$ を定数として。$x^3y^2\to2x^3y$、$e^{xy}\to x\,e^{xy}$。$f_y=2x^3y+x\,e^{xy}$。</li>
+<li>$f_{xx}$：$f_x$ をもう一度 $x$ で。$6xy^2+y^2e^{xy}$。</li>
+<li>$f_{yy}$：$f_y$ をもう一度 $y$ で。$2x^3+x^2e^{xy}$。</li>
+<li>$f_{xy}$（$f_x$ を $y$ で）：$3x^2y^2\to6x^2y$。$y\,e^{xy}$ は積の微分（<a href="07_第7回_微分.html#sym-diff-rules">第7回</a>）で $e^{xy}+y\cdot x\,e^{xy}$。合わせて $6x^2y+e^{xy}+xy\,e^{xy}$。</li>
+<li>$f_{yx}$（$f_y$ を $x$ で）：$2x^3y\to6x^2y$。$x\,e^{xy}$ は積の微分で $e^{xy}+x\cdot y\,e^{xy}$。合わせて $6x^2y+e^{xy}+xy\,e^{xy}$。</li>
+</ol>
+<p>5. と 6. は<strong>同じ式</strong>になった。計算の順序（$x$ が先か $y$ が先か）を入れ替えても結果が変わらない。</p>
+<p>4つの2階偏微分の関係を、枝分かれの木にすると図5.2 になる。</p>
+<figure class="fig" id="fig-5-2">
+<svg viewBox="0 0 440 350" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="2階偏微分の木" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>2階偏微分の木</title>
+<rect x="0" y="0" width="440" height="350" fill="#fffdf7"/>
+<line x1="84.0" y1="150.0" x2="122.0" y2="80.0" stroke="#6b645a" stroke-width="1.5"/>
+<text x="105.0" y="109.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<line x1="84.0" y1="150.0" x2="122.0" y2="220.0" stroke="#6b645a" stroke-width="1.5"/>
+<text x="105.0" y="179.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="174.0" y1="80.0" x2="222.0" y2="36.0" stroke="#6b645a" stroke-width="1.5"/>
+<text x="200.0" y="52.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<line x1="174.0" y1="80.0" x2="222.0" y2="116.0" stroke="#6b645a" stroke-width="1.5"/>
+<text x="200.0" y="92.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="174.0" y1="220.0" x2="222.0" y2="184.0" stroke="#6b645a" stroke-width="1.5"/>
+<text x="200.0" y="196.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<line x1="174.0" y1="220.0" x2="222.0" y2="264.0" stroke="#6b645a" stroke-width="1.5"/>
+<text x="200.0" y="236.0" font-size="15" fill="#6b645a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<rect x="214" y="92" width="212" height="116" rx="8" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.6"/>
+<text x="60.0" y="157.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan></text>
+<text x="150.0" y="87.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">x</tspan></text>
+<text x="150.0" y="227.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">y</tspan></text>
+<text x="250.0" y="43.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">x</tspan><tspan font-size="14.7" font-style="italic">x</tspan></text>
+<text x="250.0" y="123.0" font-size="21" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">x</tspan><tspan font-size="14.7" font-style="italic">y</tspan></text>
+<text x="250.0" y="191.0" font-size="21" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">y</tspan><tspan font-size="14.7" font-style="italic">x</tspan></text>
+<text x="250.0" y="271.0" font-size="21" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="5.9" font-size="14.7" font-style="italic">y</tspan><tspan font-size="14.7" font-style="italic">y</tspan></text>
+<text x="300.0" y="142.0" font-size="14" fill="#a8322a" text-anchor="start">順序が違うだけで</text>
+<text x="300.0" y="166.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">同じ式になる</text>
+<text x="220.0" y="306.0" font-size="17" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="4.8" font-size="11.9" font-style="italic">x</tspan><tspan font-size="11.9" font-style="italic">y</tspan><tspan dy="-4.8"> = </tspan><tspan font-style="italic">f</tspan><tspan dy="4.8" font-size="11.9" font-style="italic">y</tspan><tspan font-size="11.9" font-style="italic">x</tspan><tspan dy="-4.8"> = 6</tspan><tspan font-style="italic">x</tspan><tspan dy="-7.1" font-size="11.9">2</tspan><tspan dy="7.1" font-style="italic">y</tspan><tspan> + (1 + </tspan><tspan font-style="italic">x</tspan><tspan font-style="italic">y</tspan><tspan>)</tspan><tspan font-style="italic">e</tspan><tspan dy="-7.1" font-size="11.9" font-style="italic">x</tspan><tspan font-size="11.9" font-style="italic">y</tspan></text>
+<text x="10.0" y="336.0" font-size="14" fill="#2a2723" text-anchor="start">2 階偏微分は 4 つ。真ん中の 2 つは、微分の順序が違うだけ。</text>
+</svg>
+<figcaption><strong>図 5.2</strong>　左の $f$ から、枝に書いた変数で1回ずつ偏微分して右へ進む。$f=x^3y^2+e^{xy}$ では、朱の枠の $f_{xy}$（$x$ が先）と $f_{yx}$（$y$ が先）が、どちらも $6x^2y+e^{xy}+xy\,e^{xy}$ になる。</figcaption>
+</figure>
+
+<h3 id="sec-5-3"><span class="no">5.3</span>順序交換が成り立つ条件</h3>
+<div class="thm"><span class="label">混合偏微分の順序交換（クレローの定理）</span>
+<p>点 $(a,b)$ を含む円板で $f_{xy}$ と $f_{yx}$ が存在し、どちらも連続ならば、$f_{xy}(a,b)=f_{yx}(a,b)$。</p>
+</div>
+<p>証明は OpenStax Calculus Vol.3 の 4.3 節（Clairaut's theorem）にある。ここでは、なぜ成り立つのかの直感を、数で見る。次の<strong>二重差分</strong>を考える：</p>
+<p>$$D(h,k):=\frac{f(a+h,b+k)-f(a+h,b)-f(a,b+k)+f(a,b)}{hk}$$</p>
+<p>分子は 4 つの角の値の組み合わせで、$x$ と $y$ について<em>対称</em>（$h$ と $k$ を入れ替えても同じ式）。この分子を、(i) まず $x$ 方向の差を取ってから $y$ 方向の差を取る、(ii) 逆の順序、の 2 通りに分けて読むと、極限を取ったとき (i) は $f_{xy}$、(ii) は $f_{yx}$ になる。分子が同じなので、2 つの極限は<strong>極限の順序を入れ替えてよければ</strong>等しい。その「入れ替えてよい」条件が連続性である。</p>
+<p>分子の4つの項は、長方形の4つの角での $f$ の値である。図5.3 で、同じ4つの角を2通りの順に組み合わせる。</p>
+<figure class="fig" id="fig-5-3">
+<svg viewBox="0 0 440 508" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="二重差分の4つの角と2通りの読み方" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>二重差分の4つの角と2通りの読み方</title>
+<rect x="0" y="0" width="440" height="508" fill="#fffdf7"/>
+<text x="10.0" y="18.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(i) 横の差を先に、次に縦の差</text>
+<rect x="110" y="46" width="200" height="112" rx="2" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="126.0" y1="46.0" x2="294.0" y2="46.0" stroke="#a8322a" stroke-width="2.4"/><path d="M285.9 49.9 L294.0 46.0 L285.9 42.1" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="126.0" y1="158.0" x2="294.0" y2="158.0" stroke="#a8322a" stroke-width="2.4"/><path d="M285.9 161.9 L294.0 158.0 L285.9 154.1" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<text x="210.0" y="98.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">上の辺の差</text>
+<text x="210.0" y="118.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">− 下の辺の差</text>
+<circle cx="110.0" cy="158.0" r="13" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.5"/>
+<text x="110.0" y="164.0" font-size="17" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<text x="92.0" y="164.0" font-size="16" fill="#2a2723" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>)</tspan></text>
+<circle cx="310.0" cy="158.0" r="13" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="310.0" y="164.0" font-size="17" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<text x="328.0" y="164.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>+</tspan><tspan font-style="italic">h</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>)</tspan></text>
+<circle cx="110.0" cy="46.0" r="13" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="110.0" y="52.0" font-size="17" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<text x="92.0" y="52.0" font-size="16" fill="#2a2723" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>+</tspan><tspan font-style="italic">k</tspan><tspan>)</tspan></text>
+<circle cx="310.0" cy="46.0" r="13" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.5"/>
+<text x="310.0" y="52.0" font-size="17" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<text x="328.0" y="52.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>+</tspan><tspan font-style="italic">h</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>+</tspan><tspan font-style="italic">k</tspan><tspan>)</tspan></text>
+<text x="10.0" y="208.0" font-size="15" fill="#2b3a67" text-anchor="start" font-weight="bold">(ii) 縦の差を先に、次に横の差</text>
+<rect x="110" y="236" width="200" height="112" rx="2" fill="#fff" stroke="#ddd6c8" stroke-width="1.2"/>
+<line x1="110.0" y1="332.0" x2="110.0" y2="252.0" stroke="#2a5d8f" stroke-width="2.4"/><path d="M113.9 260.1 L110.0 252.0 L106.1 260.1" fill="none" stroke="#2a5d8f" stroke-width="2.4"/>
+<line x1="310.0" y1="332.0" x2="310.0" y2="252.0" stroke="#2a5d8f" stroke-width="2.4"/><path d="M313.9 260.1 L310.0 252.0 L306.1 260.1" fill="none" stroke="#2a5d8f" stroke-width="2.4"/>
+<text x="210.0" y="288.0" font-size="14" fill="#2a5d8f" text-anchor="middle" font-weight="bold">右の辺の差</text>
+<text x="210.0" y="308.0" font-size="14" fill="#2a5d8f" text-anchor="middle" font-weight="bold">− 左の辺の差</text>
+<circle cx="110.0" cy="348.0" r="13" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.5"/>
+<text x="110.0" y="354.0" font-size="17" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<text x="92.0" y="354.0" font-size="16" fill="#2a2723" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>)</tspan></text>
+<circle cx="310.0" cy="348.0" r="13" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="310.0" y="354.0" font-size="17" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<text x="328.0" y="354.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>+</tspan><tspan font-style="italic">h</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>)</tspan></text>
+<circle cx="110.0" cy="236.0" r="13" fill="#e8ecf4" stroke="#2b3a67" stroke-width="1.5"/>
+<text x="110.0" y="242.0" font-size="17" fill="#2b3a67" text-anchor="middle" font-weight="bold">−</text>
+<text x="92.0" y="242.0" font-size="16" fill="#2a2723" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>+</tspan><tspan font-style="italic">k</tspan><tspan>)</tspan></text>
+<circle cx="310.0" cy="236.0" r="13" fill="#f6e4e1" stroke="#a8322a" stroke-width="1.5"/>
+<text x="310.0" y="242.0" font-size="17" fill="#a8322a" text-anchor="middle" font-weight="bold">+</text>
+<text x="328.0" y="242.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>+</tspan><tspan font-style="italic">h</tspan><tspan>, </tspan><tspan font-style="italic">b</tspan><tspan>+</tspan><tspan font-style="italic">k</tspan><tspan>)</tspan></text>
+<line x1="10.0" y1="384.0" x2="430.0" y2="384.0" stroke="#ddd6c8" stroke-width="1"/>
+<text x="10.0" y="410.0" font-size="14" fill="#2a2723" text-anchor="start">f = x²y³、(a, b) = (1, 1)、h = k = 0.1 のとき 4 つの角の値：</text>
+<text x="24.0" y="436.0" font-size="14" fill="#6b645a" text-anchor="start">右上 f(1.1, 1.1)</text>
+<text x="206.0" y="436.0" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">+1.61051</text>
+<text x="234.0" y="436.0" font-size="14" fill="#6b645a" text-anchor="start">右下 f(1.1, 1)</text>
+<text x="416.0" y="436.0" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">−1.21</text>
+<text x="24.0" y="460.0" font-size="14" fill="#6b645a" text-anchor="start">左上 f(1, 1.1)</text>
+<text x="206.0" y="460.0" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">−1.331</text>
+<text x="234.0" y="460.0" font-size="14" fill="#6b645a" text-anchor="start">左下 f(1, 1)</text>
+<text x="416.0" y="460.0" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">+1</text>
+<text x="10.0" y="494.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">和 0.06951 を hk = 0.01 で割ると D = 6.951（→ 6）</text>
+</svg>
+<figcaption><strong>図 5.3</strong>　左下が点 $(a,b)$、右へ $h$、上へ $k$ 進んだ長方形。符号は対角の2つが $+$、残りの2つが $-$。(i) 横の差を先にとって上下で引くと $f_{xy}$ に、(ii) 縦の差を先にとって左右で引くと $f_{yx}$ に近づく。足し合わせる4つの数は (i) と (ii) で同じである。</figcaption>
+</figure>
+<p>数で確認する。$f=x^2y^3$、点 $(1,1)$。$f_{xy}=6xy^2$ なので $f_{xy}(1,1)=6$。$h=k=0.1$ のとき、$D=\dfrac{1.1^2\cdot1.1^3-1.1^2\cdot1-1\cdot1.1^3+1}{0.01}=6.951$。$h=k=0.01$ のとき、$D\approx6.0905$。$h,k\to0$ で $6$ に近づく。</p>
+
+<h3 id="sec-5-4"><span class="no">5.4</span>反例：連続でないと交換できない</h3>
+<p>$f(x,y):=\dfrac{xy(x^2-y^2)}{x^2+y^2}\ \bigl((x,y)\ne(0,0)\bigr)$、$f(0,0):=0$。原点での 2 つの混合偏微分を、定義から求める。</p>
+<ol>
+<li>$f_x(0,y)$：$\dfrac{f(h,y)-f(0,y)}{h}=\dfrac{1}{h}\cdot\dfrac{hy(h^2-y^2)}{h^2+y^2}=\dfrac{y(h^2-y^2)}{h^2+y^2}$（$f(0,y)=0$ を使った）。$h\to0$ で $\dfrac{y(-y^2)}{y^2}=-y$（$y\ne0$）。よって $f_x(0,y)=-y$。</li>
+<li>$f_{xy}(0,0)$ ($f_x$ を $y$ で微分)：$-y$ の $y$ での微分は $-1$。</li>
+<li>$f_y(x,0)$：$\dfrac{f(x,k)-f(x,0)}{k}=\dfrac{x(x^2-k^2)}{x^2+k^2}\to x$ ($k\to0$)。よって $f_y(x,0)=x$。</li>
+<li>$f_{yx}(0,0)$ ($f_y$ を $x$ で微分)：$x$ の微分は $+1$。</li>
+</ol>
+<p>$f_{xy}(0,0)=-1$、$f_{yx}(0,0)=+1$。<strong>違う値</strong>。このとき $f_{xy}$ と $f_{yx}$ は、原点で連続ではない（5.3 の条件が破れている）。</p>
+<p>手順 1. と 3. で求めた2本の1変数関数を、定義の差分商で計算して描くと図5.4 になる。</p>
+<figure class="fig" id="fig-5-4">
+<svg viewBox="0 0 440 466" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="反例で x 偏微分と y 偏微分を軸の上に並べる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>反例で x 偏微分と y 偏微分を軸の上に並べる</title>
+<rect x="0" y="0" width="440" height="466" fill="#fffdf7"/>
+<text x="10.0" y="24.0" font-size="15" fill="#a8322a" text-anchor="start" font-weight="bold">(a) y 軸の上で、x で偏微分した値を並べる</text>
+<line x1="70.0" y1="126.0" x2="380.0" y2="126.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 129.0 L380.0 126.0 L373.7 123.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="220.0" y1="206.0" x2="220.0" y2="36.0" stroke="#2a2723" stroke-width="1.3"/><path d="M223.0 42.3 L220.0 36.0 L217.0 42.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="95.0" y1="122.0" x2="95.0" y2="130.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="95.0" y="146.0" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="345.0" y1="122.0" x2="345.0" y2="130.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="345.0" y="146.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="216.0" y1="192.7" x2="224.0" y2="192.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="197.7" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="216.0" y1="59.3" x2="224.0" y2="59.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="64.3" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<text x="384.0" y="148.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<text x="234.0" y="42.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'></text>
+<polyline points="76.2,49.3 78.6,50.6 81.0,51.9 83.4,53.2 85.8,54.4 88.2,55.7 90.6,57.0 93.0,58.3 95.4,59.6 97.8,60.8 100.2,62.1 102.6,63.4 105.0,64.7 107.4,65.9 109.8,67.2 112.2,68.5 114.6,69.8 117.0,71.1 119.4,72.3 121.8,73.6 124.2,74.9 126.6,76.2 129.0,77.4 131.4,78.7 133.8,80.0 136.1,81.3 138.5,82.6 140.9,83.8 143.3,85.1 145.7,86.4 148.1,87.7 150.5,88.9 152.9,90.2 155.3,91.5 157.7,92.8 160.1,94.1 162.5,95.3 164.9,96.6 167.3,97.9 169.7,99.2 172.1,100.4 174.5,101.7 176.9,103.0 179.3,104.3 181.7,105.6 184.1,106.8 186.5,108.1 188.9,109.4 191.2,110.7 193.6,111.9 196.0,113.2 198.4,114.5 200.8,115.8 203.2,117.1 205.6,118.3 208.0,119.6 210.4,120.9 212.8,122.2 215.2,123.4 217.6,124.7 220.0,126.0 222.4,127.3 224.8,128.6 227.2,129.8 229.6,131.1 232.0,132.4 234.4,133.7 236.8,134.9 239.2,136.2 241.6,137.5 244.0,138.8 246.4,140.1 248.8,141.3 251.1,142.6 253.5,143.9 255.9,145.2 258.3,146.4 260.7,147.7 263.1,149.0 265.5,150.3 267.9,151.6 270.3,152.8 272.7,154.1 275.1,155.4 277.5,156.7 279.9,157.9 282.3,159.2 284.7,160.5 287.1,161.8 289.5,163.1 291.9,164.3 294.3,165.6 296.7,166.9 299.1,168.2 301.5,169.4 303.9,170.7 306.2,172.0 308.6,173.3 311.0,174.6 313.4,175.8 315.8,177.1 318.2,178.4 320.6,179.7 323.0,180.9 325.4,182.2 327.8,183.5 330.2,184.8 332.6,186.1 335.0,187.3 337.4,188.6 339.8,189.9 342.2,191.2 344.6,192.4 347.0,193.7 349.4,195.0 351.8,196.3 354.2,197.6 356.6,198.8 359.0,200.1 361.4,201.4 363.7,202.7" fill="none" stroke="#a8322a" stroke-width="3" stroke-linejoin="round"/>
+<text x="192.5" y="167.3" font-size="17" fill="#a8322a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="4.8" font-size="11.9" font-style="italic">x</tspan><tspan dy="-4.8">(0, </tspan><tspan font-style="italic">y</tspan><tspan>) = −</tspan><tspan font-style="italic">y</tspan></text>
+<text x="192.5" y="191.3" font-size="16" fill="#a8322a" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>傾き −1 = </tspan><tspan font-style="italic">f</tspan><tspan dy="4.5" font-size="11.2" font-style="italic">x</tspan><tspan font-size="11.2" font-style="italic">y</tspan><tspan dy="-4.5">(0, 0)</tspan></text>
+<text x="10.0" y="254.0" font-size="15" fill="#2a5d8f" text-anchor="start" font-weight="bold">(b) x 軸の上で、y で偏微分した値を並べる</text>
+<line x1="70.0" y1="356.0" x2="380.0" y2="356.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 359.0 L380.0 356.0 L373.7 353.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="220.0" y1="436.0" x2="220.0" y2="266.0" stroke="#2a2723" stroke-width="1.3"/><path d="M223.0 272.3 L220.0 266.0 L217.0 272.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="95.0" y1="352.0" x2="95.0" y2="360.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="95.0" y="376.0" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="345.0" y1="352.0" x2="345.0" y2="360.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="345.0" y="376.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="216.0" y1="422.7" x2="224.0" y2="422.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="427.7" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="216.0" y1="289.3" x2="224.0" y2="289.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="294.3" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<text x="384.0" y="378.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="234.0" y="272.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'></text>
+<polyline points="76.2,432.7 78.6,431.4 81.0,430.1 83.4,428.8 85.8,427.6 88.2,426.3 90.6,425.0 93.0,423.7 95.4,422.4 97.8,421.2 100.2,419.9 102.6,418.6 105.0,417.3 107.4,416.1 109.8,414.8 112.2,413.5 114.6,412.2 117.0,410.9 119.4,409.7 121.8,408.4 124.2,407.1 126.6,405.8 129.0,404.6 131.4,403.3 133.8,402.0 136.1,400.7 138.5,399.4 140.9,398.2 143.3,396.9 145.7,395.6 148.1,394.3 150.5,393.1 152.9,391.8 155.3,390.5 157.7,389.2 160.1,387.9 162.5,386.7 164.9,385.4 167.3,384.1 169.7,382.8 172.1,381.6 174.5,380.3 176.9,379.0 179.3,377.7 181.7,376.4 184.1,375.2 186.5,373.9 188.9,372.6 191.2,371.3 193.6,370.1 196.0,368.8 198.4,367.5 200.8,366.2 203.2,364.9 205.6,363.7 208.0,362.4 210.4,361.1 212.8,359.8 215.2,358.6 217.6,357.3 220.0,356.0 222.4,354.7 224.8,353.4 227.2,352.2 229.6,350.9 232.0,349.6 234.4,348.3 236.8,347.1 239.2,345.8 241.6,344.5 244.0,343.2 246.4,341.9 248.8,340.7 251.1,339.4 253.5,338.1 255.9,336.8 258.3,335.6 260.7,334.3 263.1,333.0 265.5,331.7 267.9,330.4 270.3,329.2 272.7,327.9 275.1,326.6 277.5,325.3 279.9,324.1 282.3,322.8 284.7,321.5 287.1,320.2 289.5,318.9 291.9,317.7 294.3,316.4 296.7,315.1 299.1,313.8 301.5,312.6 303.9,311.3 306.2,310.0 308.6,308.7 311.0,307.4 313.4,306.2 315.8,304.9 318.2,303.6 320.6,302.3 323.0,301.1 325.4,299.8 327.8,298.5 330.2,297.2 332.6,295.9 335.0,294.7 337.4,293.4 339.8,292.1 342.2,290.8 344.6,289.6 347.0,288.3 349.4,287.0 351.8,285.7 354.2,284.4 356.6,283.2 359.0,281.9 361.4,280.6 363.7,279.3" fill="none" stroke="#2a5d8f" stroke-width="3" stroke-linejoin="round"/>
+<text x="238.8" y="397.3" font-size="17" fill="#2a5d8f" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="4.8" font-size="11.9" font-style="italic">y</tspan><tspan dy="-4.8">(</tspan><tspan font-style="italic">x</tspan><tspan>, 0) = </tspan><tspan font-style="italic">x</tspan></text>
+<text x="238.8" y="421.3" font-size="16" fill="#2a5d8f" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>傾き +1 = </tspan><tspan font-style="italic">f</tspan><tspan dy="4.5" font-size="11.2" font-style="italic">y</tspan><tspan font-size="11.2" font-style="italic">x</tspan><tspan dy="-4.5">(0, 0)</tspan></text>
+</svg>
+<figcaption><strong>図 5.4</strong>　(a) $y$ 軸の上で $f_x$ を並べると直線 $-y$、その傾き $-1$ が $f_{xy}(0,0)$。(b) $x$ 軸の上で $f_y$ を並べると直線 $x$、その傾き $+1$ が $f_{yx}(0,0)$。2本の直線の傾きが逆向きなので、順序を入れ替えると符号が変わる。</figcaption>
+</figure>
+<p>この例は、日常の計算ではまず出会わない。出会うのは、定義域の境界や特異点の近く。実際の計算（物理・工学で扱う関数）では、混合偏微分は交換してよい、と考えて問題ない。ただし<strong>「なぜ交換してよいか」を知っておく</strong>のは、このような点で困らないため。</p>
+
+<h3 id="sec-5-5"><span class="no">5.5</span>応用の入口：波動方程式の確認</h3>
+<p>弦の変位 $u(x,t)$ が $\dfrac{\partial^2u}{\partial t^2}=c^2\dfrac{\partial^2u}{\partial x^2}$ （波動方程式。$c$ は波の速さ）を満たすかを確かめる。$u:=\sin(x-ct)$ とする。</p>
+<ol>
+<li>$u_t$：$x$ を固定。内側 $x-ct$ を $t$ で微分すると $-c$。$u_t=-c\cos(x-ct)$。</li>
+<li>$u_{tt}=-c\cdot(-\sin(x-ct))\cdot(-c)=-c^2\sin(x-ct)$。</li>
+<li>$u_x=\cos(x-ct)$、$u_{xx}=-\sin(x-ct)$。</li>
+<li>$c^2u_{xx}=-c^2\sin(x-ct)=u_{tt}$ ✓。</li>
+</ol>
+<p>$u=\sin(x-ct)$ は、形を変えずに右へ動く波である。図5.5 で $c=1$ の2つの時刻の形を重ねる。</p>
+<figure class="fig" id="fig-5-5">
+<svg viewBox="0 0 440 314" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="波 sin(x−ct) が右へ進む" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>波 sin(x−ct) が右へ進む</title>
+<rect x="0" y="0" width="440" height="314" fill="#fffdf7"/>
+<line x1="50.0" y1="131.3" x2="410.0" y2="131.3" stroke="#2a2723" stroke-width="1.3"/><path d="M403.7 134.4 L410.0 131.3 L403.7 128.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="50.0" y1="220.0" x2="50.0" y2="20.0" stroke="#2a2723" stroke-width="1.3"/><path d="M53.0 26.3 L50.0 20.0 L47.0 26.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="96.1" y1="127.3" x2="96.1" y2="135.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="96.1" y="151.3" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="142.1" y1="127.3" x2="142.1" y2="135.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="142.1" y="151.3" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="188.2" y1="127.3" x2="188.2" y2="135.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="188.2" y="151.3" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="234.2" y1="127.3" x2="234.2" y2="135.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="234.2" y="151.3" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="280.3" y1="127.3" x2="280.3" y2="135.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="280.3" y="151.3" font-size="14" fill="#6b645a" text-anchor="middle">5</text>
+<line x1="326.3" y1="127.3" x2="326.3" y2="135.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="326.3" y="151.3" font-size="14" fill="#6b645a" text-anchor="middle">6</text>
+<line x1="372.4" y1="127.3" x2="372.4" y2="135.3" stroke="#2a2723" stroke-width="1.2"/>
+<text x="372.4" y="151.3" font-size="14" fill="#6b645a" text-anchor="middle">7</text>
+<line x1="46.0" y1="194.7" x2="54.0" y2="194.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="199.7" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="46.0" y1="68.0" x2="54.0" y2="68.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="42.0" y="73.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<text x="414.0" y="153.3" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="64.0" y="26.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">u</tspan></text>
+<polyline points="50.0,131.3 51.4,129.4 52.9,127.4 54.3,125.4 55.8,123.4 57.2,121.5 58.6,119.5 60.1,117.6 61.5,115.7 63.0,113.8 64.4,111.9 65.8,110.0 67.3,108.1 68.7,106.3 70.1,104.5 71.6,102.7 73.0,101.0 74.5,99.2 75.9,97.6 77.3,95.9 78.8,94.3 80.2,92.7 81.7,91.1 83.1,89.6 84.5,88.2 86.0,86.7 87.4,85.4 88.9,84.0 90.3,82.7 91.7,81.5 93.2,80.3 94.6,79.1 96.1,78.0 97.5,77.0 98.9,76.0 100.4,75.1 101.8,74.2 103.2,73.4 104.7,72.6 106.1,71.9 107.6,71.2 109.0,70.6 110.4,70.1 111.9,69.6 113.3,69.2 114.8,68.9 116.2,68.6 117.6,68.3 119.1,68.2 120.5,68.0 122.0,68.0 123.4,68.0 124.8,68.1 126.3,68.2 127.7,68.4 129.2,68.7 130.6,69.0 132.0,69.4 133.5,69.8 134.9,70.3 136.3,70.9 137.8,71.5 139.2,72.2 140.7,72.9 142.1,73.7 143.5,74.6 145.0,75.5 146.4,76.5 147.9,77.5 149.3,78.5 150.7,79.7 152.2,80.8 153.6,82.1 155.1,83.3 156.5,84.6 157.9,86.0 159.4,87.4 160.8,88.8 162.3,90.3 163.7,91.9 165.1,93.4 166.6,95.0 168.0,96.7 169.4,98.3 170.9,100.1 172.3,101.8 173.8,103.6 175.2,105.3 176.6,107.2 178.1,109.0 179.5,110.9 181.0,112.7 182.4,114.6 183.8,116.6 185.3,118.5 186.7,120.4 188.2,122.4 189.6,124.4 191.0,126.3 192.5,128.3 193.9,130.3 195.4,132.3 196.8,134.2 198.2,136.2 199.7,138.2 201.1,140.1 202.5,142.1 204.0,144.0 205.4,146.0 206.9,147.9 208.3,149.8 209.7,151.7 211.2,153.5 212.6,155.4 214.1,157.2 215.5,159.0 216.9,160.8 218.4,162.5 219.8,164.2 221.3,165.9 222.7,167.5 224.1,169.1 225.6,170.7 227.0,172.2 228.5,173.7 229.9,175.2 231.3,176.6 232.8,177.9 234.2,179.3 235.6,180.5 237.1,181.8 238.5,182.9 240.0,184.1 241.4,185.1 242.8,186.1 244.3,187.1 245.7,188.0 247.2,188.9 248.6,189.7 250.0,190.4 251.5,191.1 252.9,191.7 254.4,192.3 255.8,192.8 257.2,193.2 258.7,193.6 260.1,194.0 261.6,194.2 263.0,194.4 264.4,194.6 265.9,194.6 267.3,194.7 268.8,194.6 270.2,194.5 271.6,194.3 273.1,194.1 274.5,193.8 275.9,193.5 277.4,193.1 278.8,192.6 280.3,192.1 281.7,191.5 283.1,190.8 284.6,190.1 286.0,189.4 287.5,188.5 288.9,187.7 290.3,186.7 291.8,185.7 293.2,184.7 294.7,183.6 296.1,182.5 297.5,181.3 299.0,180.0 300.4,178.7 301.9,177.4 303.3,176.0 304.7,174.6 306.2,173.1 307.6,171.6 309.0,170.1 310.5,168.5 311.9,166.9 313.4,165.2 314.8,163.5 316.2,161.8 317.7,160.1 319.1,158.3 320.6,156.5 322.0,154.6 323.4,152.8 324.9,150.9 326.3,149.0 327.8,147.1 329.2,145.2 330.6,143.3 332.1,141.3 333.5,139.4 335.0,137.4 336.4,135.4 337.8,133.4 339.3,131.5 340.7,129.5 342.1,127.5 343.6,125.5 345.0,123.6 346.5,121.6 347.9,119.6 349.3,117.7 350.8,115.8 352.2,113.9 353.7,112.0 355.1,110.1 356.5,108.3 358.0,106.4 359.4,104.6 360.9,102.8 362.3,101.1 363.7,99.4 365.2,97.7 366.6,96.0 368.1,94.4 369.5,92.8 370.9,91.2 372.4,89.7 373.8,88.3 375.2,86.8 376.7,85.4 378.1,84.1 379.6,82.8 381.0,81.6 382.4,80.4 383.9,79.2 385.3,78.1 386.8,77.1 388.2,76.1 389.6,75.1 391.1,74.2 392.5,73.4 394.0,72.6 395.4,71.9" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<polyline points="50.0,184.6 51.4,183.5 52.9,182.4 54.3,181.2 55.8,179.9 57.2,178.7 58.6,177.3 60.1,175.9 61.5,174.5 63.0,173.0 64.4,171.5 65.8,170.0 67.3,168.4 68.7,166.8 70.1,165.1 71.6,163.4 73.0,161.7 74.5,159.9 75.9,158.2 77.3,156.4 78.8,154.5 80.2,152.7 81.7,150.8 83.1,148.9 84.5,147.0 86.0,145.1 87.4,143.1 88.9,141.2 90.3,139.2 91.7,137.3 93.2,135.3 94.6,133.3 96.1,131.3 97.5,129.4 98.9,127.4 100.4,125.4 101.8,123.4 103.2,121.5 104.7,119.5 106.1,117.6 107.6,115.7 109.0,113.8 110.4,111.9 111.9,110.0 113.3,108.1 114.8,106.3 116.2,104.5 117.6,102.7 119.1,101.0 120.5,99.2 122.0,97.6 123.4,95.9 124.8,94.3 126.3,92.7 127.7,91.1 129.2,89.6 130.6,88.2 132.0,86.7 133.5,85.4 134.9,84.0 136.3,82.7 137.8,81.5 139.2,80.3 140.7,79.1 142.1,78.0 143.5,77.0 145.0,76.0 146.4,75.1 147.9,74.2 149.3,73.4 150.7,72.6 152.2,71.9 153.6,71.2 155.1,70.6 156.5,70.1 157.9,69.6 159.4,69.2 160.8,68.9 162.3,68.6 163.7,68.3 165.1,68.2 166.6,68.0 168.0,68.0 169.4,68.0 170.9,68.1 172.3,68.2 173.8,68.4 175.2,68.7 176.6,69.0 178.1,69.4 179.5,69.8 181.0,70.3 182.4,70.9 183.8,71.5 185.3,72.2 186.7,72.9 188.2,73.7 189.6,74.6 191.0,75.5 192.5,76.5 193.9,77.5 195.4,78.5 196.8,79.7 198.2,80.8 199.7,82.1 201.1,83.3 202.5,84.6 204.0,86.0 205.4,87.4 206.9,88.8 208.3,90.3 209.7,91.9 211.2,93.4 212.6,95.0 214.1,96.7 215.5,98.3 216.9,100.1 218.4,101.8 219.8,103.6 221.3,105.3 222.7,107.2 224.1,109.0 225.6,110.9 227.0,112.7 228.5,114.6 229.9,116.6 231.3,118.5 232.8,120.4 234.2,122.4 235.6,124.4 237.1,126.3 238.5,128.3 240.0,130.3 241.4,132.3 242.8,134.2 244.3,136.2 245.7,138.2 247.2,140.1 248.6,142.1 250.0,144.0 251.5,146.0 252.9,147.9 254.4,149.8 255.8,151.7 257.2,153.5 258.7,155.4 260.1,157.2 261.6,159.0 263.0,160.8 264.4,162.5 265.9,164.2 267.3,165.9 268.8,167.5 270.2,169.1 271.6,170.7 273.1,172.2 274.5,173.7 275.9,175.2 277.4,176.6 278.8,177.9 280.3,179.3 281.7,180.5 283.1,181.8 284.6,182.9 286.0,184.1 287.5,185.1 288.9,186.1 290.3,187.1 291.8,188.0 293.2,188.9 294.7,189.7 296.1,190.4 297.5,191.1 299.0,191.7 300.4,192.3 301.9,192.8 303.3,193.2 304.7,193.6 306.2,194.0 307.6,194.2 309.0,194.4 310.5,194.6 311.9,194.6 313.4,194.7 314.8,194.6 316.2,194.5 317.7,194.3 319.1,194.1 320.6,193.8 322.0,193.5 323.4,193.1 324.9,192.6 326.3,192.1 327.8,191.5 329.2,190.8 330.6,190.1 332.1,189.4 333.5,188.5 335.0,187.7 336.4,186.7 337.8,185.7 339.3,184.7 340.7,183.6 342.1,182.5 343.6,181.3 345.0,180.0 346.5,178.7 347.9,177.4 349.3,176.0 350.8,174.6 352.2,173.1 353.7,171.6 355.1,170.1 356.5,168.5 358.0,166.9 359.4,165.2 360.9,163.5 362.3,161.8 363.7,160.1 365.2,158.3 366.6,156.5 368.1,154.6 369.5,152.8 370.9,150.9 372.4,149.0 373.8,147.1 375.2,145.2 376.7,143.3 378.1,141.3 379.6,139.4 381.0,137.4 382.4,135.4 383.9,133.4 385.3,131.5 386.8,129.5 388.2,127.5 389.6,125.5 391.1,123.6 392.5,121.6 394.0,119.6 395.4,117.7" fill="none" stroke="#a8322a" stroke-width="2.6" stroke-dasharray="8 5" stroke-linejoin="round"/>
+<circle cx="122.3" cy="68.0" r="5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<circle cx="168.4" cy="68.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<line x1="126.3" y1="47.7" x2="166.4" y2="47.7" stroke="#a8322a" stroke-width="2"/><path d="M159.2 51.2 L166.4 47.7 L159.2 44.3" fill="none" stroke="#a8322a" stroke-width="2"/>
+<text x="145.4" y="39.7" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">ct = 1</text>
+<text x="10.0" y="256.0" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">実線：t = 0 の形 u = sin x</text>
+<text x="10.0" y="278.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">破線：t = 1 の形 u = sin(x − 1)（c = 1）</text>
+<text x="10.0" y="300.0" font-size="14" fill="#2a2723" text-anchor="start">形を保ったまま、時間 t のあいだに右へ ct だけずれる</text>
+</svg>
+<figcaption><strong>図 5.5</strong>　$t$ を止めて $x$ の関数として描くと、波の<em>形</em>（$u_{xx}$ はその曲がり具合）。$x$ を止めて $t$ を進めると、その場所での上下の<em>動き</em>（$u_{tt}$ はその加速度）。波動方程式は、この2つが $c^2$ 倍の関係にあることを言っている。</figcaption>
+</figure>
+<p>偏微分の表記 $u_{tt}=c^2u_{xx}$ が 1 行で書けるのは、S5（<a href="#abbr-partial">3.2</a>）の便利さである。</p>
+
+<div class="why"><span class="label">ひとことで</span>高階偏微分は、偏微分をもう一度かける。$\frac{\partial^2f}{\partial x\partial y}$ は右から、$f_{xy}$ は左から読む。二階偏微分が連続なら $f_{xy}=f_{yx}$。連続でないと入れ替わる例（5.4）がある。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>次回への入口：一次近似と停留点</h2>
+
+<h3 id="sec-6-1"><span class="no">6.1</span>2 方向を同時に動かす（予告）</h3>
+<p>偏微分は、1 つの変数だけを動かした変化。では 2 つ同時に動かしたら。1 次近似（<a href="08_第8回_微分を使う・近似と極値.html#sym-linear-approx">第8回</a>）を 2 変数に広げると</p>
+<p>$$f(a+h,\,b+k)\approx f(a,b)+f_x(a,b)\,h+f_y(a,b)\,k$$</p>
+<p>数で確かめる。$f=x^2+3xy$、$(a,b)=(1,2)$、$f=7$、$f_x=8$、$f_y=3$。$(h,k)=(0.1,-0.05)$ のとき、右辺 $=7+0.8-0.15=7.65$。実際の値 $f(1.1,1.95)=1.21+6.435=7.645$。差は $0.005$ で小さい。$(h,k)=(-0.1,0.1)$ では、右辺 $=7-0.8+0.3=6.5$、実際 $f(0.9,2.1)=0.81+5.67=6.48$、差 $0.02$。この式は第12回の<a href="12_第12回_全微分と連鎖律.html#sym-total-differential">全微分</a>として定式化する。</p>
+<p>右辺の2つの項は、図6.1 のように「横に $h$ 進む分」と「縦に $k$ 進む分」の寄与である。</p>
+<figure class="fig" id="fig-6-1">
+<svg viewBox="0 0 440 326" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="1次近似を横と縦の2歩に分ける" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>1次近似を横と縦の2歩に分ける</title>
+<rect x="0" y="0" width="440" height="326" fill="#fffdf7"/>
+<line x1="145.0" y1="250.0" x2="145.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="220.0" y1="250.0" x2="220.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="295.0" y1="250.0" x2="295.0" y2="20.0" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="70.0" y1="200.7" x2="370.0" y2="200.7" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="70.0" y1="118.6" x2="370.0" y2="118.6" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="70.0" y1="36.4" x2="370.0" y2="36.4" stroke="#ddd6c8" stroke-width="1"/>
+<line x1="70.0" y1="250.0" x2="380.0" y2="250.0" stroke="#2a2723" stroke-width="1.3"/><path d="M373.7 253.0 L380.0 250.0 L373.7 247.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="70.0" y1="250.0" x2="70.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M73.0 16.3 L70.0 10.0 L67.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="145.0" y1="246.0" x2="145.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="145.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="295.0" y1="246.0" x2="295.0" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="295.0" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">1.1</text>
+<line x1="66.0" y1="200.7" x2="74.0" y2="200.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="205.7" font-size="14" fill="#6b645a" text-anchor="end">1.95</text>
+<line x1="66.0" y1="118.6" x2="74.0" y2="118.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="62.0" y="123.6" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="384.0" y="272.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="84.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<line x1="145.0" y1="118.6" x2="289.0" y2="118.6" stroke="#a8322a" stroke-width="2.6"/><path d="M280.0 122.9 L289.0 118.6 L280.0 114.2" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="295.0" y1="118.6" x2="295.0" y2="194.7" stroke="#2a5d8f" stroke-width="2.6"/><path d="M290.7 185.7 L295.0 194.7 L299.3 185.7" fill="none" stroke="#2a5d8f" stroke-width="2.6"/>
+<circle cx="145.0" cy="118.6" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<circle cx="295.0" cy="118.6" r="4" fill="#6b645a" stroke="#6b645a" stroke-width="1.5"/>
+<circle cx="295.0" cy="200.7" r="5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<text x="135.0" y="106.6" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">(1, 2)　f = 7</text>
+<text x="260.0" y="106.6" font-size="16" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="4.5" font-size="11.2" font-style="italic">x</tspan><tspan dy="-4.5"> </tspan><tspan font-style="italic">h</tspan><tspan> = 8 × 0.1 = +0.8</tspan></text>
+<text x="285.0" y="164.6" font-size="16" fill="#2a5d8f" text-anchor="end" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan><tspan dy="4.5" font-size="11.2" font-style="italic">y</tspan><tspan dy="-4.5"> </tspan><tspan font-style="italic">k</tspan><tspan> = 3 × (−0.05) = −0.15</tspan></text>
+<text x="285.0" y="224.7" font-size="14" fill="#2a2723" text-anchor="end" font-weight="bold">(1.1, 1.95)</text>
+<text x="10.0" y="290.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">1次近似：7 + 0.8 − 0.15 = 7.65</text>
+<text x="10.0" y="312.0" font-size="14" fill="#2a2723" text-anchor="start">実際の値：f(1.1, 1.95) = 7.645（差 0.005）</text>
+</svg>
+<figcaption><strong>図 6.1</strong>　$f=x^2+3xy$、$(a,b)=(1,2)$、$(h,k)=(0.1,-0.05)$。横に進む1歩の寄与は $f_x\,h$、縦に進む1歩の寄与は $f_y\,k$（$k$ が負なので下向き）。2つを足すと 7.65 で、実際の値 7.645 に近い。</figcaption>
+</figure>
+
+<h3 id="sec-6-2"><span class="no">6.2</span>停留点：$f_x=f_y=0$</h3>
+<p>1 変数で極値のとき $f'=0$ だった（第8回）。2 変数では、両方の偏微分が同時に $0$ になる点が候補になる。例：$f=x^2+y^2-2x-4y$。$f_x=2x-2=0$ から $x=1$、$f_y=2y-4=0$ から $y=2$。点 $(1,2)$、$f=-5$。（これが最小かどうかの判定は、第21回の二次形式で行う。）</p>
+<p>$f=x^2+y^2-2x-4y$ の等高線を描くと、図6.2 のように点 $(1,2)$ を中心とする円になる。</p>
+<figure class="fig" id="fig-6-2">
+<svg viewBox="0 0 440 388" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="x²+y²−2x−4y の等高線と停留点" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>x²+y²−2x−4y の等高線と停留点</title>
+<rect x="0" y="0" width="440" height="388" fill="#fffdf7"/>
+<line x1="56.0" y1="306.4" x2="406.0" y2="306.4" stroke="#2a2723" stroke-width="1.3"/><path d="M399.7 309.4 L406.0 306.4 L399.7 303.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="155.2" y1="320.0" x2="155.2" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M158.2 16.3 L155.2 10.0 L152.1 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="226.0" y1="302.4" x2="226.0" y2="310.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="226.0" y="326.4" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="296.8" y1="302.4" x2="296.8" y2="310.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="296.8" y="326.4" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="367.7" y1="302.4" x2="367.7" y2="310.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="367.7" y="326.4" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="151.2" y1="238.2" x2="159.2" y2="238.2" stroke="#2a2723" stroke-width="1.2"/>
+<text x="147.2" y="243.2" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="151.2" y1="170.0" x2="159.2" y2="170.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="147.2" y="175.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="151.2" y1="101.8" x2="159.2" y2="101.8" stroke="#2a2723" stroke-width="1.2"/>
+<text x="147.2" y="106.8" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<line x1="151.2" y1="33.6" x2="159.2" y2="33.6" stroke="#2a2723" stroke-width="1.2"/>
+<text x="147.2" y="38.6" font-size="14" fill="#6b645a" text-anchor="end">4</text>
+<text x="410.0" y="328.4" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="169.2" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<polyline points="296.8,170.0 296.7,166.4 296.4,162.9 296.0,159.3 295.3,155.8 294.4,152.4 293.4,148.9 292.1,145.6 290.7,142.3 289.1,139.0 287.3,135.9 285.4,132.9 283.3,129.9 281.0,127.1 278.6,124.4 276.1,121.8 273.4,119.3 270.6,117.0 267.6,114.8 264.6,112.8 261.4,111.0 258.2,109.2 254.8,107.7 251.4,106.3 247.9,105.2 244.3,104.1 240.7,103.3 237.1,102.7 233.4,102.2 229.7,101.9 226.0,101.8 222.3,101.9 218.6,102.2 214.9,102.7 211.3,103.3 207.7,104.1 204.1,105.2 200.6,106.3 197.2,107.7 193.8,109.2 190.6,111.0 187.4,112.8 184.4,114.8 181.4,117.0 178.6,119.3 175.9,121.8 173.4,124.4 171.0,127.1 168.7,129.9 166.6,132.9 164.7,135.9 162.9,139.0 161.3,142.3 159.9,145.6 158.6,148.9 157.6,152.4 156.7,155.8 156.0,159.3 155.6,162.9 155.3,166.4 155.2,170.0 155.3,173.6 155.6,177.1 156.0,180.7 156.7,184.2 157.6,187.6 158.6,191.1 159.9,194.4 161.3,197.7 162.9,201.0 164.7,204.1 166.6,207.1 168.7,210.1 171.0,212.9 173.4,215.6 175.9,218.2 178.6,220.7 181.4,223.0 184.4,225.2 187.4,227.2 190.6,229.0 193.8,230.8 197.2,232.3 200.6,233.7 204.1,234.8 207.7,235.9 211.3,236.7 214.9,237.3 218.6,237.8 222.3,238.1 226.0,238.2 229.7,238.1 233.4,237.8 237.1,237.3 240.7,236.7 244.3,235.9 247.9,234.8 251.4,233.7 254.8,232.3 258.2,230.8 261.4,229.0 264.6,227.2 267.6,225.2 270.6,223.0 273.4,220.7 276.1,218.2 278.6,215.6 281.0,212.9 283.3,210.1 285.4,207.1 287.3,204.1 289.1,201.0 290.7,197.7 292.1,194.4 293.4,191.1 294.4,187.6 295.3,184.2 296.0,180.7 296.4,177.1 296.7,173.6 296.8,170.0" fill="none" stroke="#9a9184" stroke-width="1.4" stroke-linejoin="round"/>
+<rect x="231.3" y="100.6" width="62.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="234.3" y="114.6" font-size="14" fill="#6b645a" text-anchor="start">f = −4</text>
+<polyline points="326.2,170.0 326.0,165.0 325.6,159.9 324.9,154.9 324.0,150.0 322.8,145.0 321.3,140.2 319.5,135.4 317.5,130.8 315.3,126.2 312.8,121.8 310.0,117.5 307.0,113.3 303.8,109.3 300.4,105.5 296.8,101.8 293.0,98.3 289.0,95.1 284.9,92.0 280.6,89.1 276.1,86.5 271.5,84.1 266.7,81.9 261.9,80.0 257.0,78.3 251.9,76.9 246.8,75.7 241.7,74.8 236.5,74.1 231.2,73.7 226.0,73.6 220.8,73.7 215.5,74.1 210.3,74.8 205.2,75.7 200.1,76.9 195.0,78.3 190.1,80.0 185.3,81.9 180.5,84.1 175.9,86.5 171.4,89.1 167.1,92.0 163.0,95.1 159.0,98.3 155.2,101.8 151.6,105.5 148.2,109.3 145.0,113.3 142.0,117.5 139.2,121.8 136.7,126.2 134.5,130.8 132.5,135.4 130.7,140.2 129.2,145.0 128.0,150.0 127.1,154.9 126.4,159.9 126.0,165.0 125.8,170.0 126.0,175.0 126.4,180.1 127.1,185.1 128.0,190.0 129.2,195.0 130.7,199.8 132.5,204.6 134.5,209.2 136.7,213.8 139.2,218.2 142.0,222.5 145.0,226.7 148.2,230.7 151.6,234.5 155.2,238.2 159.0,241.7 163.0,244.9 167.1,248.0 171.4,250.9 175.9,253.5 180.5,255.9 185.3,258.1 190.1,260.0 195.0,261.7 200.1,263.1 205.2,264.3 210.3,265.2 215.5,265.9 220.8,266.3 226.0,266.4 231.2,266.3 236.5,265.9 241.7,265.2 246.8,264.3 251.9,263.1 257.0,261.7 261.9,260.0 266.7,258.1 271.5,255.9 276.1,253.5 280.6,250.9 284.9,248.0 289.0,244.9 293.0,241.7 296.8,238.2 300.4,234.5 303.8,230.7 307.0,226.7 310.0,222.5 312.8,218.2 315.3,213.8 317.5,209.2 319.5,204.6 321.3,199.8 322.8,195.0 324.0,190.0 324.9,185.1 325.6,180.1 326.0,175.0 326.2,170.0" fill="none" stroke="#9a9184" stroke-width="1.4" stroke-linejoin="round"/>
+<rect x="231.3" y="72.4" width="62.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="234.3" y="86.4" font-size="14" fill="#6b645a" text-anchor="start">f = −3</text>
+<polyline points="367.7,170.0 367.5,162.9 366.9,155.7 365.9,148.7 364.6,141.6 362.8,134.7 360.7,127.9 358.3,121.1 355.4,114.5 352.2,108.1 348.7,101.8 344.8,95.7 340.6,89.8 336.1,84.2 331.3,78.8 326.2,73.6 320.8,68.7 315.2,64.0 309.3,59.7 303.2,55.6 296.8,51.9 290.3,48.5 283.6,45.4 276.8,42.7 269.8,40.3 262.7,38.3 255.5,36.6 248.2,35.3 240.8,34.4 233.4,33.8 226.0,33.6 218.6,33.8 211.2,34.4 203.8,35.3 196.5,36.6 189.3,38.3 182.2,40.3 175.2,42.7 168.4,45.4 161.7,48.5 155.2,51.9 148.8,55.6 142.7,59.7 136.8,64.0 131.2,68.7 125.8,73.6 120.7,78.8 115.9,84.2 111.4,89.8 107.2,95.7 103.3,101.8 99.8,108.1 96.6,114.5 93.7,121.1 91.3,127.9 89.2,134.7 87.4,141.6 86.1,148.7 85.1,155.7 84.5,162.9 84.3,170.0 84.5,177.1 85.1,184.3 86.1,191.3 87.4,198.4 89.2,205.3 91.3,212.1 93.7,218.9 96.6,225.5 99.8,231.9 103.3,238.2 107.2,244.3 111.4,250.2 115.9,255.8 120.7,261.2 125.8,266.4 131.2,271.3 136.8,276.0 142.7,280.3 148.8,284.4 155.2,288.1 161.7,291.5 168.4,294.6 175.2,297.3 182.2,299.7 189.3,301.7 196.5,303.4 203.8,304.7 211.2,305.6 218.6,306.2 226.0,306.4 233.4,306.2 240.8,305.6 248.2,304.7 255.5,303.4 262.7,301.7 269.8,299.7 276.8,297.3 283.6,294.6 290.3,291.5 296.8,288.1 303.2,284.4 309.3,280.3 315.2,276.0 320.8,271.3 326.2,266.4 331.3,261.2 336.1,255.8 340.6,250.2 344.8,244.3 348.7,238.2 352.2,231.9 355.4,225.5 358.3,218.9 360.7,212.1 362.8,205.3 364.6,198.4 365.9,191.3 366.9,184.3 367.5,177.1 367.7,170.0" fill="none" stroke="#9a9184" stroke-width="1.4" stroke-linejoin="round"/>
+<rect x="231.3" y="32.5" width="62.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="234.3" y="46.5" font-size="14" fill="#6b645a" text-anchor="start">f = −1</text>
+<line x1="70.2" y1="170.0" x2="381.8" y2="170.0" stroke="#a8322a" stroke-width="1.8" stroke-dasharray="7 4"/>
+<line x1="226.0" y1="313.2" x2="226.0" y2="26.8" stroke="#2a5d8f" stroke-width="1.8" stroke-dasharray="7 4"/>
+<circle cx="226.0" cy="170.0" r="6" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="233.0" y="146.0" width="126.4" height="20" fill="#fffdf7" opacity="0.92"/><text x="236.0" y="160.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">(1, 2)：f = −5</text>
+<text x="10.0" y="352.0" font-size="14" fill="#2a2723" text-anchor="start">赤い横線（y = 2）でも青い縦線（x = 1）でも、</text>
+<text x="10.0" y="376.0" font-size="16" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>切り口の曲線は (1, 2) で底になる → </tspan><tspan font-style="italic">f</tspan><tspan dy="4.5" font-size="11.2" font-style="italic">x</tspan><tspan dy="-4.5"> = </tspan><tspan font-style="italic">f</tspan><tspan dy="4.5" font-size="11.2" font-style="italic">y</tspan><tspan dy="-4.5"> = 0</tspan></text>
+</svg>
+<figcaption><strong>図 6.2</strong>　$f=(x-1)^2+(y-2)^2-5$ と書き直せるので、等高線は $(1,2)$ を中心とする円で、外ほど $f$ が大きい。$(1,2)$ を通る横の切り口も縦の切り口も、そこで傾き $0$ の谷底になる。これが $f_x=f_y=0$ の意味である。</figcaption>
+</figure>
+<div class="why"><span class="label">ひとことで</span>1 次近似は $f(a+h,b+k)\approx f+f_xh+f_yk$。偏微分がすべて $0$ の点が極値の候補。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_11.py）。</p>
+
+<div class="ex"><span class="label">例題 1（A 確認：偏微分と差分商）</span>
+<p>$f(x,y)=x^3y-2xy^2+y$ について、(1) $f_x$、$f_y$ を求め、(2) 点 $(2,1)$ での値を求め、(3) $f_x(2,1)$ を差分商 $h=0.001$ で確かめよ。</p>
+<p><strong>解答</strong></p>
+<p>① $f_x$：$y$ を定数とみなす。$x^3y\to3x^2y$、$-2xy^2\to-2y^2$、$y\to0$。$f_x=3x^2y-2y^2$。</p>
+<p>② $f_y$：$x$ を定数とみなす。$x^3y\to x^3$、$-2xy^2\to-4xy$、$y\to1$。$f_y=x^3-4xy+1$。</p>
+<p>③ $(2,1)$：$f_x=3\cdot4\cdot1-2=10$、$f_y=8-8+1=1$。</p>
+<p>④ 差分商：$f(2,1)=8-4+1=5$。$f(2.001,1)=2.001^3-2\cdot2.001+1=8.012006\ldots-4.002+1=5.010006\ldots$。$\dfrac{5.010006-5}{0.001}\approx10.006$。$10$ に近い ✓。</p>
+</div>
+
+<div class="ex"><span class="label">例題 2（B 標準：何を固定するか）</span>
+<p>$f(x,y)=xy$ を、$s:=x+y$ を使って $(x,s)$ の関数 $g(x,s)$ でも書く。点 $(x,y)=(3,1)$ で、$\left(\dfrac{\partial f}{\partial x}\right)_y$ と $\left(\dfrac{\partial g}{\partial x}\right)_s$ を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① $y$ 固定：$\dfrac{\partial f}{\partial x}=y$。$(3,1)$ で $1$。</p>
+<p>② $y=s-x$ なので $g(x,s)=x(s-x)=xs-x^2$。</p>
+<p>③ $s$ 固定：$\dfrac{\partial g}{\partial x}=s-2x$。点 $(3,1)$ は $s=4$ に対応。$4-6=-2$。</p>
+<p>④ 結果：$1$ と $-2$。固定するものが違うと値が違う（4.1）。数での確かめ：$x$ を $0.01$ 動かす。$y$ 固定：$f(3.01,1)=3.01$、割合 $\frac{3.01-3}{0.01}=1$ ✓。$s$ 固定：$(3.01,0.99)$、$f=2.9799$、割合 $\frac{2.9799-3}{0.01}=-2.01$ ✓。</p>
+</div>
+
+<div class="ex"><span class="label">例題 3（B 標準：混合偏微分）</span>
+<p>$f(x,y)=xe^y+\sin(xy)$ の $f_{xy}$ と $f_{yx}$ を求め、一致することを確かめ、$(1,0)$ での値を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① $f_x=e^y+y\cos(xy)$。</p>
+<p>② $f_{xy}$（$f_x$ を $y$ で）：$e^y\to e^y$。$y\cos(xy)$ は積の微分：$\cos(xy)+y\cdot(-\sin(xy))\cdot x$。$f_{xy}=e^y+\cos(xy)-xy\sin(xy)$。</p>
+<p>③ $f_y=xe^y+x\cos(xy)$。</p>
+<p>④ $f_{yx}$（$f_y$ を $x$ で）：$xe^y\to e^y$。$x\cos(xy)\to\cos(xy)+x\cdot(-\sin(xy))\cdot y$。$f_{yx}=e^y+\cos(xy)-xy\sin(xy)$ ✓ 一致。</p>
+<p>⑤ $(1,0)$：$e^0+\cos0-0=1+1=2$。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-8"><span class="no">8</span>演習問題</h2>
+
+<div class="box"><span class="label">問1（A 確認）</span>$f(x,y)=3x^2-xy+y^3$ の $f_x$、$f_y$ と、$(1,2)$ での値を求めよ。
+<details><summary>解答</summary>
+<p>$f_x=6x-y$、$f_y=-x+3y^2$。$(1,2)$ で $f_x=6-2=4$、$f_y=-1+12=11$。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認：省略を戻す）</span>$f_x(a,b)$ を S0（極限の式）に書き直せ。また、$\partial_y f$ と $f_y$ は何が違うか。
+<details><summary>解答</summary>
+<p>S0：$f_x(a,b)=\displaystyle\lim_{h\to0}\dfrac{f(a+h,b)-f(a,b)}{h}$（<a href="#abbr-partial">3.2</a>）。</p>
+<p>$\partial_yf$ と $f_y$ は同じ意味（どちらも $\frac{\partial f}{\partial y}$）。書き方の違いだけ（<a href="#sym-partial-short">3.1</a>）。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認：3 変数）</span>$f(x,y,z)=xyz+z^2$ の $f_x,f_y,f_z$ を求めよ。
+<details><summary>解答</summary>
+<p>$f_x=yz$、$f_y=xz$、$f_z=xy+2z$。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認：断面の傾き）</span>曲面 $z=4-x^2-y^2$ の点 $(1,1)$ で、$\frac{\partial z}{\partial x}$ を求め、$x$ の正の向きに進むと $z$ は増えるか減るかを答えよ。
+<details><summary>解答</summary>
+<p>$\frac{\partial z}{\partial x}=-2x$。$(1,1)$ で $-2$。負なので、$y=1$ に固定して $x$ を増やすと $z$ は減る（2.3 の断面の傾きが負）。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（A 確認：2 階）</span>$f=x^3y^2$ の $f_{xx},f_{xy},f_{yx},f_{yy}$ を求めよ。
+<details><summary>解答</summary>
+<p>$f_x=3x^2y^2$、$f_y=2x^3y$。$f_{xx}=6xy^2$、$f_{xy}=6x^2y$、$f_{yx}=6x^2y$、$f_{yy}=2x^3$。$f_{xy}=f_{yx}$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準：熱力学）</span>$p=\dfrac{nRT}{V}$ について、$\left(\dfrac{\partial p}{\partial V}\right)_T$ と $\left(\dfrac{\partial p}{\partial T}\right)_V$ を求め、$nR=8$、$T=300$、$V=0.04$ での値を求めよ。
+<details><summary>解答</summary>
+<p>$\left(\frac{\partial p}{\partial V}\right)_T=-\frac{nRT}{V^2}=-\frac{2400}{0.0016}=-1.5\times10^6$。$\left(\frac{\partial p}{\partial T}\right)_V=\frac{nR}{V}=\frac{8}{0.04}=200$ (Pa/K)。</p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準：固定の違い）</span>$f(x,y)=x^2+xy$ を $w:=y-x$ を使って $g(x,w)$ で表す。点 $(1,2)$ で $\left(\frac{\partial f}{\partial x}\right)_y$ と $\left(\frac{\partial g}{\partial x}\right)_w$ を比べよ。
+<details><summary>解答</summary>
+<p>$y$ 固定：$f_x=2x+y=4$。$y=x+w$ より $g=x^2+x(x+w)=2x^2+xw$、$w$ 固定：$g_x=4x+w$。$(1,2)$ は $w=1$ に対応し、$4+1=5$。値は $4$ と $5$ で異なる。</p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準：連続性）</span>2.4 の $f=\frac{xy}{x^2+y^2}$ ($f(0,0)=0$) について、$f_x(0,0)=0$ を定義から示し、$f$ が原点で連続でない理由を述べよ。
+<details><summary>解答</summary>
+<p>$\frac{f(h,0)-f(0,0)}{h}=\frac{0-0}{h}=0$。よって $f_x(0,0)=0$。直線 $y=x$ に沿って $f(x,x)=\frac12$ だが $f(0,0)=0$ なので、原点に近づく方向によって値が違い、連続でない。</p>
+</details></div>
+
+<div class="box"><span class="label">問9（B 標準：波動方程式）</span>$u=(x-ct)^3$ が $u_{tt}=c^2u_{xx}$ を満たすことを確かめよ。
+<details><summary>解答</summary>
+<p>$u_t=-3c(x-ct)^2$、$u_{tt}=6c^2(x-ct)$。$u_x=3(x-ct)^2$、$u_{xx}=6(x-ct)$。$c^2u_{xx}=6c^2(x-ct)=u_{tt}$ ✓。</p>
+</details></div>
+
+<div class="box"><span class="label">問10（B 標準：一次近似）</span>$f=x^2+3xy$ で、$f(0.9,2.1)$ を $(1,2)$ での一次近似で見積もり、実際の値と比べよ。
+<details><summary>解答</summary>
+<p>$7+8(-0.1)+3(0.1)=6.5$。実際は $0.81+5.67=6.48$。差 $0.02$（6.1）。</p>
+</details></div>
+
+<div class="box"><span class="label">問11（B 標準：停留点）</span>$f=x^2+xy+y^2-3x$ の $f_x=f_y=0$ となる点を求めよ。
+<details><summary>解答</summary>
+<p>$f_x=2x+y-3=0$、$f_y=x+2y=0$。第 2 式から $x=-2y$。第 1 式に入れて $-4y+y-3=0$、$y=-1$、$x=2$。点 $(2,-1)$、$f=4-2+1-6=-3$。</p>
+</details></div>
+
+<div class="box"><span class="label">問12（C 発展：OpenStax Calculus Vol.3）</span>§4.3 演習 112：$z=x^2-3xy+y^2$ の $\partial z/\partial x$ と $\partial z/\partial y$ を、極限の定義だけで求めよ。
+<details><summary>解答（自作の解答）</summary>
+<p>$\frac{(x+h)^2-3(x+h)y+y^2-(x^2-3xy+y^2)}{h}=\frac{2xh+h^2-3hy}{h}=2x+h-3y\to2x-3y$。$y$ も同じ手順で $-3x+2y$。</p>
+<p class="meta">出典：OpenStax, <em>Calculus Volume 3</em>, §4.3 Exercises 112（CC BY-NC-SA 4.0）。解答は自作で、公式解答集とは未照合。</p>
+</details></div>
+
+<div class="box"><span class="label">問13（C 発展：OpenStax Calculus Vol.3）</span>§4.3 演習 133：円柱の体積 $V=\pi r^2h$ を $(r,h)$ の関数と見て、(a) $r$ での変化率が「円周×高さ」、(b) $h$ での変化率が「底面積」であることを示せ。
+<details><summary>解答（自作の解答）</summary>
+<p>$\frac{\partial V}{\partial r}=2\pi rh$ （円周 $2\pi r$ 掛ける高さ $h$）。$\frac{\partial V}{\partial h}=\pi r^2$ （底面積）。</p>
+<p class="meta">出典：OpenStax, <em>Calculus Volume 3</em>, §4.3 Exercises 133（CC BY-NC-SA 4.0）。解答は自作で、公式解答集とは未照合。</p>
+</details></div>
+
+<div class="box"><span class="label">問14（C 発展：OpenStax Calculus Vol.3）</span>§4.3 演習 138 と 140：(1) $z=e^x\tan y$ の $\frac{\partial^2z}{\partial x\partial y}$ と $\frac{\partial^2z}{\partial y\partial x}$ を求めよ。(2) $f=e^{-2x}\sin(z^2y)$ で $f_{xyy}=f_{yxy}$ を示せ。
+<details><summary>解答（自作の解答）</summary>
+<p>(1) $z_x=e^x\tan y$、$z_{xy}=e^x\sec^2y$ ($=e^x/\cos^2y$)。$z_y=e^x\sec^2y$、$z_{yx}=e^x\sec^2y$。一致。</p>
+<p>(2) $f_x=-2e^{-2x}\sin(z^2y)$、$f_{xy}=-2e^{-2x}z^2\cos(z^2y)$、$f_{xyy}=2e^{-2x}z^4\sin(z^2y)$。$f_y=e^{-2x}z^2\cos(z^2y)$、$f_{yx}=-2e^{-2x}z^2\cos(z^2y)$、$f_{yxy}=2e^{-2x}z^4\sin(z^2y)$。一致 ✓。</p>
+<p class="meta">出典：OpenStax, <em>Calculus Volume 3</em>, §4.3 Exercises 138, 140（CC BY-NC-SA 4.0）。解答は自作で、公式解答集とは未照合。</p>
+</details></div>
+
+<div class="box"><span class="label">問15（C 発展：OpenStax Calculus Vol.3）</span>§4.3 演習 146 と 150：(1) $f=2x^2+2xy+y^2+2x-3$ で $f_x=f_y=0$ となる点を求めよ。(2) $f=\ln(x^2+y^2)$ が $f_{xx}+f_{yy}=0$ を満たすことを示せ（$(x,y)\ne(0,0)$）。
+<details><summary>解答（自作の解答）</summary>
+<p>(1) $f_x=4x+2y+2=0$、$f_y=2x+2y=0$。第 2 式から $y=-x$。第 1 式に入れて $2x+2=0$、$x=-1$、$y=1$。点 $(-1,1)$。</p>
+<p>(2) $f_x=\frac{2x}{x^2+y^2}$、$f_{xx}=\frac{2(x^2+y^2)-4x^2}{(x^2+y^2)^2}=\frac{2y^2-2x^2}{(x^2+y^2)^2}$。$f_{yy}$ は $x,y$ を入れ替えて $\frac{2x^2-2y^2}{(x^2+y^2)^2}$。和は $0$ ✓。</p>
+<p class="meta">出典：OpenStax, <em>Calculus Volume 3</em>, §4.3 Exercises 146, 150（CC BY-NC-SA 4.0）。解答は自作で、公式解答集とは未照合。</p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 偏微分を「他の変数を固定した 1 変数の微分」として定義の極限で書ける。</li>
+<li>□ 他の文字を定数とみなして、偏微分を計算できる。</li>
+<li>□ 偏微分を、曲面の断面の傾きとして説明できる。</li>
+<li>□ $\frac{\partial f}{\partial x}$、$\partial_xf$、$f_x$、$D_1f$ が同じ意味であると分かり、$F_x$（成分）との違いを説明できる。</li>
+<li>□ 偏微分の省略の段階（S0〜S5）を言え、どの段階でも「何を固定したか」が書かれないと説明できる。</li>
+<li>□ 変数の組を変えると、同じ記号でも値が変わる例（4.1）を説明できる。</li>
+<li>□ $\left(\frac{\partial f}{\partial x}\right)_y$ を読み、熱力学の偏微分を約分してはいけない理由を数で説明できる。</li>
+<li>□ 第3回の引数の省略と、固定の関係を説明できる。$\frac{d}{dt}$ と $\frac{\partial}{\partial t}$ が違う例を言える。</li>
+<li>□ 高階偏微分を計算でき、$\frac{\partial^2f}{\partial x\partial y}$ と $f_{xy}$ の読む順序の違いを言える。</li>
+<li>□ 順序交換が成り立つ条件と、成り立たない例を言える。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第12回）</strong>：全微分と連鎖律。この回の 4.3 で予告した、$\frac{d}{dt}$ と $\frac{\partial}{\partial t}$ の違いと、$x,y$ が同時に動くときの変化を扱う。6.1 の一次近似が全微分になる。<br>
+<a href="12_第12回_全微分と連鎖律.html">第12回へ</a>　｜　<a href="index.html">← 目次へ</a>　｜　<a href="symbols.html">記号索引</a>
+</div>
+
+<p class="meta">出典：偏微分・高階偏微分・クレローの定理の整理は、OpenStax <em>Calculus Volume 3</em>（CC BY-NC-SA 4.0）第4章 4.3 節を参照して、本教材向けに書き直したもの。熱力学の流儀は一般的な書き方を整理した。問12〜15 は上記 OpenStax からの出題（出典を各問に記載）。例題・演習・表・図は自作。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

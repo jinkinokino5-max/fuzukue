@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>記号索引</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 目次：教材ページと同じ書籍風デザイン。各回は「教材｜読み物」を対で載せる */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.85; margin:0 auto; padding:56px 28px 60px; max-width:860px; font-size:15px; letter-spacing:.02em; }
+  a{ color:inherit; }
+  .mast{ border-bottom:1px solid var(--ink); padding-bottom:18px; margin-bottom:18px; }
+  .mast .en{ font-family:var(--num); font-weight:300; font-size:20px; letter-spacing:.3em; color:var(--shu); margin:0; }
+  .mast h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(30px,5vw,44px); letter-spacing:.1em; margin:2px 0 6px; line-height:1.3; }
+  .mast .lead{ color:var(--sub); margin:0; font-size:14.5px; }
+  .spine{ font-size:14px; color:var(--sub); border-left:3px solid var(--line); padding:4px 0 4px 14px; margin:20px 0 8px; }
+  .spine strong{ color:var(--ink); }
+  h2{ font-family:var(--mincho); font-weight:700; font-size:17px; letter-spacing:.08em; margin:48px 0 4px; display:flex; align-items:baseline; gap:12px; }
+  h2 small{ font-family:inherit; font-weight:500; font-size:13px; color:var(--sub); letter-spacing:.04em; }
+
+  /* 1回分の行：番号｜題｜教材・読み物 */
+  .row{ display:grid; grid-template-columns:72px 1fr auto; gap:6px 18px; align-items:center; padding:16px 0; border-bottom:1px solid var(--line); }
+  .row .no{ font-family:var(--num); font-weight:300; font-size:46px; line-height:1; color:var(--shu); text-align:center;
+            font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  .row .tt{ font-family:var(--mincho); font-weight:700; font-size:18px; letter-spacing:.05em; margin:0; line-height:1.5; }
+  .row .tt a{ text-decoration:none; } .row .tt a:hover{ color:var(--accent); }
+  .row .dt{ font-size:12px; color:var(--sub); letter-spacing:.1em; margin:0; }
+  .row .ds{ font-size:13px; color:var(--sub); margin:2px 0 0; }
+  .row .go{ display:flex; flex-direction:column; gap:6px; min-width:200px; }
+  .go a,.go span{ display:block; font-size:12.5px; padding:6px 12px; text-decoration:none; border:1px solid var(--ink); line-height:1.4; }
+  .go a small,.go span small{ display:block; font-size:10px; letter-spacing:.2em; color:var(--sub); }
+  .go a.les{ background:var(--ink); color:var(--paper); } .go a.les small{ color:#c9c2b4; }
+  .go a.col{ border-color:var(--shu); color:var(--shu); font-family:var(--mincho); }
+  .go a:hover{ opacity:.85; }
+  .go span{ border-style:dashed; border-color:var(--line); color:#a59d90; }
+  .row.todo .no{ color:#cfc6b6; } .row.todo .tt{ color:#a59d90; }
+  .row.test .no{ font-size:15px; letter-spacing:.1em; font-family:var(--mincho); font-weight:700; color:#a06a32; }
+  .other{ margin-top:48px; font-size:14px; }
+  .meta{ font-size:12.5px; color:var(--sub); margin-top:36px; border-top:1px solid var(--line); padding-top:12px; }
+  @media (max-width:640px){
+    body{ padding:36px 16px 40px; }
+    .row{ grid-template-columns:52px 1fr; }
+    .row .no{ font-size:36px; }
+    .row .go{ grid-column:1 / -1; flex-direction:row; min-width:0; }
+    .go a,.go span{ flex:1; }
+  }
+  table.sy{ border-collapse:collapse; width:100%; margin:18px 0; font-size:14.5px; }
+  table.sy th,table.sy td{ border-bottom:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  table.sy th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); }
+</style>
+<script>MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+<header class="mast"><p class="en">INDEX OF SYMBOLS</p><h1>記号索引</h1>
+<p class="lead">教材で「記号」として定義した記号の一覧。<strong>初めて説明した場所</strong>へ戻れる。記号を足した回を作り直すたびに自動で更新される（506件）。</p></header>
+<table class="sy"><tr><th>記号</th><th>初出</th><th></th></tr>
+<tr><td>式（しき）と関係式（かんけいしき）</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-expression">説明へ →</a></td></tr>
+<tr><td>$=$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-equal">説明へ →</a></td></tr>
+<tr><td>$:=$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-defeq">説明へ →</a></td></tr>
+<tr><td>$\equiv$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-identical">説明へ →</a></td></tr>
+<tr><td>$\approx$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-approx">説明へ →</a></td></tr>
+<tr><td>$\propto$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-propto">説明へ →</a></td></tr>
+<tr><td>$\neq$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-neq">説明へ →</a></td></tr>
+<tr><td>$\lt\ \gt\ \le\ \ge$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-order">説明へ →</a></td></tr>
+<tr><td>ギリシャ文字</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-greek">説明へ →</a></td></tr>
+<tr><td>添字（そえじ）$x_1$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-subscript">説明へ →</a></td></tr>
+<tr><td>肩の数字（冪）$x^2$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-superscript">説明へ →</a></td></tr>
+<tr><td>括弧つきの肩の数字 $x^{(2)}$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-bracket-sup">説明へ →</a></td></tr>
+<tr><td>プライム $x'$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-prime">説明へ →</a></td></tr>
+<tr><td>三点リーダー $\cdots$、$\ldots$</td><td>第1回「数式を文として読む」</td><td><a href="01_第1回_数式を文として読む.html#sym-dots">説明へ →</a></td></tr>
+<tr><td>$\in$、$\notin$</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-in">説明へ →</a></td></tr>
+<tr><td>$\{\,x\mid\cdots\,\}$（内包的表記）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-setbuilder">説明へ →</a></td></tr>
+<tr><td>$\mathbb N,\ \mathbb Z,\ \mathbb Q,\ \mathbb R,\ \mathbb C$</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-numsets">説明へ →</a></td></tr>
+<tr><td>$\emptyset$</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-emptyset">説明へ →</a></td></tr>
+<tr><td>$\subseteq$、$\subset$、$\subsetneq$</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-subset">説明へ →</a></td></tr>
+<tr><td>$\cup$（和集合）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-union">説明へ →</a></td></tr>
+<tr><td>$\cap$（共通部分）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-intersection">説明へ →</a></td></tr>
+<tr><td>$\setminus$（差集合）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-setminus">説明へ →</a></td></tr>
+<tr><td>区間 $[a,b]$、$(a,b)$、$[a,b)$、$(a,b]$</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-interval">説明へ →</a></td></tr>
+<tr><td>$A\times B$（直積）、$\mathbb R^n$</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-cartesian">説明へ →</a></td></tr>
+<tr><td>$\land$（かつ）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-and">説明へ →</a></td></tr>
+<tr><td>$\lor$（または）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-or">説明へ →</a></td></tr>
+<tr><td>$\lnot$（でない）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-not">説明へ →</a></td></tr>
+<tr><td>$\Rightarrow$（ならば）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-implies">説明へ →</a></td></tr>
+<tr><td>$\Leftrightarrow$（同値）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-iff">説明へ →</a></td></tr>
+<tr><td>$\forall$（すべての・任意の）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-forall">説明へ →</a></td></tr>
+<tr><td>$\exists$（存在する）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-exists">説明へ →</a></td></tr>
+<tr><td>$\exists!$（ただ1つ存在する）</td><td>第2回「集合と論理」</td><td><a href="02_第2回_集合と論理.html#sym-existsunique">説明へ →</a></td></tr>
+<tr><td>関数（写像）$f\colon A\to B$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-function">説明へ →</a></td></tr>
+<tr><td>$f$ と $f(x)$ の区別</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-fx">説明へ →</a></td></tr>
+<tr><td>$x\mapsto$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-mapsto">説明へ →</a></td></tr>
+<tr><td>定義域・終域・値域・像</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-domain">説明へ →</a></td></tr>
+<tr><td>単射・全射・全単射</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-bijection">説明へ →</a></td></tr>
+<tr><td>合成 $f\circ g$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-compose">説明へ →</a></td></tr>
+<tr><td>逆関数 $f^{-1}$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-inverse">説明へ →</a></td></tr>
+<tr><td>逆像 $f^{-1}(S)$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-preimage">説明へ →</a></td></tr>
+<tr><td>指数関数 $a^x$、$\exp x$、$e$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-exp">説明へ →</a></td></tr>
+<tr><td>対数 $\log_a x$、$\ln x$、$\log x$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-log">説明へ →</a></td></tr>
+<tr><td>絶対値 $|x|$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-abs">説明へ →</a></td></tr>
+<tr><td>符号関数 $\operatorname{sgn}x$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-sgn">説明へ →</a></td></tr>
+<tr><td>$\sin^2x$、$\sin x^2$、$\sin^{-1}x$（三角関数と肩の数字）</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-trig-power">説明へ →</a></td></tr>
+<tr><td>多変数関数 $f(x,y)$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-multivar">説明へ →</a></td></tr>
+<tr><td>陰関数 $F(x,y)=0$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-implicit">説明へ →</a></td></tr>
+<tr><td>媒介変数表示 $x=x(t),\ y=y(t)$</td><td>第3回「関数と写像」</td><td><a href="03_第3回_関数と写像.html#sym-parametric">説明へ →</a></td></tr>
+<tr><td>数列 $\{a_i\}$、一般項 $a_i$</td><td>第4回「総和・総乗と添字」</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sequence">説明へ →</a></td></tr>
+<tr><td>総和 $\displaystyle\sum_{i=m}^{n}a_i$</td><td>第4回「総和・総乗と添字」</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sum">説明へ →</a></td></tr>
+<tr><td>ダミー添字（仮の添字）</td><td>第4回「総和・総乗と添字」</td><td><a href="04_第4回_総和・総乗と添字.html#sym-dummy-index">説明へ →</a></td></tr>
+<tr><td>二重和 $\displaystyle\sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}$</td><td>第4回「総和・総乗と添字」</td><td><a href="04_第4回_総和・総乗と添字.html#sym-doublesum">説明へ →</a></td></tr>
+<tr><td>総乗 $\displaystyle\prod_{i=m}^{n}a_i$</td><td>第4回「総和・総乗と添字」</td><td><a href="04_第4回_総和・総乗と添字.html#sym-prod">説明へ →</a></td></tr>
+<tr><td>クロネッカーのデルタ $\delta_{ij}$</td><td>第4回「総和・総乗と添字」</td><td><a href="04_第4回_総和・総乗と添字.html#sym-kronecker">説明へ →</a></td></tr>
+<tr><td>階乗 $n!$</td><td>第4回「総和・総乗と添字」</td><td><a href="04_第4回_総和・総乗と添字.html#sym-factorial">説明へ →</a></td></tr>
+<tr><td>二項係数 $\displaystyle\binom{n}{k}$</td><td>第4回「総和・総乗と添字」</td><td><a href="04_第4回_総和・総乗と添字.html#sym-binom">説明へ →</a></td></tr>
+<tr><td>ベクトルの目印（太字 $\boldsymbol a$・矢印 $\vec a$・下線 $\underline{a}$）</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-vector">説明へ →</a></td></tr>
+<tr><td>ケットとブラ $\lvert a\rangle$、$\langle a\rvert$</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-braket">説明へ →</a></td></tr>
+<tr><td>成分 $a_i$</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-component">説明へ →</a></td></tr>
+<tr><td>零ベクトル $\boldsymbol 0$</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-zero-vector">説明へ →</a></td></tr>
+<tr><td>$m\times n$ 行列、$\mathbb R^{m\times n}$</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix">説明へ →</a></td></tr>
+<tr><td>行列の成分 $A_{ij}$、$(a_{ij})$、$[A]_{ij}$</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-matrix-entry">説明へ →</a></td></tr>
+<tr><td>単位行列 $I$（$E$、$I_n$）</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-identity">説明へ →</a></td></tr>
+<tr><td>転置 $A^{\mathsf T}$（$A^t$、${}^tA$、$A'$、$A^{\top}$）</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">説明へ →</a></td></tr>
+<tr><td>ノルム $\|\boldsymbol a\|$（$\lvert\boldsymbol a\rvert$、$a$、$\|\boldsymbol a\|_2$）</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">説明へ →</a></td></tr>
+<tr><td>単位ベクトル $\boldsymbol e_x$、$\hat{\boldsymbol e}$、$\boldsymbol i,\boldsymbol j,\boldsymbol k$、$\boldsymbol e_i$</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-unit-vector">説明へ →</a></td></tr>
+<tr><td>内積 $\boldsymbol a\cdot\boldsymbol b$（$\langle\boldsymbol a,\boldsymbol b\rangle$、$(\boldsymbol a,\boldsymbol b)$、$\boldsymbol a^{\mathsf T}\boldsymbol b$）</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">説明へ →</a></td></tr>
+<tr><td>外積 $\boldsymbol a\times\boldsymbol b$（$\boldsymbol a\wedge\boldsymbol b$、ベクトル積）</td><td>第5回「ベクトルと行列の書き方」</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-cross">説明へ →</a></td></tr>
+<tr><td>$x\to a$（近づける矢印）</td><td>第6回「極限と連続」</td><td><a href="06_第6回_極限と連続.html#sym-arrow-to">説明へ →</a></td></tr>
+<tr><td>$\displaystyle\lim_{x\to a}f(x)=L$（極限）</td><td>第6回「極限と連続」</td><td><a href="06_第6回_極限と連続.html#sym-lim">説明へ →</a></td></tr>
+<tr><td>$a^{+}$、$a^{-}$（片側極限）</td><td>第6回「極限と連続」</td><td><a href="06_第6回_極限と連続.html#sym-one-sided">説明へ →</a></td></tr>
+<tr><td>$\infty$、$-\infty$（無限大）</td><td>第6回「極限と連続」</td><td><a href="06_第6回_極限と連続.html#sym-infty">説明へ →</a></td></tr>
+<tr><td>ε-δ（イプシロン・デルタ）による極限の定義</td><td>第6回「極限と連続」</td><td><a href="06_第6回_極限と連続.html#sym-epsilon-delta">説明へ →</a></td></tr>
+<tr><td>・用語：連続（$f$ は $a$ で連続である）</td><td>第6回「極限と連続」</td><td><a href="06_第6回_極限と連続.html#sym-continuous">説明へ →</a></td></tr>
+<tr><td>$f(x)=o\bigl(g(x)\bigr)$（$x\to a$）</td><td>第6回「極限と連続」</td><td><a href="06_第6回_極限と連続.html#sym-landau-o">説明へ →</a></td></tr>
+<tr><td>$f(x)=O\bigl(g(x)\bigr)$（$x\to a$）</td><td>第6回「極限と連続」</td><td><a href="06_第6回_極限と連続.html#sym-landau-O">説明へ →</a></td></tr>
+<tr><td>$\Delta x$、$\Delta f$（変化量）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-delta-x">説明へ →</a></td></tr>
+<tr><td>$\dfrac{\Delta f}{\Delta x}$（平均の変化の割合）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-average-rate">説明へ →</a></td></tr>
+<tr><td>$f'(a)$（微分係数）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-derivative-at">説明へ →</a></td></tr>
+<tr><td>・用語：微分可能</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-differentiable">説明へ →</a></td></tr>
+<tr><td>$\dfrac{df}{dx}$、$\dfrac{d}{dx}$（ライプニッツの記法）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-derivative-leibniz">説明へ →</a></td></tr>
+<tr><td>$\left.\dfrac{df}{dx}\right|_{x=a}$（点での値）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-eval-at">説明へ →</a></td></tr>
+<tr><td>$f'$、$f'(x)$（ラグランジュの記法）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-derivative-lagrange">説明へ →</a></td></tr>
+<tr><td>$\dot x$、$\ddot x$（ニュートンの記法）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-derivative-newton">説明へ →</a></td></tr>
+<tr><td>$D$、$D_x$、$D^2$（微分演算子）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-derivative-D">説明へ →</a></td></tr>
+<tr><td>・用語：微分の規則（線形性・積・商・合成）</td><td>第7回「微分」</td><td><a href="07_第7回_微分.html#sym-diff-rules">説明へ →</a></td></tr>
+<tr><td>$L(x)$（1次近似・線形近似）</td><td>第8回「微分を使う・近似と極値」</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-linear-approx">説明へ →</a></td></tr>
+<tr><td>$dx$ と $df$（微分）</td><td>第8回「微分を使う・近似と極値」</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-differential">説明へ →</a></td></tr>
+<tr><td>$f''$、$f^{(n)}$、$\dfrac{d^2f}{dx^2}$</td><td>第8回「微分を使う・近似と極値」</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-second-derivative">説明へ →</a></td></tr>
+<tr><td>極大・極小・極値、最大・最小</td><td>第8回「微分を使う・近似と極値」</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-extremum">説明へ →</a></td></tr>
+<tr><td>臨界点（りんかいてん）</td><td>第8回「微分を使う・近似と極値」</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-critical-point">説明へ →</a></td></tr>
+<tr><td>平均値の定理</td><td>第8回「微分を使う・近似と極値」</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-mvt">説明へ →</a></td></tr>
+<tr><td>不定形（ふていけい）$\dfrac00$、$\dfrac\infty\infty$</td><td>第8回「微分を使う・近似と極値」</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-indeterminate">説明へ →</a></td></tr>
+<tr><td>ロピタルの定理</td><td>第8回「微分を使う・近似と極値」</td><td><a href="08_第8回_微分を使う・近似と極値.html#sym-lhopital">説明へ →</a></td></tr>
+<tr><td>$T_N(x)$（$N$ 次のテイラー多項式）</td><td>第9回「テイラー展開」</td><td><a href="09_第9回_テイラー展開.html#sym-taylor-poly">説明へ →</a></td></tr>
+<tr><td>マクローリン展開</td><td>第9回「テイラー展開」</td><td><a href="09_第9回_テイラー展開.html#sym-maclaurin">説明へ →</a></td></tr>
+<tr><td>$\dbinom{\alpha}{n}$（一般化された二項係数）</td><td>第9回「テイラー展開」</td><td><a href="09_第9回_テイラー展開.html#sym-gen-binom">説明へ →</a></td></tr>
+<tr><td>$R_N(x)$（剰余項）</td><td>第9回「テイラー展開」</td><td><a href="09_第9回_テイラー展開.html#sym-remainder">説明へ →</a></td></tr>
+<tr><td>テイラーの定理（テイラー展開）</td><td>第9回「テイラー展開」</td><td><a href="09_第9回_テイラー展開.html#sym-taylor">説明へ →</a></td></tr>
+<tr><td>$f(x)=T_N(x)+O\bigl((x-a)^{N+1}\bigr)$</td><td>第9回「テイラー展開」</td><td><a href="09_第9回_テイラー展開.html#sym-big-O-taylor">説明へ →</a></td></tr>
+<tr><td>$\displaystyle\sum_{n=0}^{\infty}a_n$（無限和）</td><td>第9回「テイラー展開」</td><td><a href="09_第9回_テイラー展開.html#sym-infinite-sum">説明へ →</a></td></tr>
+<tr><td>分割 $a=x_0\lt x_1\lt\cdots\lt x_n=b$ と小区間の幅 $\Delta x_i$</td><td>第10回「第10回 積分」</td><td><a href="10_第10回_積分.html#sym-partition">説明へ →</a></td></tr>
+<tr><td>リーマン和 $\displaystyle\sum_{i=1}^{n}f(c_i)\,\Delta x_i$</td><td>第10回「第10回 積分」</td><td><a href="10_第10回_積分.html#sym-riemann-sum">説明へ →</a></td></tr>
+<tr><td>定積分 $\displaystyle\int_a^b f(x)\,dx$</td><td>第10回「第10回 積分」</td><td><a href="10_第10回_積分.html#sym-integral-definite">説明へ →</a></td></tr>
+<tr><td>原始関数 $F$（$F'=f$）</td><td>第10回「第10回 積分」</td><td><a href="10_第10回_積分.html#sym-antiderivative">説明へ →</a></td></tr>
+<tr><td>$\big[F(x)\big]_a^b$、$F(x)\big|_a^b$</td><td>第10回「第10回 積分」</td><td><a href="10_第10回_積分.html#sym-eval-bar">説明へ →</a></td></tr>
+<tr><td>不定積分 $\displaystyle\int f(x)\,dx$</td><td>第10回「第10回 積分」</td><td><a href="10_第10回_積分.html#sym-integral-indefinite">説明へ →</a></td></tr>
+<tr><td>置換積分 $\displaystyle\int f(g(x))\,g'(x)\,dx=\int f(u)\,du\Big|_{u=g(x)}$</td><td>第10回「第10回 積分」</td><td><a href="10_第10回_積分.html#sym-substitution">説明へ →</a></td></tr>
+<tr><td>部分積分 $\displaystyle\int f'(x)\,g(x)\,dx=f(x)\,g(x)-\int f(x)\,g'(x)\,dx$</td><td>第10回「第10回 積分」</td><td><a href="10_第10回_積分.html#sym-by-parts">説明へ →</a></td></tr>
+<tr><td>偏微分 $\dfrac{\partial f}{\partial x}(a,b)$</td><td>第11回「第11回 偏微分」</td><td><a href="11_第11回_偏微分.html#sym-partial">説明へ →</a></td></tr>
+<tr><td>$\partial_xf$、$f_x$（偏微分の短い書き方）</td><td>第11回「第11回 偏微分」</td><td><a href="11_第11回_偏微分.html#sym-partial-short">説明へ →</a></td></tr>
+<tr><td>$\left(\dfrac{\partial f}{\partial x}\right)_y$（固定する変数を添える流儀）</td><td>第11回「第11回 偏微分」</td><td><a href="11_第11回_偏微分.html#sym-partial-fixed">説明へ →</a></td></tr>
+<tr><td>高階偏微分 $\dfrac{\partial^2f}{\partial x^2}$、$\dfrac{\partial^2f}{\partial x\,\partial y}$、$f_{xy}$</td><td>第11回「第11回 偏微分」</td><td><a href="11_第11回_偏微分.html#sym-mixed-partial">説明へ →</a></td></tr>
+<tr><td>全微分 $df=\dfrac{\partial f}{\partial x}dx+\dfrac{\partial f}{\partial y}dy$</td><td>第12回「第12回 全微分と連鎖律」</td><td><a href="12_第12回_全微分と連鎖律.html#sym-total-differential">説明へ →</a></td></tr>
+<tr><td>中間変数と独立変数</td><td>第12回「第12回 全微分と連鎖律」</td><td><a href="12_第12回_全微分と連鎖律.html#sym-intermediate">説明へ →</a></td></tr>
+<tr><td>多変数の連鎖律 $\dfrac{dz}{dt}=\dfrac{\partial z}{\partial x}\dfrac{dx}{dt}+\dfrac{\partial z}{\partial y}\dfrac{dy}{dt}$</td><td>第12回「第12回 全微分と連鎖律」</td><td><a href="12_第12回_全微分と連鎖律.html#sym-chain-rule">説明へ →</a></td></tr>
+<tr><td>$\dfrac{d}{dt}$ と $\dfrac{\partial}{\partial t}$ の区別</td><td>第12回「第12回 全微分と連鎖律」</td><td><a href="12_第12回_全微分と連鎖律.html#sym-total-vs-partial">説明へ →</a></td></tr>
+<tr><td>物質微分 $\dfrac{DT}{Dt}=\dfrac{\partial T}{\partial t}+u\dfrac{\partial T}{\partial x}$</td><td>第12回「第12回 全微分と連鎖律」</td><td><a href="12_第12回_全微分と連鎖律.html#sym-material-derivative">説明へ →</a></td></tr>
+<tr><td>陰関数の微分 $\dfrac{dy}{dx}=-\dfrac{F_x}{F_y}$</td><td>第12回「第12回 全微分と連鎖律」</td><td><a href="12_第12回_全微分と連鎖律.html#sym-implicit-derivative">説明へ →</a></td></tr>
+<tr><td>（予告）：勾配 $\nabla f$</td><td>第12回「第12回 全微分と連鎖律」</td><td><a href="12_第12回_全微分と連鎖律.html#sym-gradient-preview">説明へ →</a></td></tr>
+<tr><td>二重積分 $\displaystyle\iint_R f(x,y)\,dA$</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-double-integral">説明へ →</a></td></tr>
+<tr><td>面積要素 $dA$、体積要素 $dV$</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-dA-dV">説明へ →</a></td></tr>
+<tr><td>累次積分 $\displaystyle\int_c^d\!\!\int_a^b f(x,y)\,dx\,dy$</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-iterated">説明へ →</a></td></tr>
+<tr><td>領域 $D$、型 I・型 II</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-region">説明へ →</a></td></tr>
+<tr><td>三重積分 $\displaystyle\iiint_E f(x,y,z)\,dV$</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-triple-integral">説明へ →</a></td></tr>
+<tr><td>極座標 $(r,\theta)$</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-polar">説明へ →</a></td></tr>
+<tr><td>ヤコビアン $\dfrac{\partial(x,y)}{\partial(u,v)}$、$J$</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-jacobian">説明へ →</a></td></tr>
+<tr><td>円柱座標 $(r,\theta,z)$</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-cylindrical">説明へ →</a></td></tr>
+<tr><td>球座標 $(r,\theta,\varphi)$</td><td>第13回「第13回 重積分と変数変換」</td><td><a href="13_第13回_重積分と変数変換.html#sym-spherical">説明へ →</a></td></tr>
+<tr><td>数列 $\{a_n\}$、第 $n$ 項 $a_n$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-sequence-conv">説明へ →</a></td></tr>
+<tr><td>収束 $a_n\to\alpha\ (n\to\infty)$、$\displaystyle\lim_{n\to\infty}a_n=\alpha$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-converge">説明へ →</a></td></tr>
+<tr><td>部分和 $S_N=\displaystyle\sum_{n=0}^{N}a_n$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-partial-sum">説明へ →</a></td></tr>
+<tr><td>級数 $\displaystyle\sum_{n=0}^{\infty}a_n$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-series">説明へ →</a></td></tr>
+<tr><td>$p$ 級数 $\displaystyle\sum_{n=1}^{\infty}\frac1{n^p}$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-p-series">説明へ →</a></td></tr>
+<tr><td>絶対収束・条件収束</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-abs-converge">説明へ →</a></td></tr>
+<tr><td>上限 $\sup$、下限 $\inf$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-sup">説明へ →</a></td></tr>
+<tr><td>上極限 $\displaystyle\limsup_{n\to\infty}a_n$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-limsup">説明へ →</a></td></tr>
+<tr><td>べき級数 $\displaystyle\sum_{n=0}^{\infty}c_n(x-a)^n$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-power-series">説明へ →</a></td></tr>
+<tr><td>収束半径 $R$</td><td>第14回「第14回 級数と収束」</td><td><a href="14_第14回_級数と収束.html#sym-radius-conv">説明へ →</a></td></tr>
+<tr><td>スカラー $c$、$c_1$、$\alpha$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-scalar">説明へ →</a></td></tr>
+<tr><td>ベクトル空間 $V$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-vector-space">説明へ →</a></td></tr>
+<tr><td>$\operatorname{span}\{\boldsymbol v_1,\dots,\boldsymbol v_k\}$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-span">説明へ →</a></td></tr>
+<tr><td>部分空間 $W\subseteq V$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-subspace">説明へ →</a></td></tr>
+<tr><td>基底 $\mathcal B=\{\boldsymbol b_1,\dots,\boldsymbol b_n\}$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-basis">説明へ →</a></td></tr>
+<tr><td>標準基底 $\{\boldsymbol e_1,\dots,\boldsymbol e_n\}$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-standard-basis">説明へ →</a></td></tr>
+<tr><td>座標 $[\boldsymbol v]_{\mathcal B}$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-coordinates">説明へ →</a></td></tr>
+<tr><td>次元 $\dim V$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-dim">説明へ →</a></td></tr>
+<tr><td>基底ベクトルを並べた表 $P=(\boldsymbol b_1\ \boldsymbol b_2\ \cdots\ \boldsymbol b_n)$</td><td>第15回「第15回 ベクトル空間と基底」</td><td><a href="15_第15回_ベクトル空間と基底.html#sym-transition">説明へ →</a></td></tr>
+<tr><td>行列とベクトルの積 $A\boldsymbol x$</td><td>第16回「第16回 行列は線形写像」</td><td><a href="16_第16回_行列は線形写像.html#sym-matvec">説明へ →</a></td></tr>
+<tr><td>行列が決める写像 $f_A$</td><td>第16回「第16回 行列は線形写像」</td><td><a href="16_第16回_行列は線形写像.html#sym-matrix-map">説明へ →</a></td></tr>
+<tr><td>線形写像</td><td>第16回「第16回 行列は線形写像」</td><td><a href="16_第16回_行列は線形写像.html#sym-linear-map">説明へ →</a></td></tr>
+<tr><td>回転行列 $R(\theta)$</td><td>第16回「第16回 行列は線形写像」</td><td><a href="16_第16回_行列は線形写像.html#sym-rotation">説明へ →</a></td></tr>
+<tr><td>行列の積 $AB$（写像の合成）</td><td>第16回「第16回 行列は線形写像」</td><td><a href="16_第16回_行列は線形写像.html#sym-matmul">説明へ →</a></td></tr>
+<tr><td>恒等写像 $\mathrm{id}$ と単位行列 $I$</td><td>第16回「第16回 行列は線形写像」</td><td><a href="16_第16回_行列は線形写像.html#sym-identity-map">説明へ →</a></td></tr>
+<tr><td>逆行列 $A^{-1}$、正則（可逆）</td><td>第16回「第16回 行列は線形写像」</td><td><a href="16_第16回_行列は線形写像.html#sym-inverse-matrix">説明へ →</a></td></tr>
+<tr><td>行列のべき $A^k$</td><td>第16回「第16回 行列は線形写像」</td><td><a href="16_第16回_行列は線形写像.html#sym-matrix-power">説明へ →</a></td></tr>
+<tr><td>連立一次方程式 $A\boldsymbol x=\boldsymbol b$（係数行列 $A$、未知ベクトル $\boldsymbol x$、右辺 $\boldsymbol b$）</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-linear-system">説明へ →</a></td></tr>
+<tr><td>拡大係数行列 $[A\mid\boldsymbol b]$</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-augmented">説明へ →</a></td></tr>
+<tr><td>行基本変形 $R_i\leftrightarrow R_j$、$R_i\leftarrow cR_i$、$R_i\leftarrow R_i+cR_j$</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-row-ops">説明へ →</a></td></tr>
+<tr><td>行同値 $A\sim B$</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-row-equiv">説明へ →</a></td></tr>
+<tr><td>主成分（ピボット）</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-pivot">説明へ →</a></td></tr>
+<tr><td>行階段形・簡約行階段形</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-ref">説明へ →</a></td></tr>
+<tr><td>自由変数（と、主成分の列に対応する変数）</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-free-var">説明へ →</a></td></tr>
+<tr><td>ランク（階数）$\operatorname{rank}A$</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-rank">説明へ →</a></td></tr>
+<tr><td>核 $\ker A$</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-ker">説明へ →</a></td></tr>
+<tr><td>像 $\operatorname{im}A$</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-im">説明へ →</a></td></tr>
+<tr><td>零度 $\dim\ker A$（nullity）</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-nullity">説明へ →</a></td></tr>
+<tr><td>特解 $\boldsymbol p$</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-particular">説明へ →</a></td></tr>
+<tr><td>$[A\mid I]$（逆行列を求める表）</td><td>第17回「第17回 連立一次方程式とランク」</td><td><a href="17_第17回_連立一次方程式とランク.html#sym-aug-inverse">説明へ →</a></td></tr>
+<tr><td>行列式 $\det A$、$|A|$</td><td>第18回「第18回 行列式」</td><td><a href="18_第18回_行列式.html#sym-det">説明へ →</a></td></tr>
+<tr><td>置換 $\sigma$、$S_n$</td><td>第18回「第18回 行列式」</td><td><a href="18_第18回_行列式.html#sym-permutation">説明へ →</a></td></tr>
+<tr><td>転倒数と置換の符号 $\operatorname{sgn}\sigma$</td><td>第18回「第18回 行列式」</td><td><a href="18_第18回_行列式.html#sym-perm-sign">説明へ →</a></td></tr>
+<tr><td>上三角行列・下三角行列</td><td>第18回「第18回 行列式」</td><td><a href="18_第18回_行列式.html#sym-triangular">説明へ →</a></td></tr>
+<tr><td>小行列 $M_{ij}$</td><td>第18回「第18回 行列式」</td><td><a href="18_第18回_行列式.html#sym-minor">説明へ →</a></td></tr>
+<tr><td>余因子 $C_{ij}$</td><td>第18回「第18回 行列式」</td><td><a href="18_第18回_行列式.html#sym-cofactor">説明へ →</a></td></tr>
+<tr><td>余因子行列 $\operatorname{adj}A$</td><td>第18回「第18回 行列式」</td><td><a href="18_第18回_行列式.html#sym-adjugate">説明へ →</a></td></tr>
+<tr><td>内積 $\langle\boldsymbol u,\boldsymbol v\rangle$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-inner-product">説明へ →</a></td></tr>
+<tr><td>内積から決まるノルム $\|\boldsymbol v\|:=\sqrt{\langle\boldsymbol v,\boldsymbol v\rangle}$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-norm-induced">説明へ →</a></td></tr>
+<tr><td>なす角 $\theta$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-angle">説明へ →</a></td></tr>
+<tr><td>直交 $\boldsymbol u\perp\boldsymbol v$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-orthogonal">説明へ →</a></td></tr>
+<tr><td>直交補空間 $W^{\perp}$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-orth-complement">説明へ →</a></td></tr>
+<tr><td>正規直交基底 $\{\boldsymbol e_1,\dots,\boldsymbol e_n\}$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-orthonormal">説明へ →</a></td></tr>
+<tr><td>直交行列 $Q$（$Q^{\mathsf T}Q=I$）</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-orthogonal-matrix">説明へ →</a></td></tr>
+<tr><td>射影 $\operatorname{proj}_{\boldsymbol u}\boldsymbol v$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-projection">説明へ →</a></td></tr>
+<tr><td>射影行列 $P$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-proj-matrix">説明へ →</a></td></tr>
+<tr><td>グラム・シュミットの方法</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-gram-schmidt">説明へ →</a></td></tr>
+<tr><td>QR分解 $A=QR$</td><td>第19回「第19回 内積・直交・射影」</td><td><a href="19_第19回_内積・直交・射影.html#sym-qr">説明へ →</a></td></tr>
+<tr><td>固有値 $\lambda$、固有ベクトル $\boldsymbol v$、$A\boldsymbol v=\lambda\boldsymbol v$</td><td>第20回「第20回 固有値と固有ベクトル」</td><td><a href="20_第20回_固有値と固有ベクトル.html#sym-eigen">説明へ →</a></td></tr>
+<tr><td>特性多項式 $p_A(\lambda)$、特性方程式</td><td>第20回「第20回 固有値と固有ベクトル」</td><td><a href="20_第20回_固有値と固有ベクトル.html#sym-char-poly">説明へ →</a></td></tr>
+<tr><td>トレース $\operatorname{tr}A$</td><td>第20回「第20回 固有値と固有ベクトル」</td><td><a href="20_第20回_固有値と固有ベクトル.html#sym-trace">説明へ →</a></td></tr>
+<tr><td>固有空間 $E_\lambda$</td><td>第20回「第20回 固有値と固有ベクトル」</td><td><a href="20_第20回_固有値と固有ベクトル.html#sym-eigenspace">説明へ →</a></td></tr>
+<tr><td>代数的重複度</td><td>第20回「第20回 固有値と固有ベクトル」</td><td><a href="20_第20回_固有値と固有ベクトル.html#sym-alg-mult">説明へ →</a></td></tr>
+<tr><td>幾何的重複度</td><td>第20回「第20回 固有値と固有ベクトル」</td><td><a href="20_第20回_固有値と固有ベクトル.html#sym-geo-mult">説明へ →</a></td></tr>
+<tr><td>虚数単位 $i$、複素数 $a+bi$</td><td>第20回「第20回 固有値と固有ベクトル」</td><td><a href="20_第20回_固有値と固有ベクトル.html#sym-imag-unit">説明へ →</a></td></tr>
+<tr><td>対角行列 $\operatorname{diag}(d_1,\dots,d_n)$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-diag-matrix">説明へ →</a></td></tr>
+<tr><td>対角化 $P^{-1}AP=D$、対角化可能</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-diagonalizable">説明へ →</a></td></tr>
+<tr><td>相似 $A\sim B$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-similar">説明へ →</a></td></tr>
+<tr><td>対称行列 $A=A^{\mathsf T}$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-symmetric">説明へ →</a></td></tr>
+<tr><td>複素共役 $\bar z$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-conjugate">説明へ →</a></td></tr>
+<tr><td>直交対角化 $Q^{\mathsf T}AQ=\Lambda$、$\Lambda$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-orth-diag">説明へ →</a></td></tr>
+<tr><td>スペクトル分解 $A=\sum_i\lambda_i\boldsymbol q_i\boldsymbol q_i^{\mathsf T}$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-spectral">説明へ →</a></td></tr>
+<tr><td>二次形式 $q(\boldsymbol x)=\boldsymbol x^{\mathsf T}A\boldsymbol x$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-quadratic-form">説明へ →</a></td></tr>
+<tr><td>正定値 $A\succ0$、半正定値 $A\succeq0$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-pos-def">説明へ →</a></td></tr>
+<tr><td>主小行列式 $\Delta_k$</td><td>第21回「第21回 対角化と二次形式」</td><td><a href="21_第21回_対角化と二次形式.html#sym-leading-minor">説明へ →</a></td></tr>
+<tr><td>半正定値 $M\succeq0$</td><td>第22回「第22回 特異値分解」</td><td><a href="22_第22回_特異値分解.html#sym-semidef">説明へ →</a></td></tr>
+<tr><td>特異値 $\sigma_i$</td><td>第22回「第22回 特異値分解」</td><td><a href="22_第22回_特異値分解.html#sym-singular-value">説明へ →</a></td></tr>
+<tr><td>特異値分解 $A=U\Sigma V^{\mathsf T}$、$U$、$\Sigma$、$V$</td><td>第22回「第22回 特異値分解」</td><td><a href="22_第22回_特異値分解.html#sym-svd">説明へ →</a></td></tr>
+<tr><td>列と行の積 $\boldsymbol u\boldsymbol v^{\mathsf T}$（外積）</td><td>第22回「第22回 特異値分解」</td><td><a href="22_第22回_特異値分解.html#sym-outer">説明へ →</a></td></tr>
+<tr><td>作用素ノルム $\|A\|_2$</td><td>第22回「第22回 特異値分解」</td><td><a href="22_第22回_特異値分解.html#sym-opnorm">説明へ →</a></td></tr>
+<tr><td>ランク $k$ の打ち切り $A_k$</td><td>第22回「第22回 特異値分解」</td><td><a href="22_第22回_特異値分解.html#sym-lowrank">説明へ →</a></td></tr>
+<tr><td>フロベニウスノルム $\|A\|_F$</td><td>第22回「第22回 特異値分解」</td><td><a href="22_第22回_特異値分解.html#sym-frobenius">説明へ →</a></td></tr>
+<tr><td>擬似逆行列 $A^{+}$、$\Sigma^{+}$</td><td>第22回「第22回 特異値分解」</td><td><a href="22_第22回_特異値分解.html#sym-pseudoinverse">説明へ →</a></td></tr>
+<tr><td>（用語）：場</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-field">説明へ →</a></td></tr>
+<tr><td>（用語）：スカラー場</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-scalar-field">説明へ →</a></td></tr>
+<tr><td>（用語）：ベクトル場</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-vector-field">説明へ →</a></td></tr>
+<tr><td>位置ベクトル $\boldsymbol r$</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-position-vector">説明へ →</a></td></tr>
+<tr><td>等位集合 $\{\boldsymbol p\mid f(\boldsymbol p)=c\}$（等位線・等位面）</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-level-set">説明へ →</a></td></tr>
+<tr><td>方向微分 $D_{\boldsymbol u}f(\boldsymbol a)$</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-directional-derivative">説明へ →</a></td></tr>
+<tr><td>勾配 $\nabla f$（$\operatorname{grad}f$）</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-gradient">説明へ →</a></td></tr>
+<tr><td>$\nabla$（ナブラ）</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-nabla">説明へ →</a></td></tr>
+<tr><td>法線ベクトル $\boldsymbol n$</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-normal">説明へ →</a></td></tr>
+<tr><td>ポテンシャル $\phi$</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-potential">説明へ →</a></td></tr>
+<tr><td>（予告）：勾配法と学習率 $\eta$</td><td>第23回「第23回 場と勾配」</td><td><a href="23_第23回_場と勾配.html#sym-gradient-descent">説明へ →</a></td></tr>
+<tr><td>発散 $\operatorname{div}\boldsymbol v$（$\nabla\cdot\boldsymbol v$）</td><td>第24回「第24回 発散と回転」</td><td><a href="24_第24回_発散と回転.html#sym-divergence">説明へ →</a></td></tr>
+<tr><td>回転 $\operatorname{rot}\boldsymbol v$（$\operatorname{curl}\boldsymbol v$、$\nabla\times\boldsymbol v$）</td><td>第24回「第24回 発散と回転」</td><td><a href="24_第24回_発散と回転.html#sym-curl">説明へ →</a></td></tr>
+<tr><td>ラプラシアン $\nabla^2f$（$\Delta f$）</td><td>第24回「第24回 発散と回転」</td><td><a href="24_第24回_発散と回転.html#sym-laplacian">説明へ →</a></td></tr>
+<tr><td>（用語）：調和関数</td><td>第24回「第24回 発散と回転」</td><td><a href="24_第24回_発散と回転.html#sym-harmonic">説明へ →</a></td></tr>
+<tr><td>曲線 $C$ とそのパラメータ表示 $\boldsymbol r(t)$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-curve-param">説明へ →</a></td></tr>
+<tr><td>接ベクトル $\boldsymbol r'(t)$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-tangent">説明へ →</a></td></tr>
+<tr><td>弧長要素 $ds$ と弧長 $L$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-arclength">説明へ →</a></td></tr>
+<tr><td>曲線の向きと逆向きの曲線 $-C$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-orientation">説明へ →</a></td></tr>
+<tr><td>スカラー場の線積分 $\displaystyle\int_Cf\,ds$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-line-integral-scalar">説明へ →</a></td></tr>
+<tr><td>変位の小片 $d\boldsymbol r$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-dr">説明へ →</a></td></tr>
+<tr><td>ベクトル場の線積分 $\displaystyle\int_C\boldsymbol F\cdot d\boldsymbol r$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-line-integral">説明へ →</a></td></tr>
+<tr><td>閉曲線と周回積分 $\displaystyle\oint_C$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-closed-integral">説明へ →</a></td></tr>
+<tr><td>（用語）：保存場</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-conservative">説明へ →</a></td></tr>
+<tr><td>曲面 $S$ とそのパラメータ表示 $\boldsymbol r(u,v)$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-surface-param">説明へ →</a></td></tr>
+<tr><td>面積要素 $dS$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-surface-element">説明へ →</a></td></tr>
+<tr><td>曲面の向きと単位法線ベクトル $\boldsymbol n$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-surface-orientation">説明へ →</a></td></tr>
+<tr><td>スカラー場の面積分 $\displaystyle\iint_Sf\,dS$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-surface-integral-scalar">説明へ →</a></td></tr>
+<tr><td>流束 $\displaystyle\iint_S\boldsymbol F\cdot\boldsymbol n\,dS$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-flux">説明へ →</a></td></tr>
+<tr><td>面積要素ベクトル $d\boldsymbol S=\boldsymbol n\,dS$</td><td>第25回「第25回 線積分と面積分」</td><td><a href="25_第25回_線積分と面積分.html#sym-dS-vector">説明へ →</a></td></tr>
+<tr><td>境界 $\partial D$、$\partial S$、$\partial V$</td><td>第26回「第26回 ガウスとストークスの定理」</td><td><a href="26_第26回_ガウスとストークスの定理.html#sym-boundary">説明へ →</a></td></tr>
+<tr><td>境界の向きの約束</td><td>第26回「第26回 ガウスとストークスの定理」</td><td><a href="26_第26回_ガウスとストークスの定理.html#sym-oriented-boundary">説明へ →</a></td></tr>
+<tr><td>（用語）：単連結</td><td>第26回「第26回 ガウスとストークスの定理」</td><td><a href="26_第26回_ガウスとストークスの定理.html#sym-simply-connected">説明へ →</a></td></tr>
+<tr><td>アインシュタインの規約（縮約）　$a_ib_i$</td><td>第27回「第27回 添字記法と曲線座標」</td><td><a href="27_第27回_添字記法と曲線座標.html#sym-einstein">説明へ →</a></td></tr>
+<tr><td>自由添字・ダミー添字</td><td>第27回「第27回 添字記法と曲線座標」</td><td><a href="27_第27回_添字記法と曲線座標.html#sym-free-index">説明へ →</a></td></tr>
+<tr><td>$\partial_i$（$i$ 番目の座標での偏微分）</td><td>第27回「第27回 添字記法と曲線座標」</td><td><a href="27_第27回_添字記法と曲線座標.html#sym-partial-i">説明へ →</a></td></tr>
+<tr><td>$\varepsilon_{ijk}$（レヴィ・チヴィタの記号）</td><td>第27回「第27回 添字記法と曲線座標」</td><td><a href="27_第27回_添字記法と曲線座標.html#sym-levi-civita">説明へ →</a></td></tr>
+<tr><td>曲線座標 $(q_1,q_2,q_3)$</td><td>第27回「第27回 添字記法と曲線座標」</td><td><a href="27_第27回_添字記法と曲線座標.html#sym-curvilinear">説明へ →</a></td></tr>
+<tr><td>スケール因子 $h_i$</td><td>第27回「第27回 添字記法と曲線座標」</td><td><a href="27_第27回_添字記法と曲線座標.html#sym-scale-factor">説明へ →</a></td></tr>
+<tr><td>$\hat{\boldsymbol e}_i$（座標方向の単位ベクトル）</td><td>第27回「第27回 添字記法と曲線座標」</td><td><a href="27_第27回_添字記法と曲線座標.html#sym-unit-basis">説明へ →</a></td></tr>
+<tr><td>微分方程式　$y'=f(x,y)$</td><td>第28回「第28回 微分方程式とは・1階」</td><td><a href="28_第28回_微分方程式とは・1階.html#sym-ode">説明へ →</a></td></tr>
+<tr><td>階数（かいすう）、線形・非線形</td><td>第28回「第28回 微分方程式とは・1階」</td><td><a href="28_第28回_微分方程式とは・1階.html#sym-order">説明へ →</a></td></tr>
+<tr><td>解（かい）</td><td>第28回「第28回 微分方程式とは・1階」</td><td><a href="28_第28回_微分方程式とは・1階.html#sym-solution">説明へ →</a></td></tr>
+<tr><td>任意定数 $C$、一般解、特殊解</td><td>第28回「第28回 微分方程式とは・1階」</td><td><a href="28_第28回_微分方程式とは・1階.html#sym-gensol">説明へ →</a></td></tr>
+<tr><td>初期条件 $y(x_0)=y_0$、初期値問題</td><td>第28回「第28回 微分方程式とは・1階」</td><td><a href="28_第28回_微分方程式とは・1階.html#sym-ivp">説明へ →</a></td></tr>
+<tr><td>方向場（傾きの場）</td><td>第28回「第28回 微分方程式とは・1階」</td><td><a href="28_第28回_微分方程式とは・1階.html#sym-slopefield">説明へ →</a></td></tr>
+<tr><td>変数分離形　$y'=g(x)\,h(y)$、定数解（平衡解）</td><td>第28回「第28回 微分方程式とは・1階」</td><td><a href="28_第28回_微分方程式とは・1階.html#sym-separable">説明へ →</a></td></tr>
+<tr><td>1階線形、積分因子　$\mu(x)$</td><td>第28回「第28回 微分方程式とは・1階」</td><td><a href="28_第28回_微分方程式とは・1階.html#sym-intfactor">説明へ →</a></td></tr>
+<tr><td>2階線形定数係数同次の微分方程式　$m\ddot x+c\dot x+kx=0$</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-lccode">説明へ →</a></td></tr>
+<tr><td>特性方程式　$m\lambda^2+c\lambda+k=0$</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-char-eq">説明へ →</a></td></tr>
+<tr><td>$\lambda_1,\ \lambda_2$（特性根）</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-lambda12">説明へ →</a></td></tr>
+<tr><td>初期条件　$x(0)=x_0,\ \dot x(0)=v_0$、一般解、特殊解</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-initial">説明へ →</a></td></tr>
+<tr><td>虚数単位 $i$、複素数 $\alpha+i\beta$、実部・虚部、共役</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-complex-min">説明へ →</a></td></tr>
+<tr><td>$e^{i\theta}:=\cos\theta+i\sin\theta$（この回での約束）</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-euler-prov">説明へ →</a></td></tr>
+<tr><td>$R,\ \varphi$（振幅・位相のずれ）</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-amp-phase">説明へ →</a></td></tr>
+<tr><td>$\omega_n$（固有角周波数）</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-omega-n">説明へ →</a></td></tr>
+<tr><td>$\zeta$（減衰比）</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-zeta">説明へ →</a></td></tr>
+<tr><td>$\omega_d$（減衰固有角周波数）</td><td>第29回「第29回 2階線形定数係数」</td><td><a href="29_第29回_2階線形定数係数.html#sym-omega-d">説明へ →</a></td></tr>
+<tr><td>外力 $F_0\cos\omega t$、$F_0$、$f_0$、$\omega$</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-forcing">説明へ →</a></td></tr>
+<tr><td>余解 $x_h$、特解 $x_p$</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-x-hp">説明へ →</a></td></tr>
+<tr><td>未定係数法（みていけいすうほう）</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-undetermined">説明へ →</a></td></tr>
+<tr><td>振幅 $X$、位相の遅れ $\varphi$</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-phase-lag">説明へ →</a></td></tr>
+<tr><td>$\omega_d$（減衰振動の角振動数）</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-damped-freq">説明へ →</a></td></tr>
+<tr><td>過渡解（かとかい）と定常解（ていじょうかい）</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-steady">説明へ →</a></td></tr>
+<tr><td>振動数比 $r$、振幅倍率 $M(r)$</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-freq-ratio">説明へ →</a></td></tr>
+<tr><td>共振（きょうしん）</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-resonance">説明へ →</a></td></tr>
+<tr><td>うなり</td><td>第30回「第30回 強制振動と共振」</td><td><a href="30_第30回_強制振動と共振.html#sym-beat">説明へ →</a></td></tr>
+<tr><td>状態ベクトル $\boldsymbol x(t)$、成分 $x_1(t),x_2(t)$</td><td>第31回「第31回 連立線形ODEと行列指数関数」</td><td><a href="31_第31回_連立線形ODEと行列指数関数.html#sym-state-vec">説明へ →</a></td></tr>
+<tr><td>ベクトルの微分 $\dot{\boldsymbol x}$、連立の線形方程式 $\dot{\boldsymbol x}=A\boldsymbol x$</td><td>第31回「第31回 連立線形ODEと行列指数関数」</td><td><a href="31_第31回_連立線形ODEと行列指数関数.html#sym-vec-ode">説明へ →</a></td></tr>
+<tr><td>コンパニオン行列（companion matrix）</td><td>第31回「第31回 連立線形ODEと行列指数関数」</td><td><a href="31_第31回_連立線形ODEと行列指数関数.html#sym-companion">説明へ →</a></td></tr>
+<tr><td>行列指数関数 $e^{At}$</td><td>第31回「第31回 連立線形ODEと行列指数関数」</td><td><a href="31_第31回_連立線形ODEと行列指数関数.html#sym-matexp">説明へ →</a></td></tr>
+<tr><td>基本解行列 $\Phi(t)$（状態遷移行列）</td><td>第31回「第31回 連立線形ODEと行列指数関数」</td><td><a href="31_第31回_連立線形ODEと行列指数関数.html#sym-fundamental">説明へ →</a></td></tr>
+<tr><td>状態ベクトル $\boldsymbol x=(x_1,x_2)^{\mathsf T}$、状態空間、相平面</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-state">説明へ →</a></td></tr>
+<tr><td>軌道（解曲線、相軌道）</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-orbit">説明へ →</a></td></tr>
+<tr><td>平衡点 $\boldsymbol x^*$</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-equilibrium">説明へ →</a></td></tr>
+<tr><td>結節点（node）、鞍点（saddle point）</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-node-saddle">説明へ →</a></td></tr>
+<tr><td>渦状点（spiral）、渦心点（center）</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-spiral-center">説明へ →</a></td></tr>
+<tr><td>安定、漸近安定、不安定</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-stability">説明へ →</a></td></tr>
+<tr><td>$\operatorname{Re}\lambda$（実部）</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-realpart">説明へ →</a></td></tr>
+<tr><td>$\tau=\operatorname{tr}A$、$\Delta=\det A$</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-trdet">説明へ →</a></td></tr>
+<tr><td>状態方程式 $\dot{\boldsymbol x}=A\boldsymbol x+B\boldsymbol u$、出力方程式 $\boldsymbol y=C\boldsymbol x$、$\boldsymbol u$、$\boldsymbol y$、$B$、$C$</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-state-eq">説明へ →</a></td></tr>
+<tr><td>状態フィードバック $\boldsymbol u=-K\boldsymbol x$、ゲイン $K$、閉ループ、$A-BK$</td><td>第32回「第32回 状態空間と安定性」</td><td><a href="32_第32回_状態空間と安定性.html#sym-feedback">説明へ →</a></td></tr>
+<tr><td>$\dot{\boldsymbol x}=\boldsymbol f(\boldsymbol x)$、$\boldsymbol f=(f_1,f_2)^{\mathsf T}$（自励系）</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-autonomous">説明へ →</a></td></tr>
+<tr><td>線形と非線形</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-nonlinear">説明へ →</a></td></tr>
+<tr><td>平衡点 $\boldsymbol x^*$（非線形の場合）</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-equilibrium-nl">説明へ →</a></td></tr>
+<tr><td>$J$、$J_{\boldsymbol f}(\boldsymbol x)$、$\dfrac{\partial\boldsymbol f}{\partial\boldsymbol x}$（ヤコビ行列）</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-jacobian-matrix">説明へ →</a></td></tr>
+<tr><td>$\boldsymbol\xi:=\boldsymbol x-\boldsymbol x^*$（ずれ）</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-xi">説明へ →</a></td></tr>
+<tr><td>双曲型の平衡点</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-hyperbolic">説明へ →</a></td></tr>
+<tr><td>局所／大域</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-local">説明へ →</a></td></tr>
+<tr><td>$V(x_1)$（ポテンシャル）、$E(x_1,x_2)$（エネルギー）</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-energy">説明へ →</a></td></tr>
+<tr><td>分離線（セパラトリクス）</td><td>第33回「第33回 非線形と線形化」</td><td><a href="33_第33回_非線形と線形化.html#sym-separatrix">説明へ →</a></td></tr>
+<tr><td>複素数 $z=a+bi$、集合 $\mathbb C$</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-complex">説明へ →</a></td></tr>
+<tr><td>実部 $\operatorname{Re}z$、虚部 $\operatorname{Im}z$</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-re-im">説明へ →</a></td></tr>
+<tr><td>複素平面（ガウス平面）、実軸、虚軸</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-complex-plane">説明へ →</a></td></tr>
+<tr><td>複素共役 $\bar z$（流派によって $z^*$）</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-conjugate">説明へ →</a></td></tr>
+<tr><td>偏角 $\arg z$、主値 $\operatorname{Arg}z$</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-arg">説明へ →</a></td></tr>
+<tr><td>ド・モアブルの公式</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-de-moivre">説明へ →</a></td></tr>
+<tr><td>複素数の指数関数 $e^{z}$</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-complex-exp">説明へ →</a></td></tr>
+<tr><td>$\cos$ と $\sin$ の指数関数表示</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-euler-cossin">説明へ →</a></td></tr>
+<tr><td>1の $n$ 乗根 $\omega_k$</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-roots-unity">説明へ →</a></td></tr>
+<tr><td>フェーザ（複素振幅）</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-phasor">説明へ →</a></td></tr>
+<tr><td>周波数応答 $H(i\omega)$</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-freq-resp">説明へ →</a></td></tr>
+<tr><td>複素数の対数 $\log z$</td><td>第34回「第34回 複素数とオイラーの公式」</td><td><a href="34_第34回_複素数とオイラーの公式.html#sym-complex-log">説明へ →</a></td></tr>
+<tr><td>複素関数 $w=f(z)$、実部 $u(x,y)$ と虚部 $v(x,y)$</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-complex-function">説明へ →</a></td></tr>
+<tr><td>複素微分 $f'(a)$</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-complex-derivative">説明へ →</a></td></tr>
+<tr><td>コーシー・リーマンの関係式（CR 方程式）</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-cauchy-riemann">説明へ →</a></td></tr>
+<tr><td>正則（holomorphic）</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-holomorphic">説明へ →</a></td></tr>
+<tr><td>複素線積分 $\displaystyle\int_C f(z)\,dz$</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-complex-integral">説明へ →</a></td></tr>
+<tr><td>ML 評価 $\bigl|\int_Cf\,dz\bigr|\le M\,L$</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-ml-estimate">説明へ →</a></td></tr>
+<tr><td>孤立特異点、極、位数 $m$</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-isolated-singularity">説明へ →</a></td></tr>
+<tr><td>ローラン展開 $\displaystyle\sum_{n=-\infty}^{\infty}a_n(z-a)^n$</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-laurent">説明へ →</a></td></tr>
+<tr><td>留数 $\operatorname{Res}(f,a)$</td><td>第35回「第35回 正則関数と留数の要点」</td><td><a href="35_第35回_正則関数と留数の要点.html#sym-residue">説明へ →</a></td></tr>
+<tr><td>周期関数と周期 $T$</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-periodic">説明へ →</a></td></tr>
+<tr><td>三角関数系 $\{1,\ \cos nx,\ \sin nx\}$</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-trig-system">説明へ →</a></td></tr>
+<tr><td>フーリエ級数 $f(x)\sim\dfrac{a_0}2+\displaystyle\sum_{n=1}^{\infty}(a_n\cos nx+b_n\sin nx)$</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-fourier-series">説明へ →</a></td></tr>
+<tr><td>周期 $2\pi$ の関数の内積 $\langle f,g\rangle$</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-inner-2pi">説明へ →</a></td></tr>
+<tr><td>フーリエ係数 $a_n,\ b_n$</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-fourier-coefficients">説明へ →</a></td></tr>
+<tr><td>部分和 $S_N(x)$</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-partial-fourier">説明へ →</a></td></tr>
+<tr><td>パーセバルの等式</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-parseval">説明へ →</a></td></tr>
+<tr><td>片側極限 $f(x_0+),\ f(x_0-)$、区分的に滑らか、収束定理</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-convergence-thm">説明へ →</a></td></tr>
+<tr><td>ギブス現象</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-gibbs">説明へ →</a></td></tr>
+<tr><td>周期 $2L$ のフーリエ級数</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-period-2L">説明へ →</a></td></tr>
+<tr><td>複素フーリエ係数 $c_n$ と複素フーリエ級数</td><td>第36回「第36回 フーリエ級数」</td><td><a href="36_第36回_フーリエ級数.html#sym-complex-fourier">説明へ →</a></td></tr>
+<tr><td>$\displaystyle\int_{-\infty}^{\infty}f(t)\,dt$（全直線の積分）</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-improper">説明へ →</a></td></tr>
+<tr><td>フーリエ逆変換 $\mathcal F^{-1}$</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-ift">説明へ →</a></td></tr>
+<tr><td>角周波数 $\omega$ と周波数 $\xi$（$\nu$、$f$ とも書く）</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-freq-xi">説明へ →</a></td></tr>
+<tr><td>流派を決める定数 $A$、$B$ と符号 $\sigma$</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-convention">説明へ →</a></td></tr>
+<tr><td>の確認：定数の積 $AB$</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-ab-product">説明へ →</a></td></tr>
+<tr><td>絶対可積分 $\displaystyle\int_{-\infty}^{\infty}\lvert f(t)\rvert\,dt&lt;\infty$</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-abs-integrable">説明へ →</a></td></tr>
+<tr><td>$\operatorname{sinc}$（シンク関数）</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-sinc">説明へ →</a></td></tr>
+<tr><td>・法則：時間幅と周波数幅の積</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-uncertainty">説明へ →</a></td></tr>
+<tr><td>スペクトル（振幅スペクトル $\lvert\hat f\rvert$、位相スペクトル $\arg\hat f$）</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-spectrum">説明へ →</a></td></tr>
+<tr><td>パーセバルの等式（プランシュレルの定理）</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-parseval">説明へ →</a></td></tr>
+<tr><td>$H(i\omega)=\dfrac1{a+i\omega}$（1階系の周波数応答）</td><td>第37回「第37回 フーリエ変換」</td><td><a href="37_第37回_フーリエ変換.html#sym-transfer-1">説明へ →</a></td></tr>
+<tr><td>広義積分　$\displaystyle\int_0^\infty f(t)\,dt$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-improper">説明へ →</a></td></tr>
+<tr><td>ラプラス変換　$\mathcal L\{f\}(s)=F(s)$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-laplace">説明へ →</a></td></tr>
+<tr><td>指数位数 $\alpha$ と収束域 $s\gt\alpha$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-exp-order">説明へ →</a></td></tr>
+<tr><td>線形性　$\mathcal L\{af+bg\}=aF+bG$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-laplace-linear">説明へ →</a></td></tr>
+<tr><td>第一移動　$\mathcal L\{e^{at}f(t)\}=F(s-a)$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-laplace-shift">説明へ →</a></td></tr>
+<tr><td>逆変換　$\mathcal L^{-1}\{F\}$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-laplace-inv">説明へ →</a></td></tr>
+<tr><td>微分則　$\mathcal L\{f'\}=sF(s)-f(0)$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-laplace-deriv">説明へ →</a></td></tr>
+<tr><td>積分則　$\mathcal L\bigl\{\int_0^tf(\tau)\,d\tau\bigr\}=\dfrac{F(s)}s$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-laplace-int">説明へ →</a></td></tr>
+<tr><td>$t$ 倍則　$\mathcal L\{t\,f(t)\}=-F'(s)$</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-laplace-tmul">説明へ →</a></td></tr>
+<tr><td>部分分数分解</td><td>第38回「第38回 ラプラス変換」</td><td><a href="38_第38回_ラプラス変換.html#sym-partial-fraction">説明へ →</a></td></tr>
+<tr><td>ステップ関数　$u(t)$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-step">説明へ →</a></td></tr>
+<tr><td>第二移動　$\mathcal L\{u(t-a)f(t-a)\}=e^{-as}F(s)$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-laplace-shift2">説明へ →</a></td></tr>
+<tr><td>細いパルス　$p_\varepsilon(t)$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-pulse">説明へ →</a></td></tr>
+<tr><td>デルタ関数　$\delta(t)$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-delta">説明へ →</a></td></tr>
+<tr><td>ふるい性質　$\displaystyle\int f(t)\,\delta(t-a)\,dt=f(a)$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-sifting">説明へ →</a></td></tr>
+<tr><td>インパルス応答　$h(t)$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-impulse-resp">説明へ →</a></td></tr>
+<tr><td>たたみ込み　$(f*g)(t)$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-convolution">説明へ →</a></td></tr>
+<tr><td>伝達関数　$G(s)$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-transfer">説明へ →</a></td></tr>
+<tr><td>極と零点</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-pole-zero">説明へ →</a></td></tr>
+<tr><td>ブロック線図</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-block">説明へ →</a></td></tr>
+<tr><td>閉ループ伝達関数　$\dfrac{G}{1+GH}$</td><td>第39回「第39回 たたみ込み・δ関数・伝達関数」</td><td><a href="39_第39回_たたみ込み・δ関数・伝達関数.html#sym-closed-loop">説明へ →</a></td></tr>
+<tr><td>偏微分方程式（PDE）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-pde">説明へ →</a></td></tr>
+<tr><td>$u_t$、$u_{xx}$、$u_{xt}$（添字による偏微分）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-pde-subscript">説明へ →</a></td></tr>
+<tr><td>（用語）：階数、線形、同次（偏微分方程式で）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-pde-class">説明へ →</a></td></tr>
+<tr><td>熱拡散率 $k$（と、導出で使う $\kappa,c,\rho,q$）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-diffusivity">説明へ →</a></td></tr>
+<tr><td>（用語）：楕円型・放物型・双曲型、判別式 $B^2-4AC$</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-pde-type">説明へ →</a></td></tr>
+<tr><td>初期条件 $u(x,0)=f(x)$、$u_t(x,0)=g(x)$</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-pde-ic">説明へ →</a></td></tr>
+<tr><td>（用語）：境界条件</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-pde-bc">説明へ →</a></td></tr>
+<tr><td>（用語）：ディリクレ条件（第1種）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-dirichlet">説明へ →</a></td></tr>
+<tr><td>（用語）：ノイマン条件（第2種）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-neumann">説明へ →</a></td></tr>
+<tr><td>（用語）：ロバン条件（第3種）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-robin">説明へ →</a></td></tr>
+<tr><td>領域 $\Omega$、境界 $\partial\Omega$、法線方向の微分 $\dfrac{\partial u}{\partial n}$</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-domain-boundary">説明へ →</a></td></tr>
+<tr><td>（用語）：適切な問題（well-posed problem）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-wellposed">説明へ →</a></td></tr>
+<tr><td>（用語）：重ね合わせ（線形性の原理）</td><td>第40回「第40回 PDEの分類と境界条件」</td><td><a href="40_第40回_PDEの分類と境界条件.html#sym-superposition">説明へ →</a></td></tr>
+<tr><td>熱方程式 $u_t=k\,u_{xx}$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-heat-eq">説明へ →</a></td></tr>
+<tr><td>初期条件 $u(x,0)=f(x)$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-initial-cond">説明へ →</a></td></tr>
+<tr><td>ディリクレ境界条件 $u(0,t)=u(L,t)=0$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-dirichlet">説明へ →</a></td></tr>
+<tr><td>変数分離形 $u=X(x)\,T(t)$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-separation">説明へ →</a></td></tr>
+<tr><td>分離定数 $-\lambda$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-sep-const">説明へ →</a></td></tr>
+<tr><td>固有値問題 $X''=-\lambda X,\ X(0)=X(L)=0$、固有値 $\lambda_n$、固有関数 $X_n$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-eigenproblem">説明へ →</a></td></tr>
+<tr><td>重ね合わせ（解の一次結合）</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-superposition">説明へ →</a></td></tr>
+<tr><td>正弦級数の係数 $b_n$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-sine-coef">説明へ →</a></td></tr>
+<tr><td>定常解 $w(x)$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-steady">説明へ →</a></td></tr>
+<tr><td>ノイマン境界条件 $u_x(0,t)=u_x(L,t)=0$</td><td>第41回「第41回 熱方程式と変数分離」</td><td><a href="41_第41回_熱方程式と変数分離.html#sym-neumann">説明へ →</a></td></tr>
+<tr><td>波動方程式 $u_{tt}=c^2u_{xx}$</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-wave-eq">説明へ →</a></td></tr>
+<tr><td>初期位置 $u(x,0)=f(x)$ と初期速度 $u_t(x,0)=g(x)$</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-init-velocity">説明へ →</a></td></tr>
+<tr><td>波の速さ $c$ とその単位</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-wave-speed">説明へ →</a></td></tr>
+<tr><td>進行波 $G(x-ct)$、$F(x+ct)$</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-travel">説明へ →</a></td></tr>
+<tr><td>特性座標 $\xi=x+ct,\ \eta=x-ct$</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-char-coord">説明へ →</a></td></tr>
+<tr><td>ダランベールの公式</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-dalembert">説明へ →</a></td></tr>
+<tr><td>奇関数の周期延長 $\tilde f$</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-odd-ext">説明へ →</a></td></tr>
+<tr><td>定在波 $\sin\frac{n\pi x}L\cos\omega_nt$ と角振動数 $\omega_n$</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-standing">説明へ →</a></td></tr>
+<tr><td>定在波の係数 $a_n,\ B_n$</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-mode-coef">説明へ →</a></td></tr>
+<tr><td>基本振動数と倍音</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-overtone">説明へ →</a></td></tr>
+<tr><td>弦のエネルギー $E(t)$</td><td>第42回「第42回 波動方程式」</td><td><a href="42_第42回_波動方程式.html#sym-wave-energy">説明へ →</a></td></tr>
+<tr><td>ラプラス方程式 $\nabla^2u=0$（$\Delta u=0$）</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-laplace-eq">説明へ →</a></td></tr>
+<tr><td>境界値問題（ディリクレ問題）</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-dirichlet-problem">説明へ →</a></td></tr>
+<tr><td>（用語）：平均値の性質</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-mean-value">説明へ →</a></td></tr>
+<tr><td>等ポテンシャル線・面 $\{\phi=c\}$</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-equipotential">説明へ →</a></td></tr>
+<tr><td>$\sinh y,\ \cosh y$</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-sinh-cosh">説明へ →</a></td></tr>
+<tr><td>円板のディリクレ問題 $\nabla^2u=0\ (r\lt a),\ u(a,\theta)=f(\theta)$</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-disk-problem">説明へ →</a></td></tr>
+<tr><td>周期条件 $\Theta(\theta+2\pi)=\Theta(\theta)$</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-angular-periodic">説明へ →</a></td></tr>
+<tr><td>$r^2R''+rR'-n^2R=0$（オイラー型の方程式）</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-cauchy-euler">説明へ →</a></td></tr>
+<tr><td>$A_n,\ B_n$（円板の係数）</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-disk-coef">説明へ →</a></td></tr>
+<tr><td>ポアソン核 $P(\rho,\psi)$、ポアソン積分</td><td>第43回「第43回 ラプラス方程式」</td><td><a href="43_第43回_ラプラス方程式.html#sym-poisson-kernel">説明へ →</a></td></tr>
+<tr><td>標本空間 $\Omega$ と事象 $A$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-sample-space">説明へ →</a></td></tr>
+<tr><td>確率 $P(A)$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-prob">説明へ →</a></td></tr>
+<tr><td>条件つき確率 $P(A\mid B)$ と独立</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-cond-prob">説明へ →</a></td></tr>
+<tr><td>確率変数 $X$ と $P(X=x)$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-rv">説明へ →</a></td></tr>
+<tr><td>確率質量関数 $p_X(x)$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-pmf">説明へ →</a></td></tr>
+<tr><td>期待値 $E[X]$（$\mathbb E[X]$）</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-expectation">説明へ →</a></td></tr>
+<tr><td>平均 $\mu$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-mu">説明へ →</a></td></tr>
+<tr><td>データの平均 $\bar x$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-data-mean">説明へ →</a></td></tr>
+<tr><td>分散 $\operatorname{Var}(X)$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-variance">説明へ →</a></td></tr>
+<tr><td>標準偏差 $\sigma$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-sigma">説明へ →</a></td></tr>
+<tr><td>確率密度関数 $f_X(x)$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-pdf">説明へ →</a></td></tr>
+<tr><td>広義積分 $\displaystyle\int_a^{\infty}g(x)\,dx$、$\displaystyle\int_{-\infty}^{\infty}$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-improper">説明へ →</a></td></tr>
+<tr><td>累積分布関数 $F_X(x)$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-cdf">説明へ →</a></td></tr>
+<tr><td>一様分布 $U(a,b)$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-uniform">説明へ →</a></td></tr>
+<tr><td>指数分布 $\operatorname{Exp}(\lambda)$</td><td>第44回「第44回 確率と期待値」</td><td><a href="44_第44回_確率と期待値.html#sym-exponential">説明へ →</a></td></tr>
+<tr><td>独立な確率変数</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-independent-rv">説明へ →</a></td></tr>
+<tr><td>共分散 $\operatorname{Cov}(X,Y)$</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-covariance">説明へ →</a></td></tr>
+<tr><td>i.i.d.</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-iid">説明へ →</a></td></tr>
+<tr><td>標本平均 $\bar X_n$</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-sample-mean">説明へ →</a></td></tr>
+<tr><td>標準正規分布 $\varphi(z)$、$\Phi(z)$、$Z$</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-std-normal">説明へ →</a></td></tr>
+<tr><td>正規分布 $\mathcal N(\mu,\sigma^2)$</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-normal">説明へ →</a></td></tr>
+<tr><td>$X\sim\mathcal N(\mu,\sigma^2)$ の「$\sim$」</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-sim">説明へ →</a></td></tr>
+<tr><td>標準化 $Z=\dfrac{X-\mu}{\sigma}$</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-standardize">説明へ →</a></td></tr>
+<tr><td>測定の標準偏差 $\sigma_x$、ずれ $\Delta x$</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-sigma-x">説明へ →</a></td></tr>
+<tr><td>誤差の伝播の公式</td><td>第45回「第45回 分布と誤差伝播」</td><td><a href="45_第45回_分布と誤差伝播.html#sym-propagation">説明へ →</a></td></tr>
+<tr><td>標本 $X_1,\dots,X_n$（i.i.d.）</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-iid">説明へ →</a></td></tr>
+<tr><td>標本平均 $\bar X$、$\bar x$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-sample-mean">説明へ →</a></td></tr>
+<tr><td>標準誤差 $\operatorname{SE}$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-se">説明へ →</a></td></tr>
+<tr><td>標本分散 $s^2$、標本標準偏差 $s$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-sample-sd">説明へ →</a></td></tr>
+<tr><td>推定量 $\hat\theta$（ハット）</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-estimator">説明へ →</a></td></tr>
+<tr><td>バイアスと不偏性</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-unbiased">説明へ →</a></td></tr>
+<tr><td>$t$ 分布 $t_\nu$ と臨界値 $t^{*}$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-t-dist">説明へ →</a></td></tr>
+<tr><td>信頼区間と信頼水準</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-ci">説明へ →</a></td></tr>
+<tr><td>標準不確かさ $u$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-uncertainty">説明へ →</a></td></tr>
+<tr><td>タイプAの標準不確かさ $u_{\mathrm A}$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-uncertainty-a">説明へ →</a></td></tr>
+<tr><td>タイプBの標準不確かさ $u_{\mathrm B}$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-uncertainty-b">説明へ →</a></td></tr>
+<tr><td>合成標準不確かさ $u_{\mathrm c}$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-combined">説明へ →</a></td></tr>
+<tr><td>拡張不確かさ $U$ と包含係数 $k$</td><td>第46回「第46回 推定と不確かさ」</td><td><a href="46_第46回_推定と不確かさ.html#sym-expanded">説明へ →</a></td></tr>
+<tr><td>残差 $r_i$、$\boldsymbol r$</td><td>第47回「第47回 最小二乗法」</td><td><a href="47_第47回_最小二乗法.html#sym-residual">説明へ →</a></td></tr>
+<tr><td>残差平方和 $S(a,b)$</td><td>第47回「第47回 最小二乗法」</td><td><a href="47_第47回_最小二乗法.html#sym-rss">説明へ →</a></td></tr>
+<tr><td>長さの2乗 $\|\boldsymbol v\|^2$</td><td>第47回「第47回 最小二乗法」</td><td><a href="47_第47回_最小二乗法.html#sym-sqnorm">説明へ →</a></td></tr>
+<tr><td>$\min$ と $\operatorname{arg\,min}$</td><td>第47回「第47回 最小二乗法」</td><td><a href="47_第47回_最小二乗法.html#sym-argmin">説明へ →</a></td></tr>
+<tr><td>正規方程式 $A^{\mathsf T}A\boldsymbol x=A^{\mathsf T}\boldsymbol b$</td><td>第47回「第47回 最小二乗法」</td><td><a href="47_第47回_最小二乗法.html#sym-normal-eq">説明へ →</a></td></tr>
+<tr><td>ハット $\hat{\boldsymbol x}$（最小二乗解）</td><td>第47回「第47回 最小二乗法」</td><td><a href="47_第47回_最小二乗法.html#sym-hat">説明へ →</a></td></tr>
+<tr><td>平均 $\bar x$、$\bar y$</td><td>第47回「第47回 最小二乗法」</td><td><a href="47_第47回_最小二乗法.html#sym-mean">説明へ →</a></td></tr>
+<tr><td>決定係数 $R^2$</td><td>第47回「第47回 最小二乗法」</td><td><a href="47_第47回_最小二乗法.html#sym-r2">説明へ →</a></td></tr>
+<tr><td>$h$（刻み幅）</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-step-h">説明へ →</a></td></tr>
+<tr><td>打切り誤差 $E_{\text{打切り}}$</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-trunc-err">説明へ →</a></td></tr>
+<tr><td>丸め誤差 $E_{\text{丸め}}$</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-round-err">説明へ →</a></td></tr>
+<tr><td>絶対誤差と相対誤差</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-error">説明へ →</a></td></tr>
+<tr><td>$\operatorname{fl}(x)$、$u$、$\varepsilon_{\mathrm{mach}}$</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-unit-roundoff">説明へ →</a></td></tr>
+<tr><td>$D_{+}f$、$D_{-}f$、$D_{0}f$（前進・後退・中心差分）</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-fd">説明へ →</a></td></tr>
+<tr><td>$E(h)=O(h^p)$（誤差の次数 $p$）</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-order-h">説明へ →</a></td></tr>
+<tr><td>$D^2f(x;h)$（2階差分）</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-second-diff">説明へ →</a></td></tr>
+<tr><td>$T_n$（複合台形則）</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-trapezoid">説明へ →</a></td></tr>
+<tr><td>$S_{2n}$（複合シンプソン則）</td><td>第48回「第48回 数値計算の誤差・数値微分と数値積分」</td><td><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html#sym-simpson">説明へ →</a></td></tr>
+<tr><td>刻み幅 $h$</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-step">説明へ →</a></td></tr>
+<tr><td>格子点 $x_n$</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-grid">説明へ →</a></td></tr>
+<tr><td>数値解 $y_n$</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-yn">説明へ →</a></td></tr>
+<tr><td>オイラー法 $y_{n+1}=y_n+h\,f(x_n,y_n)$</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-euler-method">説明へ →</a></td></tr>
+<tr><td>局所誤差と大域誤差</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-local-err">説明へ →</a></td></tr>
+<tr><td>$p$ 次の方法</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-order-p">説明へ →</a></td></tr>
+<tr><td>傾き $k_1,k_2,k_3,k_4$</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-k">説明へ →</a></td></tr>
+<tr><td>ヒューン法（改良オイラー法）</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-heun">説明へ →</a></td></tr>
+<tr><td>ルンゲ＝クッタ法（RK4）</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-rk4">説明へ →</a></td></tr>
+<tr><td>試験方程式 $y'=\lambda y$</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-test-eq">説明へ →</a></td></tr>
+<tr><td>$z=h\lambda$、増幅率 $R(z)$</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-amplification">説明へ →</a></td></tr>
+<tr><td>絶対安定領域</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-stab-region">説明へ →</a></td></tr>
+<tr><td>後退オイラー法（陰的オイラー法）</td><td>第49回「第49回 ODEの数値解法」</td><td><a href="49_第49回_ODEの数値解法.html#sym-implicit-euler">説明へ →</a></td></tr>
+<tr><td>LU分解 $A=LU$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-lu">説明へ →</a></td></tr>
+<tr><td>前進代入（$L\boldsymbol y=\boldsymbol b$ を解く）</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-fwd-sub">説明へ →</a></td></tr>
+<tr><td>後退代入（$U\boldsymbol x=\boldsymbol y$ を解く）</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-bwd-sub">説明へ →</a></td></tr>
+<tr><td>部分ピボット選択と $PA=LU$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-pivoting">説明へ →</a></td></tr>
+<tr><td>演算回数（flop）</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-flop">説明へ →</a></td></tr>
+<tr><td>$A=L_0+D+U_0$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-strict-LU">説明へ →</a></td></tr>
+<tr><td>ヤコビ法</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-jacobi">説明へ →</a></td></tr>
+<tr><td>ガウス＝ザイデル法</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-gauss-seidel">説明へ →</a></td></tr>
+<tr><td>反復行列 $M$ と誤差の漸化式</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-iter-matrix">説明へ →</a></td></tr>
+<tr><td>スペクトル半径 $\rho(M)$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-spectral-radius">説明へ →</a></td></tr>
+<tr><td>最大値ノルム $\|\boldsymbol v\|_\infty$ と対角優位</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-maxnorm">説明へ →</a></td></tr>
+<tr><td>べき乗法と最大固有値</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-power-method">説明へ →</a></td></tr>
+<tr><td>レイリー商 $R(\boldsymbol v)$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-rayleigh">説明へ →</a></td></tr>
+<tr><td>格子点の値 $u_j^n$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-grid2">説明へ →</a></td></tr>
+<tr><td>陽解法（FTCS）と格子比 $r$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-ftcs">説明へ →</a></td></tr>
+<tr><td>三重対角行列 $T$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-tridiag">説明へ →</a></td></tr>
+<tr><td>モードの増幅率 $G_m$</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-growth">説明へ →</a></td></tr>
+<tr><td>陰解法（BTCS）</td><td>第50回「第50回 連立方程式・固有値の数値解法と差分法」</td><td><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html#sym-btcs">説明へ →</a></td></tr>
+<tr><td>停留点 $\nabla f(\boldsymbol x^*)=\boldsymbol 0$</td><td>第51回「第51回 最適化」</td><td><a href="51_第51回_最適化.html#sym-stationary">説明へ →</a></td></tr>
+<tr><td>ヘッセ行列 $H$、$H_f(\boldsymbol a)$</td><td>第51回「第51回 最適化」</td><td><a href="51_第51回_最適化.html#sym-hessian">説明へ →</a></td></tr>
+<tr><td>勾配法の更新式と歩幅 $\eta$</td><td>第51回「第51回 最適化」</td><td><a href="51_第51回_最適化.html#sym-eta">説明へ →</a></td></tr>
+<tr><td>条件数 $\kappa$</td><td>第51回「第51回 最適化」</td><td><a href="51_第51回_最適化.html#sym-cond-number">説明へ →</a></td></tr>
+<tr><td>$\text{s.t.}$（制約つきの最小化）</td><td>第51回「第51回 最適化」</td><td><a href="51_第51回_最適化.html#sym-st">説明へ →</a></td></tr>
+<tr><td>ラグランジュ関数 $\mathcal L(\boldsymbol x,\lambda)$ と未定乗数 $\lambda$</td><td>第51回「第51回 最適化」</td><td><a href="51_第51回_最適化.html#sym-lagrangian">説明へ →</a></td></tr>
+<tr><td>凸集合</td><td>第51回「第51回 最適化」</td><td><a href="51_第51回_最適化.html#sym-convex-set">説明へ →</a></td></tr>
+<tr><td>凸関数</td><td>第51回「第51回 最適化」</td><td><a href="51_第51回_最適化.html#sym-convex-fn">説明へ →</a></td></tr>
+</table>
+<p class="other"><a href="index.html">← 目次へ</a></p>
+</body>
+</html>

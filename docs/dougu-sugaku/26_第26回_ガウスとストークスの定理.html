@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第26回 ガウスとストークスの定理</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+  /* 写真なしの扉（この教材は写真が任意） */
+  .hero.plain{ left:auto; width:auto; margin:56px 0 8px; border-top:1px solid var(--ink); padding-top:22px; }
+  .hero.plain .ttl{ position:static; }
+  .def[id]{ scroll-margin-top:12px; } h2[id],h3[id],.box[id],figure[id]{ scroll-margin-top:12px; }
+  :target{ outline:2px solid var(--whyline); outline-offset:4px; }
+  .hero .ttl{ background:rgba(247,244,236,.88); padding:12px 22px 14px; }
+  figure.fig{ margin:26px auto 30px; max-width:640px; }
+  figure.fig svg{ border:1px solid var(--line); border-radius:6px; }
+  figure.fig figcaption{ text-align:left; font-size:14.5px; line-height:1.8; color:var(--sub); margin:10px auto 0; max-width:560px; }
+  figure.fig figcaption strong{ color:var(--ink); margin-right:.3em; }
+  @media (max-width:720px){ .hero .ttl{ background:none; padding:14px 16px 0; } }
+</style>
+</head>
+<body>
+<figure class="hero">
+<img src="img/26_hero_taiko.jpg" alt="赤い観客席を背に、黒い服の奏者たちが、台にのせた何台もの太鼓を、撥で打っている舞台">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第26回</p><h1>ガウスとストークスの定理</h1></div>
+<figcaption><p class="cap">皮を張った太鼓が、並んで打たれている。</p><p class="cr">Kenneth C. Zirkel（2023年、ストーニーブルック大学での太鼓の演奏）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Taiko_Tides_Stony_Brook.jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
+</figure>
+<p class="lead">前回の最後に、小さな正方形を貼り合わせると内側の辺は消えて外周だけが残る、と予告した。この回はそれを定理として言い切る。<strong>平面の領域</strong>では<strong>グリーンの定理</strong>（まわりを回る量 ＝ 中の回転の合計）、<strong>曲面</strong>では<strong>ストークスの定理</strong>（ふちを回る量 ＝ 面を貫く回転の合計）、<strong>立体</strong>では<strong>ガウスの発散定理</strong>（表面から出ていく量 ＝ 中の湧き出しの合計）。3つとも「内部で微分したものを足すと、境界の値だけが残る」という1つの形で、第10回の微積分学の基本定理を高い次元へ広げたものである。電磁気学のガウスの法則・アンペールの法則・ファラデーの法則は、この3つの定理の言い換えである。</p>
+<div class="navi">
+<strong>この回の論理の幹</strong>：微積分学の基本定理「$f'$ を区間で足すと、端点の差が残る」→ 2次元・3次元にも同じ形があるか → そのために「ふち」を表す記号 $\partial$ と、ふちの<strong>向き</strong>の約束が要る → 小さな正方形の循環（第24回 (1.2)）を貼り合わせる → <strong>グリーンの定理</strong> → 外向き法線に書き換えると平面の<strong>発散定理</strong> → 小さな直方体の流束（第24回の3次元版）を貼り合わせる → <strong>ガウスの発散定理</strong> → 小さな曲面片の循環を貼り合わせる → <strong>ストークスの定理</strong> → 閉曲面にはふちがない（$\operatorname{div}\operatorname{rot}=0$ の幾何学）、渦なしの渦で穴が効く（第24回 3.5 の回収）→ 電磁気学の法則との対応。
+</div>
+
+<div class="box"><span class="label">この回の使い方</span>
+<p>新しい記号は緑色の枠（<strong>記号</strong>）で「①読み方　②日本語での意味　③省略していない書き方　④どこで出会うか」を書く。この回で新しく出る記号は、境界を表す $\partial V,\ \partial S,\ \partial D$ と、3つの定理の名前だけである。式の中身は、第24回の $\nabla\cdot$、$\nabla\times$ と、第25回の線積分・面積分でできている。</p>
+<p>第25回は別に作られている。そこで定義された $\oint_C\boldsymbol F\cdot d\boldsymbol r$ と $\iint_S\boldsymbol F\cdot\boldsymbol n\,dS$ を、この回では「<strong>定義済みの記号</strong>」として使い、使うたびにリンクを張る。ただし、読むときに迷わないよう、意味は 1.4 でもう一度、短く書き直す。</p>
+<p>各節は、「なぜ必要か → 定義 → 数値で一度手を動かす → 導出 → 確かめ → よくある誤解」の順に進む。高校・1年で習った内容も、短く一度は書く。覚えている部分は飛ばしてよい。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-0"><span class="no">0</span>この回で使う記号</h2>
+<p>最初に、この回で<strong>新しく説明する記号</strong>と、<strong>前の回で説明済みの記号</strong>を分けて並べる。右の列の「→」で説明のある場所へ飛べる。</p>
+
+<h3 id="sec-0-1"><span class="no">0.1</span>この回で新しく出る記号</h3>
+<table class="tb">
+<tr><th>記号</th><th>読み方</th><th>ざっくりした意味</th><th>説明</th></tr>
+<tr><td>$\partial D$、$\partial S$、$\partial V$（境界）</td><td>ラウンド・ディー、ラウンド・エス、ラウンド・ブイ</td><td>領域・曲面・立体の「ふち」（向きつき）</td><td><a href="#sym-boundary">→1.2</a></td></tr>
+<tr><td>境界の向きの約束（左手に領域／外向き／右ねじ）</td><td>―</td><td>$\partial D,\partial V,\partial S$ にどちら向きを付けるか</td><td><a href="#sym-oriented-boundary">→1.3</a></td></tr>
+<tr><td>境界上の積分の書き方の省略の段階（S0〜S3）</td><td>―</td><td>線積分と面積分の書き方を、完全形から短い形まで並べたもの</td><td><a href="#abbr-boundary-integral">→1.4</a></td></tr>
+<tr><td>グリーンの定理</td><td>グリーンのていり</td><td>平面で、ふちを回る量 ＝ 中の $Q_x-P_y$ の合計</td><td><a href="#sym-green-theorem">→2.1</a></td></tr>
+<tr><td>ガウスの発散定理</td><td>ガウスのはっさんていり</td><td>表面から出ていく量 ＝ 中の発散の合計</td><td><a href="#sym-divergence-theorem">→3.1</a></td></tr>
+<tr><td>ストークスの定理</td><td>ストークスのていり</td><td>ふちを回る量 ＝ 面を貫く回転の合計</td><td><a href="#sym-stokes-theorem">→4.1</a></td></tr>
+<tr><td>単連結</td><td>たんれんけつ</td><td>穴のない領域（領域の中の輪が、中で縮められる）</td><td><a href="#sym-simply-connected">→4.5</a></td></tr>
+</table>
+
+<h3 id="sec-0-2"><span class="no">0.2</span>前の回で出た記号（リンクで戻れる）</h3>
+<table class="tb">
+<tr><th>記号</th><th>意味</th><th>初出</th></tr>
+<tr><td>$:=$、$=$、$\approx$</td><td>左の名前を右の式で決める／等しい／ほぼ等しい</td><td><a href="01_第1回_数式を文として読む.html#sym-defeq">第1回 2.2</a>、<a href="01_第1回_数式を文として読む.html#sym-equal">2.1</a>、<a href="01_第1回_数式を文として読む.html#sym-approx">2.4</a></td></tr>
+<tr><td>総和 $\sum$</td><td>足し算を並べる記号</td><td><a href="04_第4回_総和・総乗と添字.html#sym-sum">第4回</a></td></tr>
+<tr><td>太字ベクトル $\boldsymbol a$、成分、転置 $\mathsf T$、ノルム $\|\boldsymbol a\|$、単位ベクトル</td><td>数の組、その中の数、縦横を入れ替える、長さ、長さ1のベクトル</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-vector">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-component">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-transpose">第5回</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-norm">第5回 6.1</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-unit-vector">第5回 6.2</a></td></tr>
+<tr><td>内積 $\boldsymbol a\cdot\boldsymbol b$、外積 $\boldsymbol a\times\boldsymbol b$</td><td>成分どうしを掛けて足した数／両方に直角なベクトル</td><td><a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">第5回 7.2</a>、<a href="05_第5回_ベクトルと行列の書き方.html#sym-cross">第5回</a></td></tr>
+<tr><td>$\lim$、$o(\cdot)$</td><td>極限、「それより速く0に近づく」</td><td><a href="06_第6回_極限と連続.html#sym-lim">第6回</a>、<a href="06_第6回_極限と連続.html#sym-landau-o">第6回</a></td></tr>
+<tr><td>定積分 $\int_a^b$、リーマン和、微積分学の基本定理</td><td>細かく刻んだ和の極限、定積分は端点の差</td><td><a href="10_第10回_積分.html#sym-integral-definite">第10回</a>、<a href="10_第10回_積分.html#sym-riemann-sum">第10回</a>、<a href="10_第10回_積分.html#sym-ftc">第10回 5.2</a></td></tr>
+<tr><td>偏微分 $\dfrac{\partial f}{\partial x}$、$f_x$、順序交換</td><td>他の変数を止めた微分</td><td><a href="11_第11回_偏微分.html#sym-partial">第11回 2.1</a>、<a href="11_第11回_偏微分.html#sym-partial-short">3.1</a>、<a href="11_第11回_偏微分.html#sym-mixed-partial">5.1</a></td></tr>
+<tr><td>重積分 $\iint_D$、三重積分 $\iiint_V$、球座標</td><td>平面・空間の領域での積分</td><td><a href="13_第13回_重積分と変数変換.html#sym-double-integral">第13回</a>、<a href="13_第13回_重積分と変数変換.html#sym-triple-integral">第13回</a>、<a href="13_第13回_重積分と変数変換.html#sym-spherical">第13回</a></td></tr>
+<tr><td>場、ベクトル場、位置ベクトル $\boldsymbol r$、法線ベクトル $\boldsymbol n$</td><td>点ごとに決まるベクトル、面に直角なベクトル</td><td><a href="23_第23回_場と勾配.html#sym-vector-field">第23回 1.1</a>、<a href="23_第23回_場と勾配.html#sym-position-vector">1.1</a>、<a href="23_第23回_場と勾配.html#sym-normal">3.8</a></td></tr>
+<tr><td>$\nabla$、勾配 $\nabla f$、ポテンシャル $\phi$</td><td>偏微分を並べる命令、いちばん増える向き、元のスカラー場</td><td><a href="23_第23回_場と勾配.html#sym-nabla">第23回 3.2</a>、<a href="23_第23回_場と勾配.html#sym-gradient">3.2</a>、<a href="23_第23回_場と勾配.html#sym-potential">4.2</a></td></tr>
+<tr><td>発散 $\nabla\cdot\boldsymbol F$、回転 $\nabla\times\boldsymbol F$、ラプラシアン $\nabla^2$、調和関数</td><td>湧き出し、渦、勾配の発散</td><td><a href="24_第24回_発散と回転.html#sym-divergence">第24回 2.1</a>、<a href="24_第24回_発散と回転.html#sym-curl">3.1</a>、<a href="24_第24回_発散と回転.html#sym-laplacian">4.1</a>、<a href="24_第24回_発散と回転.html#sym-harmonic">4.2</a></td></tr>
+<tr><td>曲線 $C$ と $\boldsymbol r(t)$、線積分 $\int_C\boldsymbol F\cdot d\boldsymbol r$、$\oint$</td><td>曲線に沿った仕事・循環</td><td><a href="25_第25回_線積分と面積分.html#sym-curve-param">第25回</a>、<a href="25_第25回_線積分と面積分.html#sym-line-integral">第25回</a>、<a href="25_第25回_線積分と面積分.html#sym-closed-integral">第25回</a></td></tr>
+<tr><td>面積要素 $dS$、$d\boldsymbol S=\boldsymbol n\,dS$、流束 $\iint_S\boldsymbol F\cdot\boldsymbol n\,dS$</td><td>曲面の小さな面積、面を通り抜ける量</td><td><a href="25_第25回_線積分と面積分.html#sym-surface-element">第25回</a>、<a href="25_第25回_線積分と面積分.html#sym-dS-vector">第25回</a>、<a href="25_第25回_線積分と面積分.html#sym-flux">第25回</a></td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="sec-1"><span class="no">1</span>基本定理を高い次元へ：ふちと向き</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/26_a1_mobius.jpg" alt="淡い黄色の背景に、緑の紙の帯が、一度ひねられて輪になった立体" loading="lazy"></div>
+<p class="cap">緑の紙の帯を一度ひねって、輪にした、メビウスの帯である。</p>
+<p class="cr">David Benbennick（メビウスの帯）／<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Möbius_Strip.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/26_b1_tomoe.png" alt="濃紺の地に、白い三つの巴が、頭をつないで、同じ向きに渦を巻いている紋" loading="lazy"></div>
+<p class="cap">三つの巴が、同じ向きに巻きながら、ひとつの紋をつくる。</p>
+<p class="cr">赤口利之助三郎（2025年、三つ巴の紋の図案）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Mitsumori_migimitsudomoe.png">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-1-1"><span class="no">1.1</span>動機：「微分したものを足すと、ふちの値が残る」</h3>
+<p>第24回の最後（<a href="24_第24回_発散と回転.html#sec-5-2">5.2</a>）で、予告をした。小さな正方形のまわりを回る量（<a href="24_第24回_発散と回転.html#sec-1-3">1.3</a> の (1.2)）を、たくさん貼り合わせると、隣り合う辺は反対向きに数えられて消え、外周だけが残る。この回は、その予告を<strong>定理</strong>として言い切る。出発点は、すでに知っている次の定理である。</p>
+<p>$f$ が $[a,b]$ で連続な導関数 $f'$ をもつとき（<a href="10_第10回_積分.html#sym-ftc">第10回の微積分学の基本定理</a>）：</p>
+<p>$$ \int_a^bf'(x)\,dx=f(b)-f(a) $$</p>
+<p>これを日本語で読む。「区間 $[a,b]$ の<strong>内部</strong>で、微分 $f'$ を足し合わせると、区間の<strong>ふち</strong>（端点 $a$ と $b$）での $f$ の値の差だけが残る」。内側の切れ目で何が起きているかは、図1.1 のとおりである。区間を細かく切ると、切れ目ごとの値は「ある段の上端」であり「次の段の下端」でもあるので、足し合わせると消える。残るのは両端だけである。</p>
+<p>まず、1変数の微積分学の基本定理を、図1.1 の形で思い出す。</p>
+<figure class="fig" id="fig-1-1">
+<svg viewBox="0 0 440 334" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="基本定理：増え分の和は端点の差" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>基本定理：増え分の和は端点の差</title>
+<rect x="0" y="0" width="440" height="334" fill="#fffdf7"/>
+<line x1="60.0" y1="250.0" x2="370.0" y2="250.0" stroke="#2a2723" stroke-width="1.3"/><path d="M363.7 253.0 L370.0 250.0 L363.7 247.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="60.0" y1="250.0" x2="60.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M63.0 16.3 L60.0 10.0 L57.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="131.4" y1="246.0" x2="131.4" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="131.4" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="202.9" y1="246.0" x2="202.9" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="202.9" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="274.3" y1="246.0" x2="274.3" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="274.3" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">3</text>
+<line x1="345.7" y1="246.0" x2="345.7" y2="254.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="345.7" y="270.0" font-size="14" fill="#6b645a" text-anchor="middle">4</text>
+<line x1="56.0" y1="182.4" x2="64.0" y2="182.4" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="187.4" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="56.0" y1="114.7" x2="64.0" y2="114.7" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="119.7" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<line x1="56.0" y1="47.1" x2="64.0" y2="47.1" stroke="#2a2723" stroke-width="1.2"/>
+<text x="52.0" y="52.1" font-size="14" fill="#6b645a" text-anchor="end">3</text>
+<text x="374.0" y="272.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="74.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">f</tspan></text>
+<polyline points="81.4,191.9 83.6,190.2 85.8,188.5 88.0,186.9 90.2,185.2 92.4,183.6 94.6,182.0 96.8,180.3 99.0,178.8 101.2,177.2 103.5,175.6 105.7,174.1 107.9,172.6 110.1,171.1 112.3,169.6 114.5,168.1 116.7,166.6 118.9,165.2 121.1,163.8 123.3,162.4 125.5,161.0 127.7,159.6 129.9,158.3 132.1,156.9 134.3,155.6 136.5,154.3 138.7,153.0 140.9,151.7 143.1,150.5 145.3,149.2 147.5,148.0 149.7,146.8 151.9,145.6 154.1,144.5 156.3,143.3 158.5,142.2 160.7,141.1 162.9,139.9 165.1,138.9 167.3,137.8 169.5,136.7 171.7,135.7 173.9,134.7 176.1,133.7 178.3,132.7 180.5,131.7 182.7,130.8 184.9,129.8 187.1,128.9 189.3,128.0 191.5,127.1 193.8,126.2 196.0,125.4 198.2,124.6 200.4,123.7 202.6,122.9 204.8,122.1 207.0,121.4 209.2,120.6 211.4,119.9 213.6,119.2 215.8,118.5 218.0,117.8 220.2,117.1 222.4,116.5 224.6,115.8 226.8,115.2 229.0,114.6 231.2,114.0 233.4,113.4 235.6,112.9 237.8,112.4 240.0,111.8 242.2,111.3 244.4,110.8 246.6,110.4 248.8,109.9 251.0,109.5 253.2,109.1 255.4,108.7 257.6,108.3 259.8,107.9 262.0,107.6 264.2,107.2 266.4,106.9 268.6,106.6 270.8,106.3 273.0,106.1 275.2,105.8 277.4,105.6 279.6,105.4 281.8,105.2 284.0,105.0 286.2,104.8 288.5,104.6 290.7,104.5 292.9,104.4 295.1,104.3 297.3,104.2 299.5,104.1 301.7,104.1 303.9,104.1 306.1,104.0 308.3,104.0 310.5,104.1 312.7,104.1 314.9,104.1 317.1,104.2 319.3,104.3 321.5,104.4 323.7,104.5 325.9,104.6 328.1,104.8 330.3,105.0 332.5,105.1 334.7,105.3 336.9,105.6 339.1,105.8 341.3,106.0 343.5,106.3 345.7,106.6" fill="none" stroke="#2b3a67" stroke-width="2.8" stroke-linejoin="round"/>
+<line x1="131.4" y1="250.0" x2="131.4" y2="157.3" stroke="#ddd6c8" stroke-width="1.2"/>
+<circle cx="131.4" cy="157.3" r="3.5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<line x1="167.1" y1="250.0" x2="167.1" y2="137.9" stroke="#ddd6c8" stroke-width="1.2"/>
+<circle cx="167.1" cy="137.9" r="3.5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<line x1="202.9" y1="250.0" x2="202.9" y2="122.8" stroke="#ddd6c8" stroke-width="1.2"/>
+<circle cx="202.9" cy="122.8" r="3.5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<line x1="238.6" y1="250.0" x2="238.6" y2="112.2" stroke="#ddd6c8" stroke-width="1.2"/>
+<circle cx="238.6" cy="112.2" r="3.5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<line x1="274.3" y1="250.0" x2="274.3" y2="105.9" stroke="#ddd6c8" stroke-width="1.2"/>
+<circle cx="274.3" cy="105.9" r="3.5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<line x1="310.0" y1="250.0" x2="310.0" y2="104.1" stroke="#ddd6c8" stroke-width="1.2"/>
+<circle cx="310.0" cy="104.1" r="3.5" fill="#2b3a67" stroke="#2b3a67" stroke-width="1.5"/>
+<rect x="392" y="137.9" width="22" height="19.4" fill="#a8322a" opacity="0.75"/>
+<line x1="167.1" y1="137.9" x2="392.0" y2="137.9" stroke="#ddd6c8" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="392" y="122.8" width="22" height="15.1" fill="#b07a3e" opacity="0.75"/>
+<line x1="202.9" y1="122.8" x2="392.0" y2="122.8" stroke="#ddd6c8" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="392" y="112.2" width="22" height="10.7" fill="#a8322a" opacity="0.75"/>
+<line x1="238.6" y1="112.2" x2="392.0" y2="112.2" stroke="#ddd6c8" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="392" y="105.9" width="22" height="6.3" fill="#b07a3e" opacity="0.75"/>
+<line x1="274.3" y1="105.9" x2="392.0" y2="105.9" stroke="#ddd6c8" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="392" y="104.1" width="22" height="1.9" fill="#a8322a" opacity="0.75"/>
+<line x1="310.0" y1="104.1" x2="392.0" y2="104.1" stroke="#ddd6c8" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="131.4" y1="157.3" x2="392.0" y2="157.3" stroke="#ddd6c8" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="88.8" y="163.3" width="39.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="125.4" y="177.3" font-size="14" fill="#2b3a67" text-anchor="end" font-weight="bold">f(a)</text>
+<rect x="267.4" y="82.1" width="39.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="304.0" y="96.1" font-size="14" fill="#2b3a67" text-anchor="end" font-weight="bold">f(b)</text>
+<text x="403.0" y="96.1" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">増え分</text>
+<text x="30.0" y="300.0" font-size="14" fill="#2a2723" text-anchor="start">細かく区切った増え分を全部足すと、</text>
+<text x="30.0" y="320.0" font-size="14" fill="#2a2723" text-anchor="start">右の積み上げの高さ f(b) − f(a) になる</text>
+</svg>
+<figcaption><strong>図 1.1</strong>　曲線は $f$。区間を細かく切り、各区間での増え分 $f'(x)\,\Delta x$（右の積み上げの1段ずつ）を足すと、積み上げの全体の高さ、つまり右端の値 $f(b)$ から左端の値 $f(a)$ を引いた差になる。内側の切れ目の値は、ある段の上端であり、次の段の下端でもあるので、足すと消える。</figcaption>
+</figure>
+<p>第24回で、小さな正方形の出入りを数えて貼り合わせる、という考えを使った。それは、これとまったく同じ構造である。違いは次元だけで、区間が平面の領域や曲面や立体になり、端点がふちの曲線や曲面になる。この回で示す定理は、次の3つである。</p>
+<ul>
+<li><strong>平面の領域 $D$</strong>：ふち $\partial D$（閉曲線）を回る量 ＝ $D$ の中の $Q_x-P_y$ の合計（グリーンの定理）。</li>
+<li><strong>空間の曲面 $S$</strong>：ふち $\partial S$（閉曲線）を回る量 ＝ $S$ を貫く回転 $\nabla\times\boldsymbol F$ の合計（ストークスの定理）。</li>
+<li><strong>空間の立体 $V$</strong>：ふち $\partial V$（閉曲面）から出ていく量 ＝ $V$ の中の発散 $\nabla\cdot\boldsymbol F$ の合計（ガウスの発散定理）。</li>
+</ul>
+<p>ここで言葉が足りない。「ふち」とは何か、どちら向きに数えるのか。基本定理の右辺 $f(b)-f(a)$ では、右端 $b$ は $+$、左端 $a$ は $-$ だった。つまり<strong>ふちにも向き（符号）がある</strong>。これを正確に決める。</p>
+
+<div class="why"><span class="label">ひとことで</span>基本定理は「内部で微分を足す ＝ ふちの値」の形をしている。この形は次元を上げても成り立つ。そのために、ふちを表す記号と、ふちの向きの約束が要る。</div>
+
+<h3 id="sec-1-2"><span class="no">1.2</span>定義：境界 $\partial D$、$\partial S$、$\partial V$</h3>
+
+<div class="def" id="sym-boundary"><span class="label">記号：境界 $\partial D$、$\partial S$、$\partial V$</span>
+<p><strong>①読み方</strong>：「ラウンド・ディー」「ディーの境界」。$\partial S$ は「ラウンド・エス」「エスの境界」、$\partial V$ は「ラウンド・ブイ」。</p>
+<p><strong>②日本語での意味</strong>：領域・曲面・立体の<strong>ふち</strong>。次元が1つ低い図形で、<strong>向きが付いている</strong>。</p>
+<p><strong>③省略していない書き方</strong>：次の4つの場合がある。</p>
+<ul>
+<li>区間 $[a,b]$（1次元）：$\partial[a,b]:=\{b\}-\{a\}$。端点 $b$ に $+$、端点 $a$ に $-$ の符号を付けた2点。</li>
+<li>平面の領域 $D$（2次元）：$\partial D:=$ $D$ のふちの閉曲線。向きは「領域 $D$ を左手に見て進む向き」（外側の曲線は反時計回り）。</li>
+<li>空間の立体 $V$（3次元）：$\partial V:=$ $V$ の表面の閉曲面。向きは「$V$ の外へ向かう向き」（外向きの単位法線ベクトル $\boldsymbol n$ を選ぶ）。</li>
+<li>空間の曲面 $S$（2次元）：$\partial S:=$ $S$ のふちの閉曲線。向きは、$S$ に選んだ法線 $\boldsymbol n$ との右ねじの関係で決める（1.3）。</li>
+</ul>
+<p><strong>④どこで出会うか</strong>：グリーン・ストークス・ガウスの定理、電磁気学の積分形の法則（ガウスの法則、アンペールの法則、ファラデーの法則）、流体の保存則。</p>
+</div>
+
+<div class="warn"><span class="label">注意</span>
+<p><strong>$\partial$ は偏微分と同じ文字だが、別の意味である</strong>。偏微分 $\dfrac{\partial f}{\partial x}$ の $\partial$ は、分数の形の中にあって「他の変数を止めて微分する」という意味だった（<a href="11_第11回_偏微分.html#sym-partial">第11回</a>）。境界の $\partial D$ は、$D$ や $S$ や $V$ という<strong>図形の名前のすぐ左に付く</strong>形で、「そのふち」という意味である。見分けるには、$\partial$ の隣が「分数」か「図形の名前」かを見る。</p>
+<p>もう1つ、第24回の演算子 $\partial_x$（$\dfrac{\partial}{\partial x}$ の略）とも混ぜない。$\partial_x$ は下付きの変数が付く。</p>
+</div>
+
+<div class="box"><span class="label">この回の定理が仮定していること</span>
+<p>定理を言い切るために、次の3つを仮定する。細かい条件の証明はしない（「証明を省略する」と書く）。</p>
+<ul>
+<li>境界は<strong>区分的に滑らか</strong>：なめらかな曲線（曲面）を有限個つないだもの。正方形の周のように、角があってよい。</li>
+<li>ベクトル場 $\boldsymbol F=(P,Q,R)^{\mathsf T}$ の成分は、領域（曲面、立体）とそのふちを含む範囲で、<strong>連続な偏導関数をもつ</strong>（第24回 (1.1)、(1.2) の導出で使った仮定と同じ）。</li>
+<li>領域は<strong>有限の大きさ</strong>で、境界は<strong>自分自身と交わらない</strong>（8の字のような曲線は除く）。</li>
+</ul>
+<p>この仮定が成り立たない例（場が一点で定義されない）を、3.6 と 4.5 で扱う。</p>
+</div>
+<p>次元ごとに、境界がどう見えるかを図1.2 に並べる。</p>
+<figure class="fig" id="fig-1-2">
+<svg viewBox="0 0 440 580" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="区間・領域・立体の境界" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>区間・領域・立体の境界</title>
+<rect x="0" y="0" width="440" height="580" fill="#fffdf7"/>
+<text x="20.0" y="28.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">① 区間 [a, b]（1次元）</text>
+<line x1="90.0" y1="72.0" x2="350.0" y2="72.0" stroke="#2b3a67" stroke-width="4"/>
+<circle cx="90.0" cy="72.0" r="7" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="350.0" cy="72.0" r="7" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<text x="90.0" y="104.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">a</text>
+<text x="350.0" y="104.0" font-size="16" fill="#a8322a" text-anchor="middle" font-weight="bold">b</text>
+<text x="90.0" y="56.0" font-size="14" fill="#a8322a" text-anchor="middle">−（左端）</text>
+<text x="350.0" y="56.0" font-size="14" fill="#a8322a" text-anchor="middle">+（右端）</text>
+<text x="220.0" y="130.0" font-size="14" fill="#2a2723" text-anchor="middle">境界 ∂[a, b] は 2 点。右端を +、左端を − と数える</text>
+<text x="20.0" y="178.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">② 平面の領域 D（2次元）</text>
+<polyline points="332.0,262.0 331.3,257.5 329.3,253.0 326.1,248.3 321.8,243.7 316.6,239.1 310.8,234.5 304.5,230.1 297.9,226.0 291.3,222.0 284.7,218.4 278.3,215.2 272.1,212.4 266.0,210.0 260.0,208.1 254.0,206.6 247.9,205.6 241.5,205.1 234.8,205.0 227.6,205.3 220.0,206.0 211.9,207.0 203.5,208.4 194.8,210.0 186.1,211.9 177.5,213.9 169.2,216.1 161.5,218.5 154.5,221.0 148.4,223.6 143.3,226.4 139.2,229.2 136.1,232.2 133.9,235.3 132.6,238.6 131.9,242.1 131.6,245.7 131.6,249.5 131.8,253.5 131.9,257.7 132.0,262.0 131.9,266.5 131.8,271.0 131.6,275.7 131.6,280.3 131.9,284.9 132.6,289.5 133.9,293.9 136.1,298.0 139.2,302.0 143.3,305.6 148.4,308.8 154.5,311.6 161.5,314.0 169.2,315.9 177.5,317.4 186.1,318.4 194.8,318.9 203.5,319.0 211.9,318.7 220.0,318.0 227.6,317.0 234.8,315.6 241.5,314.0 247.9,312.1 254.0,310.1 260.0,307.9 266.0,305.5 272.1,303.0 278.3,300.4 284.7,297.6 291.3,294.8 297.9,291.8 304.5,288.7 310.8,285.4 316.6,281.9 321.8,278.3 326.1,274.5 329.3,270.5 331.3,266.3 332.0,262.0" fill="#e8ecf4" stroke="#a8322a" stroke-width="3" stroke-linejoin="round"/>
+<text x="220.0" y="267.0" font-size="20" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">D</tspan></text>
+<line x1="309.5" y1="234.6" x2="292.5" y2="221.8" stroke="#a8322a" stroke-width="3"/><path d="M302.3 223.8 L292.5 221.8 L297.1 230.7" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="160.0" y1="215.8" x2="139.5" y2="226.9" stroke="#a8322a" stroke-width="3"/><path d="M145.4 218.8 L139.5 226.9 L149.5 226.4" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="146.0" y1="301.3" x2="168.2" y2="311.2" stroke="#a8322a" stroke-width="3"/><path d="M158.2 311.5 L168.2 311.2 L161.8 303.6" fill="none" stroke="#a8322a" stroke-width="3"/>
+<line x1="276.5" y1="309.5" x2="297.8" y2="298.9" stroke="#a8322a" stroke-width="3"/><path d="M291.7 306.8 L297.8 298.9 L287.8 299.1" fill="none" stroke="#a8322a" stroke-width="3"/>
+<text x="332.0" y="258.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">∂D</text>
+<text x="220.0" y="340.0" font-size="14" fill="#2a2723" text-anchor="middle">境界 ∂D は閉曲線。D を左手に見て進む向き（反時計回り）</text>
+<text x="20.0" y="388.0" font-size="15" fill="#2a2723" text-anchor="start" font-weight="bold">③ 空間の立体 V（3次元）</text>
+<circle cx="220.0" cy="470.0" r="62" fill="#e8ecf4" stroke="#a8322a" stroke-width="3"/>
+<ellipse cx="220" cy="470" rx="62" ry="18" fill="none" stroke="#9a9184" stroke-width="1.2" stroke-dasharray="4 4"/>
+<text x="220.0" y="476.0" font-size="20" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">V</tspan></text>
+<line x1="271.2" y1="435.0" x2="297.6" y2="416.9" stroke="#a8322a" stroke-width="2.6"/><path d="M293.1 424.7 L297.6 416.9 L288.7 418.3" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="218.2" y1="408.0" x2="217.3" y2="376.0" stroke="#a8322a" stroke-width="2.6"/><path d="M221.4 384.0 L217.3 376.0 L213.6 384.3" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="163.9" y1="443.5" x2="135.0" y2="429.8" stroke="#a8322a" stroke-width="2.6"/><path d="M144.0 429.8 L135.0 429.8 L140.7 436.8" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="167.4" y1="502.8" x2="140.3" y2="519.8" stroke="#a8322a" stroke-width="2.6"/><path d="M145.1 512.2 L140.3 519.8 L149.2 518.8" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<line x1="249.0" y1="524.8" x2="264.0" y2="553.0" stroke="#a8322a" stroke-width="2.6"/><path d="M256.8 547.7 L264.0 553.0 L263.7 544.1" fill="none" stroke="#a8322a" stroke-width="2.6"/>
+<text x="302.0" y="510.0" font-size="17" fill="#a8322a" text-anchor="start" font-weight="bold">n</text>
+<text x="128.0" y="414.0" font-size="16" fill="#a8322a" text-anchor="end" font-weight="bold">∂V</text>
+<text x="220.0" y="564.0" font-size="14" fill="#2a2723" text-anchor="middle">境界 ∂V は閉曲面。向きは外向きの単位法線 n</text>
+</svg>
+<figcaption><strong>図 1.2</strong>　境界 $\partial$ は、1次元の区間では端の2点、2次元の領域では周りの曲線、3次元の立体では表面の曲面である。どれも、「ふち」の次元は1つ低い。朱の矢印が、境界に付ける向きの約束を表す。</figcaption>
+</figure>
+
+<div class="why"><span class="label">ひとことで</span>$\partial$ は「ふち」。区間のふちは2点、領域・曲面のふちは曲線、立体のふちは曲面。ふちには向き（符号）が付いている。</div>
+
+<h3 id="sec-1-3"><span class="no">1.3</span>ふちの向きの約束</h3>
+<p>向きを決めないと、定理の両辺の符号がそろわない。基本定理でも、$f(b)-f(a)$ の $+$ と $-$ は、「右端が $+$」と決めてあるから意味をもった。3つの場合に、約束を並べる。</p>
+
+<div class="def" id="sym-oriented-boundary"><span class="label">記号：境界の向きの約束</span>
+<p><strong>①読み方</strong>：「きょうかいのむきのやくそく」。</p>
+<p><strong>②日本語での意味</strong>：領域・立体・曲面のふちを、定理の両辺の符号が合うように一方向に決めたもの。</p>
+<p><strong>③省略していない書き方</strong>：</p>
+<ul>
+<li><strong>平面の領域 $D$</strong>：$\partial D$ は、進むときに領域 $D$ が<strong>左手</strong>にある向き。単純な領域（穴がない）では反時計回り。穴のある領域では、穴のふちは時計回りになる（図2.5）。</li>
+<li><strong>空間の立体 $V$</strong>：$\partial V$ の単位法線ベクトル $\boldsymbol n$ は、<strong>外向き</strong>（$V$ から遠ざかる向き）。</li>
+<li><strong>空間の曲面 $S$</strong>：$S$ の各点に単位法線ベクトル $\boldsymbol n$ を（連続になるように）1つ選ぶ。$\partial S$ は、$\boldsymbol n$ の先から見下ろして<strong>反時計回り</strong>。同じことを、<strong>右手の4本の指を $\partial S$ の向きに曲げたとき、親指が $\boldsymbol n$ の向き</strong>と言う（右ねじの規則）。</li>
+</ul>
+<p><strong>④どこで出会うか</strong>：この回の3つの定理、電磁気学の積分形の法則（<a href="24_第24回_発散と回転.html#sec-3-4">第24回 3.4</a> の回転の向きと同じ右ねじ）。</p>
+</div>
+<p>曲面 $S$ とその境界の向きの結びつきを、図1.3 で見る。</p>
+<figure class="fig" id="fig-1-3">
+<svg viewBox="0 0 440 384" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="曲面の向きと境界の向き：右ねじ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>曲面の向きと境界の向き：右ねじ</title>
+<rect x="0" y="0" width="440" height="384" fill="#fffdf7"/>
+<polyline points="110.0,250.0 260.0,250.0 335.0,202.0 185.0,202.0 110.0,250.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2" stroke-linejoin="round"/>
+<line x1="171.0" y1="250.0" x2="199.0" y2="250.0" stroke="#a8322a" stroke-width="3.4"/><path d="M189.1 254.8 L199.0 250.0 L189.1 245.2" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="285.7" y1="233.5" x2="309.3" y2="218.5" stroke="#a8322a" stroke-width="3.4"/><path d="M303.5 227.8 L309.3 218.5 L298.4 219.8" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="274.0" y1="202.0" x2="246.0" y2="202.0" stroke="#a8322a" stroke-width="3.4"/><path d="M255.9 197.2 L246.0 202.0 L255.9 206.8" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="159.3" y1="218.5" x2="135.7" y2="233.5" stroke="#a8322a" stroke-width="3.4"/><path d="M141.5 224.2 L135.7 233.5 L146.6 232.2" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="222.5" y1="226.0" x2="222.5" y2="106.0" stroke="#5f7f4f" stroke-width="3.4"/><path d="M227.3 115.9 L222.5 106.0 L217.7 115.9" fill="none" stroke="#5f7f4f" stroke-width="3.4"/>
+<text x="208.5" y="116.0" font-size="18" fill="#5f7f4f" text-anchor="end" font-weight="bold">n</text>
+<text x="214.5" y="230.0" font-size="18" fill="#2b3a67" text-anchor="end" font-weight="bold">S</text>
+<text x="284.0" y="256.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">∂S</text>
+<text x="20.0" y="36.0" font-size="14" fill="#2a2723" text-anchor="start">上（n の先）から見下ろすと、</text>
+<text x="20.0" y="56.0" font-size="14" fill="#2a2723" text-anchor="start">∂S は反時計回り</text>
+<text x="20.0" y="340.0" font-size="14" fill="#2a2723" text-anchor="start">右手の4本の指を ∂S の向きに曲げると、</text>
+<text x="20.0" y="362.0" font-size="14" fill="#2a2723" text-anchor="start">親指が n の向き（右ねじ）</text>
+<text x="250.0" y="100.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">∂S の向きを</text>
+<text x="250.0" y="120.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">決めると n が決まり、</text>
+<text x="250.0" y="140.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">n を決めると</text>
+<text x="250.0" y="160.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">∂S の向きが決まる</text>
+</svg>
+<figcaption><strong>図 1.3</strong>　曲面 $S$ に上向きの法線 $\boldsymbol n$（緑）を選ぶと、境界 $\partial S$（朱）の向きは、上から見て反時計回りに決まる。逆に $\boldsymbol n$ を下向きに選べば、境界は時計回りになる。ストークスの定理の両辺の符号は、この結びつきで揃えてある。</figcaption>
+</figure>
+<p>$\boldsymbol n$ を選ぶことは、曲面の「表と裏のどちらを表とするか」を選ぶことである。$\boldsymbol n$ を逆向きに選べば、$\partial S$ の向きも逆になり、ストークスの定理の両辺は<strong>両方とも符号が変わる</strong>ので、等式は崩れない（4.2 の例で確かめる）。</p>
+<p>平面の領域 $D$ は、特別な曲面である。$xy$ 平面上の $D$ に $\boldsymbol n=\boldsymbol e_z=(0,0,1)^{\mathsf T}$（上向き）を選べば、$\partial D$ は上から見て反時計回りで、「領域を左手に見る」と一致する。グリーンの定理はストークスの定理の特別な場合になる（4.3）。</p>
+
+<div class="why"><span class="label">ひとことで</span>領域は左手、立体は外向き、曲面は右ねじ。この3つの約束で、定理の左辺と右辺の符号がそろう。</div>
+
+<h3 id="sec-1-4"><span class="no">1.4</span>この回で使う積分の書き方：省略の段階</h3>
+<p>第25回の線積分と面積分を、この回では短い形で使う。短い形を使う前に、完全な形から1段ずつ並べておく。以後、短い形を使うときはこの表に戻ること。</p>
+
+<div class="box" id="abbr-boundary-integral"><span class="label">省略の段階：境界上の積分の書き方</span>
+<p><strong>(1) 曲線に沿った積分（線積分）</strong>。曲線 $C$ を $\boldsymbol r(t)$（$t$ は $\alpha$ から $\beta$）と媒介変数で表すとする。</p>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても誤解が起きない理由／起きる場面</th></tr>
+<tr><td>S0</td><td>$\displaystyle\int_\alpha^\beta\boldsymbol F\bigl(\boldsymbol r(t)\bigr)\cdot\boldsymbol r'(t)\,dt$</td><td>（省略なし）。媒介変数 $t$ と、曲線の速度 $\boldsymbol r'(t)$ を明示</td><td>―（<a href="25_第25回_線積分と面積分.html#sym-line-integral">第25回の定義</a>）</td></tr>
+<tr><td>S1</td><td>$\displaystyle\int_C\boldsymbol F\cdot d\boldsymbol r$</td><td>$t$ と $\boldsymbol r'(t)\,dt$ を、$d\boldsymbol r$ という1つの記号にまとめる</td><td>$d\boldsymbol r=\boldsymbol r'(t)\,dt$ と約束済みなら S0 に戻れる（<a href="25_第25回_線積分と面積分.html#sym-dr">第25回</a>）。<strong>向きの選び方（$t$ の増える向き）は S1 に書かれていない</strong></td></tr>
+<tr><td>S2</td><td>$\displaystyle\oint_{\partial D}\boldsymbol F\cdot d\boldsymbol r$</td><td>閉曲線であることを積分記号の丸 $\oint$ で示す。向きは「1.3 の約束」とする</td><td>$\oint$ は<a href="25_第25回_線積分と面積分.html#sym-closed-integral">閉曲線に沿った1周</a>を意味する。向きを省いたのは、1.3 で決めたから。<strong>向きを逆にすると符号が変わる</strong></td></tr>
+<tr><td>S3</td><td>$\displaystyle\oint_{\partial D}(P\,dx+Q\,dy)$</td><td>$\boldsymbol F\cdot d\boldsymbol r$ を成分で書いたもの。$\boldsymbol F=(P,Q)^{\mathsf T}$、$d\boldsymbol r=(dx,dy)^{\mathsf T}$ なので $P\,dx+Q\,dy$</td><td>内積の定義（<a href="05_第5回_ベクトルと行列の書き方.html#sym-dot">第5回</a>）そのもの。$dx=x'(t)\,dt$、$dy=y'(t)\,dt$</td></tr>
+</table>
+<p><strong>(2) 曲面に沿った積分（面積分、流束）</strong>。</p>
+<table class="tb">
+<tr><th>段階</th><th>書き方</th><th>何を省いたか</th><th>省いても誤解が起きない理由／起きる場面</th></tr>
+<tr><td>S0</td><td>$\displaystyle\iint_{E}\boldsymbol F\bigl(\boldsymbol r(u,v)\bigr)\cdot\bigl(\boldsymbol r_u\times\boldsymbol r_v\bigr)\,du\,dv$</td><td>（省略なし）。曲面を $\boldsymbol r(u,v)$ で表し、媒介変数の領域 $E$ で積分する</td><td>―（<a href="25_第25回_線積分と面積分.html#sym-flux">第25回の定義</a>）</td></tr>
+<tr><td>S1</td><td>$\displaystyle\iint_{S}\boldsymbol F\cdot\boldsymbol n\,dS$</td><td>$u,v$ と、$\boldsymbol r_u\times\boldsymbol r_v$ を「法線 $\boldsymbol n$ と面積要素 $dS$」に分けて書く</td><td>$\boldsymbol n\,dS=\dfrac{\boldsymbol r_u\times\boldsymbol r_v}{\|\boldsymbol r_u\times\boldsymbol r_v\|}\cdot\|\boldsymbol r_u\times\boldsymbol r_v\|\,du\,dv$ で S0 に戻れる（<a href="25_第25回_線積分と面積分.html#sym-surface-element">第25回</a>）。<strong>$\boldsymbol n$ の選び方が書かれていない</strong></td></tr>
+<tr><td>S2</td><td>$\displaystyle\iint_{\partial V}\boldsymbol F\cdot d\boldsymbol S$</td><td>$\boldsymbol n\,dS$ を $d\boldsymbol S$ にまとめる</td><td>$d\boldsymbol S:=\boldsymbol n\,dS$ と約束済みなら S1 に戻れる（<a href="25_第25回_線積分と面積分.html#sym-dS-vector">第25回</a>）。$\partial V$ では $\boldsymbol n$ は外向き（1.3）</td></tr>
+<tr><td>S3</td><td>$\displaystyle\iint_{\partial V}\boldsymbol F\cdot d\boldsymbol S$ の積分記号に丸を付けた「∯」を使う書き方（本教材では S2 の形を使う）</td><td>閉曲面であることを、積分記号に丸を付けて示す</td><td>丸を付けるかどうかは教科書による。付けても付けなくても、閉曲面の上での積分である点は同じ。丸を付けた記号は表示できない環境があるので、この教材では丸なしの $\iint_{\partial V}$ と書く</td></tr>
+</table>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>線積分は「$\boldsymbol F$ と $d\boldsymbol r$ の内積を曲線に沿って足す」、面積分は「$\boldsymbol F$ と $\boldsymbol n\,dS$ の内積を曲面全体で足す」。どちらも向きの選び方が結果の符号を決める。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-2"><span class="no">2</span>グリーンの定理：平面でふちを回る量</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/26_a2_smokering.jpg" alt="青空の下、山の斜面の上の空に、小さな白い煙の輪がひとつ浮かんでいる" loading="lazy"></div>
+<p class="cap">空に、ひとつの輪になった煙が浮かんでいる。</p>
+<p class="cr">PSomol（2023年、エトナ山の上の煙の輪）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Smoke_ring_above_Mount_Etna.jpg">Wikimedia Commons</a>（一部を切り出した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/26_b2_bon.jpg" alt="夜、提灯を連ねた綱の下の広場で、浴衣の人びとが、櫓のまわりを回っている" loading="lazy"></div>
+<p class="cap">櫓を中心に、浴衣の人びとが、輪になって回る。</p>
+<p class="cr">Yasu（東京・花園神社の盆踊り）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Bon_odori_at_Hanazono_Shrine.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-2-1"><span class="no">2.1</span>主張</h3>
+<p>平面（2次元）の領域 $D$ と、ベクトル場 $\boldsymbol F=(P,Q)^{\mathsf T}$ を考える。第24回で、小さな正方形のまわりを回る量が $(Q_x-P_y)h^2$ になった。これを大きな領域に広げる。</p>
+
+<div class="thm" id="sym-green-theorem"><span class="label">グリーンの定理</span>
+<p>平面の領域 $D$ が、区分的に滑らかな単純閉曲線 $\partial D$ で囲まれていて、$P,Q$ が $D$ とその境界を含む範囲で連続な偏導関数をもつとき、</p>
+<p>$$ \oint_{\partial D}\bigl(P\,dx+Q\,dy\bigr)=\iint_D\Bigl(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\Bigr)\,dx\,dy $$</p>
+<p>ここで $\partial D$ の向きは 1.3 の約束（領域を左手に見る）。左辺は <a href="25_第25回_線積分と面積分.html#sym-line-integral">線積分</a>（1.4 の S3）、右辺は <a href="13_第13回_重積分と変数変換.html#sym-double-integral">重積分</a> である。</p>
+<p><strong>日本語で読む</strong>：「領域のふちを反時計回りに1周して、場がふちに沿って押す力を足した量（循環）は、領域の中の各点で<a href="24_第24回_発散と回転.html#sec-1-3">第24回 1.3</a> の『単位面積あたりの循環』$Q_x-P_y$ を足した量に等しい」。</p>
+<p>ベクトルの形で書けば、$\boldsymbol F=(P,Q)^{\mathsf T}$ として、$\displaystyle\oint_{\partial D}\boldsymbol F\cdot d\boldsymbol r=\iint_D(Q_x-P_y)\,dA$（$dA=dx\,dy$ は<a href="13_第13回_重積分と変数変換.html#sym-dA-dV">面積要素</a>）。$Q_x-P_y$ は、$\boldsymbol F$ を $(P,Q,0)^{\mathsf T}$ と見たときの<a href="24_第24回_発散と回転.html#sym-curl">回転 $\nabla\times\boldsymbol F$</a> の第3成分である。</p>
+</div>
+
+<h3 id="sec-2-2"><span class="no">2.2</span>最小の具体例：数値で手を動かす</h3>
+<p>$D$ を正方形 $[0,1]\times[0,1]$、$\boldsymbol F=(P,Q)^{\mathsf T}=(-y^2,\ xy)^{\mathsf T}$ とする。</p>
+<p>① 右辺：$Q_x=\dfrac{\partial(xy)}{\partial x}=y$、$P_y=\dfrac{\partial(-y^2)}{\partial y}=-2y$。$Q_x-P_y=y-(-2y)=3y$。</p>
+<p>② $\displaystyle\iint_D3y\,dx\,dy=\int_0^1\Bigl(\int_0^13y\,dy\Bigr)dx=\int_0^1\tfrac32\,dx=\tfrac32$。　<span class="meta">累次積分（<a href="13_第13回_重積分と変数変換.html#sym-iterated">第13回</a>）</span></p>
+<p>③ 左辺：反時計回りに4辺を順に通る。</p>
+<ul>
+<li>下の辺（$y=0$、$x:0\to1$）：$P=-0^2=0$、$dy=0$。$\int(P\,dx+Q\,dy)=0$。</li>
+<li>右の辺（$x=1$、$y:0\to1$）：$dx=0$。$Q=xy=y$。$\int_0^1y\,dy=\tfrac12$。</li>
+<li>上の辺（$y=1$、$x:1\to0$）：$P=-1$、$dy=0$。$\int_{x=1}^{0}(-1)\,dx=+1$。　<span class="meta">$x$ が1から0へ減る向きなので、積分の上端が下端より小さい</span></li>
+<li>左の辺（$x=0$、$y:1\to0$）：$dx=0$。$Q=0\cdot y=0$。$0$。</li>
+</ul>
+<p>④ 合計：$0+\tfrac12+1+0=\tfrac32$。②と一致する。</p>
+
+<h3 id="sec-2-3"><span class="no">2.3</span>導出：小さな正方形を貼り合わせる</h3>
+<p>領域 $D$ を、1辺 $h$ の小さな正方形で敷き詰める（$D$ のふちの近くは階段状で近似する）。正方形は全部で $N$ 個あるとし、$k$ 番目の正方形を $Q_k$、その左下の角を $(x_k,y_k)$、$Q_k$ のまわりを反時計回りに1周する線積分を $\Gamma_k$ とする。</p>
+<p>① 第24回の (1.2) から、小さな正方形のまわりの循環は</p>
+<p>$$ \Gamma_k=\oint_{\partial Q_k}(P\,dx+Q\,dy)\approx\Bigl(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\Bigr)(x_k,y_k)\,h^2 $$</p>
+<p>② $k$ について全部足す。左辺の $\sum_k\Gamma_k$ を、<strong>辺ごと</strong>に数え直す。正方形の辺には2種類ある。</p>
+<ul>
+<li><strong>内側の辺</strong>：隣り合う2つの正方形が共有する辺。片方の正方形では反時計回りの向きに、もう片方では<strong>逆向き</strong>に通る（図2.1 の灰の2本）。同じ辺を逆向きに通るので、$P\,dx+Q\,dy$ の線積分は $+$ と $-$ で打ち消す。</li>
+<li><strong>外周の辺</strong>：$D$ のふち。1つの正方形にだけ属し、$D$ を左手に見る向きに1回通る。</li>
+</ul>
+<p>したがって $\sum_k\Gamma_k$ は、外周の辺の線積分の合計、つまり $\oint_{\partial D}(P\,dx+Q\,dy)$ になる。</p>
+<p>小さな正方形を貼り合わせたとき、辺の数えられ方を図2.1 に描く。</p>
+<figure class="fig" id="fig-2-1">
+<svg viewBox="0 0 440 358" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="小さな正方形の貼り合わせ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>小さな正方形の貼り合わせ</title>
+<rect x="0" y="0" width="440" height="358" fill="#fffdf7"/>
+<polyline points="70.0,300.0 170.0,300.0 170.0,210.0 70.0,210.0 70.0,300.0" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="70.0,210.0 170.0,210.0 170.0,120.0 70.0,120.0 70.0,210.0" fill="#fbf8ee" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="70.0,120.0 170.0,120.0 170.0,30.0 70.0,30.0 70.0,120.0" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="170.0,300.0 270.0,300.0 270.0,210.0 170.0,210.0 170.0,300.0" fill="#fbf8ee" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="170.0,210.0 270.0,210.0 270.0,120.0 170.0,120.0 170.0,210.0" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="170.0,120.0 270.0,120.0 270.0,30.0 170.0,30.0 170.0,120.0" fill="#fbf8ee" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="270.0,300.0 370.0,300.0 370.0,210.0 270.0,210.0 270.0,300.0" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="270.0,210.0 370.0,210.0 370.0,120.0 270.0,120.0 270.0,210.0" fill="#fbf8ee" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="270.0,120.0 370.0,120.0 370.0,30.0 270.0,30.0 270.0,120.0" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<line x1="175.0" y1="282.0" x2="175.0" y2="228.0" stroke="#9a9184" stroke-width="1.5"/><path d="M177.6 233.4 L175.0 228.0 L172.4 233.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="165.0" y1="228.0" x2="165.0" y2="282.0" stroke="#9a9184" stroke-width="1.5"/><path d="M162.4 276.6 L165.0 282.0 L167.6 276.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="175.0" y1="192.0" x2="175.0" y2="138.0" stroke="#9a9184" stroke-width="1.5"/><path d="M177.6 143.4 L175.0 138.0 L172.4 143.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="165.0" y1="138.0" x2="165.0" y2="192.0" stroke="#9a9184" stroke-width="1.5"/><path d="M162.4 186.6 L165.0 192.0 L167.6 186.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="175.0" y1="102.0" x2="175.0" y2="48.0" stroke="#9a9184" stroke-width="1.5"/><path d="M177.6 53.4 L175.0 48.0 L172.4 53.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="165.0" y1="48.0" x2="165.0" y2="102.0" stroke="#9a9184" stroke-width="1.5"/><path d="M162.4 96.6 L165.0 102.0 L167.6 96.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="275.0" y1="282.0" x2="275.0" y2="228.0" stroke="#9a9184" stroke-width="1.5"/><path d="M277.6 233.4 L275.0 228.0 L272.4 233.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="265.0" y1="228.0" x2="265.0" y2="282.0" stroke="#9a9184" stroke-width="1.5"/><path d="M262.4 276.6 L265.0 282.0 L267.6 276.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="275.0" y1="192.0" x2="275.0" y2="138.0" stroke="#9a9184" stroke-width="1.5"/><path d="M277.6 143.4 L275.0 138.0 L272.4 143.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="265.0" y1="138.0" x2="265.0" y2="192.0" stroke="#9a9184" stroke-width="1.5"/><path d="M262.4 186.6 L265.0 192.0 L267.6 186.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="275.0" y1="102.0" x2="275.0" y2="48.0" stroke="#9a9184" stroke-width="1.5"/><path d="M277.6 53.4 L275.0 48.0 L272.4 53.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="265.0" y1="48.0" x2="265.0" y2="102.0" stroke="#9a9184" stroke-width="1.5"/><path d="M262.4 96.6 L265.0 102.0 L267.6 96.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="90.0" y1="215.0" x2="150.0" y2="215.0" stroke="#9a9184" stroke-width="1.5"/><path d="M144.6 217.6 L150.0 215.0 L144.6 212.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="150.0" y1="205.0" x2="90.0" y2="205.0" stroke="#9a9184" stroke-width="1.5"/><path d="M95.4 202.4 L90.0 205.0 L95.4 207.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="190.0" y1="215.0" x2="250.0" y2="215.0" stroke="#9a9184" stroke-width="1.5"/><path d="M244.6 217.6 L250.0 215.0 L244.6 212.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="250.0" y1="205.0" x2="190.0" y2="205.0" stroke="#9a9184" stroke-width="1.5"/><path d="M195.4 202.4 L190.0 205.0 L195.4 207.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="290.0" y1="215.0" x2="350.0" y2="215.0" stroke="#9a9184" stroke-width="1.5"/><path d="M344.6 217.6 L350.0 215.0 L344.6 212.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="350.0" y1="205.0" x2="290.0" y2="205.0" stroke="#9a9184" stroke-width="1.5"/><path d="M295.4 202.4 L290.0 205.0 L295.4 207.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="90.0" y1="125.0" x2="150.0" y2="125.0" stroke="#9a9184" stroke-width="1.5"/><path d="M144.6 127.6 L150.0 125.0 L144.6 122.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="150.0" y1="115.0" x2="90.0" y2="115.0" stroke="#9a9184" stroke-width="1.5"/><path d="M95.4 112.4 L90.0 115.0 L95.4 117.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="190.0" y1="125.0" x2="250.0" y2="125.0" stroke="#9a9184" stroke-width="1.5"/><path d="M244.6 127.6 L250.0 125.0 L244.6 122.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="250.0" y1="115.0" x2="190.0" y2="115.0" stroke="#9a9184" stroke-width="1.5"/><path d="M195.4 112.4 L190.0 115.0 L195.4 117.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="290.0" y1="125.0" x2="350.0" y2="125.0" stroke="#9a9184" stroke-width="1.5"/><path d="M344.6 127.6 L350.0 125.0 L344.6 122.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="350.0" y1="115.0" x2="290.0" y2="115.0" stroke="#9a9184" stroke-width="1.5"/><path d="M295.4 112.4 L290.0 115.0 L295.4 117.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="90.0" y1="300.0" x2="150.0" y2="300.0" stroke="#a8322a" stroke-width="3.4"/><path d="M140.1 304.8 L150.0 300.0 L140.1 295.2" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="190.0" y1="300.0" x2="250.0" y2="300.0" stroke="#a8322a" stroke-width="3.4"/><path d="M240.1 304.8 L250.0 300.0 L240.1 295.2" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="290.0" y1="300.0" x2="350.0" y2="300.0" stroke="#a8322a" stroke-width="3.4"/><path d="M340.1 304.8 L350.0 300.0 L340.1 295.2" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="370.0" y1="282.0" x2="370.0" y2="228.0" stroke="#a8322a" stroke-width="3.4"/><path d="M374.8 237.9 L370.0 228.0 L365.2 237.9" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="370.0" y1="192.0" x2="370.0" y2="138.0" stroke="#a8322a" stroke-width="3.4"/><path d="M374.8 147.9 L370.0 138.0 L365.2 147.9" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="370.0" y1="102.0" x2="370.0" y2="48.0" stroke="#a8322a" stroke-width="3.4"/><path d="M374.8 57.9 L370.0 48.0 L365.2 57.9" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="350.0" y1="30.0" x2="290.0" y2="30.0" stroke="#a8322a" stroke-width="3.4"/><path d="M299.9 25.2 L290.0 30.0 L299.9 34.8" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="250.0" y1="30.0" x2="190.0" y2="30.0" stroke="#a8322a" stroke-width="3.4"/><path d="M199.9 25.2 L190.0 30.0 L199.9 34.8" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="150.0" y1="30.0" x2="90.0" y2="30.0" stroke="#a8322a" stroke-width="3.4"/><path d="M99.9 25.2 L90.0 30.0 L99.9 34.8" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="70.0" y1="48.0" x2="70.0" y2="102.0" stroke="#a8322a" stroke-width="3.4"/><path d="M65.2 92.1 L70.0 102.0 L74.8 92.1" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="70.0" y1="138.0" x2="70.0" y2="192.0" stroke="#a8322a" stroke-width="3.4"/><path d="M65.2 182.1 L70.0 192.0 L74.8 182.1" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="70.0" y1="228.0" x2="70.0" y2="282.0" stroke="#a8322a" stroke-width="3.4"/><path d="M65.2 272.1 L70.0 282.0 L74.8 272.1" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<text x="220.0" y="322.0" font-size="14" fill="#9a9184" text-anchor="middle" font-weight="bold">灰：内側の辺（同じ長さを逆向きに2回数える）</text>
+<text x="220.0" y="344.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">朱：外周（1回だけ数えられて残る）</text>
+</svg>
+<figcaption><strong>図 2.1</strong>　各正方形のまわりを反時計回りに1周する量を足し合わせる。隣り合う2つの正方形は、共有する辺を逆向きに通るので、その辺の寄与は $+$ と $-$ で消える（灰の2本の矢印）。消えずに残るのは、外周の辺（朱）だけである。</figcaption>
+</figure>
+<p>③ 右辺：$\sum_k\bigl(Q_x-P_y\bigr)(x_k,y_k)\,h^2$ は、<a href="10_第10回_積分.html#sym-riemann-sum">リーマン和</a>（面積 $h^2$ の小片に、小片の中の値を掛けて足したもの）である。$h\to0$ とすると $\iint_D(Q_x-P_y)\,dx\,dy$ に近づく。</p>
+<p>④ ①の「$\approx$」の誤差は各正方形で $o(h^2)$（第24回の「よくある誤解」で見たとおり、$h^2$ より速く0に近づく）。正方形は $N\approx(\text{面積})/h^2$ 個なので、誤差の総和は $N\cdot o(h^2)=o(1)\to0$。階段状の近似のずれも、$h\to0$ で0に近づく。以上から、等式が成り立つ。　<span class="meta">条件の細かい確認（誤差が一様に小さいこと、階段近似の誤差）は省略する。厳密な証明は、長方形について 2.4 で行う</span></p>
+
+<div class="why"><span class="label">ひとことで</span>小さな正方形のまわりの循環 $(Q_x-P_y)h^2$ を全部足す。内側の辺は逆向きに2回通って消え、外周だけが残る。残った外周の線積分が左辺、足した $(Q_x-P_y)$ が右辺。</div>
+
+<h3 id="sec-2-4"><span class="no">2.4</span>厳密な証明：長方形の場合</h3>
+<p>貼り合わせの導出は、極限の細かい議論を省いた。長方形 $D=[a,b]\times[c,d]$ なら、微積分学の基本定理を使って、極限なしで証明できる。$P$ の部分と $Q$ の部分を別々に確かめて、足す。</p>
+<p><strong>(a) $P$ だけの部分</strong>：$\displaystyle-\iint_D\frac{\partial P}{\partial y}\,dx\,dy=\oint_{\partial D}P\,dx$ を示す。</p>
+<p>① 左辺の重積分を、$y$ について先に積分する累次積分にする（<a href="13_第13回_重積分と変数変換.html#sym-iterated">第13回</a>）：$\displaystyle-\int_a^b\Bigl(\int_c^d\frac{\partial P}{\partial y}(x,y)\,dy\Bigr)dx$。</p>
+<p>② 内側の $y$ の積分に、<a href="10_第10回_積分.html#sym-ftc">基本定理</a>を使う（$x$ を止めて、$y$ の関数 $P(x,\cdot)$ と見る）：$\displaystyle\int_c^d\frac{\partial P}{\partial y}(x,y)\,dy=P(x,d)-P(x,c)$。</p>
+<p>③ ①に戻す：$\displaystyle-\int_a^b\bigl[P(x,d)-P(x,c)\bigr]dx=\int_a^bP(x,c)\,dx-\int_a^bP(x,d)\,dx$。</p>
+<p>④ 右辺 $\oint_{\partial D}P\,dx$ を、4辺に分ける（反時計回り）。下の辺（$y=c$、$x:a\to b$）：$\int_a^bP(x,c)\,dx$。上の辺（$y=d$、$x:b\to a$）：$\int_{x=b}^{a}P(x,d)\,dx=-\int_a^bP(x,d)\,dx$。左右の辺は $x$ が一定で $dx=0$ なので0。　<span class="meta">図2.2</span></p>
+<p>⑤ ③と④は一致する。(a) が示せた。</p>
+<p>長方形の場合は、図2.2 のように基本定理を $y$ 方向に1回使うだけで済む。</p>
+<figure class="fig" id="fig-2-2">
+<svg viewBox="0 0 440 368" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="長方形でのグリーンの定理（P の部分）" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>長方形でのグリーンの定理（P の部分）</title>
+<rect x="0" y="0" width="440" height="368" fill="#fffdf7"/>
+<rect x="70" y="60" width="300" height="170" rx="3" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.2"/>
+<line x1="100.0" y1="230.0" x2="340.0" y2="230.0" stroke="#a8322a" stroke-width="3.6"/><path d="M329.2 235.2 L340.0 230.0 L329.2 224.8" fill="none" stroke="#a8322a" stroke-width="3.6"/>
+<line x1="340.0" y1="60.0" x2="100.0" y2="60.0" stroke="#a8322a" stroke-width="3.6"/><path d="M110.8 54.8 L100.0 60.0 L110.8 65.2" fill="none" stroke="#a8322a" stroke-width="3.6"/>
+<text x="220.0" y="254.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">下の辺（→）：+∫ P(x, c) dx</text>
+<text x="220.0" y="48.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">上の辺（←）：−∫ P(x, d) dx</text>
+<line x1="215.0" y1="226.0" x2="215.0" y2="64.0" stroke="#b07a3e" stroke-width="2.2" stroke-dasharray="6 4"/>
+<line x1="215.0" y1="226.0" x2="215.0" y2="70.0" stroke="#b07a3e" stroke-width="2.2"/><path d="M218.5 77.2 L215.0 70.0 L211.5 77.2" fill="none" stroke="#b07a3e" stroke-width="2.2"/>
+<rect x="220.0" y="136.0" width="64.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="223.0" y="150.0" font-size="14" fill="#b07a3e" text-anchor="start" font-weight="bold">y 方向に</text>
+<rect x="220.0" y="156.0" width="81.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="223.0" y="170.0" font-size="14" fill="#b07a3e" text-anchor="start" font-weight="bold">P_y を足す</text>
+<text x="62.0" y="234.0" font-size="16" fill="#2a2723" text-anchor="end">c</text>
+<text x="62.0" y="65.0" font-size="16" fill="#2a2723" text-anchor="end">d</text>
+<text x="70.0" y="276.0" font-size="16" fill="#2a2723" text-anchor="middle">a</text>
+<text x="370.0" y="276.0" font-size="16" fill="#2a2723" text-anchor="middle">b</text>
+<text x="60.0" y="330.0" font-size="14" fill="#b07a3e" text-anchor="start">y で c から d まで ∫ P_y dy = P(x, d) − P(x, c)（基本定理）</text>
+<text x="60.0" y="352.0" font-size="14" fill="#2a2723" text-anchor="start">これを x で足すと −∬ P_y dA ＝ 下の辺 ＋ 上の辺</text>
+</svg>
+<figcaption><strong>図 2.2</strong>　橙の破線は、$x$ を止めて $y$ を $c$ から $d$ まで動かす道。その上で $P_y$ を足すと、上端の値と下端の値の差だけが残る。この差を $x$ で足し合わせたものが、上の辺と下の辺の線積分である。左右の辺では $dx=0$ なので、$P\,dx$ は何も足さない。</figcaption>
+</figure>
+<p><strong>(b) $Q$ だけの部分</strong>：$\displaystyle\iint_D\frac{\partial Q}{\partial x}\,dx\,dy=\oint_{\partial D}Q\,dy$ を示す。(a) の $x$ と $y$ の役割を入れ替えたもの（今度は $x$ について先に積分する）である。</p>
+<p>① $\displaystyle\int_c^d\Bigl(\int_a^b\frac{\partial Q}{\partial x}\,dx\Bigr)dy=\int_c^d\bigl[Q(b,y)-Q(a,y)\bigr]dy$。　<span class="meta">内側に基本定理（$y$ を止める）</span></p>
+<p>② 右辺 $\oint_{\partial D}Q\,dy$：右の辺（$x=b$、$y:c\to d$）：$\int_c^dQ(b,y)\,dy$。左の辺（$x=a$、$y:d\to c$）：$-\int_c^dQ(a,y)\,dy$。下の辺と上の辺は $dy=0$ で0。①と一致する。</p>
+<p>(a) と (b) を足せば、長方形でのグリーンの定理になる。　<span class="meta">数値例（長方形 $[1,3]\times[0,2]$、$P=x^2y$、$Q=xy^3$）での一致は draft/check_26.py で確かめた</span></p>
+
+<h3 id="sec-2-5"><span class="no">2.5</span>応用：面積を線積分で求める</h3>
+<p>グリーンの定理の右辺を $1$ にしたい。$Q_x-P_y=1$ となる $P,Q$ はたくさんある。たとえば $P=-\dfrac y2$、$Q=\dfrac x2$：$Q_x=\dfrac12$、$P_y=-\dfrac12$、$Q_x-P_y=\dfrac12+\dfrac12=1$。すると右辺は $\iint_D1\,dx\,dy=D$ の面積 $A$ になる：</p>
+<p>$$ A=\frac12\oint_{\partial D}\bigl(x\,dy-y\,dx\bigr) $$</p>
+<p>これは、曲線 $\partial D$ だけから面積が求まる公式である。意味は図2.3 のとおり、$\frac12(x\,dy-y\,dx)$ は原点から曲線上の隣り合う2点を結んだ細い三角形の面積（外積の半分）で、これを全部足している。</p>
+<p>面積の公式の意味は、図2.3 の細い三角形で見える。</p>
+<figure class="fig" id="fig-2-3">
+<svg viewBox="0 0 440 380" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="原点から見た細い三角形" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>原点から見た細い三角形</title>
+<rect x="0" y="0" width="440" height="380" fill="#fffdf7"/>
+<polyline points="280.0,250.0 279.9,245.8 279.8,241.5 279.5,237.3 279.2,233.0 278.7,228.8 278.1,224.6 277.4,220.4 276.6,216.2 275.7,212.1 274.7,207.9 273.6,203.8 272.4,199.8 271.1,195.7 269.7,191.7 268.2,187.7 266.6,183.8 264.9,179.9 263.1,176.1 261.2,172.3 259.2,168.5 257.1,164.8 254.9,161.1 252.7,157.5 250.3,154.0 247.9,150.5 245.3,147.1 242.7,143.8 240.0,140.5 237.2,137.3 234.4,134.1 231.5,131.0 228.4,128.0 225.4,125.1 222.2,122.3 219.0,119.5 215.7,116.8 212.3,114.2 208.9,111.7 205.4,109.3 201.9,106.9 198.2,104.7 194.6,102.5 190.9,100.5 187.1,98.5 183.3,96.6 179.4,94.8 175.5,93.1 171.6,91.6 167.6,90.1 163.6,88.7 159.6,87.4 155.5,86.2 151.4,85.1 147.2,84.1 143.1,83.2 138.9,82.5 134.7,81.8 130.5,81.2 126.3,80.8 122.0,80.4" fill="none" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<polyline points="110.0,250.0 269.7,191.7 208.9,111.7 110.0,250.0" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="100.0" y1="250.0" x2="310.0" y2="250.0" stroke="#2a2723" stroke-width="1.2"/>
+<line x1="110.0" y1="260.0" x2="110.0" y2="30.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="98.0" y="270.0" font-size="15" fill="#2a2723" text-anchor="end">O</text>
+<text x="279.7" y="209.7" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">r(t)</text>
+<text x="218.9" y="105.7" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">r(t + dt)</text>
+<text x="20.0" y="290.0" font-size="15" fill="#b07a3e" text-anchor="start" font-weight="bold">細い三角形の面積 ＝ ½ (x dy − y dx)</text>
+<text x="30.0" y="340.0" font-size="14" fill="#2a2723" text-anchor="start">（2辺 r(t)、dr で作る平行四辺形の面積 x dy − y dx の半分）</text>
+<text x="30.0" y="362.0" font-size="14" fill="#2a2723" text-anchor="start">三角形を曲線に沿って全部足すと、囲まれた面積になる</text>
+</svg>
+<figcaption><strong>図 2.3</strong>　曲線上の隣り合う2点 $\boldsymbol r(t)$ と $\boldsymbol r(t+dt)$ を原点と結ぶと細い三角形ができ、その面積は $\tfrac12(x\,dy-y\,dx)$（2本のベクトルの外積の半分）である。これを閉曲線に沿って足し合わせると、曲線の内側の面積になる。</figcaption>
+</figure>
+<p><strong>数値で手を動かす（円）。</strong>半径 $r$ の円：$x=r\cos t$、$y=r\sin t$（$0\le t\le2\pi$）。</p>
+<p>① $dx=-r\sin t\,dt$、$dy=r\cos t\,dt$。　<span class="meta">$t$ で微分</span></p>
+<p>② $x\,dy-y\,dx=r\cos t\cdot r\cos t\,dt-r\sin t\cdot(-r\sin t)\,dt=r^2(\cos^2t+\sin^2t)\,dt=r^2\,dt$。</p>
+<p>③ $A=\dfrac12\int_0^{2\pi}r^2\,dt=\dfrac12r^2\cdot2\pi=\pi r^2$。　<span class="meta">円の面積の公式に戻る（確かめ）</span></p>
+<p><strong>楕円。</strong>$x=a\cos t$、$y=b\sin t$（$a,b\gt0$）：$x\,dy-y\,dx=a\cos t\cdot b\cos t\,dt-b\sin t\cdot(-a\sin t)\,dt=ab\,dt$。$A=\dfrac12\cdot ab\cdot2\pi=\pi ab$。　<span class="meta">$a=b=r$ で円に戻る</span></p>
+
+<h3 id="sec-2-6"><span class="no">2.6</span>グリーンの定理の発散形：平面の発散定理</h3>
+<p>グリーンの定理は「ふちに沿った成分」の積分だった。「ふちから外へ出ていく成分」で書き直す。そのために、境界の外向き法線 $\boldsymbol n$ を、境界の小さな変位 $(dx,dy)$ で表す。</p>
+<p>① 反時計回りに進む境界の小さな変位を $d\boldsymbol r=(dx,dy)^{\mathsf T}$、その長さを $ds=\sqrt{dx^2+dy^2}$ とする。単位接線ベクトルは $(dx,dy)/ds$。</p>
+<p>② 外向きの単位法線ベクトルは、これを<strong>時計回りに $90^\circ$ 回した</strong>ものである：$\boldsymbol n=(dy,\ -dx)/ds$。　<span class="meta">確かめ：単位円の右端 $(1,0)$ では、反時計回りの変位は真上 $(0,ds)$。回すと $(ds,0)/ds=(1,0)$ で外向き（図2.4）</span></p>
+<p>③ したがって $\boldsymbol n\,ds=(dy,\,-dx)$。場 $\boldsymbol F=(F_1,F_2)^{\mathsf T}$ との内積は $\boldsymbol F\cdot\boldsymbol n\,ds=F_1\,dy-F_2\,dx$。</p>
+<p>平面の外向き法線と、線に沿った小さな変位の関係を図2.4 に描く。</p>
+<figure class="fig" id="fig-2-4">
+<svg viewBox="0 0 440 358" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="境界の接線と外向き法線" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>境界の接線と外向き法線</title>
+<rect x="0" y="0" width="440" height="358" fill="#fffdf7"/>
+<polyline points="260.0,170.0 259.7,162.3 258.9,154.7 257.6,147.1 255.7,139.7 253.4,132.4 250.5,125.3 247.1,118.4 243.3,111.7 239.0,105.3 234.3,99.3 229.1,93.6 223.6,88.3 217.7,83.3 211.5,78.8 205.0,74.7 198.2,71.1 191.2,68.0 184.0,65.4 176.6,63.3 169.1,61.7 161.5,60.6 153.8,60.1 146.2,60.1 138.5,60.6 130.9,61.7 123.4,63.3 116.0,65.4 108.8,68.0 101.8,71.1 95.0,74.7 88.5,78.8 82.3,83.3 76.4,88.3 70.9,93.6 65.7,99.3 61.0,105.3 56.7,111.7 52.9,118.4 49.5,125.3 46.6,132.4 44.3,139.7 42.4,147.1 41.1,154.7 40.3,162.3 40.0,170.0 40.3,177.7 41.1,185.3 42.4,192.9 44.3,200.3 46.6,207.6 49.5,214.7 52.9,221.6 56.7,228.3 61.0,234.7 65.7,240.7 70.9,246.4 76.4,251.7 82.3,256.7 88.5,261.2 95.0,265.3 101.8,268.9 108.8,272.0 116.0,274.6 123.4,276.7 130.9,278.3 138.5,279.4 146.2,279.9 153.8,279.9 161.5,279.4 169.1,278.3 176.6,276.7 184.0,274.6 191.2,272.0 198.2,268.9 205.0,265.3 211.5,261.2 217.7,256.7 223.6,251.7 229.1,246.4 234.3,240.7 239.0,234.7 243.3,228.3 247.1,221.6 250.5,214.7 253.4,207.6 255.7,200.3 257.6,192.9 258.9,185.3 259.7,177.7 260.0,170.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="260.0" cy="170.0" r="4" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="260.0" y1="170.0" x2="260.0" y2="90.0" stroke="#a8322a" stroke-width="3.4"/><path d="M264.8 99.9 L260.0 90.0 L255.2 99.9" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="260.0" y1="170.0" x2="340.0" y2="170.0" stroke="#5f7f4f" stroke-width="3.4"/><path d="M330.1 174.8 L340.0 170.0 L330.1 165.2" fill="none" stroke="#5f7f4f" stroke-width="3.4"/>
+<text x="270.0" y="86.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">接線 (dx, dy)</text>
+<text x="272.0" y="192.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">外向き法線</text>
+<text x="272.0" y="212.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">n ds = (dy, −dx)</text>
+<text x="150.0" y="175.0" font-size="20" fill="#2b3a67" text-anchor="middle">D</text>
+<text x="20.0" y="318.0" font-size="14" fill="#2a2723" text-anchor="start">接線 (dx, dy) を時計回りに 90° 回すと (dy, −dx)。</text>
+<text x="20.0" y="340.0" font-size="14" fill="#2a2723" text-anchor="start">反時計回りに進む境界では、これが外向きになる</text>
+</svg>
+<figcaption><strong>図 2.4</strong>　境界を反時計回りに進む小さな変位が $(dx,\,dy)$ のとき、それを時計回りに $90^\circ$ 回した $(dy,\,-dx)$ は、長さが同じ（$ds$）で、領域の外を向く。右端の点では、変位は真上 $(0,\,ds)$、外向き法線は真右 $(ds,\,0)$ で、確かにそうなっている。</figcaption>
+</figure>
+<p>④ グリーンの定理で $P:=-F_2$、$Q:=F_1$ とおく。左辺 $\oint(P\,dx+Q\,dy)=\oint(-F_2\,dx+F_1\,dy)=\oint\boldsymbol F\cdot\boldsymbol n\,ds$。右辺 $Q_x-P_y=\dfrac{\partial F_1}{\partial x}-\dfrac{\partial(-F_2)}{\partial y}=\dfrac{\partial F_1}{\partial x}+\dfrac{\partial F_2}{\partial y}$。これは第24回の<a href="24_第24回_発散と回転.html#sym-divergence">発散</a>である。結果：</p>
+<p>$$ \oint_{\partial D}\boldsymbol F\cdot\boldsymbol n\,ds=\iint_D\nabla\cdot\boldsymbol F\,dx\,dy \qquad(2.1) $$</p>
+<p>「領域のふちから外へ出ていく量 ＝ 領域の中の湧き出しの合計」。次の 3章 の発散定理の2次元版である。</p>
+<p><strong>確かめ。</strong>$\boldsymbol F=(x,y)^{\mathsf T}$、$D$ を単位円板とする。$\nabla\cdot\boldsymbol F=1+1=2$、右辺 $=2\times\pi\cdot1^2=2\pi$。左辺：円周上で $\boldsymbol n=(x,y)$（外向きの単位ベクトルは位置ベクトルと同じ）、$\boldsymbol F\cdot\boldsymbol n=x^2+y^2=1$。$\oint1\,ds=$ 円周の長さ $=2\pi$。一致する。</p>
+
+<h3 id="sec-2-7"><span class="no">2.7</span>よくある誤解：穴のある領域と、条件の確認</h3>
+<div class="warn"><span class="label">よくある誤解</span>
+<p><strong>(1) 「閉曲線を1周すれば、いつも内側の積分に直せる」は誤り。</strong>グリーンの定理は、閉曲線の<strong>内側全体</strong>で $P,Q$ が滑らかなときにだけ使える。内側に場が定義されない点があるときは使えない（4.5 の例）。</p>
+<p><strong>(2) 穴のある領域</strong>では、境界は外周と内周の2本になる。内周の向きを間違えると符号が狂う。領域を左手に見る約束を守ると、外周は反時計回り、内周は時計回りになる（図2.5）。</p>
+<p>例：$\boldsymbol F=\dfrac{(-y,\,x)^{\mathsf T}}{x^2+y^2}$ を、円環 $1\le r\le2$ で考える。第24回 3.5 のとおり、円環の中で $Q_x-P_y=0$。外周（半径2）を反時計回りに回ると $2\pi$、内周（半径1）を<strong>時計回り</strong>に回ると $-2\pi$。足して $2\pi+(-2\pi)=0$ で、右辺 $\iint0=0$ と合う。内周の向きを反時計回りにしてしまうと $4\pi$ になって、合わない。</p>
+<p>穴のあいた領域では、境界が2本の曲線になる。向きは図2.5 のようにそろえる。</p>
+<figure class="fig" id="fig-2-5">
+<svg viewBox="0 0 440 366" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="穴のある領域の境界の向き" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>穴のある領域の境界の向き</title>
+<rect x="0" y="0" width="440" height="366" fill="#fffdf7"/>
+<circle cx="220.0" cy="170.0" r="130" fill="#e8ecf4" stroke="#a8322a" stroke-width="3"/>
+<circle cx="220.0" cy="170.0" r="45" fill="#fffdf7" stroke="#a8322a" stroke-width="3"/>
+<line x1="319.4" y1="86.3" x2="290.2" y2="60.6" stroke="#a8322a" stroke-width="3.4"/><path d="M300.8 63.6 L290.2 60.6 L294.5 70.7" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="124.1" y1="82.2" x2="102.5" y2="114.4" stroke="#a8322a" stroke-width="3.4"/><path d="M104.0 103.6 L102.5 114.4 L112.0 108.9" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="135.0" y1="268.4" x2="167.9" y2="289.1" stroke="#a8322a" stroke-width="3.4"/><path d="M157.0 287.9 L167.9 289.1 L162.1 279.8" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="312.1" y1="261.7" x2="335.1" y2="230.4" stroke="#a8322a" stroke-width="3.4"/><path d="M333.1 241.2 L335.1 230.4 L325.4 235.6" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="254.4" y1="141.0" x2="263.0" y2="156.7" stroke="#2a5d8f" stroke-width="3.4"/><path d="M254.0 150.3 L263.0 156.7 L262.4 145.7" fill="none" stroke="#2a5d8f" stroke-width="3.4"/>
+<line x1="186.8" y1="139.6" x2="201.3" y2="129.1" stroke="#2a5d8f" stroke-width="3.4"/><path d="M196.1 138.8 L201.3 129.1 L190.4 131.0" fill="none" stroke="#2a5d8f" stroke-width="3.4"/>
+<line x1="190.6" y1="204.1" x2="179.6" y2="189.9" stroke="#2a5d8f" stroke-width="3.4"/><path d="M189.5 194.8 L179.6 189.9 L181.9 200.7" fill="none" stroke="#2a5d8f" stroke-width="3.4"/>
+<line x1="251.9" y1="201.7" x2="237.0" y2="211.7" stroke="#2a5d8f" stroke-width="3.4"/><path d="M242.6 202.2 L237.0 211.7 L247.9 210.2" fill="none" stroke="#2a5d8f" stroke-width="3.4"/>
+<text x="305.0" y="178.0" font-size="20" fill="#2b3a67" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">D</tspan></text>
+<text x="220.0" y="176.0" font-size="15" fill="#9a9184" text-anchor="middle">穴</text>
+<text x="20.0" y="328.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">外周：反時計回り（朱）</text>
+<text x="20.0" y="350.0" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">内周：時計回り（青）。D が常に左手にある</text>
+</svg>
+<figcaption><strong>図 2.5</strong>　領域 $D$（薄い青）の境界 $\partial D$ は、外側の円と内側の円の2本である。進む向きは「$D$ を左手に見る」で決める。すると、外側は反時計回り、内側は時計回りになる。</figcaption>
+</figure>
+<p><strong>(3) 条件の確認。</strong>グリーンの定理は、領域が有限の大きさで、境界が自分と交わらないときの話である。8の字の曲線は、2つの輪の向きが逆になる。それぞれの輪の内側に分けて使う。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>グリーンの定理：$\oint_{\partial D}(P\,dx+Q\,dy)=\iint_D(Q_x-P_y)\,dA$。ふちの向きは「領域を左手に見る」。$P\to-F_2$、$Q\to F_1$ と置き換えると、平面の発散定理 (2.1) になる。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-3"><span class="no">3</span>ガウスの発散定理：立体から出ていく量</h2>
+
+<h3 id="sec-3-1"><span class="no">3.1</span>主張</h3>
+<p>グリーンの定理の発散形 (2.1) を、空間に持ち上げる。立体 $V$ と、ベクトル場 $\boldsymbol F=(P,Q,R)^{\mathsf T}$ を考える。「ふちから外へ出ていく量」が、面の上の $\boldsymbol F\cdot\boldsymbol n$ を足したもの（<a href="25_第25回_線積分と面積分.html#sym-flux">流束</a>）になる。</p>
+
+<div class="thm" id="sym-divergence-theorem"><span class="label">ガウスの発散定理</span>
+<p>空間の立体 $V$ が、区分的に滑らかな閉曲面 $\partial V$ で囲まれていて、$\boldsymbol F=(P,Q,R)^{\mathsf T}$ の成分が $V$ とその表面を含む範囲で連続な偏導関数をもつとき、</p>
+<p>$$ \iiint_V\nabla\cdot\boldsymbol F\,dV=\iint_{\partial V}\boldsymbol F\cdot\boldsymbol n\,dS $$</p>
+<p>ここで $\boldsymbol n$ は $\partial V$ の<strong>外向き</strong>の単位法線ベクトル（1.3）。左辺は<a href="24_第24回_発散と回転.html#sym-divergence">発散</a>の<a href="13_第13回_重積分と変数変換.html#sym-triple-integral">三重積分</a>（$dV=dx\,dy\,dz$ は<a href="13_第13回_重積分と変数変換.html#sym-dA-dV">体積要素</a>）、右辺は閉曲面での<a href="25_第25回_線積分と面積分.html#sym-flux">流束</a>（1.4 の S1）。$d\boldsymbol S=\boldsymbol n\,dS$ を使えば右辺は $\iint_{\partial V}\boldsymbol F\cdot d\boldsymbol S$。</p>
+<p><strong>日本語で読む</strong>：「立体の表面から外へ出ていく流れの総量は、立体の中の各点の湧き出し $\nabla\cdot\boldsymbol F$ を足した総量に等しい」。</p>
+</div>
+<p>発散定理の主張を、図3.1 の絵で言い直す。</p>
+<figure class="fig" id="fig-3-1">
+<svg viewBox="0 0 440 386" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="内部の湧き出しと表面を通る流れ" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>内部の湧き出しと表面を通る流れ</title>
+<rect x="0" y="0" width="440" height="386" fill="#fffdf7"/>
+<polyline points="382.0,170.0 381.3,161.7 379.4,153.1 376.2,144.5 371.9,135.8 366.6,127.0 360.4,118.4 353.5,110.0 346.1,101.8 338.4,94.0 330.3,86.7 322.1,79.8 313.9,73.6 305.6,68.0 297.3,63.1 289.0,59.0 280.6,55.6 272.1,53.0 263.4,51.2 254.3,50.1 245.0,49.8 235.3,50.2 225.2,51.2 214.7,52.9 203.9,55.1 192.9,57.8 181.8,60.9 170.6,64.4 159.7,68.2 149.1,72.3 139.0,76.7 129.6,81.2 120.9,86.0 113.1,91.0 106.3,96.2 100.5,101.6 95.6,107.2 91.7,113.1 88.7,119.2 86.4,125.6 84.7,132.2 83.5,139.2 82.8,146.5 82.3,154.0 82.1,161.9 82.0,170.0 82.1,178.3 82.3,186.9 82.8,195.5 83.5,204.2 84.7,213.0 86.4,221.6 88.7,230.0 91.7,238.2 95.6,246.0 100.5,253.3 106.3,260.2 113.1,266.4 120.9,272.0 129.6,276.9 139.0,281.0 149.1,284.4 159.7,287.0 170.6,288.8 181.8,289.9 192.9,290.2 203.9,289.8 214.7,288.8 225.2,287.1 235.3,284.9 245.0,282.2 254.3,279.1 263.4,275.6 272.1,271.8 280.6,267.7 289.0,263.3 297.3,258.8 305.6,254.0 313.9,249.0 322.1,243.8 330.3,238.4 338.4,232.8 346.1,226.9 353.5,220.8 360.4,214.4 366.6,207.8 371.9,200.8 376.2,193.5 379.4,186.0 381.3,178.1 382.0,170.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="170.0" y="146.0" font-size="20" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>+</text>
+<line x1="183.0" y1="140.0" x2="200.0" y2="140.0" stroke="#a8322a" stroke-width="1.6"/><path d="M194.6 142.6 L200.0 140.0 L194.6 137.4" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="176.5" y1="128.7" x2="185.0" y2="114.0" stroke="#a8322a" stroke-width="1.6"/><path d="M184.6 120.0 L185.0 114.0 L180.0 117.4" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="163.5" y1="128.7" x2="155.0" y2="114.0" stroke="#a8322a" stroke-width="1.6"/><path d="M160.0 117.4 L155.0 114.0 L155.4 120.0" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="157.0" y1="140.0" x2="140.0" y2="140.0" stroke="#a8322a" stroke-width="1.6"/><path d="M145.4 137.4 L140.0 140.0 L145.4 142.6" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="163.5" y1="151.3" x2="155.0" y2="166.0" stroke="#a8322a" stroke-width="1.6"/><path d="M155.4 160.0 L155.0 166.0 L160.0 162.6" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="176.5" y1="151.3" x2="185.0" y2="166.0" stroke="#a8322a" stroke-width="1.6"/><path d="M180.0 162.6 L185.0 166.0 L184.6 160.0" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<text x="260.0" y="206.0" font-size="20" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>+</text>
+<line x1="273.0" y1="200.0" x2="290.0" y2="200.0" stroke="#a8322a" stroke-width="1.6"/><path d="M284.6 202.6 L290.0 200.0 L284.6 197.4" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="266.5" y1="188.7" x2="275.0" y2="174.0" stroke="#a8322a" stroke-width="1.6"/><path d="M274.6 180.0 L275.0 174.0 L270.0 177.4" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="253.5" y1="188.7" x2="245.0" y2="174.0" stroke="#a8322a" stroke-width="1.6"/><path d="M250.0 177.4 L245.0 174.0 L245.4 180.0" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="247.0" y1="200.0" x2="230.0" y2="200.0" stroke="#a8322a" stroke-width="1.6"/><path d="M235.4 197.4 L230.0 200.0 L235.4 202.6" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="253.5" y1="211.3" x2="245.0" y2="226.0" stroke="#a8322a" stroke-width="1.6"/><path d="M245.4 220.0 L245.0 226.0 L250.0 222.6" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="266.5" y1="211.3" x2="275.0" y2="226.0" stroke="#a8322a" stroke-width="1.6"/><path d="M270.0 222.6 L275.0 226.0 L274.6 220.0" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<text x="230.0" y="126.0" font-size="20" fill="#a8322a" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'>+</text>
+<line x1="243.0" y1="120.0" x2="260.0" y2="120.0" stroke="#a8322a" stroke-width="1.6"/><path d="M254.6 122.6 L260.0 120.0 L254.6 117.4" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="236.5" y1="108.7" x2="245.0" y2="94.0" stroke="#a8322a" stroke-width="1.6"/><path d="M244.6 100.0 L245.0 94.0 L240.0 97.4" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="223.5" y1="108.7" x2="215.0" y2="94.0" stroke="#a8322a" stroke-width="1.6"/><path d="M220.0 97.4 L215.0 94.0 L215.4 100.0" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="217.0" y1="120.0" x2="200.0" y2="120.0" stroke="#a8322a" stroke-width="1.6"/><path d="M205.4 117.4 L200.0 120.0 L205.4 122.6" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="223.5" y1="131.3" x2="215.0" y2="146.0" stroke="#a8322a" stroke-width="1.6"/><path d="M215.4 140.0 L215.0 146.0 L220.0 142.6" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="236.5" y1="131.3" x2="245.0" y2="146.0" stroke="#a8322a" stroke-width="1.6"/><path d="M240.0 142.6 L245.0 146.0 L244.6 140.0" fill="none" stroke="#a8322a" stroke-width="1.6"/>
+<line x1="367.0" y1="146.6" x2="406.2" y2="138.6" stroke="#5f7f4f" stroke-width="3.2"/><path d="M398.3 144.7 L406.2 138.6 L396.5 136.1" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<line x1="313.2" y1="77.6" x2="338.1" y2="46.2" stroke="#5f7f4f" stroke-width="3.2"/><path d="M335.9 56.0 L338.1 46.2 L329.1 50.6" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<line x1="200.7" y1="53.0" x2="195.5" y2="13.3" stroke="#5f7f4f" stroke-width="3.2"/><path d="M201.0 21.7 L195.5 13.3 L192.4 22.8" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<line x1="91.5" y1="109.2" x2="57.2" y2="88.6" stroke="#5f7f4f" stroke-width="3.2"/><path d="M67.1 89.5 L57.2 88.6 L62.7 96.9" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<line x1="79.5" y1="211.4" x2="42.1" y2="225.4" stroke="#5f7f4f" stroke-width="3.2"/><path d="M49.0 218.2 L42.1 225.4 L52.0 226.3" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<line x1="173.9" y1="282.3" x2="161.6" y2="320.4" stroke="#5f7f4f" stroke-width="3.2"/><path d="M160.2 310.4 L161.6 320.4 L168.5 313.1" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<line x1="303.2" y1="268.2" x2="325.3" y2="301.5" stroke="#5f7f4f" stroke-width="3.2"/><path d="M316.7 296.4 L325.3 301.5 L324.0 291.6" fill="none" stroke="#5f7f4f" stroke-width="3.2"/>
+<text x="20.0" y="20.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">+ ：湧き出し（発散 ＞ 0）</text>
+<text x="20.0" y="352.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">内部の発散を全部足した量 ＝ 表面から出ていく量</text>
+<text x="20.0" y="374.0" font-size="14" fill="#5f7f4f" text-anchor="start" font-weight="bold">緑の矢印は表面を通る流れ（外向きが正）</text>
+</svg>
+<figcaption><strong>図 3.1</strong>　立体の中に湧き出し（+）がいくつかあり、そこから流れが出ている。湧き出しの合計（発散を体積で積分したもの）は、立体の表面から外へ出ていく流れの合計（表面での流束）と等しい。出入りの計算を、中で足すか、表面で足すかの違いである。</figcaption>
+</figure>
+
+<h3 id="sec-3-2"><span class="no">3.2</span>最小の具体例：数値で手を動かす</h3>
+<p><strong>例1：球。</strong>$\boldsymbol F=\boldsymbol r=(x,y,z)^{\mathsf T}$（位置ベクトル）、$V$ を原点中心、半径 $R$ の球とする。</p>
+<p>① 左辺：$\nabla\cdot\boldsymbol F=1+1+1=3$（定数）。$\iiint_V3\,dV=3\times(\text{球の体積})=3\cdot\dfrac43\pi R^3=4\pi R^3$。</p>
+<p>② 右辺：球面上の外向き単位法線は $\boldsymbol n=\boldsymbol r/R$。$\boldsymbol F\cdot\boldsymbol n=\boldsymbol r\cdot\boldsymbol r/R=R^2/R=R$（球面上で一定）。球面の面積は $4\pi R^2$。$\iint_{\partial V}R\,dS=R\cdot4\pi R^2=4\pi R^3$。</p>
+<p>③ ①と②は一致する。</p>
+<p><strong>例2：立方体。</strong>$\boldsymbol F=(x^2,\ y^2,\ z^2)^{\mathsf T}$、$V=[0,1]^3$（1辺1の立方体）。</p>
+<p>① 左辺：$\nabla\cdot\boldsymbol F=2x+2y+2z$。$\displaystyle\iiint_V(2x+2y+2z)\,dV=2\cdot\tfrac12+2\cdot\tfrac12+2\cdot\tfrac12=3$。　<span class="meta">各項：$\int_0^1x\,dx=\tfrac12$、他の2変数の積分は区間の長さ1</span></p>
+<p>② 右辺：6つの面を順に見る。</p>
+<ul>
+<li>面 $x=1$：$\boldsymbol n=(1,0,0)^{\mathsf T}$。$\boldsymbol F\cdot\boldsymbol n=x^2=1$。面積 1。流束 $=1$。</li>
+<li>面 $x=0$：$\boldsymbol n=(-1,0,0)^{\mathsf T}$。$\boldsymbol F\cdot\boldsymbol n=-x^2=0$。流束 $0$。</li>
+<li>面 $y=1$：$\boldsymbol n=(0,1,0)^{\mathsf T}$。$y^2=1$。流束 $1$。　面 $y=0$：$-y^2=0$。流束 $0$。</li>
+<li>面 $z=1$：流束 $1$。　面 $z=0$：流束 $0$。</li>
+</ul>
+<p>③ 合計 $1+0+1+0+1+0=3$。①と一致する。</p>
+<p>具体例の計算結果を、図3.2 に立方体の絵で残しておく。</p>
+<figure class="fig" id="fig-3-2">
+<svg viewBox="0 0 440 416" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="立方体 [0,1]³ で F = (x², y², z²) の6面" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>立方体 [0,1]³ で F = (x², y², z²) の6面</title>
+<rect x="0" y="0" width="440" height="416" fill="#fffdf7"/>
+<line x1="70.0" y1="240.0" x2="230.0" y2="240.0" stroke="#2a2723" stroke-width="2"/>
+<line x1="150.0" y1="188.8" x2="310.0" y2="188.8" stroke="#9a9184" stroke-width="1.3" stroke-dasharray="5 4"/>
+<line x1="70.0" y1="240.0" x2="150.0" y2="188.8" stroke="#9a9184" stroke-width="1.3" stroke-dasharray="5 4"/>
+<line x1="230.0" y1="240.0" x2="230.0" y2="80.0" stroke="#2a2723" stroke-width="2"/>
+<line x1="310.0" y1="188.8" x2="310.0" y2="28.8" stroke="#2a2723" stroke-width="2"/>
+<line x1="230.0" y1="240.0" x2="310.0" y2="188.8" stroke="#2a2723" stroke-width="2"/>
+<line x1="230.0" y1="80.0" x2="70.0" y2="80.0" stroke="#2a2723" stroke-width="2"/>
+<line x1="310.0" y1="28.8" x2="150.0" y2="28.8" stroke="#2a2723" stroke-width="2"/>
+<line x1="230.0" y1="80.0" x2="310.0" y2="28.8" stroke="#2a2723" stroke-width="2"/>
+<line x1="70.0" y1="80.0" x2="70.0" y2="240.0" stroke="#2a2723" stroke-width="2"/>
+<line x1="150.0" y1="28.8" x2="150.0" y2="188.8" stroke="#9a9184" stroke-width="1.3" stroke-dasharray="5 4"/>
+<line x1="70.0" y1="80.0" x2="150.0" y2="28.8" stroke="#2a2723" stroke-width="2"/>
+<rect x="277.0" y="126.4" width="78.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="280.0" y="140.4" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">x=1 面: 1</text>
+<rect x="110.6" y="152.0" width="78.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="150.0" y="166.0" font-size="14" fill="#2a5d8f" text-anchor="middle" font-weight="bold">y=0 面: 0</text>
+<rect x="140.6" y="46.4" width="78.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="180.0" y="60.4" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">z=1 面: 1</text>
+<text x="20.0" y="316.0" font-size="14" fill="#2a2723" text-anchor="start">x=1 面：F·n = x² = 1、面積 1 → 1</text>
+<text x="20.0" y="338.0" font-size="14" fill="#2a2723" text-anchor="start">x=0 面：F·n = −x² = 0 → 0　　y=1 面：1　　y=0 面：0</text>
+<text x="20.0" y="360.0" font-size="14" fill="#2a2723" text-anchor="start">z=1 面：1　　z=0 面：0</text>
+<text x="20.0" y="382.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">6 面の合計 ＝ 3　　　体積分 ∭ 2(x+y+z) dV ＝ 3</text>
+</svg>
+<figcaption><strong>図 3.2</strong>　立方体 $[0,1]^3$ の各面で $\boldsymbol F\cdot\boldsymbol n$ を面積分した値。$x=1$ の面だけが $1$、$x=0$ の面は $-0=0$ で、$y$、$z$ も同じなので、合計が $1+0+1+0+1+0=3$。体積分も $3$ で、発散定理が確かめられる。</figcaption>
+</figure>
+
+<h3 id="sec-3-3"><span class="no">3.3</span>導出：小さな直方体を貼り合わせる</h3>
+<p>第24回 1.2 の2次元の計算を、3次元にする。</p>
+<p><strong>小さな直方体から出ていく量。</strong>点 $(x,y,z)$ を角とする、1辺 $h$ の小さな立方体 $[x,x+h]\times[y,y+h]\times[z,z+h]$ を考える。</p>
+<p>① 右の面（$x$ 座標が $x+h$、外向きは $+x$ 向き）：外向きの成分は $P$。流束は $\displaystyle\iint P(x+h,\,y+s,\,z+u)\,ds\,du$（$s,u$ は $0$ から $h$ まで）。</p>
+<p>② 左の面（$x$ 座標が $x$、外向きは $-x$ 向き）：外向きの成分は $-P$。流束は $\displaystyle-\iint P(x,\,y+s,\,z+u)\,ds\,du$。</p>
+<p>③ 左右の面を合わせる。同じ位置の右と左を先に引き算する：$\displaystyle\iint\bigl[P(x+h,\,y+s,\,z+u)-P(x,\,y+s,\,z+u)\bigr]\,ds\,du$。角括弧は、$y,z$ を止めて $x$ だけを $h$ 動かしたときの $P$ の変化で、<a href="08_第8回_微分を使う・近似と極値.html#sym-linear-approx">1次近似</a>により $\approx P_x\,h$。これを面積 $h^2$ の面で足すと $\approx P_x\,h\cdot h^2=P_x\,h^3$。</p>
+<p>④ 前後の面（$y$ 方向）は $Q_y\,h^3$、上下の面（$z$ 方向）は $R_z\,h^3$。　<span class="meta">③の $P,x$ を $Q,y$ と $R,z$ に入れ替えた計算を、それぞれ行う</span></p>
+<p>⑤ 6つの面の合計は</p>
+<p>$$ (\text{小さな立方体から出ていく量})\approx(P_x+Q_y+R_z)\,h^3=(\nabla\cdot\boldsymbol F)\,h^3 \qquad(3.1) $$</p>
+<p><strong>貼り合わせ。</strong>$V$ を小さな立方体で敷き詰め、(3.1) を全部足す。2つの立方体が共有する面では、片方の外向き法線は $+\boldsymbol n$、もう片方は $-\boldsymbol n$ なので、流束 $\boldsymbol F\cdot\boldsymbol n$ の寄与は $+$ と $-$ で消える（図3.3）。残るのは $V$ の表面の面だけで、その合計が $\iint_{\partial V}\boldsymbol F\cdot\boldsymbol n\,dS$。足した左辺は<a href="10_第10回_積分.html#sym-riemann-sum">リーマン和</a>で、$h\to0$ で $\iiint_V\nabla\cdot\boldsymbol F\,dV$ になる。誤差の議論は 2.3 ④ と同じ（$N\cdot o(h^3)\to0$）。</p>
+<p>発散定理の貼り合わせでは、図3.3 の共有面で寄与が消える。</p>
+<figure class="fig" id="fig-3-3">
+<svg viewBox="0 0 440 368" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="隣り合う2つの箱の共有面" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>隣り合う2つの箱の共有面</title>
+<rect x="0" y="0" width="440" height="368" fill="#fffdf7"/>
+<line x1="60.0" y1="250.0" x2="210.0" y2="250.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="135.0" y1="202.0" x2="285.0" y2="202.0" stroke="#9a9184" stroke-width="1.3" stroke-dasharray="5 4"/>
+<line x1="60.0" y1="250.0" x2="135.0" y2="202.0" stroke="#9a9184" stroke-width="1.3" stroke-dasharray="5 4"/>
+<line x1="210.0" y1="250.0" x2="210.0" y2="100.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="285.0" y1="202.0" x2="285.0" y2="52.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="210.0" y1="250.0" x2="285.0" y2="202.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="210.0" y1="100.0" x2="60.0" y2="100.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="285.0" y1="52.0" x2="135.0" y2="52.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="210.0" y1="100.0" x2="285.0" y2="52.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="60.0" y1="100.0" x2="60.0" y2="250.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="135.0" y1="52.0" x2="135.0" y2="202.0" stroke="#9a9184" stroke-width="1.3" stroke-dasharray="5 4"/>
+<line x1="60.0" y1="100.0" x2="135.0" y2="52.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="210.0" y1="250.0" x2="360.0" y2="250.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="285.0" y1="202.0" x2="435.0" y2="202.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="210.0" y1="250.0" x2="285.0" y2="202.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="360.0" y1="250.0" x2="360.0" y2="100.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="435.0" y1="202.0" x2="435.0" y2="52.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="360.0" y1="250.0" x2="435.0" y2="202.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="360.0" y1="100.0" x2="210.0" y2="100.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="435.0" y1="52.0" x2="285.0" y2="52.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="360.0" y1="100.0" x2="435.0" y2="52.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="210.0" y1="100.0" x2="210.0" y2="250.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="285.0" y1="52.0" x2="285.0" y2="202.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="210.0" y1="100.0" x2="285.0" y2="52.0" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="240.0" y1="118.0" x2="322.5" y2="118.0" stroke="#a8322a" stroke-width="3.2"/><path d="M313.5 122.3 L322.5 118.0 L313.5 113.7" fill="none" stroke="#a8322a" stroke-width="3.2"/>
+<line x1="255.0" y1="184.0" x2="172.5" y2="184.0" stroke="#2a5d8f" stroke-width="3.2"/><path d="M181.5 179.7 L172.5 184.0 L181.5 188.3" fill="none" stroke="#2a5d8f" stroke-width="3.2"/>
+<text x="130.0" y="290.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">箱 1</text>
+<text x="300.0" y="290.0" font-size="15" fill="#2a2723" text-anchor="middle" font-weight="bold">箱 2</text>
+<text x="20.0" y="330.0" font-size="14" fill="#2a2723" text-anchor="start">共有する面では、箱1の外向きは +x、箱2の外向きは −x。</text>
+<text x="20.0" y="352.0" font-size="14" fill="#2a2723" text-anchor="start">同じ面積・同じ F で F·n の符号だけ逆なので足すと消える</text>
+</svg>
+<figcaption><strong>図 3.3</strong>　箱1から見た共有面の外向き法線は $+\boldsymbol e_x$（朱）、箱2から見た外向き法線は $-\boldsymbol e_x$（青）である。面の上で $\boldsymbol F$ は共通なので、箱1の流束 $\boldsymbol F\cdot\boldsymbol e_x$ と箱2の流束 $\boldsymbol F\cdot(-\boldsymbol e_x)$ は、足すと $0$ になる。</figcaption>
+</figure>
+
+<h3 id="sec-3-4"><span class="no">3.4</span>厳密な証明：直方体の場合</h3>
+<p>$V=[a,b]\times[c,d]\times[e,f]$ で、$\boldsymbol F=(0,0,R)^{\mathsf T}$（$z$ 成分だけ）の場合に示す。$P$ の部分と $Q$ の部分は、軸の役割を入れ替えて計算する。たとえば $P$ の部分は、$\iiint P_x\,dV=\iint\bigl[P(b,y,z)-P(a,y,z)\bigr]dy\,dz$（$x$ について先に積分）で、面 $x=b$（$\boldsymbol n=+\boldsymbol e_x$）の流束と面 $x=a$（$\boldsymbol n=-\boldsymbol e_x$）の流束の和になる。3つ足せば直方体でのガウスの定理になる。</p>
+<p>① 左辺：$\nabla\cdot\boldsymbol F=R_z$。累次積分で $z$ から先に：$\displaystyle\iint\Bigl(\int_e^f\frac{\partial R}{\partial z}\,dz\Bigr)dx\,dy=\iint\bigl[R(x,y,f)-R(x,y,e)\bigr]\,dx\,dy$。　<span class="meta">内側に基本定理（$x,y$ を止める）</span></p>
+<p>② 右辺：6つの面のうち、側面（$x=a,b$ と $y=c,d$）では $\boldsymbol n=\pm\boldsymbol e_x$、$\pm\boldsymbol e_y$ なので $\boldsymbol F\cdot\boldsymbol n=0$（$\boldsymbol F$ は $z$ 成分しかない）。上の面（$z=f$、$\boldsymbol n=+\boldsymbol e_z$）：$\iint R(x,y,f)\,dx\,dy$。下の面（$z=e$、$\boldsymbol n=-\boldsymbol e_z$）：$-\iint R(x,y,e)\,dx\,dy$。</p>
+<p>③ ①と②は一致する。</p>
+
+<h3 id="sec-3-5"><span class="no">3.5</span>意味：保存則（連続の式）</h3>
+<p>流体の密度を $\rho(x,y,z,t)$、速度を $\boldsymbol v$ とする。質量の流れ（単位面積・単位時間あたり）は $\rho\boldsymbol v$。空間に固定した立体 $V$ を考える。</p>
+<p>① $V$ の中の質量：$M(t)=\iiint_V\rho\,dV$。その変化の速さ：$\dfrac{dM}{dt}=\iiint_V\dfrac{\partial\rho}{\partial t}\,dV$。　<span class="meta">$V$ は動かないので、微分を中に入れられる</span></p>
+<p>② 質量は表面を通ってだけ出入りする。外へ出ていく量は流束 $\iint_{\partial V}\rho\boldsymbol v\cdot\boldsymbol n\,dS$（外向きが正）。したがって $\dfrac{dM}{dt}=-\iint_{\partial V}\rho\boldsymbol v\cdot\boldsymbol n\,dS$。</p>
+<p>③ 右辺に発散定理（$\boldsymbol F:=\rho\boldsymbol v$）：$-\iiint_V\nabla\cdot(\rho\boldsymbol v)\,dV$。</p>
+<p>④ ①と③を合わせる：$\displaystyle\iiint_V\Bigl[\frac{\partial\rho}{\partial t}+\nabla\cdot(\rho\boldsymbol v)\Bigr]dV=0$。</p>
+<p>⑤ これは<strong>どんな $V$ でも</strong>成り立つ。角括弧が連続で、ある点で0でなければ、その点の近くの小さな球を $V$ に取れば積分が0でなくなって矛盾する。したがって角括弧の中身は至るところ0：</p>
+<p>$$ \frac{\partial\rho}{\partial t}+\nabla\cdot(\rho\boldsymbol v)=0 \qquad(\text{連続の式}) $$</p>
+<p>密度が一定（非圧縮）なら $\partial\rho/\partial t=0$ で、$\nabla\cdot\boldsymbol v=0$。第24回 2.3 の「発散0の流れでは、水の体積が変わらない」に戻る。</p>
+<p>発散定理から連続の式（質量保存）が出てくる筋道を、図3.4 の箱で追う。</p>
+<figure class="fig" id="fig-3-4">
+<svg viewBox="0 0 440 312" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="質量保存：箱の出入りと中身の変化" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>質量保存：箱の出入りと中身の変化</title>
+<rect x="0" y="0" width="440" height="312" fill="#fffdf7"/>
+<rect x="150" y="80" width="150" height="120" rx="4" fill="#f7ecdc" stroke="#b07a3e" stroke-width="2.4"/>
+<line x1="40.0" y1="140.0" x2="148.0" y2="140.0" stroke="#a8322a" stroke-width="4"/><path d="M136.3 145.7 L148.0 140.0 L136.3 134.3" fill="none" stroke="#a8322a" stroke-width="4"/>
+<line x1="302.0" y1="140.0" x2="410.0" y2="140.0" stroke="#5f7f4f" stroke-width="4"/><path d="M398.3 145.7 L410.0 140.0 L398.3 134.3" fill="none" stroke="#5f7f4f" stroke-width="4"/>
+<text x="95.0" y="120.0" font-size="14" fill="#a8322a" text-anchor="middle" font-weight="bold">入る</text>
+<text x="356.0" y="120.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">出る</text>
+<text x="225.0" y="130.0" font-size="16" fill="#b07a3e" text-anchor="middle" font-weight="bold">箱 V</text>
+<text x="225.0" y="156.0" font-size="14" fill="#b07a3e" text-anchor="middle">中の質量が</text>
+<text x="225.0" y="176.0" font-size="14" fill="#b07a3e" text-anchor="middle">増える／減る</text>
+<text x="20.0" y="250.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">(中の質量の増え方) ＝ (入る量) − (出る量)</text>
+<text x="20.0" y="272.0" font-size="14" fill="#2a2723" text-anchor="start">出る量は表面の流束 ∬ ρv·n dS（外向きが正）</text>
+<text x="20.0" y="294.0" font-size="14" fill="#2a2723" text-anchor="start">これを ∭ ∇·(ρv) dV に直せば、V が何でも成り立つ</text>
+</svg>
+<figcaption><strong>図 3.4</strong>　流体の中に固定した箱 $V$ を考える。箱の中の質量の変化は、表面を通って入る量と出る量の差である。表面の出入りを発散定理で体積分に直すと、すべてが $V$ についての体積分になり、$V$ をどんなに小さく取っても成り立つことから、被積分関数そのものの関係が出る。</figcaption>
+</figure>
+
+<h3 id="sec-3-6"><span class="no">3.6</span>電磁気学のガウスの法則と、原点で場が壊れる例</h3>
+<p>電磁気学のガウスの法則は、積分形と微分形の2つの形で書かれる。</p>
+<p>$$ \iint_{\partial V}\boldsymbol E\cdot\boldsymbol n\,dS=\frac{Q_V}{\varepsilon_0}\quad(\text{積分形}),\qquad \nabla\cdot\boldsymbol E=\frac{\rho}{\varepsilon_0}\quad(\text{微分形}) $$</p>
+<p>ここで $Q_V$ は $V$ の中の電荷の総量、$\rho$ は電荷密度、$\varepsilon_0$ は真空の誘電率。2つの形は、発散定理でつながる：$Q_V=\iiint_V\rho\,dV$ なので、積分形の左辺に発散定理を使うと $\iiint_V\nabla\cdot\boldsymbol E\,dV=\iiint_V\dfrac\rho{\varepsilon_0}dV$。3.5 の⑤と同じ論法で、被積分関数が等しくなり、微分形が出る。</p>
+<p><strong>点電荷の場。</strong>原点の点電荷 $q$ の電場は $\boldsymbol E=k\dfrac{\boldsymbol r}{r^3}$、$k=\dfrac{q}{4\pi\varepsilon_0}$（<a href="24_第24回_発散と回転.html#sec-2-4">第24回 2.4</a>）。原点を中心とする半径 $\rho_0$ の球面（外向き法線 $\boldsymbol n=\boldsymbol r/r$）で、</p>
+<p>$$ \boldsymbol E\cdot\boldsymbol n=k\frac{\boldsymbol r\cdot\boldsymbol r}{r^4}=\frac{k}{\rho_0^2},\qquad \iint\boldsymbol E\cdot\boldsymbol n\,dS=\frac{k}{\rho_0^2}\cdot4\pi\rho_0^2=4\pi k=\frac q{\varepsilon_0} $$</p>
+<p>これは積分形の法則と一致する。</p>
+<p><strong>ここで注意が1つある。</strong>第24回 2.4 で、$\nabla\cdot\boldsymbol E=0$（原点以外）を示した。もし原点を含む球 $V$ に発散定理をそのまま使うと、左辺 $\iiint_V\nabla\cdot\boldsymbol E\,dV=0$、右辺 $=4\pi k\ne0$ となって合わない。理由は、<strong>$\boldsymbol E$ が原点で定義されていない</strong>（$r=0$ で分母が0）ので、1.2 の「$V$ の中で滑らか」の仮定が成り立たないことにある。</p>
+<p>どう直すかは、立体を変えればよい。原点を中心とする小さな球 $B$（半径 $\rho_1$）を取り除いた、<strong>球殻</strong> $V'=\{\rho_1\le r\le\rho_2\}$ を使う。$V'$ の中では $\boldsymbol E$ は滑らかで $\nabla\cdot\boldsymbol E=0$。$\partial V'$ は、外側の球面（外向き $=$ 原点から遠ざかる向き）と、内側の球面（$V'$ から見て外向き $=$ 原点に向かう向き）の2枚である。発散定理：</p>
+<p>$$ 0=\iiint_{V'}\nabla\cdot\boldsymbol E\,dV=\underbrace{4\pi k}_{\text{外側}}\;+\;\underbrace{(-4\pi k)}_{\text{内側（法線が内向きなので符号が逆）}} $$</p>
+<p>つまり「外側の流束 ＝ 内側の流束」で、<strong>どんな大きさの球面でも $4\pi k$</strong> が示せた。これが第24回 2.4 の末尾で見た「半径によらない $4\pi k$」の理由である。原点を囲まない閉曲面では、流束は0（図3.5）。電荷という一点に、湧き出しが集中している。</p>
+<p>前回の逆2乗の場に発散定理を当てると、図3.5 のようになる。</p>
+<figure class="fig" id="fig-3-5">
+<svg viewBox="0 0 440 350" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="原点を囲む閉曲面と囲まない閉曲面" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>原点を囲む閉曲面と囲まない閉曲面</title>
+<rect x="0" y="0" width="440" height="350" fill="#fffdf7"/>
+<line x1="129.0" y1="170.0" x2="240.0" y2="170.0" stroke="#c9a09a" stroke-width="1.8"/><path d="M233.7 173.0 L240.0 170.0 L233.7 167.0" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="127.1" y1="163.0" x2="223.3" y2="107.5" stroke="#c9a09a" stroke-width="1.8"/><path d="M219.3 113.3 L223.3 107.5 L216.3 108.0" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="122.0" y1="157.9" x2="177.5" y2="61.7" stroke="#c9a09a" stroke-width="1.8"/><path d="M177.0 68.7 L177.5 61.7 L171.7 65.7" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="115.0" y1="156.0" x2="115.0" y2="45.0" stroke="#c9a09a" stroke-width="1.8"/><path d="M118.0 51.3 L115.0 45.0 L112.0 51.3" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="108.0" y1="157.9" x2="52.5" y2="61.7" stroke="#c9a09a" stroke-width="1.8"/><path d="M58.3 65.7 L52.5 61.7 L53.0 68.7" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="102.9" y1="163.0" x2="6.7" y2="107.5" stroke="#c9a09a" stroke-width="1.8"/><path d="M13.7 108.0 L6.7 107.5 L10.7 113.3" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="101.0" y1="170.0" x2="-10.0" y2="170.0" stroke="#c9a09a" stroke-width="1.8"/><path d="M-3.7 167.0 L-10.0 170.0 L-3.7 173.0" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="102.9" y1="177.0" x2="6.7" y2="232.5" stroke="#c9a09a" stroke-width="1.8"/><path d="M10.7 226.7 L6.7 232.5 L13.7 232.0" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="108.0" y1="182.1" x2="52.5" y2="278.3" stroke="#c9a09a" stroke-width="1.8"/><path d="M53.0 271.3 L52.5 278.3 L58.3 274.3" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="115.0" y1="184.0" x2="115.0" y2="295.0" stroke="#c9a09a" stroke-width="1.8"/><path d="M112.0 288.7 L115.0 295.0 L118.0 288.7" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="122.0" y1="182.1" x2="177.5" y2="278.3" stroke="#c9a09a" stroke-width="1.8"/><path d="M171.7 274.3 L177.5 278.3 L177.0 271.3" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<line x1="127.1" y1="177.0" x2="223.3" y2="232.5" stroke="#c9a09a" stroke-width="1.8"/><path d="M216.3 232.0 L223.3 232.5 L219.3 226.7" fill="none" stroke="#c9a09a" stroke-width="1.8"/>
+<circle cx="115.0" cy="170.0" r="5" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<circle cx="115.0" cy="170.0" r="48" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<circle cx="115.0" cy="170.0" r="92" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<text x="111.0" y="194.0" font-size="14" fill="#a8322a" text-anchor="end" font-weight="bold">q</text>
+<rect x="146.6" y="117.4" width="31.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="149.6" y="131.4" font-size="14" fill="#2b3a67" text-anchor="start" font-weight="bold">4πk</text>
+<rect x="14.6" y="85.8" width="31.2" height="20" fill="#fffdf7" opacity="0.92"/><text x="42.8" y="99.8" font-size="14" fill="#2b3a67" text-anchor="end" font-weight="bold">4πk</text>
+<polyline points="392.0,170.0 391.8,164.5 391.4,159.0 390.6,153.7 389.5,148.4 388.0,143.2 386.3,138.2 384.3,133.4 382.1,128.9 379.5,124.5 376.8,120.5 373.8,116.8 370.6,113.4 367.2,110.3 363.6,107.6 359.9,105.3 356.1,103.4 352.1,101.9 348.1,100.9 344.1,100.2 340.0,100.0 335.9,100.2 331.9,100.9 327.9,101.9 323.9,103.4 320.1,105.3 316.4,107.6 312.8,110.3 309.4,113.4 306.2,116.8 303.2,120.5 300.5,124.5 297.9,128.9 295.7,133.4 293.7,138.2 292.0,143.2 290.5,148.4 289.4,153.7 288.6,159.0 288.2,164.5 288.0,170.0 288.2,175.5 288.6,181.0 289.4,186.3 290.5,191.6 292.0,196.8 293.7,201.8 295.7,206.6 297.9,211.1 300.5,215.5 303.2,219.5 306.2,223.2 309.4,226.6 312.8,229.7 316.4,232.4 320.1,234.7 323.9,236.6 327.9,238.1 331.9,239.1 335.9,239.8 340.0,240.0 344.1,239.8 348.1,239.1 352.1,238.1 356.1,236.6 359.9,234.7 363.6,232.4 367.2,229.7 370.6,226.6 373.8,223.2 376.8,219.5 379.5,215.5 382.1,211.1 384.3,206.6 386.3,201.8 388.0,196.8 389.5,191.6 390.6,186.3 391.4,181.0 391.8,175.5 392.0,170.0" fill="#edf1e8" stroke="#5f7f4f" stroke-width="2.8" stroke-linejoin="round"/>
+<line x1="233.4" y1="213.2" x2="302.0" y2="181.0" stroke="#c9a09a" stroke-width="1.4"/><path d="M298.2 185.6 L302.0 181.0 L296.0 180.9" fill="none" stroke="#c9a09a" stroke-width="1.4"/>
+<line x1="241.0" y1="170.0" x2="302.0" y2="170.0" stroke="#c9a09a" stroke-width="1.4"/><path d="M296.6 172.6 L302.0 170.0 L296.6 167.4" fill="none" stroke="#c9a09a" stroke-width="1.4"/>
+<line x1="233.4" y1="126.8" x2="302.0" y2="159.0" stroke="#c9a09a" stroke-width="1.4"/><path d="M296.0 159.1 L302.0 159.0 L298.2 154.4" fill="none" stroke="#c9a09a" stroke-width="1.4"/>
+<text x="340.0" y="176.0" font-size="22" fill="#5f7f4f" text-anchor="middle" font-weight="bold">0</text>
+<text x="340.0" y="268.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">原点を囲まない</text>
+<text x="340.0" y="288.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">閉曲面の流束</text>
+<text x="20.0" y="332.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">原点を囲む閉曲面（半径によらず）：4πk　　囲まない閉曲面：0</text>
+</svg>
+<figcaption><strong>図 3.5</strong>　逆2乗の場（断面で描いた放射状の線）を、原点を囲む閉曲面で測ると、大きさによらず $4\pi k$ になる。原点を囲まない閉曲面では、入ってくる流れと出ていく流れが等しく、流束は $0$。違いを作っているのは、原点という一点に集中した湧き出しだけである。</figcaption>
+</figure>
+
+<h3 id="sec-3-7"><span class="no">3.7</span>系：ラプラシアンの形と、調和関数</h3>
+<p>発散定理で $\boldsymbol F:=\nabla f$（<a href="23_第23回_場と勾配.html#sym-gradient">勾配</a>）とおく。$\nabla\cdot\nabla f=\nabla^2f$（<a href="24_第24回_発散と回転.html#sym-laplacian">ラプラシアン</a>）なので、</p>
+<p>$$ \iiint_V\nabla^2f\,dV=\iint_{\partial V}\nabla f\cdot\boldsymbol n\,dS $$</p>
+<p>右辺の $\nabla f\cdot\boldsymbol n$ は、$f$ の外向き法線方向の<a href="23_第23回_場と勾配.html#sym-directional-derivative">方向微分</a>である。$f$ が<a href="24_第24回_発散と回転.html#sym-harmonic">調和関数</a>（$\nabla^2f=0$）なら、<strong>どんな閉曲面でも、外へ出ていく $\nabla f$ の流束は0</strong>。</p>
+<p><strong>数値で確かめる。</strong>$f=x^2+y^2+z^2=r^2$、$V$ を半径 $R$ の球とする。$\nabla f=(2x,2y,2z)^{\mathsf T}=2\boldsymbol r$、$\nabla^2f=2+2+2=6$。左辺：$6\cdot\dfrac43\pi R^3=8\pi R^3$。右辺：球面上で $\boldsymbol n=\boldsymbol r/R$、$\nabla f\cdot\boldsymbol n=2\boldsymbol r\cdot\boldsymbol r/R=2R$。$2R\cdot4\pi R^2=8\pi R^3$。一致する。</p>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p><strong>(1) 外向きでなく内向きの $\boldsymbol n$ を使う。</strong>符号が逆になる。球の例1で $\boldsymbol n=-\boldsymbol r/R$ とすると右辺が $-4\pi R^3$ になって、左辺 $4\pi R^3$ と合わない。ガウスの定理の $\boldsymbol n$ は常に外向き。</p>
+<p><strong>(2) 閉じていない面に使う。</strong>半球のように口の開いた面では、$\iint\boldsymbol F\cdot\boldsymbol n\,dS$ は発散の体積分に直せない。口を円板でふさげば閉曲面になり、ふさいだ面の流束を引けばよい（問8）。</p>
+<p><strong>(3) 発散と流束の次元を混ぜる。</strong>左辺は<strong>体積</strong>での積分（$dV$）、右辺は<strong>表面</strong>での積分（$dS$）。$\iiint$ と $\iint$ の本数が違うのは、次元が違うからである。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>ガウスの発散定理：$\iiint_V\nabla\cdot\boldsymbol F\,dV=\iint_{\partial V}\boldsymbol F\cdot\boldsymbol n\,dS$（$\boldsymbol n$ は外向き）。小さな立方体の流束 $(\nabla\cdot\boldsymbol F)h^3$ を貼り合わせると、共有面が消えて表面だけが残る。$\boldsymbol F$ が一点で壊れるときは、その点を除いた立体で使う。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-4"><span class="no">4</span>ストークスの定理：曲面のふちを回る量</h2>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/26_a4_plateau.jpg" alt="立方体の針金の枠の中に、斜めに張った薄い膜が光り、下に泡の立つ水槽がある展示" loading="lazy"></div>
+<p class="cap">針金のふちを決めると、そこに張る膜の形が決まる。</p>
+<p class="cr">Nachosan（2013年、マドリードの科学館の石けん膜の展示）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Minimal_surfaces._Plateau's_problem_01.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/26_b4_uchiwa.jpg" alt="紫の地に、橙と黒の大きな花が描かれた丸いうちわと、竹の柄" loading="lazy"></div>
+<p class="cap">竹のふちに、紙の面が張られている。</p>
+<p class="cr">zenkota（2008年、房州うちわ）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Boushuu_uchiwa.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
+<h3 id="sec-4-1"><span class="no">4.1</span>主張</h3>
+<p>最後は曲面である。グリーンの定理は、平面の中の領域だった。ストークスの定理は、曲がった面（空間の中の曲面）に広げたものである。</p>
+
+<div class="thm" id="sym-stokes-theorem"><span class="label">ストークスの定理</span>
+<p>空間の向きつき曲面 $S$（単位法線 $\boldsymbol n$ を選んだもの）が、区分的に滑らかな閉曲線 $\partial S$ を境界にもち、$\boldsymbol F=(P,Q,R)^{\mathsf T}$ の成分が $S$ とそのふちを含む範囲で連続な偏導関数をもつとき、</p>
+<p>$$ \iint_S(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS=\oint_{\partial S}\boldsymbol F\cdot d\boldsymbol r $$</p>
+<p>ここで $\partial S$ の向きは $\boldsymbol n$ と右ねじの関係（1.3）。左辺は<a href="24_第24回_発散と回転.html#sym-curl">回転</a>の<a href="25_第25回_線積分と面積分.html#sym-flux">流束</a>（面積分）、右辺は<a href="25_第25回_線積分と面積分.html#sym-line-integral">線積分</a>（1.4 の S2）。</p>
+<p><strong>日本語で読む</strong>：「曲面のふちを1周して、場がふちに沿って押す力を足した量（循環）は、曲面を貫く回転 $\nabla\times\boldsymbol F$ の流れの総量に等しい」。</p>
+</div>
+
+<h3 id="sec-4-2"><span class="no">4.2</span>最小の具体例：数値で手を動かす</h3>
+<p><strong>例1：円板と半球。</strong>$\boldsymbol F=(-y,\ x,\ 0)^{\mathsf T}$（第24回の回る場 $\boldsymbol v_A$）。$\nabla\times\boldsymbol F=(0,\ 0,\ 2)^{\mathsf T}$（第24回 3.3）。ふちを、$xy$ 平面上の単位円 $C$：$\boldsymbol r(t)=(\cos t,\sin t,0)^{\mathsf T}$（$0\le t\le2\pi$、反時計回り）とする。</p>
+<p>① 右辺：$\boldsymbol r'(t)=(-\sin t,\cos t,0)^{\mathsf T}$。$\boldsymbol F(\boldsymbol r(t))=(-\sin t,\cos t,0)^{\mathsf T}$。内積は $\sin^2t+\cos^2t=1$。$\oint_C\boldsymbol F\cdot d\boldsymbol r=\int_0^{2\pi}1\,dt=2\pi$。</p>
+<p>② 左辺（曲面として<strong>円板</strong>）：$S_1=\{x^2+y^2\le1,\ z=0\}$、$\boldsymbol n=(0,0,1)^{\mathsf T}$（上向き。1.3 の約束で $\partial S_1$ は上から見て反時計回り）。$(\nabla\times\boldsymbol F)\cdot\boldsymbol n=2$。$\iint_{S_1}2\,dS=2\times\pi=2\pi$。①と一致。</p>
+<p>③ 左辺（曲面として<strong>上半球</strong>）：$S_2=\{x^2+y^2+z^2=1,\ z\ge0\}$、$\boldsymbol n=\boldsymbol r=(x,y,z)^{\mathsf T}$（外向き。頂上で上向き）。$(\nabla\times\boldsymbol F)\cdot\boldsymbol n=2z$。球座標（<a href="13_第13回_重積分と変数変換.html#sym-spherical">第13回</a>）：$z=\cos\theta$、面積要素 $dS=\sin\theta\,d\theta\,d\varphi$（半径1の球面。<a href="25_第25回_線積分と面積分.html#sym-surface-element">第25回</a>）。$\displaystyle\iint_{S_2}2z\,dS=\int_0^{2\pi}\!\!\int_0^{\pi/2}2\cos\theta\sin\theta\,d\theta\,d\varphi=2\pi\bigl[\sin^2\theta\bigr]_0^{\pi/2}=2\pi$。　<span class="meta">$\int2\sin\theta\cos\theta\,d\theta=\sin^2\theta$（置換積分、<a href="10_第10回_積分.html#sym-substitution">第10回</a>）</span></p>
+<p>④ 円板でも半球でも $2\pi$。ふち（単位円）が同じなら、曲面の形によらず同じ値になる。これは 4.4 の主題である。</p>
+<p><strong>例2：斜めの三角形。</strong>$\boldsymbol F=(z,\ x,\ y)^{\mathsf T}$、$S$ を3点 $A(1,0,0)$、$B(0,1,0)$、$C(0,0,1)$ を頂点とする三角形（平面 $x+y+z=1$ の一部）、$\boldsymbol n=(1,1,1)^{\mathsf T}/\sqrt3$（原点から遠ざかる側）。</p>
+<p>① 回転：$R_y-Q_z=1-0=1$、$P_z-R_x=1-0=1$、$Q_x-P_y=1-0=1$。$\nabla\times\boldsymbol F=(1,1,1)^{\mathsf T}$。</p>
+<p>② $(\nabla\times\boldsymbol F)\cdot\boldsymbol n=3/\sqrt3=\sqrt3$（一定）。三角形の面積：辺 $AB=\sqrt2$ の正三角形なので $\dfrac{\sqrt3}{4}\cdot2=\dfrac{\sqrt3}2$。左辺 $=\sqrt3\cdot\dfrac{\sqrt3}{2}=\dfrac32$。</p>
+<p>③ 右辺：向きは、$\boldsymbol n$ の側から見て反時計回りの $A\to B\to C\to A$ となる（外積 $(B-A)\times(C-B)=(-1,1,0)^{\mathsf T}\times(0,-1,1)^{\mathsf T}=(1,1,1)^{\mathsf T}$ が $\boldsymbol n$ の向きなので、右ねじの規則に合う）。$\boldsymbol F\cdot d\boldsymbol r=z\,dx+x\,dy+y\,dz$。</p>
+<ul>
+<li>$A\to B$：$x=1-t,\ y=t,\ z=0$（$0\le t\le1$）。$dx=-dt,\ dy=dt,\ dz=0$。$z\,dx=0$、$x\,dy=(1-t)\,dt$、$y\,dz=0$。$\int_0^1(1-t)\,dt=\tfrac12$。</li>
+<li>$B\to C$：$x=0,\ y=1-t,\ z=t$。$dx=0,\ dy=-dt,\ dz=dt$。$z\,dx=0$、$x\,dy=0$、$y\,dz=(1-t)\,dt$。$\tfrac12$。</li>
+<li>$C\to A$：$x=t,\ y=0,\ z=1-t$。$dx=dt,\ dy=0,\ dz=-dt$。$z\,dx=(1-t)\,dt$、他は0。$\tfrac12$。</li>
+</ul>
+<p>④ 合計 $\tfrac12+\tfrac12+\tfrac12=\tfrac32$。②と一致する。</p>
+<p><strong>向きを逆にしたら。</strong>$\boldsymbol n$ を逆向き（原点側）に選ぶと、左辺は $-\tfrac32$。このとき $\partial S$ の向きも逆（$A\to C\to B\to A$）で、右辺も $-\tfrac32$。両辺とも符号が変わるので、等式は保たれる。</p>
+
+<h3 id="sec-4-3"><span class="no">4.3</span>導出：小さな曲面片を貼り合わせる</h3>
+<p>曲面 $S$ を、小さな四角い片に分ける。各片 $S_k$ は、ほぼ平らで、面積 $\Delta S_k$、単位法線 $\boldsymbol n_k$。</p>
+<p>① <strong>小さな平らな片のまわりの循環</strong>：$\boldsymbol n_k$ を $z$ 軸にとり直した座標では、片は $xy$ 平面上の小さな正方形で、第24回の (1.2) がそのまま使える。循環 $\approx(Q_x-P_y)\Delta S_k$。回転 $\nabla\times\boldsymbol F$ の<strong>$\boldsymbol n_k$ 方向の成分</strong>が $Q_x-P_y$ にあたる（<a href="24_第24回_発散と回転.html#sec-3-4">第24回 3.4</a>：回転の向きは回る面に直角）。したがって</p>
+<p>$$ \oint_{\partial S_k}\boldsymbol F\cdot d\boldsymbol r\approx(\nabla\times\boldsymbol F)\cdot\boldsymbol n_k\,\Delta S_k $$</p>
+<p>② 全部足す。隣り合う片が共有する辺は、片のどちらから見ても $\boldsymbol n$ の側から反時計回りに通ると、<strong>逆向き</strong>に通る。寄与は消える（図4.1）。残るのは外周 $\partial S$ だけ。</p>
+<p>③ 右辺の $\sum_k(\nabla\times\boldsymbol F)\cdot\boldsymbol n_k\,\Delta S_k$ は、面積分のリーマン和（<a href="25_第25回_線積分と面積分.html#sym-flux">第25回</a>）で、分割を細かくすると $\iint_S(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS$ に近づく。誤差の議論は 2.3 ④ と同じ。</p>
+<p>ストークスの定理も、曲面を小さな片に分けて貼り合わせる。図4.1 を見る。</p>
+<figure class="fig" id="fig-4-1">
+<svg viewBox="0 0 440 358" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="曲面を小さな片に分けて貼り合わせる" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>曲面を小さな片に分けて貼り合わせる</title>
+<rect x="0" y="0" width="440" height="358" fill="#fffdf7"/>
+<polyline points="60.0,300.0 156.7,309.7 180.0,278.5 83.3,268.8 60.0,300.0" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="83.3,268.8 180.0,278.5 203.3,235.2 106.7,225.5 83.3,268.8" fill="#fbf8ee" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="106.7,225.5 203.3,235.2 226.7,179.7 130.0,170.0 106.7,225.5" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="156.7,309.7 253.3,300.4 276.7,269.2 180.0,278.5 156.7,309.7" fill="#fbf8ee" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="180.0,278.5 276.7,269.2 300.0,225.8 203.3,235.2 180.0,278.5" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="203.3,235.2 300.0,225.8 323.3,170.4 226.7,179.7 203.3,235.2" fill="#fbf8ee" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="253.3,300.4 350.0,272.0 373.3,240.8 276.7,269.2 253.3,300.4" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="276.7,269.2 373.3,240.8 396.7,197.5 300.0,225.8 276.7,269.2" fill="#fbf8ee" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<polyline points="300.0,225.8 396.7,197.5 420.0,142.0 323.3,170.4 300.0,225.8" fill="#f4f0e4" stroke="#ddd6c8" stroke-width="1.2" stroke-linejoin="round"/>
+<line x1="165.3" y1="306.5" x2="179.3" y2="287.7" stroke="#9a9184" stroke-width="1.5"/><path d="M178.2 293.6 L179.3 287.7 L174.0 290.5" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="171.3" y1="281.8" x2="157.3" y2="300.5" stroke="#9a9184" stroke-width="1.5"/><path d="M158.5 294.6 L157.3 300.5 L162.7 297.7" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="189.1" y1="272.2" x2="203.1" y2="246.2" stroke="#9a9184" stroke-width="1.5"/><path d="M202.8 252.2 L203.1 246.2 L198.2 249.7" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="194.3" y1="241.5" x2="180.3" y2="267.5" stroke="#9a9184" stroke-width="1.5"/><path d="M180.5 261.5 L180.3 267.5 L185.1 264.0" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="212.6" y1="226.0" x2="226.6" y2="192.7" stroke="#9a9184" stroke-width="1.5"/><path d="M226.9 198.7 L226.6 192.7 L222.1 196.7" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="217.4" y1="188.9" x2="203.4" y2="222.1" stroke="#9a9184" stroke-width="1.5"/><path d="M203.1 216.2 L203.4 222.1 L207.9 218.2" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="262.0" y1="297.1" x2="276.0" y2="278.4" stroke="#9a9184" stroke-width="1.5"/><path d="M274.9 284.3 L276.0 278.4 L270.7 281.2" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="268.0" y1="272.4" x2="254.0" y2="291.2" stroke="#9a9184" stroke-width="1.5"/><path d="M255.1 285.3 L254.0 291.2 L259.3 288.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="285.7" y1="262.9" x2="299.7" y2="236.9" stroke="#9a9184" stroke-width="1.5"/><path d="M299.5 242.9 L299.7 236.9 L294.9 240.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="290.9" y1="232.1" x2="276.9" y2="258.1" stroke="#9a9184" stroke-width="1.5"/><path d="M277.2 252.1 L276.9 258.1 L281.8 254.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="309.3" y1="216.7" x2="323.3" y2="183.4" stroke="#9a9184" stroke-width="1.5"/><path d="M323.6 189.4 L323.3 183.4 L318.8 187.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="314.1" y1="179.5" x2="300.1" y2="212.8" stroke="#9a9184" stroke-width="1.5"/><path d="M299.7 206.8 L300.1 212.8 L304.6 208.8" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="102.2" y1="275.7" x2="160.2" y2="281.5" stroke="#9a9184" stroke-width="1.5"/><path d="M154.5 283.6 L160.2 281.5 L155.1 278.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="161.2" y1="271.6" x2="103.2" y2="265.8" stroke="#9a9184" stroke-width="1.5"/><path d="M108.8 263.7 L103.2 265.8 L108.3 268.9" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="199.8" y1="281.6" x2="257.8" y2="276.0" stroke="#9a9184" stroke-width="1.5"/><path d="M252.7 279.1 L257.8 276.0 L252.2 273.9" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="256.9" y1="266.1" x2="198.9" y2="271.7" stroke="#9a9184" stroke-width="1.5"/><path d="M204.0 268.5 L198.9 271.7 L204.5 273.7" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="297.4" y1="268.3" x2="355.4" y2="251.3" stroke="#9a9184" stroke-width="1.5"/><path d="M351.0 255.3 L355.4 251.3 L349.5 250.3" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="352.6" y1="241.7" x2="294.6" y2="258.7" stroke="#9a9184" stroke-width="1.5"/><path d="M299.0 254.7 L294.6 258.7 L300.5 259.7" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="125.5" y1="232.4" x2="183.5" y2="238.2" stroke="#9a9184" stroke-width="1.5"/><path d="M177.9 240.3 L183.5 238.2 L178.4 235.1" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="184.5" y1="228.3" x2="126.5" y2="222.4" stroke="#9a9184" stroke-width="1.5"/><path d="M132.1 220.4 L126.5 222.4 L131.6 225.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="223.1" y1="238.3" x2="281.1" y2="232.7" stroke="#9a9184" stroke-width="1.5"/><path d="M276.0 235.8 L281.1 232.7 L275.5 230.6" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="280.2" y1="222.7" x2="222.2" y2="228.3" stroke="#9a9184" stroke-width="1.5"/><path d="M227.3 225.2 L222.2 228.3 L227.8 230.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="320.7" y1="225.0" x2="378.7" y2="207.9" stroke="#9a9184" stroke-width="1.5"/><path d="M374.3 212.0 L378.7 207.9 L372.8 207.0" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="375.9" y1="198.3" x2="317.9" y2="215.4" stroke="#9a9184" stroke-width="1.5"/><path d="M322.4 211.3 L317.9 215.4 L323.8 216.4" fill="none" stroke="#9a9184" stroke-width="1.5"/>
+<line x1="79.3" y1="301.9" x2="137.3" y2="307.8" stroke="#a8322a" stroke-width="3.4"/><path d="M127.0 311.5 L137.3 307.8 L128.0 302.0" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="176.0" y1="307.9" x2="234.0" y2="302.3" stroke="#a8322a" stroke-width="3.4"/><path d="M224.6 308.0 L234.0 302.3 L223.7 298.4" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="272.7" y1="294.7" x2="330.7" y2="277.7" stroke="#a8322a" stroke-width="3.4"/><path d="M322.5 285.1 L330.7 277.7 L319.8 275.9" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="354.7" y1="265.8" x2="368.7" y2="247.0" stroke="#a8322a" stroke-width="3.4"/><path d="M366.6 257.8 L368.7 247.0 L358.9 252.1" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="378.0" y1="232.1" x2="392.0" y2="206.1" stroke="#a8322a" stroke-width="3.4"/><path d="M391.5 217.1 L392.0 206.1 L383.1 212.6" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="401.3" y1="186.4" x2="415.3" y2="153.1" stroke="#a8322a" stroke-width="3.4"/><path d="M415.9 164.1 L415.3 153.1 L407.1 160.4" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="400.7" y1="147.7" x2="342.7" y2="164.7" stroke="#a8322a" stroke-width="3.4"/><path d="M350.8 157.3 L342.7 164.7 L353.5 166.5" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="304.0" y1="172.3" x2="246.0" y2="177.9" stroke="#a8322a" stroke-width="3.4"/><path d="M255.4 172.1 L246.0 177.9 L256.3 181.7" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="207.3" y1="177.8" x2="149.3" y2="171.9" stroke="#a8322a" stroke-width="3.4"/><path d="M159.7 168.2 L149.3 171.9 L158.7 177.7" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="125.3" y1="181.1" x2="111.3" y2="214.4" stroke="#a8322a" stroke-width="3.4"/><path d="M110.8 203.4 L111.3 214.4 L119.6 207.1" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="102.0" y1="234.1" x2="88.0" y2="260.1" stroke="#a8322a" stroke-width="3.4"/><path d="M88.5 249.1 L88.0 260.1 L96.9 253.7" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="78.7" y1="275.0" x2="64.7" y2="293.8" stroke="#a8322a" stroke-width="3.4"/><path d="M66.8 283.0 L64.7 293.8 L74.4 288.7" fill="none" stroke="#a8322a" stroke-width="3.4"/>
+<line x1="240.0" y1="257.0" x2="240.0" y2="187.0" stroke="#5f7f4f" stroke-width="3.4"/><path d="M244.8 196.9 L240.0 187.0 L235.2 196.9" fill="none" stroke="#5f7f4f" stroke-width="3.4"/>
+<text x="250.0" y="195.0" font-size="18" fill="#5f7f4f" text-anchor="start" font-weight="bold">n</text>
+<text x="20.0" y="340.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">灰：内側の辺（逆向き2本で消える）　朱：外周 ∂S</text>
+</svg>
+<figcaption><strong>図 4.1</strong>　曲面 $S$ を小さな四角い片に分け、片のまわりの循環を、すべて反時計回り（$\boldsymbol n$ の側から見て）に数える。隣り合う片は共有する辺を逆向きに通るので消え、外周 $\partial S$ に沿った循環だけが残る。</figcaption>
+</figure>
+<p><strong>グリーンの定理は特別な場合。</strong>$S$ を $xy$ 平面の領域 $D$、$\boldsymbol n=\boldsymbol e_z$ とすると、$\boldsymbol e_z$ との内積は回転の第3成分 $Q_x-P_y$ を取り出す。$\boldsymbol F=(P,Q,0)^{\mathsf T}$ なら左辺は $\iint_D(Q_x-P_y)\,dA$、右辺は $\oint(P\,dx+Q\,dy)$ で、2.1 そのものである。</p>
+
+<h3 id="sec-4-4"><span class="no">4.4</span>曲面によらないこと、閉曲面にはふちがない</h3>
+<p><strong>(1) 同じふちなら、面は何でもよい。</strong>4.2 の例1では、円板と半球が同じ円をふちにもち、どちらも $2\pi$ だった。一般に、ふち $\partial S$ が同じ2つの曲面 $S_1,S_2$（同じ側を向く）について、ストークスの定理の右辺は同じなので、</p>
+<p>$$ \iint_{S_1}(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS=\iint_{S_2}(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS $$</p>
+<p>回転の流れ $\nabla\times\boldsymbol F$ が円板を通り抜けるなら、それは必ず半球も通り抜ける、ということである（図4.2）。流れの線は、途中でなくならない。</p>
+<p>ストークスの定理から、「境界が同じなら面積分も同じ」が出る。図4.2 を見る。</p>
+<figure class="fig" id="fig-4-2">
+<svg viewBox="0 0 440 380" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="同じ境界をもつ円板と半球" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>同じ境界をもつ円板と半球</title>
+<rect x="0" y="0" width="440" height="380" fill="#fffdf7"/>
+<polyline points="350.0,250.0 349.6,253.0 348.4,255.9 346.4,258.9 343.6,261.7 340.1,264.5 335.8,267.3 330.8,269.9 325.2,272.3 318.9,274.7 311.9,276.9 304.4,278.9 296.4,280.7 287.9,282.4 279.0,283.9 269.7,285.1 260.2,286.1 250.3,287.0 240.3,287.5 230.2,287.9 220.0,288.0 209.8,287.9 199.7,287.5 189.7,287.0 179.8,286.1 170.3,285.1 161.0,283.9 152.1,282.4 143.6,280.7 135.6,278.9 128.1,276.9 121.1,274.7 114.8,272.3 109.2,269.9 104.2,267.3 99.9,264.5 96.4,261.7 93.6,258.9 91.6,255.9 90.4,253.0 90.0,250.0 90.4,247.0 91.6,244.1 93.6,241.1 96.4,238.3 99.9,235.5 104.2,232.7 109.2,230.1 114.8,227.7 121.1,225.3 128.1,223.1 135.6,221.1 143.6,219.3 152.1,217.6 161.0,216.1 170.3,214.9 179.8,213.9 189.7,213.0 199.7,212.5 209.8,212.1 220.0,212.0 230.2,212.1 240.3,212.5 250.3,213.0 260.2,213.9 269.7,214.9 279.0,216.1 287.9,217.6 296.4,219.3 304.4,221.1 311.9,223.1 318.9,225.3 325.2,227.7 330.8,230.1 335.8,232.7 340.1,235.5 343.6,238.3 346.4,241.1 348.4,244.1 349.6,247.0 350.0,250.0" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M90 250 C 90 60, 350 60, 350 250" fill="#f7ecdc" fill-opacity="0.75" stroke="#b07a3e" stroke-width="2.8"/>
+<polyline points="350.0,250.0 349.6,253.0 348.4,255.9 346.4,258.9 343.6,261.7 340.1,264.5 335.8,267.3 330.8,269.9 325.2,272.3 318.9,274.7 311.9,276.9 304.4,278.9 296.4,280.7 287.9,282.4 279.0,283.9 269.7,285.1 260.2,286.1 250.3,287.0 240.3,287.5 230.2,287.9 220.0,288.0 209.8,287.9 199.7,287.5 189.7,287.0 179.8,286.1 170.3,285.1 161.0,283.9 152.1,282.4 143.6,280.7 135.6,278.9 128.1,276.9 121.1,274.7 114.8,272.3 109.2,269.9 104.2,267.3 99.9,264.5 96.4,261.7 93.6,258.9 91.6,255.9 90.4,253.0 90.0,250.0" fill="none" stroke="#a8322a" stroke-width="3.6" stroke-linejoin="round"/>
+<polyline points="90.0,250.0 90.4,247.0 91.6,244.1 93.6,241.1 96.4,238.3 99.9,235.5 104.2,232.7 109.2,230.1 114.8,227.7 121.1,225.3 128.1,223.1 135.6,221.1 143.6,219.3 152.1,217.6 161.0,216.1 170.3,214.9 179.8,213.9 189.7,213.0 199.7,212.5 209.8,212.1 220.0,212.0 230.2,212.1 240.3,212.5 250.3,213.0 260.2,213.9 269.7,214.9 279.0,216.1 287.9,217.6 296.4,219.3 304.4,221.1 311.9,223.1 318.9,225.3 325.2,227.7 330.8,230.1 335.8,232.7 340.1,235.5 343.6,238.3 346.4,241.1 348.4,244.1 349.6,247.0 350.0,250.0" fill="none" stroke="#a8322a" stroke-width="3.6" stroke-dasharray="6 4" stroke-linejoin="round"/>
+<line x1="150.0" y1="320.0" x2="150.0" y2="169.0" stroke="#5f7f4f" stroke-width="2.4"/><path d="M153.9 177.1 L150.0 169.0 L146.1 177.1" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<line x1="220.0" y1="320.0" x2="220.0" y2="120.0" stroke="#5f7f4f" stroke-width="2.4"/><path d="M223.9 128.1 L220.0 120.0 L216.1 128.1" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<line x1="290.0" y1="320.0" x2="290.0" y2="169.0" stroke="#5f7f4f" stroke-width="2.4"/><path d="M293.9 177.1 L290.0 169.0 L286.1 177.1" fill="none" stroke="#5f7f4f" stroke-width="2.4"/>
+<text x="220.0" y="190.0" font-size="15" fill="#b07a3e" text-anchor="middle" font-weight="bold">S₂（半球）</text>
+<text x="225.0" y="280.0" font-size="14" fill="#2b3a67" text-anchor="middle" font-weight="bold">S₁（円板）</text>
+<text x="358.0" y="256.0" font-size="16" fill="#a8322a" text-anchor="start" font-weight="bold">∂S</text>
+<text x="20.0" y="342.0" font-size="14" fill="#2a2723" text-anchor="start">同じ円 ∂S を境界とする2つの曲面。緑は rot F の流れ。</text>
+<text x="20.0" y="364.0" font-size="14" fill="#2a2723" text-anchor="start">どちらの曲面も、同じ緑の流れを全部受けとめる</text>
+</svg>
+<figcaption><strong>図 4.2</strong>　円板 $S_1$ と半球 $S_2$ は、同じ円 $\partial S$ を境界にもつ。$\nabla\times\boldsymbol F$ の流れ（緑）は、円板を通り抜ければ必ず半球も通り抜けるので、どちらの曲面で面積分しても同じ値になる。両方とも右辺は $\oint_{\partial S}\boldsymbol F\cdot d\boldsymbol r$ で、曲面の形を含まない。</figcaption>
+</figure>
+<p><strong>(2) 閉曲面ではふちが空になる。</strong>球面のように閉じた曲面 $\Sigma$ は、ふちをもたない。確かめる：球面を赤道で上半球と下半球に分ける。外向き法線にそろえると、上半球のふちは赤道を反時計回り（上から見て）に、下半球のふちは赤道を<strong>時計回り</strong>に通る（図4.3）。同じ赤道を逆向きに通るので、足すと線積分は消える。つまり「閉曲面の境界の線積分の合計は0」。ストークスの定理により、</p>
+<p>$$ \iint_{\Sigma}(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS=0 \qquad(\Sigma\text{ が閉曲面のとき}) $$</p>
+<p>閉曲面にはふちがない。これを、図4.3 で球を2つに分けて確かめる。</p>
+<figure class="fig" id="fig-4-3">
+<svg viewBox="0 0 440 382" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="球面を赤道で2つに分ける" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>球面を赤道で2つに分ける</title>
+<rect x="0" y="0" width="440" height="382" fill="#fffdf7"/>
+<circle cx="220.0" cy="160.0" r="110" fill="#e8ecf4" stroke="#2b3a67" stroke-width="2.4"/>
+<polyline points="110.0,160.0 110.3,157.6 111.4,155.3 113.0,153.0 115.4,150.7 118.4,148.5 122.0,146.4 126.2,144.3 131.0,142.4 136.4,140.5 142.2,138.8 148.6,137.2 155.3,135.7 162.5,134.4 170.1,133.3 177.9,132.3 186.0,131.5 194.3,130.8 202.8,130.4 211.4,130.1 220.0,130.0 228.6,130.1 237.2,130.4 245.7,130.8 254.0,131.5 262.1,132.3 269.9,133.3 277.5,134.4 284.7,135.7 291.4,137.2 297.8,138.8 303.6,140.5 309.0,142.4 313.8,144.3 318.0,146.4 321.6,148.5 324.6,150.7 327.0,153.0 328.6,155.3 329.7,157.6 330.0,160.0" fill="none" stroke="#9a9184" stroke-width="1.5" stroke-dasharray="5 4" stroke-linejoin="round"/>
+<polyline points="330.0,160.0 329.7,162.4 328.6,164.7 327.0,167.0 324.6,169.3 321.6,171.5 318.0,173.6 313.8,175.7 309.0,177.6 303.6,179.5 297.8,181.2 291.4,182.8 284.7,184.3 277.5,185.6 269.9,186.7 262.1,187.7 254.0,188.5 245.7,189.2 237.2,189.6 228.6,189.9 220.0,190.0 211.4,189.9 202.8,189.6 194.3,189.2 186.0,188.5 177.9,187.7 170.1,186.7 162.5,185.6 155.3,184.3 148.6,182.8 142.2,181.2 136.4,179.5 131.0,177.6 126.2,175.7 122.0,173.6 118.4,171.5 115.4,169.3 113.0,167.0 111.4,164.7 110.3,162.4 110.0,160.0" fill="none" stroke="#2a2723" stroke-width="2.6" stroke-linejoin="round"/>
+<line x1="180.0" y1="183.0" x2="260.0" y2="183.0" stroke="#a8322a" stroke-width="3.6"/><path d="M249.2 188.2 L260.0 183.0 L249.2 177.8" fill="none" stroke="#a8322a" stroke-width="3.6"/>
+<line x1="260.0" y1="195.0" x2="180.0" y2="195.0" stroke="#2a5d8f" stroke-width="3.6"/><path d="M190.8 189.8 L180.0 195.0 L190.8 200.2" fill="none" stroke="#2a5d8f" stroke-width="3.6"/>
+<text x="220.0" y="105.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">S 上半球</text>
+<text x="220.0" y="245.0" font-size="16" fill="#2b3a67" text-anchor="middle" font-weight="bold">S 下半球</text>
+<text x="20.0" y="322.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">上半球の境界 ∂S上：赤道を → に進む（外向き n で右ねじ）</text>
+<text x="20.0" y="344.0" font-size="14" fill="#2a5d8f" text-anchor="start" font-weight="bold">下半球の境界 ∂S下：赤道を ← に進む</text>
+<text x="20.0" y="366.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">足すと赤道上の線積分は消え、閉曲面には境界がない</text>
+</svg>
+<figcaption><strong>図 4.3</strong>　球面を赤道で上下に分ける。外向き法線をそろえると、上半球の境界は赤道を反時計回り（手前側は左から右）、下半球の境界は時計回り（手前側は右から左）に通る。同じ線を逆向きに通るので足すと消える。したがって閉曲面全体の境界は空であり、ストークスの右辺は $0$ になる。</figcaption>
+</figure>
+<p>これは第24回 3.6 の恒等式 $\nabla\cdot(\nabla\times\boldsymbol F)=0$ と、発散定理を組み合わせても出る：$\iint_\Sigma(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS=\iiint\nabla\cdot(\nabla\times\boldsymbol F)\,dV=\iiint0\,dV=0$。つまり<strong>「回転の発散は0」という計算の恒等式の幾何学的な意味は、「境界の境界は空」</strong>である。表にまとめる。</p>
+<table class="tb">
+<tr><th>計算の恒等式（第24回 3.6）</th><th>幾何学的な意味</th></tr>
+<tr><td>$\nabla\cdot(\nabla\times\boldsymbol F)=0$</td><td>閉曲面は、ふちをもたない（上の (2)）</td></tr>
+<tr><td>$\nabla\times(\nabla\phi)=\boldsymbol 0$</td><td>勾配場の閉曲線に沿った循環は0（4.5）</td></tr>
+</table>
+
+<h3 id="sec-4-5"><span class="no">4.5</span>勾配場と穴：第24回 3.5 の回収</h3>
+<p>$\boldsymbol F=\nabla\phi$（<a href="23_第23回_場と勾配.html#sym-potential">ポテンシャル</a>をもつ場）なら、$\nabla\times\boldsymbol F=\boldsymbol 0$（<a href="24_第24回_発散と回転.html#sec-3-6">第24回 3.6</a>）。ストークスの定理から、閉曲線 $C$ が曲面 $S$ のふちであれば</p>
+<p>$$ \oint_C\nabla\phi\cdot d\boldsymbol r=\iint_S\underbrace{(\nabla\times\nabla\phi)}_{=\boldsymbol 0}\cdot\boldsymbol n\,dS=0 $$</p>
+<p>勾配場の、閉曲線に沿った循環は0である。これは<a href="25_第25回_線積分と面積分.html#sym-conservative">保存場</a>（線積分が経路によらない場）の性質で、第25回で「端点の差」として別の形で示した。</p>
+<p><strong>逆は？</strong>「$\nabla\times\boldsymbol F=\boldsymbol 0$ なら $\boldsymbol F$ は勾配場」と言いたい。これは<strong>領域に穴がないとき</strong>だけ成り立つ。</p>
+
+<div class="def" id="sym-simply-connected"><span class="label">記号（用語）：単連結</span>
+<p><strong>①読み方</strong>：「たんれんけつ」。</p>
+<p><strong>②日本語での意味</strong>：領域の中に描いたどんな閉曲線も、領域から出ずに、一点まで縮められる。つまり<strong>穴がない</strong>。</p>
+<p><strong>③省略していない書き方</strong>：領域 $\Omega$ が単連結とは、$\Omega$ の中の任意の閉曲線 $C$ について、$C$ をふちとする曲面 $S$ で、$S$ 全体が $\Omega$ の中にあるものが存在すること。</p>
+<p><strong>④どこで出会うか</strong>：$\nabla\times\boldsymbol F=\boldsymbol 0$ と保存場の関係、複素関数のコーシーの定理。例：平面全体、円板は単連結。原点を除いた平面、円環は単連結でない。</p>
+</div>
+
+<p>定理（証明を省略する）：単連結な領域で $\nabla\times\boldsymbol F=\boldsymbol 0$ なら、任意の閉曲線に沿った循環は0（上の計算でストークスを使える）。したがって<a href="25_第25回_線積分と面積分.html#sym-conservative">経路によらず</a>、ポテンシャル $\phi$ が作れる。</p>
+<p><strong>単連結でないとき</strong>：<a href="24_第24回_発散と回転.html#sec-3-5">第24回 3.5</a> の渦なしの渦 $\boldsymbol F=\dfrac{(-y,\ x)^{\mathsf T}}{x^2+y^2}$。原点を除いた平面で $\nabla\times\boldsymbol F=0$ だった。原点を囲む単位円 $C_1$ に沿った循環は、$x=\cos t,\ y=\sin t$ で $\boldsymbol F\cdot d\boldsymbol r=(-\sin t\cdot(-\sin t)+\cos t\cdot\cos t)\,dt=dt$。$\oint_{C_1}=\int_0^{2\pi}dt=2\pi\ne0$。</p>
+<p>回転は至るところ0なのに、循環が0でない。2.7 の (1) のとおり、$C_1$ の内側（円板）には原点が含まれ、そこで $\boldsymbol F$ が定義されないので、グリーン（ストークス）の定理が使えない。これが「穴」の効果である。一方、原点を囲まない閉曲線 $C_2$（たとえば 4 点 $(1,-2),(2,-2),(2,-1),(1,-1)$ を結ぶ正方形）の内側では $\boldsymbol F$ は滑らかなので、循環は0（図4.4）。</p>
+<p>前回 3.5 の「渦なしの渦」に、図4.4 のように2つの閉曲線を重ねる。</p>
+<figure class="fig" id="fig-4-4">
+<svg viewBox="0 0 440 392" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="渦なしの渦：囲む曲線と囲まない曲線" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>渦なしの渦：囲む曲線と囲まない曲線</title>
+<rect x="0" y="0" width="440" height="392" fill="#fffdf7"/>
+<line x1="60.0" y1="170.0" x2="390.0" y2="170.0" stroke="#2a2723" stroke-width="1.3"/><path d="M383.7 173.0 L390.0 170.0 L383.7 167.0" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="220.0" y1="320.0" x2="220.0" y2="10.0" stroke="#2a2723" stroke-width="1.3"/><path d="M223.0 16.3 L220.0 10.0 L217.0 16.3" fill="none" stroke="#2a2723" stroke-width="1.3"/>
+<line x1="92.0" y1="166.0" x2="92.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="92.0" y="190.0" font-size="14" fill="#6b645a" text-anchor="middle">-2</text>
+<line x1="156.0" y1="166.0" x2="156.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="156.0" y="190.0" font-size="14" fill="#6b645a" text-anchor="middle">-1</text>
+<line x1="284.0" y1="166.0" x2="284.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="284.0" y="190.0" font-size="14" fill="#6b645a" text-anchor="middle">1</text>
+<line x1="348.0" y1="166.0" x2="348.0" y2="174.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="348.0" y="190.0" font-size="14" fill="#6b645a" text-anchor="middle">2</text>
+<line x1="216.0" y1="290.0" x2="224.0" y2="290.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="295.0" font-size="14" fill="#6b645a" text-anchor="end">-2</text>
+<line x1="216.0" y1="230.0" x2="224.0" y2="230.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="235.0" font-size="14" fill="#6b645a" text-anchor="end">-1</text>
+<line x1="216.0" y1="110.0" x2="224.0" y2="110.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="115.0" font-size="14" fill="#6b645a" text-anchor="end">1</text>
+<line x1="216.0" y1="50.0" x2="224.0" y2="50.0" stroke="#2a2723" stroke-width="1.2"/>
+<text x="212.0" y="55.0" font-size="14" fill="#6b645a" text-anchor="end">2</text>
+<text x="394.0" y="192.0" font-size="17" fill="#2a2723" text-anchor="middle" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">x</tspan></text>
+<text x="234.0" y="16.0" font-size="17" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan font-style="italic">y</tspan></text>
+<circle cx="92.0" cy="260.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="92.0" y1="260.0" x2="107.4" y2="279.2" stroke="#2b3a67" stroke-width="2.0"/><path d="M101.0 276.2 L107.4 279.2 L105.8 272.4" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="92.0" cy="170.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="92.0" y1="170.0" x2="92.0" y2="200.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M89.0 193.7 L92.0 200.0 L95.0 193.7" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="92.0" cy="80.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="92.0" y1="80.0" x2="76.6" y2="99.2" stroke="#2b3a67" stroke-width="2.0"/><path d="M78.2 92.4 L76.6 99.2 L83.0 96.2" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="156.0" cy="290.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="156.0" y1="290.0" x2="181.6" y2="302.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M174.6 302.1 L181.6 302.0 L177.2 296.6" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="156.0" cy="80.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="156.0" y1="80.0" x2="126.5" y2="98.5" stroke="#2b3a67" stroke-width="2.0"/><path d="M130.2 92.5 L126.5 98.5 L133.4 97.7" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="220.0" cy="290.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="220.0" y1="290.0" x2="252.0" y2="290.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M245.7 293.0 L252.0 290.0 L245.7 287.0" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="220.0" cy="50.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="220.0" y1="50.0" x2="188.0" y2="50.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M194.3 47.0 L188.0 50.0 L194.3 53.0" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="284.0" cy="290.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="284.0" y1="290.0" x2="309.6" y2="278.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M305.2 283.4 L309.6 278.0 L302.6 277.9" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="284.0" cy="80.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="284.0" y1="80.0" x2="254.5" y2="61.5" stroke="#2b3a67" stroke-width="2.0"/><path d="M261.4 62.3 L254.5 61.5 L258.2 67.5" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="348.0" cy="260.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="348.0" y1="260.0" x2="363.4" y2="240.8" stroke="#2b3a67" stroke-width="2.0"/><path d="M361.8 247.6 L363.4 240.8 L357.0 243.8" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="348.0" cy="170.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="348.0" y1="170.0" x2="348.0" y2="140.0" stroke="#2b3a67" stroke-width="2.0"/><path d="M351.0 146.3 L348.0 140.0 L345.0 146.3" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="348.0" cy="80.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="348.0" y1="80.0" x2="332.6" y2="60.8" stroke="#2b3a67" stroke-width="2.0"/><path d="M339.0 63.8 L332.6 60.8 L334.2 67.6" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="124.0" cy="134.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="124.0" y1="134.0" x2="109.3" y2="168.5" stroke="#2b3a67" stroke-width="2.0"/><path d="M109.0 161.5 L109.3 168.5 L114.6 163.9" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="124.0" cy="206.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="124.0" y1="206.0" x2="138.7" y2="240.5" stroke="#2b3a67" stroke-width="2.0"/><path d="M133.4 235.9 L138.7 240.5 L139.0 233.5" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="316.0" cy="134.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="316.0" y1="134.0" x2="301.3" y2="99.5" stroke="#2b3a67" stroke-width="2.0"/><path d="M306.6 104.1 L301.3 99.5 L301.0 106.5" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="316.0" cy="206.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="316.0" y1="206.0" x2="330.7" y2="171.5" stroke="#2b3a67" stroke-width="2.0"/><path d="M331.0 178.5 L330.7 171.5 L325.4 176.1" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="264.8" cy="116.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="264.8" y1="116.0" x2="220.5" y2="83.7" stroke="#2b3a67" stroke-width="2.0"/><path d="M227.4 84.9 L220.5 83.7 L223.8 89.9" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="175.2" cy="224.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="175.2" y1="224.0" x2="219.5" y2="256.3" stroke="#2b3a67" stroke-width="2.0"/><path d="M212.6 255.1 L219.5 256.3 L216.2 250.1" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="162.4" cy="128.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="162.4" y1="128.0" x2="127.9" y2="169.5" stroke="#2b3a67" stroke-width="2.0"/><path d="M129.6 162.7 L127.9 169.5 L134.3 166.6" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="277.6" cy="212.0" r="2.5" fill="#2a2723" stroke="#2a2723" stroke-width="1.5"/>
+<line x1="277.6" y1="212.0" x2="312.1" y2="170.5" stroke="#2b3a67" stroke-width="2.0"/><path d="M310.4 177.3 L312.1 170.5 L305.7 173.4" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<circle cx="220.0" cy="170.0" r="4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<polyline points="296.8,170.0 296.6,164.4 295.9,158.7 294.7,153.2 293.0,147.8 291.0,142.4 288.4,137.3 285.5,132.4 282.1,127.7 278.4,123.2 274.3,119.1 269.9,115.3 265.1,111.8 260.1,108.6 254.9,105.8 249.4,103.5 243.7,101.5 237.9,100.0 232.0,98.9 226.0,98.2 220.0,98.0 214.0,98.2 208.0,98.9 202.1,100.0 196.3,101.5 190.6,103.5 185.1,105.8 179.9,108.6 174.9,111.8 170.1,115.3 165.7,119.1 161.6,123.2 157.9,127.7 154.5,132.4 151.6,137.3 149.0,142.4 147.0,147.8 145.3,153.2 144.1,158.7 143.4,164.4 143.2,170.0 143.4,175.6 144.1,181.3 145.3,186.8 147.0,192.2 149.0,197.6 151.6,202.7 154.5,207.6 157.9,212.3 161.6,216.8 165.7,220.9 170.1,224.7 174.9,228.2 179.9,231.4 185.1,234.2 190.6,236.5 196.3,238.5 202.1,240.0 208.0,241.1 214.0,241.8 220.0,242.0 226.0,241.8 232.0,241.1 237.9,240.0 243.7,238.5 249.4,236.5 254.9,234.2 260.1,231.4 265.1,228.2 269.9,224.7 274.3,220.9 278.4,216.8 282.1,212.3 285.5,207.6 288.4,202.7 291.0,197.6 293.0,192.2 294.7,186.8 295.9,181.3 296.6,175.6 296.8,170.0" fill="none" stroke="#a8322a" stroke-width="3.2" stroke-linejoin="round"/>
+<polyline points="284.0,290.0 348.0,290.0 348.0,230.0 284.0,230.0 284.0,290.0" fill="none" stroke="#5f7f4f" stroke-width="3.2" stroke-linejoin="round"/>
+<rect x="275.5" y="98.9" width="62.0" height="20" fill="#fffdf7" opacity="0.92"/><text x="278.5" y="112.9" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">C₁: 2π</text>
+<rect x="289.2" y="251.0" width="53.6" height="20" fill="#fffdf7" opacity="0.92"/><text x="316.0" y="265.0" font-size="14" fill="#5f7f4f" text-anchor="middle" font-weight="bold">C₂: 0</text>
+<text x="20.0" y="354.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">原点を囲む C₁：循環 2π　　囲まない C₂：循環 0</text>
+<text x="20.0" y="376.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">どこでも rot = 0 なのに、C₁ では 0 でない</text>
+</svg>
+<figcaption><strong>図 4.4</strong>　場 $\boldsymbol F=(-y,x)/(x^2+y^2)$。原点を囲む円 $C_1$ に沿った循環は $2\pi$、原点を囲まない正方形 $C_2$ に沿った循環は $0$。原点だけは場が定義されず、$C_1$ が囲む領域は原点を含むので、グリーンの定理が使えない。</figcaption>
+</figure>
+<p>なお、原点を囲む<strong>どんな</strong>閉曲線でも、反時計回りに1周すれば循環は $2\pi$ である。2つの曲線のあいだの領域（穴のある領域）に 2.7 (2) の方法を使うと、$2\pi-2\pi=0$ で、循環が曲線によらないことが分かる（例題5で類似の計算をする）。</p>
+
+<h3 id="sec-4-6"><span class="no">4.6</span>電磁気学のアンペールの法則とファラデーの法則</h3>
+<p>磁場 $\boldsymbol B$ と電場 $\boldsymbol E$ について、電磁気学の法則は積分形と微分形の2つの形で書かれる。ストークスの定理が両者をつなぐ。</p>
+<p><strong>アンペールの法則（静磁場）</strong>：閉曲線 $C$ に沿った磁場の循環は、$C$ を貫く電流 $I$ に比例する。</p>
+<p>$$ \oint_C\boldsymbol B\cdot d\boldsymbol r=\mu_0I=\mu_0\iint_S\boldsymbol J\cdot\boldsymbol n\,dS \quad\Longleftrightarrow\quad \nabla\times\boldsymbol B=\mu_0\boldsymbol J $$</p>
+<p>ここで $\boldsymbol J$ は電流密度、$\mu_0$ は真空の透磁率、$S$ は $C$ をふちとする曲面。積分形の左辺にストークスの定理を使うと $\iint_S(\nabla\times\boldsymbol B)\cdot\boldsymbol n\,dS$。これが任意の $S$ で $\mu_0\iint_S\boldsymbol J\cdot\boldsymbol n\,dS$ に等しいので、被積分関数が等しい（3.5 の⑤と同じ論法）。</p>
+<p><strong>ファラデーの電磁誘導の法則</strong>：閉曲線 $C$ に沿った起電力は、$C$ を貫く磁束の減る速さに等しい。</p>
+<p>$$ \oint_C\boldsymbol E\cdot d\boldsymbol r=-\frac{d}{dt}\iint_S\boldsymbol B\cdot\boldsymbol n\,dS \quad\Longleftrightarrow\quad \nabla\times\boldsymbol E=-\frac{\partial\boldsymbol B}{\partial t} $$</p>
+<p>この2つは、4.2 の例のように、ストークスの定理の右辺と左辺をそのまま物理の言葉にしたものである。</p>
+<p><strong>直線電流のまわりの磁場。</strong>$z$ 軸に沿って電流 $I$（$+z$ 向き）が流れる。軸から距離 $r$ の磁場は、軸のまわりを反時計回りに、大きさ $B=\dfrac{\mu_0I}{2\pi r}$（右ねじの規則）。ベクトルで書けば $\boldsymbol B=\dfrac{\mu_0I}{2\pi}\dfrac{(-y,\ x,\ 0)^{\mathsf T}}{x^2+y^2}$。これは、<strong>4.5 の渦なしの渦そのもの</strong>に定数 $\dfrac{\mu_0I}{2\pi}$ を掛けたものである。電線の外では $\nabla\times\boldsymbol B=\boldsymbol 0$（電流がないところ）。軸を囲む半径 $r$ の円に沿った循環は、$B\cdot2\pi r=\mu_0I$。半径によらない（図4.5）。原点（電線）に電流が集中しているので、そこだけ回転が0でない。第24回 3.5 の「回転0の渦」は、電線の外側の磁場のことだった。</p>
+<p>電磁気学のアンペールの法則に、前の図と同じ形が現れる。図4.5 を見る。</p>
+<figure class="fig" id="fig-4-5">
+<svg viewBox="0 0 440 360" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="無限に長い直線電流のまわりの磁場" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>無限に長い直線電流のまわりの磁場</title>
+<rect x="0" y="0" width="440" height="360" fill="#fffdf7"/>
+<circle cx="220.0" cy="170.0" r="40" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<line x1="253.0" y1="147.4" x2="241.6" y2="136.3" stroke="#2b3a67" stroke-width="2.6"/><path d="M247.3 138.2 L241.6 136.3 L243.7 142.0" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="193.3" y1="140.2" x2="183.8" y2="152.9" stroke="#2b3a67" stroke-width="2.6"/><path d="M185.0 147.0 L183.8 152.9 L189.2 150.1" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="193.9" y1="200.3" x2="207.7" y2="208.1" stroke="#2b3a67" stroke-width="2.6"/><path d="M201.7 207.7 L207.7 208.1 L204.3 203.1" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<line x1="251.0" y1="195.3" x2="258.4" y2="181.2" stroke="#2b3a67" stroke-width="2.6"/><path d="M258.2 187.2 L258.4 181.2 L253.6 184.7" fill="none" stroke="#2b3a67" stroke-width="2.6"/>
+<circle cx="220.0" cy="170.0" r="80" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<line x1="286.0" y1="124.8" x2="275.7" y2="112.6" stroke="#2b3a67" stroke-width="2.4"/><path d="M282.1 115.5 L275.7 112.6 L277.5 119.4" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="166.7" y1="110.3" x2="155.9" y2="122.1" stroke="#2b3a67" stroke-width="2.4"/><path d="M157.9 115.4 L155.9 122.1 L162.4 119.5" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="167.7" y1="230.5" x2="180.8" y2="239.7" stroke="#2b3a67" stroke-width="2.4"/><path d="M173.9 238.6 L180.8 239.7 L177.4 233.6" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<line x1="282.0" y1="220.5" x2="290.8" y2="207.2" stroke="#2b3a67" stroke-width="2.4"/><path d="M289.9 214.1 L290.8 207.2 L284.8 210.8" fill="none" stroke="#2b3a67" stroke-width="2.4"/>
+<circle cx="220.0" cy="170.0" r="120" fill="none" stroke="#2b3a67" stroke-width="2.0"/>
+<line x1="319.0" y1="102.2" x2="309.2" y2="89.7" stroke="#2b3a67" stroke-width="2.2"/><path d="M316.3 93.2 L309.2 89.7 L310.9 97.5" fill="none" stroke="#2b3a67" stroke-width="2.2"/>
+<line x1="140.0" y1="80.5" x2="128.9" y2="91.9" stroke="#2b3a67" stroke-width="2.2"/><path d="M131.4 84.4 L128.9 91.9 L136.4 89.2" fill="none" stroke="#2b3a67" stroke-width="2.2"/>
+<line x1="141.6" y1="260.8" x2="154.3" y2="270.4" stroke="#2b3a67" stroke-width="2.2"/><path d="M146.5 268.9 L154.3 270.4 L150.7 263.3" fill="none" stroke="#2b3a67" stroke-width="2.2"/>
+<line x1="313.1" y1="245.8" x2="322.3" y2="232.7" stroke="#2b3a67" stroke-width="2.2"/><path d="M321.0 240.6 L322.3 232.7 L315.3 236.6" fill="none" stroke="#2b3a67" stroke-width="2.2"/>
+<circle cx="220.0" cy="170.0" r="14" fill="#fff" stroke="#a8322a" stroke-width="2.6"/>
+<circle cx="220.0" cy="170.0" r="4" fill="#a8322a" stroke="#a8322a" stroke-width="1.5"/>
+<rect x="237.0" y="200.0" width="134.8" height="20" fill="#fffdf7" opacity="0.92"/><text x="240.0" y="214.0" font-size="14" fill="#a8322a" text-anchor="start" font-weight="bold">電流 I（手前向き）</text>
+<text x="20.0" y="320.0" font-size="14" fill="#2a2723" text-anchor="start">半径 r の円に沿って B の大きさは μ₀I/(2πr)、</text>
+<text x="20.0" y="342.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">円周は 2πr。掛けると r によらず μ₀I</text>
+</svg>
+<figcaption><strong>図 4.5</strong>　紙面に垂直な直線電流 $I$（手前向き）のまわりの磁場 $\boldsymbol B$ は、電流を中心に反時計回りに回り、大きさは $\mu_0I/(2\pi r)$ で距離に反比例する。これは 4.4 の「渦なしの渦」と同じ形である。円周上の循環は半径によらず $\mu_0 I$ で、電流が囲まれているときだけ $0$ でない。</figcaption>
+</figure>
+
+<div class="warn"><span class="label">よくある誤解</span>
+<p><strong>(1) $\partial S$ の向きと $\boldsymbol n$ の向きを別々に決める。</strong>2つは右ねじの規則で結びついている。片方だけ逆にすると、左辺と右辺の符号がずれる。</p>
+<p><strong>(2) 閉曲面にストークスを使って、右辺を「ふちを1周する線積分」と考える。</strong>閉曲面にはふちがない。右辺は0。</p>
+<p><strong>(3) 「回転0なら循環0」を、穴のある領域に使う。</strong>4.5 のとおり、穴を囲む閉曲線では循環が0でない。単連結かどうかを確かめる。</p>
+</div>
+
+<div class="why"><span class="label">ひとことで</span>ストークスの定理：$\iint_S(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS=\oint_{\partial S}\boldsymbol F\cdot d\boldsymbol r$。小さな曲面片のまわりの循環を貼り合わせると、内側の辺が消えてふちだけが残る。ふちが同じなら曲面は何でもよく、閉曲面にはふちがない。単連結でない領域では、回転0でも循環が0でないことがある。</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-5"><span class="no">5</span>全体像と次回への入口</h2>
+
+<h3 id="sec-5-1"><span class="no">5.1</span>基本定理の系列</h3>
+<p>1.1 の問いに戻る。「内部で微分を足す ＝ ふちの値」の形を、次元ごとに並べる。</p>
+<p>ここまでの定理を、図5.1 に並べてみる。</p>
+<figure class="fig" id="fig-5-1">
+<svg viewBox="0 0 440 366" style="display:block;margin:0 auto;width:100%;max-width:440px" role="img" aria-label="内部の微分の総和は境界の値" font-family='"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif'><title>内部の微分の総和は境界の値</title>
+<rect x="0" y="0" width="440" height="366" fill="#fffdf7"/>
+<rect x="10" y="14" width="420" height="62" rx="6" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1.4"/>
+<text x="22.0" y="36.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">1次元の区間</text>
+<text x="418.0" y="36.0" font-size="14" fill="#6b645a" text-anchor="end">基本定理（第10回）</text>
+<text x="22.0" y="62.0" font-size="15" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∫</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">a</tspan><tspan dy="-10.5" font-size="10.5" font-style="italic">b</tspan><tspan dy="6.3"> </tspan><tspan font-style="italic">f</tspan><tspan>′(</tspan><tspan font-style="italic">x</tspan><tspan>) </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">x</tspan><tspan> = </tspan><tspan font-style="italic">f</tspan><tspan>(</tspan><tspan font-style="italic">b</tspan><tspan>) − </tspan><tspan font-style="italic">f</tspan><tspan>(</tspan><tspan font-style="italic">a</tspan><tspan>)</tspan></text>
+<rect x="10" y="84" width="420" height="62" rx="6" fill="#e8ecf4" stroke="#ddd6c8" stroke-width="1.4"/>
+<text x="22.0" y="106.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">曲線</text>
+<text x="418.0" y="106.0" font-size="14" fill="#6b645a" text-anchor="end">勾配場の線積分（第25回）</text>
+<text x="22.0" y="132.0" font-size="15" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∫</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">C</tspan><tspan dy="-4.2"> ∇</tspan><tspan font-style="italic">φ</tspan><tspan>·</tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">r</tspan><tspan> = </tspan><tspan font-style="italic">φ</tspan><tspan>(終点) − </tspan><tspan font-style="italic">φ</tspan><tspan>(始点)</tspan></text>
+<rect x="10" y="154" width="420" height="62" rx="6" fill="#edf1e8" stroke="#ddd6c8" stroke-width="1.4"/>
+<text x="22.0" y="176.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">平面の領域</text>
+<text x="418.0" y="176.0" font-size="14" fill="#6b645a" text-anchor="end">グリーンの定理</text>
+<text x="22.0" y="202.0" font-size="15" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∬</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">D</tspan><tspan dy="-4.2"> (</tspan><tspan font-style="italic">Q</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">x</tspan><tspan dy="-4.2"> − </tspan><tspan font-style="italic">P</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">y</tspan><tspan dy="-4.2">) </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">A</tspan><tspan> = ∮</tspan><tspan dy="4.2" font-size="10.5">∂</tspan><tspan font-size="10.5" font-style="italic">D</tspan><tspan dy="-4.2"> (</tspan><tspan font-style="italic">P</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">x</tspan><tspan> + </tspan><tspan font-style="italic">Q</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">y</tspan><tspan>)</tspan></text>
+<rect x="10" y="224" width="420" height="62" rx="6" fill="#edf1e8" stroke="#ddd6c8" stroke-width="1.4"/>
+<text x="22.0" y="246.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">曲面</text>
+<text x="418.0" y="246.0" font-size="14" fill="#6b645a" text-anchor="end">ストークスの定理</text>
+<text x="22.0" y="272.0" font-size="15" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∬</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">S</tspan><tspan dy="-4.2"> (∇×</tspan><tspan font-style="italic">F</tspan><tspan>)·</tspan><tspan font-style="italic">n</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">S</tspan><tspan> = ∮</tspan><tspan dy="4.2" font-size="10.5">∂</tspan><tspan font-size="10.5" font-style="italic">S</tspan><tspan dy="-4.2"> </tspan><tspan font-style="italic">F</tspan><tspan>·</tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">r</tspan></text>
+<rect x="10" y="294" width="420" height="62" rx="6" fill="#f7ecdc" stroke="#ddd6c8" stroke-width="1.4"/>
+<text x="22.0" y="316.0" font-size="14" fill="#2a2723" text-anchor="start" font-weight="bold">立体</text>
+<text x="418.0" y="316.0" font-size="14" fill="#6b645a" text-anchor="end">ガウスの発散定理</text>
+<text x="22.0" y="342.0" font-size="15" fill="#2a2723" text-anchor="start" font-family='"Cambria Math","STIX Two Math","Times New Roman",serif'><tspan>∭</tspan><tspan dy="4.2" font-size="10.5" font-style="italic">V</tspan><tspan dy="-4.2"> (∇·</tspan><tspan font-style="italic">F</tspan><tspan>) </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">V</tspan><tspan> = ∬</tspan><tspan dy="4.2" font-size="10.5">∂</tspan><tspan font-size="10.5" font-style="italic">V</tspan><tspan dy="-4.2"> </tspan><tspan font-style="italic">F</tspan><tspan>·</tspan><tspan font-style="italic">n</tspan><tspan> </tspan><tspan font-style="italic">d</tspan><tspan font-style="italic">S</tspan></text>
+</svg>
+<figcaption><strong>図 5.1</strong>　どの行も「左辺：内部で、微分したものを足す／右辺：境界で、元のものを足す」の形をしている。$\partial$ で境界に移る向きは、次元が1つ下がる。下の3行が、この回の主役である。</figcaption>
+</figure>
+<p>ほかの見方もある。上の表の左辺は、どれも「$\nabla$ を1回働かせたもの」の積分で、右辺は「$\partial$ で境界に移ったもの」の積分である。数学では、これらを1つにまとめた<strong>一般ストークスの定理</strong>（微分形式で書いた $\int_\Omega d\omega=\int_{\partial\Omega}\omega$）があり、工学ではその3つの場合を使う。ここでは名前の紹介だけにする。</p>
+<p><strong>3つの定理を使い分ける表。</strong></p>
+<table class="tb">
+<tr><th>知りたいもの</th><th>使う定理</th><th>左辺（内部）</th><th>右辺（ふち）</th></tr>
+<tr><td>閉曲線に沿った循環、または曲面を貫く渦の量</td><td>ストークス（グリーン）</td><td>$\iint_S(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS$</td><td>$\oint_{\partial S}\boldsymbol F\cdot d\boldsymbol r$</td></tr>
+<tr><td>閉曲面から出ていく流れ、または立体内の湧き出し</td><td>ガウス</td><td>$\iiint_V\nabla\cdot\boldsymbol F\,dV$</td><td>$\iint_{\partial V}\boldsymbol F\cdot\boldsymbol n\,dS$</td></tr>
+<tr><td>勾配場の線積分</td><td>基本定理の曲線版（第25回）</td><td>$\int_C\nabla\phi\cdot d\boldsymbol r$</td><td>$\phi(\text{終点})-\phi(\text{始点})$</td></tr>
+</table>
+
+<h3 id="sec-5-2"><span class="no">5.2</span>次回への入口：座標を変えると</h3>
+<p>この回までの計算は、デカルト座標 $(x,y,z)$ で $\nabla\cdot\boldsymbol F=P_x+Q_y+R_z$ のように書いた。円柱状・球状の対象（配管、球形のコイル）では、極座標・円柱座標・球座標のほうが計算しやすい。その座標では $\nabla\cdot$ や $\nabla\times$ の成分の式が変わる。この回の発散定理の考え方（小さな体積の流束 ÷ 体積）が、変わる式を導く道具になる。それが第27回の主題である。第27回では、成分に添字 $i,j,k$ を付けて書く<strong>縮約記法</strong>も導入する。</p>
+
+<!-- ============================================================ -->
+<h2 id="sec-6"><span class="no">6</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値は検算済み（draft/check_26.py）。</p>
+
+<div class="ex"><span class="label">例題1（A 確認：グリーンの定理で三角形を計算する）</span>
+<p>$D$ を頂点 $(0,0)$、$(1,0)$、$(0,1)$ の三角形、$P=y$、$Q=x^2$ とする。$\oint_{\partial D}(P\,dx+Q\,dy)$ を、(a) 右辺の重積分、(b) 左辺の線積分、の2通りで求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (a) $Q_x-P_y=2x-1$。$D$ は $0\le x\le1$、$0\le y\le1-x$。$\displaystyle\int_0^1\!\!\int_0^{1-x}(2x-1)\,dy\,dx=\int_0^1(2x-1)(1-x)\,dx$。</p>
+<p>② 展開：$(2x-1)(1-x)=2x-2x^2-1+x=-2x^2+3x-1$。$\displaystyle\int_0^1(-2x^2+3x-1)\,dx=-\tfrac23+\tfrac32-1=-\tfrac16$。</p>
+<p>③ (b) 反時計回りの3辺。(i) $(0,0)\to(1,0)$：$y=0$、$dy=0$。$P=0$、$Q\,dy=0$。0。(ii) $(1,0)\to(0,1)$：$x=1-t,\ y=t$、$dx=-dt,\ dy=dt$（$0\le t\le1$）。$P\,dx=t\cdot(-dt)$、$Q\,dy=(1-t)^2\,dt$。$\int_0^1(-t)\,dt=-\tfrac12$、$\int_0^1(1-t)^2\,dt=\tfrac13$。計 $-\tfrac16$。(iii) $(0,1)\to(0,0)$：$x=0$、$dx=0$。$Q=0$。0。</p>
+<p>④ 合計 $0-\tfrac16+0=-\tfrac16$。①②と一致する。</p>
+<p>⑤ 読み取り：三角形のほとんどの部分で $2x-1\lt0$ なので、負になった。</p>
+</div>
+
+<div class="ex"><span class="label">例題2（B 標準：円柱での発散定理）</span>
+<p>$V$ を円柱 $x^2+y^2\le1$、$0\le z\le h$（$h\gt0$）、$\boldsymbol F=(x,y,z)^{\mathsf T}$ とする。$\iint_{\partial V}\boldsymbol F\cdot\boldsymbol n\,dS$ を、(a) 発散定理で、(b) 3つの面（側面・上面・底面）の流束を直接足して、求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (a) $\nabla\cdot\boldsymbol F=3$。$\iiint_V3\,dV=3\times(\text{円柱の体積})=3\pi h$。　<span class="meta">円柱の体積 ＝ 底面積 $\pi$ × 高さ $h$</span></p>
+<p>② (b) 側面（$x^2+y^2=1$）：外向き単位法線は $\boldsymbol n=(x,y,0)^{\mathsf T}$。$\boldsymbol F\cdot\boldsymbol n=x^2+y^2=1$。側面積 $=2\pi\cdot1\cdot h=2\pi h$。流束 $=2\pi h$。</p>
+<p>③ 上面（$z=h$）：$\boldsymbol n=(0,0,1)^{\mathsf T}$。$\boldsymbol F\cdot\boldsymbol n=z=h$。面積 $\pi$。流束 $=\pi h$。</p>
+<p>④ 底面（$z=0$）：$\boldsymbol n=(0,0,-1)^{\mathsf T}$。$\boldsymbol F\cdot\boldsymbol n=-z=0$。流束 $0$。</p>
+<p>⑤ 合計 $2\pi h+\pi h+0=3\pi h$。①と一致する。</p>
+</div>
+
+<div class="ex"><span class="label">例題3（B 標準：ストークスで曲面を取り替える）</span>
+<p>$\boldsymbol F=(-y+z,\ x,\ 0)^{\mathsf T}$、$C$ を $xy$ 平面上の単位円（反時計回り）とする。$\oint_C\boldsymbol F\cdot d\boldsymbol r$ を、(a) 線積分を直接、(b) 円板を使って、(c) 上半球を使って、求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 回転：$R_y-Q_z=0-0=0$、$P_z-R_x=1-0=1$、$Q_x-P_y=1-(-1)=2$。$\nabla\times\boldsymbol F=(0,1,2)^{\mathsf T}$。</p>
+<p>② (a) $C$ 上は $z=0$：$\boldsymbol F=(-\sin t,\ \cos t,\ 0)^{\mathsf T}$、$\boldsymbol r'=(-\sin t,\cos t,0)^{\mathsf T}$。内積 $=1$。$\int_0^{2\pi}1\,dt=2\pi$。</p>
+<p>③ (b) 円板、$\boldsymbol n=(0,0,1)^{\mathsf T}$：$(\nabla\times\boldsymbol F)\cdot\boldsymbol n=2$。$2\times\pi=2\pi$。</p>
+<p>④ (c) 上半球、$\boldsymbol n=(x,y,z)^{\mathsf T}$：$(\nabla\times\boldsymbol F)\cdot\boldsymbol n=y+2z$。球座標で $y=\sin\theta\sin\varphi$、$z=\cos\theta$、$dS=\sin\theta\,d\theta\,d\varphi$。$\displaystyle\int_0^{2\pi}\!\!\int_0^{\pi/2}(\sin\theta\sin\varphi+2\cos\theta)\sin\theta\,d\theta\,d\varphi$。</p>
+<p>⑤ $\varphi$ の積分を先に実行する：$\int_0^{2\pi}\sin\varphi\,d\varphi=0$、$\int_0^{2\pi}d\varphi=2\pi$。第1項は0、第2項は $2\pi\int_0^{\pi/2}2\cos\theta\sin\theta\,d\theta=2\pi\cdot1=2\pi$。</p>
+<p>⑥ 3通りとも $2\pi$。曲面を取り替えても値は変わらない。</p>
+</div>
+
+<div class="ex"><span class="label">例題4（B 標準：面積を線積分で）</span>
+<p>(a) 楕円 $\dfrac{x^2}{a^2}+\dfrac{y^2}{b^2}=1$ の面積を、$A=\dfrac12\oint(x\,dy-y\,dx)$ で求めよ。(b) 曲線 $y=x^2$ と $y=x$ で囲まれた領域の面積を、同じ公式で求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (a) 2.5 で計算したとおり、$x=a\cos t,\ y=b\sin t$ で $x\,dy-y\,dx=ab\,dt$。$A=\tfrac12\cdot ab\cdot2\pi=\pi ab$。</p>
+<p>② (b) 2つの曲線の交点は $(0,0)$ と $(1,1)$。反時計回りの向きは、下の曲線 $y=x^2$ を左から右へ、次に上の曲線 $y=x$ を右から左へ。</p>
+<p>③ 下の曲線：$x=s,\ y=s^2$（$s:0\to1$）、$dx=ds,\ dy=2s\,ds$。$x\,dy-y\,dx=s\cdot2s\,ds-s^2\,ds=s^2\,ds$。$\int_0^1s^2\,ds=\tfrac13$。</p>
+<p>④ 上の曲線：$y=x$ なので $dy=dx$、$x\,dy-y\,dx=x\,dx-x\,dx=0$。0。</p>
+<p>⑤ $A=\tfrac12(\tfrac13+0)=\tfrac16$。　<span class="meta">確かめ：$\int_0^1(x-x^2)\,dx=\tfrac12-\tfrac13=\tfrac16$</span></p>
+</div>
+
+<div class="ex"><span class="label">例題5（B 標準：逆2乗の場の流束は、囲む形によらない）</span>
+<p>$\boldsymbol E=k\dfrac{\boldsymbol r}{r^3}$（$k\gt0$）について、(a) 原点を中心とする半径 $\rho_0$ の球面での流束、(b) 原点を囲む任意の閉曲面 $\Sigma$（なめらか）での流束、(c) 原点を囲まない閉曲面での流束、を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (a) 3.6 のとおり、$\boldsymbol E\cdot\boldsymbol n=\dfrac k{\rho_0^2}$、面積 $4\pi\rho_0^2$。流束 $=4\pi k$。</p>
+<p>② (b) $\Sigma$ の内側に、原点中心で十分小さい半径 $\rho_1$ の球 $B$ を取る。$\Sigma$ と $\partial B$ のあいだの領域 $V'$ では $\boldsymbol E$ は滑らかで $\nabla\cdot\boldsymbol E=0$（第24回 2.4）。発散定理：$0=\iiint_{V'}\nabla\cdot\boldsymbol E\,dV=\iint_\Sigma\boldsymbol E\cdot\boldsymbol n\,dS-\iint_{\partial B}\boldsymbol E\cdot\boldsymbol n\,dS$。　<span class="meta">$\partial B$ では $V'$ から見た外向きは原点向きなので、$B$ の外向きで測った流束を引く</span></p>
+<p>③ よって $\iint_\Sigma\boldsymbol E\cdot\boldsymbol n\,dS=\iint_{\partial B}\boldsymbol E\cdot\boldsymbol n\,dS=4\pi k$（(a)）。$\Sigma$ の形によらない。</p>
+<p>④ (c) 原点を囲まない閉曲面の内側 $V''$ では $\boldsymbol E$ は至るところ滑らか、$\nabla\cdot\boldsymbol E=0$。発散定理で流束 $=\iiint_{V''}0\,dV=0$。</p>
+<p>⑤ 読み取り：電場の源（電荷）を含んでいれば $4\pi k=q/\varepsilon_0$、含まなければ $0$。これがガウスの法則である。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec-7"><span class="no">7</span>演習問題</h2>
+<p class="meta">A 確認／B 標準（定期試験水準）／C 発展。解答はクリックで開く。問題・解答はすべて本教材の自作で、数値は draft/check_26.py で検算した（公式の解答集とは照合していない）。C 発展は OpenStax Calculus Vol.3 の 6.4（グリーンの定理）・6.7（発散定理）・6.5（ストークスの定理）の内容に対応するが、原問題の引用はしていない。</p>
+
+<div class="box"><span class="label">問1（A 確認：グリーンの定理）</span>$D$ を長方形 $[0,3]\times[0,2]$ として、$\oint_{\partial D}(-y\,dx+x\,dy)$ をグリーンの定理で求めよ。
+<details><summary>解答</summary>
+<p>① $P=-y$、$Q=x$。$Q_x-P_y=1-(-1)=2$（定数）。</p>
+<p>② $\iint_D2\,dA=2\times(\text{面積})=2\times6=12$。</p>
+<p>③ 読み取り：2.5 の面積の公式より、$\tfrac12\oint(x\,dy-y\,dx)=6$（面積）。$\oint=12$ と合う。</p>
+</details></div>
+
+<div class="box"><span class="label">問2（A 確認：向きの確認）</span>単位円板 $D$ のふちを反時計回りに1周する $\oint_{\partial D}y\,dx$ を、グリーンの定理で求めよ。時計回りに1周したら、値はどうなるか。
+<details><summary>解答</summary>
+<p>① $P=y$、$Q=0$。$Q_x-P_y=0-1=-1$。</p>
+<p>② $\iint_D(-1)\,dA=-\pi$。反時計回りで $-\pi$。</p>
+<p>③ 時計回りは向きが逆。線積分の符号が変わるので $+\pi$。</p>
+<p>④ 確かめ：$x=\cos t,\ y=\sin t$、$dx=-\sin t\,dt$、$y\,dx=-\sin^2t\,dt$。$\int_0^{2\pi}(-\sin^2t)\,dt=-\pi$。一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問3（A 確認：発散定理）</span>立方体 $V=[0,2]^3$ と $\boldsymbol F=(2x,\ -y,\ 3z)^{\mathsf T}$ について、$\iint_{\partial V}\boldsymbol F\cdot\boldsymbol n\,dS$ を求めよ。
+<details><summary>解答</summary>
+<p>① $\nabla\cdot\boldsymbol F=2-1+3=4$（定数）。</p>
+<p>② 発散定理：$\iiint_V4\,dV=4\times(\text{体積})=4\times2^3=32$。</p>
+<p>③ 読み取り：6つの面を直接足さなくても、発散が定数なら「発散 × 体積」で出る。</p>
+</details></div>
+
+<div class="box"><span class="label">問4（A 確認：ストークスの定理）</span>$\boldsymbol F=(-y,\ x,\ 0)^{\mathsf T}$、$C$ を半径2の円（$xy$ 平面、上から見て反時計回り）とする。$\oint_C\boldsymbol F\cdot d\boldsymbol r$ をストークスの定理で求め、線積分でも確かめよ。
+<details><summary>解答</summary>
+<p>① $\nabla\times\boldsymbol F=(0,0,2)^{\mathsf T}$。曲面を円板、$\boldsymbol n=(0,0,1)^{\mathsf T}$ にとる。$(\nabla\times\boldsymbol F)\cdot\boldsymbol n=2$。</p>
+<p>② 面積 $\pi\cdot2^2=4\pi$。左辺 $=2\times4\pi=8\pi$。</p>
+<p>③ 線積分：$\boldsymbol r=(2\cos t,2\sin t,0)^{\mathsf T}$、$\boldsymbol r'=(-2\sin t,2\cos t,0)^{\mathsf T}$、$\boldsymbol F=(-2\sin t,2\cos t,0)^{\mathsf T}$。内積 $=4\sin^2t+4\cos^2t=4$。$\int_0^{2\pi}4\,dt=8\pi$。一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問5（B 標準：グリーンの定理で三角形）</span>$D$ を頂点 $(0,0)$、$(2,0)$、$(0,2)$ の三角形として、$\oint_{\partial D}(xy\,dx+x^2\,dy)$ を求めよ。
+<details><summary>解答</summary>
+<p>① $P=xy$、$Q=x^2$。$Q_x=2x$、$P_y=x$。$Q_x-P_y=x$。</p>
+<p>② $D$：$0\le x\le2$、$0\le y\le2-x$。$\displaystyle\int_0^2\!\!\int_0^{2-x}x\,dy\,dx=\int_0^2x(2-x)\,dx=\bigl[x^2-\tfrac{x^3}3\bigr]_0^2=4-\tfrac83=\tfrac43$。</p>
+</details></div>
+
+<div class="box"><span class="label">問6（B 標準：面積の公式）</span>$A=\tfrac12\oint(x\,dy-y\,dx)$ を使って、曲線 $y=x^3$ と直線 $y=x$ で囲まれた第1象限の領域の面積を求めよ。(a) まず向きを書け。(b) 各曲線の寄与を求めよ。(c) 直接の積分で確かめよ。
+<details><summary>解答</summary>
+<p>(a) 交点は $(0,0)$ と $(1,1)$。$0\le x\le1$ では $x^3\le x$ なので、下の曲線が $y=x^3$。反時計回りに、下の曲線 $y=x^3$ を $(0,0)\to(1,1)$、上の直線 $y=x$ を $(1,1)\to(0,0)$。</p>
+<p>(b) 曲線 $y=x^3$：$x=s,\ y=s^3$、$dx=ds,\ dy=3s^2\,ds$。$x\,dy-y\,dx=3s^3\,ds-s^3\,ds=2s^3\,ds$。$\int_0^12s^3\,ds=\tfrac12$。直線 $y=x$：$dy=dx$ なので $x\,dy-y\,dx=0$。$A=\tfrac12\cdot\tfrac12=\tfrac14$。</p>
+<p>(c) $\int_0^1(x-x^3)\,dx=\tfrac12-\tfrac14=\tfrac14$。一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問7（B 標準：球での発散定理）</span>$\boldsymbol F=(x^3,\ y^3,\ z^3)^{\mathsf T}$、$V$ を原点中心、半径 $R$ の球とする。$\iint_{\partial V}\boldsymbol F\cdot\boldsymbol n\,dS$ を求めよ。
+<details><summary>解答</summary>
+<p>① $\nabla\cdot\boldsymbol F=3x^2+3y^2+3z^2=3r^2$。</p>
+<p>② 球座標（<a href="13_第13回_重積分と変数変換.html#sym-spherical">第13回</a>）で $dV=r^2\sin\theta\,dr\,d\theta\,d\varphi$。被積分関数 $3r^2$ は角度に依存しないので、角度の積分は $4\pi$（球面全体の立体角）。$\displaystyle\iiint3r^2\,dV=\int_0^R3r^2\cdot4\pi r^2\,dr=12\pi\int_0^Rr^4\,dr=12\pi\cdot\frac{R^5}5=\frac{12\pi R^5}5$。</p>
+</details></div>
+
+<div class="box"><span class="label">問8（B 標準：口の開いた面を閉じて使う）</span>$\boldsymbol F=(x,y,z)^{\mathsf T}$、$S$ を単位球の上半球（$z\ge0$）、$\boldsymbol n$ は外向きとする。$\iint_S\boldsymbol F\cdot\boldsymbol n\,dS$ を、底の円板 $z=0$ を足して閉曲面にし、発散定理を使って求めよ。
+<details><summary>解答</summary>
+<p>① 閉曲面 $\partial V$ ＝ 上半球 $S$ ＋ 底の円板 $D_0$（外向きは $-\boldsymbol e_z$）。$V$ は上半球の立体。</p>
+<p>② $\iiint_V\nabla\cdot\boldsymbol F\,dV=3\times\tfrac12\cdot\tfrac43\pi=2\pi$。</p>
+<p>③ 底の円板：$\boldsymbol n=(0,0,-1)^{\mathsf T}$、$\boldsymbol F\cdot\boldsymbol n=-z=0$。流束 $0$。</p>
+<p>④ ②＝（$S$ の流束）＋（$D_0$ の流束）なので、$S$ の流束 $=2\pi-0=2\pi$。</p>
+<p>⑤ 確かめ：単位球面上で $\boldsymbol F\cdot\boldsymbol n=\boldsymbol r\cdot\boldsymbol r=1$。上半球の面積 $2\pi$。流束 $=2\pi$。一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問9（B 標準：ストークスの定理）</span>$\boldsymbol F=(y,\ z,\ x)^{\mathsf T}$、$S$ を4.2 例2 と同じ三角形（頂点 $A(1,0,0)$、$B(0,1,0)$、$C(0,0,1)$、$\boldsymbol n=(1,1,1)^{\mathsf T}/\sqrt3$）とする。ストークスの定理の両辺を計算して確かめよ。
+<details><summary>解答</summary>
+<p>① $\nabla\times\boldsymbol F$：$R_y-Q_z=0-1=-1$、$P_z-R_x=0-1=-1$、$Q_x-P_y=0-1=-1$。$=(-1,-1,-1)^{\mathsf T}$。</p>
+<p>② $(\nabla\times\boldsymbol F)\cdot\boldsymbol n=-3/\sqrt3=-\sqrt3$。面積 $\dfrac{\sqrt3}2$。左辺 $=-\sqrt3\cdot\dfrac{\sqrt3}2=-\dfrac32$。</p>
+<p>③ 右辺：$\boldsymbol F\cdot d\boldsymbol r=y\,dx+z\,dy+x\,dz$。$A\to B$（$x=1-t,y=t,z=0$）：$y\,dx=t\cdot(-dt)$、他は0。$\int_0^1(-t)\,dt=-\tfrac12$。$B\to C$（$x=0,y=1-t,z=t$）：$z\,dy=t\cdot(-dt)$。$-\tfrac12$。$C\to A$（$x=t,y=0,z=1-t$）：$x\,dz=t\cdot(-dt)$。$-\tfrac12$。</p>
+<p>④ 合計 $-\tfrac32$。①②と一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問10（C 発展：アステロイドの面積）</span>アステロイド $x=\cos^3t,\ y=\sin^3t$（$0\le t\le2\pi$）が囲む面積を、$A=\tfrac12\oint(x\,dy-y\,dx)$ で求めよ。
+<p class="meta">自作の問題（OpenStax Calculus Vol.3 6.4 の面積の応用に対応）。公式の解答とは照合していない。</p>
+<details><summary>解答</summary>
+<p>① $dx=-3\cos^2t\sin t\,dt$、$dy=3\sin^2t\cos t\,dt$。</p>
+<p>② $x\,dy-y\,dx=\cos^3t\cdot3\sin^2t\cos t\,dt+\sin^3t\cdot3\cos^2t\sin t\,dt=3\sin^2t\cos^2t(\cos^2t+\sin^2t)\,dt=3\sin^2t\cos^2t\,dt$。</p>
+<p>③ $\sin t\cos t=\tfrac12\sin2t$ なので $\sin^2t\cos^2t=\tfrac14\sin^22t$。$A=\tfrac12\int_0^{2\pi}\tfrac34\sin^22t\,dt=\tfrac38\int_0^{2\pi}\sin^22t\,dt$。</p>
+<p>④ $\int_0^{2\pi}\sin^22t\,dt=\pi$（$\sin^2$ の平均は $\tfrac12$ で、区間の長さ $2\pi$）。$A=\tfrac{3\pi}8$。</p>
+</details></div>
+
+<div class="box"><span class="label">問11（C 発展：立方体を通る逆2乗の場の流束）</span>$\boldsymbol E=k\boldsymbol r/r^3$ の、立方体 $[-1,1]^3$ の表面での流束を、(a) 面を直接積分して、(b) 例題5 の結果から、求めよ。
+<p class="meta">自作の問題（OpenStax Calculus Vol.3 6.7 のガウスの法則の内容に対応）。(a) の二重積分は数値積分で $2\pi/3$ を確認した。</p>
+<details><summary>解答</summary>
+<p>① (b) 立方体は原点を囲む閉曲面なので、例題5(b) から流束 $=4\pi k$。</p>
+<p>② (a) 6つの面は対称なので、1つの面の流束の6倍。面 $x=1$：$\boldsymbol n=(1,0,0)^{\mathsf T}$、$\boldsymbol E\cdot\boldsymbol n=k\dfrac{x}{r^3}=\dfrac k{(1+y^2+z^2)^{3/2}}$。流束 $=k\displaystyle\int_{-1}^1\!\!\int_{-1}^1\frac{dy\,dz}{(1+y^2+z^2)^{3/2}}$。</p>
+<p>③ この二重積分は、原点から面を見込む立体角に等しい。立方体の6面は全空間の立体角 $4\pi$ を等分するので、1面あたり $4\pi/6=2\pi/3$。数値積分でも $2\pi/3\approx2.0944$。</p>
+<p>④ 6面の合計 $6\cdot k\cdot\dfrac{2\pi}{3}=4\pi k$。(b) と一致する。</p>
+</details></div>
+
+<div class="box"><span class="label">問12（C 発展：渦なしの渦の循環）</span>$\boldsymbol F=\dfrac{(-y,\ x)^{\mathsf T}}{x^2+y^2}$（原点以外で定義）について、(a) 楕円 $\dfrac{x^2}4+y^2=1$（反時計回り）、(b) 正方形 $(1,1)\to(2,1)\to(2,2)\to(1,2)\to(1,1)$ に沿った循環を求めよ。
+<p class="meta">自作の問題（OpenStax Calculus Vol.3 6.4 のグリーンの定理の応用に対応）。</p>
+<details><summary>解答</summary>
+<p>① (b) 正方形の内側に原点は含まれず、$\boldsymbol F$ は内側で滑らか、$Q_x-P_y=0$（第24回 3.5）。グリーンの定理から循環 $=\iint0=0$。</p>
+<p>② (a) 楕円は原点を囲む。楕円の内側に、原点中心の小さな円（半径 $\varepsilon$）を取り、そのあいだの領域にグリーンの定理を使う（2.7 (2) の方法）。領域の中で $Q_x-P_y=0$ なので、外周（楕円、反時計回り）と内周（円、時計回り）の線積分の和は0。</p>
+<p>③ 円（反時計回り）の循環は4.5 の計算と同じく、半径によらず $2\pi$（$\boldsymbol F\cdot d\boldsymbol r=dt$）。内周は時計回りなので $-2\pi$。</p>
+<p>④ したがって（楕円の循環）$+(-2\pi)=0$、楕円の循環は $2\pi$。</p>
+<p>⑤ 読み取り：原点を囲む反時計回りの閉曲線は、形によらず循環 $2\pi$。囲まない閉曲線は $0$。</p>
+</details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 微積分学の基本定理を「内部の微分の和 ＝ ふちの値」の形で読み、2次元・3次元の定理がその仲間だと言える（1.1）。</li>
+<li>□ $\partial D,\partial S,\partial V$ の意味と向きの約束（領域は左手、立体は外向き、曲面は右ねじ）を言える。偏微分の $\partial$ と区別できる（1.2、1.3）。</li>
+<li>□ 線積分と流束の書き方（S0〜S3）を、短い形から完全形へ戻せる（1.4）。</li>
+<li>□ グリーンの定理 $\oint_{\partial D}(P\,dx+Q\,dy)=\iint_D(Q_x-P_y)\,dA$ を、貼り合わせと長方形での基本定理の使用から導ける（2.3、2.4）。</li>
+<li>□ 面積の公式 $A=\tfrac12\oint(x\,dy-y\,dx)$ を使い、円・楕円の面積を求められる（2.5）。</li>
+<li>□ 外向き法線が $\boldsymbol n\,ds=(dy,-dx)$ であることを説明でき、平面の発散定理 (2.1) を導ける（2.6）。</li>
+<li>□ ガウスの発散定理 $\iiint_V\nabla\cdot\boldsymbol F\,dV=\iint_{\partial V}\boldsymbol F\cdot\boldsymbol n\,dS$ を、球と立方体の例で両辺計算して確かめられる（3.2）。</li>
+<li>□ 小さな立方体の流束 $(\nabla\cdot\boldsymbol F)h^3$ から、発散定理を導ける。連続の式を導ける（3.3、3.5）。</li>
+<li>□ 点電荷の場で、原点を囲む閉曲面の流束が $4\pi k$、囲まない閉曲面の流束が $0$ であることを説明でき、原点を含む立体に発散定理を直接使えない理由を言える（3.6）。</li>
+<li>□ ストークスの定理 $\iint_S(\nabla\times\boldsymbol F)\cdot\boldsymbol n\,dS=\oint_{\partial S}\boldsymbol F\cdot d\boldsymbol r$ を、円板・半球・斜めの三角形の例で確かめられ、向きを逆にしても等式が保たれることを言える（4.2）。</li>
+<li>□ 同じふちをもつ曲面は何でもよいことと、閉曲面にはふちがないこと、それが $\nabla\cdot(\nabla\times\boldsymbol F)=0$ の意味であることを説明できる（4.4）。</li>
+<li>□ 単連結とは何かを言え、渦なしの渦で回転0でも循環が $2\pi$ になる理由（穴）を説明できる（4.5）。</li>
+<li>□ ガウスの法則、アンペールの法則、ファラデーの法則の積分形と微分形が、発散定理・ストークスの定理でつながると言える（3.6、4.6）。</li>
+<li>□ 3つの定理を「内部の微分の総和 ＝ 境界の値」という1つの形で並べ、使い分けられる（5.1）。</li>
+</ul></div>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="symbols.html"><small>SYMBOLS</small>記号索引 →</a></nav>
+</body>
+</html>

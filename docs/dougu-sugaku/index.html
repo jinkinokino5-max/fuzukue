@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>道具としての数学</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 目次：教材ページと同じ書籍風デザイン。各回は「教材｜読み物」を対で載せる */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  *{ box-sizing:border-box; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.85; margin:0 auto; padding:56px 28px 60px; max-width:860px; font-size:15px; letter-spacing:.02em; }
+  a{ color:inherit; }
+  .mast{ border-bottom:1px solid var(--ink); padding-bottom:18px; margin-bottom:18px; }
+  .mast .en{ font-family:var(--num); font-weight:300; font-size:20px; letter-spacing:.3em; color:var(--shu); margin:0; }
+  .mast h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(30px,5vw,44px); letter-spacing:.1em; margin:2px 0 6px; line-height:1.3; }
+  .mast .lead{ color:var(--sub); margin:0; font-size:14.5px; }
+  .spine{ font-size:14px; color:var(--sub); border-left:3px solid var(--line); padding:4px 0 4px 14px; margin:20px 0 8px; }
+  .spine strong{ color:var(--ink); }
+  h2{ font-family:var(--mincho); font-weight:700; font-size:17px; letter-spacing:.08em; margin:48px 0 4px; display:flex; align-items:baseline; gap:12px; }
+  h2 small{ font-family:inherit; font-weight:500; font-size:13px; color:var(--sub); letter-spacing:.04em; }
+
+  /* 1回分の行：番号｜題｜教材・読み物 */
+  .row{ display:grid; grid-template-columns:72px 1fr auto; gap:6px 18px; align-items:center; padding:16px 0; border-bottom:1px solid var(--line); }
+  .row .no{ font-family:var(--num); font-weight:300; font-size:46px; line-height:1; color:var(--shu); text-align:center;
+            font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  .row .tt{ font-family:var(--mincho); font-weight:700; font-size:18px; letter-spacing:.05em; margin:0; line-height:1.5; }
+  .row .tt a{ text-decoration:none; } .row .tt a:hover{ color:var(--accent); }
+  .row .dt{ font-size:12px; color:var(--sub); letter-spacing:.1em; margin:0; }
+  .row .ds{ font-size:13px; color:var(--sub); margin:2px 0 0; }
+  .row .go{ display:flex; flex-direction:column; gap:6px; min-width:200px; }
+  .go a,.go span{ display:block; font-size:12.5px; padding:6px 12px; text-decoration:none; border:1px solid var(--ink); line-height:1.4; }
+  .go a small,.go span small{ display:block; font-size:10px; letter-spacing:.2em; color:var(--sub); }
+  .go a.les{ background:var(--ink); color:var(--paper); } .go a.les small{ color:#c9c2b4; }
+  .go a.col{ border-color:var(--shu); color:var(--shu); font-family:var(--mincho); }
+  .go a:hover{ opacity:.85; }
+  .go span{ border-style:dashed; border-color:var(--line); color:#a59d90; }
+  .row.todo .no{ color:#cfc6b6; } .row.todo .tt{ color:#a59d90; }
+  .row.test .no{ font-size:15px; letter-spacing:.1em; font-family:var(--mincho); font-weight:700; color:#a06a32; }
+  .other{ margin-top:48px; font-size:14px; }
+  .meta{ font-size:12.5px; color:var(--sub); margin-top:36px; border-top:1px solid var(--line); padding-top:12px; }
+  @media (max-width:640px){
+    body{ padding:36px 16px 40px; }
+    .row{ grid-template-columns:52px 1fr; }
+    .row .no{ font-size:36px; }
+    .row .go{ grid-column:1 / -1; flex-direction:row; min-width:0; }
+    .go a,.go span{ flex:1; }
+  }
+</style>
+<script>MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+<!--fzk-back--><p style="margin:0 0 18px;font-size:12px;letter-spacing:.2em;line-height:1.6"><a href="../index.html" style="color:#a8322a;text-decoration:none">← 文机 FUZUKUE</a></p>
+<header class="mast">
+<p class="en">TOOLS OF MATHEMATICS</p>
+<h1>道具としての数学</h1>
+<p class="lead">研究室に入るまでに身につけたい数学を、<strong>記号を一つも省略せず</strong>に説明し直す自習資料。新しい記号は初めて出る場所で「読み方・意味・省略しない書き方」を説明し、前に出た記号や概念には、そのたびに説明の場所へのリンクをつける。</p>
+</header>
+<p class="spine"><strong>全体の骨格</strong>：記号と言葉 → 微積分 → 線形代数 → ベクトル解析 → 常微分方程式 → 複素数・フーリエ・ラプラス → 偏微分方程式 → 研究室の道具（確率統計・最小二乗・数値計算・最適化）。<a href="symbols.html">記号索引</a>から、記号を初出の説明へ引ける。</p>
+<h2>第0部　記号と言葉</h2>
+<div class="row"><div class="no">1</div><div><p class="dt">第1回</p><p class="tt"><a href="01_第1回_数式を文として読む.html">数式を文として読む</a></p><p class="ds">式は主語・述語のある文／等号の種類（主張・定義・恒等・近似・比例）／変数・定数・パラメータ／ギリシャ文字と添字・プライムの読み方／省略の段階とは何か</p></div><div class="go"><a class="les" href="01_第1回_数式を文として読む.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">2</div><div><p class="dt">第2回</p><p class="tt"><a href="02_第2回_集合と論理.html">集合と論理</a></p><p class="ds">集合・要素・部分集合・区間／かつ・または・否定／ならば・同値・必要と十分／全称と存在、量化子の順番</p></div><div class="go"><a class="les" href="02_第2回_集合と論理.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">3</div><div><p class="dt">第3回</p><p class="tt"><a href="03_第3回_関数と写像.html">関数と写像</a></p><p class="ds">関数＝対応の規則／定義域・値域／$f$ と $f(x)$ の違い／合成・逆関数／多変数関数／**引数の省略の段階**（$\psi(x,t)\to\psi$）／陰関数</p></div><div class="go"><a class="les" href="03_第3回_関数と写像.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">4</div><div><p class="dt">第4回</p><p class="tt"><a href="04_第4回_総和・総乗と添字.html">総和・総乗と添字</a></p><p class="ds">和の記号の完全形と省略形／ダミー添字（名前を変えてよい）／二重和と順序交換／添字の付け替え／クロネッカーのデルタ／$n!$ と二項係数</p></div><div class="go"><a class="les" href="04_第4回_総和・総乗と添字.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">5</div><div><p class="dt">第5回</p><p class="tt"><a href="05_第5回_ベクトルと行列の書き方.html">ベクトルと行列の書き方</a></p><p class="ds">太字・矢印・下線／成分表示・縦と横／行列の $(i,j)$ 成分／転置／ノルム／単位ベクトル／**記号の流派対照表**（各科目の教材の書き方を並べる）</p></div><div class="go"><a class="les" href="05_第5回_ベクトルと行列の書き方.html"><small>LESSON</small>教材を読む</a></div></div>
+<h2>第1部　微積分の再建</h2>
+<div class="row"><div class="no">6</div><div><p class="dt">第6回</p><p class="tt"><a href="06_第6回_極限と連続.html">極限と連続</a></p><p class="ds">「近づく」の意味／ε-δ を読む（書けなくてよい、読めるように）／連続／ランダウの記号</p></div><div class="go"><a class="les" href="06_第6回_極限と連続.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">7</div><div><p class="dt">第7回</p><p class="tt"><a href="07_第7回_微分.html">微分</a></p><p class="ds">平均変化率→瞬間変化率／導関数の4つの書き方とその由来（ライプニッツ・ラグランジュ・ニュートン・D）／微分の規則の導出</p></div><div class="go"><a class="les" href="07_第7回_微分.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">8</div><div><p class="dt">第8回</p><p class="tt"><a href="08_第8回_微分を使う・近似と極値.html">微分を使う・近似と極値</a></p><p class="ds">接線と1次近似／$dx,\ df$ の意味（微分形式の入口）／増減と極値／ロピタル</p></div><div class="go"><a class="les" href="08_第8回_微分を使う・近似と極値.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">9</div><div><p class="dt">第9回</p><p class="tt"><a href="09_第9回_テイラー展開.html">テイラー展開</a></p><p class="ds">多項式で関数を真似る／係数が $f^{(n)}(a)/n!$ になる理由／剰余項／$\approx$ の正体／$e^x,\sin,\cos,(1+x)^\alpha$</p></div><div class="go"><a class="les" href="09_第9回_テイラー展開.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">10</div><div><p class="dt">第10回</p><p class="tt"><a href="10_第10回_積分.html">積分</a></p><p class="ds">リーマン和→定積分／$\int$ と $dx$ の意味／微積分学の基本定理／置換積分・部分積分を記号の操作として</p></div><div class="go"><a class="les" href="10_第10回_積分.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">11</div><div><p class="dt">第11回</p><p class="tt"><a href="11_第11回_偏微分.html">偏微分</a></p><p class="ds">多変数関数／**何を固定しているか**／偏導関数の書き方の流派／高階偏微分と順序交換</p></div><div class="go"><a class="les" href="11_第11回_偏微分.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">12</div><div><p class="dt">第12回</p><p class="tt"><a href="12_第12回_全微分と連鎖律.html">全微分と連鎖律</a></p><p class="ds">全微分 $df$／多変数の連鎖律（偏微分の省略が最も事故る場所）／$\dfrac{d}{dt}$ と $\dfrac{\partial}{\partial t}$ の違い／勾配の予告</p></div><div class="go"><a class="les" href="12_第12回_全微分と連鎖律.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">13</div><div><p class="dt">第13回</p><p class="tt"><a href="13_第13回_重積分と変数変換.html">重積分と変数変換</a></p><p class="ds">二重・三重積分／累次積分／極・円柱・球座標／ヤコビアン</p></div><div class="go"><a class="les" href="13_第13回_重積分と変数変換.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">14</div><div><p class="dt">第14回</p><p class="tt"><a href="14_第14回_級数と収束.html">級数と収束</a></p><p class="ds">数列・級数／収束判定／べき級数と収束半径／項別微分・積分</p></div><div class="go"><a class="les" href="14_第14回_級数と収束.html"><small>LESSON</small>教材を読む</a></div></div>
+<h2>第2部　線形代数</h2>
+<div class="row"><div class="no">15</div><div><p class="dt">第15回</p><p class="tt"><a href="15_第15回_ベクトル空間と基底.html">ベクトル空間と基底</a></p><p class="ds">線形結合・一次独立・基底・次元・座標</p></div><div class="go"><a class="les" href="15_第15回_ベクトル空間と基底.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">16</div><div><p class="dt">第16回</p><p class="tt"><a href="16_第16回_行列は線形写像.html">行列は線形写像</a></p><p class="ds">行列とベクトルの積の意味／行列の積＝写像の合成／成分で書いた積 $\sum_k A_{ik}B_{kj}$</p></div><div class="go"><a class="les" href="16_第16回_行列は線形写像.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">17</div><div><p class="dt">第17回</p><p class="tt"><a href="17_第17回_連立一次方程式とランク.html">連立一次方程式とランク</a></p><p class="ds">掃き出し法／ランク／解の個数／核と像</p></div><div class="go"><a class="les" href="17_第17回_連立一次方程式とランク.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">18</div><div><p class="dt">第18回</p><p class="tt"><a href="18_第18回_行列式.html">行列式</a></p><p class="ds">面積・体積の拡大率として／余因子展開／性質の導出</p></div><div class="go"><a class="les" href="18_第18回_行列式.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">19</div><div><p class="dt">第19回</p><p class="tt"><a href="19_第19回_内積・直交・射影.html">内積・直交・射影</a></p><p class="ds">内積の公理／直交・正規直交基底／射影／グラム・シュミット</p></div><div class="go"><a class="les" href="19_第19回_内積・直交・射影.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">20</div><div><p class="dt">第20回</p><p class="tt"><a href="20_第20回_固有値と固有ベクトル.html">固有値と固有ベクトル</a></p><p class="ds">$A\boldsymbol v=\lambda\boldsymbol v$ の意味／特性方程式／重複度</p></div><div class="go"><a class="les" href="20_第20回_固有値と固有ベクトル.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">21</div><div><p class="dt">第21回</p><p class="tt"><a href="21_第21回_対角化と二次形式.html">対角化と二次形式</a></p><p class="ds">対角化／対称行列は直交行列で対角化できる／二次形式と正定値</p></div><div class="go"><a class="les" href="21_第21回_対角化と二次形式.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">22</div><div><p class="dt">第22回</p><p class="tt"><a href="22_第22回_特異値分解.html">特異値分解</a></p><p class="ds">任意の行列の分解／低ランク近似／擬似逆行列</p></div><div class="go"><a class="les" href="22_第22回_特異値分解.html"><small>LESSON</small>教材を読む</a></div></div>
+<h2>第3部　ベクトル解析</h2>
+<div class="row"><div class="no">23</div><div><p class="dt">第23回</p><p class="tt"><a href="23_第23回_場と勾配.html">場と勾配</a></p><p class="ds">スカラー場・ベクトル場／方向微分／勾配</p></div><div class="go"><a class="les" href="23_第23回_場と勾配.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">24</div><div><p class="dt">第24回</p><p class="tt"><a href="24_第24回_発散と回転.html">発散と回転</a></p><p class="ds">湧き出し・渦／$\nabla\cdot$, $\nabla\times$ の成分計算／ラプラシアン</p></div><div class="go"><a class="les" href="24_第24回_発散と回転.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">25</div><div><p class="dt">第25回</p><p class="tt"><a href="25_第25回_線積分と面積分.html">線積分と面積分</a></p><p class="ds">曲線のパラメータ表示／仕事としての線積分／流束としての面積分</p></div><div class="go"><a class="les" href="25_第25回_線積分と面積分.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">26</div><div><p class="dt">第26回</p><p class="tt"><a href="26_第26回_ガウスとストークスの定理.html">ガウスとストークスの定理</a></p><p class="ds">発散定理・ストークスの定理・グリーンの定理／電磁気学との対応</p></div><div class="go"><a class="les" href="26_第26回_ガウスとストークスの定理.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">27</div><div><p class="dt">第27回</p><p class="tt"><a href="27_第27回_添字記法と曲線座標.html">添字記法と曲線座標</a></p><p class="ds">縮約記法（アインシュタインの規約）／$\varepsilon_{ijk}$／極・円柱・球座標での $\nabla$</p></div><div class="go"><a class="les" href="27_第27回_添字記法と曲線座標.html"><small>LESSON</small>教材を読む</a></div></div>
+<h2>第4部　常微分方程式</h2>
+<div class="row"><div class="no">28</div><div><p class="dt">第28回</p><p class="tt"><a href="28_第28回_微分方程式とは・1階.html">微分方程式とは・1階</a></p><p class="ds">解とは何か／変数分離／1階線形と積分因子</p></div><div class="go"><a class="les" href="28_第28回_微分方程式とは・1階.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">29</div><div><p class="dt">第29回</p><p class="tt"><a href="29_第29回_2階線形定数係数.html">2階線形定数係数</a></p><p class="ds">特性方程式／重解・複素根／重ね合わせ</p></div><div class="go"><a class="les" href="29_第29回_2階線形定数係数.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">30</div><div><p class="dt">第30回</p><p class="tt"><a href="30_第30回_強制振動と共振.html">強制振動と共振</a></p><p class="ds">特解の求め方／共振／位相の遅れ</p></div><div class="go"><a class="les" href="30_第30回_強制振動と共振.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">31</div><div><p class="dt">第31回</p><p class="tt"><a href="31_第31回_連立線形ODEと行列指数関数.html">連立線形ODEと行列指数関数</a></p><p class="ds">$\dot{\boldsymbol x}=A\boldsymbol x$／固有値で解く／$e^{At}$</p></div><div class="go"><a class="les" href="31_第31回_連立線形ODEと行列指数関数.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">32</div><div><p class="dt">第32回</p><p class="tt"><a href="32_第32回_状態空間と安定性.html">状態空間と安定性</a></p><p class="ds">相平面／固有値と安定性／状態方程式（制御工学の入口）</p></div><div class="go"><a class="les" href="32_第32回_状態空間と安定性.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">33</div><div><p class="dt">第33回</p><p class="tt"><a href="33_第33回_非線形と線形化.html">非線形と線形化</a></p><p class="ds">平衡点／ヤコビ行列による線形化／振り子</p></div><div class="go"><a class="les" href="33_第33回_非線形と線形化.html"><small>LESSON</small>教材を読む</a></div></div>
+<h2>第5部　複素数・フーリエ・ラプラス</h2>
+<div class="row"><div class="no">34</div><div><p class="dt">第34回</p><p class="tt"><a href="34_第34回_複素数とオイラーの公式.html">複素数とオイラーの公式</a></p><p class="ds">複素平面／極形式／$e^{i\theta}$ がなぜ $\cos+i\sin$ か</p></div><div class="go"><a class="les" href="34_第34回_複素数とオイラーの公式.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">35</div><div><p class="dt">第35回</p><p class="tt"><a href="35_第35回_正則関数と留数の要点.html">正則関数と留数の要点</a></p><p class="ds">複素微分・コーシーの定理・留数定理（要点のみ、詳細は AM2 へリンク）</p></div><div class="go"><a class="les" href="35_第35回_正則関数と留数の要点.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">36</div><div><p class="dt">第36回</p><p class="tt"><a href="36_第36回_フーリエ級数.html">フーリエ級数</a></p><p class="ds">直交関数展開としての理解／係数の導出</p></div><div class="go"><a class="les" href="36_第36回_フーリエ級数.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">37</div><div><p class="dt">第37回</p><p class="tt"><a href="37_第37回_フーリエ変換.html">フーリエ変換</a></p><p class="ds">級数→変換／スペクトル／$2\pi$ の流派</p></div><div class="go"><a class="les" href="37_第37回_フーリエ変換.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">38</div><div><p class="dt">第38回</p><p class="tt"><a href="38_第38回_ラプラス変換.html">ラプラス変換</a></p><p class="ds">定義・性質の導出／ODE を代数方程式に</p></div><div class="go"><a class="les" href="38_第38回_ラプラス変換.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">39</div><div><p class="dt">第39回</p><p class="tt"><a href="39_第39回_たたみ込み・δ関数・伝達関数.html">たたみ込み・δ関数・伝達関数</a></p><p class="ds">インパルス応答／たたみ込み／伝達関数（制御工学へ）</p></div><div class="go"><a class="les" href="39_第39回_たたみ込み・δ関数・伝達関数.html"><small>LESSON</small>教材を読む</a></div></div>
+<h2>第6部　偏微分方程式</h2>
+<div class="row"><div class="no">40</div><div><p class="dt">第40回</p><p class="tt"><a href="40_第40回_PDEの分類と境界条件.html">PDE の分類と境界条件</a></p><p class="ds">楕円・放物・双曲／初期条件・境界条件</p></div><div class="go"><a class="les" href="40_第40回_PDEの分類と境界条件.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">41</div><div><p class="dt">第41回</p><p class="tt"><a href="41_第41回_熱方程式と変数分離.html">熱方程式と変数分離</a></p><p class="ds">変数分離・固有関数展開</p></div><div class="go"><a class="les" href="41_第41回_熱方程式と変数分離.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">42</div><div><p class="dt">第42回</p><p class="tt"><a href="42_第42回_波動方程式.html">波動方程式</a></p><p class="ds">ダランベール解・弦の振動</p></div><div class="go"><a class="les" href="42_第42回_波動方程式.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">43</div><div><p class="dt">第43回</p><p class="tt"><a href="43_第43回_ラプラス方程式.html">ラプラス方程式</a></p><p class="ds">ポテンシャル／円板での解</p></div><div class="go"><a class="les" href="43_第43回_ラプラス方程式.html"><small>LESSON</small>教材を読む</a></div></div>
+<h2>第7部　研究室の道具</h2>
+<div class="row"><div class="no">44</div><div><p class="dt">第44回</p><p class="tt"><a href="44_第44回_確率と期待値.html">確率と期待値</a></p><p class="ds">確率変数・分布・期待値・分散</p></div><div class="go"><a class="les" href="44_第44回_確率と期待値.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">45</div><div><p class="dt">第45回</p><p class="tt"><a href="45_第45回_分布と誤差伝播.html">分布と誤差伝播</a></p><p class="ds">正規分布・中心極限定理／誤差の伝播（偏微分で）</p></div><div class="go"><a class="les" href="45_第45回_分布と誤差伝播.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">46</div><div><p class="dt">第46回</p><p class="tt"><a href="46_第46回_推定と不確かさ.html">推定と不確かさ</a></p><p class="ds">標本平均・標準誤差・信頼区間／測定の不確かさ</p></div><div class="go"><a class="les" href="46_第46回_推定と不確かさ.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">47</div><div><p class="dt">第47回</p><p class="tt"><a href="47_第47回_最小二乗法.html">最小二乗法</a></p><p class="ds">正規方程式の導出／射影としての最小二乗／回帰</p></div><div class="go"><a class="les" href="47_第47回_最小二乗法.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">48</div><div><p class="dt">第48回</p><p class="tt"><a href="48_第48回_数値計算の誤差・数値微分と数値積分.html">数値計算の誤差・数値微分と数値積分</a></p><p class="ds">丸め誤差と打切り誤差／差分近似（テイラーから）／台形・シンプソン</p></div><div class="go"><a class="les" href="48_第48回_数値計算の誤差・数値微分と数値積分.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">49</div><div><p class="dt">第49回</p><p class="tt"><a href="49_第49回_ODEの数値解法.html">ODE の数値解法</a></p><p class="ds">オイラー法／ルンゲ＝クッタ法／安定性</p></div><div class="go"><a class="les" href="49_第49回_ODEの数値解法.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">50</div><div><p class="dt">第50回</p><p class="tt"><a href="50_第50回_連立方程式・固有値の数値解法と差分法.html">連立方程式・固有値の数値解法と差分法</a></p><p class="ds">LU分解・反復法・べき乗法／有限差分による PDE</p></div><div class="go"><a class="les" href="50_第50回_連立方程式・固有値の数値解法と差分法.html"><small>LESSON</small>教材を読む</a></div></div>
+<div class="row"><div class="no">51</div><div><p class="dt">第51回</p><p class="tt"><a href="51_第51回_最適化.html">最適化</a></p><p class="ds">勾配法／ラグランジュの未定乗数法／凸性</p></div><div class="go"><a class="les" href="51_第51回_最適化.html"><small>LESSON</small>教材を読む</a></div></div>
+<p class="other"><a href="はじめに_使い方ガイド.html">はじめに：このフォルダの使い方</a> ― 分からないところは質問すれば教材に追記される（ティーチングモード）。</p>
+<p class="meta">例題・演習は自作。無料教科書（Book of Proof、OpenStax Calculus、Hefferon、Lebl ほか）の記法・説明順序を参照して、本資料向けに書き直したもの。</p>
+</body>
+</html>
