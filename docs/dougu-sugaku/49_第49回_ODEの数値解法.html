@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第49回</p><h1>ODEの数値解法</h1></div>
+<figure class="hero">
+<img src="img/49_hero_kumano.jpg" alt="高い杉の幹に挟まれた石畳の階段が、緑の奥へのびる。両脇に苔と木々">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第49回</p><h1>ODEの数値解法</h1></div>
+<figcaption><p class="cap">杉の巨木のあいだを、石の段が一段ずつ奥へのぼっていく。</p><p class="cr">Nekosuki（2013年、熊野古道・大門坂）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Kumano_Kodo_pilgrimage_route_Daimon-zaka_World_heritage_熊野古道_大門坂05.JPG">Wikimedia Commons</a>（石段を中心に横長に切り出した）</p></figcaption>
 </figure>
 <p class="lead">微分方程式が式の形で解けないとき、解のグラフを「小さな一歩ずつ」たどって近似する。いちばん素朴な<strong>オイラー法</strong>、傾きを4回測って平均する<strong>ルンゲ＝クッタ法</strong>、そして「刻み幅 $h$ を大きくしすぎると計算が爆発する」という<strong>安定性</strong>を、記号を1つずつ追いながら、数値で手を動かして確かめる。</p>
 <div class="navi">
@@ -367,6 +369,16 @@ $$ x_n:=x_0+n\,h. $$
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>オイラー法：傾きの方向へ $h$ だけ進む</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/49_a2_euler.jpg" alt="白い紙に黒い活字。INSTITVTIONVM CALCVLI INTEGRALIS、VOLVMEN PRIMVM、LEONHARDO EULERO、下に PETROPOLI と 1768。中ほどに小さな飾り絵" loading="lazy"></div>
+<p class="cap">「積分学教程　第1巻　オイラー著　ペテルブルク　1768年」と印刷された扉である。</p>
+<p class="cr">Leonhard Euler『Institutionum calculi integralis, Volumen primum』の扉（扉の年号は1768年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Euler_-_Institutionum_calculi_integralis,_1768_-_BEIC_1338320_F.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/49_b2_kanze.jpg" alt="赤みを帯びた木の舞台。奥に緑の松の板絵、左に手すりのある長い通路。客席に人がいる" loading="lazy"></div>
+<p class="cap">檜の舞台に松が描かれ、斜めに橋がかりが延びている。</p>
+<p class="cr">Maarten Heerlien（2019年、京都観世会館の能舞台）／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Stage_of_the_Kyoto-Kanze_Noh_and_Kyogen_theatre_(48885678827).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>動機：1歩進むには何が足りないか</h3>
 <p>いま点 $(x_n,y_n)$ にいるとする。次の点 $(x_{n+1},y_{n+1})$ の $y$ 座標を知りたい。微分方程式 $y'=f(x,y)$ が教えてくれるのは、<strong>この点での解の接線の傾き</strong> $f(x_n,y_n)$ だけである。（高校で習ったとおり、$y'$ は接線の傾きだった。）傾きが分かっていて、位置が分かっているなら、<strong>接線に沿って $h$ だけ進む</strong>のが最も素直な手である。</p>
 <p>図2.1 を見る。点 $(x_n,y_n)$ から傾き $f(x_n,y_n)$ の直線に沿って $x$ 方向に $h$ 進む。着いた先が $(x_{n+1},y_{n+1})$ である。真の解の曲線はカーブしているので、接線からは少しずれる。</p>
@@ -838,6 +850,16 @@ $y_n+hk_1$ は「オイラー法で作った仮の $y_{n+1}$」、$k_2$ はそ�
 <!-- ============================================================ -->
 <h2 id="sec-5"><span class="no">5</span>ルンゲ＝クッタ法（RK4）：傾きを4回測る</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/49_a5_kutta.jpg" alt="白髪の、蝶ネクタイと白い襟の年配の男性の横顔。黒背景" loading="lazy"></div>
+<p class="cap">横顔を見せる年配の男性の肖像写真である（M. W. クッタ、1925年ごろ）。</p>
+<p class="cr">作者不詳（1925年ごろ、マルティン・ヴィルヘルム・クッタの肖像）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Martin_Wilhelm_Kutta.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/49_b5_tamon.jpg" alt="白黒の写真。鎧姿の像が、右腕を高くかかげ、足元に邪鬼らしき小像" loading="lazy"></div>
+<p class="cap">甲冑をつけた守護神の木像が、片腕を高く上げて立っている。</p>
+<p class="cr">パナマ太平洋万国博覧会の日本帝国委員会（興福寺南円堂の多聞天像の写真）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Kofukuji_Monastery_Shitenno_of_Nan-endo_(Tamonten)_(406).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-5-1"><span class="no">5.1</span>定義</h3>
 <p>ヒューン法の考えを進めて、1歩の中で傾きを4回測る。区間の左端、真ん中（2回）、右端で測って、重み $1,2,2,1$ で平均する。</p>
 <div class="def" id="sym-rk4"><span class="label">記号：ルンゲ＝クッタ法（RK4）</span>
@@ -1197,6 +1219,16 @@ $$ y_{n+1}^2+v_{n+1}^2=(y_n+hv_n)^2+(v_n-hy_n)^2=(1+h^2)\,(y_n^2+v_n^2) $$
 <!-- ============================================================ -->
 <h2 id="sec-6"><span class="no">6</span>安定性：$h$ が大きすぎると、計算が爆発する</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 6｜現実</p>
+<div class="ph"><img src="img/49_a6_tacoma.jpg" alt="白黒写真。傾いた橋の床版と、手前の白い水煙。背景に森" loading="lazy"></div>
+<p class="cap">橋げたの一部が折れて垂れ下がり、水しぶきが上がっている。</p>
+<p class="cr">Barney Elliot（1940年11月7日、タコマ・ナローズ橋の崩壊の映像の1コマ）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Tacoma_Narrows_still.png">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 6｜見立て</p>
+<div class="ph"><img src="img/49_b6_koboshi.jpg" alt="白地に金粉、梅の花と松を描いた丸い人形。目鼻のある顔と青い縁取りの頭巾。赤い布の台" loading="lazy"></div>
+<p class="cap">梅と松の絵つけをした、卵形の白い人形が、赤い座布団の上に置かれている。</p>
+<p class="cr">Daderot（2018年、石川県立伝統産業工芸館の起き上がり小法師）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Okiagari-koboshi_-_Ishikawa_Prefectural_Museum_of_Traditional_Arts_and_Crafts_-_Kanazawa,_Japan_-_DSC09910.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-6-1"><span class="no">6.1</span>動機：精度以前の問題</h3>
 <p>3〜5章は「$h$ を小さくすると、誤差がどう減るか」だった。ところが、$h$ が小さくないとき、誤差が「小さい」とか「大きい」とかいう以前に、<strong>計算した値が爆発する</strong>ことがある。Lebl の教科書（1.7.6）は $y'=-5y$、$y(0)=1$ を $h=1$ のオイラー法で解かせて、これを見せている。真の解 $e^{-5x}$ は $0$ に減衰するのに、数値解は $1,-4,16,-64,256,\dots$ と符号を変えながら大きくなる。これは精度の話ではなく、<strong>安定性</strong>の話である。</p>
 <div class="warn"><span class="label">注意：2つの「安定」</span>

@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第48回</p><h1>数値計算の誤差・数値微分と数値積分</h1></div>
+<figure class="hero">
+<img src="img/48_hero_leopard.jpg" alt="薄茶の小石の地に、黒い小石で描いた豹が、後ろ脚で走るガゼルに跳びかかる。下に小さな家">
+<div class="ttl" style="left:4%;top:62%"><p class="vol">第48回</p><h1>数値計算の誤差・数値微分と数値積分</h1></div>
+<figcaption><p class="cap">小さな石片を敷きつめて、豹とガゼルの輪郭が描かれている。</p><p class="cr">Daderot（2013年、米国 Chazen 美術館の展示、シリア・ホムス出身のローマ時代のモザイク「豹がガゼルを追う」）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Mosaic_of_Leopard_Chasing_a_Gazelle,_Roman,_Homs,_Syria,_450-462_AD,_polychrome_marble_tesserae_-_Chazen_Museum_of_Art_-_DSC01919.JPG">Wikimedia Commons</a>（額縁を切り落とし、一部を切り出した）</p></figcaption>
 </figure>
 <p class="lead">計算機は極限 $h\to0$ を実行できず、実数も有限の桁でしか持てない。そこで微分・積分を「$h$ を小さい有限の値で止めた式」に置き換えると、数学の近似による<strong>打切り誤差</strong>と、有限桁による<strong>丸め誤差</strong>の2種類のずれが生まれる。打切り誤差はテイラー展開から $h^p$ に比例すると分かり、丸め誤差は $1/h$ に比例して増える。両者の和は $h$ に対して V 字になるので、「$h$ は小さいほどよい」は誤りである。この回では、前進・中心差分、台形則、シンプソン則を、誤差の次数 $O(h^p)$ とともに、1行1操作で導く。</p>
 <div class="navi">
@@ -166,6 +168,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>計算機の上では、2種類の「ずれ」が避けられない</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/48_a1_briggs.jpg" alt="白地に黒の活字で、番号と長い数字の列が上から下まで並ぶ表。上に小さく ARITHMETICA の頁見出し" loading="lazy"></div>
+<p class="cap">小数点以下を何桁も並べた数の表が、頁いっぱいに刷られている。</p>
+<p class="cr">Henry Briggs『Arithmetica Logarithmica』の数表の頁（Commons の記載は1624年、10の累乗根）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Briggs_roots-10.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/48_b1_pine.jpg" alt="灰色の塀の上に伸びる松と、その脇の脚立に座って枝に手を入れる人。道端の赤いコーン" loading="lazy"></div>
+<p class="cap">脚立の上の人が、塀ごしに松の枝を整えている。</p>
+<p class="cr">m-louis（2021年、兵庫県明石の松の剪定）／<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Pine_pruning_1_Akashi,_Hyogo,_2021-11-28.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>動機：極限は、計算機には実行できない</h3>
 <p>これまでの微積分は、<strong>極限</strong>でできていた。微分係数は
 $$ f'(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}{h} $$
@@ -373,6 +385,16 @@ $$ \varepsilon_{\mathrm{mach}}:=2^{-52}\approx2.22\times10^{-16}\ (=2u). $$
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>数値微分：差分近似と、打切り誤差の次数</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/48_a2_babbage.jpg" alt="黒板に二つの表。左は R = x²+1、右は R = x³ − 2x² + 1 で、x、R、DIFF1、DIFF2 の列（右は DIFF3 も）に数が並ぶ" loading="lazy"></div>
+<p class="cap">多項式の値と、その差を、黒板に表にして書き出してある。</p>
+<p class="cr">Jitze Couperus（2010年、差分機関の実演に使う黒板）／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Babbage_Difference_Engine_(Polynomial).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/48_b2_stones.jpg" alt="灰色の池に平たい石が一列に並び、向こう岸に木の太鼓橋、背後に霧のかかった山" loading="lazy"></div>
+<p class="cap">雨の池の岸に、平たい石が点々と置かれ、向こうに太鼓橋がかかる。</p>
+<p class="cr">Marie-Sophie Mejan（1985年、日本の池の飛び石）／<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Japan,_stepping_stones_in_the_rain.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>動機と定義：極限を外した式を3つ作る</h3>
 <p>微分係数の定義は $f'(x)=\displaystyle\lim_{h\to0}\frac{f(x+h)-f(x)}{h}$ だった。この「割線の傾き」（<a href="07_第7回_微分.html#sym-average-rate">第7回の平均の変化の割合</a>）から、極限だけを外して $h$ を小さい正の数に固定したものが、<strong>差分商</strong>である。図2.1 は、$y=e^x$ の点 $(1,e)$ で、$h$ を小さくすると割線が接線に近づく様子である。</p>
 <figure class="fig" id="fig-2-1">
@@ -1024,6 +1046,16 @@ $$ h_*=(3u)^{1/3}=(3.33\times10^{-16})^{1/3}=6.9\times10^{-6}. $$
 <!-- ============================================================ -->
 <h2 id="sec-4"><span class="no">4</span>数値積分：台形則とシンプソン則</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/48_a4_planimeter.jpg" alt="白い布の上に、黒い長い棒と短い棒をつないだ器具。端に金色の錘、中ほどに目盛りのついた小さな円盤" loading="lazy"></div>
+<p class="cap">2本の腕をつないだ金属の器具が、白い台の上に置かれている。</p>
+<p class="cr">Twdragon（2008年、アムスラー式の面積計）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Planimeter_Full.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/48_b4_kumiko.jpg" alt="薄い木片を組み合わせた格子。麻の葉に似た星形の模様が並び、奥から光が透ける" loading="lazy"></div>
+<p class="cap">細い木片を組んで、六角形と菱形の模様が重なっている。</p>
+<p class="cr">Sergei Sarin（2015年、組子細工）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Kumiko.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-4-1"><span class="no">4.1</span>動機と定義：区間を $n$ 個の台形で覆う</h3>
 <p>定積分 $\displaystyle\int_a^bf(x)\,dx$ は、原始関数が見つかれば微積分学の基本定理（<a href="10_第10回_積分.html#sym-ftc">第10回</a>）で計算できた。しかし、
 $$ \int_0^1e^{-x^2}\,dx $$
@@ -1368,6 +1400,16 @@ $$ S_{2n}:=\frac{4T_{2n}-T_n}{3}=\frac h3\Bigl(f(x_0)+4f(x_1)+2f(x_2)+4f(x_3)+2f
 <!-- ============================================================ -->
 <h2 id="sec-5"><span class="no">5</span>使い分けと、誤差の見積もり方</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/48_a5_eniac.jpg" alt="白黒写真。左の女性が制御盤を、右の女性が壁一面の計算盤の前に立つ" loading="lazy"></div>
+<p class="cap">機械の前で、二人の女性が配線盤に手を伸ばしている。</p>
+<p class="cr">米陸軍（1945〜47年ごろ、ENIAC を操作する二人の女性）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Two_women_operating_ENIAC.gif">Wikimedia Commons</a>（GIF から JPEG に変換した）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/48_b5_chisel.jpg" alt="木の柄の鑿が刃先を下に、赤茶の板の上に並ぶ。幅広のものから細いものまで" loading="lazy"></div>
+<p class="cap">刃の幅も形も違う鑿が、木の台に並んでいる。</p>
+<p class="cr">Rosewoman（2014年、日本の鑿の一揃い）／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Japanese_chisels.jpg">Wikimedia Commons</a></p></div>
+</figure>
 <h3 id="sec-5-1"><span class="no">5.1</span>4つの公式の比較</h3>
 <table class="tb">
 <tr><th>公式</th><th>使う点（1回分）</th><th>誤差の主要項</th><th>次数</th><th>注意</th></tr>

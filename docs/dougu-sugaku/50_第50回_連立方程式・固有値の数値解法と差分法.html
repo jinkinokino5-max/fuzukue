@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第50回</p><h1>連立方程式・固有値の数値解法と差分法</h1></div>
+<figure class="hero">
+<img src="img/50_hero_babel.jpg" alt="赤茶のレンガと白い石でできた巨大な螺旋状の塔が、港のある平野に立つ。足もとには石の塊と小さな人の群れ、右に船">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第50回</p><h1>連立方程式・固有値の数値解法と差分法</h1></div>
+<figcaption><p class="cap">積み上がる塔の足もとで、人々が石を運んでいる。</p><p class="cr">Pieter Bruegel the Elder『バベルの塔』（ウィーン美術史美術館、1563年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project.jpg">Wikimedia Commons</a>（塔の中ほどから足もとまでを横長に切り出した）</p></figcaption>
 </figure>
 <p class="lead">未知数が何千何万もある連立方程式を、計算機でどう解くか。消去の記録をとる<strong>LU分解</strong>、答えに少しずつ近づく<strong>反復法</strong>、最大の固有値だけを取り出す<strong>べき乗法</strong>。そして熱方程式を格子点の連立方程式に直す<strong>差分法</strong>で、「刻みを大きくしすぎると爆発する」条件を、行列の固有値から導く。</p>
 <div class="navi">
@@ -180,6 +182,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>動機：手で解く方法は、大きな問題で破綻する</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/50_a1_eniac.jpg" alt="白黒写真。天井まで届く計算盤と、床をはう配線。左と奥に立つ二人の女性" loading="lazy"></div>
+<p class="cap">壁いっぱいの配線盤の前で、二人が操作盤を見ている。</p>
+<p class="cr">米陸軍（1947年ごろ、弾道研究所328号棟で ENIAC をプログラムするグレン・ベックとベティ・スナイダー）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Glen_Beck_and_Betty_Snyder_program_the_ENIAC_in_building_328_at_the_Ballistic_Research_Laboratory.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/50_b1_borobudur.jpg" alt="晴れた空の下、階段状の石の大きな建造物。手前に芝と、小さな人影" loading="lazy"></div>
+<p class="cap">低い丘のような石の段が、芝の広場の向こうに積み重なっている。</p>
+<p class="cr">Gunawan Kartapranata（2008年、ボロブドゥール寺院）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Borobudur-Nothwest-view.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>連立方程式は、あらゆる計算の最後に現れる</h3>
 <p><a href="17_第17回_連立一次方程式とランク.html#sym-linear-system">第17回</a>では、未知数が3つ程度の連立一次方程式を、行基本変形（消去）で解いた。ところが、研究室で出会う連立方程式は、未知数が桁違いに多い。たとえば、棒の温度を100か所で知りたければ未知数は100個、板の温度を縦横100か所ずつで知りたければ 100×100＝10000 個になる。第5章で見るように、微分方程式を計算機で解こうとすると、ほぼ必ずこの形の連立方程式に行き着く。</p>
 <p>この回は、第17回で習った $A\boldsymbol x=\boldsymbol b$ を、<strong>未知数の数 $n$ が大きくなっても解ける</strong>ようにする回である。第17回の「手順」を、計算機が実行できる形（アルゴリズム）に書き直し、その手間を数える。覚えている人は飛ばしてよいが、念のため $A\boldsymbol x=\boldsymbol b$ の意味を確かめる。</p>
@@ -276,6 +288,16 @@ $$ a_{i1}x_1+a_{i2}x_2+\cdots+a_{in}x_n=b_i\qquad(i=1,2,\dots,n) $$
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>LU分解：消去の手順を、行列として記録する</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/50_a2_jacquard.jpg" alt="天井近くから下がる、茶色の細長い厚紙の列。紙には小さな穴が並び、手書きの文字もある" loading="lazy"></div>
+<p class="cap">穴のあいた長い紙の帯が、織機の上から何枚もつながって垂れている。</p>
+<p class="cr">Dragfyre（2011年、ヴァンフック〔ベトナム〕の絹織機で使うパンチカード）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Van_Phuc_loom_punch_cards_02.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/50_b2_kumihimo.jpg" alt="薄紫の地に、水色・赤と緑・緑と白・黒と白の紐が5本。上にキーホルダーの輪、下に房" loading="lazy"></div>
+<p class="cap">色糸を決まった順序で組んだ紐が、5本並んでいる。</p>
+<p class="cr">Ködermaus（2012年、組紐の様式の編み）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Kumihimo_Five_Braids.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>動機：消去を、右辺ごとにやり直したくない</h3>
 <p>第17回の消去は、拡大係数行列 $[\,A\mid\boldsymbol b\,]$ に行基本変形をかけた。この方法には弱点がある。<strong>右辺 $\boldsymbol b$ が変わるたびに、消去を最初からやり直す</strong>ことになる点である。実際には、同じ $A$ に対して $\boldsymbol b$ だけを何度も変えて解く場面が多い。たとえば第5章の熱方程式の計算では、時刻が1つ進むごとに $\boldsymbol b$（前の時刻の温度）が変わり、$A$ は変わらない。</p>
 <p>消去で $A$ に何が起きたかを、$\boldsymbol b$ と無関係に取り出して保存できないか。それが LU 分解である。</p>
@@ -767,6 +789,16 @@ $$ \sum_{m=1}^{n-1}(2m^2+m)=2\sum_{m=1}^{n-1}m^2+\sum_{m=1}^{n-1}m. $$
 <!-- ============================================================ -->
 <h2 id="sec-3"><span class="no">3</span>反復法：当てずっぽうの答えを、少しずつ直す</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/50_a3_jacobi.jpg" alt="灰色の版画。長髪で白い襟の男性の上半身。下に C.G.J. Jacobi の署名" loading="lazy"></div>
+<p class="cap">長い髪の男性の肖像が、署名とともに刷られている（C. G. J. ヤコビ、1843年）。</p>
+<p class="cr">August Kaselowsky 原画、Giesecke u. Devrient による複製（1843年、ヤコビの肖像）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Carl_Gustav_Jacob_Jacobi_portrait_1843.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/50_b3_togishi.jpg" alt="黄味の紙に刷った錦絵。格子柄の着物であぐらをかく男が右腕を伸ばす。右に木の桶、上に細かい文字の解説、左上に赤い題簽" loading="lazy"></div>
+<p class="cap">格子柄の着物の男が、右腕をのばして座り、前に道具を置いた錦絵である。</p>
+<p class="cr">歌川国芳『礪師田左衛門』（1848年、大英博物館 2008,3037.15412）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Togishi_Tazaemon_礪師田左衛門_(BM_2008,3037.15412).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-3-1"><span class="no">3.1</span>動機：LU分解では持て余す問題がある</h3>
 <p>LU分解は、手間 $n^3$ 程度で確実に答えが出る。しかし、第5章の差分法のように、<strong>行列の大部分が $0$ で、各行に数が数個しか入っていない</strong>（疎な行列。「そ・ぎょうれつ」）問題では、事情が変わる。$n=10^6$ の疎な行列を $n\times n$ の表として全部記憶すると $10^{12}$ 個の数が必要だが、$0$ でない数だけなら $n$ の数倍で済む。ところが LU分解を行うと、$0$ だった場所に数が現れてしまう（2次元の格子の問題でその傾向が強い）。</p>
 <p>そこで別の考え方をとる。<strong>答えの当てずっぽう $\boldsymbol x^{(0)}$ から出発して、「少し良い答え」$\boldsymbol x^{(1)}$ を作り、それをまた直して $\boldsymbol x^{(2)}$ を作る</strong>。この更新を繰り返し、答えに十分近づいたところでやめる。1回の更新は行列とベクトルの積と同程度の手間（疎なら $n$ の数倍）で済む。これが<strong>反復法</strong>である。</p>
@@ -1110,6 +1142,16 @@ $$ |e_i^{(k+1)}|\le\Bigl(\frac{1}{|a_{ii}|}\sum_{j\ne i}|a_{ij}|\Bigr)\|\boldsym
 <!-- ============================================================ -->
 <h2 id="sec-4"><span class="no">4</span>べき乗法：行列を掛け続けて、最大の固有値を取り出す</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/50_a4_mises.jpg" alt="セピアの写真。白い襟とネクタイ、黒い上着の口ひげの青年。金の縁取りの台紙" loading="lazy"></div>
+<p class="cap">口ひげの青年の肖像写真が、金縁の台紙に貼られている（R. v. ミーゼス、1909年）。</p>
+<p class="cr">作者不明（1909年、リヒャルト・フォン・ミーゼスの肖像写真）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Mises,_Richard_Edler_von,_math._u.nat_-_btv1b10227145h.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/50_b4_prayer.jpg" alt="灰色のセーターの年配の男性が、左手で柄つきの金色のマニ車を顔の前に持つ。背後に彫刻のある木の戸棚" loading="lazy"></div>
+<p class="cap">年配の男性が、金の筒の車を手に持ち、顔の前にかざしている。</p>
+<p class="cr">Rod Waddington（2023年、手持ちのマニ車。Commons の記載は雲南のシャングリラ）／<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Tibetan_Prayer_Wheel.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-4-1"><span class="no">4.1</span>動機：特性方程式は大きな行列では解けない</h3>
 <p><a href="20_第20回_固有値と固有ベクトル.html#sym-char-poly">第20回</a>では、特性方程式 $\det(\lambda I-A)=0$ を解いて固有値を求めた。これは $n=2,3$ なら手で解ける。しかし $n\ge5$ になると、一般の $n$ 次方程式には、四則演算と累乗根だけで書ける解の公式がない（アーベル・ルフィニの定理）。さらに、特性多項式の係数を求めること自体が、$n$ が大きいと手間も誤差も大きい。そこで、<strong>特性方程式を使わない</strong>固有値の求め方が必要になる。</p>
 <p>観察から始める。ベクトル $\boldsymbol v$ に行列 $A$ を何度も掛けるとどうなるか。固有ベクトルは $A\boldsymbol v=\lambda\boldsymbol v$ で、向きを変えずに $\lambda$ 倍される。ではそうでないベクトルに $A$ を掛け続けると、<strong>固有値の絶対値が最大の固有ベクトルの方向</strong>が、他の方向より速く大きくなっていくのではないか。それがべき乗法である。</p>
@@ -1304,6 +1346,16 @@ $$ R(\boldsymbol v)-\lambda_1=\frac{\lambda_1+\varepsilon^2\lambda_2}{1+\varepsi
 <!-- ============================================================ -->
 <h2 id="sec-5"><span class="no">5</span>有限差分法：偏微分方程式を、格子点の連立方程式に直す</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/50_a5_richardson.jpg" alt="白黒の絵。球形の大広間の壁に世界地図、何段もの桟敷に人がいる。中央に塔状の台" loading="lazy"></div>
+<p class="cap">地球儀の内側の壁に地図が張られ、中央の柱から人々を見下ろす。</p>
+<p class="cr">Francois Schuiten による絵（2014年、リチャードソンの「予報工場」の想像図。Jonathan Lawhead の著作に基づく）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Artist’s_conception_of_Lewis_Richardson’s_forecast_factory.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/50_b5_sashiko.jpg" alt="藍染の布を縦横の升目に区切り、各升に別の白糸の模様。外縁に細い縞の布。壁に掛けてある" loading="lazy"></div>
+<p class="cap">藍の布いちめんに、白い糸で、様々な模様の升目が縫われている。</p>
+<p class="cr">Daderot（2013年、トロント・織物博物館の刺し子の展示）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Sashiko_by_volunteers,_2012_-_Textile_Museum_of_Canada_-_DSC00807.JPG">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-5-1"><span class="no">5.1</span>動機：式で解けない偏微分方程式と、格子点</h3>
 <p><a href="41_第41回_熱方程式と変数分離.html#sec-2">第41回</a>では、両端を温度 $0$ に保った棒の熱方程式 $u_t=k\,u_{xx}$ を、変数分離と正弦級数で解いた。ところが、棒の太さが場所で違う、熱を出す物体がある、形が複雑な板になる、といった少し現実的な問題では、第41回の方法で式を書き下せない。そこで、第49回で常微分方程式にやったことを、偏微分方程式にも行う。<strong>解の関数を丸ごと求めず、格子点だけで値を求める</strong>。</p>
 <p>第49回では $x$ だけを格子点 $x_n=x_0+nh$ にした。熱方程式には位置 $x$ と時刻 $t$ の2つの変数があるので、両方を格子にする。棒の長さを $L$ として（5章では $L$ はこの意味だけに使い、数値例は $L=1$ にする。冒頭の注意）、位置の刻みを $\Delta x:=L/N$（棒を $N$ 等分）、時刻の刻みを $\Delta t$ とする。$\Delta$ は「差、刻み」を表すギリシャ文字（デルタ）で、$\Delta x$ は「$x$ の刻み」という<strong>ひとまとまりの1つの量</strong>であり、$\Delta$ と $x$ の積ではない。</p>
