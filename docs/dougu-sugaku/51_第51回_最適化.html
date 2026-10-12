@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第51回</p><h1>最適化</h1></div>
+<figure class="hero">
+<img src="img/51_hero_terraces.jpg" alt="緑・紫・水色の水を張った段々の田が、曲線を描いて斜面いっぱいに重なる。左上に濃い緑の樹">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第51回</p><h1>最適化</h1></div>
+<figcaption><p class="cap">山の斜面が、等高線に沿って細かい水田に刻まれている。</p><p class="cr">Jialiang Gao（2003年3月、雲南省の紅河ハニ棚田）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Terrace_field_yunnan_china_denoised.jpg">Wikimedia Commons</a>（一部を切り出した）</p></figcaption>
 </figure>
 <p class="lead">「いちばんよい」値を探す、という問題は、研究室のあらゆる場面で出てくる。最小二乗法も、機械学習の学習も、設計の最適化も、すべて「関数 $f$ を最小にする点を探す」問題である。この回では、(1) 勾配が $\boldsymbol 0$ になる点（<strong>停留点</strong>）とヘッセ行列による判定、(2) 勾配と逆向きに少しずつ進む<strong>勾配法</strong>（歩幅 $\eta$ と条件数）、(3) 制約があるときの<strong>ラグランジュの未定乗数法</strong>、(4) 最小点を見つけたら安心できる条件としての<strong>凸性</strong>、の4つを、記号を省略せずに順に説明する。最後に、全51回の道具が研究室のどこで使われるかを、1枚の地図にまとめる。</p>
 <div class="navi">
@@ -168,6 +170,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>「最小にする」とは：問題の形と、停留点</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/51_a1_fermat.jpg" alt="灰色の版画。楕円の飾り枠に、長髪・大きな襟の男性" loading="lazy"></div>
+<p class="cap">楕円の枠のなかに、長い髪の男性の胸像が刷られている。</p>
+<p class="cr">François de Poilly（17世紀、ピエール・ド・フェルマーの肖像版画）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Pierre_de_Fermat_(F._Poilly).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/51_b1_ryoanji.jpg" alt="白い砂の庭に、苔の上に載る石が3か所。奥に土塀と、赤く色づいた木" loading="lazy"></div>
+<p class="cap">掃き目のついた白砂に、苔をまとった石が島のように置かれている。</p>
+<p class="cr">lumoplank（龍安寺の石庭）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Ninna-ji_and_Ryoan-ji,_Kyoto_-_Ryoanji7753.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>動機と、問題の書き方</h3>
 <p>研究室で出会う「いちばんよい」には、たとえば次のようなものがある。</p>
 <ul>
@@ -342,6 +354,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>ヘッセ行列：停留点が極小かを調べる</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/51_a2_hesse.jpg" alt="茶の台紙に貼った写真。口ひげと波打つ髪の、黒い上着の男性の上半身。台紙上部に手書きの文字" loading="lazy"></div>
+<p class="cap">口ひげの男性の名刺判の肖像写真である（L. O. ヘッセ）。</p>
+<p class="cr">Eduard Lange（1856〜1874年、ルートヴィヒ・オットー・ヘッセの肖像写真。ハイデルベルク大学図書館 HeidICON 29802）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Ludwig_Otto_Hesse_(HeidICON_29802).jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/51_b2_saddle.jpg" alt="白黒の写真。黒漆の鞍が白布の台に置かれ、前橋は高く、後ろ橋は低く、中ほどが凹む" loading="lazy"></div>
+<p class="cap">前と後ろが盛り上がり、中ほどが低い鞍が、白い台に載っている。</p>
+<p class="cr">メトロポリタン美術館（MET 1257、日本の鞍。Commons の記載は18世紀）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Saddle_(Kura)_MET_1257.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>動機：$\nabla f=\boldsymbol 0$ だけでは種類が決まらない</h3>
 <p>1変数のとき、停留点が極小か極大かは、$f''$ の符号で決まった（<a href="08_第8回_微分を使う・近似と極値.html#sec-7-2">第8回 7.2</a>）。多変数では、2階微分が1つの数ではなく、$x$ で2回、$x$ と $y$ で1回ずつ、$y$ で2回、と複数ある。これを1つの行列にまとめたものを使う。</p>
 
@@ -555,6 +577,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-3"><span class="no">3</span>勾配法：少しずつ、下へ進む</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/51_a3_cauchy.jpg" alt="油彩画。広い額、白い襟巻、黒の上着の中年の男性。画面全体にひび割れ" loading="lazy"></div>
+<p class="cap">髪の薄い男性が、白いスカーフと黒い上着で、こちらを見ている肖像画である（A.-L. コーシー）。</p>
+<p class="cr">作者不詳の肖像画を Bruno Belhoste が撮影（2025年9月5日。ソー城所蔵とされる）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Cauchy-Portrait.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/51_b3_hokusai.jpg" alt="青と白の水が、橙と緑の崖の岩肌を幾筋にも流れ落ちる。下に小さな旅人、上にも人影。左上に題簽" loading="lazy"></div>
+<p class="cap">幾筋にも分かれた滝が、崖をくだる錦絵である。</p>
+<p class="cr">葛飾北斎『諸国瀧廻り 下野黒髪山きりふりの滝』（1832年ごろ、メトロポリタン美術館 DP141256）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Kirifuri_Waterfall_at_Kurokami_Mountain_in_Shimotsuke_MET_DP141256.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-3-1"><span class="no">3.1</span>動機：$\nabla f=\boldsymbol 0$ を式で解けないとき</h3>
 <p>第1章・第2章の方法は、$\nabla f=\boldsymbol 0$ という連立方程式を<strong>解けるとき</strong>に使える。しかし、解けるとは限らない。</p>
 <ul>
@@ -959,6 +991,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-4"><span class="no">4</span>ラグランジュの未定乗数法：制約があるとき</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/51_a4_lagrange.jpg" alt="灰色の版画。白髪、白いスカーフ、黒い上着に勲章の男性。下に LA GRANGE の文字" loading="lazy"></div>
+<p class="cap">胸に勲章をつけた白髪の男性の版画が、「ラグランジュ」の名とともに刷られている。</p>
+<p class="cr">米議会図書館所蔵のジョゼフ＝ルイ・ラグランジュの肖像版画（LCCN2005691518）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Joseph_Louis_Lagrange,_1736-1813,_head-and-shoulders_portrait_LCCN2005691518.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/51_b4_yukitsuri.jpg" alt="池のそばの松。低く張り出した太い枝を、2本の木の柱が支える。水面にその影が映る" loading="lazy"></div>
+<p class="cap">大きく伸びた松の枝を、木の支柱が下から支えている。</p>
+<p class="cr">lumoplank（金沢・兼六園の、木の支柱で支えられた松）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Kenroku-en_-_Kenrokuen645.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-4-1"><span class="no">4.1</span>動機：条件つきの最小・最大</h3>
 <p>ここまでの問題は、$\boldsymbol x$ をどこにとってもよかった。現実の設計では、「重さを最小にしたい。ただし長さは一定」のように、<strong>動ける範囲が条件（制約）で縛られる</strong>ことが多い。</p>
 <p>例：周の長さが $20$ の長方形で、面積を最大にしたい。縦と横を $x,y$ とすると、面積は $xy$。制約は $2x+2y=20$（つまり $x+y=10$）。</p>
