@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第43回</p><h1>ラプラス方程式</h1></div>
+<figure class="hero">
+<img src="img/43_hero_soapcube.jpg" alt="暗い背景の前に、斜めに置かれた針金の立方体。内側に、緑と紫の縞の薄い膜が面になって浮かび、下の方に泡の粒が溜まる">
+<div class="ttl" style="left:4%;top:5%"><p class="vol">第43回</p><h1>ラプラス方程式</h1></div>
+<figcaption><p class="cap">針金の立方体の中に、虹色の薄い膜が何枚か張っている。</p><p class="cr">Bin im Garten（2009年、針金の立方体に張った石けん膜）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Minimalfläche_mit_Seifenhaut_Würfel_0328.JPG">Wikimedia Commons</a>（縦長の写真から横長に切り出した）</p></figcaption>
 </figure>
 <p class="lead">熱が出入りしなくなった板の温度、電荷のない空間の電位など、「つり合った」状態の式 $\nabla^2u=0$ を扱う。解の値は<strong>まわりの値の平均</strong>になる、という1本の性質から、山も谷も内側にはできない（最大値原理）ことが出る。電位 $\phi$ の<strong>等ポテンシャル線</strong>は電気力線と直角に交わる。解き方は第41回と同じ変数分離で、長方形では $\sin$ と $\sinh$、<strong>円板</strong>では極座標（第27回）で $r^n\cos n\theta,\ r^n\sin n\theta$ が出る。縁の値を第36回のフーリエ級数に展開して $(r/a)^n$ を掛ければ円板の解になり、これを1つの積分にまとめたものがポアソン積分である。</p>
 <div class="navi">
@@ -174,6 +176,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>ラプラス方程式とその性質</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/43_a1_laplace.jpg" alt="黄ばんだ紙に、黒い活字で TRAITÉ DE MÉCANIQUE CÉLESTE、PAR P. S. LAPLACE、TOME PREMIER と並び、下に出版者の名と 1799 の年号" loading="lazy"></div>
+<p class="cap">「天体力学　第1巻　ラプラス著　パリ　1799年」と印刷された扉である。</p>
+<p class="cr">ラプラス『天体力学』第1巻の扉（BEIC 蔵。Commons の題に1799年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Laplace,_Pierre_Simon_de_–_Traité_de_mécanique_céleste,_1799_–_BEIC_12217993.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/43_b1_monet.jpg" alt="濃い青と紫の水面に、淡い桃色と黄の雲の反射、緑の睡蓮の葉が点々と散る" loading="lazy"></div>
+<p class="cap">青い水面に、雲の影と睡蓮の葉が溶け合って揺れている。</p>
+<p class="cr">クロード・モネ『睡蓮の池に映る雲』（Commons の記載は1920年ごろ）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Claude_Monet_-_Reflections_of_Clouds_on_the_Water-Lily_Pond.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>動機：「止まった状態」の式</h3>
 <p>第41回では、棒の温度 $u(x,t)$ が $u_t=k\,u_{xx}$ に従って時間とともに変わった。両端を温度 $0$ に保つと、最後はすべての場所で $u=0$ になり、変化が止まる。両端を別の温度に保っても、十分に時間がたてば温度は変わらなくなる（<a href="41_第41回_熱方程式と変数分離.html#sym-steady">第41回 6.1 の定常解</a>）。変わらないということは $u_t=0$ だから、熱方程式は $0=k\,u_{xx}$、つまり $u_{xx}=0$ になる。</p>
 <p><strong>最小の具体例（棒）。</strong>$u_{xx}=0$ を $x$ で2回積分すると $u=ax+b$（直線）。両端が $u(0)=0,\ u(L)=T$ なら $b=0,\ a=T/L$ で、$u=\dfrac{T}{L}x$。両端を直線で結ぶだけで、解がただ1つに決まる。この性質（縁の値だけで内側が決まる）は、次元を上げても生き残る。</p>
@@ -1244,6 +1256,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>ポテンシャルと等ポテンシャル線・面</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/43_a2_vdg.jpg" alt="黒板の前で、長い金髪の男が銀色の金属球に手を置き、髪が広がって立ち上がる。黒板に Volt、Ampere、flashlight などの語" loading="lazy"></div>
+<p class="cap">金属の球に手を置いた男の長い髪が、四方へ逆立っている。</p>
+<p class="cr">Drbaker171（2008年、大学の講義でのヴァンデグラーフ起電機の実演）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Muller_Van_de_Graaff_generator_demonstration.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/43_b2_starry.jpg" alt="濃い藍の夜空に黄色の星、川面にガス灯の黄色い光が縦に揺れ、手前に2人の人影" loading="lazy"></div>
+<p class="cap">夜の川面に、岸の灯りが縦の筋になって伸びている。</p>
+<p class="cr">フィンセント・ファン・ゴッホ『ローヌ川の星月夜』（1888年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Vincent_van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>動機：ベクトル場をスカラー1つで表す</h3>
 <p>電荷のまわりの電場 $\boldsymbol E$ は、ベクトル場（各点に矢印）で、平面なら2成分、空間なら3成分を決めなければならない。ところが静電場は、スカラー場 $\phi$ の勾配から作れる（<a href="23_第23回_場と勾配.html#sym-potential">第23回のポテンシャル</a>）。</p>
 <p>$$ \boldsymbol E=-\nabla\phi $$</p>
@@ -2407,6 +2429,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-4"><span class="no">4</span>円板：極座標での変数分離とポアソン積分</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/43_a4_poisson.jpg" alt="白地の上に、灰色の線で描かれた中年の男の胸像。ゆるい巻き毛、黒い上着、白いスカーフ。左下に版元の署名、下に Poisson の署名" loading="lazy"></div>
+<p class="cap">黒い上着に白いクラヴァットの男が、まっすぐこちらを見ている。</p>
+<p class="cr">ポアソンの肖像（デルペシュ〔François-Séraphin Delpech〕の石版画。Nicolas Eustache の絵による。1840年以前）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Simeon_Poisson_crop.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/43_b4_rose.jpg" alt="真っ暗な背景に、赤と青の色ガラスでできた円い大きな薔薇窓。中心を何重にも小さな円が囲み、下に縦長の窓が5枚並ぶ" loading="lazy"></div>
+<p class="cap">円形の窓の中心から、色ガラスの花びらが放射状に並ぶ。</p>
+<p class="cr">Ludwig Schneider（2009年、シャルトル大聖堂南の薔薇窓）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:South_rose_window_of_Chartres_Cathedral.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-4-1"><span class="no">4.1</span>動機：縁が円なら、座標も円にする</h3>
 <p>円い板、円い管、円い断面の棒では、縁は $x^2+y^2=a^2$ という曲線である。長方形の方法（3.2）は、縁が「$x=$ 定数」や「$y=$ 定数」の形のときだけ効いた。円の縁では $X(x)Y(y)$ が縁で $0$ になる条件が書けない。</p>
 <p>そこで座標を<a href="13_第13回_重積分と変数変換.html#sym-polar">極座標 $(r,\theta)$</a> に替える。円の縁は $r=a$ という「1つの座標が定数」の形になる。<a href="27_第27回_添字記法と曲線座標.html#sec-4-1">第27回 4.1</a> で「境界の形に座標を合わせる」と言ったことの実例である。</p>
@@ -3861,6 +3893,16 @@
 
 <!-- ============================================================ -->
 <h2 id="sec-5"><span class="no">5</span>熱方程式との対比と、まとめの図</h2>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/43_a5_fourier.jpg" alt="白地に、黒の細線で描かれた男の肩から上。巻き毛、高い襟と、縁に植物の刺繍のある上着" loading="lazy"></div>
+<p class="cap">巻き毛の男が、刺繍のある上着で描かれている。</p>
+<p class="cr">フーリエの肖像（Geille の版画。ボワイーの絵による。Commons の記載は1823年ごろ）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Joseph_Fourier.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/43_b5_kambara.jpg" alt="茶色の紙に、雪をかぶった家々と山。手前の道に傘や蓑をつけた3人が歩き、空に細かな雪が散る" loading="lazy"></div>
+<p class="cap">雪が降り積もった宿場を、傘をさした旅人が歩いていく。</p>
+<p class="cr">歌川広重『東海道五拾三次之内　蒲原　夜の雪』（クリーヴランド美術館蔵）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Ando_Hiroshige_-_Kambara-_Evening_Snow_-_1940.984_-_Cleveland_Museum_of_Art.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <p>第41回（棒の熱方程式）とこの回（円板のラプラス方程式）は、「方程式を2本の ODE に割る→境界条件で $\lambda$ を決める→足し合わせる→係数を内積1回（フーリエ係数）で出す」という同じ手順である。違いを表にする。</p>
 <table class="tb">
 <tr><th>項目</th><th>熱方程式（第41回）</th><th>円板のラプラス方程式（この回）</th></tr>

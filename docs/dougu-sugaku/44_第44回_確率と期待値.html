@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第44回</p><h1>確率と期待値</h1></div>
+<figure class="hero">
+<img src="img/44_hero_dice.jpg" alt="黒い背景に、透明な青、赤、緑、黄、白など色の違う六面サイコロが十数個かたまり、手前の黒い面に反射して並ぶ">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第44回</p><h1>確率と期待値</h1></div>
+<figcaption><p class="cap">黒い面に、青・赤・緑・白のサイコロが山になって映り込んでいる。</p><p class="cr">Dietmar Rabich（2021年、色とりどりのサイコロ）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Würfel,_gemischt_--_2021_--_5577.jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
 </figure>
 <p class="lead">同じ条件で測っても結果がばらつく量を、数学で扱う道具。「起こりうる結果の全体」「確率」「確率変数」「分布」を順に定め、1つの数で代表させる<strong>期待値</strong>と、ばらつきの大きさを表す<strong>分散</strong>を、サイコロ・コインのような<strong>離散</strong>の場合と、一様分布・指数分布のような<strong>連続</strong>の場合の両方で、1行ずつ導く。</p>
 <div class="navi">
@@ -173,6 +175,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>確率の言葉：起こりうる結果、事象、確率</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/44_a1_bernoulli.jpg" alt="白地に黒い活字で JACOBI BERNOULLI、ARS CONJECTANDI、OPUS POSTHUMUM、TRACTATUS DE SERIEBUS INFINITIS、DE LUDO PILAE RETICULARIS と並び、中央に紋章の木版、下に BASILEAE と年号 cIↄ Iↄ CC XIII" loading="lazy"></div>
+<p class="cap">「推測術　ヤコブ・ベルヌーイ著　遺作」と印刷された扉である。</p>
+<p class="cr">Jakob Bernoulli『Ars Conjectandi』の扉（Commons の題は1713年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Ars_Conjectandi_of_Jakob_Bernoulli,_1713_(1160x1130).png">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/44_b1_sugoroku.jpg" alt="横長の1枚刷りで、数十の四角い区画に、着物の人物や情景が描き込まれている。右端に縦書きの題字" loading="lazy"></div>
+<p class="cap">1枚の紙が升に区切られ、人物の絵がぎっしり並んでいる。</p>
+<p class="cr">初代歌川国貞の双六（約1850年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Kunisada_SGK_Sugoroku.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>動機：同じことをしても、毎回同じ値にならない</h3>
 <p>これまでの回の道具は、<a href="03_第3回_関数と写像.html#sym-function">関数</a>のように「入力を決めれば出力が1つに決まる」世界を扱ってきた。ところが研究室では、次のような量に出会う。</p>
 <ul>
@@ -367,6 +379,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>確率変数と分布（離散の場合）</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/44_a2_galton.jpg" alt="黒地に木枠の板。上部に漏斗、中ほどにくぎが三角に並び、下の細い仕切りの列に白い玉が積もる。中央の列がいちばん高い" loading="lazy"></div>
+<p class="cap">木の枠の中で、くぎの列を通った玉が、下の仕切りに山の形に積もっている。</p>
+<p class="cr">Estes Objethos Atelier 制作、Rodrigo.Argenton 撮影（2016年、ブラジル・USP の数学博物館のガルトン板）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Galton_box.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/44_b2_pachinko.jpg" alt="赤と黄色の縁の縦長のパチンコ機。中央に円い電飾の画面、下に金属の玉の受け皿" loading="lazy"></div>
+<p class="cap">赤と黄の機械の円い窓が光り、下の受け皿に金属の玉が見える。</p>
+<p class="cr">Piotrus（2010年、ピッツバーグの大会のパチンコ機）／<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Pachinko_machine_3.JPG">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>確率変数：結果を数に直す関数</h3>
 <p><strong>動機</strong>：コインの結果は「表」「裏」で、足したり平均したりできない。実験では結果を<strong>数</strong>に直して扱う（例：3回投げて<strong>表が何回出たか</strong>）。結果ごとに数を1つ決める規則は、<a href="03_第3回_関数と写像.html#sym-function">関数</a>そのものである。</p>
 <div class="def" id="sym-rv"><span class="label">記号：確率変数 $X$ と $P(X=x)$</span>
@@ -552,6 +574,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-3"><span class="no">3</span>期待値：分布を1つの数で代表させる</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/44_a3_steelyard.jpg" alt="白い背景に、緑青を帯びた長い金属の棒と、吊り下げる環、かぎ付きの腕。下に物差し" loading="lazy"></div>
+<p class="cap">環とかぎの付いた、青緑色の古い金属のはかりが、物差しの上に置かれている。</p>
+<p class="cr">Oxfordshire County Council／Anni Byard（2010年、ローマ時代の竿ばかり。Portable Antiquities Scheme の出土品）／<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Roman_steelyard,_Steelyard_balance_(FindID_265561).jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/44_b3_weigh.jpg" alt="黄色いパピルスに、赤・黒・緑で描かれた絵。左に白い服の人物とジャッカルの頭の神が立ち、中央に天秤があり、その右に鳥の頭の神と人物が続く" loading="lazy"></div>
+<p class="cap">天秤で心臓の重さを量る場面を、動物の頭を持つ神々が見守っている。</p>
+<p class="cr">ヘゥネフェルの『死者の書』の心臓の計量の場面（Commons の記載は紀元前1275年ごろ）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:BD_Hunefer.jpg">Wikimedia Commons</a>（左側を切り出した）</p></div>
+</figure>
 <h3 id="sec-3-1"><span class="no">3.1</span>動機：データの平均から出発する</h3>
 <p>分布の表全体は、情報が多すぎて比べにくい。「この分布の中心はどこか」を<strong>1つの数</strong>で言いたい。それには、中学以来なじみの「平均」を使うのが自然である。データ $x_1,x_2,\dots,x_n$ の平均は</p>
 <p>$$\frac{x_1+x_2+\cdots+x_n}{n}.$$</p>
@@ -778,6 +810,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-4"><span class="no">4</span>分散と標準偏差：ばらつきを1つの数で</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/44_a4_dart.jpg" alt="緑と白の同心円の的に1から9の数字が並び、赤い羽根の矢が数本、中央の周りに刺さる。盤の表面は細かい穴でざらつく" loading="lazy"></div>
+<p class="cap">緑と白の輪の的に、赤い羽根の矢が中心の付近から少し外れて刺さっている。</p>
+<p class="cr">kallerna（2009年、矢の刺さったダーツ盤）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Tikkataulu.JPG">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/44_b4_murm.jpg" alt="晴れた青空に、黒い小鳥の点が、画面いっぱいにまばらに広がる" loading="lazy"></div>
+<p class="cap">青い空に、数百羽の小さな鳥が散らばっている。</p>
+<p class="cr">Skander zarrad（2025年、ムクドリの群れ）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Murmuration_11-2025.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-4-1"><span class="no">4.1</span>動機：同じ期待値でも、ばらつきが違う</h3>
 <p>次の2つの賭けは、どちらも期待値が $0$ である。</p>
 <ul>
@@ -1016,6 +1058,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-5"><span class="no">5</span>連続の場合：和が積分になる</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/44_a5_quincunx.jpg" alt="白地の3枚の線画。それぞれ上に漏斗、中ほどに点のくぎ、下に縦の仕切り。左の図は下に玉の山、右の図は下の仕切りが斜めに広がる" loading="lazy"></div>
+<p class="cap">くぎの列を通り抜けた玉が、下の仕切りに落ちる様子が3つ並んでいる。</p>
+<p class="cr">Francis Galton の Quincunx（ガルトン板）の図（1889年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Quincunx_(Galton_Box)_-_Galton_1889_diagram.png">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/44_b5_kanaya.jpg" alt="青い波模様の川の流れの中を、笠の旅人や、輿を担ぐ人々が渡る。奥に雪をかぶった富士、右に宿の屋根" loading="lazy"></div>
+<p class="cap">人々が輿や荷を担いで、波打つ浅瀬を渡っていく。</p>
+<p class="cr">葛飾北斎『冨嶽三十六景　東海道金谷ノ不二』（1831年ごろ。ホノルル美術館蔵）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Mount_Fuji_from_Kanaya_on_the_Tōkaidō_by_Hokusai,_Honolulu_Museum_of_Art.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-5-1"><span class="no">5.1</span>動機：なぜ「確率の表」が使えなくなるか</h3>
 <p>長さ、時間、電圧のように、値が<strong>切れ目なく</strong>連続する量を考える。たとえば「バス停で次のバスが来るまでの待ち時間 $X$（分）」で、$0$ 分から $10$ 分のどこでも同じ程度に起こりやすいとする。</p>
 <p>ここで「ちょうど $3$ 分」の確率を $p\gt0$ と置いてみる。「ちょうど $3.1$ 分」「ちょうど $3.01$ 分」…も、同じ程度に起こりやすいなら、どれも $p$ になる。そのような値が $N$ 個あれば、確率の合計は $N\cdot p$ で、$N$ を大きくすれば $1$ を超えてしまう。(P2) と矛盾する。したがって、<strong>1点ぴったりの確率は $0$</strong> でなければならない。</p>

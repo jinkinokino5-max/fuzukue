@@ -117,8 +117,10 @@
 </style>
 </head>
 <body>
-<figure class="hero plain">
-<div class="ttl"><p class="vol">第42回</p><h1>波動方程式</h1></div>
+<figure class="hero">
+<img src="img/42_hero_harp.jpg" alt="黒い背景に、青・赤・白の細い弦が斜めに何本も並び、右上から左下の赤い共鳴板へ集まる">
+<div class="ttl" style="left:4%;top:9%"><p class="vol">第42回</p><h1>波動方程式</h1></div>
+<figcaption><p class="cap">暗がりの中で、赤い胴に向かって青と赤の弦が集まっていく。</p><p class="cr">Rod Waddington（2012年、ハープの弦）／<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Harp_Strings_(7185675133).jpg">Wikimedia Commons</a>（横長に切り出した）</p></figcaption>
 </figure>
 <p class="lead">ギターの弦の変位 $u(x,t)$ が従う式 $u_{tt}=c^2u_{xx}$ を、2通りに解く。1つは<strong>ダランベールの解</strong>：解は「右へ進む波」と「左へ進む波」の和 $F(x+ct)+G(x-ct)$ で、初期の形と初期の速度から公式で書ける。もう1つは第41回と同じ<strong>変数分離</strong>：両端を固定すると、弦は決まった振動数の<strong>定在波</strong> $\sin\frac{n\pi x}L\cos\frac{n\pi ct}L$ の和になる。2つの解が同じ答えを与えることを、はじいた弦で計算して確かめる。熱方程式との違い（減らない・戻れる・有限の速さで伝わる）も、エネルギーで押さえる。</p>
 <div class="navi">
@@ -170,6 +172,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-1"><span class="no">1</span>弦の振動の式：ニュートンの法則から作る</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/42_a1_gaffurio.jpg" alt="黒い線画の4コマ。左上は鍛冶場の人々、右上は鐘をつるした人物、左下は弦のような器具、右下は2人の人物が笛を持つ" loading="lazy"></div>
+<p class="cap">4つの場面に、ピタゴラスが鐘・杯・弦・笛と向き合う姿が描かれている。</p>
+<p class="cr">ガッフーリオ『音楽の理論』の木版画（Commons の記載は1492年、作者不詳）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Gaffurio_Pythagoras.png">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/42_b1_utamaro.jpg" alt="薄桃色の着物の女性が膝を折って座り、棹の長い三味線を抱え、前に黒い譜面台が立つ。左上に紅葉の枝" loading="lazy"></div>
+<p class="cap">三味線を膝に抱えた女性が、譜面台を前に座っている。</p>
+<p class="cr">喜多川歌麿「江戸の花娘浄瑠璃 紅葉」（Commons の記載は約1803年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Maple_Leaves_Koyo_and_Shamisen_by_Kitagawa_Utamaro_c1803.png">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-1-1"><span class="no">1.1</span>動機と導出：弦の小さな一片に力を書く</h3>
 <p>第40回では、波動方程式 $u_{tt}=c^2u_{xx}$ を「与えられた式」として見た。この回では、まず<strong>この式がどこから来るか</strong>を作る。式を自分で作れると、$c$ の意味と、この式が使える範囲（小さな振動だけ）がわかる。</p>
 <p>ぴんと張ったギターの弦を考える。弦は $x$ 軸に沿って $0\le x\le L$ に張ってあり、横向き（上下）に振れるとする。位置 $x$、時刻 $t$ での、つり合いの位置からの<strong>上向きのずれ</strong>を $u(x,t)$ と書く。</p>
@@ -320,6 +332,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-2"><span class="no">2</span>ダランベールの解：進む波の和</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/42_a2_dalembert.jpg" alt="緑がかった背景に、白髪の巻き毛をつけた若い男の顔と、赤茶の服、首元の白い布" loading="lazy"></div>
+<p class="cap">灰色の巻き毛の男が、こちらを見て微笑んでいる。</p>
+<p class="cr">モーリス・カンタン・ド・ラ・トゥール作ダランベール像のパステル画（Didier Descouens 撮影、2018年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Maurice_Quentin_de_La_Tour_-_Portrait_de_Jean_Le_Rond_d'Alembert.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/42_b2_wave.jpg" alt="青い大波が画面左から立ち上がり、白い泡の指のように崩れ、遠くに小さな富士、手前に低い舟" loading="lazy"></div>
+<p class="cap">大きな波が、舟の上に爪のように覆いかぶさっている。</p>
+<p class="cr">葛飾北斎「神奈川沖浪裏」（Commons の記載は19世紀前半）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Great_Wave_off_Kanagawa2.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-2-1"><span class="no">2.1</span>動機と定義：形を保って進む波</h3>
 <p>まず端のことは忘れ、<strong>無限に長い弦</strong>（$-\infty\lt x\lt\infty$）を考える。熱方程式では、変数分離で「$x$ だけの形 × $t$ だけの大きさ」を探した。波動方程式では、別の形を探す：<strong>形を保ったまま一定の速さで動く波</strong>である。</p>
 
@@ -553,6 +575,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-3"><span class="no">3</span>両端固定の弦：延長と反射</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/42_a3_seawall.jpg" alt="石積みの低い堤の向こうで、青い海の波が白く砕け、霧のようにしぶきが上がる。左に浜辺の端" loading="lazy"></div>
+<p class="cap">石の堤にぶつかった波が、白いしぶきになって跳ね上がる。</p>
+<p class="cr">ben_kitchener3（2008年、防波堤に当たる波）／<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Waves_crashing_against_Sea_Wall_-_panoramio.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/42_b3_echo.jpg" alt="森の池のほとりで、赤い布の青年が水面をのぞき込み、左で桃色の衣のニンフが木に手を添えて見つめる。手前に黄色い水草" loading="lazy"></div>
+<p class="cap">池をのぞき込む青年を、ニンフが木のそばから見ている。</p>
+<p class="cr">J. W. ウォーターハウス「エコーとナルキッソス」（Commons の題に1903年）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Echo_and_Narcissus_by_John_William_Waterhouse.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-3-1"><span class="no">3.1</span>動機：端があるとどうなるか</h3>
 <p>実際の弦には端がある。ダランベールの公式は無限に長い弦の公式なので、端 $u(0,t)=u(L,t)=0$ をどう扱うか。考え方は、<strong>端を消してしまう</strong>ことである。端のない無限の弦の問題に、うまく延長した初期条件 $\tilde f,\tilde g$ を与える。その解が、たまたま $x=0$ と $x=L$ でいつも $0$ になるようにする。そうなれば、その解の $[0,L]$ の部分が、求める答えである。</p>
 <p>端で $0$ になる条件は、2.3 の公式に延長を入れて確かめる。$x=0$ で、</p>
@@ -2923,6 +2955,16 @@
 <!-- ============================================================ -->
 <h2 id="sec-4"><span class="no">4</span>変数分離：定在波と音</h2>
 
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/42_a4_slinky.jpg" alt="机の前に座る若い男が、両腕を広げて金属のばねを持ち、ばねが空中で大きな波の形を描く。背景に教室の机" loading="lazy"></div>
+<p class="cap">男がスリンキーを両手に持ち、中ほどが大きな山の形に膨らんでいる。</p>
+<p class="cr">Nic McPhee（2006年、スリンキーで作った定在波）／<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Standing_wave_on_a_slinky.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/42_b4_qin.jpg" alt="黄ばんだ絹の絵。松の下の机で黒い服の男が琴を弾き、緑と赤の衣の2人が向かい合い、子どもが脇に立つ" loading="lazy"></div>
+<p class="cap">松の下で琴を弾く人を、2人が座って聴いている。</p>
+<p class="cr">「聴琴図」（Commons の記載は徽宗、12世紀）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Songhuizong_cropped_赵佶听琴图轴.jpg">Wikimedia Commons</a>（縮小した）</p></div>
+</figure>
 <h3 id="sec-4-1"><span class="no">4.1</span>第41回と同じ手順：$x$ の式は同じ、$t$ の式が違う</h3>
 <p>もう一つの解き方に進む。第41回の変数分離を、波動方程式に使う。手順は同じで、違いは時間の式だけである。図4.1 が全体の流れ。</p>
 <p>図4.1 は、変数分離の手順を、熱方程式と並べて描いたものである。</p>
