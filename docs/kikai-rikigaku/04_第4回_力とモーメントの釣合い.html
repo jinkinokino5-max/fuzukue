@@ -224,6 +224,37 @@ $$\boldsymbol M_Q=\Bigl[\sum_i\boldsymbol x_i\times\boldsymbol F_i+\sum_j\boldsy
 <p>③④ A まわり：A の反力は腕 0 なので消える。$R_B\times4-600\times1.5=0$。<span class="note">← 600 N は A の右 1.5 m で下向き＝時計回り（−）、$R_B$ は右 4 m で上向き＝反時計回り（＋）。</span></p>
 <p>⑤ $R_B=900/4=225$ N。次に B まわり：$600\times(4-1.5)-R_{Ay}\times4=0$ より $R_{Ay}=1500/4=375$ N。$x$ 方向：$R_{Ax}=0$。</p>
 <p>⑥ 確かめ（使わなかった式で）：$\sum F_y=375+225-600=0$ ✓。単位は N。</p></div>
+<div class="why"><span class="label">🙋 質問から追加：例題1（単純梁）の状況設定と解き方</span>
+<p><strong>■ 状況を絵にする。</strong>梁（はり）は「細長い棒」で、ここでは水平な 4 m の棒を、両端の 2 か所だけで下から支えている。</p>
+<svg viewBox="0 0 520 190" width="520" role="img" aria-label="単純梁の自由物体図。左端Aがピン、右端Bがローラー、Aから1.5 mに600 Nの下向き荷重">
+<defs><marker id="sb-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="sb-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="40" y1="90" x2="480" y2="90" stroke="#2a2723" stroke-width="5"/>
+<line x1="205" y1="30" x2="205" y2="84" stroke="#a06a32" stroke-width="2.4" marker-end="url(#sb-o)"/>
+<text x="213" y="40" fill="#a06a32">600 N（荷重）</text>
+<line x1="40" y1="160" x2="40" y2="100" stroke="#a8322a" stroke-width="2.4" marker-end="url(#sb-r)"/>
+<text x="48" y="150" fill="#a8322a">R_Ay（未知）</text>
+<text x="6" y="78" fill="#a8322a">R_Ax（未知）</text>
+<line x1="480" y1="160" x2="480" y2="100" stroke="#a8322a" stroke-width="2.4" marker-end="url(#sb-r)"/>
+<text x="400" y="150" fill="#a8322a">R_B（未知）</text>
+<text x="34" y="182" font-size="14">A（ピン）</text>
+<text x="456" y="182" font-size="14">B（ローラー）</text>
+<line x1="40" y1="20" x2="205" y2="20" stroke="#968d80" stroke-width="1"/><text x="95" y="14" fill="#968d80">1.5 m</text>
+<line x1="205" y1="68" x2="480" y2="68" stroke="#968d80" stroke-width="1"/><text x="320" y="62" fill="#968d80">2.5 m</text>
+</g></svg>
+<p><strong>■ 支点の種類（ここが設定の肝）。</strong>支点は「どの向きの力を出せるか」で未知数の数が決まる。</p>
+<p>・<strong>ピン（A）</strong>：梁が回るのは許すが、上下にも左右にも動かさない。だから反力は鉛直 $R_{Ay}$ と水平 $R_{Ax}$ の<strong>2成分</strong>（未知数 2）。</p>
+<p>・<strong>ローラー（B）</strong>：車輪が床の上を転がるので、左右には力を出せない（床が摩擦なしで滑る）。出せるのは床に垂直な力だけで、<strong>鉛直の $R_B$ の1成分</strong>（未知数 1）。</p>
+<p>合計の未知数は 3（$R_{Ax},R_{Ay},R_B$）。平面の釣合いの式は $\sum F_x=0,\ \sum F_y=0,\ \sum M=0$ の 3 本なので、ちょうど解ける。これが「単純梁」の意味である（もし両端ともピンだと未知数 4 で式が足りない）。</p>
+<p><strong>■ 解き方の考え方。</strong>3 本の式を連立で解いてもよいが、<strong>モーメントをとる点を選べば未知数が 1 つの式になる</strong>（1.4 節の戦略）。</p>
+<p>① A まわりでモーメントをとる。A を通る力（$R_{Ax},R_{Ay}$）は腕 0 なので式から消え、残る未知数は $R_B$ だけ。符号：A から右に 4 m の位置で<strong>上向き</strong>の力は、A を中心に梁を反時計回りに回そうとする（＋）。A から右 1.5 m で<strong>下向き</strong>の荷重は時計回り（−）。</p>
+<p>$\sum M_A=R_B\times4-600\times1.5=0\ \Rightarrow\ R_B=\dfrac{900}{4}=225\ \mathrm{N}$</p>
+<p>② 同じく B まわりでは $R_B$ が消え、荷重の腕は $4-1.5=2.5$ m。B から見て荷重（下向き、左 2.5 m）は反時計回り（＋）、$R_{Ay}$（上向き、左 4 m）は時計回り（−）：</p>
+<p>$\sum M_B=600\times2.5-R_{Ay}\times4=0\ \Rightarrow\ R_{Ay}=\dfrac{1500}{4}=375\ \mathrm{N}$</p>
+<p>③ 水平方向は荷重が鉛直だけなので $R_{Ax}=0$。</p>
+<p>④ 検算は、まだ使っていない $\sum F_y=0$：$375+225-600=0$ ✓。</p>
+<p><strong>■ 直感での確認。</strong>荷重は A に近い（1.5 m）ので、A が多め（375 N）、B が少なめ（225 N）を支える。比は $375:225=5:3=2.5:1.5$ で、荷重から<strong>遠い側の距離の比</strong>になっている（てこと同じ）。反力の和は荷重 600 N に一致する。</p>
+<p><span class="note">よくある間違い：モーメントの符号を取り違える／B の反力を斜めにしてしまう（ローラーは垂直方向のみ）。</span></p></div>
 
 <h3><span class="no">1.5</span>例：例題 3.1 ワイヤに生じる張力</h3>
 <p>講義資料は「解は省略」としているが、ここまでの道具でちょうど解ける形なので、手順どおりに解いてみる（<strong>本教材の自作の解答</strong>）。</p>
