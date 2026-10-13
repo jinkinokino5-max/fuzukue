@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4回 力とモーメントの釣合い｜機械力学</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 第4回（2026-10-13）講義資料「第4回.pdf」対応（CLAUDE.md §8【最重要2】：順序と説明を組み直した）。設計：draft/04_設計.md。読み物コラムはなし（ユーザー指示）。 -->
+<figure class="hero">
+<img src="img/hero_04.jpg" alt="古代エジプトのパピルス『死者の書』フネフェルの巻。左から、死者を導くアヌビス、秤で心臓を量るアヌビス、書記のトト、そして右に玉座のオシリス。上段には神々が並ぶ">
+<div class="ttl" style="left:3%;top:4%;background:rgba(247,244,236,.88);padding:12px 22px 14px"><p class="vol">第4回</p><h1>力とモーメントの釣合い</h1></div>
+<figcaption><p class="cap">秤の片方には心臓、もう片方には羽根——傾かなければ、その人は釣合っているとされた。</p><p class="cr">Hunefer（古代エジプトの書記）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Book_of_the_Dead_of_Hunefer_sheet_3.jpg">Wikimedia Commons</a>（フネフェルの『死者の書』第3葉「心臓の秤量」、大英博物館所蔵）</p></figcaption>
+</figure>
+<p class="lead">2026-10-13／講義資料「第4回」（教科書 3.1節 p.27–35、例題 3.1・3.3・3.4）の範囲。第2・3回で、物体に働く力とモーメントは「合力 $\boldsymbol R$ ＋合モーメント $\boldsymbol M$」の2つにまとめられることを見た。この回は、その2つが<strong>ともに 0</strong> になる——つまり<strong>釣合い</strong>——ときに何が言えるか、そして、それを使って<strong>支えの力（反力）を実際に求める</strong>ことが目標である。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：<br>
+【定義】釣合い＝合力・合モーメントがともに 0（1章、式 3.3・3.6・3.28）<br>
+→ 【定理】モーメントの基準点も力の軸も<strong>自由に選べる</strong>（$\boldsymbol M_Q=\boldsymbol M_P+\boldsymbol r_{QP}\times\boldsymbol R$ で $\boldsymbol R=\boldsymbol 0$ なら $\boldsymbol M_Q=\boldsymbol M_P$）（1.4）<br>
+→ 【定理】<strong>内力は釣合い条件に現れない</strong>（作用反作用の法則から導く）（2章）<br>
+→ 【勘定】支点の反力の未知数＝拘束される自由度。未知数＝式の数なら解ける（3章）<br>
+→ 【道具】二力部材：力の向きが両端のピンを結ぶ線と分かり、未知数が減る（4章）<br>
+→ 【運用】手順①〜⑥（5章）で、例題3.4・ロボット台車・例題3.3・3次元の釣合いを解く（6・7章）
+</div>
+
+<div class="box"><span class="label">この回で使う前提</span>
+<ul>
+<li><strong>仮定する</strong>：第1〜3回（力のベクトルと成分、モーメント $M=FL$ と反時計回り＋、外積 $\boldsymbol r\times\boldsymbol F$、偶力、力と偶力による合成（式2.58・2.59）、基準点を移す式）。</li>
+<li><strong>この回で一から説明する</strong>：自由物体図（FBD）、未知数と式の数の勘定、拘束と反力の対応、静定・不静定、二力部材、引張と圧縮。</li>
+<li><strong>後回しにする</strong>：分布した重さと重心（第5回）、摩擦（第6回）、トラスの系統的な解法（第7回）、釣合い条件の動力学による証明（第10・13回）。</li>
+</ul></div>
+
+<div class="box"><span class="label">この教材の作り方について</span>講義スライドは穴埋め式で、今回も空欄の答えはすべてスライドのPDFに残っていた。それを本文にふつうの文章として入れた。例題3.1（スライドは「解は省略」）、例題3.3 の別解の問い、二力部材の例（BD が AC から受ける力。数値なし）は答えが載っていないので、本教材で解いた（「自作の解答」「寸法は図から読み取った」と明記）。スライドの誤植と思われる箇所は断定せず「.warn」で注記した。計算はすべて Python（sympy・numpy）で検算してある。</div>
+
+<h2>序　この回の問い</h2>
+<p>授業の共通の題材「小型移動マニピュレータ」が、今回は<strong>壁を押す</strong>。アームの先端が垂直な壁を 100 N で押している。台車の車輪 A はブレーキで回らず、車輪 B は自由に回る。床と車輪は滑らない。<strong>このとき、車輪 A・B は床からどれだけの力を受けているか。</strong></p>
+<figure class="slide"><img src="img/slide04/ex_robot_prob.jpg" alt="ロボットアームの先端が右の壁を100Nで押している。台車は左に車輪B、右に車輪A。台車の中央に重さ500Nが下向き。アームのリンクL1、L2（水平から60°）、L3" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"><figcaption>講義資料の例題の図。壁が押し返す 100 N、台車全体の重さ 500 N、車輪 A（ブレーキ）と B（自由）。出典：講義資料 第4回 p.25</figcaption></figure>
+<p>床は車輪を支えている。その支える力は、壁の押す力と台車の重さの両方に応じて、ちょうど「つぶれも浮きもしない」大きさに決まっているはずだ。<strong>「ちょうど決まる」ことを式にしたのが釣合い条件</strong>で、この回の主題である。講義資料が挙げた「今日のポイント」は次の4つ。</p>
+<ol><li>釣合い＝<strong>合力・合モーメント</strong>がともにゼロ（1章）</li><li><strong>内力</strong>の理解（2章）</li><li><strong>支点反力</strong>の理解（3・4章）</li><li>問題を解く手順（定石）と考え方（5〜7章）</li></ol>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>釣合いの条件</h2>
+
+<h3><span class="no">1.1</span>釣合いとは何か：動機と定義</h3>
+<p><strong>動機</strong>：橋も、棚も、壁を押すロボットも、「動かずに」そこにある。止まっているものには、見えない力が必ず働き合って、互いに打ち消している。この「打ち消し合い」を、第2・3回の道具で正確に言い直したい。</p>
+<p>第3回で、物体に働くどんな力の集まりも、1つの基準点 P に集めれば<strong>合力 $\boldsymbol R$ ＋合モーメント $\boldsymbol M_P$</strong> の2つに置き換えられることを見た（式2.58・2.59）。置き換えのあとで、力の集まりが物体に与える作用は、この2つだけで決まる。したがって、その作用が「何もない」のと同じになる条件は、2つがともに 0 のときである。</p>
+<div class="def"><span class="label">定義（釣合い）</span>いくつかの力とモーメントが物体に作用していて、<strong>物体が静止している</strong>とき、物体は<strong>釣合い</strong>（equilibrium）の状態にある、という。このとき<strong>合力と合モーメントはともに 0</strong>：
+$$\boldsymbol R=\sum_i\boldsymbol F_i=\boldsymbol 0,\qquad \boldsymbol M_P=\sum_i\boldsymbol r_i\times\boldsymbol F_i+\sum_j\boldsymbol M'_j=\boldsymbol 0\qquad(1.1)$$
+（$\boldsymbol r_i$ は基準点 P から力 $\boldsymbol F_i$ の作用点までのベクトル、$\boldsymbol M'_j$ は偶力などの純粋なモーメント。）</div>
+<p>成分で書くと、3次元では $\sum F_x=\sum F_y=\sum F_z=0$ と $\sum M_x=\sum M_y=\sum M_z=0$ の<strong>6本の式</strong>になる。2次元（力がすべて $xy$ 平面内）では、$F_z$・$M_x$・$M_y$ が自動的に 0 になり、<strong>3本</strong>、
+$$\sum F_x=0,\qquad\sum F_y=0,\qquad\sum M_z=0\qquad(1.2)$$
+が残る（$M_z$ は第2回の「反時計回りを＋とするモーメント」）。この「3本」と「6本」という数が、あとで未知数を数えるときの基準になる（3章）。</p>
+<div class="why"><span class="label">直感：なぜ「合力 0」と「合モーメント 0」の2つなのか</span>物体の動き方は、<strong>位置がずれる</strong>こと（並進）と<strong>向きが変わる</strong>ことの2種類ある。合力は前者を、合モーメントは後者を起こす。どちらか一方でも 0 でなければ、物体は動き出す。たとえば「大きさが等しく向きが逆」の2力を、同じ作用線上でなくずらして加えると合力は 0 だが、物体はくるくる回り出す（偶力。4.1 節の図の左）。</div>
+<div class="warn"><span class="label">注意：この条件の位置づけ</span>「$\boldsymbol R=\boldsymbol 0$ かつ $\boldsymbol M=\boldsymbol 0$ なら静止し続け、逆に静止し続けるならこの2つが 0」という主張の<strong>後半（必要性）</strong>は、ニュートンの運動方程式（質点の運動方程式は第10回、剛体は第13回）から証明する。静力学では、これを出発点として採用する。前半（十分性）は「合力・合モーメントで力の作用が決まる」という第3回の結果から言える。なお等速直線運動でも同じ式が成り立つが、本科目の前半は静止だけを扱う。</div>
+
+<h3><span class="no">1.2</span>1点に作用する力の釣合い</h3>
+<p><strong>動機</strong>：質点（大きさのない物体）や、すべての力の作用線が1点で交わる場合は、いちばん簡単な場合である。ここで 6 本の式のうち何が不要になるかを確かめておく。</p>
+<figure class="slide"><img src="img/slide04/fig3_2.jpg" alt="教科書 図3.2 物体上の1点にn個の力が働く場合、図3.3 力の作用線が1点で交わる場合" loading="lazy" style="width:420px;max-width:92%;height:auto;background:#fff"><figcaption>1点に作用する力（教科書 図3.2・図3.3）。出典：講義資料 第4回 p.5</figcaption></figure>
+<div class="thm"><span class="label">定理（1点に作用する力の釣合い）</span>すべての力の作用線が1点 P を通るとき、釣合いの条件は
+$$\boldsymbol F_1+\boldsymbol F_2+\cdots+\boldsymbol F_n=\sum_{i=1}^{n}\boldsymbol F_i=\boldsymbol 0\qquad(3.3)$$
+すなわち<strong>成分ごと</strong>に
+$$\sum_{i=1}^{n}F_{ix}=0,\qquad\sum_{i=1}^{n}F_{iy}=0,\qquad\sum_{i=1}^{n}F_{iz}=0\qquad(3.6)$$
+モーメントの条件は<strong>不要</strong>である。</div>
+<div class="proof"><span class="label">導出</span>
+<p>① 基準点を P にとる。<span class="note">← 基準点は自由に選べる（1.4 節）。まず、いちばん都合のよい点で考える。</span></p>
+<p>② 各力の作用線は P を通るので、作用点を作用線上で P までずらしてよい（第2回：力は作用線上でずらしてよい）。ずらすと $\boldsymbol r_i=\boldsymbol 0$ なので、$\boldsymbol r_i\times\boldsymbol F_i=\boldsymbol 0$。つまり<strong>各力は P のまわりのモーメントを生じない</strong>。</p>
+<p>③ よって (1.1) の第2式は自動的に成り立ち、残るのは第1式 $\sum\boldsymbol F_i=\boldsymbol 0$ だけ（式 3.3）。</p>
+<p>④ ベクトルの等式 $\boldsymbol a=\boldsymbol 0$ は、3つの成分がそれぞれ 0 であることと同じ（成分は互いに独立）。だから成分ごとの式 (3.6) に分かれる。2次元なら $z$ 成分は不要で、$x,y$ の2本。</p></div>
+<p>1点の釣合いは、<strong>力の矢印を頭と尻でつないだ多角形が閉じる</strong>ことと同じである（次の 1.5 節の図）。</p>
+
+<h3><span class="no">1.3</span>複数の点に作用する力の釣合い</h3>
+<p>力が別々の点に作用するときは、モーメントも加わる。第3回の合成（式2.58・2.59）をそのまま使う。</p>
+<div class="thm"><span class="label">定理（複数の点に作用する力の釣合い条件）</span>基準点 P のまわりで
+$$\sum_{i=1}^{n}\boldsymbol F_i=\boldsymbol 0,\qquad\sum_{i=1}^{n}\boldsymbol M_i+\sum_{j=1}^{m}\boldsymbol M'_j=\sum_{i=1}^{n}\boldsymbol r_i\times\boldsymbol F_i+\sum_{j=1}^{m}\boldsymbol M'_j=\boldsymbol 0\qquad(3.28)$$
+ここで $\boldsymbol M_i=\boldsymbol r_i\times\boldsymbol F_i$ は力 $\boldsymbol F_i$ の P まわりのモーメント、$\boldsymbol M'_j$ は偶力などの<strong>自由なモーメント</strong>（どの点のまわりで見ても同じ。第3回 6.1 節）である。</div>
+<p>(3.28) は (1.1) と同じ式を、講義資料の記号で書いたものである。1.2 節の (3.3) は、すべての $\boldsymbol r_i$ を 0 にできた特別な場合にあたる。<strong>偶力のモーメント $\boldsymbol M'_j$ は $\boldsymbol r$ を掛けずにそのまま足す</strong>点に注意（第3回で「偶力は基準点によらない」と示した）。</p>
+<div class="warn"><span class="label">注意：力の釣合いとモーメントの釣合いは別の式</span>「力が釣合っているからモーメントも釣合っている」とは言えない。逆も言えない。式は 2 次元で 3 本、3 次元で 6 本、<strong>すべて成り立たなければならない</strong>。釣合いの問題の多くは、「どの式に何が入るか」を見分けるだけで解ける。</div>
+
+<h3><span class="no">1.4</span>モーメントの基準点も、力の軸も、自由に選べる</h3>
+<p><strong>動機</strong>：(3.28) は、基準点 P をどこにとって書いてもよい。では、点を変えると式は変わるのか。講義資料のヒント iii・iv（「モーメント中心を適切に選べば、未知数を1つだけ含む式を導ける」「軸は水平・垂直にとる必要はない」）の根拠を示す。</p>
+<div class="thm"><span class="label">定理（基準点の自由）</span>合力が $\boldsymbol R=\boldsymbol 0$ ならば、合モーメントはどの点のまわりでも同じ値をとる：$\boldsymbol M_Q=\boldsymbol M_P$。したがって、<strong>ある1点のまわりで合モーメント $=\boldsymbol 0$ なら、すべての点のまわりで $\boldsymbol 0$</strong>。</div>
+<div class="proof"><span class="label">導出</span>
+<p>① 点 P の位置ベクトルを $\boldsymbol p$、点 Q の位置ベクトルを $\boldsymbol q$ とし、力 $\boldsymbol F_i$ の作用点を $\boldsymbol x_i$ とする。基準点を Q にとると、力 $\boldsymbol F_i$ の腕は $\boldsymbol x_i-\boldsymbol q$（終点−始点）。</p>
+<p>② Q まわりのモーメント：$\boldsymbol M_Q=\sum_i(\boldsymbol x_i-\boldsymbol q)\times\boldsymbol F_i+\sum_j\boldsymbol M'_j$。<span class="note">← 偶力 $\boldsymbol M'_j$ は基準点によらないので、そのまま。</span></p>
+<p>③ 外積の分配法則（第3回 3.3 節）で $(\boldsymbol x_i-\boldsymbol q)\times\boldsymbol F_i=\boldsymbol x_i\times\boldsymbol F_i-\boldsymbol q\times\boldsymbol F_i$ と分ける：
+$$\boldsymbol M_Q=\Bigl[\sum_i\boldsymbol x_i\times\boldsymbol F_i+\sum_j\boldsymbol M'_j\Bigr]-\boldsymbol q\times\sum_i\boldsymbol F_i=\boldsymbol M_O-\boldsymbol q\times\boldsymbol R$$
+（$\boldsymbol M_O$ は原点まわりの合モーメント、$\boldsymbol q$ は $i$ によらないので和の外に出した。）P についても同じ式 $\boldsymbol M_P=\boldsymbol M_O-\boldsymbol p\times\boldsymbol R$ が成り立つ。</p>
+<p>④ 差をとると、$\boldsymbol M_Q=\boldsymbol M_P+(\boldsymbol p-\boldsymbol q)\times\boldsymbol R=\boldsymbol M_P+\boldsymbol r_{QP}\times\boldsymbol R\qquad(1.3)$（$\boldsymbol r_{QP}$ は Q から P へ向かうベクトル。第3回 6.4 節の「基準点を移す式」と同じ）。</p>
+<p>⑤ $\boldsymbol R=\boldsymbol 0$ なら右辺の第2項が消えて $\boldsymbol M_Q=\boldsymbol M_P$。</p></div>
+<div class="thm"><span class="label">定理（力の釣合いの軸の自由）</span>釣合いにあれば $\sum\boldsymbol F_i=\boldsymbol 0$ なので、<strong>任意の向きの単位ベクトル $\boldsymbol u$</strong> について $\sum\boldsymbol F_i\cdot\boldsymbol u=0$（合力の $\boldsymbol u$ 方向成分 $=0$）。座標軸を水平・垂直にとる必要はない。</div>
+<p>（証明は一行：$\boldsymbol 0\cdot\boldsymbol u=0$ に、内積の分配法則 $(\sum\boldsymbol F_i)\cdot\boldsymbol u=\sum(\boldsymbol F_i\cdot\boldsymbol u)$ を使うだけ。）</p>
+<p>この2つの自由を使うと、使う式の選び方も自由になる。<strong>2次元で、式の組を何通りにとってもよいことの根拠</strong>を示す。</p>
+<div class="thm"><span class="label">定理（独立な式の選び方・2次元）</span>次のどれを使っても、釣合い条件 (1.2) と同値である。<br>
+(a) $\sum F_x=0,\ \sum F_y=0,\ \sum M_A=0$（A は任意の1点）<br>
+(b) $\sum M_A=0,\ \sum M_B=0,\ \sum\boldsymbol F\cdot\boldsymbol u=0$（ただし $\boldsymbol u$ は直線 AB に<strong>垂直でない</strong>）<br>
+(c) $\sum M_A=0,\ \sum M_B=0,\ \sum M_C=0$（ただし A, B, C は<strong>一直線上にない</strong>）</div>
+<div class="proof"><span class="label">導出（(b)、(c) について）</span>
+<p>① $\sum M_A=0$ のとき、(1.3) から合力 $\boldsymbol R\ne\boldsymbol 0$ なら、A に集めた合力の作用線は A を通る（A まわりの合モーメントが 0 なので、合力は A を通る1本の力と同じ）。<span class="note">← $\boldsymbol R\ne\boldsymbol 0$ で、モーメントが 0 になる点は合力の作用線上にしかない。</span></p>
+<p>② 同じ理由で $\sum M_B=0$ なら、作用線は B も通る。すると $\boldsymbol R$ は<strong>直線 AB に沿う</strong>（図の例）。</p>
+<p>③ (b)：直線 AB に垂直でない $\boldsymbol u$ では $\boldsymbol R\cdot\boldsymbol u\ne0$（$\boldsymbol R\ne\boldsymbol 0$ ならば）。$\sum\boldsymbol F\cdot\boldsymbol u=0$ がこれと矛盾するので、$\boldsymbol R=\boldsymbol 0$。</p>
+<p>④ (c)：$\boldsymbol R$ が直線 AB に沿っているとき、AB 上にない点 C のまわりのモーメントは $d\,|\boldsymbol R|\ne0$（$d$ は C から直線 AB までの距離）。$\sum M_C=0$ がこれと矛盾するので、$\boldsymbol R=\boldsymbol 0$。以上で、いずれも $\boldsymbol R=\boldsymbol 0$ かつ $\sum M_A=0$ に至るので、(1.2) と同値。</p></div>
+<figure><svg viewBox="0 0 520 230" width="520" role="img" aria-label="A と B を結ぶ直線に沿う力">
+<defs><marker id="dg-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="dg-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="dg-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="dg-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="dg-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="dg-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M28.5,158.2 L417.6,28.5" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="6 4" opacity="1"/>
+<line x1="102.6" y1="133.5" x2="255.0" y2="82.7" stroke="#a8322a" stroke-width="3.0" marker-end="url(#dg-r)"/>
+<circle cx="102.6" cy="133.5" r="4.5" fill="#2a2723"/>
+<circle cx="287.9" cy="71.8" r="4.5" fill="#2a2723"/>
+<text x="96.5" y="152.1" fill="#2a2723" text-anchor="end" font-size="14">A</text>
+<text x="294.1" y="90.3" fill="#2a2723" text-anchor="start" font-size="14">B</text>
+<text x="115.0" y="53.2" fill="#a8322a" text-anchor="start" font-size="12">R ≠ 0（作用線が A も B も通る）</text>
+<line x1="355.9" y1="189.1" x2="338.3" y2="136.4" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#dg-b)"/>
+<text x="374.4" y="192.2" fill="#2b3a67" text-anchor="start" font-size="12">u（AB に垂直）</text>
+<text x="16.2" y="25.4" fill="#2a2723" text-anchor="start" font-size="12">M_A = 0、M_B = 0。さらに ΣF·u = 0 を選んでも u·R = 0 で、R ≠ 0 を見逃す。</text>
+</g></svg>
+<figcaption>図1.1　「しない」例。A と B を結ぶ直線に沿う力 $\boldsymbol R$ は、A まわりにも B まわりにもモーメントを生じない。だから $\sum M_A=\sum M_B=0$ だけでは不十分で、3本目の式が要る。3本目に $\boldsymbol u\perp\mathrm{AB}$ の方向の力の釣合いをとっても、$\boldsymbol R\cdot\boldsymbol u=0$ で見逃してしまう。</figcaption></figure>
+<div class="why"><span class="label">直感：式の「使い方」の戦略</span>(c) を見ると、「<strong>未知数が複数集まっている点のまわりで</strong>モーメントをとれば、その未知数は式から消える」ことが分かる（その力の腕が 0 になるから）。1つの式に未知数が1つだけ入るように点を選べば、連立方程式を解かずに1つずつ決まる。講義資料のヒント iii、例題 3.4 の別解と、ロボット台車の「力が多く集まる点」まわりの計算は、これを使っている。</div>
+<div class="ex"><span class="label">例題1〔A｜単純梁〕支点 A（回転支点）、B（移動支点）の反力</span>
+<p>長さ 4 m の梁を、左端 A（ピン）と右端 B（ローラー）で水平に支える。A から 1.5 m の点に 600 N の下向きの荷重がある。梁の重さは無視する。A・B の反力を、<strong>未知数が1つの式を選んで</strong>求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 梁にはたらく外力：荷重 600 N（下向き）、A の反力 $R_{Ax},R_{Ay}$、B の反力 $R_B$（上向き、ローラーなので鉛直のみ）。未知数は 3、式は 3 本。</p>
+<p>② 座標：$x$ を右、$y$ を上。反時計回りを＋。</p>
+<p>③④ A まわり：A の反力は腕 0 なので消える。$R_B\times4-600\times1.5=0$。<span class="note">← 600 N は A の右 1.5 m で下向き＝時計回り（−）、$R_B$ は右 4 m で上向き＝反時計回り（＋）。</span></p>
+<p>⑤ $R_B=900/4=225$ N。次に B まわり：$600\times(4-1.5)-R_{Ay}\times4=0$ より $R_{Ay}=1500/4=375$ N。$x$ 方向：$R_{Ax}=0$。</p>
+<p>⑥ 確かめ（使わなかった式で）：$\sum F_y=375+225-600=0$ ✓。単位は N。</p></div>
+
+<h3><span class="no">1.5</span>例：例題 3.1 ワイヤに生じる張力</h3>
+<p>講義資料は「解は省略」としているが、ここまでの道具でちょうど解ける形なので、手順どおりに解いてみる（<strong>本教材の自作の解答</strong>）。</p>
+<div class="ex"><span class="label">例題2〔A｜教科書 例題 3.1（p.28）〕2本のワイヤで支えた 10 kg の質点</span>
+<figure class="slide"><img src="img/slide04/ex31.jpg" alt="教科書 例題3.1。質点Pを2本のワイヤで支える。ワイヤ1は水平、ワイヤ2は水平から30°。質点の質量は10 kg。右は質点Pに作用する力F1、F2、W" loading="lazy" style="width:400px;max-width:92%;height:auto;background:#fff"><figcaption>例題3.1 の図。出典：講義資料 第4回 p.21（教科書 p.28）</figcaption></figure>
+<p>質量 10 kg の質点 P を2本のワイヤで吊る。ワイヤ1は水平、ワイヤ2は水平から 30° の向きで、壁につながっている。それぞれのワイヤに生じる張力の大きさを求めよ。重力加速度は $g=9.81\ \mathrm{m/s^2}$ とする。</p>
+<p><strong>解答</strong></p>
+<p>① 系：質点 P。外力は、ワイヤ1の張力 $F_1$（右向き）、ワイヤ2の張力 $F_2$（左上向き）、重力 $W=mg=10\times9.81=98.1$ N（下向き）。ワイヤは引くことしかできないので、張力は P を<strong>ワイヤの向きに引く</strong>（4.3 節）。3 力とも P を通るので、1.2 節の (3.6) が使える。</p>
+<p>② 座標：$x$ を右、$y$ を上。</p>
+<p>③ 成分：$\boldsymbol F_1=(F_1,\ 0)$、$\boldsymbol F_2=(-F_2\cos30°,\ F_2\sin30°)$、$\boldsymbol W=(0,\ -98.1)$。</p>
+<p>④ $\sum F_x=F_1-F_2\cos30°=0$、$\sum F_y=F_2\sin30°-98.1=0$。<span class="note">← 未知数 $F_1,F_2$ の2つ、式の数も2本。</span></p>
+<p>⑤ 第2式から $F_2=98.1/\sin30°=\mathbf{196.2}$ N。第1式から $F_1=F_2\cos30°=196.2\times0.8660=\mathbf{169.9}$ N。</p>
+<p>⑥ 確かめ：力の多角形（図1.2 右）は閉じる。3力の和 $F_1-F_2\cos30°=169.9-169.9=0$ ✓。$F_2$ のほうが重さ 98.1 N より大きい：ワイヤが浅い角度（水平に近い）で引くほど、重さを支えるのに大きな張力が要る（$F_2=W/\sin30°=2W$）。</p></div>
+<figure><svg viewBox="0 0 620 250" width="620" role="img" aria-label="例題3.1 の FBD と力の多角形">
+<g transform="translate(0,0)"><svg viewBox="0 0 320 250" width="320" role="img" aria-label="点 P に働く3つの力（自由物体図）">
+<defs><marker id="pl1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="pl1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="pl1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="pl1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="pl1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="pl1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<circle cx="160.0" cy="103.8" r="5" fill="#2a2723"/>
+<line x1="160.0" y1="103.8" x2="287.4" y2="103.8" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#pl1-b)"/>
+<text x="223.7" y="94.7" fill="#2b3a67" text-anchor="middle" font-size="12">F₁ = 169.9 N</text>
+<line x1="160.0" y1="103.8" x2="32.6" y2="30.2" stroke="#a8322a" stroke-width="2.4" marker-end="url(#pl1-r)"/>
+<text x="85.0" y="48.2" fill="#a8322a" text-anchor="end" font-size="12">F₂ = 196.2 N</text>
+<line x1="160.0" y1="103.8" x2="160.0" y2="177.3" stroke="#a06a32" stroke-width="2.4" marker-end="url(#pl1-o)"/>
+<text x="166.0" y="147.9" fill="#a06a32" text-anchor="start" font-size="12">W = 98.1 N</text>
+<path d="M100.0,103.8 L160.0,103.8" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 3" opacity="1"/>
+<text x="113.5" y="96.2" fill="#968d80" text-anchor="middle" font-size="11">30°</text>
+<text x="163.8" y="87.2" fill="#2a2723" text-anchor="start" font-size="13">P</text>
+</g></svg></g>
+<g transform="translate(320,0)"><svg viewBox="0 0 300 250" width="300" role="img" aria-label="力の多角形：頭と尻をつなぐと閉じる">
+<defs><marker id="pl2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="pl2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="pl2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="pl2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="pl2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="pl2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="35.5" y1="162.7" x2="251.7" y2="162.7" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#pl2-b)"/>
+<line x1="251.7" y1="162.7" x2="35.5" y2="37.9" stroke="#a8322a" stroke-width="2.4" marker-end="url(#pl2-r)"/>
+<line x1="35.5" y1="37.9" x2="35.5" y2="162.7" stroke="#a06a32" stroke-width="2.4" marker-end="url(#pl2-o)"/>
+<text x="143.6" y="178.0" fill="#2b3a67" text-anchor="middle" font-size="12">F₁</text>
+<text x="169.1" y="83.8" fill="#a8322a" text-anchor="start" font-size="12">F₂</text>
+<text x="25.3" y="99.1" fill="#a06a32" text-anchor="end" font-size="12">W</text>
+<text x="150.0" y="22.7" fill="#2a2723" text-anchor="middle" font-size="12">ΣF = 0 ⇔ 多角形が閉じる</text>
+</g></svg></g>
+</svg>
+<figcaption>図1.2　例題 3.1。左：質点 P の自由物体図（力は 100 N = 1 の縮尺）。右：力の多角形。頭と尻をつなぐと閉じる＝合力が 0。</figcaption></figure>
+<p>講義資料は、この例題を「内力に関して」と位置づけている：<strong>ワイヤの張力は理解しやすい。なぜなら常に引張りだから。もし棒なら、逆向きの作用（圧縮）もある。</strong>この「引張り・圧縮」の区別は 4 章で扱う。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/04_a1_scale.jpg" alt="骨董の卓上秤。白い鋳鉄の台に大理石の板、手前に真鍮の皿。木箱に真鍮の分銅が並び、手が皿に薬草をすくい入れている" loading="lazy"></div>
+<p class="cap">皿に物を載せ、分銅を足していくと、見えない二つのモーメントがちょうど等しくなる点で針が止まる。</p>
+<p class="cr">GabrielleMerk／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Antique-Scale-for-Herbs.jpg">Wikimedia Commons</a>（薬草用の骨董秤と分銅）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/04_b1_rockbalance.jpg" alt="森の小川のほとりで、大きさの違う5つの石が一本の柱のように積み重なっている" loading="lazy"></div>
+<p class="cap">5つの石は、どの接点でも、上からの重さと下からの支えが等しくなる位置を見つけて、そこで静止している。</p>
+<p class="cr">Leandro Inocencio／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Rock_balancing_(Counter_Balance).jpg">Wikimedia Commons</a>（ロック・バランシング「Counter Balance」）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>内力は釣合いに現れない</h2>
+
+<h3><span class="no">2.1</span>内力と外力</h3>
+<p><strong>動機</strong>：ロボットのアームは、関節でつながった何本もの棒でできている。関節ごとに、隣り合う棒どうしが押し合い引き合っている。この力を、全部、釣合いの式に入れなければならないのか。——答えは「入れなくてよい」で、それを示すのがこの章である。</p>
+<div class="def"><span class="label">定義（内力・外力）</span>考えている物体（<strong>系</strong>）の<strong>内部</strong>で生じる力を<strong>内力</strong>（internal force）、系の<strong>外</strong>から系に及ぼされる力（荷重・重力・支点や壁からの反力・ケーブルの張力など）を<strong>外力</strong>（external force）という。</div>
+<div class="warn"><span class="label">注意：内力か外力かは「系の選び方」で決まる</span>同じ力が、系の選び方によって内力にも外力にもなる。ロボット全体を系にすれば腕の関節の力は内力だが、腕だけを系にすれば関節の力は、台車から腕に働く外力になる。<strong>「何を系にするか」を最初に決める</strong>のが自由物体図の第一歩である（5 章）。</div>
+
+<h3><span class="no">2.2</span>力の釣合いに内力は現れない</h3>
+<p>系を $n$ 個の質点の集まりとして考える（連続した物体は、質点の集まりと見なせる）。質点 $i$ の位置を $\boldsymbol r_i$、質点 $i$ に働く外力を $\boldsymbol F_i$、質点 $j$ が質点 $i$ に及ぼす力（内力）を $\boldsymbol F_{ij}$ と書く。</p>
+<figure class="slide"><img src="img/slide04/fig_internal.jpg" alt="3つの質点1, 2, 3の系。各質点に外力F1, F2, F3と、質点間の内力F12, F21, F13, F31, F23, F32が働く" loading="lazy" style="width:420px;max-width:92%;height:auto;background:#fff"><figcaption>3質点系に作用する力。出典：講義資料 第4回 p.7（教科書 図3.9）</figcaption></figure>
+<p>系全体が釣合いにあるとき、各質点も静止しているので、質点 $i$ は<strong>それ自身で</strong>釣合っている（1.2 節）：
+$$\boldsymbol F_i+\sum_{\substack{j=1\\j\ne i}}^{n}\boldsymbol F_{ij}=\boldsymbol 0\qquad(2.1)$$
+これを全質点について足す。<strong>ここで作用反作用の法則</strong>「$\boldsymbol F_{ji}=-\boldsymbol F_{ij}$（質点 $j$ が $i$ に及ぼす力と、$i$ が $j$ に及ぼす力は、大きさが等しく向きが逆）」を使う。</p>
+<div class="proof"><span class="label">導出（$n=3$ で全部書く）</span>
+<p>① (2.1) を $i=1,2,3$ について書く：<br>
+$\boldsymbol F_1+\boldsymbol F_{12}+\boldsymbol F_{13}=\boldsymbol 0,\quad\boldsymbol F_2+\boldsymbol F_{21}+\boldsymbol F_{23}=\boldsymbol 0,\quad\boldsymbol F_3+\boldsymbol F_{31}+\boldsymbol F_{32}=\boldsymbol 0$</p>
+<p>② 3つを足す：$\boldsymbol F_1+\boldsymbol F_2+\boldsymbol F_3+\boldsymbol F_{12}+\boldsymbol F_{13}+\boldsymbol F_{21}+\boldsymbol F_{23}+\boldsymbol F_{31}+\boldsymbol F_{32}=\boldsymbol 0$。</p>
+<p>③ 内力の6項を、同じ質点のペアでまとめる：$(\boldsymbol F_{12}+\boldsymbol F_{21})+(\boldsymbol F_{13}+\boldsymbol F_{31})+(\boldsymbol F_{23}+\boldsymbol F_{32})$。<span class="note">← 作用反作用で各かっこは $\boldsymbol 0$。</span></p>
+<p>④ 一般の $n$ でも、内力の二重和 $\sum_i\sum_{j\ne i}\boldsymbol F_{ij}$ は、ペア $(i,j)$ と $(j,i)$ が必ず対になって消える。残るのは
+$$\sum_{i=1}^{n}\boldsymbol F_i=\boldsymbol 0\qquad(2.2)$$
+つまり、<strong>内力を入れずに、外力だけで釣合いの式が立つ</strong>。</p></div>
+
+<h3><span class="no">2.3</span>モーメントの釣合いにも内力は現れない</h3>
+<p>モーメントでは、「内力が逆向きで等しい」だけでは足りない。作用点が違うので、腕の長さが違うからである。必要なのは、<strong>内力が2つの質点を結ぶ直線の上にある</strong>ことである（強い形の作用反作用）。</p>
+<figure><svg viewBox="0 0 520 250" width="520" role="img" aria-label="質点 i, j の間の内力 F_ij と F_ji">
+<defs><marker id="in-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="in-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="in-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="in-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="in-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="in-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<circle cx="31.6" cy="218.4" r="4" fill="#2a2723"/>
+<text x="28.0" y="234.2" fill="#2a2723" text-anchor="end" font-size="13">O</text>
+<line x1="31.6" y1="218.4" x2="117.8" y2="160.9" stroke="#2b3a67" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#in-b)"/>
+<line x1="31.6" y1="218.4" x2="275.9" y2="67.5" stroke="#2b3a67" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#in-b)"/>
+<path d="M86.9,179.2 L306.9,49.2" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="6 4" opacity="1"/>
+<line x1="117.8" y1="160.9" x2="173.5" y2="128.0" stroke="#a8322a" stroke-width="2.8" marker-end="url(#in-r)"/>
+<line x1="275.9" y1="67.5" x2="220.2" y2="100.4" stroke="#a8322a" stroke-width="2.8" marker-end="url(#in-r)"/>
+<circle cx="117.8" cy="160.9" r="5.5" fill="#2a2723"/>
+<circle cx="275.9" cy="67.5" r="5.5" fill="#2a2723"/>
+<text x="110.6" y="146.6" fill="#2a2723" text-anchor="end" font-size="14">i</text>
+<text x="283.1" y="53.1" fill="#2a2723" text-anchor="start" font-size="14">j</text>
+<text x="156.4" y="166.0" fill="#a8322a" text-anchor="start" font-size="13">F_ij</text>
+<text x="248.1" y="69.6" fill="#a8322a" text-anchor="end" font-size="13">F_ji = −F_ij</text>
+<text x="81.9" y="211.2" fill="#2b3a67" text-anchor="start" font-size="13">r_i</text>
+<text x="175.3" y="175.3" fill="#2b3a67" text-anchor="start" font-size="13">r_j</text>
+<text x="218.4" y="204.1" fill="#2a2723" text-anchor="start" font-size="12">F_ij は i と j を結ぶ直線（点線）の上にある</text>
+</g></svg>
+<figcaption>図2.1　2つの質点 $i, j$ のあいだの内力。$\boldsymbol F_{ij}$ と $\boldsymbol F_{ji}$ は大きさが等しく向きが逆で、しかも2点を結ぶ同じ直線（点線）の上にある。</figcaption></figure>
+<div class="proof"><span class="label">導出</span>
+<p>① 質点 $i$ に働く力の、原点 O まわりのモーメントの釣合い（(2.1) に左から $\boldsymbol r_i\times$ をかけたもの）：
+$$\boldsymbol r_i\times\Bigl(\boldsymbol F_i+\sum_{j\ne i}\boldsymbol F_{ij}\Bigr)=\boldsymbol 0$$
+これを全質点について足す。</p>
+<p>② 内力の項を、ペアでまとめる。たとえば質点 1 と 3 のペアでは、質点 1 の式に $\boldsymbol r_1\times\boldsymbol F_{13}$、質点 3 の式に $\boldsymbol r_3\times\boldsymbol F_{31}$ が出る。$\boldsymbol F_{31}=-\boldsymbol F_{13}$ を使うと、
+$$\boldsymbol r_1\times\boldsymbol F_{13}+\boldsymbol r_3\times\boldsymbol F_{31}=(\boldsymbol r_1-\boldsymbol r_3)\times\boldsymbol F_{13}$$
+<span class="note">← 外積の分配法則。$\boldsymbol F_{31}$ を $-\boldsymbol F_{13}$ に直して、$\boldsymbol F_{13}$ でくくった。</span></p>
+<p>③ 一般に、全質点では
+$$\sum_{i=1}^{n}\boldsymbol r_i\times\boldsymbol F_i+\sum_{i=1}^{n}\sum_{j&gt;i}(\boldsymbol r_i-\boldsymbol r_j)\times\boldsymbol F_{ij}=\boldsymbol 0\qquad(2.3)$$
+（ペアを $j&gt;i$ の側だけで数えた。）</p>
+<p>④ ここで、$\boldsymbol r_i-\boldsymbol r_j$ は質点 $j$ から $i$ へ向かうベクトルで、<strong>内力 $\boldsymbol F_{ij}$ はこの2点を結ぶ直線の上にある</strong>。すなわち $\boldsymbol r_i-\boldsymbol r_j$ と $\boldsymbol F_{ij}$ は平行で、平行なベクトルの外積は 0：$(\boldsymbol r_i-\boldsymbol r_j)\times\boldsymbol F_{ij}=\boldsymbol 0$（第3回 3.3 節の「$\sin0=0$」）。</p>
+<p>⑤ よって (2.3) の第2項は消えて、
+$$\sum_{i=1}^{n}\boldsymbol r_i\times\boldsymbol F_i=\boldsymbol 0\qquad(2.4)$$
+モーメントの釣合い式にも、<strong>内力は現れない</strong>。</p></div>
+<div class="warn"><span class="label">注意：作用線が一致するという条件</span>④ で使ったのは、内力が2質点を結ぶ直線の上にある、という性質である。接触力や重力・万有引力・電荷間の静電気力などはこの性質をもつ。一方、運動している電荷や磁石のあいだに働く磁気的な力のように、この性質をもたない力があると、(2.4) は成り立たず、系全体の角運動量の保存にも別の項が要る（電磁気学で扱う）。本科目の力学では、内力はすべてこの性質をもつ。</div>
+
+<h3><span class="no">2.4</span>帰結と、よくある誤解</h3>
+<div class="thm"><span class="label">定理（内力は釣合い条件に現れない）</span>系全体の釣合い条件 (1.1)（力 $\sum\boldsymbol F=\boldsymbol 0$、モーメント $\sum\boldsymbol r\times\boldsymbol F=\boldsymbol 0$）には、<strong>外力だけを入れればよい</strong>。内力は系全体の釣合いに現れない（⇒ 内力は考慮する必要がない）。</div>
+<p>これが、自由物体図に<strong>外力だけを描く</strong>理由である（講義資料 ヒント i：「FBD には、物体に作用するすべての外力を記入する」）。外力とは、<strong>作用力</strong>（荷重や重力など）と<strong>反力</strong>（地面・壁・支点（ピン、ローラー）・ケーブル（ひも）などからの反作用）である。</p>
+<div class="warn"><span class="label">よくある誤解</span>
+<p>① 「内力は存在しない」ではない。内力は<strong>確かに存在し</strong>、部材が壊れるかどうかは内力で決まる（材料力学で扱う）。ただし、系全体の<strong>釣合い式には出てこない</strong>だけである。</p>
+<p>② 「内力は求められない」でもない。<strong>系を2つに分け</strong>、片方だけを自由物体図に描くと、切り口に働く内力は、その部分系にとって<strong>外力</strong>になる。そこで釣合いを立てれば、内力が求まる（4 章、6 章）。</p></div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/04_a2_photoelastic.jpg" alt="き裂のある板を引っ張ったときの光弾性の縞。上半分は虹色の等色線の写真、左下は同じ問題の計算で求めた等高線。左右に引張を表す矢印と σxx の記号" loading="lazy"></div>
+<p class="cap">き裂のまわりの色の縞は、外からは見えない部材の内部の力が、そのまま模様になって現れたものである。</p>
+<p class="cr">SSMG-ITALY／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Stiffener.jpg">Wikimedia Commons</a>（き裂まわりの光弾性縞と計算結果）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/04_b2_castell.jpg" alt="緑のシャツの人々が10段近く積み上げたカタルーニャの人間の塔（カステル）。手前に観衆の腕と顔が見える" loading="lazy"></div>
+<p class="cap">どの人も下の人の肩を踏みしめているが、塔を外から見たとき、その力は一つも数に入らない。</p>
+<p class="cr">Eric Sala &amp; Tània García／<a href="https://creativecommons.org/licenses/by-sa/2.5/">CC BY-SA 2.5</a>／<a href="https://commons.wikimedia.org/wiki/File:3d10_fm_de_vilafranca.jpg">Wikimedia Commons</a>（ビラフランカのカステル）</p></div>
+</figure>
+
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>支点と反力、未知数と式の数</h2>
+
+<h3><span class="no">3.1</span>拘束と反力：何が動けないか</h3>
+<p><strong>動機</strong>：物体を地面や壁につなぐと、物体は動けなくなる。動けなくなるのは、つなぎ目が<strong>力（と、ときにモーメント）を物体に及ぼして、動きを止めている</strong>からである。この力が<strong>反力</strong>（支点反力・支持力）で、荷重と違って、大きさも向きも「あらかじめ与えられていない」。釣合いの問題の未知数は、ほとんどが反力である。反力の「形」を、先に決めておかなければならない。</p>
+<div class="def"><span class="label">原理（拘束と反力の対応）</span>つなぎ目は、それが<strong>妨げている動き</strong>の向きにだけ、力を出す。<strong>許している動きの向きには、力を出さない</strong>（滑らかなつなぎ目では）。<br>
+・並進（位置のずれ）を妨げる方向に → <strong>反力</strong><br>
+・回転（向きの変化）を妨げる回転に → <strong>反モーメント</strong><br>
+したがって、<strong>反力・反モーメントの未知数の数 ＝ つなぎ目が妨げる動き（自由度）の数</strong>である。</div>
+<p>理由は簡単である。つなぎ目が許している動きの向きに力を出せるなら、その向きには動けるはずがない（動けないものは「許している」とは言わない）。逆に、妨げている向きには、動こうとする力に応じて、動かないだけの力が出る。</p>
+
+<h3><span class="no">3.2</span>3種類の支点</h3>
+<p>2次元（物体が平面内を動く）では、物体は<strong>$x$ 方向の並進・$y$ 方向の並進・回転の3つ</strong>の動き（自由度3）をもつ。支点は、そのうちいくつを止めるかで3種類に分かれる。</p>
+<figure class="slide"><img src="img/slide04/supports_big.jpg" alt="3種類の支点。左：移動支点（ローラー、ナイフエッジ）で、反力Rは可動方向に垂直な1本。中：回転支点（ピン）で、反力Rは角度をもつ。右：固定支点で、反力Rと反モーメントM" loading="lazy" style="width:560px;max-width:100%;height:auto;background:#fff"><figcaption>支点の反力。出典：講義資料 第4回 p.16–17</figcaption></figure>
+<table class="tb">
+<tr><th>支点</th><th>妨げる動き</th><th>許す動き</th><th>反力の未知数</th></tr>
+<tr><td><strong>移動支点</strong>（ローラー、ナイフエッジ支持）</td><td>面に垂直な向きの並進</td><td>面に沿った並進、回転</td><td><strong>1</strong>（反力は可動方向に垂直）</td></tr>
+<tr><td><strong>回転支点</strong>（ピン支持）</td><td>$x$・$y$ 両方向の並進</td><td>回転</td><td><strong>2</strong>（反力は角度をもつ：大きさ＋向き、または $R_x,R_y$）</td></tr>
+<tr><td><strong>固定支点</strong>（固定端）</td><td>$x$・$y$ 両方向の並進と回転</td><td>なし</td><td><strong>3</strong>（反力に加えて、反モーメントを生じる：$R_x,R_y,M$）</td></tr>
+</table>
+<p>この表は、3.1 の原理から導ける。たとえばローラーは、面に沿って転がるのを許す（その向きの力を出さない）が、面に押し付けられる向き、または面から離れる向きには動けない。この動けない向きが面に垂直な1方向だけなので、未知数は1つになる。</p>
+<div class="why"><span class="label">直感：身の回りの「支え」を分類してみる</span>車輪・ケーブル・滑らかな壁もこの分類に入る。<br>
+・<strong>ケーブル（ひも）</strong>：ひもの向きにだけ引く（押せない）。未知数 1（向きは既知）、しかも<strong>常に引張り</strong>（4.3 節）。<br>
+・<strong>滑らかな面</strong>：面に垂直にだけ押す。未知数 1。<br>
+・<strong>車輪</strong>：自由に回る車輪は、前後に押す力を出せない＝<strong>ローラー</strong>（未知数 1：垂直方向のみ）。ブレーキで回らず、床と滑らない車輪は、前後にも踏ん張れる＝<strong>ピン</strong>（未知数 2）。ロボット台車の車輪 B（自由）と A（ブレーキ）が 6 章で効いてくる。</div>
+<p>3次元では、物体の自由度は 6（並進 3 ＋回転 3）。<strong>ボール継手</strong>は 3 つの並進を妨げて回転を許すので、未知数は力の3成分。<strong>固定端</strong>は 6 つすべてを妨げるので、力3成分＋モーメント3成分で未知数は 6。7 章の例題では、棒の足元が「ボール継手」（未知数 3）になっている。</p>
+<div class="warn"><span class="label">注意：反力の向きは「仮定」でよい</span>反力の向きは最初は分からない。<strong>仮に決めて</strong>（既知の向きがあればその作用線に沿って）式を立て、計算結果が正なら仮定は正しく、負なら反力は仮定と<strong>反対向き</strong>（講義資料 ヒント ii）。例題 3.4 の $R_{By}=-500$ N は、「下向き 500 N」を意味する。</div>
+
+<h3><span class="no">3.3</span>未知数と式の数を数える</h3>
+<p>釣合いの式は、1.1 節の数だけある：<strong>2次元で 3 本、3次元で 6 本</strong>（物体の自由度の数と同じ。これは偶然ではなく、「動ける向きの数だけ、動かない条件が要る」から）。</p>
+<div class="def"><span class="label">定義（静定・不静定）</span>1つの物体について、反力などの<strong>未知数の数</strong>が、釣合いの<strong>式の数</strong>と<br>
+・<strong>等しい</strong>とき → <strong>静定</strong>（釣合い式だけで、すべての未知数が決まる）<br>
+・<strong>多い</strong>とき → <strong>不静定</strong>（釣合い式だけでは決まらない）<br>
+・<strong>少ない</strong>とき → 一般には釣合いが成り立たない（物体が動く<strong>機構</strong>になっている）</div>
+<p>講義資料の言い方では、<strong>未知数の数 ＝ 必要な式の数</strong>。だから、問題を解く前に、必ず<strong>未知数を数える</strong>（ヒント：1.「未知数の数を意識すること」）。</p>
+<table class="tb">
+<tr><th>構造（2次元）</th><th>未知数</th><th>式</th><th>判定</th></tr>
+<tr><td>梁の両端を、ピンとローラーで支える</td><td>2＋1＝3</td><td>3</td><td>静定</td></tr>
+<tr><td>片持ち梁（一端を固定）</td><td>3</td><td>3</td><td>静定</td></tr>
+<tr><td>梁の両端を、ともにピンで支える</td><td>2＋2＝4</td><td>3</td><td>不静定（1 つ多い）</td></tr>
+<tr><td>梁の両端を、ともにローラーで支える（水平面）</td><td>1＋1＝2</td><td>3</td><td>機構（水平方向の力があれば動く）</td></tr>
+</table>
+<div class="warn"><span class="label">注意：数が合っても解けるとは限らない</span>数が合っていても、反力の作用線の<strong>並べ方が悪いと</strong>釣合いが成り立たないことがある。たとえば鉛直な反力を出す3つのローラーで梁を支えても、<strong>水平の荷重を支えるものがない</strong>。1.4 節の (c) の「A, B, C が一直線上にない」と同じ種類の条件である。数を数えるのは<strong>必要条件の確認</strong>である。</div>
+<div class="ex"><span class="label">例題3〔A｜未知数を数える〕</span>
+<p>次の支持について、(1) 壁に埋めた鉄棒の先に荷重（固定端）、(2) 水平な棒を、左端のピンと、中央付近を上から吊るロープ1本で支える、の未知数の数と、静定かどうかを答えよ。</p>
+<p><strong>解答</strong>　(1) 固定端：未知数 3（$R_x,R_y,M$）、式 3。<strong>静定</strong>。(2) ピン 2＋ロープ 1＝3、式 3。<strong>静定</strong>（ロープは向きが既知で、引張りのみ）。</p></div>
+
+<h3><span class="no">3.4</span>不静定：式が足りないとき（4輪のロボット）</h3>
+<p>講義資料の例（スライド12）：ロボット台車を、3次元で、4つの車輪で支える。</p>
+<figure class="slide"><img src="img/slide04/robot_wheels.jpg" alt="4つの車輪をもつロボット台車の3次元図。各車輪の接地点に上向きの赤い矢印（4本）、台車の重さと荷重を示す青い下向きの矢印（2本）" loading="lazy" style="width:440px;max-width:92%;height:auto;background:#fff"><figcaption>各車輪の接地点に上向きの反力が働く。出典：講義資料 第4回 p.12</figcaption></figure>
+<p>未知数は 4 つの車輪の鉛直の接地力 $N_1\sim N_4$、式は、鉛直方向の力の釣合い $\sum F_z=0$ と、2 本の水平軸まわりのモーメントの釣合い $\sum M_x=\sum M_y=0$ の<strong>3 本</strong>（水平方向の力と鉛直軸まわりのモーメントは、鉛直な接地力が出さないので式にならない）。<strong>未知数 4 &gt; 式 3 ＝ 不静定問題</strong>。</p>
+<p>何が起きているのかを、具体的に見る。長方形（長さ $a$、幅 $b$）の四隅に車輪があり、全体の重さ $W$ が中央 G にあるとする。車輪の位置は $(\pm a/2,\ \pm b/2)$。</p>
+<div class="proof"><span class="label">導出（解の全体を求める）</span>
+<p>① 力の釣合い：$N_1+N_2+N_3+N_4=W$。</p>
+<p>② $x$ 軸まわり（$y=\pm b/2$ の2組）：$\tfrac b2(N_1+N_2)-\tfrac b2(N_3+N_4)=0$。よって $N_1+N_2=N_3+N_4$。</p>
+<p>③ $y$ 軸まわり（$x=\pm a/2$ の2組）：$N_1+N_4=N_2+N_3$。</p>
+<p>④ ①②より $N_1+N_2=W/2$、①③より $N_1+N_4=W/2$。ここで $N_1=W/4+t$ と置くと、$N_2=N_4=W/4-t$、$N_3=W/4+t$：
+$$(N_1,N_2,N_3,N_4)=\Bigl(\tfrac W4+t,\ \tfrac W4-t,\ \tfrac W4+t,\ \tfrac W4-t\Bigr)\qquad(3.1)$$</p>
+<p>⑤ $t$ は<strong>どんな値でもこの3本の式を満たす</strong>。つまり、静力学の式だけでは、4輪の接地力は決まらない。解は、対角線上の2輪に $+t$、もう一方の対角線上の2輪に $-t$ ずつ「ずれる」自由度をもつ。</p></div>
+<figure><svg viewBox="0 0 600 230" width="600" role="img" aria-label="4輪の接地力とそのずれ">
+<g transform="translate(0,0)"><svg viewBox="0 0 300 230" width="300" role="img" aria-label="各車輪が地面から受ける力（上から見る）">
+<defs><marker id="wh1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="wh1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="wh1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="wh1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="wh1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="wh1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<rect x="76.3" y="68.9" width="147.4" height="88.4" fill="#efe9db" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="223.7" cy="68.9" r="16" fill="#f7f4ec" stroke="#2b3a67" stroke-width="2.2"/>
+<text x="223.7" y="73.4" fill="#2b3a67" text-anchor="middle" font-size="13">N₁</text>
+<circle cx="76.3" cy="68.9" r="16" fill="#f7f4ec" stroke="#2b3a67" stroke-width="2.2"/>
+<text x="76.3" y="73.4" fill="#2b3a67" text-anchor="middle" font-size="13">N₂</text>
+<circle cx="76.3" cy="157.4" r="16" fill="#f7f4ec" stroke="#2b3a67" stroke-width="2.2"/>
+<text x="76.3" y="161.8" fill="#2b3a67" text-anchor="middle" font-size="13">N₃</text>
+<circle cx="223.7" cy="157.4" r="16" fill="#f7f4ec" stroke="#2b3a67" stroke-width="2.2"/>
+<text x="223.7" y="161.8" fill="#2b3a67" text-anchor="middle" font-size="13">N₄</text>
+<text x="150.0" y="113.2" fill="#2a2723" text-anchor="middle" font-size="13">G</text>
+<circle cx="150.0" cy="113.2" r="3" fill="#2a2723"/>
+<text x="150.0" y="24.7" fill="#2a2723" text-anchor="middle" font-size="12">各車輪が地面から受ける力（上から見る）</text>
+</g></svg></g>
+<g transform="translate(300,0)"><svg viewBox="0 0 300 230" width="300" role="img" aria-label="解のずれ：N₁, N₃ に +t、N₂, N₄ に −t">
+<defs><marker id="wh2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="wh2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="wh2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="wh2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="wh2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="wh2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<rect x="76.3" y="68.9" width="147.4" height="88.4" fill="#efe9db" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="223.7" cy="68.9" r="16" fill="#f7f4ec" stroke="#a8322a" stroke-width="2.2"/>
+<text x="223.7" y="73.4" fill="#a8322a" text-anchor="middle" font-size="13">+t</text>
+<circle cx="76.3" cy="68.9" r="16" fill="#f7f4ec" stroke="#2b3a67" stroke-width="2.2"/>
+<text x="76.3" y="73.4" fill="#2b3a67" text-anchor="middle" font-size="13">−t</text>
+<circle cx="76.3" cy="157.4" r="16" fill="#f7f4ec" stroke="#a8322a" stroke-width="2.2"/>
+<text x="76.3" y="161.8" fill="#a8322a" text-anchor="middle" font-size="13">+t</text>
+<circle cx="223.7" cy="157.4" r="16" fill="#f7f4ec" stroke="#2b3a67" stroke-width="2.2"/>
+<text x="223.7" y="161.8" fill="#2b3a67" text-anchor="middle" font-size="13">−t</text>
+<text x="150.0" y="113.2" fill="#2a2723" text-anchor="middle" font-size="13">G</text>
+<circle cx="150.0" cy="113.2" r="3" fill="#2a2723"/>
+<text x="150.0" y="24.7" fill="#2a2723" text-anchor="middle" font-size="12">解のずれ：N₁, N₃ に +t、N₂, N₄ に −t</text>
+</g></svg></g>
+</svg>
+<figcaption>図3.1　4輪の接地力。左：未知数 $N_1\sim N_4$。右：釣合い式を満たしたまま、対角線上の車輪に $+t,\ -t$ だけ「ずれる」。</figcaption></figure>
+<p>この $t$ を決めるのは何か。<strong>台車や床の変形</strong>である。机の4本の脚の1本が少し短いとガタガタするが、あのとき、短い脚の接地力は 0（$t=W/4$）になっている。<strong>剛体（変形しない物体）と仮定する限り、$t$ は決まらず</strong>、決めるには、材料の変形（たわみ）を考える（材料力学、不静定問題）。逆に、3つの車輪（3点）で支えれば、未知数 3 ＝ 式 3 で、ガタガタしない。</p>
+<p>だから第4回の例題（ロボット台車、6.2 節）は、2つの車輪の「組」（A と B）にまとめた<strong>2次元の問題</strong>になっている（2 つの車輪の接地力を1つにまとめれば、不静定は解消する）。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/04_a3_bearing.jpg" alt="錆びた鋲打ちの鉄の桁の端が、鋼のころを並べた支承の上に載り、コンクリートの橋脚に据えられている" loading="lazy"></div>
+<p class="cap">桁の端は、ころの列の上に載っているだけで、鉛直の力は受け止めるが、横には逃げることができる。</p>
+<p class="cr">Douglas W. Jones／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:BridgeBearing.jpg">Wikimedia Commons</a>（橋桁の端の支承（ローラー支承））</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/04_b3_atlas.jpg" alt="大理石の像。身をかがめて肩に天球を担ぐファルネーゼのアトラス。背後は博物館の展示室" loading="lazy"></div>
+<p class="cap">天球を担ぐ者は、肩で受けた重さと同じ大きさの力を、足もとの地面から受け取り続けている。</p>
+<p class="cr">Carlo Raso／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Farnese_Atlas.jpg">Wikimedia Commons</a>（ファルネーゼのアトラス、ナポリ国立考古学博物館）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>二力部材と引張・圧縮</h2>
+
+<h3><span class="no">4.1</span>二力部材：定義と導出</h3>
+<p><strong>動機</strong>：反力は、ふつう、大きさも向きも分からない（ピンなら未知数 2）。ところが、<strong>向きが最初から分かる</strong>力があれば、未知数が減って、解きやすくなる。向きが分かるものの代表が<strong>二力部材</strong>である。</p>
+<div class="def"><span class="label">定義（二力部材 two-force member）</span>力が<strong>2 点だけ</strong>で加わり（たとえば両端をピンでつなぎ）、<strong>途中に荷重がなく、自重も無視できる</strong>部材。</div>
+<div class="thm"><span class="label">定理（二力部材の力）</span>二力部材が釣合いにあるとき、2 点に働く力は、<strong>大きさが等しく、向きが逆</strong>で、<strong>2 点を結ぶ直線に沿っている</strong>。</div>
+<div class="proof"><span class="label">導出</span>
+<p>① 2点を P₁、P₂、そこに働く力を $\boldsymbol F_1,\boldsymbol F_2$ とする。ほかに力は働かない。</p>
+<p>② 力の釣合い $\boldsymbol F_1+\boldsymbol F_2=\boldsymbol 0$ より、$\boldsymbol F_2=-\boldsymbol F_1$。大きさは等しく向きは逆。<span class="note">← これが講義資料の定義の前半。</span></p>
+<p>③ P₁ まわりのモーメントの釣合い。$\boldsymbol F_1$ は P₁ に作用するので腕が 0。残るのは P₂ の力：$\overrightarrow{\mathrm{P_1P_2}}\times\boldsymbol F_2=\boldsymbol 0$。<span class="note">← 基準点を、未知の力が作用している点にとると、式が単純になる（1.4 節）。</span></p>
+<p>④ 外積が $\boldsymbol 0$ になるのは、2つのベクトルが<strong>平行</strong>のとき（第3回 3.3 節）。よって $\boldsymbol F_2$ は $\overrightarrow{\mathrm{P_1P_2}}$ に平行。② より $\boldsymbol F_1$ も同じ直線に沿う。□</p></div>
+<figure><svg viewBox="0 0 600 230" width="600" role="img" aria-label="二力部材">
+<g transform="translate(0,0)"><svg viewBox="0 0 300 230" width="300" role="img" aria-label="ΣF=0 でも偶力が残る">
+<defs><marker id="tf1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tf1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tf1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tf1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tf1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tf1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M70.5,153.8 L70.5,55.4 L221.9,55.4" fill="none" stroke="#b8ad98" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="70.5" cy="153.8" r="5" fill="#2a2723"/>
+<circle cx="221.9" cy="55.4" r="5" fill="#2a2723"/>
+<text x="63.0" y="165.1" fill="#2a2723" text-anchor="end" font-size="13">P₁</text>
+<text x="229.5" y="51.6" fill="#2a2723" text-anchor="start" font-size="13">P₂</text>
+<line x1="70.5" y1="153.8" x2="131.1" y2="153.8" stroke="#a8322a" stroke-width="2.6" marker-end="url(#tf1-r)"/>
+<line x1="221.9" y1="55.4" x2="161.4" y2="55.4" stroke="#a8322a" stroke-width="2.6" marker-end="url(#tf1-r)"/>
+<text x="100.8" y="168.9" fill="#a8322a" text-anchor="middle" font-size="13">F</text>
+<text x="191.6" y="40.3" fill="#a8322a" text-anchor="middle" font-size="13">−F</text>
+<text x="146.2" y="100.8" fill="#2a2723" text-anchor="middle" font-size="11">向きは逆・大きさは同じでも</text>
+<text x="146.2" y="115.9" fill="#2a2723" text-anchor="middle" font-size="11">作用線がずれている → M ≠ 0</text>
+</g></svg></g>
+<g transform="translate(300,0)"><svg viewBox="0 0 300 230" width="300" role="img" aria-label="釣合うのは P₁P₂ を結ぶ線に沿うとき">
+<defs><marker id="tf2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tf2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tf2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tf2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tf2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tf2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M70.5,153.8 L70.5,55.4 L221.9,55.4" fill="none" stroke="#b8ad98" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="70.5" cy="153.8" r="5" fill="#2a2723"/>
+<circle cx="221.9" cy="55.4" r="5" fill="#2a2723"/>
+<text x="63.0" y="165.1" fill="#2a2723" text-anchor="end" font-size="13">P₁</text>
+<text x="229.5" y="51.6" fill="#2a2723" text-anchor="start" font-size="13">P₂</text>
+<path d="M40.3,173.5 L259.7,30.8" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="6 4" opacity="1"/>
+<line x1="70.5" y1="153.8" x2="127.6" y2="116.7" stroke="#a8322a" stroke-width="2.6" marker-end="url(#tf2-r)"/>
+<line x1="221.9" y1="55.4" x2="164.8" y2="92.5" stroke="#a8322a" stroke-width="2.6" marker-end="url(#tf2-r)"/>
+<text x="112.2" y="142.4" fill="#a8322a" text-anchor="middle" font-size="13">F</text>
+<text x="180.3" y="63.0" fill="#a8322a" text-anchor="middle" font-size="13">−F</text>
+<text x="187.8" y="127.3" fill="#2a2723" text-anchor="middle" font-size="11">部材は L 字でも力は直線 P₁P₂ に沿う</text>
+</g></svg></g>
+</svg>
+<figcaption>図4.1　左：大きさが等しく向きが逆でも、作用線がずれると偶力になり、物体は回る（$M\ne0$）。右：釣合うのは、2つの力が P₁ と P₂ を結ぶ同じ直線に沿うときだけ。</figcaption></figure>
+<div class="warn"><span class="label">よくある誤解：「棒の軸に沿う」ではなく「ピンを結ぶ線に沿う」</span>二力部材の力は、<strong>2つのピンを結ぶ直線</strong>に沿う。部材がまっすぐな棒なら、棒の軸と一致するので、「部材に沿う」と言ってよい。しかし<strong>L字や曲がった部材</strong>では、力は部材の形に沿わず、2つのピンを結ぶ直線に沿う（図の右）。また、<strong>3か所以上に力がかかる部材</strong>（途中に荷重がある、ピンが3つある）は、二力部材ではない（向きは分からない）。</div>
+
+<h3><span class="no">4.2</span>未知数が減る</h3>
+<p>二力部材の両端のピン反力は、ふつう 2 成分ずつの未知数だが、向きが既知（2点を結ぶ直線）なので、<strong>大きさ 1 つだけ</strong>が未知数になる。講義資料の言葉では、「方向が限定される ⇒ 未知数の数を減らせる」。さらに、この部材に<strong>接続された物体</strong>に働く力は、作用反作用の法則（大きさ等しく逆向き）で、やはりこの直線の向きを向く。</p>
+
+<h3><span class="no">4.3</span>引張と圧縮</h3>
+<p>二力部材の内部の力（内力）は、2つの向きしかない。<strong>引張り</strong>（ひっぱり）と<strong>圧縮</strong>である。2.4 節で見たように、部材を切ると、切り口に働く内力は、切った側にとって外力になる。</p>
+<figure class="slide"><img src="img/slide04/tension_comp.jpg" alt="引張と圧縮。左：引張で、部材が引き伸ばされ、支点には部材の方向へ引く力が働く。右：圧縮で、部材がつぶされ、支点を部材から遠ざける力が働く" loading="lazy" style="width:560px;max-width:100%;height:auto;background:#fff"><figcaption>引張（左・青）と圧縮（右・赤）。引張では支点に働く力が部材の方向を向き、圧縮では部材から遠ざかる向きを向く（上段・下段は同じ力の描き方の違い）。出典：講義資料 第4回 p.19–20</figcaption></figure>
+<table class="tb">
+<tr><th></th><th>部材の状態</th><th>部材がしようとすること</th><th>節点（支点）に働く力</th></tr>
+<tr><td><strong>引張り</strong></td><td>引き伸ばされている</td><td>縮もうとする</td><td>節点を<strong>部材の方向へ引く</strong>力</td></tr>
+<tr><td><strong>圧縮</strong></td><td>つぶされている</td><td>伸びようとする</td><td>節点を<strong>部材から遠ざけようとする</strong>力</td></tr>
+</table>
+<p>釣合いは、<strong>節点に働く力</strong>で考える（講義資料 4）。つまり、節点を自由物体図に描き、そこに部材が及ぼす力を、「引張りなら部材のほうへ向く矢印、圧縮なら部材から離れる矢印」で描く。</p>
+<div class="why"><span class="label">直感：ワイヤと棒のちがい</span>ワイヤ（ひも）は<strong>押せない</strong>ので、いつも引張りである（例題 3.1。張力は理解しやすい）。棒は押すこともできるので、<strong>圧縮もありうる</strong>（逆向きの作用）。「向きが逆の可能性がある」ことが、棒の問題を、ワイヤの問題より難しくする。</div>
+<div class="warn"><span class="label">注意：矢印を描く場所で向きが反対になる</span>同じ引張りでも、<strong>部材の自由物体図</strong>に描く矢印（部材の端を外向きに引く）と、<strong>節点の自由物体図</strong>に描く矢印（節点を部材の側へ引く）は<strong>逆向き</strong>（作用反作用）。どの自由物体図を描いているかを意識する。迷ったら「<strong>引張りと仮定して矢印を描き、結果が負なら圧縮</strong>」とすればよい（ヒント ii と同じ）。</div>
+
+<h3><span class="no">4.4</span>例：BD が AC から受ける力</h3>
+<p>講義資料の例（スライド14）：「部材 BD が AC から受ける力を求めよ」。資料は考え方（AC は二力部材で、BD が AC から受ける力は AC の方向）だけを述べ、数値を与えていない。ここでは、<strong>図から寸法を読み取って</strong>数値例を作り、手順を最後まで通してみる（<strong>寸法・質量は本教材の仮定</strong>）。</p>
+<div class="ex"><span class="label">例題4〔B｜講義資料の例に数値を補った自作〕部材 BD が AC から受ける力</span>
+<p>図のように、鉛直な柱に、部材 AC（A は柱にピン留め、C は BD にピン留め）と、部材 BD（B は柱にピン留め、D の先に質量 $m=10$ kg の物体がぶら下がる）がある。寸法（m）：A(0, 0)、B(0, 1)、C(0.9, 0.4)、D(1.5, 0)。C は直線 BD 上にある。部材の重さは無視する。部材 BD が AC から受ける力と、B のピンの力を求めよ。</p>
+<figure><svg viewBox="0 0 600 280" width="600" role="img" aria-label="BD と AC の例">
+<g transform="translate(0,0)"><svg viewBox="0 0 300 280" width="300" role="img" aria-label="骨組みの寸法（m）">
+<defs><marker id="bd1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="bd1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="bd1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="bd1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="bd1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="bd1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<rect x="27.9" y="211.7" width="71.7" height="10" fill="#d8d0bf"/>
+<path d="M63.8,211.7 L63.8,45.9" fill="none" stroke="#2a2723" stroke-width="4" opacity="1"/>
+<path d="M63.8,45.9 L198.3,135.5" fill="none" stroke="#2a2723" stroke-width="4" opacity="1"/>
+<path d="M63.8,135.5 L144.5,99.7" fill="none" stroke="#2a2723" stroke-width="4" opacity="1"/>
+<path d="M198.3,135.5 L198.3,175.9" fill="none" stroke="#2a2723" stroke-width="1.4" opacity="1"/>
+<rect x="189.3" y="175.9" width="17.9" height="31.4" fill="#f7f4ec" stroke="#2a2723" stroke-width="1.6"/>
+<text x="198.3" y="192.9" fill="#2a2723" text-anchor="middle" font-size="12">m</text>
+<circle cx="63.8" cy="135.5" r="6" fill="#f7f4ec"/>
+<circle cx="63.8" cy="135.5" r="3" fill="#2a2723"/>
+<text x="54.8" y="144.5" fill="#2a2723" text-anchor="end" font-size="13">A</text>
+<circle cx="63.8" cy="45.9" r="6" fill="#f7f4ec"/>
+<circle cx="63.8" cy="45.9" r="3" fill="#2a2723"/>
+<text x="54.8" y="41.4" fill="#2a2723" text-anchor="end" font-size="13">B</text>
+<circle cx="144.5" cy="99.7" r="6" fill="#f7f4ec"/>
+<circle cx="144.5" cy="99.7" r="3" fill="#2a2723"/>
+<text x="151.7" y="90.7" fill="#2a2723" text-anchor="start" font-size="13">C</text>
+<circle cx="198.3" cy="135.5" r="6" fill="#f7f4ec"/>
+<circle cx="198.3" cy="135.5" r="3" fill="#2a2723"/>
+<text x="205.4" y="131.0" fill="#2a2723" text-anchor="start" font-size="13">D</text>
+<text x="72.8" y="162.4" fill="#a06a32" text-anchor="start" font-size="11">AC（二力部材）</text>
+<text x="14.5" y="90.7" fill="#968d80" text-anchor="middle" font-size="11">1 m</text>
+<text x="131.0" y="252.1" fill="#2a2723" text-anchor="middle" font-size="11">m = 10 kg、W = 98.1 N</text>
+</g></svg></g>
+<g transform="translate(300,0)"><svg viewBox="0 0 300 280" width="300" role="img" aria-label="BD の自由物体図">
+<defs><marker id="bd2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="bd2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="bd2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="bd2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="bd2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="bd2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M109.2,39.2 L196.7,97.5" fill="none" stroke="#2a2723" stroke-width="5" opacity="1"/>
+<line x1="109.2" y1="39.2" x2="40.5" y2="23.9" stroke="#4f7a4a" stroke-width="2.6" marker-end="url(#bd2-g)"/>
+<line x1="161.7" y1="74.2" x2="230.3" y2="43.6" stroke="#a8322a" stroke-width="2.6" marker-end="url(#bd2-r)"/>
+<line x1="196.7" y1="97.5" x2="196.7" y2="143.3" stroke="#a06a32" stroke-width="2.6" marker-end="url(#bd2-o)"/>
+<circle cx="109.2" cy="39.2" r="4" fill="#2a2723"/>
+<circle cx="161.7" cy="74.2" r="4" fill="#2a2723"/>
+<circle cx="196.7" cy="97.5" r="4" fill="#2a2723"/>
+<text x="106.2" y="32.2" fill="#2a2723" text-anchor="end" font-size="13">B</text>
+<text x="164.6" y="82.9" fill="#2a2723" text-anchor="start" font-size="13">C</text>
+<text x="193.8" y="90.5" fill="#2a2723" text-anchor="end" font-size="13">D</text>
+<text x="40.5" y="18.1" fill="#4f7a4a" text-anchor="start" font-size="11">B = (-147, 33) N</text>
+<text x="215.8" y="36.6" fill="#a8322a" text-anchor="start" font-size="11">AC から 161 N</text>
+<text x="201.3" y="143.3" fill="#a06a32" text-anchor="start" font-size="11">W = 98.1 N</text>
+<text x="15.8" y="117.9" fill="#968d80" text-anchor="start" font-size="10">縮尺：100 N = 0.8 m</text>
+</g></svg></g>
+</svg>
+<figcaption>図4.2　左：骨組みの寸法（講義資料 p.14 の図から読み取った）。右：BD の自由物体図。力は 100 N = 0.8 m の縮尺。</figcaption></figure>
+<p><strong>解答</strong></p>
+<p>① 系と FBD：部材 BD を取り出す。外力は、D の物体の重さ $W=mg=98.1$ N（下向き）、B のピンの反力 $\boldsymbol B=(B_x,B_y)$（向き未知、未知数 2）、C で AC から受ける力。<strong>AC は両端のピンだけに力が働く二力部材</strong>なので、この力は<strong>AC の方向</strong>、つまり $\overrightarrow{\mathrm{AC}}=(0.9,\ 0.4)$ の向き。単位ベクトル $\boldsymbol u=(0.9,\ 0.4)/\sqrt{0.9^2+0.4^2}=(0.9138,\ 0.4061)$。大きさを $F$ とし、$\boldsymbol u$ の向きを正（BD が押される向き）に仮定する。未知数は $B_x,B_y,F$ の 3 つ、式も 3 本。</p>
+<p>② 座標：$x$ を右、$y$ を上、反時計回りを＋。</p>
+<p>③ 成分：AC から受ける力 $=F\boldsymbol u$、$\boldsymbol W=(0,\ -98.1)$。</p>
+<p>④ 式：B まわりのモーメントをとる（B の反力が消えて、未知数が $F$ だけになる）。B から C、D への位置ベクトルは $\overrightarrow{\mathrm{BC}}=(0.9,\ -0.6)$、$\overrightarrow{\mathrm{BD}}=(1.5,\ -1.0)$。2次元の外積 $r_xF_y-r_yF_x$ を使うと、<br>
+$\sum M_B=F\,(0.9\times0.4061-(-0.6)\times0.9138)+\bigl(1.5\times(-98.1)-(-1.0)\times0\bigr)=0.9138F-147.15=0$。<br>
+力の釣合い：$B_x+0.9138F=0$、$B_y+0.4061F-98.1=0$。</p>
+<p>⑤ 解く：$F=147.15/0.9138=\mathbf{161.0}$ N。$B_x=-0.9138\times161.0=-147.2$ N、$B_y=98.1-0.4061\times161.0=32.7$ N。</p>
+<p>⑥ 確かめ：<strong>使わなかった式</strong>、C まわりのモーメントで検算する。$\overrightarrow{\mathrm{CB}}=(-0.9,\ 0.6)$、$\overrightarrow{\mathrm{CD}}=(0.6,\ -0.4)$ で、$\boldsymbol B=(-147.2,\ 32.7)$、$\boldsymbol W=(0,\ -98.1)$：<br>
+$(-0.9)(32.7)-(0.6)(-147.2)+(0.6)(-98.1)-(-0.4)(0)=-29.4+88.3-58.9=0$ ✓。<br>
+$F&gt;0$ なので仮定どおり、BD は AC から $\boldsymbol u$ の向き（A から C のほうへ、BD を押す向き）に <strong>161 N</strong> の力を受ける。反作用で AC は BD から押されるので、<strong>AC は圧縮</strong>（4.3 節）。B のピンには (−147, 33) N（左向きにほぼ 147 N、上向きに 33 N）が働く。<br>
+<strong>答</strong>　BD が AC から受ける力：AC の方向（A→C 向き）に 161 N（AC は圧縮）。</p></div>
+<p>もし AC が二力部材だと分かっていなければ、C のピンの力も大きさ・向きとも未知（未知数 2）になり、未知数は 4 ＞ 式 3 で解けない。<strong>二力部材と見抜くだけで、未知数が 1 つ減って、解ける</strong>ようになった。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/04_a4_pratt.jpg" alt="橋の上から正面に見た、ピンで接合された錆色のプラット・トラス橋。斜材と垂直材、上下の弦材が連なる" loading="lazy"></div>
+<p class="cap">ピンで留めた細い棒の一本ずつは、両端の2点でだけ力を受け、押されるか引かれるかのどちらか一方をしている。</p>
+<p class="cr">SharonPapierdreams／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Atchison,_Topeka_and_Santa_Fe_Pratt_Truss_Bridge_Kansas_south_view.jpg">Wikimedia Commons</a>（カンザス州のプラット・トラス橋）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/04_b4_kazura.jpg" alt="祖谷のかずら橋。つる草を編んだ太い綱の手すりと、すき間のある木の踏み板。人々が橋を登っていく" loading="lazy"></div>
+<p class="cap">つる草の橋は、引かれることしかできない綱だけで、人を向こう岸まで渡している。</p>
+<p class="cr">ume-y／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Iya_Kazurabashi-4.jpg">Wikimedia Commons</a>（祖谷のかずら橋）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>解き方の定石</h2>
+<p>ここまでの部品を、<strong>毎回同じ手順</strong>にまとめる。講義資料の「問題を解くためのヒント i〜v」は、この手順の各段階に対応している。</p>
+<div class="def"><span class="label">手順（毎回これで解く）</span>
+<ol><li><strong>系を切り出して自由物体図（FBD）を描く</strong>：何を系にするか（2.1 節）を決め、その系に働く<strong>すべての外力</strong>を描く。<br>
+　作用力：荷重・重力など。反力：地面・壁・支点（ピン・ローラー・固定）・ケーブルなどからの反作用。<strong>内力は描かない</strong>（2 章）。</li>
+<li><strong>座標軸を決める</strong>：軸は水平・垂直にとらなくてよい（1.4 節）。モーメントは反時計回り（ccw）を正に。</li>
+<li><strong>力を成分で書く</strong>：反力は、向きが既知ならその作用線に沿って向きを仮定する（二力部材・ケーブル・滑らかな面）。未知なら成分 $R_x,R_y$。<strong>計算結果が正なら仮定は正しく、負なら反対向き</strong>。</li>
+<li><strong>未知数と式を数えて、釣合い式を立てる</strong>：未知数 ＝ 式の数か（3.3 節）。力 $\sum F_x=\sum F_y=0$（または任意の2方向）、モーメント $\sum M=0$ は<strong>未知の力が集まる点</strong>のまわりでとる（1.4 節）。式は右辺を 0 にそろえる。</li>
+<li><strong>解く</strong>：できるだけ「未知数が1つの式」から1つずつ決める。</li>
+<li><strong>確かめる</strong>：<strong>使わなかった式</strong>（別の点まわりのモーメント、または別の方向の力）に、答えを代入して 0 になるか。符号（向き）が直感と合うか。単位（N、N·m）、有効数字 3〜4 桁。</li></ol></div>
+<table class="tb">
+<tr><th>講義資料のヒント</th><th>本教材の手順</th><th>根拠</th></tr>
+<tr><td>i. FBD を描く。すべての外力を記入</td><td>①</td><td>2 章（内力は式に現れない）</td></tr>
+<tr><td>ii. 反力の角度が既知なら作用線に沿って向きを仮定。正→正しい、負→反対</td><td>③</td><td>3.2 節、4.3 節</td></tr>
+<tr><td>iii. 3 式すべてが必要とは限らない。モーメント中心を適切に選ぶ</td><td>④</td><td>1.4 節 (c)、(1.3)</td></tr>
+<tr><td>iv. 軸は水平・垂直でなくてよい。合力の軸方向成分 $=0$</td><td>②</td><td>1.4 節（軸の自由）</td></tr>
+<tr><td>v. FBD で力の向きと符号が明らかなら、あとは「大きさ」が分かればよい</td><td>③⑤</td><td>向きの仮定と符号</td></tr>
+</table>
+<div class="warn"><span class="label">よくある誤り</span>
+<p>① <strong>内力を描く</strong>：系の内部の力は、FBD に描かない。部分系にしたら、切り口の力を、外力として描く。</p>
+<p>② <strong>支点の種類を取り違える</strong>：ローラーに水平な反力を描く、ピンを未知数 1 にする、など。3.2 節の表で確かめる。</p>
+<p>③ <strong>モーメントの符号</strong>：「反時計回りを正」をすべての項で守る。荷重の向きと腕の位置の2つで符号が決まる。</p>
+<p>④ <strong>未知数が多い点でモーメントをとる</strong>：未知の力の作用点まわりでモーメントをとれば、その力は式から消える。連立方程式を解く量が減る。</p>
+<p>⑤ <strong>確かめを省く</strong>：使わなかった釣合い式に代入するのは、ほとんど無料の検算である。</p></div>
+
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>2次元の例題</h2>
+
+<h3><span class="no">6.1</span>教科書 例題 3.4：L字の棒の支点反力（解答例と別解）</h3>
+<div class="ex"><span class="label">例題5〔B｜教科書 例題 3.4（p.33）〕支点 A、B の支持力</span>
+<figure class="slide"><img src="img/slide04/ex34.jpg" alt="教科書 例題3.4の図。L字に曲がった棒。水平部分の左端Pに450 Nの下向きの力、水平部分の途中の点Aに丸いローラー、右端の角に600 N·mのモーメント。鉛直部分の上端Bに壁側のピン。寸法は、Pから角まで5 m、Aから角まで3 m、鉛直部分の高さ5 m" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"><figcaption>例題3.4 の図。A は移動支点（ローラー）、B は回転支点（ピン）。出典：講義資料 第4回 p.22（教科書 p.33）</figcaption></figure>
+<p>支点 A、B における支持力（支点反力）を求めよ。座標：P を原点として、$x$ を右、$y$ を上にとると、P(0, 0)、A(2, 0)、角 C(5, 0)、B(5, 5)（単位 m）。</p>
+<p><strong>解答例</strong>（講義資料の解答例）</p>
+<p>① 系と FBD：棒全体。外力は、P の 450 N（下向き）、角の 600 N·m（モーメント。反時計回りに働く）、A の反力 $R_A$（ローラーなので鉛直・上向きに仮定）、B の反力 $R_{Bx},R_{By}$（ピンなので 2 成分）。<strong>未知数は $R_A,R_{Bx},R_{By}$ の 3、釣合い式も 3 本必要。</strong></p>
+<figure class="slide"><img src="img/slide04/ex34_fbd.jpg" alt="L字棒の自由物体図。Pに450 N下向き、Aに上向きのR_A、角に600 Nmのモーメント、Bに右向きのR_Bxと上向きのR_By" loading="lazy" style="width:300px;max-width:80%;height:auto;background:#fff"><figcaption>自由物体図（FBD）。出典：講義資料 第4回 p.24</figcaption></figure>
+<p>②③ 座標は上のとおり。力はすべて成分で書ける。</p>
+<p>④ 力の釣合い：<br>
+$x$ 方向：$R_{Bx}=0\qquad(1)$<br>
+$y$ 方向：$R_{By}+R_A-450=0\qquad(2)$<br>
+点 C まわりのモーメントの釣合い（ccw を正）：<br>
+$600-R_{Bx}\times5+450\times5-R_A\times3=0\qquad(3)$<br>
+<span class="note">← 釣合い式は右辺を 0 にそろえる（講義資料）。各項の符号：450 N は C の左 5 m で下向き＝反時計回り（＋）、$R_A$ は C の左 3 m で上向き＝時計回り（−）、$R_{Bx}$ は C の上 5 m で右向き＝時計回り（−）、600 N·m は偶力で＋。</span></p>
+<p>⑤ (1) より $R_{Bx}=0$。(3) に代入して $600+2250-3R_A=0$ より $R_A=\mathbf{950}$ N。(2) より $R_{By}=450-950=\mathbf{-500}$ N。</p>
+<p>⑥ 確かめ：使わなかった式、P まわりのモーメントで検算する。P から A は (2, 0)、B は (5, 5) で、$\sum M_P=600+2\times950+\bigl(5\times(-500)-5\times0\bigr)=600+1900-2500=0$ ✓。<br>
+<strong>答</strong>　支点 A：950 N 上向き、支点 B：500 N 下向き（$R_{By}$ の符号が負なので、仮定の上向きと反対向き）。</p>
+<p><strong>別解</strong>（モーメントは、<strong>力が多く集まる点</strong>まわりで計算すると効率的：1.4 節の (c)）</p>
+<p>B にはほとんどの未知数（$R_{Bx},R_{By}$）が集まる。<strong>点 B まわり</strong>で釣合いをとると、これらは腕が 0 で式から消える：<br>
+$600+450\times5-R_A\times3=0\qquad(3)'$<br>
+未知数が $R_A$ <strong>1 つだけ</strong>の式なので、<strong>直ちに $R_A=2850/3=950$ N</strong> が求まる。力の釣合い (1)(2) はそのままで、$R_{Bx}=0$、$R_{By}=-500$ N。</p></div>
+<p>連立方程式を解く作業が、別解では 1 行で済んだ。ただし、どちらの解き方でも<strong>同じ答え</strong>が出ることが、1.4 節の定理（基準点の自由）の確かめにもなっている（(3) と (3)′ の差は $-R_{Bx}\times5$ で、(1) により 0）。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/04_a5_curiosity.jpg" alt="火星の地表を走る探査車キュリオシティの想像図。アームを岩の上へ伸ばし、車輪が地面に触れている" loading="lazy"></div>
+<p class="cap">アームを伸ばして作業する台車は、車輪が地面に触れる数点だけで、自分の重さと作業の反力を受け止めている。</p>
+<p class="cr">NASA/JPL-Caltech／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Curiosity_-_Robot_Geologist_and_Chemist_in_One!.jpg">Wikimedia Commons</a>（キュリオシティの想像図（写真ではない））</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/04_b5_durer.jpg" alt="デューラーの木版画『マクシミリアン1世の凱旋車』の左端。高く飾り立てた凱旋車と、それを引く馬の列" loading="lazy"></div>
+<p class="cap">高く積み上げた飾りの重さも、最後には、車輪が地面に触れる何点かで支えられている。</p>
+<p class="cr">Albrecht Dürer／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Albrecht_D%C3%BCrer,_The_Triumphal_Chariot_of_Maximilian_I_(The_Great_Triumphal_Car),_1523_(Latin_ed.),_NGA_6810.jpg">Wikimedia Commons</a>（『マクシミリアン1世の凱旋車』1523年、ナショナル・ギャラリー所蔵、左端を切り出し）</p></div>
+</figure>
+<h3><span class="no">6.2</span>ロボット台車：壁を押すときの車輪の反力</h3>
+<p>序の問いである。講義資料の解答例にそって、手順①〜⑥で解く。</p>
+<div class="ex"><span class="label">例題6〔B｜講義資料 第4回 ロボット台車〕車輪 A、B が地面から受ける反力</span>
+<p>ロボットのアームの先端が垂直な壁を押しており、壁から 100 N の力を受けている。車輪 A はブレーキによって回転せず、車輪 B は自由に回転できる。地面と車輪の間は滑らない。台車全体の重さは 500 N（2 つの車輪の中央 O に下向き）。車輪 A、B が地面から受ける反力を求めなさい。</p>
+<figure class="slide"><img src="img/slide04/ex_robot_dim.jpg" alt="ロボット台車の寸法図。車輪の間隔400、台車の全幅600、車輪の直径200、リンクL1が200、L2が400で水平から60°、L3が300。先端の関節の下に200の寸法" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"><figcaption>各部の寸法（mm）。出典：講義資料 第4回 p.26</figcaption></figure>
+<p>① <strong>系と FBD</strong>：台車＋アーム全体を 1 つの剛体と見る（アームの関節の力は内力なので描かない：2 章）。外力は 3 つ：壁から受ける 100 N（水平、向きは左）、重さ 500 N（下向き）、車輪が地面から受ける反力。<br>
+<strong>車輪の反力の形</strong>（3.2 節）：車輪 B は自由に回るので、水平な力を出せない＝<strong>ローラー</strong>。反力は鉛直上向き $R_{By}$ のみ。車輪 A はブレーキで回らず、滑らないので、水平にも踏ん張れる＝<strong>ピン</strong>。$R_{Ax},R_{Ay}$ の 2 成分。<strong>未知数は $R_{Ax},R_{Ay},R_{By}$ の 3、式も 3 本必要。</strong></p>
+<figure class="slide"><img src="img/slide04/ex_robot_sol.jpg" alt="解答用の図。左はロボットとFBD、右は台車を棒で表した模式図。B、O、Aが水平に並び、Oから棒が上へ伸びて点P′（高さ0.7464 m）に至る。P′で左向きの100 N、Oで下向きの500 N、Bに上向きのR_By、Aに上向きのR_Ayと右向きのR_Ax" loading="lazy" style="width:440px;max-width:96%;height:auto;background:#fff"><figcaption>FBD と模式図。100 N の作用線は点 P′ を通る水平線で、その高さは地面から 0.7464 m。出典：講義資料 第4回 p.27–28</figcaption></figure>
+<p>② 座標：O を原点に、$x$ を右、$y$ を上（壁は右側）。反時計回りを正。車輪の接地点は B(−0.2, 0)、A(0.2, 0) m。</p>
+<p>③ <strong>幾何学的条件</strong>：100 N の作用線の高さ（地面からの距離）$\mathrm{OP'}=H+L_1+L_2\sin60°=0.2+0.2+0.4\times0.8660=0.7464$ m。$\mathrm{AB}=0.4$ m（$\mathrm{OA}=\mathrm{OB}=0.2$ m）。<span class="note">← 水平な 100 N の効く腕は、作用線までの<strong>垂直距離</strong>＝高さ 0.7464 m。</span></p>
+<p>④ 釣合い式：<br>
+$x$ 方向：$R_{Ax}-100=0\qquad(1)$<br>
+$y$ 方向：$R_{Ay}+R_{By}-500=0\qquad(2)$<br>
+<strong>点 A まわり</strong>のモーメント（ccw を正。<strong>力が多く集まる点</strong>）：A の反力（$R_{Ax},R_{Ay}$）は腕が 0 で消える。<br>
+$\mathrm{OP}\times100+\mathrm{OA}\times500-\mathrm{AB}\times R_{By}=0$、すなわち $0.7464\times100+0.2\times500-0.4R_{By}=0\qquad(3)$<br>
+<span class="note">← 100 N は左向きで高さ 0.7464 m：A のまわりに反時計回り（＋）。500 N は A の左 0.2 m で下向き：反時計回り（＋）。$R_{By}$ は A の左 0.4 m で上向き：時計回り（−）。</span></p>
+<p>⑤ 解く：(1) より直ちに $R_{Ax}=\mathbf{100}$ N。(3) より $R_{By}=(74.64+100)/0.4=436.6\fallingdotseq\mathbf{437}$ N。(2) に代入して $R_{Ay}=500-436.6=63.4\fallingdotseq\mathbf{63}$ N。</p>
+<p>⑥ 確かめ：<strong>使わなかった式</strong>、点 B まわりのモーメント：$0.4R_{Ay}-0.2\times500+0.7464\times100=25.4-100+74.6=0$ ✓（A の水平な反力は接地点が地面上なので腕 0）。<br>
+向き：壁に押されるアームは、台車を後ろ（左）へ倒そうとする。だから後ろの車輪 B の接地力が重さの半分（250 N）より増え（437 N）、前の車輪 A のほうが減る（63 N）。<br>
+<strong>答</strong>　車輪 A：水平 100 N（右向き）、鉛直 63 N（上向き）。車輪 B：鉛直 437 N（上向き）。</p></div>
+<div class="warn"><span class="label">資料の寸法図について（要確認）</span>寸法図の右端（腕の先の関節の下）に「200」の寸法があるが、解答例は、100 N の作用線の高さを $H+L_1+L_2\sin60°=0.7464$ m として答え（437 N、63 N）を出している。作用線がこれより低い（たとえば 0.5464 m）なら、$R_{By}=(54.64+100)/0.4=387$ N、$R_{Ay}=113$ N と答えが変わる。ここでは、資料の解答例に従った。<strong>試験でも資料の解答例が基準</strong>になるはずだが、条件の読み取りは問題文の図でよく確認すること。</div>
+<p>この結果は、グラフにするともっと分かる。壁を押す力 $F$ を変えると、(3) から $R_{By}=(0.7464F+100)/0.4$、$R_{Ay}=500-R_{By}$。</p>
+<figure><svg viewBox="0 0 460 300" width="460" role="img" aria-label="壁を押す力 F と車輪の接地力">
+<defs><marker id="tp-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tp-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tp-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tp-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tp-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tp-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="60.0" y1="20.0" x2="60.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="106.7" y1="20.0" x2="106.7" y2="250.0" stroke="#e2dccf"/>
+<line x1="153.3" y1="20.0" x2="153.3" y2="250.0" stroke="#e2dccf"/>
+<line x1="200.0" y1="20.0" x2="200.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="246.7" y1="20.0" x2="246.7" y2="250.0" stroke="#e2dccf"/>
+<line x1="293.3" y1="20.0" x2="293.3" y2="250.0" stroke="#e2dccf"/>
+<line x1="340.0" y1="20.0" x2="340.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="60.0" y1="217.1" x2="340.0" y2="217.1" stroke="#e2dccf"/>
+<line x1="60.0" y1="184.3" x2="340.0" y2="184.3" stroke="#e2dccf"/>
+<line x1="60.0" y1="151.4" x2="340.0" y2="151.4" stroke="#e2dccf"/>
+<line x1="60.0" y1="118.6" x2="340.0" y2="118.6" stroke="#e2dccf"/>
+<line x1="60.0" y1="85.7" x2="340.0" y2="85.7" stroke="#e2dccf"/>
+<line x1="60.0" y1="52.9" x2="340.0" y2="52.9" stroke="#e2dccf"/>
+<line x1="60.0" y1="20.0" x2="340.0" y2="20.0" stroke="#e2dccf"/>
+<line x1="56" y1="217.1" x2="354" y2="217.1" stroke="#2a2723" marker-end="url(#tp-k)"/>
+<line x1="60.0" y1="254" x2="60.0" y2="6" stroke="#2a2723" marker-end="url(#tp-k)"/>
+<text x="358" y="221.1">壁を押す力 F [N]</text>
+<text x="66.0" y="6">N</text>
+<line x1="60.0" y1="217.1" x2="60.0" y2="221.1" stroke="#2a2723"/>
+<text x="60.0" y="234.1" text-anchor="middle" font-size="11">0</text>
+<line x1="106.7" y1="217.1" x2="106.7" y2="221.1" stroke="#2a2723"/>
+<text x="106.7" y="234.1" text-anchor="middle" font-size="11">25</text>
+<line x1="153.3" y1="217.1" x2="153.3" y2="221.1" stroke="#2a2723"/>
+<text x="153.3" y="234.1" text-anchor="middle" font-size="11">50</text>
+<line x1="200.0" y1="217.1" x2="200.0" y2="221.1" stroke="#2a2723"/>
+<text x="200.0" y="234.1" text-anchor="middle" font-size="11">75</text>
+<line x1="246.7" y1="217.1" x2="246.7" y2="221.1" stroke="#2a2723"/>
+<text x="246.7" y="234.1" text-anchor="middle" font-size="11">100</text>
+<line x1="293.3" y1="217.1" x2="293.3" y2="221.1" stroke="#2a2723"/>
+<text x="293.3" y="234.1" text-anchor="middle" font-size="11">125</text>
+<line x1="340.0" y1="217.1" x2="340.0" y2="221.1" stroke="#2a2723"/>
+<text x="340.0" y="234.1" text-anchor="middle" font-size="11">150</text>
+<line x1="56.0" y1="217.1" x2="60.0" y2="217.1" stroke="#2a2723"/>
+<text x="53.0" y="221.1" text-anchor="end" font-size="11">0</text>
+<line x1="56.0" y1="184.3" x2="60.0" y2="184.3" stroke="#2a2723"/>
+<text x="53.0" y="188.3" text-anchor="end" font-size="11">100</text>
+<line x1="56.0" y1="151.4" x2="60.0" y2="151.4" stroke="#2a2723"/>
+<text x="53.0" y="155.4" text-anchor="end" font-size="11">200</text>
+<line x1="56.0" y1="118.6" x2="60.0" y2="118.6" stroke="#2a2723"/>
+<text x="53.0" y="122.6" text-anchor="end" font-size="11">300</text>
+<line x1="56.0" y1="85.7" x2="60.0" y2="85.7" stroke="#2a2723"/>
+<text x="53.0" y="89.7" text-anchor="end" font-size="11">400</text>
+<line x1="56.0" y1="52.9" x2="60.0" y2="52.9" stroke="#2a2723"/>
+<text x="53.0" y="56.9" text-anchor="end" font-size="11">500</text>
+<line x1="56.0" y1="20.0" x2="60.0" y2="20.0" stroke="#2a2723"/>
+<text x="53.0" y="24.0" text-anchor="end" font-size="11">600</text>
+<path d="M60.0,135.0 L61.9,134.4 L63.7,133.8 L65.6,133.2 L67.5,132.5 L69.3,131.9 L71.2,131.3 L73.1,130.7 L74.9,130.1 L76.8,129.5 L78.7,128.9 L80.5,128.3 L82.4,127.6 L84.3,127.0 L86.1,126.4 L88.0,125.8 L89.9,125.2 L91.7,124.6 L93.6,124.0 L95.5,123.4 L97.3,122.7 L99.2,122.1 L101.1,121.5 L102.9,120.9 L104.8,120.3 L106.7,119.7 L108.5,119.1 L110.4,118.4 L112.3,117.8 L114.1,117.2 L116.0,116.6 L117.9,116.0 L119.7,115.4 L121.6,114.8 L123.5,114.2 L125.3,113.5 L127.2,112.9 L129.1,112.3 L130.9,111.7 L132.8,111.1 L134.7,110.5 L136.5,109.9 L138.4,109.2 L140.3,108.6 L142.1,108.0 L144.0,107.4 L145.9,106.8 L147.7,106.2 L149.6,105.6 L151.5,105.0 L153.3,104.3 L155.2,103.7 L157.1,103.1 L158.9,102.5 L160.8,101.9 L162.7,101.3 L164.5,100.7 L166.4,100.1 L168.3,99.4 L170.1,98.8 L172.0,98.2 L173.9,97.6 L175.7,97.0 L177.6,96.4 L179.5,95.8 L181.3,95.1 L183.2,94.5 L185.1,93.9 L186.9,93.3 L188.8,92.7 L190.7,92.1 L192.5,91.5 L194.4,90.9 L196.3,90.2 L198.1,89.6 L200.0,89.0 L201.9,88.4 L203.7,87.8 L205.6,87.2 L207.5,86.6 L209.3,86.0 L211.2,85.3 L213.1,84.7 L214.9,84.1 L216.8,83.5 L218.7,82.9 L220.5,82.3 L222.4,81.7 L224.3,81.0 L226.1,80.4 L228.0,79.8 L229.9,79.2 L231.7,78.6 L233.6,78.0 L235.5,77.4 L237.3,76.8 L239.2,76.1 L241.1,75.5 L242.9,74.9 L244.8,74.3 L246.7,73.7 L248.5,73.1 L250.4,72.5 L252.3,71.8 L254.1,71.2 L256.0,70.6 L257.9,70.0 L259.7,69.4 L261.6,68.8 L263.5,68.2 L265.3,67.6 L267.2,66.9 L269.1,66.3 L270.9,65.7 L272.8,65.1 L274.7,64.5 L276.5,63.9 L278.4,63.3 L280.3,62.7 L282.1,62.0 L284.0,61.4 L285.9,60.8 L287.7,60.2 L289.6,59.6 L291.5,59.0 L293.3,58.4 L295.2,57.7 L297.1,57.1 L298.9,56.5 L300.8,55.9 L302.7,55.3 L304.5,54.7 L306.4,54.1 L308.3,53.5 L310.1,52.8 L312.0,52.2 L313.9,51.6 L315.7,51.0 L317.6,50.4 L319.5,49.8 L321.3,49.2 L323.2,48.5 L325.1,47.9 L326.9,47.3 L328.8,46.7 L330.7,46.1 L332.5,45.5 L334.4,44.9 L336.3,44.3 L338.1,43.6 L340.0,43.0" fill="none" stroke="#2b3a67" stroke-width="2.4" opacity="1"/>
+<path d="M60.0,135.0 L61.9,135.6 L63.7,136.2 L65.6,136.8 L67.5,137.5 L69.3,138.1 L71.2,138.7 L73.1,139.3 L74.9,139.9 L76.8,140.5 L78.7,141.1 L80.5,141.7 L82.4,142.4 L84.3,143.0 L86.1,143.6 L88.0,144.2 L89.9,144.8 L91.7,145.4 L93.6,146.0 L95.5,146.6 L97.3,147.3 L99.2,147.9 L101.1,148.5 L102.9,149.1 L104.8,149.7 L106.7,150.3 L108.5,150.9 L110.4,151.6 L112.3,152.2 L114.1,152.8 L116.0,153.4 L117.9,154.0 L119.7,154.6 L121.6,155.2 L123.5,155.8 L125.3,156.5 L127.2,157.1 L129.1,157.7 L130.9,158.3 L132.8,158.9 L134.7,159.5 L136.5,160.1 L138.4,160.8 L140.3,161.4 L142.1,162.0 L144.0,162.6 L145.9,163.2 L147.7,163.8 L149.6,164.4 L151.5,165.0 L153.3,165.7 L155.2,166.3 L157.1,166.9 L158.9,167.5 L160.8,168.1 L162.7,168.7 L164.5,169.3 L166.4,169.9 L168.3,170.6 L170.1,171.2 L172.0,171.8 L173.9,172.4 L175.7,173.0 L177.6,173.6 L179.5,174.2 L181.3,174.9 L183.2,175.5 L185.1,176.1 L186.9,176.7 L188.8,177.3 L190.7,177.9 L192.5,178.5 L194.4,179.1 L196.3,179.8 L198.1,180.4 L200.0,181.0 L201.9,181.6 L203.7,182.2 L205.6,182.8 L207.5,183.4 L209.3,184.0 L211.2,184.7 L213.1,185.3 L214.9,185.9 L216.8,186.5 L218.7,187.1 L220.5,187.7 L222.4,188.3 L224.3,189.0 L226.1,189.6 L228.0,190.2 L229.9,190.8 L231.7,191.4 L233.6,192.0 L235.5,192.6 L237.3,193.2 L239.2,193.9 L241.1,194.5 L242.9,195.1 L244.8,195.7 L246.7,196.3 L248.5,196.9 L250.4,197.5 L252.3,198.2 L254.1,198.8 L256.0,199.4 L257.9,200.0 L259.7,200.6 L261.6,201.2 L263.5,201.8 L265.3,202.4 L267.2,203.1 L269.1,203.7 L270.9,204.3 L272.8,204.9 L274.7,205.5 L276.5,206.1 L278.4,206.7 L280.3,207.3 L282.1,208.0 L284.0,208.6 L285.9,209.2 L287.7,209.8 L289.6,210.4 L291.5,211.0 L293.3,211.6 L295.2,212.3 L297.1,212.9 L298.9,213.5 L300.8,214.1 L302.7,214.7 L304.5,215.3 L306.4,215.9 L308.3,216.5" fill="none" stroke="#a8322a" stroke-width="2.4" opacity="1"/>
+<path d="M310.1,217.2 L312.0,217.8 L313.9,218.4 L315.7,219.0 L317.6,219.6 L319.5,220.2 L321.3,220.8 L323.2,221.5 L325.1,222.1 L326.9,222.7 L328.8,223.3 L330.7,223.9 L332.5,224.5 L334.4,225.1 L336.3,225.7 L338.1,226.4 L340.0,227.0" fill="none" stroke="#968d80" stroke-width="1.4" stroke-dasharray="4 3" opacity="1"/>
+<circle cx="310.1" cy="217.1" r="5" fill="#a06a32"/>
+<path d="M310.1,217.1 L310.1,52.9" fill="none" stroke="#a06a32" stroke-width="1.2" stroke-dasharray="4 3" opacity="1"/>
+<circle cx="246.7" cy="73.7" r="4.5" fill="#2b3a67"/>
+<circle cx="246.7" cy="196.3" r="4.5" fill="#a8322a"/>
+<text x="78.7" y="177.7" fill="#a8322a" text-anchor="start" font-size="12">車輪 A の接地力 R_Ay</text>
+<text x="78.7" y="108.7" fill="#2b3a67" text-anchor="start" font-size="12">車輪 B の接地力 R_By</text>
+<text x="315.7" y="204.0" fill="#a06a32" text-anchor="start" font-size="12">F = 134 N で A が浮く</text>
+<text x="252.3" y="62.7" fill="#2a2723" text-anchor="start" font-size="11">F = 100 N（例題）</text>
+</g></svg>
+<figcaption>図6.1　壁を押す力 $F$ と車輪の接地力（上の (1)〜(3) を $F$ の関数として計算した）。$F=100$ N が例題の点。$F\fallingdotseq134$ N で車輪 A の接地力が 0 になり、これを超えると A は浮いて台車が倒れる（点線は、そのとき式の上では負になる部分）。</figcaption></figure>
+<div class="why"><span class="label">直感：釣合いの式は「転倒の限界」も教えてくれる</span>$R_{Ay}=0$ になる $F=100/0.7464=134$ N は、<strong>この台車が壁を押せる力の上限</strong>である（これを超えると、釣合いの式に $R_{Ay}\ge0$ という条件が満たされなくなる）。接地力は引っ張る向きには働けないからである。同じ式を使って、腕を伸ばす高さや台車の幅を変えたときの限界も計算できる。さらに、(1) の $R_{Ax}=F$ は<strong>摩擦力</strong>が供給するので、$F=100$ N のとき、必要な静止摩擦係数は $100/63.4\fallingdotseq1.6$ と大きく、実際にはゴム車輪でも滑りやすい（摩擦は第6回）。</div>
+
+<h3><span class="no">6.3</span>教科書 例題 3.3：滑らかな滑車と、別解</h3>
+<div class="ex"><span class="label">例題7〔B｜教科書 例題 3.3（p.32）〕滑車を支える軸の力とロープの張力</span>
+<figure class="slide"><img src="img/slide04/ex33.jpg" alt="教科書 例題3.3 図3.8。(a) 500 Nの荷重が作用するプーリー、(b) プーリーに作用する力、(c) 点Qから力Tの作用線までの距離。プーリーの半径は0.1 m、ロープは鉛直から30°" loading="lazy" style="width:340px;max-width:80%;height:auto;background:#fff"><figcaption>教科書 図3.8（例題3.3）。出典：講義資料 第4回 p.30</figcaption></figure>
+<p>半径 0.1 m の滑らかな滑車に、ロープがかかっている。右側のロープは 500 N の荷重を吊り、左側のロープは、鉛直から 30° の向きで壁につながっている（教科書 図3.8）。滑車は中心の軸で支えられている。ロープの張力 $T$ と、軸の力を求めよ。</p>
+<p><strong>教科書の解き方</strong>（講義資料）：図3.8 (c) より、軸の反力 $R_x,R_y$、張力 $T$ を未知数として、<br>
+$R_x-T\sin30°=0$<br>
+$R_y-T\cos30°-500=0\qquad(3.30)$<br>
+$T\times0.1-500\times0.1=0$<br>
+これを解いて $T=500$ N、$R_x=250$ N、$R_y=933$ N。</p>
+<p><strong>別解</strong>（講義資料の問い「FBD は？ 未知数は？ 釣合い式は？」への答え。<strong>自作</strong>）。「<strong>プーリーが滑らかに回転する場合、$T=500$ N は自明</strong>」を使う。</p>
+<figure><svg viewBox="0 0 460 320" width="460" role="img" aria-label="滑車の自由物体図">
+<defs><marker id="pu-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="pu-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="pu-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="pu-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="pu-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="pu-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<circle cx="263.0" cy="131.0" r="55.0" fill="#efe9db" stroke="#2a2723" stroke-width="2"/>
+<circle cx="263.0" cy="131.0" r="4" fill="#2a2723"/>
+<text x="268.5" y="142.0" fill="#2a2723" text-anchor="start" font-size="13">O</text>
+<line x1="215.4" y1="103.5" x2="187.9" y2="151.1" stroke="#a8322a" stroke-width="2.8" marker-end="url(#pu-r)"/>
+<text x="21.0" y="172.3" fill="#a8322a" text-anchor="start" font-size="12">T = 500 N（ロープ、鉛直から 30°）</text>
+<line x1="318.0" y1="131.0" x2="318.0" y2="186.0" stroke="#a06a32" stroke-width="2.8" marker-end="url(#pu-o)"/>
+<text x="323.5" y="175.0" fill="#a06a32" text-anchor="start" font-size="12">500 N</text>
+<line x1="263.0" y1="131.0" x2="290.5" y2="28.4" stroke="#4f7a4a" stroke-width="2.8" marker-end="url(#pu-g)"/>
+<text x="296.0" y="31.1" fill="#4f7a4a" text-anchor="start" font-size="12">R = (250, 933) N（軸受）</text>
+<path d="M208.0,131.0 L318.0,131.0" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="3 3" opacity="1"/>
+<text x="290.5" y="124.4" fill="#968d80" text-anchor="middle" font-size="11">r = 0.1 m</text>
+</g></svg>
+<figcaption>図6.2　滑車の自由物体図。ロープが滑車に及ぼす力 $T$（左下へ、鉛直から 30°）、荷重 500 N（右側のロープ、下向き）、軸の反力 $\boldsymbol R$。力は 500 N = 1.0 の縮尺。</figcaption></figure>
+<p>① FBD：系は、滑車と、それに巻きついたロープの部分。外力は 3 つ：ロープの張力 $T$（左側、壁のほうへ）、500 N（右側）、軸の反力 $\boldsymbol R=(R_x,R_y)$。</p>
+<p>② 座標：$x$ を右、$y$ を上。</p>
+<p>③ <strong>$T=500$ N が自明な理由</strong>：滑車の中心 O まわりのモーメントを見る。$\boldsymbol R$ は O を通るので腕 0。$T$ も 500 N も滑車の円周に接する向き（半径 0.1 m の接線）なので、腕はどちらも半径 $0.1$ m。反時計回りを正とすると、$T\times0.1-500\times0.1=0$。<span class="note">← 滑らかな滑車では、ロープの両側の張力は等しい。これが教科書の第 3 式。</span>したがって $T=500$ N。</p>
+<p>④ <strong>未知数は $R_x,R_y$ の 2 つ</strong>、使う式は<strong>力の釣合い 2 本</strong>（モーメントの式は、$T$ を求めるのに使ってしまった）。<br>
+$x$ 方向：$R_x-T\sin30°=0$、$y$ 方向：$R_y-T\cos30°-500=0$。<span class="note">← $T$ が滑車を引く向きは、(3.30) の符号から、水平成分が左向き（$-T\sin30°$）、鉛直成分が下向き（$-T\cos30°$）：左下向き。</span></p>
+<p>⑤ $R_x=500\times0.5=\mathbf{250}$ N、$R_y=500\times0.8660+500=\mathbf{933}$ N。</p>
+<p>⑥ 確かめ：<br>
+・3 つの力の和：$x$：$250-250=0$、$y$：$933-433-500=0$ ✓。<br>
+・3 つの力で釣合う物体では、3 つの力の作用線が<strong>1 点で交わる</strong>。500 N の作用線（O の右 0.1 m の鉛直線）と $T$ の作用線の交点は O から (0.1, 0.373) m。$\boldsymbol R=(250,\ 933)$ N の作用線は O を通り、傾き $933/250$ なので、$y=0.373$ では $x=0.373\times250/933=0.100$ m で、この交点を通る ✓。<br>
+<strong>答</strong>　$T=500$ N、軸の力 $R_x=250$ N、$R_y=933$ N（大きさ $\sqrt{250^2+933^2}=966$ N）。</p></div>
+<p>2 通りで同じ答えになる。別解は、<strong>モーメントの式で「張力の両側が等しい」ことだけを取り出して先に使った</strong>ので、残りは 2 元の簡単な連立になる。このように、式を使う順序を工夫すると、式がやさしくなる。</p>
+
+<!-- ============================================================ -->
+<h2><span class="no">7</span>3次元の釣合い</h2>
+
+<h3><span class="no">7.1</span>3次元では、式が 6 本になる</h3>
+<p>3次元の釣合いも、条件は 1 章のままで、(1.1) の<strong>ベクトルの式</strong>がそのまま使える：
+$$\sum_i\boldsymbol F_i=\boldsymbol 0,\qquad\sum_i\boldsymbol r_i\times\boldsymbol F_i+\sum_j\boldsymbol M'_j=\boldsymbol 0$$
+外積 $\boldsymbol r\times\boldsymbol F$ は第3回で成分の式（2.54）を使って計算する。3次元の釣合いは、講義資料の<strong>2つの方針</strong>のどちらで解いてもよい。</p>
+<ul>
+<li><strong>方針1</strong>：$x,y,z$ 方向それぞれの力の釣合い式を考える。必要に応じて、$xy$ 平面、$yz$ 平面、$zx$ 平面のそれぞれの中で、モーメントの釣合いも考える（<strong>2次元の問題に分解する</strong>）。</li>
+<li><strong>方針2</strong>：立体的な釣合いを考える（<strong>ベクトルと外積で</strong>、3次元のまま式を立てる）。</li>
+</ul>
+<p>方針2 のほうが、形が一定で、計算の機械的な手順になる。講義資料の解答例は方針2 である。</p>
+
+<h3><span class="no">7.2</span>例題：支線で支える棒</h3>
+<div class="ex"><span class="label">例題8〔C｜Schaum's Engineering Mechanics (Statics) 図 6-1〕棒の先端に力と2本の支線</span>
+<figure class="slide"><img src="img/slide04/ex3d.jpg" alt="3次元の図。鉛直な棒の先端Oに、xy平面内の右下向き600 Nの力（x軸から10°）。先端Oから2本の支線が水平面内の点AとBへ張られ、棒の足元はC。棒の長さは10 m。A、B、Cは同じ水平面内。角度は60°、30°、30°、60°" loading="lazy" style="width:420px;max-width:96%;height:auto;background:#fff"><figcaption>例題の図。出典：E. W. Nelson, et al., <i>Engineering Mechanics -Statics-</i> (Schaum's Outlines), McGraw Hill, Figure 6-1（講義資料 第4回 p.31 に掲載）</figcaption></figure>
+<p>図のように、棒の先端（点 O）に作用する $xy$ 平面内の力（600 N）と、先端につながれた 2 本の支線で、棒（長さ 10 m）を支持している。支線の張力と、棒に作用する力を求めなさい。棒の重さは無視する。棒の足元 C は、回転できるボール継手で支えられている（反力の未知数は 3 成分）。</p>
+<p><strong>解答例（方針2）</strong>（講義資料の解答例を、手順①〜⑥で、補いながら書く）</p>
+<p>① <strong>FBD</strong>：棒を系とする。外力は、O で支線 A、B の張力 $F_A,F_B$（ワイヤなので<strong>引張り</strong>、O を各点 A、B のほうへ引く）、600 N の力、足元 C のボール継手の反力 $\boldsymbol R_C=(R_{Cx},R_{Cy},R_{Cz})$。<strong>未知数は $F_A,F_B,R_{Cx},R_{Cy},R_{Cz}$ の 5 つ。</strong></p>
+<figure><svg viewBox="0 0 520 380" width="520" role="img" aria-label="支線で支える棒の3次元の自由物体図">
+<defs><marker id="t3-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="t3-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="t3-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="t3-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="t3-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="t3-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M222.5,329.6 L34.3,354.8 L106.3,304.4 z" fill="#ebe5d6" stroke="#968d80" opacity="0.8"/>
+<path d="M222.5,25.2 L34.3,354.8" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="6 4" opacity="1"/>
+<path d="M222.5,25.2 L106.3,304.4" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="6 4" opacity="1"/>
+<path d="M222.5,329.6 L222.5,25.2" fill="none" stroke="#2a2723" stroke-width="5" opacity="1"/>
+<line x1="222.5" y1="25.2" x2="155.8" y2="142.1" stroke="#a8322a" stroke-width="2.8" marker-end="url(#t3-r)"/>
+<line x1="222.5" y1="25.2" x2="181.3" y2="124.2" stroke="#a8322a" stroke-width="2.8" marker-end="url(#t3-r)"/>
+<line x1="222.5" y1="25.2" x2="330.4" y2="44.2" stroke="#2b3a67" stroke-width="2.8" marker-end="url(#t3-b)"/>
+<line x1="233.2" y1="329.6" x2="233.2" y2="94.7" stroke="#4f7a4a" stroke-width="2.8" marker-end="url(#t3-g)"/>
+<circle cx="222.5" cy="25.2" r="3.5" fill="#2a2723"/>
+<circle cx="222.5" cy="329.6" r="3.5" fill="#2a2723"/>
+<circle cx="34.3" cy="354.8" r="3.5" fill="#2a2723"/>
+<circle cx="106.3" cy="304.4" r="3.5" fill="#2a2723"/>
+<text x="219.5" y="22.2" fill="#2a2723" text-anchor="end" font-size="13">O</text>
+<text x="219.5" y="335.7" fill="#2a2723" text-anchor="end" font-size="13">C</text>
+<text x="31.3" y="357.8" fill="#2a2723" text-anchor="end" font-size="13">A</text>
+<text x="109.4" y="310.5" fill="#2a2723" text-anchor="start" font-size="13">B</text>
+<text x="152.8" y="142.1" fill="#a8322a" text-anchor="end" font-size="12">F_A</text>
+<text x="184.4" y="127.2" fill="#a8322a" text-anchor="start" font-size="12">F_B</text>
+<text x="333.5" y="44.2" fill="#2b3a67" text-anchor="start" font-size="12">600 N</text>
+<text x="237.7" y="100.8" fill="#4f7a4a" text-anchor="start" font-size="12">R_C = 1286 N</text>
+<line x1="270.2" y1="360.1" x2="331.1" y2="360.1" stroke="#968d80" stroke-width="1.2" marker-end="url(#t3-s)"/>
+<text x="335.9" y="360.7" fill="#968d80" text-anchor="middle" font-size="13">x</text>
+<line x1="270.2" y1="360.1" x2="270.2" y2="299.3" stroke="#968d80" stroke-width="1.2" marker-end="url(#t3-s)"/>
+<text x="270.2" y="295.0" fill="#968d80" text-anchor="middle" font-size="13">y</text>
+<line x1="270.2" y1="360.1" x2="245.3" y2="377.6" stroke="#968d80" stroke-width="1.2" marker-end="url(#t3-s)"/>
+<text x="243.3" y="377.8" fill="#968d80" text-anchor="middle" font-size="13">z</text>
+</g></svg>
+<figcaption>図7.1　棒の自由物体図（計算した値で描いた）。O から A、B へ支線（点線）、O に 600 N と支線の張力 $F_A,F_B$、足元 C に反力 $R_C$。$R_C$ は見やすさのため棒から少しずらして描いてある。</figcaption></figure>
+<p>② 座標：右手系で、C を原点、$x$ を右、$y$ を上（棒の向き）、$z$ を手前。O は $(0,\ 10,\ 0)$ m。</p>
+<p>③ <strong>3つの力をベクトルで書く</strong>（支線の向きは、図の角度から、単位ベクトル×大きさ）：<br>
+$\boldsymbol F_A=F_A\bigl(-\cos60°\cos30°,\ -\sin60°,\ \cos60°\sin30°\bigr)=(-0.433F_A,\ -0.866F_A,\ 0.25F_A)\qquad(1)$<br>
+$\boldsymbol F_B=F_B\bigl(-\cos60°\cos30°,\ -\sin60°,\ -\cos60°\sin30°\bigr)=(-0.433F_B,\ -0.866F_B,\ -0.25F_B)\qquad(2)$<br>
+$\boldsymbol R_C=(R_{Cx},\ R_{Cy},\ R_{Cz})\qquad(3)$<br>
+$600$ N の力は $xy$ 平面内で $x$ 軸から 10° 下向きなので<br>
+$\boldsymbol F_{600}=(600\cos10°,\ -600\sin10°,\ 0)=(591,\ -104,\ 0)\qquad(4)$<br>
+<span class="note">← 単位ベクトルの確かめ：$\cos^260°(\cos^230°+\sin^230°)+\sin^260°=0.25+0.75=1$。支線は水平面から 60° 傾いていて、その水平な影は $-x$ 軸から $\pm30°$ 振れている。</span></p>
+<div class="warn"><span class="label">講義資料の誤植と思われる箇所</span>
+<p>・式(2)の2行目（スライド32）は右辺が「$-0.433F_A\boldsymbol i-0.866F_A\boldsymbol j-0.25F_A\boldsymbol k$」になっているが、これは $F_B$ の式なので、$F_B$ の誤り（上の (2) のとおり）。<br>
+・式(4)の左辺 $(600\cos10°)\boldsymbol i+(600\sin10°)\boldsymbol j$ は、右辺の $591\boldsymbol i-104\boldsymbol j$ と合わせるなら、$j$ 成分に符号 $-$ がつく（図で力は右下向き）。</p></div>
+<p>④ <strong>釣合い式</strong>。点 C のまわりのモーメントの釣合い（O に作用する3力。$\boldsymbol r=\overrightarrow{\mathrm{CO}}=(0,\ 10,\ 0)$）：
+$$\sum\boldsymbol r\times\boldsymbol F=F_A\begin{vmatrix}\boldsymbol i&\boldsymbol j&\boldsymbol k\\0&10&0\\-0.433&-0.866&0.25\end{vmatrix}+F_B\begin{vmatrix}\boldsymbol i&\boldsymbol j&\boldsymbol k\\0&10&0\\-0.433&-0.866&-0.25\end{vmatrix}+\begin{vmatrix}\boldsymbol i&\boldsymbol j&\boldsymbol k\\0&10&0\\591&-104&0\end{vmatrix}=\boldsymbol 0\qquad(5)$$
+行列式を展開する（第1行 $(\boldsymbol i,\boldsymbol j,\boldsymbol k)$、第2行 $(0,10,0)$、第3行 $(F_x,F_y,F_z)$ の行列式は $10F_z\,\boldsymbol i-10F_x\,\boldsymbol k$）：<br>
+$(2.5F_A-2.5F_B)\boldsymbol i+(4.33F_A+4.33F_B-5910)\boldsymbol k=\boldsymbol 0\qquad(6)$<br>
+<span class="note">← $\boldsymbol j$ 成分は 0（棒に沿う方向のモーメントは、どの力も出さない）。</span><br>
+力の釣合い：$\sum F_x=-0.433F_A-0.433F_B+591+R_{Cx}=0$、$\sum F_y=R_{Cy}-0.866F_A-0.866F_B-104=0\ (7)$、$\sum F_z=0.25F_A-0.25F_B+R_{Cz}=0$。</p>
+<p>⑤ <strong>解く</strong>：(6) の $\boldsymbol i$ 成分より $F_A=F_B$。$\boldsymbol k$ 成分より $8.66F=5910$（正確には $5908.9$）から $F_A=F_B=\mathbf{682}$ N（682.3 N）。(7) より $R_{Cy}=0.866\times2\times682.3+104.2=1286\ \mathrm{N}$（資料は 3 桁で $1290$ N）。<br>
+<strong>点 O まわり</strong>のモーメントの釣合い：O に作用する 3 力は腕が 0 で消え、足元の反力だけが残る。$\overrightarrow{\mathrm{OC}}=(0,\ -10,\ 0)$ なので、$\overrightarrow{\mathrm{OC}}\times\boldsymbol R_C=(-10R_{Cz},\ 0,\ 10R_{Cx})=\boldsymbol 0\qquad(8)$ より <strong>$R_{Cx}=R_{Cz}=0$</strong>。</p>
+<div class="warn"><span class="label">講義資料の誤植と思われる箇所（つづき）</span>スライド33の式(8)は「$-10R_{Cy}\boldsymbol i+10R_{Cx}\boldsymbol k=0$」となっているが、$\boldsymbol i$ 成分は $R_{Cz}$ のはず（上の (8)）。結論の $R_{Cx}=R_{Cz}=0$ は変わらない。また $R_{Cy}=1290$ N は 3 桁に丸めた値（厳密には 1285.96 N）。</div>
+<p>⑥ <strong>確かめ</strong>：<br>
+・力の釣合いの検算：$\sum F_x=-0.433\times2\times682.3+590.9=-590.9+590.9=0$ ✓（$R_{Cx}=0$ と整合）、$\sum F_z=0.25\times(682.3-682.3)=0$ ✓（$R_{Cz}=0$ と整合）。<br>
+・向き：支線は棒を A、B のほうへ引き、600 N は棒を右へ押す。支線の水平成分 $2\times0.433\times682.3=590.9$ N が、600 N の水平成分 $590.9$ N と<strong>ちょうど打ち消す</strong>ので、足元には水平の力がかからない（$R_{Cx}=0$）。足元は、支線の鉛直成分と 600 N の鉛直成分（下向き 104 N）を受けて、<strong>上向きに 1286 N</strong>。<br>
+<strong>答</strong>　$F_A=F_B=682$ N（引張り）、$R_{Cy}=1290$ N（1286 N）、$R_{Cx}=R_{Cz}=0$。</p></div>
+<h3><span class="no">7.3</span>式は 6 本のはずが、効いたのは 5 本</h3>
+<p>3次元の釣合い式は 6 本のはずだった。ところが、この例題では (6) の $\boldsymbol j$ 成分が $0=0$ で、<strong>実質は 5 本</strong>（未知数も 5 つ）だった。理由は 3.1 節の原理で説明できる：棒の足元のボール継手は並進 3 つを妨げるが、<strong>棒の軸（$y$ 軸）のまわりの回転は許す</strong>。この回転は 2 本の支線でも妨げられない（支線は軸の上の点 O につながっているので、腕が 0）。<strong>許されている動きに対応する式は、いつでも $0=0$</strong>（自動的に成り立つ）。未知数が減る分だけ、式も減る。</p>
+<div class="why"><span class="label">直感：方針1（平面に分解する）で見る</span>棒に沿う向き（$y$）の力は、足元 C のまわりにモーメントを作らない（腕が力と平行）。だから、C まわりのモーメントの釣合いには、<strong>棒に垂直な力の成分</strong>（水平面内の $x,z$ 成分）だけが効く：$\sum M_x=10\sum F_z$（$z$ 成分から）、$\sum M_z=-10\sum F_x$（$x$ 成分から）。(6) はこの 2 式そのものである。「$z$ 成分は左右に張った 2 本の支線の引き合い（$F_A$ と $F_B$ の差）、$x$ 成分は 600 N と支線の水平成分の競り合い」と、1 つずつ日本語で読める。</div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 6｜現実</p>
+<div class="ph"><img src="img/04_a6_guymast.jpg" alt="地面から見上げた電波塔。手前に碍子のついた太い支線、遠くの塔の頂に向かって細い支線が集まっている" loading="lazy"></div>
+<p class="cap">塔は自分では立っていない。何本もの綱が、それぞれ違う向きに引いて、ちょうど釣合わせている。</p>
+<p class="cr">CedarGlen86／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Espoon_radio-_ja_televisioaseman_harusvaijeri.jpg">Wikimedia Commons</a>（エスポー放送局の支線）</p></div>
+<div class="side b"><p class="kick">MITATE 6｜見立て</p>
+<div class="ph"><img src="img/04_b6_tipi.jpg" alt="ジョージ・カトリンの絵。白く塗った皮のティピー。柱の先が頂で交差し、左に人物、手前に犬が座っている" loading="lazy"></div>
+<p class="cap">一点で交わる何本もの柱は、互いを押し合って、ひとつの立体の釣合いをつくっている。</p>
+<p class="cr">George Catlin／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Crow_Tipi_or_Lodge-_George_Catlin.jpg">Wikimedia Commons</a>（クロウ族のティピー（1832年頃））</p></div>
+</figure>
+
+
+<!-- ============================================================ -->
+<h2><span class="no">8</span>章末例題</h2>
+<p class="meta">出典の問題文は本教材で日本語に書き直した（図の寸法の読み取りを含む。原文は出典を参照）。解答は、手順①〜⑥にそって、本教材で書いた。数値は検算済み（<code>draft/check_04.py</code>）。</p>
+
+<div class="ex"><span class="label">例題9〔B｜Mechanics Map 3.6 問4〕壁にピンで留めた棒と、ケーブル</span>
+<figure class="slide"><img src="img/ext04/ex9_bar.png" alt="壁に留めた棒ABC。下端Aは壁のピン。棒は水平から45°で右上へ伸び、中点Bから壁へ張られたケーブルが、壁と45°をなす。先端Cから300 kgの物体が吊り下がる" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 3.6）。</figcaption></figure>
+<p>長さ 6 m の棒 ABC を、下端 A で壁にピン留めし、水平から 45° に傾けて保持する。中点 B から、壁と 45° をなす向きのケーブルが壁へ張られている。先端 C に 300 kg の物体が吊るされている。棒の重さは無視する。ケーブルの張力 $T$ と、A の反力を求めよ（$g=9.81\ \mathrm{m/s^2}$）。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 3.6 Equilibrium of Rigid Bodies, 問4（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>、CC 表示・継承）。公式解答 $T=4162$ N、$A_x=2943$ N、$A_y=0$ と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 系：棒 ABC。外力は、C に吊るした物体の重さ $W=300\times9.81=2943$ N（下向き）、B のケーブルの張力 $T$（B から壁へ向かう向き、引張り）、A のピンの反力 $A_x,A_y$。未知数 3、式 3。</p>
+<p>② 座標：A を原点、$x$ を右、$y$ を上。反時計回りを正。</p>
+<p>③ B $=(3\cos45°,\ 3\sin45°)=(2.121,\ 2.121)$ m、C $=(4.243,\ 4.243)$ m。張力は壁（左）の上向き 45° なので $\boldsymbol T=T(-0.7071,\ 0.7071)$。</p>
+<p>④ <strong>A まわり</strong>のモーメント（A の反力が消えて、未知数が $T$ だけの式になる）：<br>
+$\boldsymbol r_B\times\boldsymbol T=2.121\times0.7071T-2.121\times(-0.7071T)=3.000\,T$、$\boldsymbol r_C\times\boldsymbol W=4.243\times(-2943)=-12487$。よって $3.000T-12487=0$。<br>
+力の釣合い：$A_x-0.7071T=0$、$A_y+0.7071T-2943=0$。</p>
+<p>⑤ $T=\mathbf{4162}$ N（約 4.16 kN）。$A_x=0.7071\times4162=\mathbf{2943}$ N（右向き）、$A_y=2943-2943=\mathbf{0}$。</p>
+<p>⑥ 確かめ：点 C まわり：A の反力 $(2943,\ 0)$ の腕は $(-4.243,\ -4.243)$ で $+12487$、ケーブルの力 $(-2943,\ 2943)$ の腕は $(-2.121,\ -2.121)$ で $-6243-6243=-12487$、和は 0 ✓。<br>
+なぜ $A_y=0$ か：ケーブルの鉛直成分 $T\sin45°=2943$ N が、重さ $W$ をちょうど打ち消している（$T=\sqrt2\,W$）。偶然ではなく、B が棒の中点で、ケーブルが 45° のため。<br>
+<strong>答</strong>　$T=4162$ N、A の反力は水平右向きに 2943 N、鉛直成分は 0。</p></div>
+
+<div class="ex"><span class="label">例題10〔B｜Mechanics Map 5.5 例2〕二力部材を含む2部材の骨組み</span>
+<figure class="slide"><img src="img/ext04/ex10_frame.png" alt="壁にピン留めされた2つの部材。上のA、下のCが壁に留められ、Aから斜めにBへ、CからBへ水平な部材。Bの内側の角は60°。BCの上でCから2 m、Bから1 mの位置に6 kNの下向きの力" loading="lazy" style="width:300px;max-width:80%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 5.5）。</figcaption></figure>
+<p>壁に、上の点 A と下の点 C がピンで留められている。部材 AB（A と B をピンで結ぶ）と、水平な部材 BC（長さ 3 m、C は壁にピン留め）が、B でピンでつながる。B の内側の角は 60°。BC 上の、C から 2 m（B から 1 m）の点に、下向き 6 kN の力が働く。部材の重さは無視する。AB に働く力と、C のピンの反力を求めよ。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 5.5 Analysis of Structures（Frames and Machines）, Worked Example 2（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。公式解答（$F_{AB}=4.6$、$C=(2.3,\ 2.0)$ kN）と照合済み（公式は単位を「hN」と手書きしているが kN の意）。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>AB は、両端 A、B のピンだけに力が働く二力部材</strong>（途中に荷重なし）。AB の力は A と B を結ぶ直線の向き（4.1 節）。AB を<strong>引張り</strong>と仮定し、B が受ける力を $F$（B から A へ向かう向き）とする。BC を系にとる。外力：6 kN（下向き）、B で AB から受ける $F(-\cos60°,\ \sin60°)$、C のピン反力 $C_x,C_y$。未知数は $F,C_x,C_y$ の 3、式も 3。</p>
+<p>② 座標：C を原点、$x$ を B の向き（右）、$y$ を上。</p>
+<p>③④ <strong>C まわり</strong>のモーメント（C の反力が消える）：B は $x=3$ m で、$F$ の鉛直成分 $F\sin60°$ が効く。荷重は $x=2$ m で下向き：<br>
+$3\times F\sin60°-2\times6=0$。力の釣合い：$C_x-F\cos60°=0$、$C_y+F\sin60°-6=0$。</p>
+<p>⑤ $F=12/(3\times0.8660)=\mathbf{4.62}$ kN（正なので仮定どおり<strong>引張り</strong>）。$C_x=4.619\times0.5=\mathbf{2.31}$ kN（右向き）、$C_y=6-4.619\times0.8660=\mathbf{2.00}$ kN（上向き）。</p>
+<p>⑥ 確かめ：B まわり：C の反力 $(2.309,\ 2.000)$ は腕 $(-3,\ 0)$ で $-3\times2.000=-6.0$、荷重は腕 $(-1,\ 0)$ で $(-1)(-6)=+6.0$、和は 0 ✓。<br>
+<strong>答</strong>　AB：4.62 kN の<strong>引張り</strong>（B を A のほうへ引く）。C の反力：(2.31, 2.00) kN。</p></div>
+
+<div class="ex"><span class="label">例題11〔C｜OpenStax University Physics Vol.1 12章 問43〕蝶番で支えた板と綱</span>
+<figure class="slide"><img src="img/ext04/ex11_trapdoor.png" alt="斜めに立てかけた長方形の板。水平から30°、長さ1.5 m、幅1.0 m。下端に蝶番H、板の中央から出た綱が床に向かい、水平と20°をなす" loading="lazy" style="width:300px;max-width:80%;height:auto;background:#fff"><figcaption>原図（OpenStax University Physics Vol.1, 12章 問43）。</figcaption></figure>
+<p>一様な長方形の板（長さ 1.5 m、幅 1.0 m、重さ 300 N）が、下端の蝶番 H で床に取り付けられ、水平から 30° 傾いて保持されている。板の中央から出た綱が、水平から 20° 下向きに、蝶番の側の床へ張られている。綱の張力 $T$ と、蝶番が板に及ぼす力を求めよ。蝶番の力の向きについて、何が言えるか。</p>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 12 Problems, Problem 43（CC BY-NC-SA 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/12-problems">https://openstax.org/books/university-physics-volume-1/pages/12-problems</a>。和訳と、綱の向き（図からの読み取り）は本教材。公式解答（$T=1500$ N、蝶番の力 1620 N・水平から 30°）と照合済み（正確な値は 1496 N、1623 N で、公式は丸めている）。</p>
+<p><strong>解答</strong></p>
+<p>① 系：板。外力は、重さ $W=300$ N（板の中央、蝶番から斜面に沿って 0.75 m の点）、綱の張力 $T$、蝶番の反力 $\boldsymbol H=(H_x,H_y)$（ピンなので 2 成分）。未知数 3、式 3。</p>
+<p>② 座標：蝶番 H を原点、$x$ を水平（板の上がる側）、$y$ を上。</p>
+<p>③ 板の中央 $\boldsymbol r=0.75\,(\cos30°,\ \sin30°)=(0.6495,\ 0.375)$ m。$\boldsymbol W=(0,\ -300)$。張力は綱の向き $(-\cos20°,\ -\sin20°)=(-0.9397,\ -0.3420)$。</p>
+<p>④ <strong>蝶番まわり</strong>のモーメント（$\boldsymbol H$ が消える）：<br>
+$\boldsymbol r\times\boldsymbol W=0.6495\times(-300)=-194.9$、$\boldsymbol r\times T(\cdots)=T\bigl[0.6495\times(-0.3420)-0.375\times(-0.9397)\bigr]=0.1303\,T$。<br>
+よって $0.1303\,T-194.9=0$。</p>
+<p>⑤ $T=\mathbf{1496}$ N（約 1500 N）。力の釣合い：$H_x-0.9397T=0$ より $H_x=1406$ N、$H_y-0.3420T-300=0$ より $H_y=812$ N。<br>
+大きさ $|\boldsymbol H|=\sqrt{1406^2+812^2}=\mathbf{1623}$ N（約 1620 N）、向きは水平から $\arctan(812/1406)=\mathbf{30.0°}$。</p>
+<p>⑥ 確かめ：蝶番の力の向きは、板の傾き 30° と<strong>一致</strong>する（<strong>蝶番の力は板に沿う</strong>）。これは偶然ではない。板に働く 3 つの力のうち、重さと張力は<strong>板の中央を通る</strong>。<strong>3 つの力が釣合うとき、作用線は 1 点で交わる</strong>（6.3 節の確かめと同じ）ので、蝶番の力の作用線も板の中央を通る。蝶番と板の中央を結ぶ直線は、板に沿う直線である。<br>
+<strong>答</strong>　$T=1500$ N（1496 N）、蝶番の力は 1620 N（1623 N）で、水平から 30°（板の方向）。</p></div>
+
+<div class="ex"><span class="label">例題12〔C｜Engineering Statics 例題 6.6.17（トグルクランプ）〕二力部材とローラーのクランプ</span>
+<figure class="slide"><img src="img/ext04/ex12_toggle.png" alt="トグルクランプの図。壁の上の点Aに部材ABCがピン留め。ABCはBで曲がり、先端Cに力Fが水平から角θで下向き左へ働く。BとDを結ぶ部材BD。Dは壁に沿って動くローラーで、下の木片を押す。寸法：AからBまで水平7インチ、BからCまで水平9インチ、AからBまで鉛直24インチ、BからDまで鉛直24インチ、AからCまで鉛直40インチ" loading="lazy" style="width:300px;max-width:76%;height:auto;background:#fff"><figcaption>原図（Engineering Statics, 例題 6.6.17）。</figcaption></figure>
+<p>トグルクランプで、C に力 $F$（水平から $\theta=60°$ 下向き、左向き）を加える。部材 BD は B と D のピンだけに力が働く二力部材で、D は壁に沿って上下にだけ動くローラーとして、下の木片を押している。BD の力と、木片を押す力 $Q$ を、$F$ の何倍か答えよ。寸法（図から読み取った。A を原点とし、右を $+x$、上を $+y$ とする）：A(0, 0)、B(7, −24)、C(16, −40)、D(0, −48)（単位 in）。BD の長さは $\sqrt{7^2+24^2}=25$ in。</p>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics: Open and Interactive</i>, §6.6, Example 6.6.17（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/">https://engineeringstatics.org/</a>。和訳と寸法の書き起こしは本教材。公式解答（BD $=2.52F$、$Q=2.42F$）と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 系：部材 ABC。外力は、C の $F$、B で BD から受ける力 $S$（BD は二力部材なので、方向は直線 BD。B を D から<strong>遠ざける</strong>向き＝圧縮と仮定）、A のピン反力 $A_x,A_y$。未知数は $S,A_x,A_y$ の 3、式 3。</p>
+<p>② 座標は上のとおり。反時計回りを正。</p>
+<p>③ $\boldsymbol F=F(-\cos60°,\ -\sin60°)=F(-0.5,\ -0.8660)$。D から B への向きの単位ベクトル：$\boldsymbol u=(7,\ 24)/25=(0.28,\ 0.96)$。B の力 $=S\boldsymbol u$。</p>
+<p>④ <strong>A まわり</strong>のモーメント（A の反力が消える）：<br>
+$\boldsymbol F$ の C まわり：$16\times(-0.8660F)-(-40)\times(-0.5F)=-13.86F-20F=-33.86F$。<br>
+$S\boldsymbol u$ の B まわり：$7\times0.96S-(-24)\times0.28S=6.72S+6.72S=13.44S$。<br>
+$13.44S-33.86F=0$。</p>
+<p>⑤ $S=33.86F/13.44=\mathbf{2.52}\,F$（正なので仮定どおり、<strong>BD は圧縮</strong>）。<br>
+木片を押す力：BD が D を押す力は、$S$ で向きは B から D へ $(-0.28,\ -0.96)$。<strong>鉛直成分</strong> $0.96S=0.96\times2.519F=\mathbf{2.42}\,F$ が木片を押す力 $Q$（水平成分 $0.28S=0.705F$ は、ローラーが壁から受ける力で支えられる）。</p>
+<p>⑥ 確かめ：使わなかった力の釣合いから $A_x=-0.205F$、$A_y=-1.552F$。C まわり：A の反力の腕は $(-16,\ 40)$ で $(-16)(-1.552F)-40(-0.205F)=24.83F+8.2F=33.03F$、$S\boldsymbol u$ の腕は $(-9,\ 16)$ で $(-9)(2.418F)-16(0.705F)=-21.76F-11.28F=-33.04F$、和は 0（丸め誤差内）✓。<br>
+<strong>答</strong>　BD：圧縮 $2.52F$。木片を押す力 $Q=2.42F$。力が <strong>2.4 倍に増える</strong>のは、$\theta=60°$ の $F$ のモーメントが、てこ（$A$–$C$）の腕の長さの比で拡大されるため。</p></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">9</span>演習問題</h2>
+<p class="meta">出典の問題文は本教材で日本語に書き直した。単位は出典のまま（lb、ft、in）。解答は、折りたたみの中。</p>
+
+<div class="box"><span class="label">問1〔A｜Mechanics Map 3.6 問5〕いすの接触点の反力</span>
+<figure class="slide"><img src="img/ext04/q1_chair.png" alt="いすの側面図。前脚A、後脚B（背もたれの下端）。座面に180 lbの下向きの力（Aから12 inの位置）、背もたれの上端に15 lbの水平な力。座面の高さ18 in、背もたれの上端は座面の上18 in。AB間は18 in" loading="lazy" style="width:200px;max-width:50%;height:auto;background:#fff"></figure>
+<p>いすの側面図。座面に 180 lb の下向きの力（A から 12 in）、背もたれの上端に 15 lb の水平な力（右向き）が働く。A と B は 18 in 離れている。座面の高さは 18 in、背もたれの上端は座面の上 18 in。床と A の間は滑らかで、B の間は粗い。A、B の反力を求めよ。</p>
+<p class="cr">出典：Mechanics Map 3.6, 問5（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。公式解答（$N_A=30$、$N_B=150$、$F_B=15$ lb）と照合済み。</p>
+<details><summary>解答</summary>
+<p>① A（滑らか）は鉛直な力 $N_A$ のみ（未知数 1）。B（粗い）は $N_B$ と水平な摩擦力 $F_B$（未知数 2）。計 3、式 3。② $x$ を右、$y$ を上。</p>
+<p>③④ $\sum F_x$：$15+F_B=0$ より $F_B=-15$ lb（左向き 15 lb）。<strong>B まわり</strong>のモーメント（B の力が消える）：$-18N_A+180\times6-15\times36=0$。<span class="note">← 180 lb は B の左 6 in で下向き＝反時計回り（＋）、15 lb は B の上 36 in で右向き＝時計回り（−）、$N_A$ は B の左 18 in で上向き＝時計回り（−）。</span></p>
+<p>⑤ $N_A=(1080-540)/18=\mathbf{30}$ lb。$\sum F_y$：$N_A+N_B=180$ より $N_B=\mathbf{150}$ lb。⑥ A まわり：$18N_B-180\times12-15\times36=2700-2160-540=0$ ✓。<br>答：$N_A=30$ lb、$N_B=150$ lb、$F_B=15$ lb（左向き）。</p></details></div>
+
+<div class="box"><span class="label">問2〔A｜Engineering Statics §5.6〕未知数の勘定と静定・不静定</span>
+<figure class="slide"><img src="img/ext04/q2_supports.png" alt="L字の部材を3通りに支える。上：左端A（壁のローラー状の支え）と右下C（ピン）。中：左端A（ピン）と右下C（ピン）。下：左端Aと右下C（いずれもローラー）" loading="lazy" style="width:230px;max-width:60%;height:auto;background:#fff"></figure>
+<p>L字の部材を、図の 3 通りの支え（上・中・下）で支える。それぞれ、反力の未知数の数を数え、静定・不静定・不安定のいずれかを答えよ。</p>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics</i>, §5.6（図は同書。CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/">https://engineeringstatics.org/</a>。答えは同書の図中の判定と一致。</p>
+<details><summary>解答</summary>
+<p>上：$A_x$ ＋ $C_x,C_y$ ＝ <strong>未知数 3</strong>（式 3）：<strong>静定</strong>。中：$A_x,A_y$ ＋ $C_x,C_y$ ＝ <strong>未知数 4</strong>（式 3）：<strong>不静定</strong>（1 つ多い）。下：$A_x$ ＋ $C_y$ ＝ <strong>未知数 2</strong>（式 3）：<strong>不安定</strong>（式のほうが多く、一般には釣合わない：水平・鉛直の組合せで動く）。<br>原図の解答：<img src="img/ext04/q2_supports_ans.png" alt="3通りの支えそれぞれの自由物体図と判定。上は n=3 静定、中は n=4 不静定、下は n=2 不安定" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff;vertical-align:top"></p></details></div>
+
+<div class="box"><span class="label">問3〔A｜Mechanics Map 宿題 3.9〕飛び込み板</span>
+<figure class="slide"><img src="img/ext04/q3_board.png" alt="水平な板。左端Aはピン、Aから2 ftの位置Bは下から支える支柱。Bから6 ftの位置に150 lbの下向きの力" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"></figure>
+<p>水平な飛び込み板。左端 A はピン、A から 2 ft の B は下から支える支持（鉛直な力のみ）。B から 6 ft の板の上に、150 lb の下向きの力が働く。板の重さは無視する。A、B の反力を求めよ。</p>
+<p class="cr">出典：Mechanics Map, Homework 3.9（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。公式解答（答えのみ）$B_y=600$ lb、$A_y=-450$ lb と照合済み。</p>
+<details><summary>解答</summary>
+<p>A まわり：$2B_y-150\times8=0$（荷重は A から 8 ft）より $B_y=\mathbf{600}$ lb（上向き）。$\sum F_y$：$A_y+600-150=0$ より $A_y=\mathbf{-450}$ lb（<strong>下向き</strong> 450 lb）。<br>確かめ：B まわり：A の反力は B の左 2 ft で下向き 450 lb（腕 $(-2,\ 0)$、力 $(0,\ -450)$）で $(-2)(-450)=+900$、荷重は B の右 6 ft で下向き 150 lb で $6	imes(-150)=-900$、和は 0 ✓。<br>A が下向きに引かれる（反力が負）：板が B でてこのように持ち上がろうとするのを、A のピンが押さえている。答：$A_y=450$ lb 下向き、$B_y=600$ lb 上向き。</p></details></div>
+
+<div class="box"><span class="label">問4〔B｜OpenStax University Physics Vol.1 12章 問41〕ブームと、ヒンジの力の向き</span>
+<figure class="slide"><img src="img/ext04/q4_boom.png" alt="壁のヒンジから斜め上へ伸びる棒。水平から20°。先端に400 Nのおもりを吊るし、先端から壁へ向かうケーブルが水平と45°をなす" loading="lazy" style="width:210px;max-width:56%;height:auto;background:#fff"></figure>
+<p>一様なブーム（重さ 700 N）が、壁のヒンジで支えられ、水平から 20° 上向きに伸びている。先端に 400 N の物体が吊るされ、先端から壁へ張られたケーブルが水平と 45° をなす。ケーブルの張力とヒンジの力を求めよ。ヒンジの力はブームの方向を向くか。</p>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 12 Problems, Problem 41（CC BY-NC-SA 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/12-problems">https://openstax.org/books/university-physics-volume-1/pages/12-problems</a>。和訳は本教材。公式解答（$T=778$ N、ヒンジ 778 N・水平から 45°、ブームの方向ではない）と照合済み。</p>
+<details><summary>解答</summary>
+<p>① 系：ブーム。ブーム長を $L$ とする。外力：ブームの重さ 700 N（中央）、400 N（先端）、ケーブル $T$（先端から壁の上向き 45° 方向）、ヒンジの反力 $H_x,H_y$。未知数 3。② ヒンジを原点、右・上を正。</p>
+<p>③④ <strong>ヒンジまわり</strong>：先端は $L(\cos20°,\ \sin20°)$、ケーブルの力は $T(-\cos45°,\ \sin45°)$。<br>
+$T\cdot L\bigl[\cos20°\sin45°+\sin20°\cos45°\bigr]-700\cdot\tfrac L2\cos20°-400\cdot L\cos20°=0$。<br>
+$[\cdots]=\sin(20°+45°)=\sin65°=0.9063$、$\cos20°=0.9397$ なので、$0.9063T=(350+400)\times0.9397=704.8$。</p>
+<p>⑤ $T=\mathbf{778}$ N。$H_x=T\cos45°=\mathbf{550}$ N（右向き）、$H_y=700+400-T\sin45°=1100-550=\mathbf{550}$ N（上向き）。大きさ $778$ N、向きは水平から $45°$。<br>
+⑥ ヒンジの力の向き（45°）は、ブームの向き（20°）と<strong>異なる</strong>。ブームは二力部材ではない（途中に自重が作用し、先端にも荷重がある）ので、ヒンジの力はブームに沿うとは限らない。<br>答：$T=778$ N、ヒンジの力 778 N（水平から 45° 上向き）、ブームの方向ではない。</p></details></div>
+
+<div class="box"><span class="label">問5〔B｜Mechanics Map 3.6 問9〕滑車を通るケーブルで支えた梁</span>
+<figure class="slide"><img src="img/ext04/q5_beam.png" alt="水平な梁ABC。左端Aは壁のピン。Aから5 ftのB、さらに5 ft先の点にケーブルがつながり、天井の滑車Dを通る。DからBへは鉛直、Dからもう一方へは勾配2対1の斜め。先端Cは、Aから13 ft。Cから重り" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"></figure>
+<p>水平な梁を、左端 A のピンと、天井の滑らかな滑車 D を通る 1 本のケーブルで支える。ケーブルは、梁の B（A から 5 ft）から滑車 D まで鉛直に上り、D で折り返して、梁の上の A から 10 ft の点まで、勾配 2（鉛直）：1（水平）で下りている。梁の先端 C（A から 13 ft）に 80 lb の重りが吊るされている。梁の重さは無視する。ケーブルの張力と、A の反力を求めよ。</p>
+<p class="cr">出典：Mechanics Map 3.6, 問9（図は UBC Engineering、CC BY。Hibbeler の問題の類題）（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。公式解答（$T=74.6$ lb、$A_x=33.4$ lb、$A_y=61.3$ lb 下向き）と照合済み（公式解答の途中式の符号に誤りがあるが、結果は一致）。</p>
+<details><summary>解答</summary>
+<p>① 系：梁。ケーブルは<strong>滑らかな滑車</strong>を通る 1 本なので、張力 $T$ は全長で同じ（例題 3.3）。梁に作用する力：B で上向き $T$、10 ft の点で、D のほうへ向かう $T(-1,\ 2)/\sqrt5$、C の 80 lb（下向き）、A の反力。未知数は $T,A_x,A_y$ の 3。<br>
+② A を原点、$x$ を右、$y$ を上。<br>
+③④ <strong>A まわり</strong>：$5T+10\times\dfrac{2T}{\sqrt5}-13\times80=0$（梁の高さでの水平な力は腕 0）。$\dfrac{2}{\sqrt5}=0.8944$ なので $(5+8.944)T=1040$。<br>
+⑤ $T=\mathbf{74.6}$ lb。$\sum F_x$：$A_x-0.4472T=0$ より $A_x=\mathbf{33.4}$ lb（右向き）。$\sum F_y$：$A_y+T+0.8944T-80=0$ より $A_y=80-141.3=\mathbf{-61.3}$ lb（下向き 61.3 lb）。<br>
+⑥ 確かめ：10 ft の点まわり：A の力は $x$ 成分 33.4 は腕 0（同じ高さ）、$A_y$ の腕 $-10$：$(-10)(-61.3)=613$、B の $T$：腕 $-5$：$(-5)(74.6)=-373$、C の 80 lb：腕 3：$3\times(-80)=-240$、和は $613-373-240=0$ ✓。<br>答：$T=74.6$ lb、$A_x=33.4$ lb（右）、$A_y=61.3$ lb（下）。</p></details></div>
+
+<div class="box"><span class="label">問6〔B｜Mechanics Map 宿題 3.15〕3本のケーブルで水平に吊る棒（3次元）</span>
+<figure class="slide"><img src="img/ext04/q6_pole.png" alt="天井から3本のケーブルで水平に吊られた棒。ケーブルAとBは天井のz軸方向に3 m離れた点から、棒の左端から2 mの同一点につながる。ケーブルCは鉛直で、棒の右端から1 m。棒の全長9 m（2 m、6 m、1 m）。天井から棒までの高さ4 m" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"></figure>
+<p>質量 100 kg、長さ 9 m の一様な棒が、水平に、3 本のケーブルで天井から吊られている。ケーブル A、B は、天井の、$z$ 方向に ±3 m 離れた 2 点から、棒の左端から 2 m の同じ点に張られ、ケーブル C は、棒の右端から 1 m の点から鉛直に張られている。天井から棒までの高さは 4 m。各ケーブルの張力を求めよ（$g=9.81\ \mathrm{m/s^2}$）。</p>
+<p class="cr">出典：Mechanics Map, Homework 3.15（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。和訳と、ケーブル A・B が棒の同じ点につながるという図の読み取りは本教材。公式解答（答えのみ）$T_A=T_B=357.66$ N、$T_C=408.75$ N と照合済み。</p>
+<details><summary>解答</summary>
+<p>① 系：棒。外力：重さ $W=981$ N（中央＝左端から 4.5 m）、$T_A,T_B,T_C$（すべて<strong>引張り</strong>）。② 左端から 2 m の点 P を原点、$x$ を棒に沿って右、$y$ を上、$z$ を手前。③ ケーブル A、B は、P から天井の $(0,\ 4,\ \pm3)$ へ向かうので、単位ベクトル $(0,\ 4,\ \pm3)/5=(0,\ 0.8,\ \pm0.6)$。ケーブル C は鉛直 $(0,\ 1,\ 0)$。C の点の $x$ は $6$ m、重さの作用点は $x=2.5$ m。</p>
+<p>④ <strong>P まわり</strong>（A、B の力は腕 0）：棒に沿う $x$ 軸に垂直な方向の力だけが効く。$x$ 軸の向きに腕をとるので、モーメントは $z$ 成分：$6T_C-2.5W=0$。<br>
+力の釣合い：$y$：$0.8T_A+0.8T_B+T_C-981=0$。$z$：$0.6T_A-0.6T_B=0$（よって $T_A=T_B$）。</p>
+<p>⑤ $T_C=2.5\times981/6=\mathbf{408.75}$ N。$T_A=T_B=(981-408.75)/1.6=\mathbf{357.66}$ N。<br>
+⑥ 確かめ：左端まわりのモーメント（$x=-2$ の点まわり）：$T_A,T_B$ の鉛直成分 $2\times0.8\times357.66=572.25$ は腕 2、$T_C$ は腕 8、重さは腕 4.5：$2\times572.25+8\times408.75-4.5\times981=1144.5+3270-4414.5=0$ ✓。<br>答：$T_A=T_B=357.7$ N、$T_C=408.8$ N。</p></details></div>
+
+<div class="box"><span class="label">問7〔C｜Mechanics Map 宿題 5.10〕缶つぶし器</span>
+<figure class="slide"><img src="img/ext04/q7_crusher.png" alt="缶つぶし器。壁のピンCから斜めに伸びる腕ABC。A端に20 Nの力が腕に垂直に下向きに働く。Bで缶に接し、缶のもう一方はピンDで壁に支えられた板に接する。AB=0.3 m、BC=0.1 m、CとDは0.1 m離れていて、腕は水平から25°" loading="lazy" style="width:460px;max-width:96%;height:auto;background:#fff"></figure>
+<p>缶つぶし器の腕 ABC は、C で壁にピン留めされている。A に、腕に垂直な 20 N の力を加える。腕の B が缶を押し、缶はもう一方の端 D（C の真下 0.1 m、壁にピン留め）で受けられている。缶 BD を二力部材とみなして、缶に働く力を求めよ。寸法：AB $=0.3$ m、BC $=0.1$ m、腕は水平から 25°。</p>
+<p class="cr">出典：Mechanics Map, Homework 5.10（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。和訳と、「20 N は腕に垂直」「D は C の真下」という図の読み取りは本教材。公式解答（答えのみ）148.9 N と、この読み取りで一致。</p>
+<details><summary>解答</summary>
+<p>① 系：腕 ABC。外力：A の 20 N、B で缶から受ける力（<strong>缶 BD は二力部材なので、方向は直線 BD</strong>）、C のピン反力（未知数 2）。大きさを $F$ とする。② C を原点。腕は C から A へ向かって、水平から 25° 上（左上）：C→A の向き $(-\cos25°,\ \sin25°)$。<br>
+③ B $=0.1\times(-0.9063,\ 0.4226)=(-0.0906,\ 0.0423)$ m。D $=(0,\ -0.1)$ m。BD の向き（B から D）：$(0.0906,\ -0.1423)/0.1687=(0.5373,\ -0.8434)$。</p>
+<p>④ <strong>C まわり</strong>のモーメント（C の反力が消える）：20 N は腕に垂直で A は C から $0.4$ m なので、そのモーメントの大きさは $20\times0.4=8$ N·m。B の力 $F$（向き $-(0.5373,\ -0.8434)$、つまり D から B へ。缶が腕を押し返す向き）のモーメントの大きさは $F\times|(-0.0906)(-0.8434)-0.0423\times0.5373|=0.05372F$。</p>
+<p>⑤ $0.05372F=8$ より $F=\mathbf{148.9}$ N。缶は B と D の両端から押されて<strong>圧縮</strong>（缶をつぶす力）。<br>
+⑥ 確かめ：もし缶がなければ、20 N を A に加えるだけでは、腕は C のまわりを回るだけ。てこの比（A までの距離 0.4 m と、B の力の腕 0.0537 m の比 7.4）が、20 N を 149 N に拡大している。<br>答：缶に働く力 148.9 N（圧縮）。</p></details></div>
+
+<div class="box"><span class="label">問8〔C｜自作〕例題8 の変形：先端にもう一つの横向きの力</span>
+<p>例題8（支線で支える棒）で、先端 O に 600 N の力に加えて、<strong>$z$ 方向（手前）に 200 N の力</strong>も作用するとき、支線の張力 $F_A,F_B$ と足元の反力を求めよ。2 本の張力が等しくならないのはなぜか。</p>
+<p class="cr">自作（本教材）。解答は sympy で検算済み（<code>draft/check_04.py</code>）。</p>
+<details><summary>解答</summary>
+<p>① 3 次元の釣合い。未知数 5（$F_A,F_B,R_{Cx},R_{Cy},R_{Cz}$）。③ O の力の和：$\boldsymbol F_A+\boldsymbol F_B+(591,\ -104,\ 200)$。④ C まわりのモーメント（(6) と同じ形で、$z$ 成分に 200 が加わる）：<br>
+$\boldsymbol i$：$10\times(0.25F_A-0.25F_B+200)=0$、$\boldsymbol k$：$-10\times(-0.433F_A-0.433F_B+591)=0$。<br>
+⑤ $F_A-F_B=-800$、$F_A+F_B=590.9/0.433=1364.6$ より $F_A=\mathbf{282.3}$ N、$F_B=\mathbf{1082.3}$ N。足元：$\sum F_x$：$R_{Cx}=0$、$\sum F_z$：$R_{Cz}=-(0.25(F_A-F_B)+200)=-(−200+200)=0$、$R_{Cy}=0.866\times1364.6+104.2=\mathbf{1286}$ N。<br>
+⑥ 確かめ：点 O まわり（足元の反力だけが残る）：$R_{Cx}=R_{Cz}=0$ と整合 ✓。<br>
+<strong>$F_A\ne F_B$ の理由</strong>：手前向き（$+z$）の 200 N は、支線 A（$+z$ 側）の張力を弱め、支線 B（$-z$ 側）を強くして初めて、棒を $z$ 方向に釣合わせる。2 本とも張力は正（引張り）のまま。<br>
+答：$F_A=282$ N、$F_B=1082$ N、$R_C=(0,\ 1286,\ 0)$ N。</p></details></div>
+
+<!-- ============================================================ -->
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 釣合い＝<strong>合力と合モーメントがともに 0</strong>（式 1.1、3.28）を言え、2次元 3 式・3次元 6 式を立てられる。1点に作用する力はモーメント不要（3.3・3.6）で、その理由を言える。</li>
+<li>□ $\boldsymbol R=\boldsymbol 0$ ならモーメントは基準点によらない（$\boldsymbol M_Q=\boldsymbol M_P+\boldsymbol r_{QP}\times\boldsymbol R$）ことと、力の釣合いの軸は任意でよいことを導けて、<strong>未知数が 1 つの式</strong>を選べる。</li>
+<li>□ <strong>内力が釣合い条件に現れない</strong>ことを、作用反作用（逆向き・同一作用線上）から力とモーメントで導ける。FBD には外力だけを描く。</li>
+<li>□ 支点の反力の未知数（移動 1・回転 2・固定 3）を、「妨げる動きの数」から説明できる。ケーブル・滑らかな面・車輪の反力の形を言える。</li>
+<li>□ 未知数と式の数を数え、静定・不静定・不安定を判別できる。不静定のとき、剛体の仮定では決まらないことを言える。</li>
+<li>□ <strong>二力部材</strong>の力が 2 つのピンを結ぶ直線に沿うことを導け（曲がった部材でも）、引張りと圧縮を、節点に働く力の向きで区別できる。</li>
+<li>□ 手順①〜⑥で、例題 3.1・3.3・3.4、ロボット台車、3 次元の支線の問題を解ける。<strong>使わなかった式で検算</strong>する習慣がある。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第5回・10/20）</strong>：重心（教科書 3.2）。この回の釣合いの問題の荷重は、すべて「1 点に働く力」だった。ところが現実の荷重（梁の重さ、水の圧力、風）は、<strong>面や体積に分布して</strong>いる。分布した重さを、釣合いの式にそのまま使える「1 つの力」に置き換えるには、その力を<strong>どこに</strong>置けばよいか——それが重心で、同じ式（合力と合モーメント）から導かれる。<br>
+<a href="index.html">← 目次へ</a>
+</div>
+
+<div class="box"><span class="label">講義資料との対応（どこで扱ったか）</span>
+<table class="tb">
+<tr><th>講義資料</th><th>本教材</th></tr>
+<tr><td>p.1–3 第3章の扉・マニピュレータ、今日のポイント</td><td>序</td></tr>
+<tr><td>p.4 3・1 釣合い</td><td>1.1</td></tr>
+<tr><td>p.5 3・1・1 1点に作用する力の釣合い（式 3.3、3.6）</td><td>1.2</td></tr>
+<tr><td>p.6 3・1・2 複数の点に作用する力の釣合い（式 3.28）</td><td>1.3（1.4 は本教材の追加）</td></tr>
+<tr><td>p.7–9 3・1・3 釣合いにおける内力</td><td>2章</td></tr>
+<tr><td>p.11–12 1. 釣合い条件（未知数の数、不静定問題）</td><td>1.1、3.3、3.4</td></tr>
+<tr><td>p.13–14 2. Two-Force Members</td><td>4.1、4.2、4.4</td></tr>
+<tr><td>p.15–18 3. 問題を解くためのヒント（FBD、支点の反力、ヒント ii–v）</td><td>2.4、3.1、3.2、5章、1.4</td></tr>
+<tr><td>p.19–20 4. 部材の内力（引張・圧縮）</td><td>4.3</td></tr>
+<tr><td>p.21 例題 3.1（内力の考察として）</td><td>1.5、4.3</td></tr>
+<tr><td>p.22–24 例題 3.4（解答例・別解）</td><td>6.1</td></tr>
+<tr><td>p.25–29 例題（ロボット台車）</td><td>序、6.2</td></tr>
+<tr><td>p.30 例題 3.3（教科書の解き方・別解）</td><td>6.3</td></tr>
+<tr><td>p.31–33 例題 3次元の釣合い（Schaum's 図 6-1）</td><td>7章</td></tr>
+</table></div>
+
+<p class="meta">出典：講義資料「第4回」の内容と、本教材の追加（導出・例・図・計算）。図は、講義資料から切り出したもの（<code>img/slide04/</code>、個人の学習用の転載・再配布しない）と、数値から計算して描いたもの。章末例題・演習問題の出典は各問題の下に記した（原図は個人の学習用に転載。再配布しない）。写真の出典は各写真の下に記した。解答の検算は Python（sympy・numpy）。ロボット台車の寸法図の読み取り、二力部材の例の寸法、外部問題の日本語化は本教材によるもので、誤りがあれば本教材側の誤りである。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a></nav>
+
+</body>
+</html>
