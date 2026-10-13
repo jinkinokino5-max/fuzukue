@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2回 温度計測</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<style>.hero .ttl{ color:#f7f4ec; } .hero .ttl .vol{ color:#e9795f; }</style>
+<!-- 第2回 温度計測（本文）。SVG は draft/02_build.py が差し込む -->
+<figure class="hero">
+<img src="img/hero_02.jpg" alt="暗がりの中で赤熱する鉄片">
+<div class="ttl"><p class="vol">第2回</p><h1>温度計測</h1></div>
+<figcaption><p class="cap">暗がりの中で、鉄は自分の色で温度を告げている。</p><p class="cr">Hi-Res Images of Chemical Elements／<a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Red_hot_iron_is_forged_with_hammer_and_anvil.jpg">Wikimedia Commons</a>（「Red hot iron is forged with hammer and anvil」。縮小し、黒地を左に延ばして加工）</p></figcaption>
+</figure>
+<p class="lead">講義資料「温度計測」（エンジンシステム・次世代燃料研究室）対応。資料は撮影画像の9ページ分で、本教材は説明の順序を組み直している（対応表は設計メモ）。資料の空欄は標準的な内容で補い、補った箇所には「補足」と書いた。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：温度は「熱平衡」でだけ決まる → だから温度計は<em>温度で変わる量</em>（体積・圧力・起電力・抵抗・放射）を読むしかない → 各方式の式を導く → どの方式でも読めているのは<em>センサ自身の温度</em>だけ → センサが相手と同じ温度になるまでの<em>遅れ（時定数）</em>と<em>熱接触</em>が、すべての誤差の入口になる。
+</div>
+
+<h2 id="s0"><span class="no">0</span>準備：この回で使う数学</h2>
+<div class="box"><span class="label">0.1　1階の微分方程式 $\tau\,\dot y = y_\infty - y$</span>
+<p>右辺を $y_\infty-y=u$ とおくと $\dot u=-\dot y$ なので $\tau\dot u=-u$、すなわち $u=u_0e^{-t/\tau}$。したがって
+$$y(t)=y_\infty+(y_0-y_\infty)\,e^{-t/\tau}\qquad(2.0)$$
+$t=\tau$ で差が $e^{-1}\approx0.368$ 倍（＝目標の63.2 %に到達）、$t=4.6\tau$ で $e^{-4.6}\approx0.01$（99 %）。2.2節で使う。</p>
+<span class="label">0.2　積分の加法性</span>
+<p>$\displaystyle\int_{a}^{c}f\,dx=\int_{a}^{b}f\,dx+\int_{b}^{c}f\,dx$、$\displaystyle\int_{a}^{a}f\,dx=0$、$\displaystyle\int_{b}^{a}f\,dx=-\int_{a}^{b}f\,dx$。熱電対の3法則（3章）はこの3行だけで導ける。</p>
+<span class="label">0.3　指数と対数の微分</span>
+<p>$\dfrac{d}{dx}\ln f=\dfrac{f'}{f}$、$\dfrac{d}{dT}\dfrac1T=-\dfrac1{T^2}$。サーミスタの感度（4.3節）で使う。</p></div>
+
+<!-- ============================================================ -->
+<h2 id="s1"><span class="no">1</span>温度と目盛</h2>
+
+<h3><span class="no">1.1</span>なぜ「温度計測はすべての基本」なのか</h3>
+<p>資料の冒頭は、エンジンの断面図に温度の働きを書き込んだものである。吸気負圧から<strong>最適な燃料噴射量を計算</strong>する、<strong>触媒活性</strong>と<strong>焼付き防止</strong>、<strong>早い暖気</strong>と<strong>オーバーヒート防止</strong>――どの項目も、温度が分かって初めて制御が成り立つ。圧力・流量・濃度などの多くの量は、読み取りに温度補正が必要になる（気体の密度は温度で変わる）。だから温度は計測の土台と呼ばれる。</p>
+
+<h3><span class="no">1.2</span>温度を定める：熱平衡</h3>
+<p><strong>動機</strong>：「熱い・冷たい」は感覚であり、数にするには「何をもって同じ温度というか」を決めねばならない。</p>
+<div class="def"><span class="label">定義（熱平衡と温度）</span>二つの物体を熱的に接触させ、十分に時間がたって正味の熱の出入りがなくなった状態を<strong>熱平衡</strong>という。物体Aと物体Bが平衡、BとCが平衡なら、AとCも平衡である（熱力学第0法則）。この推移性があるので、「平衡のとき共通になる量」として<strong>温度</strong>を定義できる。</div>
+<p>温度計とは、Bの役を務める小さな物体である。温度計をAに触れさせて平衡にし、Cにも触れさせて同じ読みなら、AとCは同じ温度だと言える。資料の「大体の温度計は<strong>熱平衡状態</strong>であることを求める（相当する遅れ時間が必要）」とは、この意味である。また、<strong>熱平衡が定義されていないと目盛りがつけられない</strong>のも、同じ理由による。</p>
+
+<h3><span class="no">1.3</span>目盛：°F、°C、K</h3>
+<p>資料は三つの目盛を挙げる：ファーレンハイト度 $T_F$（華氏）、セルシウス度 $T_C$（摂氏）、絶対温度 $T_K$（ケルビン）。</p>
+<p><strong>ファーレンハイト</strong>（資料の雑学）：1724年、ドイツのガブリエル・ファーレンハイトが提唱した。資料によれば、0 °F は −17.8 °C、100 °F は当時の計測精度が低かったため少し高めの値（人体付近）になっており、この0〜100の目盛りを12等分し、さらに8等分して96の目盛りをつくったものが °F と定義された。</p>
+
+<div class="proof">
+<p><span class="step">STEP 1　換算式を二点から導く</span>　温度目盛は「一次式の読み替え」で結ばれる（どちらも体積などが温度に比例するという同じ約束に基づく）ので、$T_F=aT_C+b$ とおく。水の凝固点は 0 °C ＝ 32 °F、沸点は 100 °C ＝ 212 °F（この二点は目盛の定義として広く用いられる値）。</p>
+<p><span class="step">STEP 2　係数を決める</span>　$b=32$（$T_C=0$ を代入）。$212=100a+32$ より $a=180/100=9/5$。したがって
+$$T_F=\tfrac95T_C+32\qquad\Longleftrightarrow\qquad T_C=\tfrac59(T_F-32)\qquad(1.1)$$
+<span class="step">STEP 3　絶対温度</span>　$T_K=T_C+273.15$（1.2）。絶対零度は $-273.15$ °C。目盛の間隔は °C と同じである。</p>
+</div>
+<p><strong>確かめ</strong>：(1.1)で 0 °F → $\frac59(-32)=-17.8$ °C、100 °F → $\frac59\cdot68=37.8$ °C。資料の値と一致する（Pythonで検算済み）。資料のアメリカ気温図（The Weather Channel）の例も確かめると：</p>
+<table class="tb"><tr><th>地点（資料）</th><th>°F</th><th>(1.1)の計算</th><th>資料の値</th></tr>
+<tr><td>California</td><td>76</td><td>24.4 °C</td><td>25 °C</td></tr>
+<tr><td>Las Vegas</td><td>92</td><td>33.3 °C</td><td>33 °C</td></tr>
+<tr><td>Chicago</td><td>57</td><td>13.9 °C</td><td>14 °C</td></tr>
+<tr><td>Minnesotaの北の方</td><td>30</td><td>−1.1 °C</td><td>−1 °C</td></tr></table>
+<p class="note">資料の °C は四捨五入された概数である（California の 25 は 24.4 を丸めた値で、小数に直すと 0.6 °C ずれる）。</p>
+<div class="warn"><span class="label">よくある誤解：温度「差」の換算</span>1 K ＝ 1 °C ＝ 1.8 °F である。差の換算では「$+32$」も「$+273.15$」も要らない。たとえば 10 °C の温度上昇は 18 °F の上昇であって、$10\times1.8+32$ ではない。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/a1_galileo.jpg" alt="ガリレオ温度計。液体の中に札のついたガラス球が浮いている" loading="lazy"></div>
+<p class="cap">札のついた球が上下し、液体の密度変化だけで温度の目盛を読ませる。</p>
+<p class="cr">Fenners／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:Galileo_Thermometer_closeup.jpg">Wikimedia Commons</a>（Galileo Thermometer closeup）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/b1_meter.jpg" alt="断面がX字形のメートル原器" loading="lazy"></div>
+<p class="cap">一本の棒を「基準」と決めたとき、世界の長さは目盛りの数え方に変わった。</p>
+<p class="cr">作者不詳／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:Platinum-Iridium_meter_bar.jpg">Wikimedia Commons</a>（Platinum-Iridium meter bar）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="s2"><span class="no">2</span>センサの考え方と機械式温度計</h2>
+
+<h3><span class="no">2.1</span>測定方法の分類と共通の原理</h3>
+<table class="tb"><tr><th>方式</th><th>例（資料）</th></tr>
+<tr><td>接触方式</td><td>液体温度計、バイメタル、流体膨張温度計（圧力式）、熱電対、抵抗測温体</td></tr>
+<tr><td>非接触方式</td><td>放射温度計</td></tr></table>
+<p>資料の「測定原理」は一言でいえば、<strong>温度で変わる物理量を読み、目盛りに表示したり電気信号に変換したりする</strong>ことである。変わる量の例として資料は、物体の膨張・収縮、抵抗値の増減（電流の流れ具合）、磁気特性、電磁波放出量を挙げる。本教材の章立てはこの分類に対応している。</p>
+<table class="tb"><tr><th>温度で変わる量</th><th>方式</th><th>章</th></tr>
+<tr><td>体積・長さ・圧力</td><td>液体封入、バイメタル、圧力式</td><td>2</td></tr>
+<tr><td>起電力</td><td>熱電対</td><td>3</td></tr>
+<tr><td>電気抵抗</td><td>白金測温抵抗体、サーミスタ</td><td>4</td></tr>
+<tr><td>放射エネルギ</td><td>放射温度計</td><td>5</td></tr>
+<tr><td>磁気特性・色・軟化</td><td>フェライト、示温塗料、ゼーゲル錐</td><td>6</td></tr></table>
+<p>資料は「センサのよしあしなどの応答性も計測精度などに依存するため、<strong>計測装置の原理を知らずして正しい計測はできない</strong>」と強調する。以降、各方式で「何が・なぜ・どれだけ」変わるのかを式で追う。</p>
+
+<h3><span class="no">2.2</span>測っているのは「センサ自身の温度」：時定数と熱接触</h3>
+<p><strong>動機</strong>：温度計が示すのは、相手の温度ではなく、<em>温度計自身の温度</em>である。示度が相手の温度に近づくのに、どれくらい時間がかかるか。</p>
+<div class="proof">
+<p><span class="step">STEP 1　熱収支を立てる</span>　質量 $m$、比熱 $c$、表面積 $A$ のセンサを、温度 $T_f$ の流体に入れる。熱伝達率を $h$ とすると、センサに入る熱流は $hA(T_f-T)$（温度差に比例するというニュートンの冷却則）。これがセンサの蓄熱の速さ $mc\,\dot T$ に等しい：
+$$mc\,\dot T=hA\,(T_f-T)\qquad\Longrightarrow\qquad\tau\,\dot T=T_f-T,\quad \tau=\frac{mc}{hA}\qquad(2.1)$$
+<span class="step">STEP 2　解く</span>　0.1節の形そのものなので、
+$$T(t)=T_f+(T_0-T_f)e^{-t/\tau}\qquad(2.2)$$
+<span class="step">STEP 3　球状のセンサ（熱電対の先端など）</span>　直径 $D$、密度 $\rho$ なら $m=\rho\pi D^3/6$、$A=\pi D^2$ なので
+$$\tau=\frac{\rho c D}{6h}\qquad(2.3)$$
+細く小さいほど速く、熱が伝わりにくい（$h$ が小さい）媒体ほど遅い。</p>
+</div>
+<figure><svg viewBox='0 0 560 290' xmlns='http://www.w3.org/2000/svg' font-family='Yu Gothic,Meiryo,sans-serif' font-size='12'><rect x='56' y='14' width='490' height='232' fill='#fff' stroke='#2a2723'/><line x1='56.0' y1='14' x2='56.0' y2='246' stroke='#ddd6c8'/><text x='56.0' y='262' text-anchor='middle'>0</text><line x1='137.7' y1='14' x2='137.7' y2='246' stroke='#ddd6c8'/><text x='137.7' y='262' text-anchor='middle'>1</text><line x1='219.3' y1='14' x2='219.3' y2='246' stroke='#ddd6c8'/><text x='219.3' y='262' text-anchor='middle'>2</text><line x1='301.0' y1='14' x2='301.0' y2='246' stroke='#ddd6c8'/><text x='301.0' y='262' text-anchor='middle'>3</text><line x1='382.7' y1='14' x2='382.7' y2='246' stroke='#ddd6c8'/><text x='382.7' y='262' text-anchor='middle'>4</text><line x1='464.3' y1='14' x2='464.3' y2='246' stroke='#ddd6c8'/><text x='464.3' y='262' text-anchor='middle'>5</text><line x1='546.0' y1='14' x2='546.0' y2='246' stroke='#ddd6c8'/><text x='546.0' y='262' text-anchor='middle'>6</text><line x1='56' y1='246.0' x2='546' y2='246.0' stroke='#ddd6c8'/><text x='50' y='250.0' text-anchor='end'>0</text><line x1='56' y1='190.8' x2='546' y2='190.8' stroke='#ddd6c8'/><text x='50' y='194.8' text-anchor='end'>0.25</text><line x1='56' y1='135.5' x2='546' y2='135.5' stroke='#ddd6c8'/><text x='50' y='139.5' text-anchor='end'>0.5</text><line x1='56' y1='80.3' x2='546' y2='80.3' stroke='#ddd6c8'/><text x='50' y='84.3' text-anchor='end'>0.75</text><line x1='56' y1='25.0' x2='546' y2='25.0' stroke='#ddd6c8'/><text x='50' y='29.0' text-anchor='end'>1</text><text x='301.0' y='284' text-anchor='middle'>時間 t / τ</text><text x='14' y='130.0' text-anchor='middle' transform='rotate(-90 14 130.0)'>(T − T₀)/(T∞ − T₀)</text><polyline points='56.0,246.0 60.1,235.2 64.2,225.0 68.2,215.2 72.3,205.9 76.4,197.1 80.5,188.7 84.6,180.8 88.7,173.2 92.8,165.9 96.8,159.1 100.9,152.5 105.0,146.3 109.1,140.4 113.2,134.8 117.2,129.4 121.3,124.3 125.4,119.5 129.5,114.9 133.6,110.5 137.7,106.3 141.8,102.4 145.8,98.6 149.9,95.0 154.0,91.6 158.1,88.4 162.2,85.3 166.2,82.3 170.3,79.5 174.4,76.9 178.5,74.3 182.6,71.9 186.7,69.7 190.7,67.5 194.8,65.4 198.9,63.4 203.0,61.6 207.1,59.8 211.2,58.1 215.2,56.5 219.3,55.0 223.4,53.5 227.5,52.1 231.6,50.8 235.7,49.5 239.8,48.3 243.8,47.2 247.9,46.1 252.0,45.1 256.1,44.1 260.2,43.2 264.2,42.3 268.3,41.5 272.4,40.7 276.5,39.9 280.6,39.2 284.7,38.5 288.8,37.8 292.8,37.2 296.9,36.6 301.0,36.0 305.1,35.5 309.2,35.0 313.2,34.5 317.3,34.1 321.4,33.6 325.5,33.2 329.6,32.8 333.7,32.4 337.8,32.1 341.8,31.7 345.9,31.4 350.0,31.1 354.1,30.8 358.2,30.5 362.2,30.2 366.3,30.0 370.4,29.7 374.5,29.5 378.6,29.3 382.7,29.1 386.7,28.9 390.8,28.7 394.9,28.5 399.0,28.4 403.1,28.2 407.2,28.0 411.2,27.9 415.3,27.8 419.4,27.6 423.5,27.5 427.6,27.4 431.7,27.3 435.8,27.2 439.8,27.1 443.9,27.0 448.0,26.9 452.1,26.8 456.2,26.7 460.3,26.6 464.3,26.5 468.4,26.5 472.5,26.4 476.6,26.3 480.7,26.3 484.8,26.2 488.8,26.2 492.9,26.1 497.0,26.0 501.1,26.0 505.2,26.0 509.2,25.9 513.3,25.9 517.4,25.8 521.5,25.8 525.6,25.8 529.7,25.7 533.8,25.7 537.8,25.7 541.9,25.6 546.0,25.6' fill='none' stroke='#2b3a67' stroke-width='2'/><line x1='137.7' y1='106.4' x2='137.7' y2='246.0' stroke='#a8322a' stroke-dasharray='4 3'/><line x1='56.0' y1='106.4' x2='137.7' y2='106.4' stroke='#a8322a' stroke-dasharray='4 3'/><text x='143.7' y='135.5' fill='#a8322a'>t = τ で 63.2 %</text><line x1='432.1' y1='27.3' x2='432.1' y2='246.0' stroke='#6b8a5a' stroke-dasharray='4 3'/><text x='426.1' y='135.5' fill='#6b8a5a' text-anchor='end'>4.6τ で 99 %</text></svg><figcaption>図2.1　1次遅れ応答（(2.2)式）。縦軸は到達の割合、横軸は $t/\tau$。計算して描いたグラフ。</figcaption></figure>
+<div class="ex"><span class="label">例（概算）</span><p>直径1 mm の金属球（$\rho=8700$ kg/m³、$c=450$ J/(kg·K) と仮定）。空気中（$h=50$ W/(m²·K) と仮定）では (2.3) から $\tau=8700\times450\times10^{-3}/(6\times50)=13$ s、$4.6\tau\approx60$ s。水中（$h=2000$ W/(m²·K) と仮定）では $\tau=0.33$ s。<span class="note">数値 $h$・$\rho$・$c$ は説明用の仮定値で、実際の値は条件で大きく変わる。</span>同じセンサでも、流体が違うと待ち時間が二桁変わる。</p></div>
+<p><strong>熱接触</strong>（資料の注記）：温度の異なる二つの物体は、接触していれば伝導・対流・放射で、接触していなくても放射で熱をやりとりし、それぞれの温度が変わって、やがて一つの共通の温度に到達する（両者をあわせた系の熱平衡が成り立つ）。つまり<strong>温度計を入れた時点で、測りたい対象の温度も（わずかに）変えている</strong>。測るとは、相手と自分が同じ温度になるまで待つことである。</p>
+<p>資料の熱電対の注意事項は、この論理でまとめて読める：表面温度の測定は、測温部を被測温体の温度に一致させる工夫が必要（熱接触を良くする）。細い配管内の流体温度は、挿入深度が足りないと配管壁への熱伝導で示度が下がるので挿入方法に工夫が要る。高温炉内は放射熱による誤差に注意する。反応性流体では触媒反応が起きないよう注意する。そして何より「<strong>何の（どこの）温度を計測しているか</strong>」を意識する。</p>
+
+<h3><span class="no">2.3</span>センサとしての必要条件</h3>
+<p>資料は三つを挙げる。</p>
+<ol><li><strong>零点の決め方の明確性</strong>（基準温度）：目盛の出発点が再現できること。氷点がその例である。</li>
+<li><strong>すばやい時間応答性</strong>：(2.1)の $\tau$ が小さいこと。</li>
+<li><strong>線形性の必要性</strong>：出力が温度に比例すること。資料は「応答が非線形のものは、たとえ非線形関数が正しいとしても望ましくない」と述べる。</li></ol>
+<div class="why"><span class="label">補足：なぜ線形性がそこまで大事か（本教材の補足）</span>出力が温度の一次式なら、校正は2点で済み、目盛は等間隔で、感度（出力の変化 ÷ 温度の変化）はどこでも一定になる。非線形だと感度が場所で変わり、読み取り誤差も温度域によって違い、校正点が増える。正しい関数が分かっていても、計算の手間と誤差の見積りが重くなる。</div>
+<div class="warn"><span class="label">よくある勘違い（資料）</span>「この計測概念は万能である」（万能な概念は極めて稀である）／「この計測装置は万能である」（<strong>ワーキングレンジ</strong>は必ずある）／「一つの計測装置の値で満足」（できる限り<strong>クロスチェック</strong>することが必要）。</div>
+
+<h3><span class="no">2.4</span>液体封入ガラス温度計</h3>
+<p>ガラスに液体（アルコール、水銀など）を封入する。液体の体積膨張率を $\beta$、球部の体積を $V_0$、細管の断面積を $a$ とすると、温度が $\Delta T$ 上がったときの液柱の伸びは（ガラス自体の膨張を無視して）$\Delta L=\beta V_0\Delta T/a$。球が大きく管が細いほど、目盛が読みやすい（感度が高い）。</p>
+
+<h3><span class="no">2.5</span>バイメタル温度計</h3>
+<p>資料は「<span class="note">（空欄）</span>を接合して素子を形成」とし、構造が簡単で丈夫、簡単なオン・オフ温度制御スイッチを形成できるとする。空欄は<strong>熱膨張率の異なる二種の金属板</strong>（補足：標準的な内容）である。</p>
+<p><strong>曲がる量を導く</strong>：同じ厚さ $t$、同じヤング率 $E$、幅 $b$ の金属板A（線膨張率 $\alpha_1$）とB（$\alpha_2 \gt \alpha_1$）を貼り合わせる。温度が $\Delta T$ 上がると、自由なら板Aはひずみ $\alpha_1\Delta T$、板Bは $\alpha_2\Delta T$ だけ伸びたいが、貼ってあるのでそろえて曲がる。</p>
+<div class="proof">
+<p><span class="step">STEP 1　ひずみを置く</span>　接合面からの距離を $y$（Bの側を正）、曲率を $\kappa$、接合面のひずみを $\varepsilon_0$ とすると、位置 $y$ の全ひずみは $\varepsilon_0+\kappa y$。応力は「全ひずみ − 自由な熱膨張」にヤング率を掛けたもの：A（$-t\le y\le0$）は $\sigma_1=E(\varepsilon_0+\kappa y-\alpha_1\Delta T)$、B（$0\le y\le t$）は $\sigma_2=E(\varepsilon_0+\kappa y-\alpha_2\Delta T)$。</p>
+<p><span class="step">STEP 2　力のつり合い</span>（外力なし：$\int\sigma\,dy=0$）　$\kappa$ の項は $-t^2/2$ と $+t^2/2$ で打ち消し合い、$2t\varepsilon_0-(\alpha_1+\alpha_2)\Delta T\,t=0$ より $\varepsilon_0=\frac{\alpha_1+\alpha_2}2\Delta T$。</p>
+<p><span class="step">STEP 3　モーメントのつり合い</span>（$\int\sigma\,y\,dy=0$）　$\int_{-t}^0y\,dy=-t^2/2$、$\int_0^ty\,dy=t^2/2$、$\int y^2dy=t^3/3$（各層）を使うと
+$$\tfrac{t^2}{2}\big[(\varepsilon_0-\alpha_2\Delta T)-(\varepsilon_0-\alpha_1\Delta T)\big]+\tfrac{2t^3}{3}\kappa=0\ \Longrightarrow\ \kappa=\frac{3(\alpha_2-\alpha_1)\Delta T}{4t}=\frac{3\,\Delta\alpha\,\Delta T}{2h}\qquad(2.4)$$
+（$h=2t$：全体の厚さ）。</p>
+<p><span class="step">STEP 4　先端のたわみ</span>　長さ $l$ の片持ち板で、小さなたわみなら $x=\kappa l^2/2$（円弧の近似）。
+$$x=\frac{3\,\Delta\alpha\,\Delta T\,l^2}{4h}\qquad(2.5)$$
+</p></div>
+<div class="ex"><span class="label">例</span><p>$\Delta\alpha=7\times10^{-6}$ /K（たとえば真ちゅうと鋼の差の代表的な大きさ）、$h=0.4$ mm、$l=50$ mm、$\Delta T=100$ K：(2.4) から $\kappa=2.6$ 1/m（曲率半径 0.38 m）、(2.5) から $x=3.3$ mm。小さな力と動きなので、接点を開閉するスイッチ向きである。<span class="note">材料値は代表的な大きさの仮定で、実際の板材の値ではない。</span></p></div>
+<p class="note">(2.4)は「同じ厚さ・同じヤング率」のときの結果である。厚さや $E$ が違う一般の場合は係数が変わるが、「$\kappa\propto\Delta\alpha\,\Delta T/h$」という形は変わらない。</p>
+
+<h3><span class="no">2.6</span>圧力式温度計（ブルドン管）</h3>
+<p>感温部、導管、ブルドン管などを用いた受圧変換部で構成される。感温部の中の流体が温度で圧力を変え、ブルドン管（曲がった管。圧力が上がると伸びる）がその圧力を指針の動きに変える。構造が簡単で丈夫、工業的な温度測定で最も経済的で融通がきき、広く使われている。<strong>電気を使わないので本質安全防爆</strong>の計装に適し、プロセス計装に多い。</p>
+<table class="tb"><tr><th>方式（資料）</th><th>封入するもの</th><th>温度と圧力の関係</th></tr>
+<tr><td>液体充満圧力計式</td><td>非圧縮性の液体（ケロシン、アルコール、ブタン、プロパン、水銀など）を完全に封入</td><td>体積が膨張しようとして圧力が上がる</td></tr>
+<tr><td>蒸気圧式</td><td>プロパン、ブタン、トルエン、液体酸素、水など</td><td>飽和蒸気圧が温度で決まる（非線形）</td></tr>
+<tr><td>気体圧力式</td><td>不活性ガス（ヘリウム、窒素など）</td><td>ボイル・シャルルの法則</td></tr></table>
+<p><strong>気体式の式</strong>：体積一定のとき $pV=nRT$ から $p=\dfrac{nR}{V}T\propto T$（2.6）。出力が絶対温度に比例する、線形のセンサである。たとえば 300 K で 100 kPa に封入した気体は、400 K で $100\times400/300=133$ kPa になる。蒸気圧式が非線形になるのは、飽和蒸気圧が温度の指数関数的な増加（クラウジウス–クラペイロンの式の形）であるためで、気体式のほうが目盛が素直である（補足）。</p>
+<p class="note">資料の製品カタログの図には、ブルドン管の動きを歯車で拡大して指針に伝える「ギヤー式」と、管の変位を直接ダイヤルに指示する「ギヤーレス式」があること、周囲温度誤差を補正バイメタル等で補うことが書かれている。</p>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/a2_bimetal.jpg" alt="渦巻状のバイメタルが見える丸型温度計" loading="lazy"></div>
+<p class="cap">中央の渦巻が二種の金属の貼り合わせで、温度が針の回転に変わる。</p>
+<p class="cr">Pogrebnoj-Alexandroff／<a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Bimetallic_thermometer.JPG">Wikimedia Commons</a>（Bimetallic thermometer）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/b2_kyudo.jpg" alt="大弓を引き絞る弓道家の古い写真" loading="lazy"></div>
+<p class="cap">表と裏の伸びの差が、弓の反りという力の貯えになる。</p>
+<p class="cr">作者不詳／パブリックドメイン／<a href="https://commons.wikimedia.org/wiki/File:Japanese_Kyudoka_Draws_Daikyu_Longbow.png">Wikimedia Commons</a>（Japanese Kyudoka Draws Daikyu Longbow）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="s3"><span class="no">3</span>熱電対</h2>
+
+<h3><span class="no">3.1</span>ゼーベック効果と熱起電力</h3>
+<p><strong>動機</strong>：抵抗で測る方式は電源を要するが、熱電対は<strong>自分で電圧を発生する</strong>。小さく、丈夫で、高温まで使える。</p>
+<div class="def"><span class="label">定義（熱電対・熱起電力）</span>二種の金属線（導体）A、Bの両端を電気的に接続して閉回路をつくり、一端を加熱するなどして両端に温度差を与えると、回路中に電流が流れる（<strong>ゼーベック効果</strong>。1821年の発見）。この電流を起こす起電力を<strong>熱起電力</strong>という。<strong>熱起電力の大きさは、両端の温度と導体の材質だけで決まり</strong>、導体の長さや太さ、両端以外の部分の温度には無関係である。（資料の空欄を、この標準的な内容で補った。）</div>
+<p>資料の図では、基準接点（温度 $t_1$）と測温接点（$t_2$）の二つの接点があり、A側を「+脚」、B側を「−脚」とよぶ。一端の温度を一定（原則 0 °C）に保てば、熱起電力を測ることで他端の温度が分かる。工業的に最も一般的に使われている。</p>
+<p><strong>式にする</strong>：各導体に、材質と温度だけで決まる量 $S(T)$（絶対熱電能）があるとし、導体の中で温度が $dT$ 変わると $dV=S(T)\,dT$ の電圧が現れる、と考える（接点そのものは起電力を生まないとする、標準的なモデル）。基準接点（$t_1$）から A を通って測温接点（$t_2$）へ、B を通って戻る向きに電圧を足すと、閉回路の起電力は
+$$E_{AB}(t_1,t_2)=\int_{t_1}^{t_2}S_A\,dT+\int_{t_2}^{t_1}S_B\,dT=\int_{t_1}^{t_2}\big(S_A-S_B\big)\,dT\qquad(3.1)$$
+<span class="note">（符号のとり方は教科書で違う。資料は式を与えておらず、(3.1)は本教材の定式化である。）</span>以下、三つの法則は(3.1)と積分の性質（0.2節）だけで導ける。</p>
+
+<h3><span class="no">3.2</span>均質回路の法則</h3>
+<div class="thm"><span class="label">法則(1)　均質回路の法則（資料の熱電対(2)(1)）</span>単独の均質な金属導体からなる回路では、局所的に加熱を行っても電流は流れない。熱電対の両脚が均質であれば、途中の温度分布は起電力に影響しない。</div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　導体が A だけなら、(3.1)で B を A に置き換える：$E=\int_{t_1}^{t_2}S_A\,dT+\int_{t_2}^{t_1}S_A\,dT$。</p>
+<p><span class="step">STEP 2</span>　第2項は積分の向きを逆にしただけなので $-\int_{t_1}^{t_2}S_A\,dT$。足して 0（0.2節）。途中でどんなに加熱しても、往路で現れた電圧を復路が打ち消す。</p>
+<p><span class="step">STEP 3</span>　両脚（A、B）についても、各脚の中の温度分布 $T(x)$ は積分の変数変換 $dT=T'(x)dx$ で消える（積分値は両端の温度だけで決まる）。これが「両端以外の温度、長さや太さには無関係」の理由である。</p>
+</div>
+<div class="warn"><span class="label">この法則の前提：均質であること</span>$S$ が場所で変わる（劣化、酸化、加工ひずみ、不純物）と、$S_A$ が位置の関数になり STEP 2 の打ち消しが崩れる。高温や長期間の使用で雰囲気による劣化（酸化・還元）が進むと熱電対が狂うのは、このためである（資料の短所(4)）。</div>
+
+<h3><span class="no">3.3</span>中間金属の法則</h3>
+<div class="thm"><span class="label">法則(2)　中間金属の法則（資料の熱電対(2)(2)）</span>熱電対 A、B の両接点以外の任意の箇所に、A、B とは異質の金属導体 C が接続されても、C の両端の温度が等しければ（資料の図：$t_3$）、熱起電力は変わらない。（資料の空欄を補った。）</div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　脚Aの途中に C を入れる。C の両端は同じ温度 $t_3$。脚 A の積分は、$t_1\to t_3$ の区間、C の区間（$t_3\to t_3$）、$t_3\to t_2$ の区間に分かれる：
+$$\int_{t_1}^{t_3}S_A\,dT+\underbrace{\int_{t_3}^{t_3}S_C\,dT}_{=0}+\int_{t_3}^{t_2}S_A\,dT=\int_{t_1}^{t_2}S_A\,dT$$
+<span class="step">STEP 2</span>　C の区間は始点と終点の温度が同じなので積分が0。残りの二つは足して元の積分になる（0.2節）。したがって(3.1)の値は変わらない。</p>
+</div>
+<p><strong>意味</strong>：電圧計の端子（銅）や、はんだ（接合部材）を回路に入れても、その両端が同温度なら測定に影響しない。つまり計器と接続してよい。</p>
+
+<h3><span class="no">3.4</span>中間温度の法則</h3>
+<div class="thm"><span class="label">法則(3)　中間温度の法則（資料の熱電対(3)）</span>両接点の温度が $T_1,T_2$ のときの熱起電力を $E_{12}$、$T_2,T_3$ のときを $E_{23}$ とすれば、$T_1,T_3$ のときは
+$$E_{13}=E_{12}+E_{23}\qquad(3.2)$$
+基準接点の温度がいかなる温度でも、熱起電力の値を、表から計算によって求められる。</div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　(3.1)で $t_1,t_2,t_3\to T_1,T_2,T_3$ とし、$S=S_A-S_B$ とおく：$E_{13}=\int_{T_1}^{T_3}S\,dT$。</p>
+<p><span class="step">STEP 2</span>　区間を $T_2$ で二つに分ける（0.2節の加法性）：$\int_{T_1}^{T_3}=\int_{T_1}^{T_2}+\int_{T_2}^{T_3}=E_{12}+E_{23}$。　$\blacksquare$</p>
+</div>
+<p><strong>使いかた</strong>：標準の熱起電力表は基準接点を 0 °C にして作られている。$T_1=t_{\text{ref}},T_2=0\,°\mathrm C,T_3=t$ として(3.2)を使い、$E_{0}(t)$ を「0 °C基準の表の値」とすると
+$$E(t,\,t_{\text{ref}})=E_0(t)-E_0(t_{\text{ref}})\qquad(3.3)$$
+</p>
+<div class="ex"><span class="label">例（K型）</span><p>基準接点が 100 °C、測温接点が 300 °C のとき。K 型の 0 °C 基準の熱起電力は 100 °C で 4.096 mV、300 °C で 12.209 mV（NIST の ITS-90 表の値。<strong>実験で配られる表と照合すること</strong>）。(3.3)から $E=12.209-4.096=8.113$ mV。測温接点の温度の読み取りには、この 8.113 mV に $E_0(100\,°\mathrm C)=4.096$ mV を足した 12.209 mV を表で逆引きして 300 °C を得る。</p></div>
+<figure><svg viewBox='0 0 560 300' xmlns='http://www.w3.org/2000/svg' font-family='Yu Gothic,Meiryo,sans-serif' font-size='12'><rect x='56' y='14' width='490' height='242' fill='#fff' stroke='#2a2723'/><line x1='56.0' y1='14' x2='56.0' y2='256' stroke='#ddd6c8'/><text x='56.0' y='272' text-anchor='middle'>0</text><line x1='154.0' y1='14' x2='154.0' y2='256' stroke='#ddd6c8'/><text x='154.0' y='272' text-anchor='middle'>200</text><line x1='252.0' y1='14' x2='252.0' y2='256' stroke='#ddd6c8'/><text x='252.0' y='272' text-anchor='middle'>400</text><line x1='350.0' y1='14' x2='350.0' y2='256' stroke='#ddd6c8'/><text x='350.0' y='272' text-anchor='middle'>600</text><line x1='448.0' y1='14' x2='448.0' y2='256' stroke='#ddd6c8'/><text x='448.0' y='272' text-anchor='middle'>800</text><line x1='546.0' y1='14' x2='546.0' y2='256' stroke='#ddd6c8'/><text x='546.0' y='272' text-anchor='middle'>1000</text><line x1='56' y1='256.0' x2='546' y2='256.0' stroke='#ddd6c8'/><text x='50' y='260.0' text-anchor='end'>0</text><line x1='56' y1='202.2' x2='546' y2='202.2' stroke='#ddd6c8'/><text x='50' y='206.2' text-anchor='end'>10</text><line x1='56' y1='148.4' x2='546' y2='148.4' stroke='#ddd6c8'/><text x='50' y='152.4' text-anchor='end'>20</text><line x1='56' y1='94.7' x2='546' y2='94.7' stroke='#ddd6c8'/><text x='50' y='98.7' text-anchor='end'>30</text><line x1='56' y1='40.9' x2='546' y2='40.9' stroke='#ddd6c8'/><text x='50' y='44.9' text-anchor='end'>40</text><text x='301.0' y='294' text-anchor='middle'>測温接点の温度 t [°C]（基準接点 0 °C）</text><text x='14' y='135.0' text-anchor='middle' transform='rotate(-90 14 135.0)'>熱起電力 E [mV]</text><polyline points='56.0,256.0 105.0,234.0 154.0,212.2 203.0,190.3 252.0,167.8 301.0,145.0 350.0,122.1 399.0,99.4 448.0,77.1 497.0,55.3 546.0,34.0' fill='none' stroke='#2b3a67' stroke-width='2'/><line x1='56.0' y1='256.0' x2='546.0' y2='34.0' stroke='#968d80' stroke-dasharray='4 4'/><circle cx='56.0' cy='256.0' r='3.5' fill='#a8322a'/><circle cx='105.0' cy='234.0' r='3.5' fill='#a8322a'/><circle cx='154.0' cy='212.2' r='3.5' fill='#a8322a'/><circle cx='203.0' cy='190.3' r='3.5' fill='#a8322a'/><circle cx='252.0' cy='167.8' r='3.5' fill='#a8322a'/><circle cx='301.0' cy='145.0' r='3.5' fill='#a8322a'/><circle cx='350.0' cy='122.1' r='3.5' fill='#a8322a'/><circle cx='399.0' cy='99.4' r='3.5' fill='#a8322a'/><circle cx='448.0' cy='77.1' r='3.5' fill='#a8322a'/><circle cx='497.0' cy='55.3' r='3.5' fill='#a8322a'/><circle cx='546.0' cy='34.0' r='3.5' fill='#a8322a'/></svg><figcaption>図3.1　K型熱電対の熱起電力（基準接点 0 °C）。点は NIST ITS-90 表の値（100 °C刻み。表との照合を要する）、破線は原点と1000 °Cの点を結ぶ直線。傾きは約 41 μV/K で、ほぼ直線に乗る。</figcaption></figure>
+<p>信号が数 mV〜数十 mV と小さいので、後段で増幅する（資料の長所(1)：電気量に換算・検出できるので、測定・調節・制御・増幅・変換が容易）。</p>
+
+<h3><span class="no">3.5</span>基準接点と補償導線</h3>
+<p>資料の図(a)(b)は、基準接点を<strong>氷水混合浴</strong>に入れて 0 °C に保つ回路である（(a)は銅線への接続点を二つ氷浴に入れ、(b)は一つで足りる形。(b)は中間金属の法則で説明できる：電圧計への銅線は両端が氷浴で同温）。</p>
+<p>基準接点を一定温度に保つのは大がかりなので、資料は短所として「基準接点を必要とし、これを一定温度（たとえば 0 °C）に保つ必要があり、これ以外の場合は熱電対を延長して用いるか（高価である）、<strong>補償導線</strong>を使用しなければならない」とする。</p>
+<p><strong>補償導線</strong>（資料の熱電対(6)の空欄の内容）：常温を含む相当の温度範囲で熱電対と同じかきわめて類似の熱起電力特性をもつ2種の導体を1組とし、絶縁と保護被覆を施したもの。熱電対と計器の間を結ぶと、熱電対を延長したのと同じ効果で、基準接点の温度を補償し、経路での障害を防止して正確な測温ができる。</p>
+<div class="proof">
+<p><span class="step">STEP 1</span>　熱電対 A,B を、測温接点 $t_2$ から端子箱の温度 $t_a$ まで。そこから計器（温度 $t_r$）までを補償導線 A′,B′ とする。A′B′ は常温付近で AB と同じ特性だから $E_{A'B'}(t_r,t_a)=E_{AB}(t_r,t_a)$。</p>
+<p><span class="step">STEP 2</span>　全体の起電力は $E_{AB}(t_a,t_2)+E_{A'B'}(t_r,t_a)=E_{AB}(t_a,t_2)+E_{AB}(t_r,t_a)$。中間温度の法則(3.2)で一つにまとまり、$E_{AB}(t_r,t_2)$。</p>
+<p>端子箱の温度 $t_a$ は答えに現れない。つまり、基準接点を遠い計器側へ移したのと同じになり、高価な熱電対線を長く引かずに済む。　$\blacksquare$</p>
+</div>
+<p class="note">補足：現在の計器の多くは、基準接点の位置の温度を別の温度センサ（サーミスタなど）で測り、(3.3)の $E_0(t_{\text{ref}})$ を電気的に足している（冷接点補償）。氷浴の代わりを中間温度の法則が務める。</p>
+
+<h3><span class="no">3.6</span>種類・構造・長所短所</h3>
+<table class="tb"><tr><th>記号（資料）</th><th>構成材料（＋脚／−脚）</th><th>測定温度</th></tr>
+<tr><td>B</td><td>Rh30 %を含む Pt,Rh合金／Rh6 %を含む Pt,Rh合金</td><td>600〜1700 °C未満</td></tr>
+<tr><td>R</td><td>Rh13 %を含む Pt,Rh合金／Pt</td><td>0〜1600 °C未満</td></tr>
+<tr><td>S</td><td>Rh10 %を含む Pt,Rh合金／Pt</td><td>0〜1600 °C未満</td></tr>
+<tr><td>K</td><td>Ni及びCrを主とした合金／Niを主とした合金</td><td>−200〜1200 °C未満</td></tr>
+<tr><td>E</td><td>Ni及びCrを主とした合金／Cu及びNiを主とした合金</td><td>−200〜800 °C未満</td></tr>
+<tr><td>J</td><td>Fe／Cu及びNiを主とした合金</td><td>0〜750 °C未満</td></tr>
+<tr><td>T</td><td>Cu／Cu及びNiを主とした合金</td><td>−200〜350 °C未満</td></tr></table>
+<p class="note">資料の表の転記（目読）。白金系（B、R、S）は高温・高価、K は汎用、T は低温に向く。</p>
+<p><strong>構造</strong>（資料）：(1)裸熱電対 (2)絶縁管付熱電対 (3)保護管付熱電対 (4)<strong>シース熱電対</strong>――構造的に最も広く使われ、熱電対線の周囲を絶縁物が取り囲み、最外層を金属パイプが覆う。</p>
+<table class="tb"><tr><th>長所（資料）</th><th>短所（資料）</th></tr>
+<tr><td style="text-align:left">(1)温度を電気量に換算・検出でき、測定・調節・制御・増幅・変換が容易<br>(2)比較的安価で入手しやすく、測定方法も簡便の割に精度が高く、時間遅れも少ない。寸法（線径）を自由に選べる<br>(3)広い温度範囲を測れる</td>
+<td style="text-align:left">(1)雰囲気により使える熱電対の種類に制限がある<br>(2)±0.2 %程度以上の精度を得ることが難しい<br>(3)基準接点を必要とし、これを一定温度に保つ必要がある<br>(4)高温・長期間では雰囲気による劣化（酸化・還元）が進む</td></tr></table>
+<p>応答の速さ(2)は、細い線径で(2.3)の $D$ が小さくなるため、と説明できる。</p>
+
+<h3><span class="no">3.7</span>応用例：吸気バルブの温度を測る</h3>
+<p>資料は、エンジンの吸気バルブの温度を、熱電対を埋め込んで測った例を載せる。計測部（表示器）と熱電対のセット、バルブの A（シリンダ側）、B（ポート側）などに熱電対を処理した写真、そして吸気負圧（mmHg）に対する各測定点（A〜D）の温度のグラフである。グラフの読み取り（図からの概数）：温度が最も高いのは<strong>中負荷</strong>（吸気負圧 約 −250 mmHg）のときで、測定点によって約 200〜250 °C 台、低負荷では低く、高負荷になるにつれて下がる。資料の考察は次の二つ：</p>
+<ol><li><strong>デポジット</strong>が付着すると、断熱効果によりバルブの温度が上昇する。</li>
+<li>吸気バルブの温度が一番高いのは<strong>中負荷</strong>のとき。負荷が低いときは温度が低い。負荷が高いときは燃料の噴射が多いので、バルブが冷やされる。</li></ol>
+<p>ここで、先端のサイズ(2.3)と熱接触(2.2)の議論が効く：バルブ表面の小さな点の温度を測るには、熱電対が小さく、バルブ面と一体で熱接触が良くなければならない。資料の写真で熱電対を「バルブ熱電対処理」と呼んでいるのは、このためである。</p>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph pair"><img src="img/a3_tcprobe.jpg" alt="熱電対プローブ" loading="lazy"><img src="img/a3_seebeck.jpg" alt="ゼーベックの生家に掲げられた記念プレート" loading="lazy"></div>
+<p class="cap">細い針のような先端が測温接点で、発見者の記念板は「1821」と記す。</p>
+<p class="cr">左：Harke／<a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:ThermocoupleProbe.jpg">Wikimedia Commons</a>（ThermocoupleProbe）。右：Wilhelmy／<a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Thomas_Johann_Seebeck.jpg">Wikimedia Commons</a>（Thomas Johann Seebeck）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/b3_meoto.jpg" alt="荒波の中に立つ夫婦岩としめ縄" loading="lazy"></div>
+<p class="cap">離れた二つの岩を縄でつなぐと、あいだに張りが生まれる。</p>
+<p class="cr">Douglas Perkins／<a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Meoto_Iwa_rocks_01.jpg">Wikimedia Commons</a>（Meoto Iwa rocks 01）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="s4"><span class="no">4</span>抵抗測温体とサーミスタ</h2>
+
+<h3><span class="no">4.1</span>金属の抵抗は温度で変わる</h3>
+<p><strong>動機</strong>：熱電対は基準接点が要り、信号が小さい。<strong>抵抗の読みからただちに温度が求まる</strong>方式は、常温付近で扱いやすい（資料の特徴(4)）。</p>
+<p>資料の原理（空欄を補う）：一般に金属は、温度が上がると電気抵抗が<strong>増加</strong>する。金属では温度にほぼ比例する。理由（補足）：温度が上がると原子の格子振動が大きくなり、伝導電子が散乱されやすくなるため。白金や銅などの電気抵抗と温度の間には一定の関係があり、この関係を利用して温度を測定する。</p>
+<div class="def"><span class="label">白金測温抵抗体の式（IEC 60751）</span>0 °C 以上で
+$$R(t)=R_0\big(1+At+Bt^2\big),\quad A=3.9083\times10^{-3}\ \mathrm{K^{-1}},\ B=-5.775\times10^{-7}\ \mathrm{K^{-2}}\qquad(4.1)$$
+$R_0$ は 0 °C の抵抗。$R_0=100\ \Omega$ のものを <strong>Pt100</strong> という。（係数は一般に公開されている規格の値。使用する素子の規格を確認すること。）</div>
+<div class="ex"><span class="label">例</span><p>Pt100 の 100 °C：$R=100(1+0.39083-0.005775)=138.51\ \Omega$、200 °C：175.86 Ω（Pythonで検算）。逆に、$R$ から $t$ を出すには、(4.1)を $Bt^2+At+(1-R/R_0)=0$ と見て $t=\dfrac{-A+\sqrt{A^2-4B(1-R/R_0)}}{2B}$ を使う。たとえば 119.40 Ω → 50.0 °C。</p></div>
+<figure><svg viewBox='0 0 560 300' xmlns='http://www.w3.org/2000/svg' font-family='Yu Gothic,Meiryo,sans-serif' font-size='12'><rect x='56' y='14' width='490' height='242' fill='#fff' stroke='#2a2723'/><line x1='56.0' y1='14' x2='56.0' y2='256' stroke='#ddd6c8'/><text x='56.0' y='272' text-anchor='middle'>0</text><line x1='178.5' y1='14' x2='178.5' y2='256' stroke='#ddd6c8'/><text x='178.5' y='272' text-anchor='middle'>100</text><line x1='301.0' y1='14' x2='301.0' y2='256' stroke='#ddd6c8'/><text x='301.0' y='272' text-anchor='middle'>200</text><line x1='423.5' y1='14' x2='423.5' y2='256' stroke='#ddd6c8'/><text x='423.5' y='272' text-anchor='middle'>300</text><line x1='546.0' y1='14' x2='546.0' y2='256' stroke='#ddd6c8'/><text x='546.0' y='272' text-anchor='middle'>400</text><line x1='56' y1='256.0' x2='546' y2='256.0' stroke='#ddd6c8'/><text x='50' y='260.0' text-anchor='end'>1</text><line x1='56' y1='195.5' x2='546' y2='195.5' stroke='#ddd6c8'/><text x='50' y='199.5' text-anchor='end'>1.5</text><line x1='56' y1='135.0' x2='546' y2='135.0' stroke='#ddd6c8'/><text x='50' y='139.0' text-anchor='end'>2</text><line x1='56' y1='74.5' x2='546' y2='74.5' stroke='#ddd6c8'/><text x='50' y='78.5' text-anchor='end'>2.5</text><line x1='56' y1='14.0' x2='546' y2='14.0' stroke='#ddd6c8'/><text x='50' y='18.0' text-anchor='end'>3</text><text x='301.0' y='294' text-anchor='middle'>温度 t [°C]</text><text x='14' y='135.0' text-anchor='middle' transform='rotate(-90 14 135.0)'>R / R₀</text><polyline points='56.0,256.0 546.0,66.8' fill='none' stroke='#968d80' stroke-width='2'/><polyline points='56.0,256.0 68.2,251.3 80.5,246.6 92.8,241.9 105.0,237.2 117.2,232.5 129.5,227.9 141.8,223.2 154.0,218.6 166.2,214.0 178.5,209.4 190.8,204.8 203.0,200.3 215.2,195.7 227.5,191.2 239.8,186.6 252.0,182.1 264.2,177.6 276.5,173.1 288.8,168.7 301.0,164.2 313.2,159.8 325.5,155.3 337.8,150.9 350.0,146.5 362.2,142.1 374.5,137.8 386.8,133.4 399.0,129.1 411.2,124.7 423.5,120.4 435.8,116.1 448.0,111.8 460.2,107.6 472.5,103.3 484.8,99.0 497.0,94.8 509.2,90.6 521.5,86.4 533.8,82.2 546.0,78.0' fill='none' stroke='#2b3a67' stroke-width='2'/><text x='239.8' y='201.6' fill='#2b3a67' font-size='12' stroke='#fff' stroke-width='3' paint-order='stroke'>Pt100（ほぼ直線）</text><text x='319.4' y='135.0' fill='#968d80' stroke='#fff' stroke-width='3' paint-order='stroke'>灰の直線＝2次の項を無視した場合</text></svg><figcaption>図4.1　Pt100 の $R/R_0$（実線）と、2次の項を無視した直線（灰）。400 °Cまでずれが小さく、直線に近い。資料の「線形性！」に対応。</figcaption></figure>
+<p>感度（相対変化率）は $\dfrac1R\dfrac{dR}{dt}=\dfrac{A+2Bt}{1+At+Bt^2}$。0 °C で $A=0.39$ %/K、100 °C で 0.27 %/K と、ほぼ一定である。</p>
+<p><strong>種類</strong>（資料）：(a)<strong>白金</strong>：産業界で最も高精度が期待できる温度計として −200〜650 °C で広く利用される。(b)<strong>ニッケル</strong>：白金に比べ安価。−50〜300 °C 程度。(c)<strong>銅</strong>：最も安価。線形性がよく均一な素線が容易に得られるので常温付近に使うが、固有抵抗が小さく高温では酸化が進む。0〜120 °C 程度。</p>
+<p><strong>測るときの注意</strong>（補足）：抵抗を測るには電流を流すので、素子自身が $I^2R$ で発熱し、(2.2)の「相手の温度」からずれる（自己加熱）。リード線の抵抗も加わるので、3線式・4線式の配線でこれを打ち消す。</p>
+
+<h3><span class="no">4.2</span>測温抵抗体の特徴（資料）</h3>
+<table class="tb"><tr><th>長所</th><th>短所</th></tr>
+<tr><td style="text-align:left">(1)感度が大きい<br>(2)安定度が高い（振動の少ない良好な環境で長期に安定）<br>(3)温度と抵抗の関係がよく調べられている<br>(4)抵抗値の読みからただちに温度が求まる。基準接点のような器具が不要で、常温付近に有利</td>
+<td style="text-align:left">(5)抵抗素子は構造が複雑で形状が大きく、応答が遅い。狭い場所の測定に不適<br>(6)最高使用温度が 500〜650 °C と低い<br>(7)細い素線を使うので、機械的衝撃や振動に弱く、長期振動で断線の恐れ</td></tr></table>
+<p>(5)は(2.3)で説明できる：形状が大きい（$D$ が大きい）ほど $\tau$ が大きい。</p>
+
+<h3><span class="no">4.3</span>サーミスタ</h3>
+<p>資料：サーミスタは<strong>半導体</strong>の感温抵抗体。いろいろな温度特性のものがある。白金測温抵抗体に比べて、(1)電気抵抗が 1〜4 桁大きい、(2)<strong>温度係数が 1 桁大きい</strong>、(3)形状が小さい。高感度で速応性のある温度計を作れるが、温度係数が大きいために広い温度範囲の測定には不適で、特殊なものを除いて 350 °C 以上の高温には使えない。</p>
+<p><strong>式</strong>：半導体では温度が上がるとキャリア（電子）が熱励起で増えて抵抗が下がる（負特性、NTC）。この振る舞いは経験的に
+$$R(T)=R_0\exp\!\Big[B\Big(\frac1T-\frac1{T_0}\Big)\Big]\qquad(4.2)$$
+で表される（$B$ はサーミスタ定数 [K]、$T$ は絶対温度）。</p>
+<div class="proof">
+<p><span class="step">STEP 1　感度を出す</span>　対数をとると $\ln R=\ln R_0+B(1/T-1/T_0)$。</p>
+<p><span class="step">STEP 2</span>　$T$ で微分（0.3節）：$\dfrac1R\dfrac{dR}{dT}=-\dfrac{B}{T^2}\qquad(4.3)$</p>
+<p><span class="step">STEP 3　数値</span>　$B=3380$ K、$T=298.15$ K（25 °C）で $-3380/298.15^2=-0.0380$、すなわち <strong>−3.8 %/K</strong>。Pt100 の 0.39 %/K の約 10 倍で、資料の「温度係数が1桁大きい」と合う（Pythonで検算）。</p>
+</div>
+<div class="ex"><span class="label">例</span><p>$R_{25}=10\ \mathrm{k\Omega}$、$B=3380$ K（説明用の仮の値）の NTC：0 °C で 28.2 kΩ、25 °C で 10.0 kΩ、50 °C で 4.16 kΩ、100 °C で 1.02 kΩ。100 °C のあいだに抵抗が 28 倍も変わる。感度が高い反面、出力が曲線（図4.2）なので広い範囲では扱いにくい。</p></div>
+<figure><svg viewBox='0 0 560 300' xmlns='http://www.w3.org/2000/svg' font-family='Yu Gothic,Meiryo,sans-serif' font-size='12'><rect x='56' y='14' width='490' height='242' fill='#fff' stroke='#2a2723'/><line x1='56.0' y1='14' x2='56.0' y2='256' stroke='#ddd6c8'/><text x='56.0' y='272' text-anchor='middle'>0</text><line x1='178.5' y1='14' x2='178.5' y2='256' stroke='#ddd6c8'/><text x='178.5' y='272' text-anchor='middle'>25</text><line x1='301.0' y1='14' x2='301.0' y2='256' stroke='#ddd6c8'/><text x='301.0' y='272' text-anchor='middle'>50</text><line x1='423.5' y1='14' x2='423.5' y2='256' stroke='#ddd6c8'/><text x='423.5' y='272' text-anchor='middle'>75</text><line x1='546.0' y1='14' x2='546.0' y2='256' stroke='#ddd6c8'/><text x='546.0' y='272' text-anchor='middle'>100</text><line x1='56' y1='241.7' x2='546' y2='241.7' stroke='#ddd6c8'/><text x='50' y='245.7' text-anchor='end'>0.1</text><line x1='56' y1='171.3' x2='546' y2='171.3' stroke='#ddd6c8'/><text x='50' y='175.3' text-anchor='end'>0.3</text><line x1='56' y1='94.2' x2='546' y2='94.2' stroke='#ddd6c8'/><text x='50' y='98.2' text-anchor='end'>1</text><line x1='56' y1='23.9' x2='546' y2='23.9' stroke='#ddd6c8'/><text x='50' y='27.9' text-anchor='end'>3</text><text x='301.0' y='294' text-anchor='middle'>温度 t [°C]</text><text x='14' y='135.0' text-anchor='middle' transform='rotate(-90 14 135.0)'>R / R₂₅（対数軸）</text><polyline points='56.0,27.8 65.8,33.5 75.6,39.2 85.4,44.8 95.2,50.3 105.0,55.8 114.8,61.1 124.6,66.4 134.4,71.6 144.2,76.8 154.0,81.9 163.8,86.9 173.6,91.8 183.4,96.7 193.2,101.5 203.0,106.2 212.8,110.9 222.6,115.5 232.4,120.1 242.2,124.6 252.0,129.0 261.8,133.4 271.6,137.7 281.4,142.0 291.2,146.2 301.0,150.4 310.8,154.5 320.6,158.6 330.4,162.6 340.2,166.6 350.0,170.5 359.8,174.4 369.6,178.2 379.4,182.0 389.2,185.8 399.0,189.5 408.8,193.1 418.6,196.7 428.4,200.3 438.2,203.8 448.0,207.3 457.8,210.8 467.6,214.2 477.4,217.6 487.2,220.9 497.0,224.2 506.8,227.5 516.6,230.7 526.4,233.9 536.2,237.0 546.0,240.2' fill='none' stroke='#a8322a' stroke-width='2'/><text x='203.0' y='53.1' fill='#a8322a' font-size='12' stroke='#fff' stroke-width='3' paint-order='stroke'>NTCサーミスタ（B=3380 K）</text></svg><figcaption>図4.2　NTCサーミスタ（$B=3380$ K、$R_{25}$ で規格化）。縦軸は対数。(4.2)式から計算して描いた。</figcaption></figure>
+<p>資料は、自動車で使われるサーミスタ温度計（センサ）として、冷却水用、カーエアコン用、モーター温度検知用、バッテリー温度計測用の写真を挙げ、エンジン制御システム（日産 SR20DE 型の図）のなかの水温センサ・排気温度センサの位置を示している。小さく安価で感度が高い、という特徴が、車載の多数点計測に向く。</p>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/a4_pt100.jpg" alt="3線式Pt100温度センサ" loading="lazy"></div>
+<p class="cap">三本の線は、リード線の抵抗分を測定から差し引くための工夫である。</p>
+<p class="cr">Suyash Dwivedi／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:3_wire_PT100_Sensor.jpg">Wikimedia Commons</a>（3 wire PT100 Sensor）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/b4_lock.jpg" alt="運河の閘門（ゲートを上げ下げする水門）" loading="lazy"></div>
+<p class="cap">ゲートの開き具合ひとつで、通る水の量が変わる。</p>
+<p class="cr">Phil Champion／<a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Guillotine_lock_gate,_Library_Lock,_Rochdale_Canal_-_geograph.org.uk_-_302700.jpg">Wikimedia Commons</a>（Guillotine lock gate, Library Lock, Rochdale Canal）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="s5"><span class="no">5</span>放射を利用した温度計</h2>
+
+<h3><span class="no">5.1</span>放射率と黒体</h3>
+<div class="def"><span class="label">定義（放射率）</span>$\varepsilon=E/E_b$。$E$ は物体表面から放射されるエネルギ、$E_b$ は同じ温度の<strong>黒体</strong>（入射する放射をすべて吸収する理想的な物体）から放射されるエネルギ。キルヒホッフの法則により $\varepsilon=\alpha$（吸収率）である。</div>
+<p>良く吸収する面は、同じ割合で良く放射する。光沢のある金属面は反射が強く、$\varepsilon$ が小さい。</p>
+
+<h3><span class="no">5.2</span>ステファン–ボルツマンの法則</h3>
+<p>資料：黒体の単位面積から単位時間に放射されるエネルギは温度 $T$ の4乗に比例する。
+$$E_b=\sigma T^4,\qquad E=\varepsilon\sigma T^4\qquad\sigma=5.67\times10^{-8}\ \mathrm{W/(m^2K^4)}\qquad(5.1)$$
+$E$ を測れば $T$ が求まる。<strong>なぜ4乗か</strong>を、黒体放射のスペクトル（プランクの式）から導く。</p>
+<div class="proof">
+<p><span class="step">STEP 1　出発点</span>　黒体の波長 $\lambda$ あたりの放射エネルギ密度（プランクの式）：
+$$M_\lambda=\frac{2\pi hc^2}{\lambda^5}\,\frac{1}{e^{hc/\lambda kT}-1}\qquad(5.2)$$
+$h$：プランク定数、$c$：光速、$k$：ボルツマン定数。全体の放射 $E_b=\int_0^\infty M_\lambda\,d\lambda$（資料の「曲線の下部面積」）。</p>
+<p><span class="step">STEP 2　変数を替える</span>　$x=hc/(\lambda kT)$ とおく。$\lambda=hc/(xkT)$、$d\lambda=-\dfrac{hc}{kT\,x^2}dx$。</p>
+<p><span class="step">STEP 3　代入して整理</span>　$\lambda^{-5}=(xkT/hc)^5$ なので
+$$M_\lambda\,d\lambda\ \to\ 2\pi hc^2\Big(\frac{xkT}{hc}\Big)^5\frac{1}{e^x-1}\cdot\frac{hc}{kT\,x^2}\,dx=\frac{2\pi(kT)^4}{h^3c^2}\,\frac{x^3}{e^x-1}\,dx$$
+（$d\lambda$ の負号は積分の向きの反転と相殺する。）</p>
+<p><span class="step">STEP 4　$T$ が積分の外に出る</span>　$$E_b=\frac{2\pi k^4}{h^3c^2}\,T^4\int_0^\infty\frac{x^3}{e^x-1}\,dx$$ 積分は $T$ を含まない定数で、値は $\pi^4/15=6.4939\ldots$（数値積分でも確かめた）。よって $E_b=\sigma T^4$、$\sigma=\dfrac{2\pi^5k^4}{15h^3c^2}=5.6704\times10^{-8}$ W/(m²K⁴)（Pythonで計算）。資料の値と一致する。　$\blacksquare$</p>
+</div>
+<p><strong>確かめ</strong>：(5.2)を数値積分した結果は、1500 K で $\sigma T^4$ と一致した（Pythonで検算）。</p>
+<div class="ex"><span class="label">例</span><p>$\varepsilon=1$ として 300 K で $E=5.67\times10^{-8}\times300^4=459$ W/m²。温度を 2 倍の 600 K にすると $2^4=16$ 倍の 7348 W/m²。温度が少し上がるだけで放射が急増するので、高温ほど放射温度計は感度が高い。</p></div>
+
+<h3><span class="no">5.3</span>ウィーンの変位則</h3>
+<p>資料：黒体の温度が高くなれば放射エネルギ全体は大きくなり、密度が最大値を示す波長は短くなる。最大の密度を示す波長 $\lambda_m$ は
+$$\lambda_m T=b,\qquad b=2.8978\times10^3\ \mu\mathrm{m\cdot K}\qquad(5.3)$$
+</p>
+<div class="proof">
+<p><span class="step">STEP 1</span>　(5.2)の対数をとる。$u=hc/(\lambda kT)$ とすると、$\ln M_\lambda=\text{(定数)}-5\ln\lambda-\ln(e^u-1)$。</p>
+<p><span class="step">STEP 2</span>　$\lambda$ で微分して 0 とおく。$du/d\lambda=-u/\lambda$ を使うと
+$$-\frac5\lambda+\frac{e^u}{e^u-1}\cdot\frac u\lambda=0\ \Longrightarrow\ u=5\,(1-e^{-u})$$</p>
+<p><span class="step">STEP 3</span>　これは数値的に解く。反復 $u\leftarrow5(1-e^{-u})$ で $u=4.9651$ に収束する（Pythonで計算）。</p>
+<p><span class="step">STEP 4</span>　$\lambda_m=hc/(ukT)$ なので $\lambda_mT=hc/(uk)=14388\ \mu\mathrm{m\cdot K}/4.9651=2897.8\ \mu\mathrm{m\cdot K}$。資料の $b$ と一致する。　$\blacksquare$</p>
+</div>
+<div class="ex"><span class="label">例</span><p>300 K（室温）：$\lambda_m=9.66\ \mu$m（遠赤外）。3000 K（白熱電球のフィラメント程度）：0.97 μm（赤外寄り）。太陽表面（約5770 K）：0.50 μm（可視の緑）。（Pythonで検算）</p></div>
+<figure><svg viewBox='0 0 560 330' xmlns='http://www.w3.org/2000/svg' font-family='Yu Gothic,Meiryo,sans-serif' font-size='12'><rect x='56' y='14' width='490' height='272' fill='#fff' stroke='#2a2723'/><line x1='56.0' y1='14' x2='56.0' y2='286' stroke='#ddd6c8'/><text x='56.0' y='302' text-anchor='middle'>0</text><line x1='178.5' y1='14' x2='178.5' y2='286' stroke='#ddd6c8'/><text x='178.5' y='302' text-anchor='middle'>1</text><line x1='301.0' y1='14' x2='301.0' y2='286' stroke='#ddd6c8'/><text x='301.0' y='302' text-anchor='middle'>2</text><line x1='423.5' y1='14' x2='423.5' y2='286' stroke='#ddd6c8'/><text x='423.5' y='302' text-anchor='middle'>3</text><line x1='546.0' y1='14' x2='546.0' y2='286' stroke='#ddd6c8'/><text x='546.0' y='302' text-anchor='middle'>4</text><line x1='56' y1='286.0' x2='546' y2='286.0' stroke='#ddd6c8'/><text x='50' y='290.0' text-anchor='end'>0</text><line x1='56' y1='203.6' x2='546' y2='203.6' stroke='#ddd6c8'/><text x='50' y='207.6' text-anchor='end'>100</text><line x1='56' y1='121.2' x2='546' y2='121.2' stroke='#ddd6c8'/><text x='50' y='125.2' text-anchor='end'>200</text><line x1='56' y1='38.7' x2='546' y2='38.7' stroke='#ddd6c8'/><text x='50' y='42.7' text-anchor='end'>300</text><text x='301.0' y='324' text-anchor='middle'>波長 λ [μm]</text><text x='14' y='150.0' text-anchor='middle' transform='rotate(-90 14 150.0)'>放射エネルギ密度 [W/(cm²·μm)]</text><polyline points='80.5,286.0 85.4,286.0 90.3,286.0 95.2,286.0 100.1,286.0 105.0,286.0 109.9,286.0 114.8,286.0 119.7,286.0 124.6,286.0 129.5,286.0 134.4,286.0 139.3,286.0 144.2,286.0 149.1,286.0 154.0,285.9 158.9,285.9 163.8,285.9 168.7,285.8 173.6,285.8 178.5,285.7 183.4,285.6 188.3,285.5 193.2,285.4 198.1,285.3 203.0,285.2 207.9,285.0 212.8,284.9 217.7,284.7 222.6,284.6 227.5,284.5 232.4,284.3 237.3,284.2 242.2,284.0 247.1,283.9 252.0,283.8 256.9,283.7 261.8,283.6 266.7,283.5 271.6,283.4 276.5,283.3 281.4,283.2 286.3,283.1 291.2,283.0 296.1,283.0 301.0,282.9 305.9,282.9 310.8,282.9 315.7,282.8 320.6,282.8 325.5,282.8 330.4,282.8 335.3,282.8 340.2,282.8 345.1,282.8 350.0,282.8 354.9,282.8 359.8,282.8 364.7,282.8 369.6,282.8 374.5,282.9 379.4,282.9 384.3,282.9 389.2,282.9 394.1,283.0 399.0,283.0 403.9,283.0 408.8,283.1 413.7,283.1 418.6,283.2 423.5,283.2 428.4,283.2 433.3,283.3 438.2,283.3 443.1,283.4 448.0,283.4 452.9,283.5 457.8,283.5 462.7,283.5 467.6,283.6 472.5,283.6 477.4,283.7 482.3,283.7 487.2,283.7 492.1,283.8 497.0,283.8 501.9,283.9 506.8,283.9 511.7,283.9 516.6,284.0 521.5,284.0 526.4,284.1 531.3,284.1 536.2,284.1 541.1,284.2 546.0,284.2' fill='none' stroke='#6b8a5a' stroke-width='2'/><polyline points='80.5,286.0 85.4,286.0 90.3,286.0 95.2,286.0 100.1,286.0 105.0,286.0 109.9,286.0 114.8,286.0 119.7,286.0 124.6,286.0 129.5,286.0 134.4,285.9 139.3,285.8 144.2,285.7 149.1,285.6 154.0,285.4 158.9,285.2 163.8,284.9 168.7,284.6 173.6,284.3 178.5,283.9 183.4,283.5 188.3,283.1 193.2,282.7 198.1,282.2 203.0,281.8 207.9,281.4 212.8,281.0 217.7,280.6 222.6,280.3 227.5,279.9 232.4,279.6 237.3,279.3 242.2,279.1 247.1,278.9 252.0,278.7 256.9,278.5 261.8,278.3 266.7,278.2 271.6,278.1 276.5,278.0 281.4,278.0 286.3,278.0 291.2,277.9 296.1,278.0 301.0,278.0 305.9,278.0 310.8,278.0 315.7,278.1 320.6,278.2 325.5,278.3 330.4,278.3 335.3,278.4 340.2,278.5 345.1,278.6 350.0,278.7 354.9,278.9 359.8,279.0 364.7,279.1 369.6,279.2 374.5,279.3 379.4,279.5 384.3,279.6 389.2,279.7 394.1,279.8 399.0,280.0 403.9,280.1 408.8,280.2 413.7,280.3 418.6,280.5 423.5,280.6 428.4,280.7 433.3,280.8 438.2,280.9 443.1,281.1 448.0,281.2 452.9,281.3 457.8,281.4 462.7,281.5 467.6,281.6 472.5,281.7 477.4,281.8 482.3,281.9 487.2,282.0 492.1,282.1 497.0,282.2 501.9,282.3 506.8,282.4 511.7,282.4 516.6,282.5 521.5,282.6 526.4,282.7 531.3,282.8 536.2,282.8 541.1,282.9 546.0,283.0' fill='none' stroke='#4a5f8c' stroke-width='2'/><polyline points='80.5,286.0 85.4,286.0 90.3,286.0 95.2,286.0 100.1,286.0 105.0,286.0 109.9,285.9 114.8,285.6 119.7,285.2 124.6,284.5 129.5,283.5 134.4,282.2 139.3,280.6 144.2,278.7 149.1,276.6 154.0,274.3 158.9,271.9 163.8,269.5 168.7,267.2 173.6,264.9 178.5,262.8 183.4,260.9 188.3,259.1 193.2,257.5 198.1,256.2 203.0,255.0 207.9,254.1 212.8,253.4 217.7,252.8 222.6,252.4 227.5,252.2 232.4,252.1 237.3,252.1 242.2,252.2 247.1,252.5 252.0,252.8 256.9,253.2 261.8,253.7 266.7,254.3 271.6,254.8 276.5,255.4 281.4,256.1 286.3,256.8 291.2,257.4 296.1,258.1 301.0,258.8 305.9,259.5 310.8,260.3 315.7,261.0 320.6,261.7 325.5,262.4 330.4,263.0 335.3,263.7 340.2,264.4 345.1,265.0 350.0,265.7 354.9,266.3 359.8,266.9 364.7,267.5 369.6,268.0 374.5,268.6 379.4,269.1 384.3,269.7 389.2,270.2 394.1,270.7 399.0,271.1 403.9,271.6 408.8,272.0 413.7,272.5 418.6,272.9 423.5,273.3 428.4,273.7 433.3,274.1 438.2,274.4 443.1,274.8 448.0,275.1 452.9,275.5 457.8,275.8 462.7,276.1 467.6,276.4 472.5,276.7 477.4,277.0 482.3,277.2 487.2,277.5 492.1,277.8 497.0,278.0 501.9,278.2 506.8,278.5 511.7,278.7 516.6,278.9 521.5,279.1 526.4,279.3 531.3,279.5 536.2,279.7 541.1,279.9 546.0,280.0' fill='none' stroke='#8a6d94' stroke-width='2'/><polyline points='80.5,286.0 85.4,286.0 90.3,286.0 95.2,285.9 100.1,285.4 105.0,284.3 109.9,282.1 114.8,278.5 119.7,273.3 124.6,266.7 129.5,258.9 134.4,250.3 139.3,241.2 144.2,232.1 149.1,223.4 154.0,215.2 158.9,207.9 163.8,201.5 168.7,196.0 173.6,191.5 178.5,188.0 183.4,185.4 188.3,183.7 193.2,182.7 198.1,182.4 203.0,182.7 207.9,183.5 212.8,184.8 217.7,186.4 222.6,188.3 227.5,190.4 232.4,192.7 237.3,195.2 242.2,197.8 247.1,200.4 252.0,203.1 256.9,205.8 261.8,208.5 266.7,211.2 271.6,213.8 276.5,216.4 281.4,219.0 286.3,221.5 291.2,223.9 296.1,226.3 301.0,228.5 305.9,230.7 310.8,232.9 315.7,234.9 320.6,236.9 325.5,238.8 330.4,240.6 335.3,242.4 340.2,244.1 345.1,245.7 350.0,247.3 354.9,248.8 359.8,250.2 364.7,251.6 369.6,252.9 374.5,254.1 379.4,255.3 384.3,256.5 389.2,257.6 394.1,258.7 399.0,259.7 403.9,260.7 408.8,261.6 413.7,262.5 418.6,263.3 423.5,264.2 428.4,264.9 433.3,265.7 438.2,266.4 443.1,267.1 448.0,267.8 452.9,268.4 457.8,269.0 462.7,269.6 467.6,270.2 472.5,270.7 477.4,271.2 482.3,271.7 487.2,272.2 492.1,272.6 497.0,273.1 501.9,273.5 506.8,273.9 511.7,274.3 516.6,274.7 521.5,275.0 526.4,275.4 531.3,275.7 536.2,276.0 541.1,276.3 546.0,276.6' fill='none' stroke='#c08a52' stroke-width='2'/><polyline points='80.5,286.0 85.4,285.9 90.3,285.3 95.2,283.2 100.1,277.6 105.0,267.3 109.9,251.5 114.8,230.6 119.7,205.9 124.6,179.1 129.5,152.0 134.4,126.0 139.3,102.4 144.2,81.7 149.1,64.6 154.0,50.9 158.9,40.8 163.8,33.8 168.7,29.8 173.6,28.3 178.5,29.0 183.4,31.6 188.3,35.6 193.2,40.9 198.1,47.1 203.0,54.0 207.9,61.4 212.8,69.1 217.7,77.1 222.6,85.1 227.5,93.2 232.4,101.2 237.3,109.1 242.2,116.7 247.1,124.2 252.0,131.5 256.9,138.5 261.8,145.2 266.7,151.7 271.6,157.9 276.5,163.8 281.4,169.5 286.3,174.9 291.2,180.1 296.1,185.0 301.0,189.6 305.9,194.1 310.8,198.3 315.7,202.3 320.6,206.1 325.5,209.7 330.4,213.2 335.3,216.4 340.2,219.5 345.1,222.5 350.0,225.3 354.9,227.9 359.8,230.4 364.7,232.8 369.6,235.1 374.5,237.3 379.4,239.3 384.3,241.3 389.2,243.1 394.1,244.9 399.0,246.6 403.9,248.2 408.8,249.7 413.7,251.1 418.6,252.5 423.5,253.8 428.4,255.1 433.3,256.3 438.2,257.4 443.1,258.5 448.0,259.6 452.9,260.5 457.8,261.5 462.7,262.4 467.6,263.3 472.5,264.1 477.4,264.9 482.3,265.6 487.2,266.4 492.1,267.1 497.0,267.7 501.9,268.3 506.8,269.0 511.7,269.5 516.6,270.1 521.5,270.6 526.4,271.1 531.3,271.6 536.2,272.1 541.1,272.6 546.0,273.0' fill='none' stroke='#a8322a' stroke-width='2'/><polyline points='411.0,284.9 394.1,284.6 378.7,284.3 364.7,283.9 351.8,283.4 340.0,282.8 329.1,282.1 318.9,281.2 309.6,280.3 300.8,279.2 292.7,277.9 285.0,276.5 277.9,274.9 271.1,273.0 264.8,270.9 258.8,268.6 253.2,266.0 247.9,263.0 242.8,259.7 238.0,256.1 233.5,252.1 229.2,247.6 225.0,242.7 221.1,237.3 217.4,231.3 213.8,224.8 210.3,217.7 207.1,210.0 203.9,201.6 200.9,192.4 198.0,182.4 195.2,171.7 192.5,160.0 190.0,147.4 187.5,133.8 185.1,119.2 182.8,103.5 180.6,86.6 178.4,68.5 176.3,49.1 174.3,28.3' fill='none' stroke='#2a2723' stroke-dasharray='5 4'/><text x='258.1' y='38.7' font-size='11.5' stroke='#fff' stroke-width='3' paint-order='stroke'>λmT = b（ピークの軌跡）</text><text x='340.0' y='275.8' text-anchor='middle' fill='#6b8a5a' font-size='11.5' stroke='#fff' stroke-width='3' paint-order='stroke'>1250 K</text><text x='292.7' y='270.9' text-anchor='middle' fill='#4a5f8c' font-size='11.5' stroke='#fff' stroke-width='3' paint-order='stroke'>1500 K</text><text x='233.5' y='245.1' text-anchor='middle' fill='#8a6d94' font-size='11.5' stroke='#fff' stroke-width='3' paint-order='stroke'>2000 K</text><text x='198.0' y='175.4' text-anchor='middle' fill='#c08a52' font-size='11.5' stroke='#fff' stroke-width='3' paint-order='stroke'>2500 K</text><text x='174.3' y='21.3' text-anchor='middle' fill='#a8322a' font-size='11.5' stroke='#fff' stroke-width='3' paint-order='stroke'>3000 K</text></svg><figcaption>図5.1　黒体の放射エネルギ密度（(5.2)式から計算）。破線はピークの軌跡 $\lambda_mT=b$。資料の図と同じ種類のグラフを、1250 K〜3000 Kで描き直した。</figcaption></figure>
+<p>資料の「鉄の色が温度の上昇とともに赤→橙→黄→白と変化する」はこの図で読める。可視光は約 0.38〜0.78 μm。温度が低いと可視域の放射は長波長側の「すそ」だけで赤く見え、温度が上がるとピークが可視域に入り込んで、青緑の成分が増えて白に近づく。</p>
+
+<h3><span class="no">5.4</span>放射温度計の種類と検出素子</h3>
+<p>資料：光高温計、二色温度計、シリコン放射温度計、PbS 放射温度計、サーモパイル放射温度計、焦電放射温度計など。検出素子により様々。</p>
+<table class="tb"><tr><th>検出素子（資料）</th><th>原理</th><th>特徴</th></tr>
+<tr><td>(a) 熱電形</td><td>放射が入射して受光面がわずかに昇温。この温度変化を電気信号に変換</td><td>可視〜赤外まで<strong>ほぼ一様な感度</strong>。特定波長での検出能力は光電形より低い。応答は受熱面の熱容量と基盤への熱拡散で決まり<strong>遅い</strong>。冷却不要</td></tr>
+<tr><td>(b) 光電形</td><td>入射した光子が電子と直接相互作用し、<strong>光子数に比例</strong>した電気信号</td><td>応答が速い。感度が10〜100倍。半導体のバンド幅で決まる<strong>狭い波長帯</strong>の分光感度。液体窒素冷却が必要なものも多い</td></tr>
+<tr><td>(c) 肉眼（光高温計）</td><td>測温体の像と電球フィラメントの輝度が等しくなる電流を手動で合わせ、電流計で温度を読む</td><td>赤外フィルタで 0.65 μm の波長を比べ、他の波長が混じる不確かさを減らす</td></tr></table>
+<p>(a)の遅さは(2.1)の考え方で説明できる：熱電形は「受光面の昇温」を測る＝温度計の一種なので、熱容量が大きいと $\tau$ が大きい。(b)は温度ではなく光子を数えるので、熱の蓄積の遅れがない（補足）。</p>
+<div class="warn"><span class="label">放射率の誤差（本教材の補足）</span>放射温度計は(5.1)から $T=(E/\varepsilon\sigma)^{1/4}$ で温度を出す。放射率を $\varepsilon=1$ と仮定したまま、実際は $\varepsilon=0.8$ の面を測ると、示度は $T_{\text{ind}}=\varepsilon^{1/4}T=0.946\,T$。1000 K の面を 946 K と読み、54 K も低い。4乗根のおかげで、$\varepsilon$ の誤差は温度の誤差に弱く効くが、無視はできない。測る面の $\varepsilon$（塗装・酸化の有無）は必ず確認する。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/a5_thermo.jpg" alt="電子部品のサーモグラフィ画像（温度で色分け）" loading="lazy"></div>
+<p class="cap">触れずに撮った熱の分布が、色の階調として画面に並ぶ。</p>
+<p class="cr">Mister rf／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:RAKON_STP2734B_LF_OCXO_Thermal_Imaging.jpg">Wikimedia Commons</a>（RAKON STP2734B LF OCXO Thermal Imaging）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/b5_nebula.jpg" alt="赤く輝く中心をもつ星雲と無数の星" loading="lazy"></div>
+<p class="cap">遠い星の温度は、手を伸ばせない光の色だけで読まれる。</p>
+<p class="cr">ESA／<a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:The_Red_Spider_Nebula,_caught_by_Webb_ESA513806.jpg">Wikimedia Commons</a>（The Red Spider Nebula, caught by Webb）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="s6"><span class="no">6</span>その他の方法と、エンジン筒内温度</h2>
+
+<h3><span class="no">6.1</span>エンジンの筒内平均温度の計測</h3>
+<p>資料の問い：「燃焼室の燃焼ガスの温度をどのように計測するか？」。燃焼ガスは高温で、ピストンが動き、温度が刻々と変わる。熱電対では応答が追いつかない（(2.3)の $\tau$ を思い出す）ことが、問いの背景にあると読める。</p>
+<p>資料が示すのは<strong>クランク角度信号との同期</strong>である。クランク軸の端に<strong>ロータリーエンコーダ</strong>（円盤にスリットを刻み、光源とフォトトランジスタで光の通過をパルスにする装置）を付け、</p>
+<ul><li><strong>クロック</strong>：360 穴／1 周 → 360 パルス／1 回転（1 パルス ＝ クランク角 1°）</li>
+<li><strong>トリガー</strong>：1 穴／1 周 → 1 パルス／1 回転（角度の原点）</li></ul>
+<p>の二つの信号を出す。センサの信号をアンプを通して PC で処理する、という流れが図示されている。たとえば 2000 rpm では 1 パルスの間隔が $1/(2000/60\times360)=83\ \mu$s（クロック 12 kHz）になり、この間隔でセンサ信号をとれば、クランク角ごとのガスの状態を追える。</p>
+<div class="box"><span class="label">本教材の解釈（資料に答えは書かれていない）</span><p>資料は、センサが何を測るのかを明示していない。標準的な方法として、<strong>筒内圧力 $p(\theta)$</strong> を測り、クランク角 $\theta$ からシリンダ容積 $V(\theta)$ を幾何で計算して、理想気体の式から
+$$T(\theta)=\frac{p(\theta)\,V(\theta)}{mR}\qquad(6.1)$$
+とする方法がある（$m$：ガス質量、$R$：気体定数。バルブが閉じている間 $m$ は一定）。エンコーダは $V(\theta)$ と圧力の同期をとる役目である。講義で別の方法が説明された場合は、そちらを優先すること。</p></div>
+
+<h3><span class="no">6.2</span>示温塗料・フェライト・ゼーゲル錐</h3>
+<ul><li><strong>示温塗料</strong>：ある規定温度に達すると明瞭な色変化を示すもの。高温で一度変色すると元の色に戻らない<strong>不可逆性</strong>のものと、温度が下がれば元に戻る<strong>可逆性</strong>のものがある。ペイント状、クレヨン状、ラベル、ワッペン形がある。不可逆性は変色温度が 40〜1350 °C まで各種あるが、可逆性は 40〜70 °C および 130〜170 °C の 7 種程度と少ない。表面温度分布の測定や簡単な温度モニタに使う。</li>
+<li><strong>フェライト</strong>：Mn-Cu-Fe、Mn-Zn-Fe、Ni-Zn-Fe 酸化物などからなるフェライトは、組成を変えることで<strong>キュリー温度</strong>（磁性が失われる温度）を自由に変えられる。この特性で、簡単な温度スイッチなどに応用できる。</li>
+<li><strong>ゼーゲル錐</strong>：陶磁器工業を始めとする窯業などで、炉中の温度を簡便に判知するため広く利用される。粘土や珪酸塩、酸化金属類を配合して三角錐状に成形し、耐火物状に台面と約 80° の傾斜角で埋めて据え付ける。炉内で徐々に加熱され、三角錐が軟化して湾曲する状態により炉内温度の概略値を判定できる。600〜2000 °C の範囲で約 60 種類がある。</li></ul>
+<p>共通点は、<strong>電気も電子回路も使わず、材料そのものの変化を温度の記録にする</strong>ことである。ゼーゲル錐は、(2.2)の熱平衡の考え方でいえば「炉と同じ温度になった時点の履歴が曲がりとして残る」温度計である（補足）。</p>
+<div class="box"><span class="label">方式の比較（本教材のまとめ）</span>
+<table class="tb"><tr><th>方式</th><th>読む量</th><th>長所（資料より）</th><th>短所（資料より）</th></tr>
+<tr><td>液体封入・バイメタル</td><td>体積・たわみ</td><td>構造が簡単で丈夫</td><td>電気信号にしにくい</td></tr>
+<tr><td>圧力式</td><td>圧力</td><td>経済的、防爆</td><td>—</td></tr>
+<tr><td>熱電対</td><td>起電力</td><td>安価、広範囲、小型</td><td>基準接点が要る、±0.2 %</td></tr>
+<tr><td>白金測温体</td><td>抵抗</td><td>高精度、安定</td><td>大きく遅い、〜650 °C</td></tr>
+<tr><td>サーミスタ</td><td>抵抗</td><td>高感度、小型</td><td>非線形、〜350 °C</td></tr>
+<tr><td>放射温度計</td><td>放射量</td><td>非接触</td><td>放射率の影響</td></tr></table></div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 6｜現実</p>
+<div class="ph pair"><img src="img/a6_seger1.jpg" alt="台座に立てたゼーゲル錐" loading="lazy"><img src="img/a6_seger2.jpg" alt="焼成で先端が曲がったゼーゲル錐" loading="lazy"></div>
+<p class="cap">まっすぐ立った錐は、窯の中で自らの先端を折り曲げて、温度の履歴を残す。</p>
+<p class="cr">左：Geni／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Fired_and_unfired_seger_cones.JPG">Wikimedia Commons</a>（Fired and unfired seger cones）。右：Tinux／<a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Segerkegel.jpg">Wikimedia Commons</a>（Segerkegel）</p></div>
+<div class="side b"><p class="kick">MITATE 6｜見立て</p>
+<div class="ph"><img src="img/b6_noborigama.jpg" alt="常滑の登り窯の内部に並ぶ焚き口" loading="lazy"></div>
+<p class="cap">窯の列は、温度を段ごとにずらして仕上げる大きな温度計でもある。</p>
+<p class="cr">Gryffindor／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Noborigama_Tokoname_01.jpg">Wikimedia Commons</a>（Noborigama Tokoname 01）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="s7"><span class="no">7</span>章末例題</h2>
+<p class="meta">※例題は本教材の自作。数値はPythonで検算済み。</p>
+<div class="ex"><span class="label">例題1（A 確認：目盛の換算）</span><p>(a) −40 °C は何 °F か。(b) 98.6 °F は何 °C か。</p><p><strong>解答</strong></p><p>① (1.1)より $T_F=\frac95(-40)+32=-72+32=-40$ °F。（−40 は °C と °F が一致する唯一の温度。）</p><p>② $T_C=\frac59(98.6-32)=\frac59\times66.6=37.0$ °C。</p></div>
+<div class="ex"><span class="label">例題2（B 標準：中間温度の法則）</span><p>K型熱電対で基準接点が 100 °C のとき、起電力 8.113 mV を得た。測温接点の温度は何 °C か。表の値は 100 °C：4.096 mV、300 °C：12.209 mV（0 °C 基準）。</p><p><strong>解答</strong></p><p>① (3.3)より $E=E_0(t)-E_0(100)$。② $E_0(t)=8.113+4.096=12.209$ mV。③ 表を逆引きして $t=300$ °C。（0 °C 基準の 8.113 mV から 200 °C ではない点に注意。）</p></div>
+<div class="ex"><span class="label">例題3（B 標準：Pt100）</span><p>Pt100 の抵抗が 130.0 Ω のとき、温度は何 °C か。</p><p><strong>解答</strong></p><p>① $1-R/R_0=1-1.300=-0.300$。② 二次方程式 $Bt^2+At-0.300=0$ に、$A=3.9083\times10^{-3}$、$B=-5.775\times10^{-7}$ を代入：判別式 $A^2-4B(-0.300)=1.5275\times10^{-5}-6.93\times10^{-7}=1.4582\times10^{-5}$、平方根 $3.8187\times10^{-3}$。③ $t=\dfrac{-3.9083\times10^{-3}+3.8187\times10^{-3}}{2\times(-5.775\times10^{-7})}=77.7$ °C。（直線 $t=(R/R_0-1)/A$ なら 76.8 °C。約 1 °C のずれが2次の項の分。）</p></div>
+<div class="ex"><span class="label">例題4（A 確認：放射）</span><p>放射率 0.9、温度 350 K の面が放射するエネルギ $E$ はいくらか。また、ピーク波長はいくらか。</p><p><strong>解答</strong></p><p>① $E=0.9\times5.67\times10^{-8}\times350^4=766$ W/m²（$350^4=1.5006\times10^{10}$）。② $\lambda_m=2897.8/350=8.28\ \mu$m（黒体としての値）。</p></div>
+
+<h2 id="s8"><span class="no">8</span>演習問題</h2>
+<div class="box"><span class="label">問1（A）</span>人体の表面温度を 310 K とする。放射のピーク波長を求めよ。
+<details><summary>解答</summary><p>$\lambda_m=2897.8/310=9.35\ \mu$m。（遠赤外。体温の放射を見るサーモグラフィがこの波長帯を使うことと対応する。）</p></details></div>
+<div class="box"><span class="label">問2（A）</span>体積一定の気体封入式温度計で、20 °C のときの圧力が 120 kPa だった。80 °C での圧力を求めよ。
+<details><summary>解答</summary><p>絶対温度で比をとる：$T_1=293.15$ K、$T_2=353.15$ K。$p_2=120\times353.15/293.15=144.6$ kPa。（°C のまま比をとって $120\times80/20$ としてはならない。）</p></details></div>
+<div class="box"><span class="label">問3（A）</span>温度を 400 K から 800 K に上げると、黒体の放射エネルギは何倍になるか。ピーク波長は何倍になるか。
+<details><summary>解答</summary><p>$E\propto T^4$ で 16 倍。$\lambda_m\propto1/T$ で 1/2 倍。</p></details></div>
+<div class="box"><span class="label">問4（B）</span>中間金属の法則を、(3.1)から導け。
+<details><summary>解答</summary><p>3.3節の STEP 1〜2。C の区間が $t_3\to t_3$ で積分が 0 になり、A の積分が元に戻る。</p></details></div>
+<div class="box"><span class="label">問5（B）</span>補償導線を使っても、端子箱の温度が測定値に影響しない理由を説明せよ。
+<details><summary>解答</summary><p>3.5節。補償導線 A′B′ が常温付近で AB と同じ特性ならば $E_{A'B'}(t_r,t_a)=E_{AB}(t_r,t_a)$。全体は $E_{AB}(t_a,t_2)+E_{AB}(t_r,t_a)=E_{AB}(t_r,t_2)$（中間温度の法則）。$t_a$ が消える。</p></details></div>
+<div class="box"><span class="label">問6（B）</span>(2.5)の例（$\Delta\alpha=7\times10^{-6}$ /K、$h=0.4$ mm、$l=50$ mm）で、先端が 1 mm 動くのに必要な温度変化を求めよ。
+<details><summary>解答</summary><p>(2.5)より $\Delta T=4hx/(3\Delta\alpha\,l^2)=4\times4\times10^{-4}\times10^{-3}/(3\times7\times10^{-6}\times2.5\times10^{-3})=30.5$ K。</p></details></div>
+<div class="box"><span class="label">問7（C 発展：自作）</span>温度計（時定数 $\tau$）で、周囲温度が一定の速さ $r$ [K/s] で上昇しているときを測る。十分時間がたつと、示度は真の温度より何 K 遅れるか。$\tau=13$ s、$r=2$ K/s で数値を出せ。
+<details><summary>解答</summary><p>$\tau\dot T=T_f-T$、$T_f=T_0+rt$。定常な遅れ $\delta=T_f-T$ は一定なので $\dot T=r$ となり、$\tau r=\delta$。$\delta=r\tau=2\times13=26$ K。厳密解は $T_f-T=r\tau(1-e^{-t/\tau})$ で、$t\gg\tau$ で $r\tau$ に近づく。時間変化する温度を測る場合、$\tau$ が大きいと系統的に遅れる。</p></details></div>
+<div class="box"><span class="label">問8（C 発展：自作）</span>放射温度計の放射率を $\varepsilon=1$ に設定して 800 K と表示した。実際の面の放射率が 0.6 のとき、真の温度は何 K か（周囲からの反射は無視する）。
+<details><summary>解答</summary><p>放射量は一定：$\sigma T_{\text{ind}}^4=\varepsilon\sigma T^4$ より $T=T_{\text{ind}}\varepsilon^{-1/4}=800/0.6^{0.25}=800/0.880=909$ K。（約 109 K 高い。）</p></details></div>
+<p class="note">※C 段階の外部の良問（教科書の章末問題や公開された演習問題）は、まだ調べていない。出典のある問題を載せたい場合は、あとで追加する。</p>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 熱平衡と第0法則から温度が定義されることを説明できる。</li>
+<li>□ °F ↔ °C ↔ K を、(1.1)(1.2)を導いて変換でき、温度差には +32 が要らないと言える。</li>
+<li>□ 時定数 $\tau=mc/(hA)$ の導出と、63 %・99 % の意味を説明できる。</li>
+<li>□ センサの必要条件（零点・応答・線形性）と「勘違い三つ」を言える。</li>
+<li>□ バイメタルの曲率 (2.4)、気体式の $p\propto T$ を説明できる。</li>
+<li>□ 熱電対の3法則（均質回路・中間金属・中間温度）を積分の性質から導ける。</li>
+<li>□ 補償導線で端子箱の温度が消える理由を、中間温度の法則で説明できる。</li>
+<li>□ Pt100 の (4.1) と、サーミスタの (4.2)(4.3) を使い、感度を比べられる。</li>
+<li>□ $E=\varepsilon\sigma T^4$ の4乗の由来、$\lambda_mT=b$ の導出、放射率の誤差を説明できる。</li>
+<li>□ 「何の温度を測っているか」を、熱接触・時定数の言葉で説明できる。</li></ul></div>
+
+<div class="navi">
+<strong>次回</strong>：未定（資料待ち）。<br>
+<a href="index.html">← 目次へ</a>
+</div>
+<p class="meta">出典：講義資料「計測工学実験　温度計測」（エンジンシステム・次世代燃料研究室）の内容を、本教材向けに説明し直したもの。資料は撮影画像で、目読による書き起こしのため転記誤りがありうる。導出・例題・演習・補足・写真の見立ては自作。熱電対の起電力表の値、各係数（IEC 60751 の Pt 係数、ウィーン定数など）は公開されている標準的な値で、実験で配られる資料と照合すること。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a></nav>
+
+</body>
+</html>

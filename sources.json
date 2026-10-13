@@ -40,6 +40,11 @@
       "name": "道具としての数学",
       "slug": "dougu-sugaku",
       "src": "道具としての数学/output"
+    },
+    {
+      "name": "計測工学実験",
+      "slug": "keisoku-kogaku",
+      "src": "計測工学実験/output"
     }
   ]
 }
