@@ -106,7 +106,11 @@
 </style>
 </head>
 <body>
-
+<figure class="hero">
+<img src="img/hero_06_sarayashiki.jpg" alt="葛飾北斎《百物語 さらやしき》。紺の夜空の下、蔦のからむ古井戸から、皿を連ねた胴を伸ばしてお菊の亡霊の首が立ちのぼり、口から細い息を吐いている">
+<div class="ttl" style="left:57%;top:30%;"><p class="vol">第6回</p><h1>自由粒子と<br>無限井戸</h1></div>
+<figcaption><p class="cap">井戸から立ちのぼるお菊の亡霊の胴は皿を一枚ずつ連ねてできており、夜ごと彼女が数えるのも、一枚、二枚と、とびとびの数だけである。</p><p class="cr">葛飾北斎《百物語 さらやしき》（1831–32年頃）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Hokusai_Sarayashiki.jpg">Wikimedia Commons</a>（左右に紙色の余白を足して横長にした）</p></figcaption>
+</figure>
 <p class="lead">2026年10月16日（木）4限／レジュメ「量子力学ノート（第3回）」後半（■無限のポテンシャル井戸、束縛状態の性質、パリティ、練習問題 問4）対応。自由粒子はスケジュール表にあるがレジュメにはほとんど記述がないので、本教材で補った。第5回で、エネルギーの固有状態（定常状態）と固有値がすべて分かれば、どんな初期状態の時間発展も書けることを見た。今回は実際にそれを求める。力のかからない粒子（<strong>自由粒子</strong>）と、壁に閉じこめられた粒子（<strong>無限井戸</strong>）の二つである。閉じこめると、エネルギーがとびとびになる。</p>
 
 <div class="navi">
@@ -320,7 +324,16 @@ $$|\Psi|^2\propto\exp\Big(-\frac{x^2}{2}\,\mathrm{Re}\frac{1}{\alpha}\Big)$$</p>
 
 <div class="warn"><span class="label">よくある誤解</span>①「波束が広がる＝粒子がちぎれて大きくなる」のではない。広がるのは<strong>位置の確率分布</strong>で、測れば粒子は1か所に見つかる（第1回の1個ずつの電子と同じ）。②「自由粒子のエネルギーが連続なのは量子力学が効いていないから」ではない。壁（境界条件）がないから連続なのであり、波束の広がりのような量子力学特有の現象は起きている。③「平面波は規格化できないから役に立たない」のではない。状態ではなく展開の部品として使う（3.3 節）。</div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/a3_06_wake.jpg" alt="断崖の上から見下ろしたフィヨルドの水面。左端の小さな船から、八の字に開いた細い波の列が右へ長く伸びている" loading="lazy"></div>
+<p class="cap">静かなフィヨルドを進む小舟の後ろには八の字に開いた波の列が残り、その一つ一つの波の山は、列全体とは違う速さで進んでいる。</p>
+<p class="cr">Edmont（2009）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Fjordn_surface_wave_boat.jpg">Wikimedia Commons</a>（ノルウェー、リーセフィヨルド）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/b3_06_ebru.jpg" alt="水を張った金属の盆に絵の具を落としたエブルの作業。紺と黄の斑点が水面いっぱいに広がり、職人が針で模様を引いている" loading="lazy"></div>
+<p class="cap">トルコの墨流し、エブルでは、水面に落とした絵の具の一滴が輪になって広がり、薄く大きくなりながら隣の滴と押し合う。</p>
+<p class="cr">Zephyris（2013）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Paper_Marbling_Tank.jpg">Wikimedia Commons</a></p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">4</span>壁と境界条件</h2>
@@ -405,7 +418,16 @@ $$\psi'(a+\varepsilon)-\psi'(a-\varepsilon)=\frac{2m}{\hbar^2}\int_{a-\varepsilo
 </table>
 <div class="warn"><span class="label">注意：二つの流儀の固有関数は符号が違うことがある</span>$x'=x+a$ を右の列に入れると $\sqrt{2/L}\sin\frac{n\pi(x+a)}{2a}=\frac{1}{\sqrt a}\sin\big(\frac{n\pi x}{2a}+\frac{n\pi}{2}\big)$ で、$n=1,4,5$ では左の列と一致、$n=2,3,6$ では $-1$ 倍になる（sympy で確認）。波動関数全体に掛かる $-1$（一般に $e^{i\theta}$）は確率にも期待値にも効かないので、物理的には同じ状態である。ただし、重ね合わせの計算（第8章）で符号を混ぜて使うと結果の見かけの符号が変わるので、一つの計算の中では流儀をそろえること。<strong>Griffiths の $a$ は井戸の幅（＝本教材の $2a$）</strong>なので、教科書の式を写すときは特に注意する。</div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/a4_06_stm.jpg" alt="走査トンネル顕微鏡の像。青い地の上に、黄色く光る丸い原子の像と、その下に横長の二つの像が並ぶ" loading="lazy"></div>
+<p class="cap">走査トンネル顕微鏡は、表面に触れない針と試料のあいだの真空のすき間を電子がしみ出して流れる電流を測り、一個の原子の姿を描き出す。</p>
+<p class="cr">NIST（2009）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Scanning_tunneling_microscope%3B_Semiconductor%3B_Spintronics_(5884298881).jpg">Wikimedia Commons</a>（半導体中のマンガン原子。上半分の実測像だけを切り出した）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/b4_06_shoji.jpg" alt="古い町家の座敷。格子の障子が何枚も立ち、奥の障子ほど外の光で白く明るく、手前の障子は橙色に沈んでいる" loading="lazy"></div>
+<p class="cap">障子の紙は外の光をさえぎりきらず、弱めながら座敷の奥までにじませる。</p>
+<p class="cr">LLAAYY（2024）／<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Sh%C5%8Dji_and_Engawa_of_the_former_Miura_residence_6-10_Reisenmachi_Hakata-ku_Fukuoka_20240119.jpg">Wikimedia Commons</a>（福岡・旧三浦邸）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">5</span>無限井戸を解く</h2>
@@ -549,7 +571,16 @@ $$E_n=\frac{\hbar^2k_n^2}{2m}=\frac{\hbar^2\pi^2n^2}{8ma^2}=n^2E_1\qquad(n=1,2,3
 </g></svg><figcaption>図5-2　確率密度 $|\psi_n|^2$（$a$ 倍して無次元にした）。左：$n=1,2,3$。節では粒子が見つかる確率が 0。$n=1$ は中央に集まり、古典の一様分布とはまるで違う。右：$n=20$ では細かい山が 20 個並び、その平均は古典の一様分布（破線、高さ 1/2）に近い。</figcaption></figure>
 <div class="warn"><span class="label">よくある誤解</span>①「$n=2$ の粒子は節 $x=0$ を通れないのに、左右どちらにも見つかるのはおかしい」：$|\psi_2|^2$ は「測ったときどこに見つかるかの確率」で、粒子が軌道を描いて左右を往復しているわけではない。②「エネルギーが $n^2$ に比例するのは、井戸が無限に深いからで一般的ではない」：これは正しい。$n^2$ は無限井戸に特有の形で、調和振動子では等間隔（第4回 例題 3-2 の $\frac12\hbar\omega$ から始まる $\hbar\omega$ 間隔）、水素原子では $-1/n^2$（後半の授業）になる。離散・零点エネルギー・節の数のような<strong>定性的な性質</strong>のほうが共通である（第6章）。③流儀の違い：$E_n=\frac{n^2h^2}{8mL^2}$ の $L$ は幅、$\frac{\hbar^2\pi^2n^2}{8ma^2}$ の $a$ は半幅。混同すると4倍ずれる。</div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/a5_06_qdots.jpg" alt="紫外線を当てた8本の小瓶。中の量子ドットの液が、左から青紫・青・水色・緑・黄・橙・赤・深紅に光っている" loading="lazy"></div>
+<p class="cap">発光の波長を10 nmずつずらしてつくった量子ドットの瓶が並び、電子を閉じこめる粒が小さいものほど、光は赤から青の側へ寄る。</p>
+<p class="cr">Antipoff（2012）／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Quantum_Dots_with_emission_maxima_in_a_10-nm_step_are_being_produced_at_PlasmaChem_in_a_kg_scale.jpg">Wikimedia Commons</a>（PlasmaChem 社）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/b5_06_koto.jpg" alt="箏を弾く手元の接写。爪をはめた指が弦をはじき、白い柱が弦の下に斜めに並んでいる" loading="lazy"></div>
+<p class="cap">箏の弦は一本ずつ柱で区切られ、柱を動かして弦の鳴る部分の長さを変えると、出る音の高さが変わる。</p>
+<p class="cr">U.S. Air Force photo by Airman 1st Class Zachary Kee（2013）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Misawa_Koto_musician.JPG">Wikimedia Commons</a></p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">6</span>束縛状態に共通の性質</h2>
@@ -715,7 +746,16 @@ $$\hat P\psi_n=(-1)^{n+1}\psi_n\tag{7.2}$$
 <li>偶関数の初期状態を展開すると、奇の固有関数の係数はすべて 0（例題 8-1）。</li>
 </ul>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 7｜現実</p>
+<div class="ph"><img src="img/a7_06_butterfly.jpg" alt="砂利の上で翅を開いてとまった蝶を真上から写した写真。水色と黒の筋模様と橙の斑が、胴をはさんで左右対称に並ぶ" loading="lazy"></div>
+<p class="cap">翅を開いてとまった蝶は、胴を境に左右を折り返すと、模様がほぼそのまま重なる。</p>
+<p class="cr">Sandipoutsider（2018）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Open_wing_position_of_Male_Graphium_xenocles_Doubleday,_1842_%E2%80%93_Great_Zebra_WLB_DSC_8531.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 7｜見立て</p>
+<div class="ph"><img src="img/b7_06_niou.jpg" alt="東大寺南大門の金剛力士像2体の古写真を左右に並べたもの。左は口を大きく開き、右は口を固く結んでいる" loading="lazy"></div>
+<p class="cap">東大寺南大門の二体の金剛力士は、門の左右で対をなしながら、一方は口を開き（阿形）、一方は口を結んでいる（吽形）。</p>
+<p class="cr">Imperial Japanese Commission to the Panama-Pacific International Exposition（1915）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Todaiji_Monastery_Kongo_Rikishi_of_Nandaimon_I_(409).jpg">Commons 1</a>・<a href="https://commons.wikimedia.org/wiki/File:Todaiji_Monastery_Kongo_Rikishi_of_Nandaimon_II_(410).jpg">Commons 2</a>（2枚を左右に並べた）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">8</span>直交性・完全性と時間発展</h2>
@@ -833,7 +873,16 @@ $$|\Psi(x,t)|^2=\frac12\Big[\psi_1^2+\psi_2^2+2\psi_1\psi_2\cos\omega_{21}t\Big]
 <p>⑥ 確かめ：第4回 問9 の $\frac{d\langle x\rangle}{dt}=\frac{\langle p\rangle}{m}$ から $\langle p\rangle=-m\omega_{21}\frac{32a}{9\pi^2}\sin\omega_{21}t=-\frac{4\hbar}{3a}\sin\omega_{21}t$。$-i\hbar\partial_x$ で直接計算しても一致する（sympy で確認）。エネルギーを測ると $E_1$ か $E_2$ がそれぞれ確率 $\frac12$ で出て、$\langle H\rangle=\frac{E_1+E_2}2=\frac52E_1$ は時間によらない。</p></div>
 <div class="why"><span class="label">直感：揺れる電荷と、出てくる光</span>荷電粒子（電子）の確率分布が角振動数 $\omega_{21}=(E_2-E_1)/\hbar$ で左右に揺れる。その振動数 $\nu=\omega_{21}/2\pi=(E_2-E_1)/h$ は、電子が $n=2$ から $n=1$ に移るときに出す光子の振動数（例題 5-1 ④、$E=h\nu$）とちょうど同じである。1 nm の井戸の電子なら $T=h/(E_2-E_1)=3.67\times10^{-15}$ s（例題 9-1）。ボーアが原子模型で仮定した「光の振動数＝エネルギー差 $/h$」（振動数条件）が、重ね合わせの時間発展の中に現れている。（光の放出そのものを扱うには電磁場との相互作用が要り、本講義の範囲外。）</div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 8｜現実</p>
+<div class="ph"><img src="img/a8_06_tidepredictor.jpg" alt="ガラス戸の木製の箱に収められたケルビン式潮候推算機。上下二段に並んだ真鍮の滑車と歯車、右に大きな目盛盤と記録用の紙の筒" loading="lazy"></div>
+<p class="cap">1930年から30年間、中央気象台はこの機械で、周期の違う潮の成分をそれぞれ歯車で回してワイヤーで足し合わせ、日本沿岸の潮の満ち引きを描かせた。</p>
+<p class="cr">Daderot（2013）／CC0／<a href="https://commons.wikimedia.org/wiki/File:Kelvin%27s_tide_predictor_-_National_Museum_of_Nature_and_Science,_Tokyo_-_DSC07304.JPG">Wikimedia Commons</a>（国立科学博物館）</p></div>
+<div class="side b"><p class="kick">MITATE 8｜見立て</p>
+<div class="ph"><img src="img/b8_06_hataori.jpg" alt="喜多川歌麿の美人画。手拭いをかぶった女が機に座り、張り渡した経糸のあいだに筬を引き寄せている" loading="lazy"></div>
+<p class="cap">機の上では、縦に張った経糸に緯糸を一本ずつ直角にくぐらせ、どんな柄もその交わりの組み合わせで織り出される。</p>
+<p class="cr">喜多川歌麿《婦人手業操鏡》より（1796年頃、メトロポリタン美術館）／CC0／<a href="https://commons.wikimedia.org/wiki/File:%E5%A9%A6%E4%BA%BA%E6%89%8B%E6%A5%AD%E6%93%8D%E9%8F%A1-A_Woman_Weaving,_Seated_at_a_Hand_Loom_MET_DP143114.jpg">Wikimedia Commons</a></p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">9</span>章末例題</h2>

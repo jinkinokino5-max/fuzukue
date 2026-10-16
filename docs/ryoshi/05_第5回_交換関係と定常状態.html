@@ -106,7 +106,11 @@
 </style>
 </head>
 <body>
-
+<figure class="hero">
+<img src="img/hero_05_gyokuto.jpg" alt="月岡芳年の版画。画面いっぱいの淡い桃色の満月の中を、白い兎が跳ね、赤い如意棒を構えた孫悟空がそれを追う。月の外は黒い夜空">
+<div class="ttl" style="left:13%;top:30%;"><p class="vol">第5回</p><h1>交換関係と<br>定常状態</h1></div>
+<figcaption><p class="cap">芳年の月では孫悟空が兎を追い回すが、地上から見上げる月の兎はいつも同じ向きで同じ所にいて、それは月が止まっているからではなく、回りながら同じ面だけをこちらに向けつづけているからである。</p><p class="cr">月岡芳年《月百姿 玉兎 孫悟空》（1885–92年の連作から）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Tsukioka_Yoshitoshi_(c._1885%E2%80%9390)_Tsuki_hyaku_shi_-_Tamausagi_songok%C5%AB-.jpg">Wikimedia Commons</a>（左右に紙色の余白を足して横長にした）</p></figcaption>
+</figure>
 <p class="lead">2026年10月16日（木）3限／レジュメ「量子力学ノート（第3回）」の「演算子の交換関係とHeisenberg不確定性」「エネルギー縮退」「シュレディンガー方程式（定常状態と非定常状態）」と練習問題 問1〜3 に対応。第4回で、観測量はエルミート演算子で表され、測ると固有値のどれかが出ることを見た。今回はまず、<strong>二つの観測量を同時に決められるか</strong>を、演算子を掛ける順序（<strong>交換子</strong>）で判定し、そこから<strong>不確定性関係 $\Delta x\,\Delta p\ge\hbar/2$ を証明</strong>する。後半では、シュレディンガー方程式を実際に時間について解き、確率の分布が<strong>動かない状態（定常状態）</strong>と<strong>動く状態（非定常状態）</strong>を区別する。</p>
 
 <div class="navi">
@@ -317,7 +321,16 @@ $$[\hat H_\text{HO},\hat p]=\frac{m\omega^2}{2}\cdot2i\hbar\hat x=i\hbar m\omega
 どちらも $0$ でない。<strong>この系では、粒子のエネルギーと運動量、エネルギーと位置は同時には決まらない</strong>（その根拠は次章）。</p>
 <p>⑦ 確かめ：$\omega\to0$（ばねを外す）で $\hat H_\text{HO}\to\hat H_\text{free}$ となり、(2.5) は $0$、(2.4) は例題 2-2 ② に戻る。実際、第4回 例題 8-3 の基底状態では $\Delta x=b/\sqrt2\ne0$、$\Delta p\ne0$ で、エネルギーだけが確定していた。</p></div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/a2_05_helgoland.jpg" alt="北海に浮かぶヘルゴラント島の赤い砂岩の断崖と、海から突き出た岩の塔「ランゲ・アンナ」。青い海と空、崖の上に柵と人影" loading="lazy"></div>
+<p class="cap">1925年6月、花粉症に苦しんだハイゼンベルクは草木の少ないこの北海の島にこもり、のちに行列力学となる計算をここで組み上げた。</p>
+<p class="cr">Jörg Braukmann（2018）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Klippen_von_Helgoland_mit_Langer_Anna.jpg">Wikimedia Commons</a>（ヘルゴラント島の断崖とランゲ・アンナ）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/b2_05_kimono.jpg" alt="赤と白の振袖を着た女性が、庭の池の飛び石にかがんで鯉をのぞきこんでいる。胸元で襟が重なっている" loading="lazy"></div>
+<p class="cap">着物は右の衽を下に、左を上に重ねて着るが、同じ二枚を逆の順に重ねた「左前」は、死者の装いとされる。</p>
+<p class="cr">H.Hmoderato（2015）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:A_Japanese_woman_wearing_a_Kimono_and_Japanese_traditional_garden.jpg">Wikimedia Commons</a></p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">3</span>交換しない＝同時には決まらない</h2>
@@ -467,7 +480,16 @@ $$\langle H\rangle\ \ge\ 2\sqrt{\frac{\hbar^2\omega^2}{16}}=\frac12\hbar\omega\t
 <p>⑥ 確かめ：④の等号は $P=Q$、すなわち $(\Delta x)^2=\dfrac{\hbar}{2m\omega}$ のとき。第4回 例題 8-3 の基底状態は $\langle x^2\rangle=\dfrac{\hbar}{2m\omega}$ で、ちょうどこの値だった。$\hbar\to0$ で下限 $\to0$（古典に戻る）。</p></div>
 <div class="why"><span class="label">直感：狭い谷にじっとしていられない理由</span>エネルギーを下げようとして粒子を谷底に寄せる（$\Delta x$ を小さくする）と、(4.2) で運動量の広がりが大きくなり、運動エネルギー $\propto1/(\Delta x)^2$ が増える。逆に広げると位置エネルギー $\propto(\Delta x)^2$ が増える。二つの綱引きの釣り合う点が $\frac12\hbar\omega$ で、それより下には行けない。</div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/a4_05_helium.jpg" alt="魔法瓶の中の液体ヘリウムの白黒写真。液面が明るく光り、液の中には泡が見えない" loading="lazy"></div>
+<p class="cap">2.2 K 以下まで冷やした液体ヘリウムは泡立ちをやめて静まり返るが、常圧のままでは、どれほど冷やしても固体にはならない。</p>
+<p class="cr">Bmatulis／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Liquid_helium_superfluid_phase.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/b4_05_hotaru.jpg" alt="夜の庭を長時間露光で撮った写真。蛍の飛んだ跡が、黄緑色の光の糸となって草木のあいだに何本も絡み合っている" loading="lazy"></div>
+<p class="cap">シャッターを開いたままにした写真では蛍は光の糸になり、どこを飛んだかは見えても、いまどこにいるかは糸のどの一点とも決められない。</p>
+<p class="cr">Bernd Thaller（2017）／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Erratic_Flight_of_Fireflies.jpg">Wikimedia Commons</a></p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">5</span>エネルギーの縮退</h2>
@@ -542,7 +564,16 @@ $$\langle H\rangle\ \ge\ 2\sqrt{\frac{\hbar^2\omega^2}{16}}=\frac12\hbar\omega\t
 <p>$L=1$ の3つが同じエネルギーになるのは定理 5-2 の例である：$\hat L_x$ と $\hat L_z$ はどちらも $\hat H$ と交換する（向きを回しても系が変わらない）が、互いには交換しない。$L=0$ と $L=1$ までが同じエネルギーになるのは、クーロンポテンシャル $\propto1/r$ に特有の事情による（後半の回で扱う）。</p>
 <div class="warn"><span class="label">第6回への注意</span>レジュメは第6回の範囲で「一次元の束縛状態にはエネルギー縮退がない」と述べる。これは $x\to\pm\infty$ で $\psi\to0$ となる直線上の話である。円周上の粒子（例題 5-1）は直線ではない（端がなく、ぐるりと一周できる）ので、縮退していても矛盾しない。</div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/a5_05_zeeman.jpg" alt="ナトリウムのD₁線とD₂線を写した白黒の写真。上段は太い線が1本ずつ、下段はそれぞれが細い線の束に分かれている" loading="lazy"></div>
+<p class="cap">ナトリウムの炎を磁場の中に置くと、1本ずつだったD₁線とD₂線（上）が、それぞれ何本もの細い線に分かれて写る（下）。</p>
+<p class="cr">Pieter Zeeman 撮影とされる写真／Public domain／<a href="https://commons.wikimedia.org/wiki/File:ZeemanEffect.GIF">Wikimedia Commons</a>（原画像が小さいので2倍に拡大した）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/b5_05_hina.jpg" alt="赤い毛氈を敷いた七段の雛壇。最上段に内裏雛、二段目に三人官女、三段目に五人囃子が並び、下の段に随身や仕丁、道具類" loading="lazy"></div>
+<p class="cap">雛壇の三段目には五人囃子が並び、手にするものはそれぞれ違うが、五人とも同じ高さの段に座っている。</p>
+<p class="cr">Asanagi（2020）／CC0／<a href="https://commons.wikimedia.org/wiki/File:Ornamental_dolls_of_Hinamatsuri_2020-01-12.jpg">Wikimedia Commons</a></p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">6</span>定常状態</h2>
@@ -622,7 +653,16 @@ $$P(x,t)\equiv|\psi(x,t)|^2=\big(e^{+iEt/\hbar}\psi_E^*\big)\big(e^{-iEt/\hbar}\
 ③ $V(x)$ に定数 $V_0$ を足すと $E$ も $V_0$ ずれ、位相の回る速さが変わる。しかし全体の位相なので、確率には効かない。エネルギーの基準の取り方は物理に影響しない。
 </div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 6｜現実</p>
+<div class="ph"><img src="img/a6_05_saturn.jpg" alt="カッシーニが4種類のフィルターで撮った土星の北極の4枚組。どの画像にも、極を囲む六角形の暗い雲の帯と中心の渦が写る" loading="lazy"></div>
+<p class="cap">土星の北極を囲む六角形の雲は、その縁に沿って強い風が吹き流れているのに、1980年代のボイジャーの写真にも、2016年のこのカッシーニの写真にも、同じ形で写っている。</p>
+<p class="cr">NASA/JPL-Caltech/Space Science Institute（2016）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:PIA21053_-_Saturnian_Hexagon_Collage.jpg">Wikimedia Commons</a>（PIA21053）</p></div>
+<div class="side b"><p class="kick">MITATE 6｜見立て</p>
+<div class="ph"><img src="img/b6_05_hojoki.jpg" alt="大福光寺本『方丈記』の冒頭。右に青い表紙と「鴨長明」の文字、左に漢字片仮名まじりの本文が縦書きで続く" loading="lazy"></div>
+<p class="cap">鴨長明は『方丈記』を、ゆく河の流れは絶えずして、しかももとの水にあらず、と書き起こした。</p>
+<p class="cr">鴨長明『方丈記』大福光寺本（鎌倉時代、自筆と伝える）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Hojyoki_codex_Daifukukohji.jpg">Wikimedia Commons</a></p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">7</span>非定常状態</h2>
@@ -735,7 +775,16 @@ $$\frac{d}{dt}\langle A\rangle=\frac{1}{i\hbar}\big\langle[\hat A,\hat H]\big\ra
 <p>7.3 の状態では、エネルギーの測定値は $E_0$ と $E_1$ が確率 $\frac12$ ずつなので、$\langle H\rangle=\hbar\omega$、$\langle H^2\rangle=\frac12\big(\frac14+\frac94\big)\hbar^2\omega^2=\frac54\hbar^2\omega^2$、$\Delta H=\sqrt{\frac54-1}\,\hbar\omega=\frac12\hbar\omega$。確率の分布が右から左へ移るのにかかる時間（半周期）は $\tau=\pi/\omega$ で、積は $\Delta H\cdot\tau=\frac{\pi}{2}\hbar$。エネルギーの広がりが大きいほど、状態は速く変わる。定常状態では $\Delta H=0$ で、何も変わらない（$\tau=\infty$）。</p>
 <div class="warn"><span class="label">注意：時間は演算子ではない</span>この「$\Delta E\cdot\tau\gtrsim\hbar$ 程度」という関係は、(4.1) の特別な場合<strong>ではない</strong>。シュレディンガー方程式の中で時間 $t$ はただの変数（ラベル）で、$\hat x$ や $\hat p$ のような観測量のエルミート演算子ではないからである。ここでの $\tau$ は「状態が目に見えて変わるのにかかる時間」で、$\Delta x$ のような標準偏差とは意味が違う。正確な定式化は Griffiths §3.5.3 などを参照（本講義では深入りしない）。</div>
 
-
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 7｜現実</p>
+<div class="ph"><img src="img/a7_05_wilberforce.jpg" alt="コイルばねの下に木の円柱を吊り、左右に重りつきの腕を突き出したウィルバーフォース振り子" loading="lazy"></div>
+<p class="cap">ばねに吊るしたこの振り子は、上下に弾む揺れと、左右にねじれる揺れとを交互にくり返し、揺れの勢いが二つのあいだをゆっくり行き来する。</p>
+<p class="cr">Redeemer sjr（2019）／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:The_Wilberforce_Pendulum.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 7｜見立て</p>
+<div class="ph"><img src="img/b7_05_swing.jpg" alt="フラゴナール《ぶらんこ》。森の中で桃色のドレスの女がぶらんこを漕ぎ、左下の茂みに男が身を伏せて見上げ、右奥の男が綱を引いている" loading="lazy"></div>
+<p class="cap">ぶらんこの女は、後ろで綱を引く男の側と、茂みに身を伏せて見上げる男の側とを、行っては戻る。</p>
+<p class="cr">ジャン＝オノレ・フラゴナール《ぶらんこ》（1767年、ウォレス・コレクション）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Jean-Honor%C3%A9_Fragonard_-_The_Swing_-_WGA08061.jpg">Wikimedia Commons</a></p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">8</span>章末例題</h2>
