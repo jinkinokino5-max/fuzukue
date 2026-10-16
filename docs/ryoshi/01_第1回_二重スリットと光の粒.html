@@ -312,6 +312,17 @@ $$e^{i\theta}=1+i\theta-\frac{\theta^2}{2!}-i\frac{\theta^3}{3!}+\frac{\theta^4}
 <p class="qed">■</p>
 </div>
 <p>強度は振幅の2乗 $a^2$ に比例する。比例係数は比べるときに打ち消されるので、以下では簡単のため <strong>$I=a^2$</strong> と書く（レジュメの $I=h^2$ と同じ約束）。</p>
+<div class="why"><span class="label">🙋 質問から追加：なぜここで sin ではなく cos なのか</span>
+<p><strong>結論：sin でも cos でも、同じ波である。</strong>形は全く同じで、$\pi/2$（四分の一周期）ずれているだけだからだ。関係式は
+$$\sin\alpha=\cos\!\left(\alpha-\frac{\pi}{2}\right)$$
+である。確かめ：$\alpha=0$ のとき左辺は $0$、右辺は $\cos(-\pi/2)=0$。$\alpha=\pi/2$ のとき左辺は $1$、右辺は $\cos 0=1$。図1.3 の円で言えば、高さ（sin）を測る代わりに横（cos）を測っても、針が $\pi/2$ 回った位置で同じ値になる、ということである。</p>
+<p><strong>ではなぜ cos を選んだか。</strong>理由は2つある。</p>
+<ul>
+<li>(1.5) の複素平面波 $e^{i(kx-\omega t)}$ の<strong>実部</strong>が $\cos(kx-\omega t)$ で、古典的な波では「実部が実際の変位」と約束した（1.4節）。複素数で書いた波と記号をそろえるため、実数の波も cos で書く。</li>
+<li>位相のずれ $\varphi$ を入れた一般形 $a\cos(\omega t-\varphi)$ では、$\varphi=0$ のとき $t=0$ で最大値 $a$ になる。「最大から数えて何ラジアンずれているか」という読み方が素直で、sin だと $t=0$ で $0$ から始まるため、基準が少し不自然になる。</li>
+</ul>
+<p><strong>sin で書くと結果は変わるか。</strong>変わらない。$a\cos(\omega t-\varphi)=a\sin\!\left(\omega t-\varphi+\frac{\pi}{2}\right)$ なので、sin で書くなら位相のずれの値が $\pi/2$ だけ違うだけである（$\varphi$ はもともと「そのときどきで決まる任意の数」なので、$\pi/2$ の差は吸収される）。STEP 2〜3 の $\langle h^2\rangle=a^2/2$ も、sin で書いて $\sin^2\alpha=\frac{1-\cos2\alpha}{2}$ を使えば同じ結果になる。</p>
+<p><strong>混乱のもと：</strong>1.4節に足した説明の図（図1.3〜1.5）では、「高さ」を直感的に見せるため、針の先の高さ（sin）で波を描いた。一方、教材の式 (1.5) の実部は cos である。これは「どちらでもよい」範囲のずれだが、記号をそろえたいなら、「本教材の式で実数の波と言うときは、針の横の成分 $\cos$ を指す」と読み替えればよい。</p></div>
 
 <h3><span class="no">2.3</span>干渉の公式</h3>
 <div class="thm"><span class="label">二つの波の干渉</span>同じ振動数の二つの波（振幅 $a_1,a_2$、位相のずれ $\varphi_1,\varphi_2$）が重なるとき、位相差を $\delta=\varphi_2-\varphi_1$ とすると
