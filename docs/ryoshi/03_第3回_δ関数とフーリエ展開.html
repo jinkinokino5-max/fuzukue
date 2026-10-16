@@ -627,6 +627,21 @@ $$\langle p^2\rangle=\int\psi^*\Big(-\hbar^2\frac{\partial^2}{\partial x^2}\Big)
 <text x="420" y="179" fill="#4a5f8c" stroke="#f7f4ec" stroke-width="3" paint-order="stroke">Re ψ</text><text x="470" y="179" fill="#a8322a" stroke="#f7f4ec" stroke-width="3" paint-order="stroke">Im ψ</text><text x="520" y="179" fill="#968d80" stroke="#f7f4ec" stroke-width="3" paint-order="stroke">|ψ|</text>
 </g></svg><figcaption>図5-1　$\phi(x)=e^{-x^2/2}$（包絡線、破線）に $e^{ik_0x}$ を掛けた波動関数。$|\psi|^2=\phi^2$ は上下で同じなのに、下では位相が $x$ とともに回り、その回る速さ $k_0$ が運動量 $\hbar k_0$ を表す。</figcaption></figure>
 <p>⑤ 読み取り：確率密度 $|\psi|^2=\phi^2$ は $k_0$ によらない。<strong>同じ場所に同じ確率でいても、位相の回り方が違えば運動量が違う</strong>。実数の波動関数（例：1.3 節の cos 型、無限井戸の定常状態）は、右向きと左向きの運動量を同じ重みで含む（例3-2 の $\tilde\psi$ は $k\to-k$ で対称だった）ので、平均が $0$ になる。</p></div>
+<div class="why"><span class="label">🙋 質問から追加：例題 5-1「実数値で規格化」の意味と、(1) の計算</span>
+<p><strong>「$\psi$ が実数値（$\psi^*=\psi$）」とは</strong>　波動関数は一般に、場所 $x$ ごとに<strong>複素数</strong>を割り当てる関数である（$e^{ikx}=\cos kx+i\sin kx$ のように虚部がある）。「実数値」とは、どの $x$ でも虚部が $0$、つまり $\psi(x)$ が<strong>ふつうの実数だけ</strong>で書かれているということである。例：$\psi(x)=e^{-x^2/2}$（山の形、虚部なし）。逆に $e^{ik_0x}$ は実数値ではない。</p>
+<p>複素共役は虚部の符号を反転する操作（第1回 1.3 節）なので、虚部が $0$ の数は反転しても変わらない。例：$3^*=3$。よって実数値なら $\psi^*(x)=\psi(x)$ が成り立つ。この式は「実数値であること」の言い換えである。</p>
+<p><strong>「規格化されている」とは</strong>　全空間で粒子を見つける確率の合計が 1、すなわち $\displaystyle\int|\psi|^2dx=1$ である。実数値なら $|\psi|^2=\psi^2$ なので、$\displaystyle\int\psi^2dx=1$ と書ける。</p>
+
+<p><strong>① (1) の計算を一歩ずつ</strong>　目標は $\langle p\rangle=0$ を示すこと。出発点は (5.2) の
+$$\langle p\rangle=\int\psi^*\Big(-i\hbar\frac{\partial}{\partial x}\Big)\psi\,dx$$
+である。</p>
+<p><span class="step">STEP 1</span>　【実数値なので $\psi^*$ を $\psi$ に替える】$\psi^*=\psi$ を使うと $\displaystyle\langle p\rangle=-i\hbar\int\psi\,\psi'\,dx$（$\psi'=\partial_x\psi$。定数 $-i\hbar$ は積分の外に出した）。</p>
+<p><span class="step">STEP 2</span>　【$\psi\psi'$ を「何かの微分」に見直す】$\psi^2$ を $x$ で微分すると、合成関数の微分で $(\psi^2)'=2\psi\psi'$。よって $\psi\psi'=\dfrac12(\psi^2)'$。なぜこうするか：「微分を積分する」と、端の値の差だけが残るからである。</p>
+<p><span class="step">STEP 3</span>　【積分する】$\displaystyle\int_{-\infty}^{\infty}\psi\psi'\,dx=\frac12\Big[\psi^2\Big]_{-\infty}^{\infty}=\frac12\big(\psi(\infty)^2-\psi(-\infty)^2\big)$。</p>
+<p><span class="step">STEP 4</span>　【端の値は 0】規格化できる関数は遠方で $0$ になる（$\psi(\pm\infty)=0$）。そうでないと $\int\psi^2dx$ が有限にならない。よって STEP 3 は $0$。したがって $\langle p\rangle=-i\hbar\times0=0$。</p>
+
+<p><strong>具体例で確かめる</strong>　$\psi(x)=\pi^{-1/4}e^{-x^2/2}$ を使う。規格化の確認：$\int\psi^2dx=\pi^{-1/2}\int e^{-x^2}dx=\pi^{-1/2}\sqrt\pi=1$（ガウス積分）。微分すると $\psi'=-x\,\psi$ なので $\psi\psi'=-x\,\psi^2$。これは $x\to-x$ で符号が変わる<strong>奇関数</strong>で、左右対称な範囲で積分すると $0$ になる。確かに $\langle p\rangle=0$ である。</p>
+<p><strong>意味（直感）</strong>　実数値の波動関数には位相の回転がなく、「右へ進む」「左へ進む」という向きの偏りがない。右向きと左向きの運動量が同じ重みで混ざるので、平均は打ち消し合って $0$ になる（⑤ で述べたことと同じ）。</p></div>
 
 <h3><span class="no">5.5</span>エネルギー演算子と、次回への橋</h3>
 <p>時間の側でも同じことをする。ド・ブロイの関係 $E=\hbar\omega$ をもつ平面波 $e^{i(kx-\omega t)}$ から $\hbar\omega$ を取り出すには、$t$ で微分すればよい：$i\hbar\,\partial_t\,e^{i(kx-\omega t)}=i\hbar(-i\omega)e^{i(kx-\omega t)}=\hbar\omega\,e^{i(kx-\omega t)}$。</p>
