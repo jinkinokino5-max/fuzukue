@@ -643,6 +643,14 @@ $$\langle p\rangle=\int\psi^*\Big(-i\hbar\frac{\partial}{\partial x}\Big)\psi\,d
 <p><strong>具体例で確かめる</strong>　$\psi(x)=\pi^{-1/4}e^{-x^2/2}$ を使う。規格化の確認：$\int\psi^2dx=\pi^{-1/2}\int e^{-x^2}dx=\pi^{-1/2}\sqrt\pi=1$（ガウス積分）。微分すると $\psi'=-x\,\psi$ なので $\psi\psi'=-x\,\psi^2$。これは $x\to-x$ で符号が変わる<strong>奇関数</strong>で、左右対称な範囲で積分すると $0$ になる。確かに $\langle p\rangle=0$ である。</p>
 <p><strong>意味（直感）</strong>　実数値の波動関数には位相の回転がなく、「右へ進む」「左へ進む」という向きの偏りがない。右向きと左向きの運動量が同じ重みで混ざるので、平均は打ち消し合って $0$ になる（⑤ で述べたことと同じ）。</p></div>
 
+<div class="why"><span class="label">🙋 質問から追加：例題 5-1 (2) の ③④ は何をしているか</span>
+<p><strong>やりたいこと</strong>　$\psi=\phi(x)\,e^{ik_0x}$（$\phi$ は実数の「山」の形、$e^{ik_0x}$ は位相だけを回す部分）について、運動量の平均 $\displaystyle\langle p\rangle=\int\psi^*\big(-i\hbar\,\partial_x\big)\psi\,dx$ を実際に計算して、$\hbar k_0$ になることを確かめる。</p>
+<p><span class="step">STEP 1</span>　【③ $\psi$ を微分する】$\psi$ は $\phi$ と $e^{ik_0x}$ の積なので積の微分を使う：$\psi'=\phi'\,e^{ik_0x}+\phi\cdot(ik_0)e^{ik_0x}=(\phi'+ik_0\phi)\,e^{ik_0x}$。（$e^{ik_0x}$ の微分は $ik_0e^{ik_0x}$。微分すると $ik_0$ が前に出る、が運動量を読み取る仕掛けだった。）</p>
+<p><span class="step">STEP 2</span>　【③ 左から $\psi^*$ を掛ける】$\psi^*=\phi\,e^{-ik_0x}$（複素共役で $i\to-i$、$\phi$ は実数なのでそのまま）。すると $\psi^*\psi'=\phi\,(\phi'+ik_0\phi)\,e^{-ik_0x}e^{ik_0x}$。ここで $e^{-ik_0x}e^{ik_0x}=e^{0}=1$ なので<strong>位相因子が消える</strong>。残るのは $\phi\phi'+ik_0\phi^2$。</p>
+<p><span class="step">STEP 3</span>　【③ $-i\hbar$ を掛ける】$\psi^*\hat p\psi=-i\hbar\,(\phi\phi'+ik_0\phi^2)=-i\hbar\,\phi\phi'+\hbar k_0\phi^2$。（$-i\cdot i=-i^2=1$ を使った。）</p>
+<p><span class="step">STEP 4</span>　【④ 積分する】第1項 $-i\hbar\int\phi\phi'dx$ は、例題の (1) とまったく同じ形（$\phi$ が実数）なので $0$。第2項は $\hbar k_0\int\phi^2dx$ で、$\phi$ が規格化されている（$\int\phi^2dx=1$）ので $\hbar k_0$。合わせて $\langle p\rangle=\hbar k_0$。</p>
+<p><strong>意味（直感）</strong>　山の形 $\phi$ は運動量の平均に<strong>まったく効かない</strong>（第1項は $0$）。効くのは位相の回る速さ $k_0$ だけで、その結果が $\hbar k_0$（ド・ブロイの $p=\hbar k$）。つまり「運動量は波動関数の位相の傾きに書かれている」というこの節の題の、具体的な確認が (2) である。</p></div>
+
 <h3><span class="no">5.5</span>エネルギー演算子と、次回への橋</h3>
 <p>時間の側でも同じことをする。ド・ブロイの関係 $E=\hbar\omega$ をもつ平面波 $e^{i(kx-\omega t)}$ から $\hbar\omega$ を取り出すには、$t$ で微分すればよい：$i\hbar\,\partial_t\,e^{i(kx-\omega t)}=i\hbar(-i\omega)e^{i(kx-\omega t)}=\hbar\omega\,e^{i(kx-\omega t)}$。</p>
 <div class="def"><span class="label">定義（エネルギー演算子）</span>
