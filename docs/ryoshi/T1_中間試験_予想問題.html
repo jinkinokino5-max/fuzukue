@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1 中間試験 範囲まとめ＋予想問題</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<div class="navi">
+<strong>T1｜中間試験（10/23 3限）の範囲まとめ＋予想問題</strong>（第1〜6回）<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="06_第6回_自由粒子と無限井戸.html">第6回へ</a>
+</div>
+<p class="lead">2026-10-16 作成。「全部を理解しようとして混乱する」状態から抜けるために、<strong>試験で点になる部分だけ</strong>を一本道に並べ直したページ。導出の詳しい説明は各回の教材に戻って読む。ここは「何を、どの順で、何を使って解くか」の地図である。</p>
+
+<div class="warn"><span class="label">注意：このページについて</span>①試験範囲「第1〜6回」は、日程の区切りからの<strong>推定</strong>で、講義での指示は未確認。先生の指示を最優先にすること。②予想問題はすべて<strong>自作</strong>で、出題を保証しない。③優先度（★）は、教材の構成と問題の型からの<strong>私の推定</strong>であり、先生の採点方針ではない。④掲載した数値は sympy と数値計算で検算した（<code>draft/check_T1.py</code>）。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>まず整理：全部は要らない</h2>
+
+<h3><span class="no">1.1</span>優先度（推定）</h3>
+<table class="tb">
+<tr><th>優先度</th><th>内容</th><th>どこで学んだか</th></tr>
+<tr><td>★★★<br>必須</td><td>
+波の式と $k,\omega,\lambda,v_{\rm p}$／光子とド・ブロイ：$E=h\nu=\hbar\omega,\ p=h/\lambda=\hbar k$／確率密度と規格化／期待値 $\langle A\rangle=\int\psi^*\hat A\psi\,dx$／$\hat p=-i\hbar\partial_x$ と $[\hat x,\hat p]=i\hbar$／固有値方程式／無限井戸の $E_n$ と $\psi_n$／不確定性関係の数値計算</td><td>第1・2・3・4・5・6回</td></tr>
+<tr><td>★★<br>標準</td><td>
+フーリエ変換 $\tilde\psi(k)$ の計算／δ関数の性質／エルミート性の証明（$\hat p$）／重ね合わせの測定確率と時間発展／交換子の計算／定常状態の導出</td><td>第3〜6回</td></tr>
+<tr><td>★<br>余裕があれば</td><td>
+干渉項の導出／群速度の導出／シュワルツ不等式の証明／束縛状態の性質（ロンスキアン）／パリティの証明／有限井戸</td><td>第1・2・5・6回</td></tr>
+</table>
+<p class="note">★★★ を確実に取れるようにしてから、★★ に進む。★ は、時間が余ったときだけでよい。</p>
+
+<h3><span class="no">1.2</span>6回分の「一本道」（論理の幹）</h3>
+<ol>
+<li><strong>波は複素数の「針」で書く</strong>：$f=e^{i(kx-\omega t)}$。$k=2\pi/\lambda$、$\omega=2\pi\nu$、進む速さ $\omega/k$。（第1回）</li>
+<li><strong>光も電子も、波であり粒子でもある</strong>：$E=\hbar\omega$、$p=\hbar k$。電子の波長 $\lambda=h/p$。（第1・2回）</li>
+<li><strong>波動関数 $\psi(x)$ の2乗が確率</strong>：$|\psi|^2dx$＝その区間に見つかる確率。合計 1（規格化）。重ね合わせは<strong>足してから2乗</strong>。（第2回）</li>
+<li><strong>平均（期待値）は「$\psi^*$ と $\psi$ で挟む」</strong>：$\langle x\rangle=\int\psi^*x\psi\,dx$。ばらつき $(\Delta a)^2=\langle a^2\rangle-\langle a\rangle^2$。（第3回）</li>
+<li><strong>運動量は演算子 $\hat p=-i\hbar\partial_x$</strong>：平面波を $x$ で微分すると $k$ が前に出るから。$\langle p\rangle=\int\psi^*\hat p\psi\,dx$。（第3回）</li>
+<li><strong>測定値は固有値</strong>：$\hat A\psi_a=a\psi_a$。一般の $\psi=\sum c_a\psi_a$ なら、値 $a$ の確率は $|c_a|^2$。（第4回）</li>
+<li><strong>時間発展はシュレディンガー方程式</strong>：$i\hbar\partial_t\Psi=\hat H\Psi$。定常状態は $\Psi=\psi_E(x)e^{-iEt/\hbar}$、$\hat H\psi=E\psi$。（第4・5・6回）</li>
+<li><strong>$[\hat x,\hat p]=i\hbar$ から不確定性</strong>：$\Delta x\,\Delta p\ge\hbar/2$。位置と運動量は同時に確定できない。（第5回）</li>
+<li><strong>具体的に解く</strong>：無限井戸で $E_n$ がとびとびになる。自由粒子は連続。（第6回）</li>
+</ol>
+
+<h3><span class="no">1.3</span>混同しやすい対（ここで混乱している人が多い）</h3>
+<table class="tb">
+<tr><th>これと</th><th>これは別もの</th><th>違い</th></tr>
+<tr><td>演算子 $\hat p$</td><td>平均 $\langle p\rangle$</td><td>$\hat p$ は「関数を別の関数に変える操作」、$\langle p\rangle$ は「その操作を使って出した<strong>数</strong>」。$\langle p\rangle=\int\psi^*\hat p\psi\,dx$</td></tr>
+<tr><td>$\psi(x)$</td><td>$|\psi(x)|^2$</td><td>$\psi$ は複素数の波（振幅）、$|\psi|^2$ は確率密度（実数・非負）</td></tr>
+<tr><td>波数 $k$</td><td>運動量 $p$</td><td>$p=\hbar k$。波の言葉と粒子の言葉の辞書</td></tr>
+<tr><td>$\psi(x)$</td><td>$\Psi(x,t)$</td><td>$\psi$ は時間によらない部分、$\Psi=\psi\,e^{-iEt/\hbar}$ が時間込み</td></tr>
+<tr><td>固有値 $E_n$</td><td>期待値 $\langle E\rangle$</td><td>$E_n$ は測ったとき出うる値、$\langle E\rangle=\sum|c_n|^2E_n$ はその平均</td></tr>
+<tr><td>確率振幅 $c_n$</td><td>確率 $P_n$</td><td>$P_n=|c_n|^2$。振幅は複素数、確率は実数</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>公式表（回ごと）</h2>
+<p class="note">レジュメの流儀に合わせて記した。座標は無限井戸を $-a\le x\le a$（レジュメ）、$0\le x\le L$（教科書）の両方で書いた（$L=2a$）。</p>
+<table class="tb">
+<tr><th>回</th><th>公式</th></tr>
+<tr><td>1</td><td>$k=\dfrac{2\pi}{\lambda}$、$\omega=2\pi\nu$、$v_{\rm p}=\dfrac{\omega}{k}$、$e^{i\theta}=\cos\theta+i\sin\theta$、$|z|^2=zz^*$<br>
+干渉 $I_{12}=I_1+I_2+2\sqrt{I_1I_2}\cos\delta$、縞の間隔 $\Delta y=\dfrac{\lambda L}{d}$<br>
+光電効果 $K_{\max}=h\nu-W=eV_0$、$hc\approx1240\ \mathrm{eV\,nm}$、光子の運動量 $p=\dfrac{h}{\lambda}=\hbar k$</td></tr>
+<tr><td>2</td><td>$E=\hbar\omega$、$p=\hbar k$、ド・ブロイ波長 $\lambda=\dfrac{h}{p}$<br>
+加速電圧 $V$ の電子：$\lambda=\dfrac{h}{\sqrt{2meV}}\approx\dfrac{1.226}{\sqrt{V[\mathrm{V}]}}\ \mathrm{nm}$<br>
+規格化 $\int|\psi|^2dx=1$、区間 $[a,b]$ に見つかる確率 $\int_a^b|\psi|^2dx$</td></tr>
+<tr><td>3</td><td>$\langle a\rangle=\sum aP(a)$、$(\Delta a)^2=\langle a^2\rangle-\langle a\rangle^2$、$\langle x\rangle=\int\psi^*x\psi\,dx$<br>
+$\int f(x)\delta(x-x_0)dx=f(x_0)$、$\int e^{ikx}dk=2\pi\delta(x)$<br>
+フーリエ展開（レジュメの流儀）：$\psi(x)=\int\tilde\psi(k)\dfrac{e^{ikx}}{\sqrt{2\pi}}dk$、$\tilde\psi(k)=\int\dfrac{e^{-ikx}}{\sqrt{2\pi}}\psi(x)dx$<br>
+$\hat p=-i\hbar\dfrac{\partial}{\partial x}$、$\hat E=i\hbar\dfrac{\partial}{\partial t}$、$\langle p\rangle=\int\psi^*\hat p\psi\,dx$、$\Delta x\,\Delta p\ge\dfrac{\hbar}{2}$</td></tr>
+<tr><td>4</td><td>固有値方程式 $\hat A\psi_a=a\psi_a$、エルミート：$\int f^*\hat Ag\,dx=\int(\hat Af)^*g\,dx$（固有値は実数）<br>
+$\psi=\sum c_a\psi_a$、$c_a=\int\psi_a^*\psi\,dx$、$P(a)=|c_a|^2$、$\langle A\rangle=\sum a|c_a|^2$<br>
+$i\hbar\dfrac{\partial\Psi}{\partial t}=\hat H\Psi$、$\hat H=-\dfrac{\hbar^2}{2m}\dfrac{\partial^2}{\partial x^2}+V(x)$、$[\hat x,\hat p]=i\hbar$</td></tr>
+<tr><td>5</td><td>$[\hat A,\hat B]=\hat A\hat B-\hat B\hat A$、$[\hat A,\hat B\hat C]=[\hat A,\hat B]\hat C+\hat B[\hat A,\hat C]$<br>
+$\Delta A\,\Delta B\ge\dfrac12\big|\langle[\hat A,\hat B]\rangle\big|$<br>
+定常状態 $\Psi=\psi_Ee^{-iEt/\hbar}$（$|\Psi|^2$ は時間によらない）、一般に $\Psi=\sum c_n\psi_ne^{-iE_nt/\hbar}$<br>
+$\dfrac{d\langle A\rangle}{dt}=\dfrac{1}{i\hbar}\big\langle[\hat A,\hat H]\big\rangle$</td></tr>
+<tr><td>6</td><td>$\hat H\psi=E\psi$：井戸の中 $\psi''=-k^2\psi$（$k=\sqrt{2mE}/\hbar$）、壁の中 $\psi\propto e^{-\kappa x}$（$\kappa=\sqrt{2m(V_0-E)}/\hbar$）<br>
+自由粒子 $E=\dfrac{\hbar^2k^2}{2m}$<br>
+無限井戸（$-a\le x\le a$）：$k_n=\dfrac{n\pi}{2a}$、$E_n=\dfrac{\hbar^2\pi^2n^2}{8ma^2}$、$\psi_n=\dfrac{1}{\sqrt a}\cos\dfrac{n\pi x}{2a}$（$n$ 奇）、$\dfrac{1}{\sqrt a}\sin\dfrac{n\pi x}{2a}$（$n$ 偶）<br>
+（$0\le x\le L$）：$\psi_n=\sqrt{\dfrac2L}\sin\dfrac{n\pi x}{L}$、$E_n=\dfrac{n^2h^2}{8mL^2}=\dfrac{n^2\pi^2\hbar^2}{2mL^2}$</td></tr>
+</table>
+<div class="box"><span class="label">数値計算の定数</span>$h=6.626\times10^{-34}\ \mathrm{J\,s}$、$\hbar=1.055\times10^{-34}\ \mathrm{J\,s}$、$m_e=9.109\times10^{-31}\ \mathrm{kg}$、$e=1.602\times10^{-19}\ \mathrm{C}$、$hc=1240\ \mathrm{eV\,nm}$、$1\ \mathrm{eV}=1.602\times10^{-19}\ \mathrm{J}$。<br>
+無限井戸の電子：$\dfrac{h^2}{8m_e}=0.376\ \mathrm{eV\,nm^2}$（幅 $L$ nm なら $E_n=0.376\,n^2/L^2\ \mathrm{eV}$）。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>予想問題 A（確認：小テスト水準）</h2>
+<p class="meta">すべて自作。数値は検算済み。まず手で解き、そのあと解答を開くこと。有効数字は問題文の数字に合わせる。</p>
+
+<div class="box"><span class="label">問A1【光子】</span>波長 $500\ \mathrm{nm}$ の光子のエネルギー（eV）と運動量（kg m/s）を求めよ。
+<details><summary>解答</summary><p>① エネルギー：$E=\dfrac{hc}{\lambda}=\dfrac{1240\ \mathrm{eV\,nm}}{500\ \mathrm{nm}}=2.48\ \mathrm{eV}$。</p><p>② 運動量：$p=\dfrac h\lambda=\dfrac{6.626\times10^{-34}}{500\times10^{-9}}=1.33\times10^{-27}\ \mathrm{kg\,m/s}$。</p></details></div>
+
+<div class="box"><span class="label">問A2【ド・ブロイ波長】</span>$100\ \mathrm{V}$ で加速された電子のド・ブロイ波長を求めよ。
+<details><summary>解答</summary><p>① 加速で得る運動エネルギー：$\dfrac{p^2}{2m}=eV$ より $p=\sqrt{2meV}$。</p><p>② $\lambda=\dfrac hp=\dfrac{h}{\sqrt{2meV}}$。数値は $\lambda\approx\dfrac{1.226}{\sqrt{100}}\ \mathrm{nm}=0.123\ \mathrm{nm}$（直接計算すると $0.1226\ \mathrm{nm}$）。</p></details></div>
+
+<div class="box"><span class="label">問A3【規格化と確率】</span>$\psi(x)=A(1-x^2)$（$-1\le x\le1$）、それ以外では $\psi=0$ とする（$x$ は無次元）。(1) 規格化定数 $A$ を求めよ。(2) $0\le x\le\frac12$ に見つかる確率を求めよ。
+<details><summary>解答</summary><p>① 規格化：$\int|\psi|^2dx=A^2\int_{-1}^{1}(1-x^2)^2dx=A^2\int_{-1}^{1}(1-2x^2+x^4)dx=A^2\cdot2\Big(1-\dfrac23+\dfrac15\Big)=A^2\cdot\dfrac{16}{15}=1$。よって $A=\dfrac{\sqrt{15}}{4}\approx0.968$。</p>
+<p>② 確率：$P=A^2\int_0^{1/2}(1-2x^2+x^4)dx=\dfrac{15}{16}\Big[x-\dfrac{2x^3}{3}+\dfrac{x^5}{5}\Big]_0^{1/2}=\dfrac{15}{16}\Big(\dfrac12-\dfrac1{12}+\dfrac1{160}\Big)=\dfrac{15}{16}\cdot\dfrac{203}{480}=\dfrac{203}{512}\approx0.396$。</p>
+<p>③ 確かめ：$\psi$ は偶関数なので、$-\frac12\le x\le0$ の確率も同じ。$0.396\lt0.5$ で、$0\le x\le1$ の確率は $0.5$ になるはず（対称性）。矛盾なし。</p></details></div>
+
+<div class="box"><span class="label">問A4【運動量の固有値】</span>$\psi(x)=e^{ikx}$（$k=2.0\times10^{9}\ \mathrm{m^{-1}}$）に $\hat p=-i\hbar\,\partial_x$ を作用させ、運動量の値と、運動エネルギー $p^2/2m_e$（eV）を求めよ。
+<details><summary>解答</summary><p>① $\hat p\,e^{ikx}=-i\hbar\cdot ik\,e^{ikx}=\hbar k\,e^{ikx}$。固有値は $p=\hbar k=1.055\times10^{-34}\times2.0\times10^{9}=2.1\times10^{-25}\ \mathrm{kg\,m/s}$。</p>
+<p>② $E=\dfrac{p^2}{2m_e}=\dfrac{(2.11\times10^{-25})^2}{2\times9.109\times10^{-31}}=2.4\times10^{-20}\ \mathrm{J}=0.15\ \mathrm{eV}$。</p></details></div>
+
+<div class="box"><span class="label">問A5【無限井戸】</span>幅 $1.0\ \mathrm{nm}$ の無限井戸の中の電子について、$E_1$、$E_2$、および $n=2\to1$ の遷移で出る光子の波長を求めよ。
+<details><summary>解答</summary><p>① $E_n=\dfrac{n^2h^2}{8m_eL^2}=0.376\,n^2/L^2\ \mathrm{eV}$（$L$ は nm）。$L=1.0$ より $E_1=0.376\ \mathrm{eV}$、$E_2=4E_1=1.50\ \mathrm{eV}$。</p>
+<p>② $\Delta E=E_2-E_1=3E_1=1.13\ \mathrm{eV}$。光子の波長 $\lambda=\dfrac{hc}{\Delta E}=\dfrac{1240\ \mathrm{eV\,nm}}{1.13\ \mathrm{eV}}\approx1.1\times10^{3}\ \mathrm{nm}$（赤外線）。</p></details></div>
+
+<div class="box"><span class="label">問A6【不確定性関係】</span>電子の位置の不確かさが $\Delta x=0.10\ \mathrm{nm}$ のとき、運動量の不確かさ $\Delta p$ と速度の不確かさ $\Delta v$ の最小値を求めよ。
+<details><summary>解答</summary><p>① $\Delta x\,\Delta p\ge\hbar/2$ より $\Delta p\ge\dfrac{\hbar}{2\Delta x}=\dfrac{1.055\times10^{-34}}{2\times1.0\times10^{-10}}=5.3\times10^{-25}\ \mathrm{kg\,m/s}$。</p>
+<p>② $\Delta v=\dfrac{\Delta p}{m_e}\ge\dfrac{5.27\times10^{-25}}{9.109\times10^{-31}}=5.8\times10^{5}\ \mathrm{m/s}$。（原子の大きさ程度に閉じ込めるだけで、これだけの速度のばらつきが生じる。）</p></details></div>
+
+<div class="box"><span class="label">問A7【複素数の波】</span>(1) $z=3+4i$ の $|z|$、$z^*$、$zz^*$ を求めよ。(2) $f(x,t)=e^{i(3x+2t)}$（$x$ は m、$t$ は s）は、どちらの向きにどの速さで進むか。
+<details><summary>解答</summary><p>① $|z|=\sqrt{3^2+4^2}=5$、$z^*=3-4i$、$zz^*=9+16=25=|z|^2$。</p>
+<p>② 位相 $3x+2t=$ 一定の点を追う：$x=-\dfrac23t+$ 定数。時間とともに $x$ が減るので、<strong>$-x$ 向きに速さ $\dfrac23\ \mathrm{m/s}$</strong>（$x$ と $t$ の係数の符号が同じ → $-x$ 向き）。</p></details></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>予想問題 B（標準：定期試験水準）</h2>
+<p class="meta">すべて自作（型は教科書の典型問題による）。導出を含む。先に自分で書いてから解答を見ること。</p>
+
+<div class="box"><span class="label">問B1【交換子】</span>任意の関数 $f(x)$ に作用させて、$[\hat x,\hat p]=i\hbar$ を示せ。
+<details><summary>解答</summary><p>① 交換子の定義：$[\hat x,\hat p]f=\hat x\hat pf-\hat p\hat xf$。</p>
+<p>② 第1項：$\hat x\hat pf=x\cdot(-i\hbar f')=-i\hbar\,xf'$。</p>
+<p>③ 第2項：$\hat p\hat xf=-i\hbar\,\dfrac{d}{dx}(xf)=-i\hbar(f+xf')$（積の微分。$xf$ 全体を微分するのがポイント）。</p>
+<p>④ 引く：$-i\hbar\,xf'-\big(-i\hbar f-i\hbar\,xf'\big)=i\hbar f$。$f$ は任意なので $[\hat x,\hat p]=i\hbar$。∎</p></details></div>
+
+<div class="box"><span class="label">問B2【無限井戸の基底状態】</span>$0\le x\le L$ の無限井戸の基底状態 $\psi_1=\sqrt{2/L}\,\sin(\pi x/L)$ について、$\langle x\rangle,\ \Delta x,\ \Delta p$ を求め、$\Delta x\,\Delta p\ge\hbar/2$ を確かめよ。
+<details><summary>解答</summary>
+<p>① $\langle x\rangle$：$|\psi_1|^2$ は $x=L/2$ について対称なので $\langle x\rangle=\dfrac L2$。</p>
+<p>② $\langle x^2\rangle=\dfrac2L\int_0^Lx^2\sin^2\dfrac{\pi x}{L}dx=\dfrac1L\int_0^Lx^2\Big(1-\cos\dfrac{2\pi x}{L}\Big)dx$（倍角公式 $\sin^2\alpha=\frac{1-\cos2\alpha}2$）。第1項は $\dfrac{L^2}{3}$。第2項は部分積分を2回行って $\int_0^Lx^2\cos\dfrac{2\pi x}{L}dx=\dfrac{L^3}{2\pi^2}$。よって $\langle x^2\rangle=\dfrac{L^2}3-\dfrac{L^2}{2\pi^2}$。</p>
+<p>③ $(\Delta x)^2=\langle x^2\rangle-\langle x\rangle^2=\dfrac{L^2}{3}-\dfrac{L^2}{2\pi^2}-\dfrac{L^2}{4}=L^2\Big(\dfrac1{12}-\dfrac1{2\pi^2}\Big)$。</p>
+<p>④ 運動量：$\psi_1$ は実数なので $\langle p\rangle=0$（例題 5-1）。$\hat p^2\psi_1=-\hbar^2\psi_1''=\hbar^2\Big(\dfrac{\pi}{L}\Big)^2\psi_1$ なので $\langle p^2\rangle=\dfrac{\pi^2\hbar^2}{L^2}$、$\Delta p=\dfrac{\pi\hbar}L$。</p>
+<p>⑤ 積：$\Delta x\,\Delta p=\pi\hbar\sqrt{\dfrac1{12}-\dfrac1{2\pi^2}}=\hbar\sqrt{\dfrac{\pi^2}{12}-\dfrac12}\approx0.568\,\hbar$。これは $0.5\hbar$ より大きく、関係式を満たす（等号に近い）。</p></details></div>
+
+<div class="box"><span class="label">問B3【エルミート性】</span>$\hat p=-i\hbar\,\partial_x$ について、遠方で $0$ になる関数 $f,g$ に対し $\int f^*(\hat pg)\,dx=\int(\hat pf)^*g\,dx$ を示せ。さらに、固有値が実数であることを示せ。
+<details><summary>解答</summary><p>① 部分積分：$\int f^*(-i\hbar g')dx=-i\hbar\big[f^*g\big]_{-\infty}^{\infty}+i\hbar\int(f^*)'g\,dx$。境界項は遠方で $f,g\to0$ なので $0$。</p>
+<p>② 右辺の形を作る：$(\hat pf)^*=(-i\hbar f')^*=+i\hbar\,(f^*)'$（共役で $-i\to+i$）。よって ① の結果は $\int(\hat pf)^*g\,dx$ と一致する。∎（$-i$ があるおかげで符号が合う。$d/dx$ だけではこの符号が合わずエルミートでない）。</p>
+<p>③ 固有値：$\hat p\psi=a\psi$ とする。$\int\psi^*\hat p\psi\,dx=a\int|\psi|^2dx$。一方、①②で $f=g=\psi$ とすると $=\int(\hat p\psi)^*\psi\,dx=a^*\int|\psi|^2dx$。よって $a=a^*$、すなわち $a$ は実数。∎</p></details></div>
+
+<div class="box"><span class="label">問B4【重ね合わせの測定】</span>無限井戸（幅 $L=1.0\ \mathrm{nm}$）の電子が $\Psi(x,0)=\dfrac{1}{5}\big(3\psi_1+4\psi_2\big)$（$\psi_1,\psi_2$ は規格直交な固有関数）にある。(1) 規格化されていることを示せ。(2) $E_1,E_2$ を測る確率。(3) $\langle E\rangle$。(4) $|\Psi(x,t)|^2$ が振動する周期。
+<details><summary>解答</summary><p>① $\int|\Psi|^2dx=\dfrac1{25}(9+16)=1$（$\int\psi_m^*\psi_n=\delta_{mn}$ を使った）。</p>
+<p>② 係数 $c_1=\dfrac35$、$c_2=\dfrac45$。$P(E_1)=|c_1|^2=\dfrac9{25}=0.36$、$P(E_2)=|c_2|^2=\dfrac{16}{25}=0.64$。（合計 1。）</p>
+<p>③ $\langle E\rangle=0.36E_1+0.64E_2=0.36E_1+0.64\cdot4E_1=2.92\,E_1$。$E_1=0.376\ \mathrm{eV}$ なので $\langle E\rangle\approx1.10\ \mathrm{eV}$。（これは測定値 $E_1,E_2$ の<strong>平均</strong>で、測定で $1.10\ \mathrm{eV}$ が出るわけではない。）</p>
+<p>④ $\Psi(x,t)=\dfrac15\big(3\psi_1e^{-iE_1t/\hbar}+4\psi_2e^{-iE_2t/\hbar}\big)$。$\psi_n$ が実数なら $|\Psi|^2=\dfrac1{25}\Big[9\psi_1^2+16\psi_2^2+24\psi_1\psi_2\cos\dfrac{(E_2-E_1)t}{\hbar}\Big]$。干渉項が角振動数 $\omega_{21}=\dfrac{E_2-E_1}\hbar$ で振動するので、周期 $T=\dfrac{2\pi\hbar}{E_2-E_1}=\dfrac{h}{3E_1}=\dfrac{4.136\times10^{-15}\ \mathrm{eV\,s}}{1.13\ \mathrm{eV}}\approx3.7\times10^{-15}\ \mathrm{s}$（約 $3.7\ \mathrm{fs}$）。</p></details></div>
+
+<div class="box"><span class="label">問B5【定常状態の導出】</span>ポテンシャル $V(x)$ が時間によらないとき、$\Psi(x,t)=\psi(x)\,T(t)$ を $i\hbar\,\partial_t\Psi=\hat H\Psi$ に代入して、時間によらないシュレディンガー方程式 $\hat H\psi=E\psi$ と $T(t)=e^{-iEt/\hbar}$ を導け。また $|\Psi|^2$ が時間によらないことを示せ。
+<details><summary>解答</summary><p>① 代入：$i\hbar\,\psi\,T'=(\hat H\psi)\,T$（$\hat H$ は $x$ だけに作用するので $T$ は外に出る）。</p>
+<p>② 両辺を $\psi T$ で割る：$i\hbar\dfrac{T'}{T}=\dfrac{\hat H\psi}{\psi}$。左辺は $t$ だけ、右辺は $x$ だけの関数。両者が等しいので、どちらも定数。これを $E$ とおく。</p>
+<p>③ 右辺 $=E$ より $\hat H\psi=E\psi$。</p>
+<p>④ 左辺 $=E$ より $T'=-\dfrac{iE}{\hbar}T$。解は $T=e^{-iEt/\hbar}$（定数倍は $\psi$ に吸収）。</p>
+<p>⑤ $|\Psi|^2=|\psi|^2\,|e^{-iEt/\hbar}|^2=|\psi|^2$（$|e^{i\theta}|=1$）。時間によらない。∎</p></details></div>
+
+<div class="box"><span class="label">問B6【零点エネルギー】</span>調和振動子 $E=\dfrac{p^2}{2m}+\dfrac12m\omega^2x^2$ で、不確定性関係を使い、基底エネルギーの下限が $\dfrac12\hbar\omega$ であることを示せ。ただし $\langle x\rangle=\langle p\rangle=0$ とする。
+<details><summary>解答</summary><p>① $\langle x\rangle=\langle p\rangle=0$ なら $(\Delta x)^2=\langle x^2\rangle$、$(\Delta p)^2=\langle p^2\rangle$。不確定性関係より $\langle p^2\rangle\ge\dfrac{\hbar^2}{4\langle x^2\rangle}$。</p>
+<p>② $s=\langle x^2\rangle$ とおくと $\langle E\rangle=\dfrac{\langle p^2\rangle}{2m}+\dfrac12m\omega^2s\ \ge\ \dfrac{\hbar^2}{8ms}+\dfrac12m\omega^2s$。</p>
+<p>③ 右辺を $s$ の関数として最小にする：$\dfrac{d}{ds}\Big(\dfrac{\hbar^2}{8ms}+\dfrac12m\omega^2s\Big)=-\dfrac{\hbar^2}{8ms^2}+\dfrac12m\omega^2=0$ より $s=\dfrac{\hbar}{2m\omega}$。</p>
+<p>④ そのときの値：$\dfrac{\hbar^2}{8m}\cdot\dfrac{2m\omega}{\hbar}+\dfrac12m\omega^2\cdot\dfrac{\hbar}{2m\omega}=\dfrac{\hbar\omega}4+\dfrac{\hbar\omega}4=\dfrac12\hbar\omega$。よって $\langle E\rangle\ge\dfrac12\hbar\omega$。∎</p></details></div>
+
+<div class="box"><span class="label">問B7【フーリエ変換】</span>$\psi(x)=\dfrac{1}{\sqrt{2a}}$（$|x|\lt a$）、$\psi=0$（$|x|\gt a$）のフーリエ変換 $\tilde\psi(k)=\displaystyle\int\dfrac{e^{-ikx}}{\sqrt{2\pi}}\psi(x)\,dx$ を求めよ。また $\tilde\psi(0)$ と、$a$ を小さくしたときの $\tilde\psi$ の広がりの変化を述べよ。
+<details><summary>解答</summary><p>① 積分範囲は $-a\le x\le a$：$\tilde\psi(k)=\dfrac{1}{\sqrt{2\pi}}\cdot\dfrac1{\sqrt{2a}}\int_{-a}^{a}e^{-ikx}dx=\dfrac{1}{2\sqrt{\pi a}}\cdot\dfrac{e^{ika}-e^{-ika}}{ik}$。</p>
+<p>② オイラーの公式より $\dfrac{e^{ika}-e^{-ika}}{i}=2\sin ka$。よって $\tilde\psi(k)=\dfrac{\sin ka}{k\sqrt{\pi a}}$。</p>
+<p>③ $k\to0$ では $\sin ka\approx ka$ なので $\tilde\psi(0)=\dfrac{a}{\sqrt{\pi a}}=\sqrt{\dfrac a\pi}$。</p>
+<p>④ 零点は $ka=n\pi$、つまり $k=\pm\dfrac{\pi}{a},\pm\dfrac{2\pi}{a},\dots$。$a$ を小さくする（$\psi$ を細くする）と、零点の間隔 $\pi/a$ が広がる。<strong>位置の幅を狭くすると、波数の幅が広がる</strong>（不確定性関係の一つの現れ）。</p></details></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>1週間の進め方（試験まで）</h2>
+<div class="box"><span class="label">基本方針</span>毎日1〜2個の「幹」だけを扱う。<strong>各日、最後に問題を解き、自分の言葉で1行書く</strong>。書けなかった所が、次に質問する場所である。</div>
+<table class="tb">
+<tr><th>日</th><th>やること</th></tr>
+<tr><td>10/17</td><td>1.2 の一本道を通読。問A1・A2・A7（第1・2回）。分からない所を質問する</td></tr>
+<tr><td>10/18</td><td>問A3（規格化と確率）、問B5（定常状態）。「$\psi$ と $|\psi|^2$」を言えるように</td></tr>
+<tr><td>10/19</td><td>問A4・A6、問B1（$\hat p$、不確定性、交換子）。「演算子と平均の違い」を1行で</td></tr>
+<tr><td>10/20</td><td>問B3（エルミート）、問B7（フーリエ）</td></tr>
+<tr><td>10/21</td><td>問A5、問B2・B4（無限井戸と重ね合わせ）</td></tr>
+<tr><td>10/22</td><td>問B6 と総復習。解けなかった問題だけをやり直す。公式表（2章）を見ずに書けるか確認</td></tr>
+</table>
+<p class="note">日程は目安。授業のある日・体調に合わせて動かしてよい。試験範囲が違っていたら、先生の指示に合わせて入れ替える。</p>
+
+<div class="navi">
+<strong>次</strong>：第7回（10/30）から後半（担当教員が交代）。<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="06_第6回_自由粒子と無限井戸.html">← 第6回へ</a>
+</div>
+
+<p class="meta">出典：第1〜6回の本教材（レジュメ「量子力学ノート（第1〜3回）」の範囲）の内容を、試験対策向けに整理したもの。予想問題は自作で、問B2・B4 などの型は教科書（Griffiths の無限井戸・重ね合わせの問題）の典型に倣った。出題を保証するものではない。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a></nav>
+
+</body>
+</html>
