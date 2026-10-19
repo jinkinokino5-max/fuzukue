@@ -239,6 +239,23 @@ $$(\boldsymbol u,M\boldsymbol v)=(M\boldsymbol u,\boldsymbol v)\tag{1.4}$$</div>
 
 <div class="warn"><span class="label">レジュメの記述について（誤植と思われる箇所）</span>レジュメの対応表は、この行列の固有ベクトルを $\binom{0}{-i}$ と $\binom{i}{0}$ としている。しかし実際に掛けると $M\binom{0}{-i}=\binom{-1}{0}$ で、元のベクトルの定数倍にならない（$\binom{i}{0}$ も同様）。上の ⑤ のとおり $\binom1i$, $\binom1{-i}$（またはその定数倍）が固有ベクトルであり、誤植の可能性が高い。ただし「エルミート行列の固有ベクトルは直交する」という主張そのものは正しい。<strong>本教材の判断であり、講義での訂正は確認していない。</strong></div>
 
+<div class="why"><span class="label">🙋 質問から追加：エルミート行列とは結局何か（具体例・意味・演算子での例）</span>
+<p><strong>① 見た目。</strong>$M_{ij}=M_{ji}^*$ は、「対角線で折り返して複素共役をとると自分に戻る」という意味である。そこから、対角成分は自分の共役に等しいので<strong>必ず実数</strong>（$M_{ii}=M_{ii}^*$）と分かる。成分がすべて実数なら、エルミート＝対称行列である。</p>
+<p><strong>② 符号だけ違う2つの行列を比べる。</strong></p>
+<ul>
+<li>$A=\begin{pmatrix}1&i\\i&1\end{pmatrix}$：転置しても自分自身だが、共役もとると $\begin{pmatrix}1&-i\\-i&1\end{pmatrix}\ne A$。<strong>エルミートではない</strong>。固有値は $(1-m)^2-i^2=(1-m)^2+1=0$ より $m=1\pm i$（<strong>複素数</strong>）。</li>
+<li>$H=\begin{pmatrix}1&i\\-i&1\end{pmatrix}$：転置して共役をとると元に戻る。<strong>エルミート</strong>。固有値は $(1-m)^2-i(-i)=(1-m)^2-1=0$ より $m=0,\,2$（<strong>実数</strong>）。</li>
+</ul>
+<p>$H$ の固有ベクトル：$m=2$ のとき $-v_1+iv_2=0$ より $\binom{i}{1}$。$m=0$ のとき $v_1+iv_2=0$ より $\binom{-i}{1}$。内積は左のベクトルに共役をつけて $\big(\binom{i}{1},\binom{-i}{1}\big)=i^*\cdot(-i)+1^*\cdot1=(-i)(-i)+1=i^2+1=0$：<strong>直交している</strong>。</p>
+<p><strong>③ 幾何学的な意味。</strong>エルミート行列は、「互いに直交する軸の方向に、実数倍に伸び縮みさせるだけの変換」である。$H$ は $\binom{i}{1}$ 方向を2倍にし、$\binom{-i}{1}$ 方向を0倍にする。回転やねじれはない。任意のベクトルはこの直交する2方向の和に分解でき、各方向の成分が、のちの基本命題 VI（固有関数で展開する）の係数、つまり測定確率を決める量になる。</p>
+<p><strong>④ なぜ「転置＋共役」（$\dagger$）なのか。</strong>内積は左に共役をつけて $(\boldsymbol u,\boldsymbol v)=\sum u_i^*v_i$ と決めた。$M$ を内積の右側から左側へ移すと、成分に共役がつくので $(\boldsymbol u,M\boldsymbol v)=(M^\dagger\boldsymbol u,\boldsymbol v)$ となる。$M^\dagger=M$ なら、$M$ は内積の左右どちらにも自由に移せる。これが (1.4) で、この「自由に移せる」ことが、固有値が実数であること・固有ベクトルが直交することの両方の証明の中身である。</p>
+<p><strong>⑤ 演算子での具体例（4 章への橋）。</strong>円周 $0\le x\le2\pi$ 上、$\hbar=1$ で、波数1と2を半々に混ぜた $\psi=e^{ix}+e^{2ix}$ を考える。内積の計算には $\int_0^{2\pi}e^{i(n-m)x}dx=2\pi\delta_{nm}$ を使う。</p>
+<ul>
+<li>$\hat p=-i\,\dfrac{d}{dx}$：$\hat p\psi=e^{ix}+2e^{2ix}$。$\int\psi^*\hat p\psi\,dx=2\pi(1+2)=6\pi$。規格化 $\int\psi^*\psi\,dx=4\pi$ で割ると $\langle p\rangle=\tfrac32$。1と2の平均で<strong>実数</strong>。</li>
+<li>$\dfrac{d}{dx}$（$-i$ なし）：$\int\psi^*\psi'\,dx=2\pi(i+2i)=6\pi i$。<strong>純虚数</strong>になり、「測る値の平均」として使えない。</li>
+</ul>
+<p>エルミートかどうかで、期待値が実数になるか純虚数になるかが分かれる（4.3 節 (iii)、例題 4-1）。</p></div>
+
 <figure class="spread">
 <div class="side a"><p class="kick">PHOTO 1｜現実</p>
 <div class="ph"><img src="img/a1_04_calcite.jpg" alt="絵本の文字の上に置いた黄色みのある方解石の結晶。結晶越しの文字だけが二重に見える" loading="lazy"></div>
