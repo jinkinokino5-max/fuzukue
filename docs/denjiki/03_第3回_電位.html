@@ -156,7 +156,7 @@ $C$ は点 A から点 B までの道筋（経路）。$\mathrm d\boldsymbol r$ 
 <text x="307.3" y="110.1" fill="#4a5f8c" text-anchor="start" font-size="13">E（その点の電場）</text>
 <line x1="301.3" y1="106.1" x2="321.3" y2="167.2" stroke="#968d80" stroke-dasharray="4 3"/>
 <line x1="248.5" y1="191.0" x2="321.3" y2="167.2" stroke="#a06a32" stroke-width="5" opacity="0.55"/>
-<text x="201.3" y="211.2" fill="#a06a32" text-anchor="start" font-size="12">E の dr 方向の成分（太い線）</text>
+<text x="178.5" y="243.0" fill="#a06a32" text-anchor="start" font-size="12">E の dr 方向の成分（太い線）</text>
 <path d="M280.8,180.5 A34,34 0 0 0 266.4,162.2" fill="none" stroke="#2a2723"/>
 <text x="286.5" y="181.0" fill="#2a2723" text-anchor="start" font-size="13">θ</text>
 <text x="20.0" y="28.0" fill="#2a2723" text-anchor="start" font-size="14">dw = E·dr = |E| |dr| cosθ（単位電荷あたりの仕事）</text>
@@ -240,7 +240,7 @@ $$\text{上半円（}(1,0)\to(-1,0)\text{、反時計回り）}:\int_0^{\pi}\mat
 <text x="360.0" y="60.0" fill="#2a2723" text-anchor="start" font-size="14">場 F = (−y, x) は、円周のどの点でも</text>
 <text x="360.0" y="82.0" fill="#2a2723" text-anchor="start" font-size="14">円の接線方向を向き、大きさは半径に等しい。</text>
 <text x="360.0" y="122.0" fill="#a8322a" text-anchor="start" font-size="13">反時計回りに 1 周：F·dr = dθ（r = 1）</text>
-<text x="360.0" y="146.0" fill="#a8322a" text-anchor="start" font-size="13">　∮ F·dr = ∫₀^2π dθ = 2π ≠ 0</text>
+<text x="360.0" y="146.0" fill="#a8322a" text-anchor="start" font-size="13">　∮ F·dr = ∫ dθ（0 から 2π）= 2π ≠ 0</text>
 <text x="360.0" y="186.0" fill="#2a2723" text-anchor="start" font-size="13">(1,0) → (−1,0) の 2 つの経路：</text>
 <text x="360.0" y="208.0" fill="#2a2723" text-anchor="start" font-size="13">　上半円（反時計回り）…　+π</text>
 <text x="360.0" y="230.0" fill="#2a2723" text-anchor="start" font-size="13">　下半円（時計回り）…　−π</text>
@@ -346,7 +346,7 @@ $$\phi(\boldsymbol r_A)=\int_A^{\mathrm O}\boldsymbol E\cdot\mathrm d\boldsymbol
 <p>これを3通りに言い換えられる（どれも同じ式 (2.5) の読み方）：</p>
 <ul>
 <li>A から基準点まで単位正電荷が動くとき、<strong>電場がなす仕事</strong>。</li>
-<li>基準点から A まで単位正電荷を運ぶのに、<strong>外から加えなければならない仕事</strong>〔資料：「A点の電位＝基準点OからA点まで正電荷を運ぶのに必要な仕事」〕。電場が $-\boldsymbol E q$ の力で押し返すのに逆らって運ぶので、符号が反転するだけで、大きさは同じ。</li>
+<li>基準点から A まで単位正電荷を運ぶのに、<strong>外から加えなければならない仕事</strong>〔資料：「A点の電位＝基準点OからA点まで正電荷を運ぶのに必要な仕事」〕。電場の力 $q\boldsymbol E$ に逆らい、ゆっくり運ぶには外力 $-q\boldsymbol E$ をかけ続けることになるので、符号が反転するだけで、大きさは同じ。</li>
 <li>単位電荷あたりの<strong>位置エネルギー</strong>（重力なら、単位質量あたりの位置エネルギー $gh$ に相当）〔資料〕。</li>
 </ul>
 <p>資料の「B点の電位 ＝ A点の電位 ＋（AからBへ運ぶのに必要な仕事）」も、(2.4) の言い換えである：外力の仕事 $=-\int_A^B\boldsymbol E\cdot\mathrm d\boldsymbol r=\phi(\boldsymbol r_B)-\phi(\boldsymbol r_A)$。</p>
@@ -448,7 +448,7 @@ $$1\ \mathrm{eV}=1.602\times10^{-19}\ \mathrm C\times1\ \mathrm V=1.602\times10^
 $$\phi\approx\frac{k\,p\cos\theta}{r^2}\qquad(r\gg d)\qquad(3.1)$$
 <span class="qed">∎</span></p>
 </div>
-<p>電位は $1/r^2$ で減る（単独の電荷の $1/r$ より速い）。$+q$ と $-q$ がほぼ打ち消し合うからである。$\theta=90^\circ$（中垂面）では $\cos\theta=0$ で $\phi=0$（図3.1、5章の図5.1(b) の黒い線）。</p>
+<p>電位は $1/r^2$ で減る（単独の電荷の $1/r$ より速い）。$+q$ と $-q$ がほぼ打ち消し合うからである。$\theta=90^\circ$（中垂面）では $\cos\theta=0$ で $\phi=0$（図3.1、5章の図5.2(b) の黒い線）。</p>
 <figure><svg viewBox="0 0 680 300" width="680" role="img" aria-label="+q と −q を結ぶ直線上の電位">
 <defs><marker id="e3da-arw" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a2723"/></marker></defs>
 <g font-family="sans-serif" font-size="13" fill="#2a2723">
@@ -583,7 +583,7 @@ $$\phi(r)=\int_r^{R}\frac{kQr'}{R^3}\,\mathrm dr'+\frac{kQ}{R}=\frac{kQ}{2R^3}(R
 <path d="M70.0,240.0 L223.1,240.0" fill="none" stroke="#4a5f8c" stroke-width="2.4" stroke-dasharray="7 4"/>
 <path d="M223.1,240.0 L223.1,80.0" fill="none" stroke="#4a5f8c" stroke-width="1.2" stroke-dasharray="3 3"/>
 <path d="M223.1,80.0 L224.8,83.5 L226.5,86.8 L228.2,90.1 L229.9,93.3 L231.6,96.3 L233.3,99.3 L235.0,102.2 L236.7,104.9 L238.4,107.6 L240.1,110.3 L241.7,112.8 L243.4,115.3 L245.1,117.7 L246.8,120.0 L248.5,122.3 L250.2,124.5 L251.9,126.6 L253.6,128.7 L255.3,130.7 L257.0,132.7 L258.7,134.6 L260.4,136.5 L262.1,138.3 L263.8,140.1 L265.4,141.8 L267.1,143.5 L268.8,145.1 L270.5,146.7 L272.2,148.3 L273.9,149.8 L275.6,151.3 L277.3,152.7 L279.0,154.1 L280.7,155.5 L282.4,156.8 L284.1,158.1 L285.8,159.4 L287.5,160.7 L289.1,161.9 L290.8,163.1 L292.5,164.2 L294.2,165.4 L295.9,166.5 L297.6,167.6 L299.3,168.7 L301.0,169.7 L302.7,170.7 L304.4,171.7 L306.1,172.7 L307.8,173.6 L309.5,174.6 L311.2,175.5 L312.8,176.4 L314.5,177.3 L316.2,178.1 L317.9,179.0 L319.6,179.8 L321.3,180.6 L323.0,181.4 L324.7,182.2 L326.4,182.9 L328.1,183.7 L329.8,184.4 L331.5,185.1 L333.2,185.8 L334.9,186.5 L336.5,187.2 L338.2,187.9 L339.9,188.5 L341.6,189.2 L343.3,189.8 L345.0,190.4 L346.7,191.0 L348.4,191.6 L350.1,192.2 L351.8,192.8 L353.5,193.3 L355.2,193.9 L356.9,194.4 L358.6,194.9 L360.2,195.5 L361.9,196.0 L363.6,196.5 L365.3,197.0 L367.0,197.5 L368.7,198.0 L370.4,198.4 L372.1,198.9 L373.8,199.3 L375.5,199.8 L377.2,200.2 L378.9,200.7 L380.6,201.1 L382.3,201.5 L383.9,201.9 L385.6,202.3 L387.3,202.7 L389.0,203.1 L390.7,203.5 L392.4,203.9 L394.1,204.3 L395.8,204.7 L397.5,205.0 L399.2,205.4 L400.9,205.7 L402.6,206.1 L404.3,206.4 L406.0,206.8 L407.6,207.1 L409.3,207.4 L411.0,207.7 L412.7,208.1 L414.4,208.4 L416.1,208.7 L417.8,209.0 L419.5,209.3 L421.2,209.6 L422.9,209.9 L424.6,210.2 L426.3,210.4 L428.0,210.7 L429.7,211.0 L431.3,211.3 L433.0,211.5 L434.7,211.8 L436.4,212.1 L438.1,212.3 L439.8,212.6 L441.5,212.8 L443.2,213.1 L444.9,213.3 L446.6,213.5 L448.3,213.8 L450.0,214.0 L451.7,214.2 L453.4,214.5 L455.0,214.7 L456.7,214.9 L458.4,215.1 L460.1,215.4 L461.8,215.6 L463.5,215.8 L465.2,216.0 L466.9,216.2 L468.6,216.4 L470.3,216.6 L472.0,216.8 L473.7,217.0 L475.4,217.2 L477.1,217.4 L478.7,217.5 L480.4,217.7 L482.1,217.9 L483.8,218.1 L485.5,218.3 L487.2,218.4 L488.9,218.6 L490.6,218.8 L492.3,219.0 L494.0,219.1 L495.7,219.3 L497.4,219.5 L499.1,219.6 L500.8,219.8 L502.4,219.9 L504.1,220.1 L505.8,220.2 L507.5,220.4 L509.2,220.6 L510.9,220.7 L512.6,220.8 L514.3,221.0 L516.0,221.1 L517.7,221.3 L519.4,221.4 L521.1,221.6 L522.8,221.7 L524.5,221.8 L526.1,222.0 L527.8,222.1 L529.5,222.2 L531.2,222.4 L532.9,222.5 L534.6,222.6 L536.3,222.7 L538.0,222.9 L539.7,223.0 L541.4,223.1 L543.1,223.2 L544.8,223.4 L546.5,223.5 L548.2,223.6 L549.8,223.7 L551.5,223.8 L553.2,223.9 L554.9,224.0 L556.6,224.2 L558.3,224.3 L560.0,224.4" fill="none" stroke="#4a5f8c" stroke-width="1.5" stroke-dasharray="7 4"/>
-<text x="77.7" y="102.4" fill="#a8322a" text-anchor="start" font-size="13">球：E ∝ r（φ の傾き）</text>
+<text x="74.6" y="59.2" fill="#a8322a" text-anchor="start" font-size="13">球の内側：E ∝ r（φ の傾き）</text>
 <text x="299.7" y="152.0" fill="#2a2723" text-anchor="start" font-size="12">E = −dφ/dr：上の図の傾きの符号を変えたもの</text>
 </g></svg>
 <figcaption>図3.3　同じ球・球殻の電場の大きさ（第2回の図と同じもの）。図3.2の曲線の<strong>傾きの大きさ</strong>が電場に当たる。球殻の内側は傾き 0 なので $E=0$、一様球の内側は傾きが $r$ に比例するので $E\propto r$。4章で式にする。</figcaption></figure>
@@ -685,7 +685,7 @@ $$\boldsymbol E(\boldsymbol r)=-\nabla\phi(\boldsymbol r)\qquad\Bigl(E_x=-\frac{
 <tr><td>単位質量の位置エネルギー $gh$</td><td>単位電荷の位置エネルギー $\phi$</td></tr>
 <tr><td>どの道を通っても、登る仕事は標高差で決まる</td><td>どの経路でも、仕事は電位差で決まる（静電場は保存力）</td></tr>
 </table>
-<figure><svg viewBox="0 0 680 400" width="680" role="img" aria-label="山の等高線と、各点の勾配（最も急な上り坂の向き）">
+<figure><svg viewBox="0 0 680 470" width="680" role="img" aria-label="山の等高線と、各点の勾配（最も急な上り坂の向き）">
 <defs><marker id="e3gh-r" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a8322a"/></marker><marker id="e3gh-b" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4a5f8c"/></marker></defs>
 <g font-family="sans-serif" font-size="13" fill="#2a2723">
 <rect x="20" y="20" width="572.0" height="429.0" fill="#fbf9f4" stroke="#ddd6c8"/>
@@ -758,7 +758,7 @@ $$\boldsymbol E(\boldsymbol r)=-\nabla\phi(\boldsymbol r)\qquad\Bigl(E_x=-\frac{
 <div class="proof">
 <p><span class="step">STEP 1</span>　等電位面に沿った微小変位 $\mathrm d\boldsymbol r$ をとる。面上では電位が変わらないので $\mathrm d\phi=0$。</p>
 <p><span class="step">STEP 2</span>　(4.1) より $0=\mathrm d\phi=-\boldsymbol E\cdot\mathrm d\boldsymbol r$〔資料 (3.8)〕。</p>
-<p><span class="step">STEP 3</span>　内積が 0 なので、$\boldsymbol E$ は面上のどの方向の $\mathrm d\boldsymbol r$ とも直交する。つまり $\boldsymbol E$ は<strong>等電位面に垂直</strong>で、電気力線（接線が $\boldsymbol E$ の向き）も等電位面と直交する（図5.1）。<span class="qed">∎</span></p>
+<p><span class="step">STEP 3</span>　内積が 0 なので、$\boldsymbol E$ は面上のどの方向の $\mathrm d\boldsymbol r$ とも直交する。つまり $\boldsymbol E$ は<strong>等電位面に垂直</strong>で、電気力線（接線が $\boldsymbol E$ の向き）も等電位面と直交する（図5.2）。<span class="qed">∎</span></p>
 </div>
 <p>さらに $\boldsymbol E=-\nabla\phi$ の向きは「電位が最も急に下がる向き」だから、力線は<strong>電位の高い等電位面から低い面</strong>へ、面を突っ切って進む。</p>
 

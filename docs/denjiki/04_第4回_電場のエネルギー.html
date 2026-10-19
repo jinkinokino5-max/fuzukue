@@ -340,7 +340,7 @@ $$C_{\text{同心球}}=\frac{4\pi\varepsilon_0\,ab}{b-a},\qquad \frac{C_{\text{�
 <line x1="550" y1="100" x2="600" y2="100" stroke="#2a2723"/>
 <text x="452" y="74" text-anchor="end" font-size="12" fill="#a8322a">+Q</text><text x="478" y="74" font-size="12" fill="#4a5f8c">−Q</text><text x="532" y="74" text-anchor="end" font-size="12" fill="#a8322a">+Q</text><text x="558" y="74" font-size="12" fill="#4a5f8c">−Q</text>
 <text x="465" y="138" text-anchor="middle" font-size="12">C₁（電圧 V₁）</text><text x="545" y="138" text-anchor="middle" font-size="12">C₂（電圧 V₂）</text>
-<text x="505" y="94" text-anchor="middle" font-size="11" fill="#968d80">中間の導体は正味 0</text>
+<text x="505" y="164" text-anchor="middle" font-size="11" fill="#968d80">（つなぎ目の導体は、正味 0）</text>
 <text x="500" y="180" text-anchor="middle">V = V₁+V₂ = Q(1/C₁+1/C₂)</text><text x="500" y="200" text-anchor="middle" fill="#a8322a">1/C = 1/C₁ + 1/C₂</text>
 <text x="395" y="104" text-anchor="end" font-size="12">V</text>
 </g></svg>
@@ -368,7 +368,7 @@ $$\mathrm dW=V(q)\,\mathrm dq=\frac{q}{C}\,\mathrm dq\qquad(3.1)$$
 
 <h3><span class="no">3.3</span>足し合わせる</h3>
 <p><strong>最小の具体例</strong>：半径 $5.0\ \mathrm{cm}$ の球に $Q=2.0\ \mathrm{nC}$ を与える。$C=4\pi\varepsilon_0a=5.56\ \mathrm{pF}$。$Q$ を 4 回に分け、$\Delta q=0.50\ \mathrm{nC}$ ずつ運ぶ。$i$ 回目（$i=0,1,2,3$）の直前には $q_i=i\,\Delta q$ だけたまっているので、その回の仕事は（近似として直前の電位で）$\dfrac{q_i}{C}\Delta q$。合計は
-$$\frac{(\Delta q)^2}{C}(0+1+2+3)=\frac{6\,(0.50\times10^{-9})^2}{5.56\times10^{-12}}=2.7\times10^{-7}\ \mathrm J$$
+$$\frac{(\Delta q)^2}{C}(0+1+2+3)=\frac{6\,(0.50\times10^{-9})^2}{5.56\times10^{-12}}=2.7\times10^{-7}\ \mathrm J$$</p>
 <p>これは回数を細かくするほど正確になり、10回で $3.24\times10^{-7}$、100回で $3.56\times10^{-7}$、1000回で $3.59\times10^{-7}\ \mathrm J$ に近づいていく（Python で数値計算した値）。極限は、次の積分である。</p>
 <figure><svg viewBox="0 0 600 320" width="600" role="img" aria-label="電荷qとコンデンサの電圧Vの関係のグラフ。Vはqに比例し、三角形の面積が運ぶのに必要な仕事">
 <defs><marker id="e4qv-arw" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a2723"/></marker></defs>
@@ -389,7 +389,8 @@ $$\frac{(\Delta q)^2}{C}(0+1+2+3)=\frac{6\,(0.50\times10^{-9})^2}{5.56\times10^{
 <path d="M480.0,270.0 L480.0,61.3" fill="none" stroke="#2a2723" stroke-width="1" stroke-dasharray="4 3"/>
 <path d="M80.0,61.3 L480.0,61.3" fill="none" stroke="#2a2723" stroke-width="1" stroke-dasharray="4 3"/>
 <text x="108.0" y="48.8" fill="#4a5f8c" text-anchor="start" font-size="13">V(q) = q/C</text>
-<text x="328.0" y="207.4" fill="#a06a32" text-anchor="start" font-size="12">短冊（4回に分けた和）</text>
+<text x="488.0" y="182.3" fill="#a06a32" text-anchor="start" font-size="12">短冊</text>
+<text x="488.0" y="199.0" fill="#a06a32" text-anchor="start" font-size="12">（4回分）</text>
 <text x="100.0" y="86.3" fill="#2a2723" text-anchor="start" font-size="13">三角形の面積</text>
 <text x="100.0" y="103.0" fill="#a8322a" text-anchor="start" font-size="13">= ½・Q・(Q/C) = Q²/2C</text>
 <text x="280.0" y="305.5" fill="#968d80" text-anchor="middle" font-size="12">4回の短冊は三角形の 3/4。回数を増やすと三角形に近づく</text>
@@ -507,7 +508,7 @@ $$W_{\mathrm e}=\frac{Q^2}{8\pi\varepsilon_0a}=\frac{Q^2}{2C}\qquad(4.2)$$
 
 <h3><span class="no">4.5</span>一般化と、この結論の扱い</h3>
 <p>球と平板は形がまったく違うが、どちらも (4.1) で3章の結果と一致した。資料はここから「上記は電荷を蓄える導体が球ではない場合にも成り立つ。一般に、真空中で単位体積あたりに蓄えられる電場のエネルギーは $w_{\mathrm e}=\tfrac12\varepsilon_0\boldsymbol E^2$」と一般化する。</p>
-<div class="box"><span class="label">本教材での扱い（証明の範囲）</span>球と平板の2例は、仮説 (4.1) を確かめた<strong>例</strong>であって、すべての形についての証明ではない。一般の電荷分布での証明は、電荷密度と電場を結ぶ式（ガウスの法則の微分形、$\rho=\varepsilon_0\nabla\cdot\boldsymbol E$）と部分積分（発散定理）を使うので、ベクトル解析が要る。ここではその証明は省略し、結論 (4.1) を受け入れて先へ進む（導出は Griffiths <i>Introduction to Electrodynamics</i> §2.4、砂川『理論電磁気学』の静電エネルギーの章を参照）。章末の演習問題で、同心球と同軸円筒でも一致することを自分で確かめられる（問4・問5）。</div>
+<div class="box"><span class="label">本教材での扱い（証明の範囲）</span>球と平板の2例は、仮説 (4.1) を確かめた<strong>例</strong>であって、すべての形についての証明ではない。一般の電荷分布での証明は、電荷密度と電場を結ぶ式（ガウスの法則の微分形、$\rho=\varepsilon_0\nabla\cdot\boldsymbol E$）と部分積分（発散定理）を使うので、ベクトル解析が要る。ここではその証明は省略し、結論 (4.1) を受け入れて先へ進む（導出は Griffiths <i>Introduction to Electrodynamics</i> §2.4、砂川『理論電磁気学』なども参照）。章末の演習問題で、同心球と同軸円筒でも一致することを自分で確かめられる（問4・問5）。</div>
 <div class="warn"><span class="label">注意：点電荷の「場のエネルギー」は無限大になる</span>(4.2) で $a$ を小さくしていくと $W_{\mathrm e}=\dfrac{Q^2}{8\pi\varepsilon_0a}$ は大きくなり、$a\to0$（点電荷）では無限大になる。つまり、「点電荷1個がもつ、自分自身の場のエネルギー」を場の見方で計算すると意味のない値になる。そのため、5章で扱うのは、<strong>電荷どうしの相互作用の分</strong>（電荷の配置を変えたときに変わるエネルギー）だけである。（この問題は古典電磁気学の限界として知られているが、本教材の範囲を超える。）</div>
 <div class="warn"><span class="label">よくある誤解：「エネルギーは電荷にあるのか、場にあるのか？」</span>静電場だけを考えている限り、「電荷が位置エネルギーをもつ」と「電場にエネルギーが分布している」は、<strong>どちらでも同じ総量になり、区別できない</strong>（この回で、2つの計算が一致したのはそのため）。場の見方が必要になるのは、<strong>電場が電荷から離れて空間を伝わっていく電磁波（第12回）</strong>のときで、そこでは電荷がなくなっても、エネルギーが空間を運ばれていく。これを説明するために、エネルギーは場にあると考えるのが自然、という説明がよく使われる（Feynman, <i>Lectures on Physics</i> Vol.II Ch.8 など）。この点は、第12回まで「場のエネルギー」という見方を保留にしてよい。</div>
 
