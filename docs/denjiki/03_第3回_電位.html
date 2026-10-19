@@ -106,7 +106,11 @@
 </style>
 </head>
 <body>
-<!-- HERO -->
+<figure class="hero">
+<img src="img/03_hero_terrace.jpg" alt="山あいに段々の田が広がる棚田の景色">
+<div class="ttl"><p class="vol">第3回</p><h1>電位</h1></div>
+<figcaption><p class="cap">段々の田は、どの一枚をとっても水面がまっ平らで、隣へ移るときにだけ高さが変わる。</p><p class="cr">新木大地／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:%E6%AF%9B%E5%8E%9F%E3%81%AE%E6%A3%9A%E7%94%B0202265.jpg">Wikimedia Commons</a>（毛原の棚田、縮小）</p></figcaption>
+</figure>
 <p class="lead">2026年10月15日／配布資料「電位」対応。第2回までは電場 $\boldsymbol E$（ベクトル、3成分）を扱ってきた。この回では、<strong>電場のなす仕事</strong>に注目して、空間の各点に<strong>数が1つだけ</strong>つく量——<strong>電位</strong> $\phi$（スカラー）——を作る。電位は足し算でよく、電場は電位の坂道（勾配）として後から取り出せる。山の「標高」と「坂の傾き」の関係とまったく同じである。</p>
 
 <div class="navi">
@@ -426,7 +430,16 @@ $$1\ \mathrm{eV}=1.602\times10^{-19}\ \mathrm C\times1\ \mathrm V=1.602\times10^
 <li><strong>「電位と電位エネルギーは同じ」</strong> → 電位は単位電荷あたり。電荷 $q$ の位置エネルギーは $q\phi$。</li>
 </ul></div>
 
-<!-- SPREAD_1 -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/03_a1_bird_on_wire.jpg" alt="青空を背に、電柱から延びる電線にとまる鳥" loading="lazy"></div>
+<p class="cap">電線にとまった鳥が感電しないのは、両足のあいだに電位差がほとんどないからである。</p>
+<p class="cr">DeltaSquad833／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Power_line_and_birds.jpg">Wikimedia Commons</a>（縮小）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/03_b1_datum.jpg" alt="木立のそばに建つ、破風をもつ石造りの小さな建物" loading="lazy"></div>
+<p class="cap">高さの値は、この小さな石の建物に収められた一点を基準にして、日本じゅうで数えられている。</p>
+<p class="cr">Kestrel／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Japanese_Vertical_Datum_P5228651.jpg">Wikimedia Commons</a>（日本水準原点標庫、縮小）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">3</span>電位を計算してみる</h2>
@@ -641,7 +654,16 @@ $$V=Ed=\frac{Qd}{\varepsilon_0S}\qquad(3.5)$$
 </table>
 <p class="note">距離依存性のそろい方：電場が $1/r^2,\ 1/r,\ r^0$ と変わると、電位は $1/r,\ \ln r,\ r^1$ と<strong>積分の分だけ1次ずつ</strong>変わる。</p>
 
-<!-- SPREAD_2 -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/03_a2_faraday_cage.jpg" alt="金網の箱の中に二人が立ち、箱の外側に放電が走っている" loading="lazy"></div>
+<p class="cap">高電圧をかけた金網の箱の中では、立つ場所によらず、人は同じ電位に包まれている。</p>
+<p class="cr">David Jackson／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Faraday_cage_running_at_110000_V.jpg">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/03_b2_birdcage.jpg" alt="二つの鳥籠を天秤棒で担ぐ、着飾った女を描いた浮世絵" loading="lazy"></div>
+<p class="cap">籠が担がれて揺れても、籠のなかではどこに止まる鳥も、内と外を分ける境の同じ側にいる。</p>
+<p class="cr">鳥居清満／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:MET_DP123725.jpg">Wikimedia Commons</a>（メトロポリタン美術館蔵、縮小）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">4</span>電場は電位の勾配である</h2>
@@ -745,7 +767,16 @@ $$\boldsymbol E(\boldsymbol r)=-\nabla\phi(\boldsymbol r)\qquad\Bigl(E_x=-\frac{
 <p>③ 直接足す：$+q$ からの電場 $\dfrac{kq}{(z-d/2)^2}$、$-q$ からは $-\dfrac{kq}{(z+d/2)^2}$（向きは $-q$ に向かうので $-z$ 向き）。$E_z=kq\Bigl[\dfrac1{(z-d/2)^2}-\dfrac1{(z+d/2)^2}\Bigr]=kq\,\dfrac{(z+d/2)^2-(z-d/2)^2}{(z^2-d^2/4)^2}=kq\,\dfrac{2zd}{(z^2-d^2/4)^2}$。$z\gg d$ では分母 $\approx z^4$ なので $E_z\approx\dfrac{2kqd}{z^3}=\dfrac{2kp}{z^3}$。②と一致。</p>
 <p>④ 確かめ：電場は $1/z^3$（電位の $1/z^2$ より1次速く減る：微分で1次下がる）。単位：$[\mathrm{N\,m^2/C^2}][\mathrm{C\,m}]/[\mathrm m^3]=\mathrm{N/C}$。</p></div>
 
-<!-- SPREAD_3 -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/03_a3_cooper_hill.jpg" alt="草の斜面に人々が座り、坂の下へ向かう様子" loading="lazy"></div>
+<p class="cap">クーパーズ・ヒルの急斜面では、足を取られた者は誰でも、坂のいちばん急な向きへ転がり落ちていく。</p>
+<p class="cr">Dave Farrance／<a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:A_race_at_the_Cooper%27s_Hill_Cheese_Rolling_and_Wake,_on_Cooper%27s_Hill,_Brockworth,_Gloucestershire,_on_27_May_2013.jpg">Wikimedia Commons</a>（クーパーズ・ヒルのチーズ転がし、2013年、縮小）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/03_b3_hokusai_kirifuri.jpg" alt="岩肌を白い筋となって落ちる滝と、そのふもとの旅人を描いた浮世絵" loading="lazy"></div>
+<p class="cap">滝の水は岩肌をいちばん急な向きへ落ちていき、その筋が白い線となって画面に残っている。</p>
+<p class="cr">葛飾北斎／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Katsushika_Hokusai,_Japanese_-_Pilgrims_at_Kirifuri_Waterfall_on_Mount_Kurokami_in_Shimotsuke_Province_-_Google_Art_Project.jpg">Wikimedia Commons</a>（《諸国瀧廻り 下野黒髪山きりふりの滝》、縮小）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">5</span>等電位面</h2>
@@ -953,7 +984,16 @@ $$\boldsymbol E(\boldsymbol r)=-\nabla\phi(\boldsymbol r)\qquad\Bigl(E_x=-\frac{
 <li>(c) 2電荷の近くは円、遠くは1つの楕円（大きな球に見える）に近づく。中点は電場が 0（鞍点）で、等電位面が十字に交わる（資料 図3の下の図）。</li>
 </ul>
 
-<!-- SPREAD_4 -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/03_a4_contour_map.jpg" alt="細い茶色の線が谷や尾根をなぞる地形図の一部" loading="lazy"></div>
+<p class="cap">地形図の細い等高線は、どれも同じ標高の点を結んでおり、混み合った所ほど斜面が急である。</p>
+<p class="cr">U.S. Geological Survey ほか／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Topographic_map_of_Mesa_Verde_National_Park_-_Montezuma_County,_Colorado_LOC_2012586900.tif">Wikimedia Commons</a>（メサ・ヴェルデ国立公園の地形図、米国議会図書館蔵、一部を切り出し）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/03_b4_tree_rings.jpg" alt="年輪が同心状に並ぶ丸太の切り口" loading="lazy"></div>
+<p class="cap">年輪の一本一本は、同じ年の幹の表面をなぞる線であり、互いに交わることがない。</p>
+<p class="cr">Kelsey Todd／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Close-up_of_Tree_Cross-section_Showing_Growth_Rings.jpg">Wikimedia Commons</a>（縮小）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">6</span>章末例題</h2>

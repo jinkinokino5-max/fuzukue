@@ -106,7 +106,11 @@
 </style>
 </head>
 <body>
-<!-- HERO -->
+<figure class="hero">
+<img src="img/04_hero_shosoin.jpg" alt="高床の上に建つ、大きな屋根の黒い倉。手前に見物の人々">
+<div class="ttl"><p class="vol">第4回</p><h1>電場のエネルギー</h1></div>
+<figcaption><p class="cap">倉の中身は外から見えないが、そこにしまわれた宝は、誰かが運び入れた手間のぶんだけ蓄えられている。</p><p class="cr">Roman SUZUKI／<a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:%E6%AD%A3%E5%80%89%E9%99%A2_-_panoramio.jpg">Wikimedia Commons</a>（正倉院、縮小）</p></figcaption>
+</figure>
 <p class="lead">2026年10月19日／配布資料「電場のエネルギー」対応。第3回では、電場の中で電荷を運ぶ仕事から「電位」を作った。この回では、その仕事を逆向きに眺める。<strong>電荷をためるには外から仕事が要る。その仕事はどこへ行ったのか</strong>。答えは「電場の中にエネルギーとして蓄えられている」で、その密度は $\tfrac12\varepsilon_0E^2$ と書ける。電荷をためる器（コンデンサ）の性質から出発して、この結論までを一本の筋で導く。</p>
 
 <div class="navi">
@@ -353,7 +357,16 @@ $$\frac1C=\frac1{C_1}+\frac1{C_2}\qquad(2.8)$$
 </div>
 <p>確かめ：並列は「板の面積が増える」のと同じなので、$C$ が増えて当然（平板 (2.5) の $S$ が足し算になる）。直列は「板の間隔が足し算になる」のと同じなので、$C$ が減る（(2.5) の $d$ の足し算）。</p>
 
-<!-- SPREAD_1 -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/04_a1_leyden_jar.png" alt="ガラス瓶に液体が入り、金属の鎖と球のついた栓がされたライデン瓶の図" loading="lazy"></div>
+<p class="cap">ライデン瓶は、ガラスをはさむ内と外の二つの導体に電荷を蓄える、もっとも古いコンデンサである。</p>
+<p class="cr">Robert Alexander Houstoun／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Leyden_jar_engraving.png">Wikimedia Commons</a></p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/04_b1_jomon_bowl.jpg" alt="縄目の模様をもつ縄文時代の深鉢" loading="lazy"></div>
+<p class="cap">深鉢が一度に煮ることのできる量は、土の質でも火の強さでもなく、形の大きさで決まっている。</p>
+<p class="cr">Davide Mauro／<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Deep_Bowl_J%C5%8Dmon_period.jpg">Wikimedia Commons</a>（縮小）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">3</span>電荷をためるのに必要な仕事</h2>
@@ -408,7 +421,16 @@ $$W=\frac{Q^2}{2C}=\frac12QV=\frac12CV^2\qquad(3.2)\quad〔資料\ (4.3)〕$$
 <div class="why"><span class="label">直感：なぜ $\tfrac12$ がつくのか（水槽の比喩）</span>断面積 $A$ の水槽に、水を1杯ずつ汲み上げて入れる。最初の1杯は低いところ、最後の1杯は水位 $h$ のところまで持ち上げるので、<strong>平均の持ち上げ高さは $h/2$</strong>。全体の仕事は「水の重さ × 平均の高さ」$=mg\cdot\dfrac h2$（$m$：水の全質量）。電荷も同じで、水量が電荷 $Q$、水位が電圧 $V$、断面積が容量 $C$（$Q=CV$ は「水量＝断面積×水位」）。仕事は $Q\times\dfrac V2$ である。この比喩は式を読み解くための補助で、結論は (3.2) の積分が与える。</div>
 <div class="warn"><span class="label">よくある誤解：「$W=QV$ ではないのか？」</span>$QV$ は、「$Q$ 全部を最初から電圧 $V$ に逆らって運ぶ」ときの仕事である。実際は、電荷がたまるにつれて $V(q)$ が $0$ から $V$ まで上がっていくので、平均すると $V/2$。コンデンサに蓄えられるエネルギーは $\tfrac12QV$。<br>なお、電池で充電する場合は、電池が $QV$ の仕事をする（電荷 $Q$ が電圧 $V$ を通るため）が、半分は $\tfrac12QV$ としてコンデンサに入り、残りの半分は配線の抵抗で熱などになる、ということが知られている。この点は電流を扱う第7回以降の話なので、本教材では導かない。</div>
 
-<!-- SPREAD_2 -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/04_a2_aed.jpg" alt="壁の箱に収められたAED（自動体外式除細動器）" loading="lazy"></div>
+<p class="cap">AED の中ではコンデンサにエネルギーを蓄えておき、それを一度に電気ショックとして放出する。</p>
+<p class="cr">Tanja-Denise Schantz／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Defibrillator-809447_1920.jpg">Wikimedia Commons</a>（縮小）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/04_b2_osaka_wall.jpg" alt="堀に面して大小の石を積み上げた城の石垣" loading="lazy"></div>
+<p class="cap">石垣は石を一つずつ運び上げて積んだものであり、積んだ石の数だけ、運ぶ仕事が積もっている。</p>
+<p class="cr">そらみみ／<a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Stone_Wall_of_Osaka_Castle.JPG">Wikimedia Commons</a>（大阪城の石垣、縮小）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">4</span>電場のエネルギー</h2>
@@ -512,7 +534,16 @@ $$W_{\mathrm e}=\frac{Q^2}{8\pi\varepsilon_0a}=\frac{Q^2}{2C}\qquad(4.2)$$
 <div class="warn"><span class="label">注意：点電荷の「場のエネルギー」は無限大になる</span>(4.2) で $a$ を小さくしていくと $W_{\mathrm e}=\dfrac{Q^2}{8\pi\varepsilon_0a}$ は大きくなり、$a\to0$（点電荷）では無限大になる。つまり、「点電荷1個がもつ、自分自身の場のエネルギー」を場の見方で計算すると意味のない値になる。そのため、5章で扱うのは、<strong>電荷どうしの相互作用の分</strong>（電荷の配置を変えたときに変わるエネルギー）だけである。（この問題は古典電磁気学の限界として知られているが、本教材の範囲を超える。）</div>
 <div class="warn"><span class="label">よくある誤解：「エネルギーは電荷にあるのか、場にあるのか？」</span>静電場だけを考えている限り、「電荷が位置エネルギーをもつ」と「電場にエネルギーが分布している」は、<strong>どちらでも同じ総量になり、区別できない</strong>（この回で、2つの計算が一致したのはそのため）。場の見方が必要になるのは、<strong>電場が電荷から離れて空間を伝わっていく電磁波（第12回）</strong>のときで、そこでは電荷がなくなっても、エネルギーが空間を運ばれていく。これを説明するために、エネルギーは場にあると考えるのが自然、という説明がよく使われる（Feynman, <i>Lectures on Physics</i> Vol.II Ch.8 など）。この点は、第12回まで「場のエネルギー」という見方を保留にしてよい。</div>
 
-<!-- SPREAD_3 -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/04_a3_capacitor_bank.jpg" alt="青い棚に大きなコンデンサがぎっしり並んだ部屋に、一人の技術者が立つ" loading="lazy"></div>
+<p class="cap">青い棚にぎっしり並んだコンデンサの、板と板のあいだの空間に、電場のエネルギーが蓄えられている。</p>
+<p class="cr">Colin N. Danson ほか／<a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:VULCAN_capacitor_bank_with_HVR_resistors.jpg">Wikimedia Commons</a>（VULCAN レーザーのコンデンサ群、縮小）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/04_b3_nasu_yoichi.jpg" alt="馬で海に入り、弓に矢をつがえて引く鎧姿の武者" loading="lazy"></div>
+<p class="cap">引き絞られた弓は、見た目には静止していても、引いた仕事のぶんの力を、しなりのなかに蓄えている。</p>
+<p class="cr">外務省／Public domain／<a href="https://commons.wikimedia.org/wiki/File:NasunoYoichi.jpg">Wikimedia Commons</a>（那須与一、縮小）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">5</span>応用：エネルギーの変化から力と相互作用を求める</h2>
@@ -601,7 +632,16 @@ $$U=\sum_{\text{ペア }i\lt j}\frac{q_iq_j}{4\pi\varepsilon_0\,r_{ij}}\qquad(5.
 </table>
 <p class="note">どれも「電荷をバラバラの状態から集めるのに必要な仕事」で、静電場の範囲ではすべて同じ値になる。（点電荷の組では、場のエネルギーが各電荷の自己エネルギーを含んで無限大になるので、(5.3) は自己エネルギーを除いた分である。）</p></div>
 
-<!-- SPREAD_4 -->
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/04_a4_absolute_electrometer.jpg" alt="ガラスの覆いの中に収められた真鍮の測定器" loading="lazy"></div>
+<p class="cap">トムソン（ケルビン）の型にならった絶対電位計は、向かい合う円板の引き合う力から電位差を測る。</p>
+<p class="cr">instrumentmakers／<a href="https://creativecommons.org/licenses/by-sa/3.0/nl/deed.en">CC BY-SA 3.0 nl</a>／<a href="https://commons.wikimedia.org/wiki/File:Cabinet_III_-_absolute_electrometer_after_Thomson_by_Breguet_1883.jpg">Wikimedia Commons</a>（ブレゲ製、1883年、縮小）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/04_b4_kubihiki.jpg" alt="輪を首にかけて引き合う子どもたちを描いた浮世絵" loading="lazy"></div>
+<p class="cap">首引きの遊びで引き合う二人の力は、つねに向きが逆で、大きさが等しい。</p>
+<p class="cr">北尾重政／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Kubihiki_LCCN2009615129.jpg">Wikimedia Commons</a>（米国議会図書館蔵、縮小）</p></div>
+</figure>
 
 <!-- ============================================================ -->
 <h2><span class="no">6</span>章末例題</h2>
