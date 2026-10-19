@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3回 小テスト解説</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 小テスト解説はページ固有の題字（扉写真なし）。テンプレートのCSSは変えず、ここで足す -->
+<style>
+  .qhead{ border-bottom:1px solid var(--ink); padding:28px 0 14px; margin-bottom:6px; }
+  .qhead .vol{ font-family:var(--num); color:var(--shu); font-size:15px; letter-spacing:.2em; margin:0; }
+  .qhead h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(22px,3.4vw,32px); line-height:1.4; margin:4px 0 0; letter-spacing:.06em; }
+</style>
+
+<header class="qhead">
+<p class="vol">QUIZ 3 ― 第3回・10/15</p>
+<h1>小テスト：ヒントと解説<br><small style="font-size:.6em">点電荷の「本数・電場・電位」を次元で決める</small></h1>
+</header>
+<p class="lead">10/15 小テストの解き方。まず<strong>ヒントを1つずつ開いて</strong>自分で解き、最後に解説で答え合わせをする使い方を想定している。この問題は<strong>単位（次元）だけで、式の形のほとんどが決まる</strong>ことを使う。</p>
+
+<div class="navi">
+関連：<a href="03_第3回_電位.html">第3回 本編</a> の §2.5（点電荷の電位 (2.6)）、§2.2（単位 V = J/C）。第2回の本数 $N=q/\varepsilon_0$、電場 $E=q/(4\pi\varepsilon_0r^2)$ もそのまま使う。<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="02Q_第2回_小テスト解説.html">第2回の小テスト解説</a>
+</div>
+
+<div class="warn">
+<span class="label">出典・注意</span>
+問題は 10/15 の講義で配布された小テスト（<code>reference/講義資料/第3回/第3回小テスト.pdf</code>）。以下は本教材での要約で、原文ではない。解答・解説は自作のため、正答は Moodle の採点結果で確認すること。<strong>原文の式には文字 $z$ が現れるが、問題文には $z$ の説明がない</strong>（電荷は $q$ と書かれ、式では $Q$）。本解説は「$z$ は問題に出てこない量、$Q$ は $q$ と同じ電荷」と解釈して $n=0$ とした。この解釈は未確認なので、授業での説明と違えば直すこと。
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>問題の要約</h2>
+<div class="box">
+<p>真空中に点電荷 $q$ [C]（式では $Q$ と書く）がある。真空の誘電率を $\varepsilon_0$ [C²/(N·m²)] とする。次の量は、どれも
+$$a\,\pi^{k}\,\varepsilon_0^{\,l}\,r^{m}\,z^{n}\,Q^{o}$$
+の形で表される。<strong>係数 $a$ と指数 $k\sim o$ を答える</strong>（$a$ と $k\sim o$ は (1)〜(3) で同じとは限らない）。</p>
+<ol>
+<li>電荷を中心とする半径 $r$ [m] の球の表面を貫いて外に出る<strong>電気力線の本数</strong> $N$ [N·m²/C]</li>
+<li>電荷から距離 $r$ [m] の位置の<strong>電場の強さ</strong> $E$ [N/C]</li>
+<li>無限遠方を電位 0 としたときの、電荷から距離 $r$ [m] の位置の<strong>電位</strong> $V$ [V = J/C]</li>
+</ol>
+<p class="note">$l$ は「エル」、$o$ は「オー」で、数字ではない。</p>
+</div>
+
+<div class="why">
+<span class="label">この出題形式の読み方（第1・2回と同じ）</span>
+<ul>
+<li>分母にあるもの → 指数がマイナス：$\dfrac1{\varepsilon_0}=\varepsilon_0^{-1}$、$\dfrac1r=r^{-1}$</li>
+<li><strong>式に出てこない文字 → 指数は 0</strong>（$z$ はここ。問題文にない量が答えに入るはずがない）</li>
+<li>$\pi$ は $a$ に含めず $\pi^k$ として別に数える（$a$ は $\tfrac14$ のような純粋な数）。</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>ヒント（1つずつ開く）</h2>
+
+<details><summary>ヒント1：式を「単位の式」に書き直す</summary>
+<div class="box">$\varepsilon_0$ の単位は C²/(N·m²)。$r$ は m、$Q$ は C、$N$ は N·m²/C。使う単位は <strong>N、m、C の3種類</strong>だけである。両辺の単位を、N・m・C の累乗で比べると、未知の指数が3つの方程式で決まる。</div>
+</details>
+
+<details><summary>ヒント2：(1) の指数を決める</summary>
+<div class="box">$[\mathrm{N\,m^2/C}]=\Bigl[\dfrac{\mathrm C^2}{\mathrm N\,\mathrm m^2}\Bigr]^{l}[\mathrm m]^{m}[\mathrm C]^{o}$。N の指数、m の指数、C の指数を左右で比べてみよう。</div>
+</details>
+
+<details><summary>ヒント3：係数 $a$ と $\pi$ の指数 $k$ は、単位からは決まらない</summary>
+<div class="box">$a$ や $\pi^k$ は単位を持たない純粋な数なので、単位の比較では決められない。ここは<strong>物理</strong>で決める：(1) は第2回の「1 C から $1/\varepsilon_0$ 本」、(2) は点電荷の電場の式 $q/(4\pi\varepsilon_0r^2)$（第1回）、(3) は電位 $kq/r$（本編 2.5 節）。</div>
+</details>
+
+<details><summary>ヒント4：(2)、(3) は (1) から作れる？</summary>
+<div class="box">(2)：電場 ＝ 力線の密度 ＝ 本数 ÷ 球の表面積 $4\pi r^2$。(3)：電位 $=\int_r^{\infty}E\,\mathrm dr'$ は、点電荷の場合「電場 × 距離 $r$」になる（$1/r^2$ を積分すると $1/r$）。これで3つの答えがつながる。</div>
+</details>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>解説</h2>
+
+<h3><span class="no">3.1</span>単位だけで決まる部分：N・m・C の方程式</h3>
+<p>$\varepsilon_0$ の単位 $\mathrm{C^2/(N\,m^2)}=\mathrm C^2\,\mathrm N^{-1}\mathrm m^{-2}$ を使って、各量の単位を N・m・C の累乗で書く。$z$ は問題に出てこないので $n=0$。</p>
+
+<p><strong>(1) 本数 $N$ [N·m²/C]</strong>：左辺 $=\mathrm N^{1}\mathrm m^{2}\mathrm C^{-1}$。右辺 $=(\mathrm C^{2}\mathrm N^{-1}\mathrm m^{-2})^{l}\,\mathrm m^{m}\,\mathrm C^{o}=\mathrm N^{-l}\ \mathrm m^{-2l+m}\ \mathrm C^{2l+o}$。</p>
+<table class="tb">
+<tr><th>単位</th><th>左辺の指数</th><th>右辺の指数</th><th>方程式</th></tr>
+<tr><td>N</td><td>$1$</td><td>$-l$</td><td>$l=-1$</td></tr>
+<tr><td>m</td><td>$2$</td><td>$-2l+m$</td><td>$2=2+m$ より $m=0$</td></tr>
+<tr><td>C</td><td>$-1$</td><td>$2l+o$</td><td>$-1=-2+o$ より $o=1$</td></tr>
+</table>
+<p>よって $N\propto\varepsilon_0^{-1}Q^{1}r^{0}$。係数は、第2回の約束「電荷 $q$ から $q/\varepsilon_0$ 本」より $a=1$、$\pi$ は出てこないので $k=0$。</p>
+<div class="box"><strong>答え (1)</strong>　$N=\dfrac{Q}{\varepsilon_0}$：$a=1,\ k=0,\ l=-1,\ m=0,\ n=0,\ o=1$。</div>
+
+<p><strong>(2) 電場 $E$ [N/C]</strong>：左辺 $=\mathrm N^{1}\mathrm m^{0}\mathrm C^{-1}$。右辺は (1) と同じ形。</p>
+<table class="tb">
+<tr><th>単位</th><th>左辺</th><th>右辺</th><th>方程式</th></tr>
+<tr><td>N</td><td>$1$</td><td>$-l$</td><td>$l=-1$</td></tr>
+<tr><td>m</td><td>$0$</td><td>$-2l+m$</td><td>$0=2+m$ より $m=-2$</td></tr>
+<tr><td>C</td><td>$-1$</td><td>$2l+o$</td><td>$o=1$</td></tr>
+</table>
+<p>$E\propto\varepsilon_0^{-1}r^{-2}Q$。係数は、点電荷の電場 $E=\dfrac{Q}{4\pi\varepsilon_0r^2}$ から $a=\tfrac14$、$\pi^{-1}$ より $k=-1$。</p>
+<div class="box"><strong>答え (2)</strong>　$E=\dfrac{Q}{4\pi\varepsilon_0r^2}$：$a=\tfrac14,\ k=-1,\ l=-1,\ m=-2,\ n=0,\ o=1$。</div>
+
+<p><strong>(3) 電位 $V$ [V = J/C]</strong>：$\mathrm J=\mathrm N\,\mathrm m$ なので左辺 $=\mathrm N^{1}\mathrm m^{1}\mathrm C^{-1}$。</p>
+<table class="tb">
+<tr><th>単位</th><th>左辺</th><th>右辺</th><th>方程式</th></tr>
+<tr><td>N</td><td>$1$</td><td>$-l$</td><td>$l=-1$</td></tr>
+<tr><td>m</td><td>$1$</td><td>$-2l+m$</td><td>$1=2+m$ より $m=-1$</td></tr>
+<tr><td>C</td><td>$-1$</td><td>$2l+o$</td><td>$o=1$</td></tr>
+</table>
+<p>$V\propto\varepsilon_0^{-1}r^{-1}Q$。係数は電位 $V=\dfrac{Q}{4\pi\varepsilon_0r}$ から $a=\tfrac14,\ k=-1$。</p>
+<div class="box"><strong>答え (3)</strong>　$V=\dfrac{Q}{4\pi\varepsilon_0r}$：$a=\tfrac14,\ k=-1,\ l=-1,\ m=-1,\ n=0,\ o=1$。</div>
+
+<table class="tb">
+<tr><th></th><th>$a$</th><th>$k$</th><th>$l$</th><th>$m$</th><th>$n$</th><th>$o$</th></tr>
+<tr><td>(1) 本数 $N$</td><td>1</td><td>0</td><td>−1</td><td>0</td><td>0</td><td>1</td></tr>
+<tr><td>(2) 電場 $E$</td><td>1/4</td><td>−1</td><td>−1</td><td>−2</td><td>0</td><td>1</td></tr>
+<tr><td>(3) 電位 $V$</td><td>1/4</td><td>−1</td><td>−1</td><td>−1</td><td>0</td><td>1</td></tr>
+</table>
+
+<h3><span class="no">3.2</span>検算：3つの答えがつながっている</h3>
+<div class="proof">
+<p><span class="step">検算1（本数 → 電場）</span>　電場は「力線の密度」＝本数 ÷ 球の表面積：$E=\dfrac{N}{4\pi r^2}=\dfrac{Q}{4\pi\varepsilon_0r^2}$。表では $m$ が $0\to-2$、$a$ が $1\to\tfrac14$、$k$ が $0\to-1$ に変わるだけ（$\dfrac1{4\pi r^2}$ の分）。</p>
+<p><span class="step">検算2（電場 → 電位）</span>　無限遠から運ぶ仕事で $V=\int_r^{\infty}E\,\mathrm dr'=\dfrac{Q}{4\pi\varepsilon_0}\int_r^\infty\dfrac{\mathrm dr'}{r'^2}=\dfrac{Q}{4\pi\varepsilon_0r}$。表では電場から $m$ が $-2\to-1$ に上がるだけ（長さ $r$ を1回かけた分。単位が N/C → N m/C = V になる）。</p>
+<p><span class="step">検算3（数値）</span>　$Q=1.0$ nC、$r=0.30$ m：$N=\dfrac{10^{-9}}{8.85\times10^{-12}}=1.1\times10^{2}$ N·m²/C、$E=\dfrac{8.99\times10^{9}\times10^{-9}}{0.30^2}=1.0\times10^{2}$ N/C、$V=30$ V。確かめ：$V=E\,r=100\times0.30=30$ V ✓。</p>
+</div>
+
+<h3><span class="no">3.3</span>なぜ $a$ と $\pi$ は単位で決まらないのか</h3>
+<div class="why"><span class="label">次元解析のできること・できないこと</span>
+<p>単位の方程式で決まるのは、<strong>単位をもつ量（$\varepsilon_0, r, Q$）の指数</strong>だけ。数そのものである $a$ や $\pi$ は、単位をかけても変わらない。だから、単位の方程式は「$E=a\pi^k\,Q/(\varepsilon_0 r^2)$」までは決めるが、$a\pi^k$ が $1$ か $\dfrac1{4\pi}$ かは決めない。そこは<strong>球の表面積 $4\pi r^2$</strong>（第2回）という幾何と、$\varepsilon_0$ の定義（第1回）から来る。逆に言えば、<strong>次元が合わない式は即座に間違い</strong>と分かるので、検算としてとても強力である。</p>
+</div>
+
+<div class="warn">
+<span class="label">よくあるミス</span>
+<ul>
+<li>(1) で $m=-2$ としてしまう（球の面積で割る (2) と混同）→ 本数は球の大きさによらず $o$ だけで決まる（$m=0$）。</li>
+<li>(2) で $k=0$ にする → $4\pi$ を $a$ に含めず、$\dfrac1{4\pi}=\tfrac14\pi^{-1}$ と分けて、$k=-1$。</li>
+<li>(3) で $m=-2$ のままにする → 電位は「電場 × 長さ」なので $m=-1$。単位が V = J/C = N·m/C であることから m の指数は 1。</li>
+<li>$\mathrm J$ を $\mathrm N\,\mathrm m$ に直し忘れる → (3) の m の方程式が合わなくなる。</li>
+<li>$z$ に 0 以外の指数を入れる → 問題に出てこない量は 0。</li>
+</ul>
+<p class="note">分数（$1/4$ など）の入力形式は Moodle の指示に従うこと。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>まとめ</h2>
+<div class="box">
+<ul>
+<li>□ 単位を N・m・C（または基本単位）の累乗に分けて、両辺を比べる方程式が立てられる</li>
+<li>□ 係数 $a$ と $\pi$ の指数は単位で決まらず、物理（球の表面積、電場・電位の式）で決めると説明できる</li>
+<li>□ 本数 $N=Q/\varepsilon_0$、電場 $Q/(4\pi\varepsilon_0r^2)$、電位 $Q/(4\pi\varepsilon_0r)$ がつながっている（÷$4\pi r^2$、×$r$）</li>
+<li>□ 問題文にない量の指数は 0 と答える</li>
+</ul>
+</div>
+
+<p class="meta">出典：10/15 講義配布の小テスト（要約）。ヒント・解説・検算方法は本教材の自作。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="03_第3回_電位.html"><small>LESSON 3</small>← 教材：第3回</a></nav>
+
+</body>
+</html>
