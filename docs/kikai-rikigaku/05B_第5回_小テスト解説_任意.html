@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5回 小テスト解説（課題5B・任意）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<header style="padding-top:48px">
+<p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第5回・小テスト解説（任意）</p>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">課題 5B の解き方</h1>
+</header>
+<p class="lead">2026/10/20／第5回「重心」の Moodle 小テスト（課題 5B〔任意〕全2問）。必修の課題 5A（<a href="05A_第5回_小テスト解説.html">解説はこちら</a>）より一段進んだ問題で、<strong>線（円弧）の重心</strong>と、<strong>ロボットの重心と転倒</strong>を扱う。教材 第5回の 2.4節（分割と合成）・3.3節（扇形）・4章（転倒）・6章（台車の重心と転倒限界）の応用。</p>
+
+<div class="navi">
+<strong>2問に共通する道具</strong>：重心は「量 × 重心位置」の和を全体の量で割る（教材 第5回 2.4節）。<strong>線</strong>では量が<strong>長さ</strong>、<strong>立体や質点</strong>では<strong>質量</strong>。転倒は「全体の重心の鉛直線が、<strong>接地点の内側</strong>にあるか」で決まる（4.2節）。<br>
+<strong>いちばん大事な約束</strong>：先に<strong>原点と座標軸</strong>を決め、<strong>部分ごとの量と重心位置の表</strong>を作る。答えを出す前に、<strong>対称性・極限・単位</strong>で確かめる。
+</div>
+
+<div class="warn"><span class="label">この解説の位置づけ</span>問題文と図は Moodle の画面（reference/講義資料/第5回小テスト続き.pdf）から転載した。解答は<strong>自作</strong>で、<strong>公式解答とは未照合</strong>（正解表示がなかった）。数値は Python（draft/check_quiz05b.py）で検算した。5B-1 の解答欄の形から<strong>中心角 $\alpha$ は円弧の全体の開き角</strong>と読んだ（理由は問題の中に書いた）。5B-2 のリンクの質量の扱いも、問題文の記述にもとづく前提をその問に書いた。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>5B-1　線の重心（円弧を含む針金）</h2>
+<div class="ex"><span class="label">5B-1〔B 標準〜C 発展〕</span>
+<p>Find the center of gravity of the line.<br>
+（まずはじめに、半径 $r$、中心角 $\alpha$ の円弧の重心〔中心からの距離〕を求める式を導出せよ。）</p>
+<figure class="slide"><img src="img/quiz05/q5b1.png" alt="針金の図。O から右上へ 45° に長さ100 mm の線 OA、O から左へ 100 mm の線 OB、B から左側に半径75 mm の半円弧で C へ、C から右へ 100 mm の線 CD" loading="lazy" style="width:520px;max-width:95%;height:auto;background:#fff"><figcaption>5B-1 の図。出典：第5回小テスト（Moodle 課題 5B 問題1）</figcaption></figure>
+<p class="note">解答欄：半径 $r$、中心角 $\alpha$ の円弧の重心位置を $\dfrac{A}{B}\,r^{C}\alpha^{D}\sin\!\left(\dfrac{E}{F}\,r^{G}\alpha^{H}\right)$ と表したときの整数 A〜H。および、図の線全体の重心 $(x_G,\ y_G)$ [mm]。</p>
+
+<p><strong>解答（前半：円弧の重心の式を導く）</strong></p>
+<p>① <strong>設定</strong>：円の中心を原点に置き、円弧が $x$ 軸について対称になるように置く。中心角（開き角）を $\alpha$ とすると、円弧は角度 $-\alpha/2\le\theta\le\alpha/2$ の範囲。円弧は一様な線なので、重心は<strong>対称軸（$x$ 軸）上</strong>にあり、中心からの距離だけを求めればよい。</p>
+<p>② <strong>小片</strong>：角度 $\theta$ のところで、幅 $d\theta$ の小さな弧を取る。長さは $ds=r\,d\theta$、位置は $x=r\cos\theta$（教材 3.3節の扇形と同じ極座標の考え方）。</p>
+<p>③ <strong>長さと一次モーメント</strong>：
+$$L=\int ds=\int_{-\alpha/2}^{\alpha/2}r\,d\theta=r\alpha$$
+$$\int x\,ds=\int_{-\alpha/2}^{\alpha/2}r\cos\theta\cdot r\,d\theta=r^2\Bigl[\sin\theta\Bigr]_{-\alpha/2}^{\alpha/2}=r^2\left(\sin\frac{\alpha}{2}-\sin\Bigl(-\frac{\alpha}{2}\Bigr)\right)=2r^2\sin\frac{\alpha}{2}$$
+（$\sin$ が奇関数なので $\sin(-\alpha/2)=-\sin(\alpha/2)$ を使った。）</p>
+<p>④ <strong>割る</strong>：
+$$\bar x=\frac{\int x\,ds}{L}=\frac{2r^2\sin(\alpha/2)}{r\alpha}=\frac{2}{1}\,r^{1}\alpha^{-1}\sin\!\left(\frac{1}{2}\,r^{0}\alpha^{1}\right)$$
+⑤ <strong>確かめ</strong>：(i) <strong>半円</strong>（$\alpha=\pi$）：$\bar x=\dfrac{2r}{\pi}\approx0.637r$ になる。これは半円の針金の重心としてよく知られた値で、半円板の $\dfrac{4r}{3\pi}$ より外側（円弧に近い）にあるのも自然。 (ii) <strong>極限</strong>：$\alpha\to0$ では $\sin(\alpha/2)\approx\alpha/2$ なので $\bar x\to r$（ごく短い弧は円周上の1点と同じ）✓。 (iii) <strong>全円</strong>（$\alpha=2\pi$）：$\sin\pi=0$ で $\bar x=0$（円の中心）✓。 (iv) <strong>単位</strong>：$r$ [長さ] × 無次元で、長さ ✓。</p>
+<p class="note">（記号の注意：教材 3.3節の扇形は<strong>半頂角</strong> $\alpha$（開き角が $2\alpha$）で、重心は $\dfrac{2r\sin\alpha}{3\alpha}$ だった。この問題の解答欄には $\dfrac{E}{F}$ の分数が入る形があり、$\sin\!\left(\dfrac12\alpha\right)$ と書く<strong>全角</strong>の $\alpha$ だと読むと形が合うので、そう読んだ。半頂角で読むなら $\bar x=\dfrac{r\sin\alpha}{\alpha}$（$A=B=1,\ C=1,\ D=-1,\ E=F=1,\ G=0,\ H=1$）になる。どちらの流儀かは問題文の「中心角」の読みで決まり、公式解答とは未照合。）</p>
+<p class="note"><strong>答え（前半）：$A=2,\ B=1,\ C=1,\ D=-1,\ E=1,\ F=2,\ G=0,\ H=1$</strong>（$\bar x=\dfrac{2r}{\alpha}\sin\dfrac{\alpha}{2}$）</p>
+
+<p><strong>解答（後半：線全体の重心）</strong></p>
+<p>⑥ <strong>形を読む</strong>：O を原点とし、図の寸法から、線は4本の部分でできている：①OA（O から右上 45° に 100 mm）、②OB（O から左へ 100 mm）、③円弧 BC（B から C までの<strong>半円</strong>、半径 75 mm、中心は $(-100,\ 75)$、左側に膨らむ）、④CD（C $(-100,\ 150)$ から右へ 100 mm、D は $(0,\ 150)$）。B と C は同じ鉛直線上（中心の真上と真下）で、半径 75 の2倍が $B$–$C$ の距離 150 mm と合う。</p>
+<figure><svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="5B-1 の線を4本に分けた図" style="width:460px;max-width:100%;height:auto;background:#fff">
+<defs><marker id="q5ba" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#222"/></marker></defs>
+<line x1="292.5" y1="270.0" x2="398.6" y2="163.9" stroke="#2b5d8a" stroke-width="4"/>
+<line x1="292.5" y1="270.0" x2="142.5" y2="270.0" stroke="#4a7c3a" stroke-width="4"/>
+<polyline points="142.5,270.0 133.7,269.7 124.9,268.6 116.2,266.9 107.7,264.5 99.4,261.4 91.4,257.7 83.7,253.4 76.4,248.5 69.4,243.0 63.0,237.0 57.0,230.6 51.5,223.6 46.6,216.3 42.3,208.6 38.6,200.6 35.5,192.3 33.1,183.8 31.4,175.1 30.3,166.3 30.0,157.5 30.3,148.7 31.4,139.9 33.1,131.2 35.5,122.7 38.6,114.4 42.3,106.4 46.6,98.7 51.5,91.4 57.0,84.4 63.0,78.0 69.4,72.0 76.4,66.5 83.7,61.6 91.4,57.3 99.4,53.6 107.7,50.5 116.2,48.1 124.9,46.4 133.7,45.3 142.5,45.0" fill="none" stroke="#7a4a8a" stroke-width="4"/>
+<line x1="142.5" y1="45.0" x2="292.5" y2="45.0" stroke="#c08a1a" stroke-width="4"/>
+<circle cx="345.5" cy="217.0" r="4" fill="#a8322a"/><circle cx="217.5" cy="270.0" r="4" fill="#a8322a"/><circle cx="70.9" cy="157.5" r="4" fill="#a8322a"/><circle cx="217.5" cy="45.0" r="4" fill="#a8322a"/>
+<line x1="142.5" y1="280.0" x2="142.5" y2="35.0" stroke="#999" stroke-dasharray="6 3 1 3"/>
+<circle cx="142.5" cy="157.5" r="2.5" fill="#555"/>
+<circle cx="176.9" cy="168.6" r="7" fill="none" stroke="#a8322a" stroke-width="2.5"/><text x="186.9" y="160.6" font-size="14" fill="#a8322a">G</text>
+<line x1="292.5" y1="270.0" x2="372.5" y2="270.0" stroke="#222" stroke-width="1.2" marker-end="url(#q5ba)"/><text x="376.5" y="274.0" font-size="14" font-style="italic">x</text>
+<line x1="292.5" y1="270.0" x2="292.5" y2="170.0" stroke="#222" stroke-width="1.2" marker-end="url(#q5ba)"/><text x="298.5" y="174.0" font-size="14" font-style="italic">y</text>
+<text x="288.5" y="288.0" font-size="14">O</text>
+<text x="402.6" y="161.9" font-size="13">①A</text><text x="209.5" y="286.0" font-size="13">②</text>
+<text x="36.0" y="161.5" font-size="13">③</text><text x="209.5" y="37.0" font-size="13">④</text>
+<text x="128.5" y="286.0" font-size="13">B</text><text x="128.5" y="41.0" font-size="13">C</text><text x="296.5" y="41.0" font-size="13">D</text>
+</svg><figcaption>4本の部分に分けた。赤い点が各部分の重心、赤い丸が全体の重心 G（$-77.1,\ 67.6$）。円弧の重心は中心から左へ $2r/\pi=47.7$ mm の位置（1 mm = 1.5 px）。</figcaption></figure>
+<p>⑦ <strong>表にする</strong>（量は長さ $L_i$、重心位置は各部分の中点。円弧だけ前半の式を使う）：</p>
+<table class="tb"><tr><th>部分</th><th>長さ $L_i$ [mm]</th><th>重心 $x_i$ [mm]</th><th>重心 $y_i$ [mm]</th><th>$L_ix_i$</th><th>$L_iy_i$</th></tr>
+<tr><td>① OA</td><td>100</td><td>$50\cos45^\circ=35.36$</td><td>$50\sin45^\circ=35.36$</td><td>3535.5</td><td>3535.5</td></tr>
+<tr><td>② OB</td><td>100</td><td>$-50$</td><td>0</td><td>−5000</td><td>0</td></tr>
+<tr><td>③ 円弧 BC</td><td>$\pi\cdot75=235.62$</td><td>$-100-\dfrac{2\cdot75}{\pi}=-147.75$</td><td>75</td><td>−34812</td><td>17671</td></tr>
+<tr><td>④ CD</td><td>100</td><td>$-50$</td><td>150</td><td>−5000</td><td>15000</td></tr>
+<tr><th>合計</th><th>535.62</th><th></th><th></th><th>−41276</th><th>36207</th></tr></table>
+<p><span class="note">（円弧の重心：中心 $(-100,75)$ から<strong>左へ</strong> $\dfrac{2r}{\pi}=47.75$ mm なので $x=-147.75$、$y=75$。半円なので前半の式で $\alpha=\pi$。円弧の長さは $r\alpha=75\pi=235.62$。）</span></p>
+<p>⑧ <strong>割って重心</strong>：
+$$x_G=\frac{-41276}{535.62}=-77.06\ \mathrm{mm},\qquad y_G=\frac{36207}{535.62}=67.60\ \mathrm{mm}$$
+⑨ <strong>確かめ</strong>：(i) <strong>範囲</strong>：線は $x:-175\sim71$、$y:0\sim150$ に収まり、$(-77.1,\ 67.6)$ はその内側。円弧とその左側の長い部分が重いので、$x_G$ は負の側に寄る ✓。 (ii) <strong>$y_G$</strong>：下の線（OB）が 0、上の線（CD）が 150、円弧が平均 75 なので、$y_G$ は 75 に近い値になるはず。OA が下寄り（平均 35）なので少し下がって 67.6 ✓。 (iii) <strong>重心は線の上にない</strong>：$(-77.1,\ 67.6)$ は、円弧の内側の空間にある（重心は物体の外にも出る）。 (iv) 計算は Python（draft/check_quiz05b.py）でも確認済み。</p>
+<p><strong>答え：$(x_G,\ y_G)=(-77.1,\ 67.6)$ mm</strong></p></div>
+<div class="warn"><span class="label">よくある誤り</span>(1) 円弧の重心を<strong>円弧の中点</strong>（$x=-175$）にとる：弧の重心は中点より内側（中心側）で、中心から $2r/\pi$。 (2) 円弧の重みを<strong>弧の長さ</strong>でなく<strong>半円の面積</strong>などで計算する：これは<strong>線</strong>なので重みは長さ。 (3) 円弧の重心を<strong>中心から右へ</strong>測る：弧は中心の左側に膨らむので、重心も中心の<strong>左</strong>。 (4) 斜めの線 OA の重心を $(50,0)$ とする：中点は $(50\cos45^\circ,\ 50\sin45^\circ)$。 (5) 中心角を半分と全部で取り違える：全角なら $\sin(\alpha/2)$、半角なら $\sin\alpha$。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>5B-2　移動式ロボットアームの重心と転倒</h2>
+<div class="ex"><span class="label">5B-2〔B 標準〕</span>
+<p>図1に示すように、図2のような仕様の移動式ロボットアームが、アーム先端に質量 25 kg のおもりを吊るしている。リンク $L_3$ は常に水平、$L_4$ は常に垂直を保つ。アームを含むロボット本体の重心は常に車軸 A と B の中間にあり、その質量は 50 kg である。座標系 O−$xy$ を図1のように設定するとき、以下の問いに答えなさい。<br>
+(a) リンク2の角度 $\theta=60^\circ$ のとき、系全体の重心の $x$ 座標を求めなさい。<br>
+(b) 角度 $\theta$ を変化させ、アームをゆっくりと前方（図の右方向）へ伸ばしていくとき、ロボットが前方へ転倒を始めるときの $\theta$ を求めなさい。</p>
+<figure class="slide"><img src="img/quiz05/q5b2_fig1.png" alt="図1：車軸AとBの間の中央に原点O。リンクL1、L2（角度θ）、L3（水平）、L4（垂直）の先に25 kgのおもり" loading="lazy" style="width:440px;max-width:95%;height:auto;background:#fff"><figcaption>5B-2 の図1。出典：第5回小テスト（Moodle 課題 5B 問題2）</figcaption></figure>
+<figure class="slide"><img src="img/quiz05/q5b2_fig2.png" alt="図2：寸法（mm）。L2 は 400、L3 は 300、L4 は 200、車軸間は 400、全長 600、高さ 200 と 200" loading="lazy" style="width:440px;max-width:95%;height:auto;background:#fff"><figcaption>5B-2 の図2（寸法、単位 mm）。出典：同上</figcaption></figure>
+<p class="note">解答欄：(a) [mm]　(b) [°]。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>系を切り出して、質点2つに置き換える</strong>：「アームを含むロボット本体」は質量 50 kg、重心は<strong>車軸 A・B の中間</strong>（図1の原点 O の真上）なので、$(x,\ y)$ のうち $x=0$ の1つの質点でよい。もう1つは、先端のおもり 25 kg。リンクの質量は本体の 50 kg に含まれているので、別に数えない（問題文の前提）。</p>
+<p>② <strong>座標軸</strong>：図1のとおり、O を車軸の真ん中の地面（床）、右（A の側）を $+x$、上を $+y$ とする。車軸 A は $x=+200$ mm、B は $-200$ mm（図2の車軸間 400 mm の半分）。タイヤの接地点も同じ $x$ にあるので、<strong>転倒の支点は A の接地点 $x=+200$ mm</strong>。</p>
+<p>③ <strong>おもりの位置</strong>（$x$ 座標）：アーム根元のピンは O の真上（$x=0$）。$L_2$ は長さ 400 mm、水平から $\theta$ 傾いて右へ伸び、その先に水平の $L_3$（300 mm）が右へ、さらに垂直の $L_4$ が真下へ下がるので、おもりの $x$ 座標は
+$$x_m=400\cos\theta+300\ \ [\mathrm{mm}]$$
+（$L_4$ は垂直なので、$L_3$ の先端の真下におもりがある。$L_4$ の長さ 200 は $y$ にだけ効き、$x$ には効かない。）</p>
+<p>④ <strong>(a) 全体の重心</strong>（教材 1.3節。質点2つの合成）：$\theta=60^\circ$ のとき $x_m=400\cos60^\circ+300=200+300=500$ mm。
+$$x_G=\frac{50\times0+25\times500}{50+25}=\frac{12500}{75}=166.7\ \mathrm{mm}$$
+⑤ <strong>(b) 転倒を始める条件</strong>（教材 4.2節）：全体の重心の鉛直線が支持面（接地点 B から A の間）の外に出ると転倒する。前方へ倒れ始める限界は、重心の $x$ 座標が<strong>前輪 A の接地点</strong> $x=200$ mm に来たとき（ちょうどそこでは、床の反力がすべて A に集まり、B の反力が 0 になる）：
+$$x_G=\frac{25\,x_m}{75}=\frac{x_m}{3}=200\ \ \Longrightarrow\ \ x_m=600\ \mathrm{mm}$$
+$$400\cos\theta+300=600\ \Longrightarrow\ \cos\theta=\frac{300}{400}=0.75\ \Longrightarrow\ \theta=\cos^{-1}0.75=41.4^\circ$$
+⑥ <strong>確かめ</strong>：(i) <strong>向き</strong>：腕を伸ばすほど $\theta$ が小さくなり $\cos\theta$ が大きくなって $x_m$ が増える。$\theta=60^\circ$ で $x_G=166.7&lt;200$（倒れない）、$\theta=41.4^\circ$ で 200（限界）、$\theta=0$（水平いっぱい）では $x_m=700$、$x_G=233&gt;200$（倒れる）で、話が通る ✓。 (ii) <strong>B の反力で確かめ</strong>：限界では B の反力が 0 のはずなので、A の接地点まわりで重力のモーメントが<strong>つり合う</strong>ことを見る。本体 $50g$ は A の 200 mm 左（$x=0$ と $x=200$ の差）で $50g\times200=10000g$、おもり $25g$ は A の 400 mm 右（$x=600$ と $x=200$ の差）で $25g\times400=10000g$。両者が等しいので ✓（向きは逆で、打ち消し合う）。 (iii) <strong>単位</strong>：mm どうし、質量比は無次元 ✓。</p>
+<p><strong>答え：(a) $x_G=166.7$ mm　(b) $\theta=41.4^\circ$</strong>（$\cos\theta=0.75$）</p></div>
+<div class="warn"><span class="label">よくある誤り</span>(1) $L_2$ の水平成分を $400\sin\theta$ とする：$\theta$ は<strong>水平</strong>から測るので水平成分は $\cos\theta$。 (2) $L_4$ の長さ 200 mm を $x$ に足してしまう：$L_4$ は垂直なので $x$ には関係しない。 (3) 転倒の支点を原点 O（$x=0$）や車体の端 $x=300$ にする：支点は<strong>タイヤの接地点</strong>（車軸の真下、$x=200$）。 (4) 重心を<strong>先端のおもりの位置</strong>で考える：重心は 50 kg の本体と 25 kg のおもりの<strong>質量加重平均</strong>。 (5) 転倒の限界を「重心が支点を<strong>越えた</strong>とき」と、少し先に取る：限界は「ちょうど支点の真上に来たとき」。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 円弧の重心の式（中心角 $\alpha$ の全角なら $\bar x=\dfrac{2r}{\alpha}\sin\dfrac{\alpha}{2}$、半円で $\dfrac{2r}{\pi}$）を、極座標の積分で導ける（5B-1）。</li>
+<li>□ 線の重心では、重みを<strong>長さ</strong>にする（5B-1）。</li>
+<li>□ 円弧・直線・斜めの線を「長さ × 重心位置」の表にして合成できる（5B-1）。</li>
+<li>□ 極限（$\alpha\to0$ で $r$、$\alpha=2\pi$ で 0）や既知の値（半円 $2r/\pi$）で確かめられる（5B-1）。</li>
+<li>□ 複雑なロボットを、重心が分かっている質点2つに置き換えられる（5B-2）。</li>
+<li>□ リンクの向き（$L_3$ 水平・$L_4$ 垂直）から、おもりの位置を $\theta$ で式にできる（5B-2）。</li>
+<li>□ 転倒の限界を「重心の鉛直線が接地点の真上に来たとき」として式にできる（5B-2）。</li>
+<li>□ 限界の前後（倒れる・倒れない）で、答えの向きを確かめられる（5B-2）。</li>
+</ul></div>
+
+<div class="navi">
+<a href="index.html">← 目次へ</a>　｜　<a href="05_第5回_重心.html">教材：第5回 重心</a>　｜　<a href="05A_第5回_小テスト解説.html">課題 5A の解説</a>
+</div>
+
+<p class="meta">出典：問題文と図は第5回小テスト（Moodle 課題 5B・任意）の画面より転載（個人の学習用）。解答・解説は自作で、公式解答とは未照合。数値は Python（draft/check_quiz05b.py）で検算済み。5B-1 の中心角の読み（全角）は解答欄の形からの推定。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="05_第5回_重心.html"><small>LESSON</small>← 教材：第5回 重心</a></nav>
+</body>
+</html>
