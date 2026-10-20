@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5回 重心｜機械力学</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 第5回（2026-10-20）講義資料「第5回.pdf」対応（CLAUDE.md §8【最重要2】：順序と説明を組み直した）。設計：draft/05_設計.md。読み物コラムは保留（ユーザー指示）。 -->
+<figure class="hero">
+<img src="img/hero_05.jpg" alt="緑の山あいにそびえる、コンクリートの重力式とみられる大きな堤体。上部に放流ゲートが並び、堤体の足もとに青緑の水がたまっている">
+<div class="ttl" style="left:3%;top:4%;background:rgba(247,244,236,.88);padding:12px 22px 14px"><p class="vol">第5回</p><h1>重心</h1></div>
+<figcaption><p class="cap">水の重さが三角形に分布して押す力と、堤体自身の重さ——その合力が底の内側を通るかぎり、この壁は倒れない。</p><p class="cr">河川一等兵／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Tsukabaru-2808-r1.JPG">Wikimedia Commons</a>（塚原ダムの堤体、2008年撮影）</p></figcaption>
+</figure>
+<p class="lead">2026-10-20／講義資料「第5回」（教科書 3.2節 p.35〜、練習問題【3・2】p.44、補足資料：分布荷重）の範囲。第4回までは、荷重を「1点に働く力」として扱ってきた。しかし現実の重さは、物体のあらゆる部分に<strong>分布して</strong>働いている。この回は、その重さを釣合いの式に使える<strong>「1つの力」</strong>に置き換えるには、その力を<strong>どこに</strong>置けばよいか——その点が<strong>重心</strong>——を導き、実際に計算し、最後に<strong>分布荷重を受ける梁</strong>と<strong>台車の転倒</strong>に使うことが目標である。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：<br>
+【動機】棒の一点を支えて釣合わせる（1.1）→ 【定義】全重力を1点に集めて「等価」にする点＝重力のモーメントが釣合う点（1.2）<br>
+→ 【導出】<strong>2通り</strong>（等価と釣合い）で同じ式 $\boldsymbol r_G=\sum w_i\boldsymbol r_i/W$ が出る（1.3）。ベクトルで書くと向きによらない（1.4）<br>
+→ 【数学】和を積分に置き換える（2章）→ 均質なら体積・面積・長さで決まる＝<strong>図心</strong>（2.3）<br>
+→ 【計算】長方形・三角形・扇形・L字板（3章）<br>
+→ 【応用】重心の鉛直線が底面の外に出ると<strong>転倒</strong>（4章）／<strong>分布荷重</strong>は面積に等しい合力を図心に置く（5章）／台車の荷重と転倒限界（6章）
+</div>
+
+<div class="box"><span class="label">この回で使う前提</span>
+<ul>
+<li><strong>仮定する</strong>：第1〜4回（力のモーメント、合力と合モーメントによる力の置き換え＝「等価」、釣合い式、支点反力、FBD）。</li>
+<li><strong>この回で一から説明する</strong>：総和記号 $\sum$、和を積分に置き換える考え方、定積分と二重積分の計算、極座標の面積要素、対称性を使った積分の省略、分割・欠損の方法。</li>
+<li><strong>後回しにする</strong>：慣性モーメント（第12回。重心まわりの「2次のモーメント」）、重心の運動（第15回）、摩擦（第6回）、パップス・ギュルダンの定理（講義資料にない）。</li>
+</ul></div>
+
+<div class="box"><span class="label">この教材の作り方について</span>講義スライドは穴埋め式で、空欄の答えの多くはPDFに残っていた（重心の定義、等価、一次モーメント、図心、分布荷重の合力、など）。それらを本文に普通の文章として入れた。<strong>ただし、2か所の空欄（スライド24「釣合いの安定度は重心の［　］で決まる」、スライド25「重心の［　］が［　］とモーメントが反転」）は、答えが画像の中にあって読み取れなかった</strong>。ここは、4章で式から導いた内容にもとづく<strong>本教材の推定</strong>で埋め、「推定」と明記した。スライドの誤植と思われる箇所は断定せず <code>.warn</code> で注記した。計算はすべて Python（sympy・numpy・scipy）で検算してある（<code>draft/check_05.py</code>）。</div>
+
+<h2>序　この回の問い</h2>
+<p>授業の共通の題材「小型移動マニピュレータ」の台車は、内部にバッテリー・モータ・制御基板などが入っている。講義資料は、同じ台車で<strong>バッテリーを後ろに置いたとき</strong>と<strong>前に置いたとき</strong>の全体の重心の位置（赤白の丸）が変わることを示している。</p>
+<figure class="slide"><img src="img/slide05/robot_com.jpg" alt="小型移動マニピュレータの透視図・側面図・上面図。台車の内部にバッテリー、モータドライバ、コントローラ、減速機つきモータが入る。下段は、バッテリーが後ろのとき（標準）と前のとき（代替）の台車全体の重心の位置を赤白の丸で示す。寸法は台車の高さ0.2 m、幅0.5 m、長さ0.6 m" loading="lazy" style="width:760px;max-width:98%;height:auto;background:#fff"><figcaption>講義資料の図。右下の2つの小図で、バッテリーの位置を変えると全体の重心（赤白の丸）が動く。「内部の部品配置によって、全体の重心位置は変化する」と注記がある。出典：講義資料 第5回 p.2</figcaption></figure>
+<p>部品はそれぞれ違う場所にあり、違う重さを持つ。しかし、台車が坂で転ばないか、車輪が床から受ける力はいくらか、を考えるとき、私たちは<strong>台車全体の重さ $W$ を「1つの力」として、ある1点に作用させて</strong>考える。第4回の釣合いの式にそのまま入れるためである。<strong>その1点はどこか。</strong>これが今回の問いである。</p>
+<p>講義資料が挙げた「今日のポイント」は次の3つ。</p>
+<ol><li>重心：<strong>重力</strong>のモーメントが釣り合う点（1章）</li><li>重心の性質を理解する（1.4・1.6、2.3、4章）</li><li>重心の計算方法を覚える（2・3章。5章の分布荷重は、同じ式の応用）</li></ol>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>質点系の重心</h2>
+
+<h3><span class="no">1.1</span>動機：棒の一点を支えて釣合わせる</h3>
+<p><strong>動機</strong>：定規の両端に重さの違う2つの消しゴムをのせて、指1本で水平に支えるとき、指をどこに当てればよいか。経験では、<strong>重い方に寄せる</strong>。この「寄せ方」を式にする。これが重心の出発点になる。</p>
+<p>重さを無視できる長さ $l$ の棒の左端に質量 $m_1$、右端に質量 $m_2$ の質点がついている。棒の左端から距離 $l_G$ の点 G を、上向きの力 $F_G$ で支えて、棒が水平に釣合っているとする。</p>
+<figure><svg viewBox="0 0 520 230" width="520" role="img" aria-label="2つの質点をつけた棒を点Gで支える">
+<defs><marker id="bar-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="bar-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="bar-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="bar-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="bar-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="bar-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M98.0,125.6 L234.1,125.6" fill="none" stroke="#2a2723" stroke-width="4" opacity="1"/>
+<circle cx="98.0" cy="125.6" r="8.242640687119286" fill="#2b3a67"/>
+<line x1="98.0" y1="125.6" x2="98.0" y2="171.9" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#bar-b)"/>
+<text x="98.0" y="102.5" fill="#2b3a67" text-anchor="middle" font-size="12">m₁ = 2 kg</text>
+<circle cx="234.1" cy="125.6" r="9.196152422706632" fill="#a8322a"/>
+<line x1="234.1" y1="125.6" x2="234.1" y2="171.9" stroke="#a8322a" stroke-width="2.4" marker-end="url(#bar-r)"/>
+<text x="234.1" y="102.5" fill="#a8322a" text-anchor="middle" font-size="12">m₂ = 3 kg</text>
+<text x="92.6" y="152.9" fill="#2b3a67" text-anchor="end" font-size="12">w₁ = m₁g</text>
+<text x="239.5" y="152.9" fill="#a8322a" text-anchor="start" font-size="12">w₂ = m₂g</text>
+<line x1="179.7" y1="193.7" x2="179.7" y2="131.1" stroke="#2a2723" stroke-width="2.6" marker-end="url(#bar-k)"/>
+<text x="183.7" y="201.8" fill="#2a2723" text-anchor="start" font-size="12">F_G（支える力）</text>
+<line x1="98.0" y1="44.0" x2="179.7" y2="44.0" stroke="#968d80" stroke-width="1.2" marker-end="url(#bar-s)"/>
+<line x1="179.7" y1="44.0" x2="98.0" y2="44.0" stroke="#968d80" stroke-width="1.2" marker-end="url(#bar-s)"/>
+<text x="92.6" y="46.7" fill="#968d80" text-anchor="end" font-size="12">l_G = 0.6 m</text>
+<line x1="179.7" y1="78.0" x2="234.1" y2="78.0" stroke="#968d80" stroke-width="1.2" marker-end="url(#bar-s)"/>
+<line x1="234.1" y1="78.0" x2="179.7" y2="78.0" stroke="#968d80" stroke-width="1.2" marker-end="url(#bar-s)"/>
+<text x="239.5" y="80.7" fill="#968d80" text-anchor="start" font-size="12">l − l_G = 0.4 m</text>
+</g></svg>
+<figcaption>図1.1　2つの質点をつけた棒を点 G で支える（$m_1=2$ kg、$m_2=3$ kg、$l=1$ m の場合。点 G の位置は式 (1.3) から $l_G=0.6$ m）。</figcaption></figure>
+<p>第4回の釣合い条件（合力 0・合モーメント 0）を、この棒に使う。外力は、2つの重力 $m_1g$、$m_2g$（下向き）と、点 G の支える力 $F_G$（上向き）。</p>
+<div class="proof"><span class="label">導出</span>
+<p><span class="step">STEP 1</span>　<strong>力の釣合い</strong>（上向きを正）：
+$$F_G-m_1g-m_2g=0\qquad(1.1)$$<span class="note">← 鉛直方向の力の和が 0。</span></p>
+<p><span class="step">STEP 2</span>　<strong>点 G まわりのモーメントの釣合い</strong>（反時計回りを正）。基準点を G にとる理由：未知の $F_G$ の腕が 0 になって、式から消えるから（第4回 1.4 節）。$m_1$ の重さは G の左 $l_G$ にあって下向きなので反時計回り（＋）、$m_2$ の重さは G の右 $l-l_G$ にあって下向きなので時計回り（−）：
+$$m_1g\,l_G-m_2g\,(l-l_G)=0\qquad(1.2)$$</p>
+<p><span class="step">STEP 3</span>　(1.1) から $F_G=(m_1+m_2)g$。(1.2) の両辺を $g$ で割って展開する（$g$ が消えることに注意）：$m_1l_G-m_2l+m_2l_G=0$。$l_G$ を含む項を左に集める：$(m_1+m_2)\,l_G=m_2\,l$。よって
+$$l_G=\frac{m_2}{m_1+m_2}\,l\qquad(1.3)$$</p></div>
+<p>(1.3) は、教科書の式 3.45 に当たる。数値例では $l_G=\dfrac{3}{2+3}\times1=0.6$ m、$F_G=5\times9.81=49.05$ N。距離の比は $l_G:(l-l_G)=0.6:0.4=3:2=m_2:m_1$ で、<strong>質量の比の逆</strong>になっている（重い方に近い）。講義資料の言い方では、「棒の長さを質点の質量比で<strong>案分</strong>した点」である。</p>
+<p>ここで大事な観察が1つある。支える力は $F_G=(m_1+m_2)g$、つまり<strong>全体の重さに等しい</strong>。全体の重さをこの1点 G に集めて、同じ力で支えても同じ状態になる。つまり釣合いに関する限り、<strong>棒は、点 G に全質量が集まった1つの質点と同じ</strong>とみなせる。これが次の定義である。</p>
+
+<h3><span class="no">1.2</span>重心の定義</h3>
+<div class="def"><span class="label">定義（重心）</span>物体の<strong>全重量</strong>をその1点に作用させたとき、元の状態と<strong>等価</strong>になる点を、物体の<strong>重心</strong>（center of gravity）という。<br>
+言い換えると、<strong>重力のモーメントが釣合う点</strong>（式 (1.2)）である。</div>
+<p>「等価」とは、第3回で学んだ意味である：力の集まりが物体に与える作用は、<strong>合力と合モーメント</strong>だけで決まる。したがって、各部分に働く重力の集まりを、<strong>全重力 $W$ を点 G に作用させた1つの力</strong>に置き換えて、合力も合モーメントも変わらないなら、置き換えは許される。その点 G が重心である。</p>
+<p>1.1 の棒では、点 G で支えると釣合う（ $F_G=W$、点 G まわりのモーメント 0 ）。「重力のモーメントが釣合う点」と「全重量を1点に作用させて等価になる点」は、同じ点を別の見方で言ったものである。次の 1.3 で、$n$ 個の質点の場合に2つの見方のそれぞれから式を導き、同じ式が出ることを確かめる。</p>
+
+<h3><span class="no">1.3</span>$n$ 個の質点の重心：2通りの導出</h3>
+<p>質点 $i$（$i=1,\dots,n$）の位置ベクトルを $\boldsymbol r_i=(x_i,\,y_i,\,z_i)$、質量を $m_i$ とする。質点に働く重力の大きさは $w_i=m_ig$。全重力は
+$$W=w_1+w_2+\cdots+w_n=\sum_{i=1}^{n}w_i\qquad(1.4)$$
+である（物体<strong>全体</strong>に働く重力。向きがそろっているので、大きさをそのまま足してよい）。重力は $-z$ 向き（鉛直下向き）とし、$x$ 座標が重力のモーメントの<strong>腕</strong>になる場合を考える。</p>
+<div class="proof"><span class="label">導出（考え方1）：全重量を1点に作用させて「等価」</span>
+<p>① 全重力 $W$ を、$x$ 座標が $x_G$ の点に作用させたとして、原点 O まわりのモーメントを比べる。</p>
+<p>② 全重力を1点に作用させたとき：$W\,x_G$。　… (i)</p>
+<p>③ 元の状態（各質点に別々に作用）：各質点の重力 $w_i$ の腕は $x_i$ なので、和は $w_1x_1+w_2x_2+\cdots+w_nx_n=\sum_i w_ix_i$。　… (ii)<span class="note">← 向きが同じ平行な力のモーメントは、単純に足してよい。</span></p>
+<p>④ 等価なら (i)＝(ii)：$W\,x_G=\sum_i w_ix_i$。$W\neq0$ で割って
+$$x_G=\frac{1}{W}\sum_{i=1}^{n}w_ix_i\qquad(1.5)$$</p></div>
+<div class="proof"><span class="label">導出（考え方2）：重力のモーメントが釣合う点</span>
+<p>① $x$ 軸上で、点 $x_G$ まわりの重力のモーメントの総和が 0 になる、と考える。<span class="note">← 「点 G で支えたら棒が傾かない」を式にしたもの（1.1 の STEP 2 の一般化）。</span></p>
+<p>② 質点 $i$ は点 $x_G$ から $x_i-x_G$ だけ右にあり、重力は下向きなので、モーメントは時計回り（−）で $-w_i(x_i-x_G)$。総和を 0 とおく：
+$$-w_1(x_1-x_G)-w_2(x_2-x_G)-\cdots-w_n(x_n-x_G)=0$$</p>
+<p>③ 和の記号で書き、括弧を展開する：$\sum_i w_i(x_i-x_G)=\sum_i w_ix_i-x_G\sum_i w_i$。<span class="note">← $x_G$ は $i$ によらない定数なので、和の外に出せる。</span></p>
+<p>④ よって $x_G\sum_i w_i-\sum_i w_ix_i=0$。$\sum_i w_i=W$ を使って $x_G=\frac1W\sum_i w_ix_i$。これは (1.5) と同じ。</p></div>
+<p>2つの見方から、<strong>同じ式</strong>が得られた。式 (1.5) は、$x_G$ が各質点の位置 $x_i$ の<strong>重みつき平均</strong>（重み＝その質点の重さ）であることを意味している。1.1 の式 (1.3) も、左端を原点にとれば $x_1=0$、$x_2=l$ なので、$x_G=\frac{m_2}{m_1+m_2}l$ となって一致する。</p>
+<p>$y$ 座標も同様である（重力が $-z$ 向きのとき、$y$ 座標も重力のモーメントの腕になるので、同じ導出がそのまま使える）：
+$$y_G=\frac1W\sum_{i=1}^{n}w_iy_i,\qquad z_G=\frac1W\sum_{i=1}^{n}w_iz_i\qquad(1.6)$$
+$z_G$ は、重力が $-z$ 向きのままでは腕にならないので、<strong>物体を回して</strong>（重力の向きを $x$ や $y$ の向きにして）同じ議論をして得られる。「回しても同じ点か」は 1.6 節で扱う。まず次の 1.4 節で、方向を決めずに一度に導く。</p>
+
+<h3><span class="no">1.4</span>ベクトルで書く：質量中心と、向きによらない理由</h3>
+<p>3つの式をまとめて、位置ベクトル $\boldsymbol r_G=(x_G,\,y_G,\,z_G)$ で書く：
+$$\boldsymbol r_G=\frac1W\sum_{i=1}^{n}w_i\,\boldsymbol r_i\qquad(1.7)$$
+$w_i=m_ig$、$W=Mg$（$M=\sum m_i$ は全質量）を代入すると、$g$ が分子・分母で約分されて
+$$\boldsymbol r_G=\frac1M\sum_{i=1}^{n}m_i\,\boldsymbol r_i\qquad(1.7)'$$
+となる（資料の「(3.50)′」）。これは重力が使われていない式で、<strong>質量中心</strong>（center of mass）と呼ばれる（物理学の呼び名）。重力が全質点で同じ $g$ とみなせる（一様な重力場）限り、重心と質量中心は同じ点である。</p>
+<div class="warn"><span class="label">注意：スライドの式番号</span>講義資料 p.12 の質量中心の式は「(3.50)′」と書かれていて、記号の付き方が変則（教科書の式番号の誤記の可能性）。式の内容は (1.7)′ と同じで、問題はない。</div>
+<p>次に、(1.7) が「向きによらず、全重力を1点に置いて等価」になることを、ベクトルで<strong>一度に</strong>示す。第3回の外積（モーメント $\boldsymbol r\times\boldsymbol F$）を使う。</p>
+<div class="thm"><span class="label">定理（重心の等価性）</span>重力が全質点で共通のベクトル $\boldsymbol g$（鉛直下向き）で、各質点に $\boldsymbol w_i=m_i\boldsymbol g$ が働くとき、(1.7)′ で決まる点 G に全重力 $\boldsymbol W=M\boldsymbol g$ を1つ作用させると、<strong>$\boldsymbol g$ がどの向きでも</strong>、合力と、原点まわりの合モーメントが元の状態と等しい。</div>
+<div class="proof"><span class="label">導出</span>
+<p>① 合力：$\sum\boldsymbol w_i=\bigl(\sum m_i\bigr)\boldsymbol g=M\boldsymbol g=\boldsymbol W$。確かに等しい。</p>
+<p>② 原点 O まわりの合モーメント（元の状態）：$\sum_i\boldsymbol r_i\times(m_i\boldsymbol g)$。$\boldsymbol g$ は $i$ によらないので、外積の分配法則（第3回）で $\boldsymbol g$ を右にまとめる：$\Bigl(\sum_i m_i\boldsymbol r_i\Bigr)\times\boldsymbol g$。</p>
+<p>③ 点 G に $\boldsymbol W$ を作用させたとき：$\boldsymbol r_G\times M\boldsymbol g=(M\boldsymbol r_G)\times\boldsymbol g$。</p>
+<p>④ (1.7)′ から $M\boldsymbol r_G=\sum_i m_i\boldsymbol r_i$ なので、②＝③。$\boldsymbol g$ の向きには何も仮定していない。</p></div>
+<div class="why"><span class="label">直感：なぜ「1点」に決まるのか</span>1つの向き（たとえば真下）だけを考えると、等価になる点は<strong>鉛直な1本の直線上</strong>のどこでもよい（力は作用線上で滑らせてよい、第2回）。上の定理は、<strong>どの向きの重力でも</strong>同時に等価になる点を求めた——だから、物体に固定された<strong>ただ1つの点</strong>に決まる。ペットボトルを糸で1点で吊るして下ろした鉛直線と、別の点で吊るして下ろした鉛直線の<strong>交点</strong>が重心である（2本の直線が交わるのは1点だけ）。</div>
+
+<h3><span class="no">1.5</span>数値例：3つの質点</h3>
+<div class="ex"><span class="label">例題1〔A｜3質点の重心〕</span>
+<p>質量 2 kg、3 kg、5 kg の3つの質点が、軽い板の上の座標 $(0,0)$、$(4,0)$、$(1,3)$（単位 m）に固定されている。重心の位置を求め、重心まわりの「質量×位置のずれ」の和が 0 になることを確かめよ。</p>
+<figure><svg viewBox="0 0 520 300" width="520" role="img" aria-label="3質点の重心">
+<defs><marker id="m3-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="m3-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="m3-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="m3-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="m3-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="m3-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="69.9" y1="10.0" x2="69.9" y2="270.0" stroke="#e2dccf"/>
+<line x1="126.4" y1="10.0" x2="126.4" y2="270.0" stroke="#e2dccf"/>
+<line x1="183.0" y1="10.0" x2="183.0" y2="270.0" stroke="#e2dccf"/>
+<line x1="239.5" y1="10.0" x2="239.5" y2="270.0" stroke="#e2dccf"/>
+<line x1="296.0" y1="10.0" x2="296.0" y2="270.0" stroke="#e2dccf"/>
+<line x1="36.0" y1="224.8" x2="352.5" y2="224.8" stroke="#e2dccf"/>
+<line x1="36.0" y1="168.3" x2="352.5" y2="168.3" stroke="#e2dccf"/>
+<line x1="36.0" y1="111.7" x2="352.5" y2="111.7" stroke="#e2dccf"/>
+<line x1="36.0" y1="55.2" x2="352.5" y2="55.2" stroke="#e2dccf"/>
+<line x1="32" y1="253.0" x2="366.5217391304348" y2="253.0" stroke="#2a2723" marker-end="url(#m3-k)"/>
+<line x1="41.7" y1="274.0" x2="41.7" y2="-4" stroke="#2a2723" marker-end="url(#m3-k)"/>
+<text x="370.5217391304348" y="257.0">x [m]</text>
+<text x="47.7" y="-4">y [m]</text>
+<line x1="69.9" y1="253.0" x2="69.9" y2="257.0" stroke="#2a2723"/>
+<text x="69.9" y="270.0" text-anchor="middle" font-size="11">0</text>
+<line x1="126.4" y1="253.0" x2="126.4" y2="257.0" stroke="#2a2723"/>
+<text x="126.4" y="270.0" text-anchor="middle" font-size="11">1</text>
+<line x1="183.0" y1="253.0" x2="183.0" y2="257.0" stroke="#2a2723"/>
+<text x="183.0" y="270.0" text-anchor="middle" font-size="11">2</text>
+<line x1="239.5" y1="253.0" x2="239.5" y2="257.0" stroke="#2a2723"/>
+<text x="239.5" y="270.0" text-anchor="middle" font-size="11">3</text>
+<line x1="296.0" y1="253.0" x2="296.0" y2="257.0" stroke="#2a2723"/>
+<text x="296.0" y="270.0" text-anchor="middle" font-size="11">4</text>
+<line x1="37.7" y1="224.8" x2="41.7" y2="224.8" stroke="#2a2723"/>
+<text x="34.7" y="228.8" text-anchor="end" font-size="11">0</text>
+<line x1="37.7" y1="168.3" x2="41.7" y2="168.3" stroke="#2a2723"/>
+<text x="34.7" y="172.3" text-anchor="end" font-size="11">1</text>
+<line x1="37.7" y1="111.7" x2="41.7" y2="111.7" stroke="#2a2723"/>
+<text x="34.7" y="115.7" text-anchor="end" font-size="11">2</text>
+<line x1="37.7" y1="55.2" x2="41.7" y2="55.2" stroke="#2a2723"/>
+<text x="34.7" y="59.2" text-anchor="end" font-size="11">3</text>
+<path d="M69.9,224.8 L296.0,224.8 L126.4,55.2 z" fill="#e9e3d3" stroke="#968d80" opacity="0.6"/>
+<circle cx="69.9" cy="224.8" r="8.242640687119286" fill="#2b3a67"/>
+<text x="77.8" y="213.5" fill="#2b3a67" text-anchor="start" font-size="12">m₁ = 2 kg</text>
+<circle cx="296.0" cy="224.8" r="9.196152422706632" fill="#4f7a4a"/>
+<text x="303.9" y="213.5" fill="#4f7a4a" text-anchor="start" font-size="12">m₂ = 3 kg</text>
+<circle cx="126.4" cy="55.2" r="10.70820393249937" fill="#a8322a"/>
+<text x="134.3" y="43.9" fill="#a8322a" text-anchor="start" font-size="12">m₃ = 5 kg</text>
+<circle cx="166.0" cy="140.0" r="4" fill="#2a2723"/>
+<circle cx="166.0" cy="140.0" r="10" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="177.3" y="151.3" fill="#2a2723" text-anchor="start" font-size="13">G (1.7, 1.5)</text>
+</g></svg>
+<figcaption>図1.2　3つの質点（円の大きさは質量の平方根に比例）と重心 G。</figcaption></figure>
+<p><strong>解答</strong></p>
+<p>① 系：3つの質点。式 (1.7)′ を使う（$g$ は約分されるので質量のままでよい）。全質量 $M=2+3+5=10$ kg。</p>
+<p>② 座標は問題のとおり。</p>
+<p>③④ $x_G=\dfrac{2\times0+3\times4+5\times1}{10}$、$y_G=\dfrac{2\times0+3\times0+5\times3}{10}$。</p>
+<p>⑤ $x_G=\dfrac{0+12+5}{10}=\mathbf{1.7}$ m、$y_G=\dfrac{0+0+15}{10}=\mathbf{1.5}$ m。</p>
+<p>⑥ 確かめ：<br>
+・$x$ のずれ：$2(0-1.7)+3(4-1.7)+5(1-1.7)=-3.4+6.9-3.5=0$ ✓（(1.5) の導出②の「重心まわりの総和が 0」）。$y$ のずれも $2(-1.5)+3(-1.5)+5(1.5)=-7.5+7.5=0$ ✓。<br>
+・最も重い 5 kg の質点が重心に最も近い（距離 1.66 m。2 kg は 2.27 m、3 kg は 2.75 m）。重い質点ほど重心を引き寄せている。<strong>重心は、質点が作る図形の内側に入る</strong>（重みが正の平均なので、最小値と最大値の間に入る）。<br>
+<strong>答</strong>　重心 $(1.7,\ 1.5)$ m。</p></div>
+
+<h3><span class="no">1.6</span>物体の向きを変えても、重心は物体の同じ点である</h3>
+<p><strong>動機</strong>：物体を傾けたり、ひっくり返したりすると、重力の向き（物体から見た）が変わる。そのたびに重心は別の点に動くのか。動くなら、重心を1度計算しても役に立たない。結論：<strong>動かない</strong>（物体に固定された点）。講義資料の導出と、1.4 節の一行の導出の両方で示す。</p>
+<div class="proof"><span class="label">導出（講義資料の方法）</span>
+<p>① 質点系を、原点 O のまわりに角 $\theta$ だけ回す。質点 $i$ は $(x_i,\,z_i)\to(x'_i,\,z'_i)$ に移る。回転の式（第1回）は
+$$x'_i=\cos\theta\,x_i-\sin\theta\,z_i,\qquad z'_i=\sin\theta\,x_i+\cos\theta\,z_i\qquad(1.8)$$</p>
+<p>② 回した姿勢でも重力は $-z$ 向き。重心の $x$ 座標 $x'_G$ は、(1.5) の導出と同じく、$x'_G$ まわりのモーメントの総和が 0 になる点：$-\sum_i w_i(x'_i-x'_G)=0$。</p>
+<p>③ 整理して $x'_G\sum_i w_i=\sum_i w_ix'_i=\sum_i w_i(\cos\theta\,x_i-\sin\theta\,z_i)$。<span class="note">← (1.8) の $x'_i$ を代入。</span></p>
+<p>④ $\sum_i w_i=W$ で割って、$\cos\theta$、$\sin\theta$ は $i$ によらないので和の外に出す：
+$$x'_G=\cos\theta\,\frac{\sum w_ix_i}{W}-\sin\theta\,\frac{\sum w_iz_i}{W}=\cos\theta\,x_G-\sin\theta\,z_G$$
+同様に $z'_G=\sin\theta\,x_G+\cos\theta\,z_G$。</p>
+<p>⑤ これは (1.8) と同じ形、つまり<strong>重心も他の質点と同じ回転移動</strong>をする。物体のなかでの重心の相対的な位置は<strong>不変</strong>。重力の向きが変わっても、物体の重心位置は変わらない。</p></div>
+<div class="warn"><span class="label">注意：スライドの式 (i)</span>講義資料 p.13 の式 (i) の右端に「$=0$」が付いている（$x'_G\sum w_i=\sum w_ix'_i=\sum w_i(\cos\theta\,x_i-\sin\theta\,z_i)=0$）。この「$=0$」は不要で、誤植と思われる（次の行の結果 $x'_G=\cos\theta\,x_G-\sin\theta\,z_G$ は「$=0$」なしで導かれている）。上の導出ではその「$=0$」を除いた。</div>
+<p>1.4 節の導出を使うと、もっと短い。ベクトル式 (1.7)′ は、物体に固定された位置 $\boldsymbol r_i$ の<strong>線形な組合せ</strong>なので、全体を回転行列 $R$ で回しても $\dfrac1M\sum m_i(R\boldsymbol r_i)=R\Bigl(\dfrac1M\sum m_i\boldsymbol r_i\Bigr)=R\,\boldsymbol r_G$：重心は、他の質点と同じ回転を受ける。</p>
+<figure><svg viewBox="0 0 550 280" width="550" role="img" aria-label="向きを変えても重心の位置は物体に対して変わらない">
+<g transform="translate(0,0)"><svg viewBox="0 0 280 280" width="280" role="img" aria-label="質点系と重心">
+<defs><marker id="ro0-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ro0-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ro0-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ro0-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ro0-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ro0-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M63.7,216.3 L222.4,216.3 L103.4,97.3 z" fill="#e9e3d3" stroke="#968d80" opacity="0.6"/>
+<circle cx="63.7" cy="216.3" r="8.242640687119286" fill="#2b3a67"/>
+<circle cx="222.4" cy="216.3" r="9.196152422706632" fill="#4f7a4a"/>
+<circle cx="103.4" cy="97.3" r="10.70820393249937" fill="#a8322a"/>
+<circle cx="131.1" cy="156.8" r="4" fill="#2a2723"/>
+<circle cx="131.1" cy="156.8" r="9" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="63.7" cy="216.3" r="2.5" fill="#968d80"/>
+<text x="67.6" y="234.2" fill="#968d80" text-anchor="start" font-size="12">O</text>
+<line x1="250.2" y1="21.9" x2="250.2" y2="77.5" stroke="#a06a32" stroke-width="2.4" marker-end="url(#ro0-o)"/>
+<text x="242.2" y="57.6" fill="#a06a32" text-anchor="end" font-size="12">g</text>
+<text x="143.0" y="17.9" fill="#2a2723" text-anchor="middle" font-size="13">θ = 0°</text>
+<text x="141.0" y="174.7" fill="#2a2723" text-anchor="start" font-size="11">G (1.70, 1.50)</text>
+</g></svg></g>
+<g transform="translate(270,0)"><svg viewBox="0 0 280 280" width="280" role="img" aria-label="質点系と重心">
+<defs><marker id="ro1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ro1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ro1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ro1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ro1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ro1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M63.7,216.3 L185.3,114.3 L17.6,99.6 z" fill="#e9e3d3" stroke="#968d80" opacity="0.6"/>
+<circle cx="63.7" cy="216.3" r="8.242640687119286" fill="#2b3a67"/>
+<circle cx="185.3" cy="114.3" r="9.196152422706632" fill="#4f7a4a"/>
+<circle cx="17.6" cy="99.6" r="10.70820393249937" fill="#a8322a"/>
+<circle cx="77.1" cy="127.4" r="4" fill="#2a2723"/>
+<circle cx="77.1" cy="127.4" r="9" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="63.7" cy="216.3" r="2.5" fill="#968d80"/>
+<text x="67.6" y="234.2" fill="#968d80" text-anchor="start" font-size="12">O</text>
+<line x1="250.2" y1="21.9" x2="250.2" y2="77.5" stroke="#a06a32" stroke-width="2.4" marker-end="url(#ro1-o)"/>
+<text x="242.2" y="57.6" fill="#a06a32" text-anchor="end" font-size="12">g</text>
+<text x="143.0" y="17.9" fill="#2a2723" text-anchor="middle" font-size="13">θ = 40°</text>
+<text x="87.0" y="145.2" fill="#2a2723" text-anchor="start" font-size="11">G (0.34, 2.24)</text>
+</g></svg></g>
+</svg>
+<figcaption>図1.3　図1.2 の質点系を 40° 回す。重心の座標は (1.70, 1.50) から (0.34, 2.24) に変わるが、3つの質点との<strong>位置関係</strong>は変わらない。確かめ：$1.7\cos40°-1.5\sin40°=0.338$、$1.7\sin40°+1.5\cos40°=2.242$。</figcaption></figure>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/05_a1_steelyard.jpg" alt="金属の棒の中ほどに吊り環があり、棒の下に鉤、右端に小さな分銅がぶら下がった、古代ローマの竿秤。白い背景" loading="lazy"></div>
+<p class="cap">竿秤は、支点から物までの距離と、支点から分銅までの距離の比で重さを量る——1.1 節の案分そのものである。</p>
+<p class="cr">不明（Wellcome Collection）／<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:A_Roman_steelyard_and_weight_Wellcome_M0000471.jpg">Wikimedia Commons</a>（古代ローマの竿秤と分銅）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/05_b1_themis.jpg" alt="ガラス張りの高層ビルを背に、台座の上に立つ女神像を見上げた写真。片手に天秤を掲げている" loading="lazy"></div>
+<p class="cap">天秤を掲げる女神は、左右の皿が釣合うことを、正しさの姿とした。</p>
+<p class="cr">Scotted400／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Themis_in_front_of_the_Bank_of_China.jpg">Wikimedia Commons</a>（正義の女神像）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>連続体の重心</h2>
+
+<h3><span class="no">2.1</span>数学準備：和を積分で書く</h3>
+<p>現実の物体は、質点の集まりではなく<strong>連続している</strong>。連続体の重心を計算するために、「小さな部分の和」を<strong>積分</strong>で書き換える考え方と、この回で使う積分の計算を、先に確認しておく。</p>
+<h4>(a) 和から積分へ</h4>
+<p>区間 $[0,a]$ を幅 $\Delta x$ の短冊に細かく分け、各短冊の中心の位置 $x_i$ で「$f(x_i)\times\Delta x$」を作って足す：$\sum_i f(x_i)\,\Delta x$。$\Delta x\to0$ の極限が<strong>定積分</strong> $\int_0^a f(x)\,dx$ である（幅 $dx$ の微小な短冊を、$\int$（総和を表す記号）で足し合わせる）。例：$f(x)=x^2$ を4本の短冊で足すと、$x_i=\tfrac18,\tfrac38,\tfrac58,\tfrac78$、$\Delta x=\tfrac14$ なので $\tfrac14\bigl(\tfrac1{64}+\tfrac9{64}+\tfrac{25}{64}+\tfrac{49}{64}\bigr)=\tfrac{21}{64}=0.328$。極限の値は $\int_0^1x^2dx=\tfrac13=0.333$ に近い。</p>
+<h4>(b) この回で使う積分の公式</h4>
+<p>$$\int_0^a dx=a,\qquad\int_0^a x\,dx=\frac{a^2}{2},\qquad\int_0^a x^2\,dx=\frac{a^3}{3},\qquad\int_{-\alpha}^{\alpha}\cos\theta\,d\theta=2\sin\alpha\qquad(2.1)$$
+最初の3つは、$x^n$ の原始関数が $\dfrac{x^{n+1}}{n+1}$ であること（微分すると $x^n$ に戻る）から。$\int_0^a x\,dx=\dfrac{a^2}2$ は、図形として見ると、高さ $x$ の直線（傾き 1）の下の三角形の面積 $\tfrac12\cdot a\cdot a$ に等しい。最後は $\sin$ の微分が $\cos$ であることから $[\sin\theta]_{-\alpha}^{\alpha}=\sin\alpha-\sin(-\alpha)=2\sin\alpha$（$\sin$ は奇関数）。</p>
+<h4>(c) 二重積分</h4>
+<p>平面の図形の上で、小さな面積 $ds$ を $dx\,dy$（横 $dx$、縦 $dy$ の長方形）で表し、$x$ と $y$ の両方で足し合わせるのが<strong>二重積分</strong> $\iint\cdots dx\,dy$ である。積分の範囲が定数（長方形など）のときは、<strong>内側の積分を先にして（そのとき他の変数は定数とみなす）、外側の積分を後でする</strong>。例：$\displaystyle\int_0^b\!\!\int_0^a x\,dx\,dy=\int_0^b\Bigl[\frac{x^2}{2}\Bigr]_0^a dy=\int_0^b\frac{a^2}{2}dy=\frac{a^2}{2}\,b$。</p>
+<h4>(d) 極限・極座標</h4>
+<p>中心 O から距離 $\rho$、$x$ 軸からの角 $\theta$ で点を表す方法が<strong>極座標</strong>で、$x=\rho\cos\theta$、$y=\rho\sin\theta$。角が $d\theta$、距離が $d\rho$ の小さな「扇形の小片」は、縦（半径方向）が $d\rho$、横（弧の長さ）が $\rho\,d\theta$ の長方形とみなせるので、面積は
+$$ds=\rho\,d\rho\,d\theta\qquad(2.2)$$
+（$\rho$ が掛かる理由：同じ角 $d\theta$ でも、中心から遠いほど弧が長いから。）</p>
+<h4>(e) 対称性で積分を省く</h4>
+<p>$x$ 軸について上下対称な図形では、$y$ と $-y$ の位置に同じ重さの小部分が対になって並ぶので、$\int y\,dw$ の中で打ち消し合って 0 になる。奇関数の積分が 0（$\int_{-c}^{c}(\text{奇関数})=0$）になることと同じである。</p>
+
+<h3><span class="no">2.2</span>質点系から連続体へ：重心の積分表示</h3>
+<p><strong>動機</strong>：連続した物体の重心の式を、1章の式（質点の和）から導きたい。</p>
+<div class="proof"><span class="label">導出（和から積分へ）</span>
+<p>① 物体を、$N$ 個の小さな部分に分ける。$i$ 番目の部分の重さを $\Delta w_i$、その位置（部分の中のどこか1点）を $\boldsymbol r_i$ とし、小部分を<strong>質点とみなす</strong>と、1章の式 (1.7) が使える：
+$$\boldsymbol r_G\approx\frac1W\sum_{i=1}^{N}\Delta w_i\,\boldsymbol r_i,\qquad W=\sum\Delta w_i$$</p>
+<p>② 分割を細かくして $\Delta w_i\to0$ の極限をとる。和 $\sum$ が積分 $\int$、$\Delta w_i$ が微小な重さ $dw$ になる（2.1(a)）：
+$$\boldsymbol r_G=\frac1W\int\boldsymbol r\,dw,\qquad W=\int dw\qquad(2.3)$$
+成分で書くと
+$$x_G=\frac1W\int x\,dw,\qquad y_G=\frac1W\int y\,dw,\qquad z_G=\frac1W\int z\,dw\qquad(2.4)$$</p></div>
+<figure><svg viewBox="0 0 550 210" width="550" role="img" aria-label="短冊を細かくすると重心の計算値が 2/3 に近づく">
+<g transform="translate(0,0)"><svg viewBox="0 0 280 200" width="280" role="img" aria-label="三角形を4本の短冊に分ける">
+<defs><marker id="st0-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="st0-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="st0-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="st0-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="st0-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="st0-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M14.0,115.9 L41.9,115.9 L41.9,102.0 L14.0,102.0 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M41.9,129.9 L69.9,129.9 L69.9,88.0 L41.9,88.0 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M69.9,143.9 L97.8,143.9 L97.8,74.1 L69.9,74.1 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M97.8,157.8 L125.7,157.8 L125.7,60.1 L97.8,60.1 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M14.0,109.0 L125.7,53.1 L125.7,164.8 L14.0,109.0" fill="none" stroke="#2a2723" stroke-width="1.8" opacity="1"/>
+<line x1="87.3" y1="21.8" x2="87.3" y2="75.4" stroke="#a8322a" stroke-width="2.0" marker-end="url(#st0-r)"/>
+<text x="87.3" y="12.9" fill="#a8322a" text-anchor="middle" font-size="12">x_G ≈ 0.6562</text>
+<text x="69.9" y="173.8" fill="#968d80" text-anchor="middle" font-size="11">4 本（真値 0.6667）</text>
+</g></svg></g>
+<g transform="translate(270,0)"><svg viewBox="0 0 280 200" width="280" role="img" aria-label="三角形を16本の短冊に分ける">
+<defs><marker id="st1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="st1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="st1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="st1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="st1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="st1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M14.0,110.7 L21.0,110.7 L21.0,107.2 L14.0,107.2 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M21.0,114.2 L28.0,114.2 L28.0,103.7 L21.0,103.7 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M28.0,117.7 L34.9,117.7 L34.9,100.2 L28.0,100.2 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M34.9,121.2 L41.9,121.2 L41.9,96.7 L34.9,96.7 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M41.9,124.7 L48.9,124.7 L48.9,93.3 L41.9,93.3 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M48.9,128.2 L55.9,128.2 L55.9,89.8 L48.9,89.8 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M55.9,131.7 L62.9,131.7 L62.9,86.3 L55.9,86.3 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M62.9,135.2 L69.9,135.2 L69.9,82.8 L62.9,82.8 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M69.9,138.6 L76.8,138.6 L76.8,79.3 L69.9,79.3 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M76.8,142.1 L83.8,142.1 L83.8,75.8 L76.8,75.8 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M83.8,145.6 L90.8,145.6 L90.8,72.3 L83.8,72.3 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M90.8,149.1 L97.8,149.1 L97.8,68.8 L90.8,68.8 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M97.8,152.6 L104.8,152.6 L104.8,65.3 L97.8,65.3 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M104.8,156.1 L111.8,156.1 L111.8,61.8 L104.8,61.8 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M111.8,159.6 L118.7,159.6 L118.7,58.3 L111.8,58.3 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M118.7,163.1 L125.7,163.1 L125.7,54.8 L118.7,54.8 z" fill="#e9e3d3" stroke="#968d80" opacity="1"/>
+<path d="M14.0,109.0 L125.7,53.1 L125.7,164.8 L14.0,109.0" fill="none" stroke="#2a2723" stroke-width="1.8" opacity="1"/>
+<line x1="88.4" y1="21.8" x2="88.4" y2="75.4" stroke="#a8322a" stroke-width="2.0" marker-end="url(#st1-r)"/>
+<text x="88.4" y="12.9" fill="#a8322a" text-anchor="middle" font-size="12">x_G ≈ 0.6660</text>
+<text x="69.9" y="173.8" fill="#968d80" text-anchor="middle" font-size="11">16 本（真値 0.6667）</text>
+</g></svg></g>
+</svg>
+<figcaption>図2.1　三角形（頂点を原点に置いた、底辺 $a=1$ の二等辺三角形）を $x$ 方向の短冊に分けて、(1.5) の和で重心の $x$ 座標を計算した結果。短冊が4本なら 0.656、16本なら 0.666。短冊を細かくすると、積分の値 $2/3=0.6667$ に近づく。</figcaption></figure>
+<p>講義資料は、1次元の場合として、区間 $[a,b]$ の位置 $x$ にある幅 $dx$ の小部分の重さを $dw$、$x_G$ まわりのモーメントの総和を 0 とおいて、$-\int_a^b(x-x_G)\,dw=0$、すなわち $x_G=\dfrac{\int_a^b x\,dw}{\int_a^b dw}$ を導いている。これは (2.4) の1次元版で、1.3 の考え方2をそのまま積分にしたものである。</p>
+<div class="def"><span class="label">定義（一次モーメント）</span>(2.4) の分子 $\displaystyle\int x\,dw$ など（位置 $\times$ 微小な重さ の総和）を<strong>一次モーメント</strong>（first moment）という。「位置の<strong>1乗</strong>」を掛けているので「一次」。重心は、<strong>一次モーメントを全重量で割った</strong>もの。（位置の2乗を掛ける $\int x^2\,dm$ は<strong>慣性モーメント</strong>で、第12回で扱う。）</div>
+<div class="why"><span class="label">直感：重心＝重さの重みつき平均</span>クラスの平均点は「点数の和 ÷ 人数」。重心は、<strong>位置の平均</strong>だが、重い部分ほど大きく数える（重みつき平均）。人数が連続的に分布するなら、和が積分に変わるだけ。</div>
+
+<h3><span class="no">2.3</span>均質な物体と図心</h3>
+<p>密度 $\rho$ が物体のどこでも等しい（<strong>均質</strong>）ならば、小部分の重さは体積に比例する：$dw=\rho g\,dv$（$dv$ は微小な体積）。$\rho g$ は定数なので (2.3) の分子と分母で<strong>約分</strong>されて、重さが消える：
+$$\boldsymbol r_G=\frac{\int_V\boldsymbol r\,dv}{\int_V dv}=\frac1V\int_V\boldsymbol r\,dv\qquad(2.5)$$
+同様に、<strong>均質で厚さが一様な薄板</strong>では重さが面積 $S$ に比例し、<strong>均質な細い線</strong>では長さ $L$ に比例する：
+$$\boldsymbol r_G=\frac1S\int_S\boldsymbol r\,ds,\qquad\boldsymbol r_G=\frac1L\int\boldsymbol r\,dl\qquad(2.6)$$
+これらは<strong>形だけ</strong>で決まる点である。均質な物体の重心を<strong>図心</strong>（centroid）と呼ぶことがある（建築・デザインでの呼び名）。</p>
+<div class="warn"><span class="label">よくある誤解：重心＝図心とは限らない</span>密度が一様でなければ、重心と図心は一致しない。たとえばハンマーは、金属の頭が重く、木の柄が軽い。形の中心（図心）は柄の中ほどだが、重心は頭のそばにある。逆に、(2.5)・(2.6) の式は、<strong>均質だと仮定して</strong>重さを約分している。「物体の重心を求めよ」で密度の指定がないときは、均質を仮定する。</div>
+<div class="box"><span class="label">補足：重心・質量中心・図心の使い分け</span>
+<ul><li><strong>重心</strong>：全重力を1点に置いて等価になる点（重力が働く場での概念）。</li>
+<li><strong>質量中心</strong>：質量の重みつき平均（1.7′）。一様な重力場なら重心と一致する。</li>
+<li><strong>図心</strong>：形だけで決まる点。均質なら重心・質量中心と一致する。</li></ul>
+この授業では、特に断らない限り、重力は一様、物体は均質として、3つを同じ点として扱う。</div>
+
+<h3><span class="no">2.4</span>分割と合成：重心がわかっている部分から全体の重心を作る</h3>
+<p><strong>動機</strong>：複雑な形を毎回積分で計算するのは大変である。長方形や三角形のように、すでに重心がわかっている部分に分けられれば、積分は不要になる。</p>
+<div class="proof"><span class="label">導出（積分は足し算ができる）</span>
+<p>① 物体を、位置 $x=c$ を境に2つの部分 1（$a\le x\le c$）と 2（$c\le x\le b$）に分ける。部分 1、2 の重さを $W_1=\int_a^c dw$、$W_2=\int_c^b dw$、重心の $x$ 座標を $x_{G1}=\dfrac{\int_a^c x\,dw}{W_1}$、$x_{G2}=\dfrac{\int_c^b x\,dw}{W_2}$ とする。$W_1+W_2=W$。</p>
+<p>② 全体の重心の $x$ 座標の分子は、積分区間を足して $\int_a^b x\,dw=\int_a^c x\,dw+\int_c^b x\,dw$。<span class="note">← 積分は区間について足し算できる。</span></p>
+<p>③ ①の式から $\int_a^c x\,dw=W_1x_{G1}$、$\int_c^b x\,dw=W_2x_{G2}$。よって
+$$x_G=\frac{W_1x_{G1}+W_2x_{G2}}{W_1+W_2}\qquad(2.7)$$</p></div>
+<p>(2.7) は、<strong>各部分の全重量を、各部分の重心に集めた質点とみなして</strong>、1章の式 (1.5) を使うことを意味している。部分の中身は積分で計算する必要がない（同じ理由で $y_G$、$z_G$ も同様）。3つ以上の部分でも、$x_G=\dfrac{\sum_k W_kx_{Gk}}{\sum_k W_k}$。</p>
+<p>均質な薄板なら、重さを<strong>面積</strong>に置き換えてよい（2.3）：$x_G=\dfrac{S_1x_{G1}+S_2x_{G2}}{S_1+S_2}$。穴や欠けた部分があるときは、<strong>欠けた部分を「負の面積（負の重さ）」で足す</strong>：全体の板（欠損を埋めた形）と、欠けた部分を考え、$x_G=\dfrac{S_{\text{大}}x_{G\text{大}}-S_{\text{欠}}x_{G\text{欠}}}{S_{\text{大}}-S_{\text{欠}}}$（3.4 節で使う）。</p>
+
+<h3><span class="no">2.5</span>重心の計算の道具箱</h3>
+<ol>
+<li><strong>対称性</strong>：図形に対称軸（面）があれば、重心はその上にある（2.1(e)）。長方形・円・楕円・二等辺三角形の軸方向、など。積分が1つ減る。</li>
+<li><strong>分割</strong>：既知の図形（長方形・三角形・半円・扇形）に分ける（2.4）。</li>
+<li><strong>欠損を引く</strong>：穴や欠けた部分は負の面積（2.4）。</li>
+<li><strong>積分</strong>：短冊や極座標の小片に分けて足す（2.2、3.1〜3.3）。</li>
+<li><strong>検算</strong>：①単位は長さか。②<strong>図形の中（のはず）に入るか</strong>。③対称性と合うか。④極端な場合（角が 0 や 90°、一辺が 0 など）で既知の結果に戻るか。</li>
+</ol>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/05_a2_plumbbob.jpg" alt="木の台の上で、細い糸に吊るされた金属製の下げ振り。先の尖った六角柱の錘が、糸の真下に向いている" loading="lazy"></div>
+<p class="cap">糸で吊るされた錘は、重心を糸の真下に置いたときにだけ静止する。</p>
+<p class="cr">Jim Thomas／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Plumb_bob.jpg">Wikimedia Commons</a>（下げ振り）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/05_b2_noren.jpg" alt="藍色の地に、円形の紋と笹の葉を白く染め抜いた暖簾が、上端の横木から垂れている" loading="lazy"></div>
+<p class="cap">一枚の布の重さは、無数の糸の重さの総和として、一本の横木に掛かっている。</p>
+<p class="cr">Hiart／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Noren_(curtain),_Japan,_Meiji_period,_Honolulu_Museum_of_Art.JPG">Wikimedia Commons</a>（明治期の暖簾、ホノルル美術館所蔵）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>重心の計算</h2>
+<p>2章の道具で、講義資料の4つの例（長方形・三角形・L字板・扇形）を計算する。各例とも、<strong>①座標軸と原点を決める、②小片の取り方（$dx$、$dy$、$\rho\,d\rho\,d\theta$ など）を決める、③小片の面積を書く、④面積と一次モーメントを積分する、⑤割って重心、⑥確かめる</strong>の順で進める。</p>
+
+<h3><span class="no">3.1</span>長方形（講義資料 計算例1）</h3>
+<p>横 $a$、縦 $b$ の均質な長方形の薄板。左下の角を原点 O にとり、辺に沿って $x$ 軸、$y$ 軸をとる。</p>
+<figure><svg viewBox="0 0 300 230" width="300" role="img" aria-label="長方形の重心">
+<defs><marker id="rc-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="rc-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="rc-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="rc-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="rc-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="rc-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M71.8,149.3 L211.1,149.3 L211.1,37.9 L71.8,37.9 z" fill="#e9e3d3" stroke="#2a2723" opacity="1"/>
+<path d="M71.8,72.7 L211.1,72.7 L211.1,61.5 L71.8,61.5 z" fill="#c9d3e6" stroke="#2b3a67" opacity="0.9"/>
+<text x="216.6" y="62.9" fill="#2b3a67" text-anchor="start" font-size="12">dy</text>
+<path d="M155.4,149.3 L166.5,149.3 L166.5,37.9 L155.4,37.9 z" fill="#e6cfcc" stroke="#a8322a" opacity="0.55"/>
+<text x="160.9" y="26.7" fill="#a8322a" text-anchor="middle" font-size="12">dx</text>
+<circle cx="141.4" cy="93.6" r="4" fill="#2a2723"/>
+<circle cx="141.4" cy="93.6" r="9" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="151.2" y="110.3" fill="#2a2723" text-anchor="start" font-size="13">G</text>
+<line x1="71.8" y1="168.8" x2="211.1" y2="168.8" stroke="#968d80" stroke-width="1.1" marker-end="url(#rc-s)"/>
+<line x1="211.1" y1="168.8" x2="71.8" y2="168.8" stroke="#968d80" stroke-width="1.1" marker-end="url(#rc-s)"/>
+<text x="141.4" y="185.5" fill="#968d80" text-anchor="middle" font-size="12">a</text>
+<line x1="55.1" y1="149.3" x2="55.1" y2="37.9" stroke="#968d80" stroke-width="1.1" marker-end="url(#rc-s)"/>
+<line x1="55.1" y1="37.9" x2="55.1" y2="149.3" stroke="#968d80" stroke-width="1.1" marker-end="url(#rc-s)"/>
+<text x="43.9" y="93.6" fill="#968d80" text-anchor="end" font-size="12">b</text>
+</g></svg>
+<figcaption>図3.1　長方形の重心。青い横長の帯が $dy$、赤い縦長の帯が $dx$、中央の ⊙ が G。</figcaption></figure>
+<div class="proof"><span class="label">導出（二重積分）</span>
+<p>① 面積 $S=ab$。小片は $dx\times dy$ の小さな長方形で、面積 $ds=dx\,dy$。位置は $(x,y)$。</p>
+<p>② 均質な薄板なので (2.6) を使う：$x_G=\dfrac1S\displaystyle\int_S x\,ds=\dfrac{1}{ab}\int_0^b\!\!\int_0^a x\,dx\,dy$。</p>
+<p>③ 内側の積分（$y$ は定数とみなす）：$\displaystyle\int_0^a x\,dx=\dfrac{a^2}{2}$。　外側：$\displaystyle\int_0^b\dfrac{a^2}{2}\,dy=\dfrac{a^2}{2}b$。</p>
+<p>④ よって $x_G=\dfrac{a^2b/2}{ab}=\dfrac a2$。</p>
+<p>⑤ $y$ 座標も、$x$ と $y$ を入れ替えて同様に（資料は「過程省略」）：$y_G=\dfrac{1}{ab}\displaystyle\int_0^a\!\!\int_0^b y\,dy\,dx=\dfrac{1}{ab}\cdot\dfrac{b^2}{2}\,a=\dfrac b2$。</p></div>
+<p>$$x_G=\frac a2,\qquad y_G=\frac b2\qquad(3.1)$$
+<strong>確かめ</strong>：長方形の<strong>中心</strong>。対称性（2.5 の1）からも、左右対称なら $x_G=a/2$、上下対称なら $y_G=b/2$ とすぐわかる。積分を1つにする方法もある：縦長の帯（幅 $dx$）は面積 $ds=b\,dx$ なので、$x_G=\dfrac1{ab}\int_0^a x\,b\,dx=\dfrac{a^2b/2}{ab}=\dfrac a2$。</p>
+
+<h3><span class="no">3.2</span>三角形（講義資料 計算例2）</h3>
+<p>頂点を原点 O に置き、$x$ 軸について対称な二等辺三角形を考える。底辺は $x=a$ に立っていて、長さ $b$。三角形の上側の辺は $y=\dfrac b{2a}x$、下側は $y=-\dfrac{b}{2a}x$ で、位置 $x$ での縦の幅は $2\times\dfrac{b}{2a}x=\dfrac ba\,x$（講義資料の図の「$\dfrac ba x$」）。</p>
+<figure><svg viewBox="0 0 400 250" width="400" role="img" aria-label="三角形の重心">
+<defs><marker id="tr-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tr-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tr-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tr-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tr-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tr-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M58.1,115.7 L228.5,30.5 L228.5,200.9 z" fill="#e9e3d3" stroke="#2a2723" opacity="1"/>
+<path d="M151.8,162.6 L163.8,168.5 L163.8,62.8 L151.8,68.8 z" fill="#e6cfcc" stroke="#a8322a" opacity="0.55"/>
+<line x1="32.5" y1="115.7" x2="271.2" y2="115.7" stroke="#2a2723" stroke-width="1.4" marker-end="url(#tr-k)"/>
+<text x="274.6" y="108.9" fill="#2a2723" text-anchor="start" font-size="13">x</text>
+<text x="51.3" y="132.7" fill="#2a2723" text-anchor="end" font-size="13">O</text>
+<circle cx="171.7" cy="115.7" r="4" fill="#2a2723"/>
+<circle cx="171.7" cy="115.7" r="9" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="164.9" y="95.2" fill="#2a2723" text-anchor="end" font-size="13">G</text>
+<text x="157.8" y="42.4" fill="#a8322a" text-anchor="middle" font-size="11">幅 (b/a)x</text>
+<text x="235.4" y="115.7" fill="#2a2723" text-anchor="start" font-size="13">b</text>
+<line x1="58.1" y1="214.5" x2="171.7" y2="214.5" stroke="#968d80" stroke-width="1.1" marker-end="url(#tr-s)"/>
+<line x1="171.7" y1="214.5" x2="58.1" y2="214.5" stroke="#968d80" stroke-width="1.1" marker-end="url(#tr-s)"/>
+<text x="114.9" y="228.2" fill="#968d80" text-anchor="middle" font-size="12">x_G = 2a/3</text>
+<line x1="171.7" y1="214.5" x2="228.5" y2="214.5" stroke="#968d80" stroke-width="1.1" marker-end="url(#tr-s)"/>
+<line x1="228.5" y1="214.5" x2="171.7" y2="214.5" stroke="#968d80" stroke-width="1.1" marker-end="url(#tr-s)"/>
+<text x="200.1" y="228.2" fill="#968d80" text-anchor="middle" font-size="11">a/3</text>
+</g></svg>
+<figcaption>図3.2　三角形の重心。赤い帯が位置 $x$、幅 $dx$ の短冊。短冊の高さは $\dfrac ba x$。重心は頂点から $2a/3$、底辺から $a/3$ の位置にある。</figcaption></figure>
+<figure class="slide"><img src="img/slide05/tri.jpg" alt="頂点が原点、底辺が x=a の二等辺三角形。位置xに幅dxの短冊。短冊の高さは(b/a)x。底辺の長さはb" loading="lazy" style="width:420px;max-width:92%;height:auto;background:#fff"><figcaption>講義資料の図。出典：講義資料 第5回 p.34</figcaption></figure>
+<div class="proof"><span class="label">導出（短冊）</span>
+<p>① 面積 $S=\dfrac12ab$。図のような細い<strong>短冊</strong>（幅 $dx$、高さ $\dfrac ba x$）を小片にとる：$ds=\dfrac ba\,x\,dx$。短冊の重心は短冊の中央（高さ方向は $y=0$、$x$ 座標は $x$）。<span class="note">← 短冊は十分に細いので、短冊全体の $x$ 座標を $x$ とみなしてよい。</span></p>
+<p>② $y_G=0$：図形が $x$ 軸について対称なので（2.5 の1）。</p>
+<p>③ $x_G=\dfrac{\int x\,ds}{\int ds}=\dfrac{\displaystyle\int_0^a x\cdot\dfrac ba\,x\,dx}{\displaystyle\int_0^a\dfrac ba\,x\,dx}$。</p>
+<p>④ 分子：$\dfrac ba\displaystyle\int_0^a x^2dx=\dfrac ba\cdot\dfrac{a^3}{3}=\dfrac{a^2b}{3}$。分母：$\dfrac ba\displaystyle\int_0^a x\,dx=\dfrac ba\cdot\dfrac{a^2}2=\dfrac{ab}{2}$（三角形の面積に一致 ✓）。</p>
+<p>⑤ $x_G=\dfrac{a^2b/3}{ab/2}=\dfrac23\,a$。</p></div>
+<p>$$x_G=\frac23\,a,\qquad y_G=0\qquad(3.2)$$
+<strong>確かめ</strong>：重心は頂点から $2/3$、つまり<strong>底辺から $a/3$</strong>（高さの $1/3$）の位置。三角形の内側にある ✓。図2.1 の短冊の数値計算（0.656、0.666 → 0.667）とも一致する。</p>
+<div class="box"><span class="label">補足：一般の三角形でも同じ</span>どの辺を「底辺」と見ても、底辺に<strong>平行な</strong>短冊の幅は、向かい合う頂点からの距離に<strong>比例</strong>する。上の計算はこの比例関係しか使っていないので、一般の三角形でも、重心は<strong>どの辺からも高さの $1/3$ の位置</strong>にある（3本の中線の交点）。</div>
+
+<h3><span class="no">3.3</span>扇形（講義資料 計算例3）</h3>
+<p>中心 O、半径 $r$、中心角 $2\alpha$（$x$ 軸の上下に $\alpha$ ずつ開く）の均質な扇形。$x$ 軸について対称なので $y_G=0$。$x_G$ を2通りで求める。</p>
+<figure class="slide"><img src="img/slide05/sector.jpg" alt="中心Oの扇形。x軸の上下に角α。小さな扇形の小片（半径方向dρ、角方向dθ）。小片の位置ρ、角θ。小片のx座標はρcosθ、小片の大きさはdρとρdθ" loading="lazy" style="width:640px;max-width:98%;height:auto;background:#fff"><figcaption>講義資料の図。左：扇形と、極座標の小片。右下：小片の拡大。出典：講義資料 第5回 p.38</figcaption></figure>
+<div class="proof"><span class="label">方法1：極座標の二重積分（資料のスライド 38〜39）</span>
+<p>① 小片：中心から $\rho$、角 $\theta$ の位置の、$d\rho\times\rho\,d\theta$ の小さな長方形。面積 $ds=\rho\,d\rho\,d\theta$（式 2.2）。その $x$ 座標は $x=\rho\cos\theta$。<span class="note">← 図の右下の小片と、その真下の $\rho\cos\theta$ の寸法。</span></p>
+<p>② 一次モーメント：
+$$\int x\,ds=\int_{-\alpha}^{\alpha}\!\!\int_0^r\rho\cos\theta\cdot\rho\,d\rho\,d\theta=\int_{-\alpha}^{\alpha}\cos\theta\,d\theta\cdot\int_0^r\rho^2\,d\rho=2\sin\alpha\cdot\frac{r^3}{3}=\frac23\,r^3\sin\alpha$$
+<span class="note">← 被積分関数が「$\theta$ だけの関数 × $\rho$ だけの関数」で、範囲が定数なので、積分は積に分かれる（2.1(b) の公式）。</span></p>
+<p>③ 面積：$\displaystyle S=\int ds=\int_{-\alpha}^{\alpha}\!\!\int_0^r\rho\,d\rho\,d\theta=2\alpha\cdot\frac{r^2}{2}=r^2\alpha$。（中心角 $2\alpha$ の扇形の面積 $\tfrac12r^2\times2\alpha$ に一致 ✓。）</p>
+<p>④ $x_G=\dfrac{\int x\,ds}{S}=\dfrac{\frac23r^3\sin\alpha}{r^2\alpha}=\dfrac{2r\sin\alpha}{3\alpha}$。</p></div>
+<div class="proof"><span class="label">方法2：細い三角形に分ける別解（資料のスライド 40〜42）</span>
+<p>① 角 $d\theta$ の細い扇形の小片を、<strong>細い三角形</strong>とみなす（$d\theta\to0$ の極限で正確）。面積 $ds=\dfrac12\,r\,(r\,d\theta)=\dfrac12r^2\,d\theta$。</p>
+<p>② 三角形の重心は、頂点（中心 O）から高さの $2/3$（3.2 節）。いまの細い三角形の「高さ」は半径方向の長さ $r$ なので、重心は中心から $\dfrac23r$ の位置、角 $\theta$ の方向。よって重心の $x$ 座標は $x=\dfrac23\,r\cos\theta$。</p>
+<p>③ (2.6) に代入：$x_G=\dfrac{\int_{-\alpha}^{\alpha}\frac23r\cos\theta\cdot\frac12r^2d\theta}{\int_{-\alpha}^{\alpha}\frac12r^2d\theta}=\dfrac{\frac13r^3\cdot2\sin\alpha}{r^2\alpha}=\dfrac{2r\sin\alpha}{3\alpha}$。方法1と一致する。</p></div>
+<figure class="slide"><img src="img/slide05/sector_G.jpg" alt="扇形と、角dθの細い扇形の小片。小片の重心Gは中心から2r/3の位置、x座標は(2/3)r cosθ" loading="lazy" style="width:640px;max-width:98%;height:auto;background:#fff"><figcaption>講義資料の図（別解）。細い扇形の小片は三角形とみなせるので、重心は中心から $\tfrac23r$。出典：講義資料 第5回 p.42</figcaption></figure>
+<p>$$x_G=\frac{2r\sin\alpha}{3\alpha}\qquad(\alpha\ \text{はラジアン}),\qquad y_G=0\qquad(3.3)$$
+<strong>確かめ</strong>（2.5 の4つの検算）：<br>
+・$\alpha\to0$（細い扇形）：$\sin\alpha\approx\alpha$ なので $x_G\to\dfrac23r$。細い三角形（頂点から $2/3$、3.2 節）に一致 ✓。<br>
+・$\alpha=\dfrac\pi2$（半円）：$x_G=\dfrac{2r}{3\cdot\pi/2}=\dfrac{4r}{3\pi}\approx0.4244\,r$。半円の重心の公式として知られる値に一致 ✓。<br>
+・$\alpha=\pi$（円）：$\sin\pi=0$ なので $x_G=0$。円の重心は中心 ✓。<br>
+・数値例：$r=0.5$ m、$\alpha=60°=\dfrac\pi3$：$x_G=\dfrac{2\times0.5\times\sin60°}{3\times\pi/3}=\dfrac{0.8660}{\pi}=\mathbf{0.2757}$ m（Python の数値積分でも 0.2757）。</p>
+<figure><svg viewBox="0 0 520 280" width="520" role="img" aria-label="扇形の重心の位置 x_G/r と半頂角 α">
+<defs><marker id="sec-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="sec-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="sec-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="sec-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="sec-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="sec-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="130.0" y1="28.0" x2="130.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="204.0" y1="28.0" x2="204.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="278.0" y1="28.0" x2="278.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="352.0" y1="28.0" x2="352.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="426.0" y1="28.0" x2="426.0" y2="250.0" stroke="#e2dccf"/>
+<line x1="56.0" y1="176.0" x2="500.0" y2="176.0" stroke="#e2dccf"/>
+<line x1="56.0" y1="102.0" x2="500.0" y2="102.0" stroke="#e2dccf"/>
+<line x1="56.0" y1="28.0" x2="500.0" y2="28.0" stroke="#e2dccf"/>
+<line x1="52" y1="250.0" x2="514" y2="250.0" stroke="#2a2723" marker-end="url(#sec-k)"/>
+<line x1="56.0" y1="254" x2="56.0" y2="14" stroke="#2a2723" marker-end="url(#sec-k)"/>
+<text x="518" y="254.0">α</text>
+<text x="62.0" y="14">x_G / r</text>
+<line x1="56.0" y1="250.0" x2="56.0" y2="254.0" stroke="#2a2723"/>
+<text x="56.0" y="267.0" text-anchor="middle" font-size="11">0</text>
+<line x1="130.0" y1="250.0" x2="130.0" y2="254.0" stroke="#2a2723"/>
+<text x="130.0" y="267.0" text-anchor="middle" font-size="11">30°</text>
+<line x1="204.0" y1="250.0" x2="204.0" y2="254.0" stroke="#2a2723"/>
+<text x="204.0" y="267.0" text-anchor="middle" font-size="11">60°</text>
+<line x1="278.0" y1="250.0" x2="278.0" y2="254.0" stroke="#2a2723"/>
+<text x="278.0" y="267.0" text-anchor="middle" font-size="11">90°</text>
+<line x1="352.0" y1="250.0" x2="352.0" y2="254.0" stroke="#2a2723"/>
+<text x="352.0" y="267.0" text-anchor="middle" font-size="11">120°</text>
+<line x1="426.0" y1="250.0" x2="426.0" y2="254.0" stroke="#2a2723"/>
+<text x="426.0" y="267.0" text-anchor="middle" font-size="11">150°</text>
+<line x1="500.0" y1="250.0" x2="500.0" y2="254.0" stroke="#2a2723"/>
+<text x="500.0" y="267.0" text-anchor="middle" font-size="11">180°</text>
+<line x1="52.0" y1="250.0" x2="56.0" y2="250.0" stroke="#2a2723"/>
+<text x="49.0" y="254.0" text-anchor="end" font-size="11">0</text>
+<line x1="52.0" y1="176.0" x2="56.0" y2="176.0" stroke="#2a2723"/>
+<text x="49.0" y="180.0" text-anchor="end" font-size="11">0.25</text>
+<line x1="52.0" y1="102.0" x2="56.0" y2="102.0" stroke="#2a2723"/>
+<text x="49.0" y="106.0" text-anchor="end" font-size="11">0.50</text>
+<line x1="52.0" y1="52.7" x2="56.0" y2="52.7" stroke="#2a2723"/>
+<text x="49.0" y="56.7" text-anchor="end" font-size="11">2/3</text>
+<path d="M56.0,52.7 L58.2,52.7 L60.5,52.7 L62.7,52.7 L64.9,52.8 L67.2,52.9 L69.4,53.0 L71.6,53.1 L73.9,53.2 L76.1,53.3 L78.3,53.5 L80.6,53.7 L82.8,53.8 L85.0,54.1 L87.2,54.3 L89.5,54.5 L91.7,54.8 L93.9,55.0 L96.2,55.3 L98.4,55.6 L100.6,55.9 L102.9,56.3 L105.1,56.6 L107.3,57.0 L109.6,57.4 L111.8,57.8 L114.0,58.2 L116.3,58.6 L118.5,59.0 L120.7,59.5 L122.9,60.0 L125.2,60.5 L127.4,61.0 L129.6,61.5 L131.9,62.0 L134.1,62.6 L136.3,63.1 L138.6,63.7 L140.8,64.3 L143.0,64.9 L145.3,65.5 L147.5,66.2 L149.7,66.8 L152.0,67.5 L154.2,68.2 L156.4,68.9 L158.6,69.6 L160.9,70.3 L163.1,71.0 L165.3,71.8 L167.6,72.5 L169.8,73.3 L172.0,74.1 L174.3,74.9 L176.5,75.7 L178.7,76.5 L181.0,77.4 L183.2,78.2 L185.4,79.1 L187.6,80.0 L189.9,80.9 L192.1,81.8 L194.3,82.7 L196.6,83.6 L198.8,84.6 L201.0,85.5 L203.3,86.5 L205.5,87.5 L207.7,88.4 L210.0,89.4 L212.2,90.5 L214.4,91.5 L216.7,92.5 L218.9,93.5 L221.1,94.6 L223.3,95.7 L225.6,96.7 L227.8,97.8 L230.0,98.9 L232.3,100.0 L234.5,101.1 L236.7,102.2 L239.0,103.3 L241.2,104.5 L243.4,105.6 L245.7,106.8 L247.9,107.9 L250.1,109.1 L252.3,110.3 L254.6,111.5 L256.8,112.7 L259.0,113.9 L261.3,115.1 L263.5,116.3 L265.7,117.5 L268.0,118.8 L270.2,120.0 L272.4,121.2 L274.7,122.5 L276.9,123.7 L279.1,125.0 L281.4,126.3 L283.6,127.6 L285.8,128.8 L288.0,130.1 L290.3,131.4 L292.5,132.7 L294.7,134.0 L297.0,135.3 L299.2,136.6 L301.4,137.9 L303.7,139.2 L305.9,140.6 L308.1,141.9 L310.4,143.2 L312.6,144.5 L314.8,145.9 L317.1,147.2 L319.3,148.6 L321.5,149.9 L323.7,151.2 L326.0,152.6 L328.2,153.9 L330.4,155.3 L332.7,156.6 L334.9,158.0 L337.1,159.4 L339.4,160.7 L341.6,162.1 L343.8,163.4 L346.1,164.8 L348.3,166.1 L350.5,167.5 L352.7,168.9 L355.0,170.2 L357.2,171.6 L359.4,172.9 L361.7,174.3 L363.9,175.6 L366.1,177.0 L368.4,178.4 L370.6,179.7 L372.8,181.1 L375.1,182.4 L377.3,183.8 L379.5,185.1 L381.8,186.4 L384.0,187.8 L386.2,189.1 L388.4,190.4 L390.7,191.8 L392.9,193.1 L395.1,194.4 L397.4,195.8 L399.6,197.1 L401.8,198.4 L404.1,199.7 L406.3,201.0 L408.5,202.3 L410.8,203.6 L413.0,204.9 L415.2,206.2 L417.4,207.5 L419.7,208.7 L421.9,210.0 L424.1,211.3 L426.4,212.5 L428.6,213.8 L430.8,215.0 L433.1,216.3 L435.3,217.5 L437.5,218.7 L439.8,220.0 L442.0,221.2 L444.2,222.4 L446.5,223.6 L448.7,224.8 L450.9,226.0 L453.1,227.1 L455.4,228.3 L457.6,229.5 L459.8,230.6 L462.1,231.8 L464.3,232.9 L466.5,234.1 L468.8,235.2 L471.0,236.3 L473.2,237.4 L475.5,238.5 L477.7,239.6 L479.9,240.7 L482.2,241.8 L484.4,242.8 L486.6,243.9 L488.8,244.9 L491.1,246.0 L493.3,247.0 L495.5,248.0 L497.8,249.0 L500.0,250.0" fill="none" stroke="#a8322a" stroke-width="2.2" opacity="1"/>
+<circle cx="56.1" cy="52.7" r="4" fill="#2a2723"/>
+<text x="67.4" y="40.8" fill="#2a2723" text-anchor="start" font-size="11">α→0：2/3（細い三角形）</text>
+<circle cx="204.0" cy="86.8" r="4" fill="#2a2723"/>
+<text x="218.1" y="72.0" fill="#2a2723" text-anchor="start" font-size="11">α=60°：0.5513</text>
+<circle cx="278.0" cy="124.4" r="4" fill="#2a2723"/>
+<text x="292.1" y="103.7" fill="#2a2723" text-anchor="start" font-size="11">α=90°（半円）：4/(3π)=0.4244</text>
+<circle cx="500.0" cy="250.0" r="4" fill="#2a2723"/>
+<text x="485.9" y="229.3" fill="#2a2723" text-anchor="end" font-size="11">α=180°（円）：0</text>
+</g></svg>
+<figcaption>図3.3　扇形の重心の位置 $x_G/r$ を半頂角 $\alpha$ の関数として描いたもの。$\alpha$ が大きくなる（扇が開く）と、重心は中心に近づく。</figcaption></figure>
+<div class="warn"><span class="label">注意：角度はラジアンで</span>式 (3.3) の $\alpha$ は<strong>ラジアン</strong>（$\alpha=60°$ なら $\pi/3\approx1.047$）。電卓で $\sin$ は度でも、分母の $\alpha$ にそのまま「60」を入れると誤り。$\sin\alpha/\alpha$ の形は「度で入れてよい」と「ラジアンで入れる」が混ざりやすい。</div>
+
+<h3><span class="no">3.4</span>L字板（講義資料 練習問題【3・2】、教科書 p.44）</h3>
+<p>図のL字形の板（一様、厚さ一様）の重心を求めよ。積分は不要で、<strong>分割</strong>（2.4）で解ける。</p>
+<figure class="slide"><img src="img/slide05/lplate.jpg" alt="L字形の板。全体の幅は2a、高さは2b。右上のa×bの長方形の部分だけが欠けている。寸法a、b、2a、2bが書き込まれている" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"><figcaption>教科書 図3.23 板の重心（練習問題【3・2】、p.44）。出典：講義資料 第5回 p.36</figcaption></figure>
+<div class="ex"><span class="label">例題2〔B｜教科書 練習問題【3・2】〕L字板の重心（分割法と欠損を引く方法）</span>
+<figure><svg viewBox="0 0 550 250" width="550" role="img" aria-label="L字板の重心：分割法（左）と欠損を引く方法（右）">
+<g transform="translate(0,0)"><svg viewBox="0 0 280 250" width="280" role="img" aria-label="L字板を2つの長方形に分ける">
+<defs><marker id="lp1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="lp1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="lp1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="lp1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="lp1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="lp1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M43.7,172.4 L142.1,172.4 L142.1,34.6 L43.7,34.6 z" fill="#d9e0ee" stroke="#2b3a67" opacity="0.9"/>
+<path d="M142.1,172.4 L240.5,172.4 L240.5,103.5 L142.1,103.5 z" fill="#ecd9d6" stroke="#a8322a" opacity="0.9"/>
+<path d="M43.7,172.4 L240.5,172.4 L240.5,103.5 L142.1,103.5 L142.1,34.6 L43.7,34.6 L43.7,172.4" fill="none" stroke="#2a2723" stroke-width="2.2" opacity="1"/>
+<circle cx="92.9" cy="103.5" r="4" fill="#2b3a67"/>
+<text x="100.8" y="91.7" fill="#2b3a67" text-anchor="start" font-size="12">G₁</text>
+<circle cx="191.3" cy="137.9" r="4" fill="#a8322a"/>
+<text x="199.2" y="126.1" fill="#a8322a" text-anchor="start" font-size="12">G₂</text>
+<circle cx="125.7" cy="115.0" r="4" fill="#2a2723"/>
+<circle cx="125.7" cy="115.0" r="9" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="111.9" y="128.7" fill="#2a2723" text-anchor="end" font-size="13">G</text>
+<text x="92.9" y="189.1" fill="#968d80" text-anchor="middle" font-size="12">a</text>
+<text x="191.3" y="189.1" fill="#968d80" text-anchor="middle" font-size="12">a</text>
+</g></svg></g>
+<g transform="translate(270,0)"><svg viewBox="0 0 280 250" width="280" role="img" aria-label="大きな長方形から欠けた部分を引く">
+<defs><marker id="lp2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="lp2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="lp2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="lp2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="lp2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="lp2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M43.7,172.4 L240.5,172.4 L240.5,34.6 L43.7,34.6 z" fill="#e9e3d3" stroke="#968d80" opacity="0.8"/>
+<path d="M142.1,103.5 L240.5,103.5 L240.5,34.6 L142.1,34.6 z" fill="#ffffff" stroke="#a8322a" opacity="0.9"/>
+<path d="M142.1,103.5 L240.5,103.5 L240.5,34.6 L142.1,34.6 L142.1,103.5" fill="none" stroke="#a8322a" stroke-width="1.6" stroke-dasharray="5 3" opacity="1"/>
+<path d="M43.7,172.4 L240.5,172.4 L240.5,103.5 L142.1,103.5 L142.1,34.6 L43.7,34.6 L43.7,172.4" fill="none" stroke="#2a2723" stroke-width="2.2" opacity="1"/>
+<text x="53.5" y="46.4" fill="#2b3a67" text-anchor="start" font-size="11">大 4ab</text>
+<circle cx="191.3" cy="69.0" r="4" fill="#a8322a"/>
+<text x="191.3" y="55.3" fill="#a8322a" text-anchor="middle" font-size="11">欠け：−ab</text>
+<circle cx="125.7" cy="115.0" r="4" fill="#2a2723"/>
+<circle cx="125.7" cy="115.0" r="9" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="111.9" y="138.6" fill="#2a2723" text-anchor="end" font-size="13">G</text>
+</g></svg></g>
+</svg>
+<figcaption>図3.4　左：2つの長方形に分ける（資料の方法）。右：大きな長方形から欠けた部分を引く（別解）。</figcaption></figure>
+<p><strong>解答（分割法）</strong></p>
+<p>① 系：L字板。左下の角を原点にとる。左の縦長の長方形 1（幅 $a$、高さ $2b$）と右下の横長の長方形 2（幅 $a$、高さ $b$）に分ける。</p>
+<p>② 座標：$x$ を右、$y$ を上。</p>
+<p>③ 各部分（2.3：均質なので重さは面積に比例）：<br>
+・部分 1：面積 $S_1=2ab$、重心 $G_1=\Bigl(\dfrac a2,\ b\Bigr)$（長方形の中心、(3.1)）。<br>
+・部分 2：面積 $S_2=ab$、重心 $G_2=\Bigl(\dfrac{3a}{2},\ \dfrac b2\Bigr)$（左の辺が $x=a$ で幅 $a$ なので、中心は $a+\tfrac a2$）。<br>
+・全体：$S=S_1+S_2=3ab$。</p>
+<p>④⑤ (2.7) を $x$、$y$ について：
+$$x_G=\frac{\frac a2\cdot2ab+\frac{3a}{2}\cdot ab}{3ab}=\frac{a^2b+\frac32a^2b}{3ab}=\frac{\frac52a^2b}{3ab}=\frac56\,a,\qquad y_G=\frac{b\cdot2ab+\frac b2\cdot ab}{3ab}=\frac{2ab^2+\frac12ab^2}{3ab}=\frac56\,b$$</p>
+<p>⑥ 確かめ：重心 $\bigl(\tfrac56a,\tfrac56b\bigr)$ は、左の縦長部分（$0\le x\le a$、$0\le y\le2b$）の内側にある ✓（板の中に入る）。大きな部分（面積 $2ab$）のほうに寄っていて、左下の方向にずれている ✓。</p>
+<p><strong>別解（欠損を引く）</strong>：横 $2a$、縦 $2b$ の長方形（面積 $4ab$、重心 $(a,b)$）から、右上の欠けた長方形（面積 $ab$、重心 $\bigl(\tfrac{3a}2,\tfrac{3b}2\bigr)$）を<strong>引く</strong>：
+$$x_G=\frac{a\cdot4ab-\frac{3a}2\cdot ab}{4ab-ab}=\frac{4a^2b-\frac32a^2b}{3ab}=\frac{\frac52a^2b}{3ab}=\frac56a$$
+$y_G$ も同様に $\dfrac56b$。分割法と一致する ✓。<br>
+<strong>数値例</strong>：$a=0.30$ m、$b=0.20$ m なら $(x_G,\,y_G)=(0.25\ \text{m},\ 0.167\ \text{m})$。<br>
+<strong>答</strong>　$x_G=\dfrac56a$、$y_G=\dfrac56b$（板の左下の角から）。</p></div>
+<p class="meta">図の寸法は、スライドの図（教科書 図3.23）を読み取って書き直した。2つの長方形に分ける線の取り方は他にもある（たとえば、下の横長 $2a\times b$ と、上の縦長 $a\times b$）。どれで分けても、結果は同じ（3.4 の確かめ）。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/05_a3_fan.jpg" alt="開いた折り扇の白黒写真。要から扇形に骨が広がり、扇面に絵が描かれている" loading="lazy"></div>
+<p class="cap">扇を開くと、要から扇面の重さの中心までの距離は、開き角で決まる——式 (3.3) の扇形である。</p>
+<p class="cr">不明（メトロポリタン美術館）／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Folding_fan_MET_141148.jpg">Wikimedia Commons</a>（18世紀後半の折り扇）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/05_b3_sriyantra.jpg" alt="黒い額に入った銅板の浮き彫り。何重にも重なり合う三角形と、蓮の花びらの円が、中心に向かって収まっている" loading="lazy"></div>
+<p class="cap">重なり合う三角形が一点に向かって収まる図を、人は祈りの形にした。</p>
+<p class="cr">Tangopaso／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Sri_Yantra_copper.jpg">Wikimedia Commons</a>（銅板のシュリー・ヤントラ）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>安定と転倒：重心の位置で決まること</h2>
+<p><strong>動機</strong>：重心は「重さをまとめて置く点」というだけでなく、「物体が<strong>倒れるかどうか</strong>」の判定にも使われる。机の上の物体は、重さと床からの反力の2つで釣合っているが、傾けると、2つの力がずれて、<strong>モーメント</strong>が生まれる。重心の位置が、そのモーメントの向きを決める。</p>
+
+<h3><span class="no">4.1</span>安定・不安定・中立</h3>
+<p>水平な床に置いた円すいを考える。講義資料は、3つの置き方を比べている。</p>
+<figure class="slide"><img src="img/slide05/cones.jpg" alt="水平な床におかれた円すいの3つの姿勢。左：底面を床につけて立った円すい（安定）、中：頂点を下にして立った円すい（不安定）、右：側面を床につけて寝かせた円すい（中立）。それぞれ重力Wと床の反力Rが描かれている" loading="lazy" style="width:680px;max-width:98%;height:auto;background:#fff"><figcaption>つりあいの安定度。W は重力、R は床からの反力。出典：講義資料 第5回 p.24</figcaption></figure>
+<ul>
+<li><strong>安定</strong>（stable）：少し傾けても、<strong>元に戻る</strong>。</li>
+<li><strong>不安定</strong>（unstable）：少し傾けると、傾きが<strong>ますます大きくなって倒れる</strong>。</li>
+<li><strong>中立</strong>（neutral）：少し動かしても、<strong>その位置で止まる</strong>（元に戻りも、遠ざかりもしない）。</li>
+</ul>
+<p>講義資料は「釣合いの安定度は、姿勢が変化したときの重心の［　　　］で決まる」と書いている。<strong>［推定］重心の「高さ」の変化</strong>である（答えはスライドの画像の中で読み取れなかったので、以下の説明から本教材が推定した）。</p>
+<ul>
+<li>安定：傾けると、重心が<strong>持ち上がる</strong>（元に戻るには重心が下がる）。</li>
+<li>不安定：傾けると、重心が<strong>下がる</strong>（そのまま落ちていく）。</li>
+<li>中立：傾けても、重心の高さが<strong>変わらない</strong>（寝かせた円すいは転がしても、重心の高さは一定）。</li>
+</ul>
+<div class="warn"><span class="label">スライド24の空欄は「推定」</span>この空欄の答えは、講義資料のPDFのテキストにも、読み取れた画像にもなかった。上は4.2 節の計算（傾けた直方体で、重心の高さと復元モーメントが対応する）から、<strong>本教材が推定</strong>した。授業で先生が別の言葉（たとえば「位置エネルギー」）を使っていたら、そちらに合わせてよい（重心が高くなる＝位置エネルギーが増える）。</div>
+
+<h3><span class="no">4.2</span>転倒：重心の鉛直線が底面の外に出るとき</h3>
+<p>床の上の直方体を、底面の端（角）を支点にして少しずつ傾ける。重さ $W$ は重心 G に、床の反力 $R$ は接している角に、それぞれ鉛直に働く。</p>
+<figure class="slide"><img src="img/slide05/tipping.jpg" alt="傾けた直方体の2つの姿勢。左：重心Gを通る鉛直線が、床と接する角より内側にあり、重力Wと反力Rが元に戻す向きのモーメントを作る。右：さらに傾けて、重心の鉛直線が角の外側に出ており、モーメントが反転して倒れる" loading="lazy" style="width:520px;max-width:96%;height:auto;background:#fff"><figcaption>物体の転倒。傾けていくと、重心の鉛直線が角の外側に出た瞬間に、モーメントの向きが反転して倒れる。出典：講義資料 第5回 p.25</figcaption></figure>
+<p>講義資料の空欄は「重心の［　　　］が［　　　］とモーメントが反転→転倒」。<strong>［推定］重心を通る鉛直線（重力の作用線）が、支持面（底面）の外に出る</strong>と、モーメントが反転して転倒する。次の計算で確かめる。</p>
+<div class="proof"><span class="label">導出（幅 $b$、高さ $h$ の直方体）</span>
+<p>① 系：一様な直方体（幅 $b$、高さ $h$、重さ $W$）。右下の角 P を支点にして、左側を持ち上げるように角度 $\theta$ だけ傾ける（右下が倒れていく向き）。外力は重さ $W$（重心 G、下向き）と、角 P で床から受ける反力 $R$（上向き）。</p>
+<p>② 座標：P を原点、$x$ を右（倒れる向き）、$y$ を上。力の釣合い（鉛直）：$R=W$。</p>
+<p>③ P まわりのモーメント：$R$ は P を通るので腕 0。$W$ の腕は G の $x$ 座標。傾ける前の G の位置は、P から見て $\bigl(-\tfrac b2,\ \tfrac h2\bigr)$。角 $\theta$ だけ時計回りに回す（右が下がる向き）と、G の $x$ 座標は
+$$x_G(\theta)=-\frac b2\cos\theta+\frac h2\sin\theta\qquad(4.1)$$
+<span class="note">← 回転の式（1.8）で角度の向きを時計回りにしたもの。$\theta=0$ では $-b/2$（P の左）。</span></p>
+<p>④ $W$（下向き）が P のまわりに作るモーメントは、反時計回りを正として $M_P=x_G(\theta)\times(-W)=-W\,x_G(\theta)=W\Bigl(\dfrac b2\cos\theta-\dfrac h2\sin\theta\Bigr)$。$M_P&gt;0$（反時計回り）なら<strong>元に戻す向き</strong>、$M_P&lt;0$ なら<strong>倒す向き</strong>。</p>
+<p>⑤ 境目は $M_P=0$、すなわち G が P の真上に来る（G の鉛直線が角 P を通る）：
+$$\tan\theta_c=\frac bh\qquad(4.2)$$
+$\theta&lt;\theta_c$ では G の鉛直線が底面の内側（P の左）にあって元に戻り、$\theta&gt;\theta_c$ では外側（P の右）に出て倒れる。</p></div>
+<figure><svg viewBox="0 0 530 190" width="530" role="img" aria-label="傾けた直方体：重心の鉛直線が底面の内側にあれば戻り、外に出ると倒れる">
+<g transform="translate(0,0)"><svg viewBox="0 0 180 190" width="180" role="img" aria-label="θ < θc：元に戻る">
+<defs><marker id="tl0-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tl0-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tl0-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tl0-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tl0-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tl0-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M52.5,118.2 L101.4,128.6 L124.7,18.7 L75.9,8.3 z" fill="#e9e3d3" stroke="#2a2723" opacity="1"/>
+<path d="M52.5,118.2 L101.4,128.6 L124.7,18.7 L75.9,8.3 L52.5,118.2" fill="none" stroke="#2a2723" stroke-width="2" opacity="1"/>
+<path d="M14.0,128.6 L170.0,128.6" fill="none" stroke="#2a2723" stroke-width="1.4" opacity="1"/>
+<circle cx="88.6" cy="68.4" r="4" fill="#2a2723"/>
+<circle cx="88.6" cy="68.4" r="8" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<path d="M88.6,128.6 L88.6,68.4" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 3" opacity="1"/>
+<line x1="88.6" y1="68.4" x2="88.6" y2="103.4" stroke="#2b3a67" stroke-width="2.2" marker-end="url(#tl0-b)"/>
+<text x="93.6" y="93.4" fill="#2b3a67" text-anchor="start" font-size="12">W</text>
+<line x1="101.4" y1="128.6" x2="101.4" y2="96.1" stroke="#a8322a" stroke-width="2.4" marker-end="url(#tl0-r)"/>
+<text x="106.4" y="103.6" fill="#a8322a" text-anchor="start" font-size="12">R</text>
+<text x="90" y="182" text-anchor="middle" font-size="12" fill="#2a2723">θ < θc：元に戻る</text></g></svg></g>
+<g transform="translate(175,0)"><svg viewBox="0 0 180 190" width="180" role="img" aria-label="θ = θc：限界">
+<defs><marker id="tl1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tl1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tl1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tl1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tl1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tl1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M55.7,108.3 L101.4,128.6 L147.0,25.9 L101.4,5.6 z" fill="#e9e3d3" stroke="#2a2723" opacity="1"/>
+<path d="M55.7,108.3 L101.4,128.6 L147.0,25.9 L101.4,5.6 L55.7,108.3" fill="none" stroke="#2a2723" stroke-width="2" opacity="1"/>
+<path d="M14.0,128.6 L170.0,128.6" fill="none" stroke="#2a2723" stroke-width="1.4" opacity="1"/>
+<circle cx="101.4" cy="67.1" r="4" fill="#2a2723"/>
+<circle cx="101.4" cy="67.1" r="8" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<path d="M101.4,128.6 L101.4,67.1" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 3" opacity="1"/>
+<line x1="101.4" y1="67.1" x2="101.4" y2="102.0" stroke="#2b3a67" stroke-width="2.2" marker-end="url(#tl1-b)"/>
+<text x="106.4" y="92.1" fill="#2b3a67" text-anchor="start" font-size="12">W</text>
+<line x1="101.4" y1="128.6" x2="101.4" y2="96.1" stroke="#a8322a" stroke-width="2.4" marker-end="url(#tl1-r)"/>
+<text x="106.4" y="103.6" fill="#a8322a" text-anchor="start" font-size="12">R</text>
+<text x="90" y="182" text-anchor="middle" font-size="12" fill="#2a2723">θ = θc：限界</text></g></svg></g>
+<g transform="translate(350,0)"><svg viewBox="0 0 180 190" width="180" role="img" aria-label="θ > θc：倒れる">
+<defs><marker id="tl2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tl2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tl2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tl2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tl2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tl2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M60.0,100.6 L101.4,128.6 L164.2,35.4 L122.8,7.5 z" fill="#e9e3d3" stroke="#2a2723" opacity="1"/>
+<path d="M60.0,100.6 L101.4,128.6 L164.2,35.4 L122.8,7.5 L60.0,100.6" fill="none" stroke="#2a2723" stroke-width="2" opacity="1"/>
+<path d="M14.0,128.6 L170.0,128.6" fill="none" stroke="#2a2723" stroke-width="1.4" opacity="1"/>
+<circle cx="112.1" cy="68.0" r="4" fill="#2a2723"/>
+<circle cx="112.1" cy="68.0" r="8" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<path d="M112.1,128.6 L112.1,68.0" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 3" opacity="1"/>
+<line x1="112.1" y1="68.0" x2="112.1" y2="103.0" stroke="#2b3a67" stroke-width="2.2" marker-end="url(#tl2-b)"/>
+<text x="117.1" y="93.0" fill="#2b3a67" text-anchor="start" font-size="12">W</text>
+<line x1="101.4" y1="128.6" x2="101.4" y2="96.1" stroke="#a8322a" stroke-width="2.4" marker-end="url(#tl2-r)"/>
+<text x="106.4" y="103.6" fill="#a8322a" text-anchor="start" font-size="12">R</text>
+<text x="90" y="182" text-anchor="middle" font-size="12" fill="#2a2723">θ > θc：倒れる</text></g></svg></g>
+</svg>
+<figcaption>図4.1　傾けた直方体（$b=0.4$ m、$h=0.9$ m）。W（青、重心から下向き）と R（赤、角から上向き）。左：$\theta=12°&lt;\theta_c$、G の鉛直線（点線）は角の左で、W と R が元に戻す向きの偶力になる。中：$\theta=\theta_c=24.0°$。W と R が同じ鉛直線上に並び、モーメントは 0。右：$\theta=34°&gt;\theta_c$、G の鉛直線は角の右に出て、倒す向きの偶力になる。</figcaption></figure>
+<p><strong>数値例</strong>：$b=0.4$ m、$h=0.9$ m なら $\theta_c=\arctan\dfrac{0.4}{0.9}=\mathbf{24.0°}$。背が高く幅の狭い物体（$h$ が大きく $b$ が小さい）ほど $\theta_c$ が小さく、倒れやすい。</p>
+<h4>重心の高さとの関係（4.1 の空欄の理由）</h4>
+<p>(4.1) から、傾けたときの重心の高さは
+$$z_G(\theta)=\frac h2\cos\theta+\frac b2\sin\theta\qquad(4.3)$$
+（傾ける前は $h/2$。傾けると、右側の角 P を支点にして重心が円を描く。）これを $\theta$ で微分すると $\dfrac{dz_G}{d\theta}=-\dfrac h2\sin\theta+\dfrac b2\cos\theta$。右辺は (4.1) の $-x_G(\theta)$ に<strong>等しい</strong>：$\dfrac{dz_G}{d\theta}=-x_G(\theta)$。したがって、<strong>元に戻すモーメント $M_P=W\,\dfrac{dz_G}{d\theta}$</strong> である。</p>
+<ul><li>$\dfrac{dz_G}{d\theta}&gt;0$（傾けると重心が<strong>上がる</strong>）なら $M_P&gt;0$：元に戻す＝<strong>安定</strong>。</li><li>$\dfrac{dz_G}{d\theta}&lt;0$（傾けると重心が<strong>下がる</strong>）なら $M_P&lt;0$：倒す＝<strong>不安定</strong>。</li><li>$\dfrac{dz_G}{d\theta}=0$（重心の高さが<strong>変わらない</strong>、または最高点）＝<strong>中立</strong>（または、(4.2) のちょうど限界）。</li></ul>
+<figure><svg viewBox="0 0 520 250" width="520" role="img" aria-label="傾き θ と重心の高さ z_G">
+<defs><marker id="zg-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="zg-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="zg-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="zg-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="zg-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="zg-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="130.0" y1="28.0" x2="130.0" y2="210.0" stroke="#e2dccf"/>
+<line x1="204.0" y1="28.0" x2="204.0" y2="210.0" stroke="#e2dccf"/>
+<line x1="278.0" y1="28.0" x2="278.0" y2="210.0" stroke="#e2dccf"/>
+<line x1="352.0" y1="28.0" x2="352.0" y2="210.0" stroke="#e2dccf"/>
+<line x1="426.0" y1="28.0" x2="426.0" y2="210.0" stroke="#e2dccf"/>
+<line x1="500.0" y1="28.0" x2="500.0" y2="210.0" stroke="#e2dccf"/>
+<line x1="56.0" y1="179.7" x2="500.0" y2="179.7" stroke="#e2dccf"/>
+<line x1="56.0" y1="103.8" x2="500.0" y2="103.8" stroke="#e2dccf"/>
+<line x1="56.0" y1="28.0" x2="500.0" y2="28.0" stroke="#e2dccf"/>
+<line x1="52" y1="210.0" x2="514" y2="210.0" stroke="#2a2723" marker-end="url(#zg-k)"/>
+<line x1="56.0" y1="214" x2="56.0" y2="14" stroke="#2a2723" marker-end="url(#zg-k)"/>
+<text x="518" y="214.0">θ</text>
+<text x="62.0" y="14">z_G [m]</text>
+<line x1="56.0" y1="210.0" x2="56.0" y2="214.0" stroke="#2a2723"/>
+<text x="56.0" y="227.0" text-anchor="middle" font-size="11">0°</text>
+<line x1="130.0" y1="210.0" x2="130.0" y2="214.0" stroke="#2a2723"/>
+<text x="130.0" y="227.0" text-anchor="middle" font-size="11">10°</text>
+<line x1="204.0" y1="210.0" x2="204.0" y2="214.0" stroke="#2a2723"/>
+<text x="204.0" y="227.0" text-anchor="middle" font-size="11">20°</text>
+<line x1="278.0" y1="210.0" x2="278.0" y2="214.0" stroke="#2a2723"/>
+<text x="278.0" y="227.0" text-anchor="middle" font-size="11">30°</text>
+<line x1="352.0" y1="210.0" x2="352.0" y2="214.0" stroke="#2a2723"/>
+<text x="352.0" y="227.0" text-anchor="middle" font-size="11">40°</text>
+<line x1="426.0" y1="210.0" x2="426.0" y2="214.0" stroke="#2a2723"/>
+<text x="426.0" y="227.0" text-anchor="middle" font-size="11">50°</text>
+<line x1="500.0" y1="210.0" x2="500.0" y2="214.0" stroke="#2a2723"/>
+<text x="500.0" y="227.0" text-anchor="middle" font-size="11">60°</text>
+<line x1="52.0" y1="179.7" x2="56.0" y2="179.7" stroke="#2a2723"/>
+<text x="49.0" y="183.7" text-anchor="end" font-size="11">0.40</text>
+<line x1="52.0" y1="103.8" x2="56.0" y2="103.8" stroke="#2a2723"/>
+<text x="49.0" y="107.8" text-anchor="end" font-size="11">0.45</text>
+<line x1="52.0" y1="28.0" x2="56.0" y2="28.0" stroke="#2a2723"/>
+<text x="49.0" y="32.0" text-anchor="end" font-size="11">0.50</text>
+<path d="M56.0,103.8 L59.7,101.2 L63.5,98.6 L67.2,96.1 L70.9,93.6 L74.7,91.2 L78.4,88.8 L82.1,86.5 L85.8,84.2 L89.6,82.0 L93.3,79.8 L97.0,77.7 L100.8,75.7 L104.5,73.7 L108.2,71.7 L112.0,69.8 L115.7,68.0 L119.4,66.2 L123.2,64.5 L126.9,62.9 L130.6,61.3 L134.4,59.7 L138.1,58.2 L141.8,56.8 L145.5,55.4 L149.3,54.1 L153.0,52.8 L156.7,51.6 L160.5,50.5 L164.2,49.4 L167.9,48.3 L171.7,47.3 L175.4,46.4 L179.1,45.6 L182.9,44.7 L186.6,44.0 L190.3,43.3 L194.1,42.7 L197.8,42.1 L201.5,41.6 L205.2,41.1 L209.0,40.7 L212.7,40.3 L216.4,40.1 L220.2,39.8 L223.9,39.6 L227.6,39.5 L231.4,39.5 L235.1,39.5 L238.8,39.5 L242.6,39.6 L246.3,39.8 L250.0,40.0 L253.7,40.3 L257.5,40.7 L261.2,41.1 L264.9,41.5 L268.7,42.1 L272.4,42.6 L276.1,43.3 L279.9,44.0 L283.6,44.7 L287.3,45.5 L291.1,46.4 L294.8,47.3 L298.5,48.3 L302.3,49.3 L306.0,50.4 L309.7,51.6 L313.4,52.8 L317.2,54.0 L320.9,55.3 L324.6,56.7 L328.4,58.1 L332.1,59.6 L335.8,61.2 L339.6,62.8 L343.3,64.4 L347.0,66.2 L350.8,67.9 L354.5,69.8 L358.2,71.6 L361.9,73.6 L365.7,75.6 L369.4,77.6 L373.1,79.7 L376.9,81.9 L380.6,84.1 L384.3,86.3 L388.1,88.7 L391.8,91.0 L395.5,93.5 L399.3,95.9 L403.0,98.5 L406.7,101.1 L410.5,103.7 L414.2,106.4 L417.9,109.1 L421.6,111.9 L425.4,114.8 L429.1,117.7 L432.8,120.6 L436.6,123.6 L440.3,126.7 L444.0,129.8 L447.8,133.0 L451.5,136.2 L455.2,139.4 L459.0,142.7 L462.7,146.1 L466.4,149.5 L470.2,153.0 L473.9,156.5 L477.6,160.0 L481.3,163.6 L485.1,167.3 L488.8,171.0 L492.5,174.7 L496.3,178.5 L500.0,182.4" fill="none" stroke="#a8322a" stroke-width="2.2" opacity="1"/>
+<circle cx="233.3" cy="39.5" r="4.5" fill="#2a2723"/>
+<text x="250.3" y="27.3" fill="#2a2723" text-anchor="start" font-size="11">θc = 24.0°、最高点 0.492 m</text>
+<text x="68.7" y="205.4" fill="#968d80" text-anchor="start" font-size="11">左：持ち上げないと越えられない（元に戻る）</text>
+<text x="307.6" y="88.7" fill="#968d80" text-anchor="start" font-size="11">右：重心が下がる（倒れる）</text>
+</g></svg>
+<figcaption>図4.2　傾けたときの重心の高さ $z_G(\theta)$（4.3 式、$b=0.4$ m、$h=0.9$ m）。$\theta_c=24.0°$ で最高点 0.492 m に達し、それを越えると重心が下がる＝倒れる。左側の山を越えるには、重心を 0.45 m から 0.492 m に持ち上げる仕事が要る（第14回の「仕事とエネルギ」）。</figcaption></figure>
+<div class="why"><span class="label">直感：ボールを谷と山に置く</span>谷底のボールは、動かすと上がるので元に戻る（安定）。山頂のボールは、動かすと下がるので落ちていく（不安定）。平らな面のボールは、動かしても高さが変わらず止まる（中立）。重心の高さを「ボールの高さ」と見るのが、この3つの関係である。</div>
+<h4>一般の物体では：支持面の内側に「反力の作用点」がなければならない</h4>
+<p>底面が接する<strong>支持面</strong>（複数の足の場合は、足の接地点を結んだ多角形）の上で、床は物体を<strong>押すことしかできない</strong>（引けない）。床が各接地点で上向きの力 $R_k\ge0$ を出すとき、その合力は
+$$R=\sum_k R_k,\qquad\text{作用点}\ \ \boldsymbol r_R=\frac{\sum_kR_k\,\boldsymbol r_k}{\sum_kR_k}$$
+で、(1.5) と同じ形の<strong>重みつき平均</strong>（重み $R_k\ge0$）である。重みが負にならないので、作用点は<strong>接地点を結んだ多角形の内側</strong>にしか来ない。一方、静止しているなら、物体に働く力は重さ $W$ と合力 $R$ の2つで、第4回で見たとおり、2力の釣合いは（二力部材のときと同じ理由で）<strong>同一作用線上</strong>に並ぶ。よって、$W$ の作用線（重心 G を通る鉛直線）が支持面の内側に入っているときだけ、釣合える。外に出ると、反力でモーメントを打ち消せず、物体は倒れる。</p>
+<div class="thm"><span class="label">定理（静止の条件・転倒の条件）</span>重心 G を通る鉛直線が、<strong>支持面の内側</strong>にあれば、物体は静止できる。<strong>外側</strong>に出ると<strong>転倒</strong>する。</div>
+
+<h3><span class="no">4.3</span>ロボットの歩行</h3>
+<p>講義資料は、同じ考え方が<strong>ロボットの歩行の安定性</strong>の議論に使われると紹介している。片足立ちのロボットでは、支持面は足の裏だけである。重心の真下付近に、床からの反力 $R$ の作用点が来る必要がある。</p>
+<figure class="slide"><img src="img/slide05/walk.jpg" alt="歩行する人型ロボットの横向きの絵。胴体のあたりの台車（カート）に重心の記号があり、重力Wが下向きに描かれる。細い軸（テーブル）が足まで降り、足の裏で床からの反力Rが上向きに描かれる" loading="lazy" style="width:440px;max-width:92%;height:auto;background:#fff"><figcaption>ロボットの歩行：「テーブル–カートモデル」。出典：講義資料 第5回 p.26</figcaption></figure>
+<p>図は、ロボットの全質量が重心に集まったものを「<strong>カート</strong>」、足から重心までの支えを「<strong>テーブル</strong>」として、台の上でカートを動かす様子で歩行を模式化している（「テーブル–カートモデル」）。このモデルの詳しい式は、講義資料にここまでしか載っていない。この回の範囲では、<strong>床を押す力 $R$ の作用点が足の裏の内側に収まっているか</strong>、が歩行の安定の条件として使われる、という点（4.2 の定理）だけを押さえておけばよい。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph pair"><img src="img/05_a4_koboshi.jpg" alt="オレンジ色の地に花の模様を描いた、白い顔の起き上がり小法師" loading="lazy"><img src="img/05_a4_pisa.jpg" alt="青空を背に、傾いて立つピサの斜塔を見上げた写真" loading="lazy"></div>
+<p class="cap">重心の低い人形は傾けるほど元に戻り、傾いた塔は重心の鉛直線が底の内側にあるあいだ立ち続ける。</p>
+<p class="cr">Daderot／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Okiagari-koboshi_-_Ishikawa_Prefectural_Museum_of_Traditional_Arts_and_Crafts_-_Kanazawa,_Japan_-_DSC09911.jpg">Wikimedia Commons</a>（起き上がり小法師、石川県立伝統産業工芸館）</p><p class="cr">Saffron Blaze／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:The_Leaning_Tower_of_Pisa_SB.jpeg">Wikimedia Commons</a>（ピサの斜塔）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/05_b4_nataraja.jpg" alt="炎の輪の中で、片足を高く上げて踊る神のブロンズ像（ナタラージャ）" loading="lazy"></div>
+<p class="cap">片足で舞う神は、全身の重さを、ただ一つの足の真上にのせている。</p>
+<p class="cr">Vassil／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Shiva_Nataraja_Tanjore_Bruxelles_02_10_2011_01.jpg">Wikimedia Commons</a>（シヴァ・ナタラージャ像、ブリュッセルで撮影）</p></div>
+</figure>
+
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>分布荷重</h2>
+<p><strong>動機</strong>：第4回までの荷重は、「1点に働く力」（<strong>集中荷重</strong>）だった。ところが、梁の上に積もった雪、堤防にかかる水の圧力、床板に載せた砂は、<strong>梁の長さに沿って連続的に分布</strong>した力である（<strong>分布荷重</strong>）。釣合いの式（第4回）に入れるには、分布荷重を1つの集中荷重（合力）に置き換えたい。置き換えた力の<strong>大きさ</strong>と<strong>作用点</strong>は、どう決めるか。講義資料はこれを「補足資料」として扱っているが、重心の式と<strong>まったく同じ形</strong>で、ここまでの内容の直接の応用である。</p>
+
+<h3><span class="no">5.1</span>合力と作用点を求める</h3>
+<p>$x$ 軸に沿った梁の区間 A〜B に、単位長さあたりの力（<strong>荷重分布</strong>）$w(x)$ [N/m] が下向きに働いている。</p>
+<figure class="slide"><img src="img/slide05/wx.jpg" alt="x軸に沿った分布荷重w(x)。区間AからBまで曲線の下に細い短冊が並ぶ。位置xの幅dxの短冊。全荷重の合力Rが赤い矢印で、原点から距離dの位置に下向きに描かれている" loading="lazy" style="width:440px;max-width:92%;height:auto;background:#fff"><figcaption>分布荷重 $w(x)$ と、それと等価な合力 $R$（赤）。出典：講義資料 第5回 p.28</figcaption></figure>
+<p><strong>求めたいもの</strong>：分布荷重と等価になる<strong>合力 $R$</strong> と<strong>作用点 $d$</strong>（原点 O から測る）。「等価」とは、合力も、原点まわりの合モーメントも等しいこと（第3回、1.2 節）。</p>
+<div class="proof"><span class="label">導出</span>
+<p><span class="step">STEP 1</span>　位置 $x$ にある、幅 $dx$ の部分に働く力は $dw=w(x)\,dx$（単位長さあたりの力 × 長さ）。この部分は十分に短いので、1つの力 $dw$ とみなせる。</p>
+<p><span class="step">STEP 2</span>　<strong>合力の大きさ</strong>：平行な力の合力は、大きさの和なので、区間 A〜B で足して
+$$R=\int dw=\int_A^B w(x)\,dx\qquad(5.1)$$</p>
+<p><span class="step">STEP 3</span>　<strong>原点 O まわりのモーメント</strong>：$dw$ の腕は $x$ なので $dM=x\,dw$。全体で
+$$M=\int dM=\int_A^B x\,w(x)\,dx\qquad(5.2)$$</p>
+<p><span class="step">STEP 4</span>　<strong>等価の条件</strong>：合力 $R$ を原点から $d$ の位置に置いたときの原点まわりのモーメント $R\,d$ が、分布荷重のモーメント $M$ に等しい：$M=Rd$。<span class="note">← 合力が元の合力に等しい（STEP 2）ことと合わせて、「合力・合モーメントがともに等しい」＝等価。</span></p>
+<p><span class="step">STEP 5</span>　$d=\dfrac MR$ を (5.1)・(5.2) で書いて
+$$d=\frac{\displaystyle\int_A^B x\,w(x)\,dx}{\displaystyle\int_A^B w(x)\,dx}\qquad(5.3)$$</p></div>
+<p>(5.3) は、重心の式 (2.4) $x_G=\dfrac{\int x\,dw}{\int dw}$ に<strong>そのまま一致</strong>している。「重さの分布」の代わりに「荷重の分布 $w(x)$」を使っているだけである。講義資料の結論：</p>
+<div class="thm"><span class="label">定理（分布荷重の合力）</span>分布荷重が作用する場合の釣合いは、分布荷重の<strong>総和</strong>に等しい力 $R=\int w\,dx$ が、分布曲線の<strong>重心</strong>（$w(x)$ の曲線と軸で囲まれた図形の図心）に作用している場合と<strong>等価</strong>である。</div>
+<div class="why"><span class="label">直感：合力 R は「$w(x)$ の下の面積」</span>(5.1) の $\int_A^B w\,dx$ は、グラフ $w(x)$ と $x$ 軸の間の<strong>面積</strong>そのもの。だから、<strong>合力 $R$ ＝ 荷重分布の図形の面積</strong>、<strong>作用点 $d$ ＝ その図形の図心の $x$ 座標</strong>。長方形・三角形の図心は 3.1、3.2 節でもう知っている。分布荷重の問題の大半は、積分をしなくても、図形の面積と図心で解ける。</div>
+
+<h3><span class="no">5.2</span>よく出る荷重分布の早見</h3>
+<p>荷重分布の図形を、長方形・三角形に分けて、面積と図心を使う（2.4 節の分割）。区間の長さを $L$、区間の左端を原点にとる。</p>
+<table class="tb">
+<tr><th>荷重分布</th><th>合力 $R$（面積）</th><th>作用点（左端から）</th><th>根拠</th></tr>
+<tr><td>等分布（一定の $w_0$）</td><td>$w_0L$</td><td>$L/2$（中央）</td><td>長方形：3.1</td></tr>
+<tr><td>三角形分布（左端 0 から右端 $w_0$ へ増加）</td><td>$\tfrac12w_0L$</td><td>$\tfrac23L$（0 の端から）</td><td>三角形：3.2（頂点から $2/3$）</td></tr>
+<tr><td>三角形分布（左端 $w_0$ から右端 0 へ減少）</td><td>$\tfrac12w_0L$</td><td>$\tfrac13L$（左端から）</td><td>同上（0 の端から $2L/3$ ＝ 左端から $L/3$）</td></tr>
+<tr><td>台形分布</td><td>長方形＋三角形の和</td><td>2.4（2.7）で合成</td><td>下の例題3</td></tr>
+</table>
+<figure><svg viewBox="0 0 550 230" width="550" role="img" aria-label="分布荷重を合力と作用点に置き換える">
+<g transform="translate(0,0)"><svg viewBox="0 0 280 230" width="280" role="img" aria-label="三角形分布の合力">
+<defs><marker id="d1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="d1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="d1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="d1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="d1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="d1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M36.7,151.9 L248.8,151.9 L248.8,159.7 L36.7,159.7 z" fill="#d8d1c2" stroke="#2a2723" opacity="1"/>
+<path d="M36.7,151.9 L36.7,151.9" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M47.3,151.9 L47.3,144.4" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M57.9,151.9 L57.9,136.9" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M68.5,151.9 L68.5,129.4" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M79.1,151.9 L79.1,121.8" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M89.7,151.9 L89.7,114.3" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M100.3,151.9 L100.3,106.8" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M110.9,151.9 L110.9,99.2" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M121.6,151.9 L121.6,91.7" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M132.2,151.9 L132.2,84.2" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M142.8,151.9 L142.8,76.7" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M153.4,151.9 L153.4,69.1" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M164.0,151.9 L164.0,61.6" fill="none" stroke="#2b3a67" stroke-width="1.2" opacity="1"/>
+<path d="M36.7,151.9 L164.0,61.6 L164.0,151.9 L36.7,151.9" fill="none" stroke="#2b3a67" stroke-width="1.8" opacity="1"/>
+<line x1="121.6" y1="39.0" x2="121.6" y2="116.5" stroke="#a8322a" stroke-width="2.6" marker-end="url(#d1-r)"/>
+<text x="125.8" y="26.1" fill="#a8322a" text-anchor="start" font-size="12">R = 600 N</text>
+<text x="38.8" y="84.2" fill="#2b3a67" text-anchor="start" font-size="11">400 N/m</text>
+<text x="36.7" y="140.3" fill="#2a2723" text-anchor="end" font-size="12">A</text>
+<text x="248.8" y="140.3" fill="#2a2723" text-anchor="start" font-size="12">B</text>
+<line x1="36.7" y1="181.0" x2="121.6" y2="181.0" stroke="#968d80" stroke-width="1.1" marker-end="url(#d1-s)"/>
+<line x1="121.6" y1="181.0" x2="36.7" y2="181.0" stroke="#968d80" stroke-width="1.1" marker-end="url(#d1-s)"/>
+<text x="79.1" y="193.9" fill="#968d80" text-anchor="middle" font-size="11">d = 2 m</text>
+</g></svg></g>
+<g transform="translate(270,0)"><svg viewBox="0 0 280 230" width="280" role="img" aria-label="台形分布は長方形＋三角形に分ける">
+<defs><marker id="d2-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="d2-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="d2-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="d2-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="d2-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="d2-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M54.8,157.1 L208.5,157.1 L208.5,164.1 L54.8,164.1 z" fill="#d8d1c2" stroke="#2a2723" opacity="1"/>
+<path d="M54.8,157.1 L208.5,157.1 L208.5,110.0 L54.8,110.0 z" fill="#d9e0ee" stroke="#2b3a67" opacity="0.9"/>
+<path d="M54.8,110.0 L208.5,110.0 L208.5,39.4 L54.8,110.0 z" fill="#ecd9d6" stroke="#a8322a" opacity="0.9"/>
+<path d="M54.8,157.1 L208.5,157.1 L208.5,39.4 L54.8,110.0 L54.8,157.1" fill="none" stroke="#2a2723" stroke-width="1.6" opacity="1"/>
+<line x1="131.6" y1="77.6" x2="131.6" y2="154.1" stroke="#2b3a67" stroke-width="2.2" marker-end="url(#d2-b)"/>
+<text x="129.1" y="133.5" fill="#2b3a67" text-anchor="end" font-size="12">R₁</text>
+<line x1="157.3" y1="21.8" x2="157.3" y2="107.1" stroke="#a8322a" stroke-width="2.2" marker-end="url(#d2-r)"/>
+<text x="162.4" y="21.8" fill="#a8322a" text-anchor="start" font-size="12">R₂</text>
+<text x="50.7" y="133.5" fill="#2b3a67" text-anchor="end" font-size="11">200</text>
+<text x="213.6" y="39.4" fill="#2a2723" text-anchor="start" font-size="11">500 N/m</text>
+</g></svg></g>
+</svg>
+<figcaption>図5.1　左：三角形分布（0 から 400 N/m、区間 3 m）の合力は $R=\tfrac12\times400\times3=600$ N、作用点は 0 の端（A）から $\tfrac23\times3=2$ m。右：台形分布（200 N/m から 500 N/m、区間 3 m）は、長方形（青）と三角形（赤）に分けて足す。</figcaption></figure>
+<div class="ex"><span class="label">例題3〔A｜三角形分布と台形分布〕</span>
+<p>(a) 長さ 5 m の梁 AB の左端 A はピン、右端 B はローラーで支えられている。A から 3 m の区間に、A で 0、そこから直線的に増えて 3 m の位置で 400 N/m になる三角形分布の荷重が下向きに働く（図5.1 左）。反力 $R_A$、$R_B$ を求めよ。<br>
+(b) 荷重が 200 N/m から 500 N/m まで直線的に増える台形分布（区間 3 m）の合力と作用点（200 N/m の端から）を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>(a) ① 系：梁 AB。荷重は、下の ③ の合力に置き換える。未知数は $R_A$（鉛直成分。水平成分は 0）、$R_B$ の2つ。<br>
+② 座標：A を原点、$x$ を右、$y$ を上。反時計回りを正。<br>
+③ 合力：$R=\tfrac12\times400\times3=600$ N（下向き）。作用点は A から $d=\tfrac23\times3=2$ m（表の「0 の端から $2L/3$」）。<br>
+④ A まわり（$R_A$ が消える）：$R_B\times5-600\times2=0$。力の釣合い（鉛直）：$R_A+R_B-600=0$。<br>
+⑤ $R_B=\dfrac{1200}{5}=\mathbf{240}$ N、$R_A=600-240=\mathbf{360}$ N。<br>
+⑥ 確かめ：B まわり：$R_A\times5-600\times(5-2)=1800-1800=0$ ✓。<br>
+<strong>答</strong>　$R_A=360$ N、$R_B=240$ N。</p>
+<p>(b) 分布を長方形（200 N/m、3 m）と三角形（200 N/m の上に 300 N/m が増える、3 m）に分ける。<br>
+・長方形：$R_1=200\times3=600$ N、作用点は端から $1.5$ m。<br>
+・三角形：$R_2=\tfrac12\times300\times3=450$ N、作用点は 0 の端（200 N/m 側）から $\tfrac23\times3=2$ m。<br>
+・合力：$R=600+450=\mathbf{1050}$ N。作用点（(2.7) の合成）：$d=\dfrac{600\times1.5+450\times2}{1050}=\dfrac{1800}{1050}=\mathbf{1.714}$ m。<br>
+確かめ：台形の面積 $\tfrac12(200+500)\times3=1050$ ✓。作用点は区間の中央 1.5 m より、荷重の大きい側（右）に寄っている ✓。</p></div>
+
+<h3><span class="no">5.3</span>例題：梁の支点反力（講義資料 p.31〜33）</h3>
+<div class="ex"><span class="label">例題4〔B｜講義資料の例題〕分布荷重を受ける梁</span>
+<figure class="slide"><img src="img/slide05/beam.jpg" alt="両端が単純支持された梁AB。Aは回転支点、Bは移動支点（ローラー）。左端Aから1.52 mの区間に300 N/mの分布荷重が下向きに作用。AB間の距離は3.65 m。A、Bに上向きの反力RA、RB" loading="lazy" style="width:520px;max-width:96%;height:auto;background:#fff"><figcaption>両端が単純支持された梁と分布荷重。出典：講義資料 第5回 p.31</figcaption></figure>
+<p>図のように、両端が単純支持された梁（左端 A はピン、右端 B はローラー）に分布荷重が作用するとき、支点反力を求めよ。（A から 1.52 m の区間に 300 N/m の等分布荷重。A、B 間は 3.65 m。梁の重さは無視。）</p>
+<figure><svg viewBox="0 0 520 260" width="520" role="img" aria-label="300 N/m の分布荷重を受ける梁">
+<defs><marker id="bm-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="bm-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="bm-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="bm-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="bm-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="bm-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M70.9,148.0 L443.8,148.0 L443.8,159.0 L70.9,159.0 z" fill="#d8d1c2" stroke="#2a2723" opacity="1"/>
+<path d="M70.9,148.0 L70.9,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M79.0,148.0 L79.0,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M87.2,148.0 L87.2,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M95.4,148.0 L95.4,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M103.6,148.0 L103.6,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M111.7,148.0 L111.7,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M119.9,148.0 L119.9,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M128.1,148.0 L128.1,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M136.3,148.0 L136.3,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M144.4,148.0 L144.4,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M152.6,148.0 L152.6,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M160.8,148.0 L160.8,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M169.0,148.0 L169.0,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M177.1,148.0 L177.1,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M185.3,148.0 L185.3,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M193.5,148.0 L193.5,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M201.7,148.0 L201.7,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M209.8,148.0 L209.8,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M218.0,148.0 L218.0,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M226.2,148.0 L226.2,97.4" fill="none" stroke="#2b3a67" stroke-width="1.0" opacity="1"/>
+<path d="M70.9,148.0 L226.2,148.0 L226.2,97.4 L70.9,97.4 L70.9,148.0" fill="none" stroke="#2b3a67" stroke-width="1.6" opacity="1"/>
+<text x="234.3" y="111.2" fill="#2b3a67" text-anchor="start" font-size="12">300 N/m</text>
+<line x1="148.5" y1="51.4" x2="148.5" y2="92.8" stroke="#a8322a" stroke-width="2.8" marker-end="url(#bm-r)"/>
+<text x="156.7" y="39.4" fill="#a8322a" text-anchor="start" font-size="12">R = 456 N</text>
+<line x1="70.9" y1="218.8" x2="70.9" y2="160.0" stroke="#2a2723" stroke-width="2.4" marker-end="url(#bm-k)"/>
+<text x="77.0" y="228.0" fill="#2a2723" text-anchor="start" font-size="12">R_A = 361.1 N</text>
+<line x1="443.8" y1="181.5" x2="443.8" y2="160.0" stroke="#2a2723" stroke-width="2.4" marker-end="url(#bm-k)"/>
+<text x="437.7" y="190.7" fill="#2a2723" text-anchor="end" font-size="12">R_B = 94.9 N</text>
+<text x="65.8" y="131.4" fill="#2a2723" text-anchor="end" font-size="13">A</text>
+<text x="448.9" y="131.4" fill="#2a2723" text-anchor="start" font-size="13">B</text>
+<line x1="70.9" y1="21.0" x2="148.5" y2="21.0" stroke="#968d80" stroke-width="1.1" marker-end="url(#bm-s)"/>
+<line x1="148.5" y1="21.0" x2="70.9" y2="21.0" stroke="#968d80" stroke-width="1.1" marker-end="url(#bm-s)"/>
+<text x="109.7" y="13.7" fill="#968d80" text-anchor="middle" font-size="11">0.76 m</text>
+</g></svg>
+<figcaption>図5.2　例題4。分布荷重を合力 $R=456$ N に置き換え、作用点は区間の中央（A から 0.76 m）。</figcaption></figure>
+<p><strong>解答</strong>（講義資料 p.32〜33 に従い、手順①〜⑥を添えた）</p>
+<p>① 系：梁 AB。分布荷重を集中荷重（合力）$R$ に置き換える。未知数 $R_A$、$R_B$（鉛直。ローラーなので B は鉛直のみ。A の水平成分は荷重が鉛直だけなので 0）の2つ。</p>
+<p>② 座標：A を原点、右を $x$、上を $y$。力は上向きを正、モーメントは反時計回りを正（資料と同じ）。</p>
+<p>③ 単位長さあたりの荷重が一定なので、全荷重は
+$$R=1.52\times300=456\ \text{N}\qquad(1)$$
+点 A から $R$ の作用点までの距離 $d$ は、分布荷重の重心までの距離に相当する。等分布なので区間の中央：
+$$d=\frac{1.52}{2}=0.76\ \text{m}\qquad(2)$$</p>
+<p>④ 力の釣合いと、点 A まわりのモーメントの釣合い：
+$$R_A+R_B-456=0\qquad(3)$$
+$$3.65\,R_B-0.76\times456=0\qquad(4)$$
+<span class="note">← A まわりにすると $R_A$ の腕が 0 で、(4) は未知数が $R_B$ だけになる。</span></p>
+<p>⑤ (4) から $R_B=\dfrac{0.76\times456}{3.65}=\dfrac{346.56}{3.65}=94.95\to\mathbf{94.9}$ N。(3) から $R_A=456-94.95=361.05\to\mathbf{361.1}$ N。</p>
+<p>⑥ 確かめ（使わなかった式で）：B まわり：$R_A\times3.65-456\times(3.65-0.76)=361.05\times3.65-456\times2.89=1317.9-1317.8\approx0$ ✓（丸めの範囲）。単位は N。$R_A&gt;R_B$ は、荷重が A に近いから ✓。<br>
+<strong>答</strong>　$R_A=361.1$ N、$R_B=94.9$ N。</p></div>
+<div class="warn"><span class="label">注意：丸めと有効数字</span>講義資料の答え $R_A=361.1$ N、$R_B=94.9$ N は、$R_B=94.948\ldots$、$R_A=361.052\ldots$ を小数第1位に丸めたもの（教科書の流儀）。$R_A+R_B=456.0$ となるので、足し算でも合う。</div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/05_a5_gassho.jpg" alt="山を背に建つ、茅葺きの急な屋根の合掌造りの家。手前に枯れ木と低木が見える" loading="lazy"></div>
+<p class="cap">屋根に積もる雪は面に分布した重さで、合掌造りの急な屋根は、それを小さくするための形だという。</p>
+<p class="cr">Zairon／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Shirakawa_Gassho-zukuri_14.jpg">Wikimedia Commons</a>（白川郷の合掌造り）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/05_b5_hiroshige.jpg" alt="縦長の浮世絵。細い斜めの線で描かれた激しい夕立のなか、人々が大きな橋を渡って急いでいる" loading="lazy"></div>
+<p class="cap">一本ずつの雨の筋は小さいが、橋に降りそそぐ総量は、ひとつの合力として橋にかかる。</p>
+<p class="cr">歌川広重／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:%C5%8Chashi_Atake_no_y%C5%ABdachi-%E5%90%8D%E6%89%80%E6%B1%9F%E6%88%B8%E7%99%BE%E6%99%AF_%E5%A4%A7%E3%81%AF%E3%81%97%E3%81%82%E3%81%9F%E3%81%91%E3%81%AE%E5%A4%95%E7%AB%8B-Sudden_Shower_over_Shin-%C5%8Chashi_Bridge_and_Atake_(%C5%8Chashi_Atake_no_y%C5%ABdachi),_from_the_series_One_Hundred_Famous_Views_of_Edo_(Meisho_Edo_hyakkei)_MET_DP123602.jpg">Wikimedia Commons</a>（『名所江戸百景 大はしあたけの夕立』1857年、メトロポリタン美術館所蔵）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>運用：台車の重心と車輪の荷重・転倒</h2>
+<p>1〜5章の道具を使って、この回の冒頭の問い（バッテリーを前に置くか後ろに置くか）に答える。講義資料の台車の寸法（長さ 0.6 m、高さ 0.2 m）を借りて、部品の質量と位置を<strong>本教材で仮定</strong>した（<strong>自作の数値例</strong>。実際の機体の数値ではない）。</p>
+<div class="ex"><span class="label">例題5〔B｜自作〕台車の重心、車輪の荷重、前に倒れる限界、坂道</span>
+<p>前後の車輪の接地点の間隔が 0.6 m の台車を横から見る。後輪の接地点を原点 O に、前方（右）を $x$、上を $z$ とする。台車は次の4つの部分でできていて、それぞれの重心の位置は表のとおりとする。$g=9.81\ \mathrm{m/s^2}$。</p>
+<table class="tb">
+<tr><th>部分</th><th>質量 $m$ [kg]</th><th>$x$ [m]</th><th>$z$ [m]</th></tr>
+<tr><td>車体（フレーム・モータ・基板）</td><td>24</td><td>0.30</td><td>0.10</td></tr>
+<tr><td>バッテリー（後ろに置く／前に置く）</td><td>10</td><td>0.10／0.50</td><td>0.10</td></tr>
+<tr><td>アーム</td><td>6</td><td>0.60</td><td>0.45</td></tr>
+<tr><td>つかんだ荷物</td><td>4</td><td>0.90</td><td>0.45</td></tr>
+</table>
+<figure><svg viewBox="0 0 570 250" width="570" role="img" aria-label="台車の重心の位置と車輪の荷重">
+<g transform="translate(0,0)"><svg viewBox="0 0 300 250" width="300" role="img" aria-label="台車：バッテリーが後ろ">
+<defs><marker id="rb0-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="rb0-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="rb0-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="rb0-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="rb0-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="rb0-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M24.9,184.8 L276.3,184.8" fill="none" stroke="#2a2723" stroke-width="1.6" opacity="1"/>
+<path d="M46.8,173.9 L177.9,173.9 L177.9,145.5 L46.8,145.5 z" fill="#d8d1c2" stroke="#2a2723" opacity="1"/>
+<path d="M112.4,145.5 L177.9,86.5 L243.5,86.5" fill="none" stroke="#2a2723" stroke-width="3" opacity="1"/>
+<circle cx="46.8" cy="173.9" r="10.9" fill="#bdb5a5" stroke="#2a2723"/>
+<circle cx="177.9" cy="173.9" r="10.9" fill="#bdb5a5" stroke="#2a2723"/>
+<circle cx="112.4" cy="163.0" r="8.388877434122993" fill="#968d80"/>
+<circle cx="68.6" cy="163.0" r="6.478505426185218" fill="#4f7a4a"/>
+<circle cx="177.9" cy="86.5" r="5.694438717061496" fill="#2b3a67"/>
+<circle cx="243.5" cy="86.5" r="5.2" fill="#a8322a"/>
+<text x="68.6" y="129.1" fill="#4f7a4a" text-anchor="middle" font-size="10">電池</text>
+<text x="243.5" y="71.2" fill="#a8322a" text-anchor="middle" font-size="10">荷 4 kg</text>
+<circle cx="123.3" cy="145.6" r="4" fill="#2a2723"/>
+<circle cx="123.3" cy="145.6" r="8" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="112.4" y="165.3" fill="#2a2723" text-anchor="end" font-size="11">G</text>
+<line x1="123.3" y1="152.2" x2="123.3" y2="189.2" stroke="#a06a32" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#rb0-o)"/>
+<line x1="46.8" y1="217.6" x2="46.8" y2="189.2" stroke="#2a2723" stroke-width="2.2" marker-end="url(#rb0-k)"/>
+<line x1="177.9" y1="217.6" x2="177.9" y2="189.2" stroke="#2a2723" stroke-width="2.2" marker-end="url(#rb0-k)"/>
+<text x="46.8" y="230.6" text-anchor="middle" font-size="11" fill="#2a2723">後輪 179.9 N</text><text x="177.9" y="230.6" text-anchor="middle" font-size="11" fill="#2a2723">前輪 251.8 N</text>
+<text x="156.1" y="18.7" fill="#2a2723" text-anchor="middle" font-size="12">バッテリーが後ろ：G は x = 0.350 m</text>
+</g></svg></g>
+<g transform="translate(285,0)"><svg viewBox="0 0 300 250" width="300" role="img" aria-label="台車：バッテリーが前">
+<defs><marker id="rb1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="rb1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="rb1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="rb1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="rb1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="rb1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M24.9,184.8 L276.3,184.8" fill="none" stroke="#2a2723" stroke-width="1.6" opacity="1"/>
+<path d="M46.8,173.9 L177.9,173.9 L177.9,145.5 L46.8,145.5 z" fill="#d8d1c2" stroke="#2a2723" opacity="1"/>
+<path d="M112.4,145.5 L177.9,86.5 L243.5,86.5" fill="none" stroke="#2a2723" stroke-width="3" opacity="1"/>
+<circle cx="46.8" cy="173.9" r="10.9" fill="#bdb5a5" stroke="#2a2723"/>
+<circle cx="177.9" cy="173.9" r="10.9" fill="#bdb5a5" stroke="#2a2723"/>
+<circle cx="112.4" cy="163.0" r="8.388877434122993" fill="#968d80"/>
+<circle cx="156.1" cy="163.0" r="6.478505426185218" fill="#4f7a4a"/>
+<circle cx="177.9" cy="86.5" r="5.694438717061496" fill="#2b3a67"/>
+<circle cx="243.5" cy="86.5" r="5.2" fill="#a8322a"/>
+<text x="156.1" y="129.1" fill="#4f7a4a" text-anchor="middle" font-size="10">電池</text>
+<text x="243.5" y="71.2" fill="#a8322a" text-anchor="middle" font-size="10">荷 4 kg</text>
+<circle cx="143.1" cy="145.6" r="4" fill="#2a2723"/>
+<circle cx="143.1" cy="145.6" r="8" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="132.2" y="165.3" fill="#2a2723" text-anchor="end" font-size="11">G</text>
+<line x1="143.1" y1="152.2" x2="143.1" y2="189.2" stroke="#a06a32" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#rb1-o)"/>
+<line x1="46.8" y1="217.6" x2="46.8" y2="189.2" stroke="#2a2723" stroke-width="2.2" marker-end="url(#rb1-k)"/>
+<line x1="177.9" y1="217.6" x2="177.9" y2="189.2" stroke="#2a2723" stroke-width="2.2" marker-end="url(#rb1-k)"/>
+<text x="46.8" y="230.6" text-anchor="middle" font-size="11" fill="#2a2723">後輪 114.5 N</text><text x="177.9" y="230.6" text-anchor="middle" font-size="11" fill="#2a2723">前輪 317.2 N</text>
+<text x="156.1" y="18.7" fill="#2a2723" text-anchor="middle" font-size="12">バッテリーが前：G は x = 0.441 m</text>
+</g></svg></g>
+</svg>
+<figcaption>図6.1　台車（側面）。灰色が車体、緑がバッテリー、青がアーム、赤が荷物。左：バッテリーが後ろ（$x=0.10$）、右：バッテリーが前（$x=0.50$）。⊙ が全体の重心 G。車輪の荷重は計算結果。</figcaption></figure>
+<p>(a) バッテリーを後ろに置いたときの、全体の重心 G の位置 $(x_G,\,z_G)$。(b) そのとき、後輪・前輪が床から受ける力（荷重）。(c) バッテリーを前に置くと、(a)(b) はどう変わるか。(d) バッテリーを後ろに置いた状態で、荷物の質量を増やしていくと、何 kg を超えると前に倒れる（後輪が浮く）か。(e) 荷物 4 kg を持ったまま、前を下にして傾斜 $\varphi$ の坂を下ると、何度で前に倒れるか（滑らないとして）。</p>
+<p><strong>解答</strong></p>
+<p>(a) ① 系：4つの質点（部分）の集まり。式 (1.7)′ を使う。全質量 $M=24+10+6+4=44$ kg、全重量 $W=44\times9.81=431.6$ N。<br>
+② 座標は問題のとおり。<br>
+③④⑤ $x_G=\dfrac{24\times0.30+10\times0.10+6\times0.60+4\times0.90}{44}=\dfrac{7.2+1.0+3.6+3.6}{44}=\dfrac{15.4}{44}=\mathbf{0.350}$ m。<br>
+$z_G=\dfrac{24\times0.10+10\times0.10+6\times0.45+4\times0.45}{44}=\dfrac{2.4+1.0+2.7+1.8}{44}=\dfrac{7.9}{44}=\mathbf{0.180}$ m。<br>
+⑥ 確かめ：$x_G=0.350$ は後輪（0）と前輪（0.6）の間にある ✓。$z_G$ は、重いもの（車体 $z=0.10$）に引かれて低い側にある ✓。</p>
+<p>(b) ① 系：台車全体。全重量 $W$ を<strong>重心 G に集めた1つの力</strong>に置き換える（1.2 節の「等価」）。外力は、重さ $W$（G、下向き）、後輪の荷重 $N_r$、前輪の荷重 $N_f$（ともに上向き）。未知数 2。<br>
+② 座標：後輪の接地点 O を原点。<br>
+③④ 後輪 O まわりのモーメント（$N_r$ が消える）：$N_f\times0.6-W\times x_G=0$。力の釣合い（鉛直）：$N_r+N_f-W=0$。<br>
+⑤ $N_f=\dfrac{W\,x_G}{0.6}=\dfrac{431.6\times0.350}{0.6}=\mathbf{251.8}$ N、$N_r=431.6-251.8=\mathbf{179.9}$ N。<br>
+⑥ 確かめ：前輪まわり：$N_r\times0.6-W\times(0.6-0.350)=107.9-107.9=0$ ✓。</p>
+<p>(c) バッテリーを前（$x=0.50$）にすると、$x_G$ の分子が $7.2+5.0+3.6+3.6=19.4$ となり、$x_G=\dfrac{19.4}{44}=\mathbf{0.441}$ m（$z_G$ は同じ 0.180 m）。$N_f=\dfrac{431.6\times0.441}{0.6}=\mathbf{317.2}$ N、$N_r=114.5$ N。<strong>重心が前に動いたので、前輪の荷重が増え、後輪の荷重が減った</strong>（図6.1）。</p>
+<p>(d) 荷物の質量を $m$ とする。倒れる限界は、後輪が床から離れる瞬間、すなわち<strong>後輪の荷重 $N_r=0$</strong>。そのとき床の力は前輪の接地点（$x=0.6$）だけで、<strong>前輪の接地点まわりのモーメントが 0</strong>：各部分の重さが前輪まわりに作るモーメントの和 $=0$（反時計回りを正、重さは下向き）：
+前輪の左側にある部分（車体、バッテリー）は、重さが<strong>後ろへ戻す向き</strong>のモーメント $m_ig\,(0.6-x_i)$ を作り、右側にある荷物は<strong>前へ倒す向き</strong>のモーメント $m\,g\,(0.90-0.6)$ を作る。限界で2つが等しい：
+$$24\,(0.60-0.30)+10\,(0.60-0.10)+6\,(0.60-0.60)=m\,(0.90-0.60)\quad\Longrightarrow\quad7.2+5.0+0=0.30\,m$$
+$$m=\frac{12.2}{0.30}=\mathbf{40.7}\ \text{kg}$$
+（$g$ は両辺で約分された。）確かめ：このとき全体の重心の $x$ 座標は $\dfrac{7.2+1.0+3.6+40.7\times0.9}{24+10+6+40.7}=\dfrac{48.4}{80.7}=0.600$ m（前輪の真上）になる ✓。<strong>バッテリーを前に置くと</strong>（$10\times(0.6-0.5)=1.0$ に変わり）$m=\dfrac{7.2+1.0}{0.30}=\mathbf{27.3}$ kg。バッテリーを後ろに置くと、前に倒れにくい（後ろのバッテリーが<strong>カウンターウェイト</strong>になる）。</p>
+<p>(e) 坂の傾斜 $\varphi$（前が下）。台車の底面に沿って $x$、垂直に $z$ をとり直す（重心の座標はそのまま）。重力は、底面に沿って前向きに $W\sin\varphi$、底面に垂直に下向きに $W\cos\varphi$。前輪の接地点（$x=0.6,\ z=0$）まわりの重さのモーメント（反時計回りを正）：
+$$M=W\bigl[(0.6-x_G)\cos\varphi-z_G\sin\varphi\bigr]$$
+（$\cos\varphi$ の項は、重心が前輪より後ろにあるので元に戻す向き、$\sin\varphi$ の項は、重心が高いので前に倒す向き。）倒れる限界は $M=0$：
+$$\tan\varphi_c=\frac{0.6-x_G}{z_G}=\frac{0.600-0.350}{0.180}=1.39\quad\Longrightarrow\quad\varphi_c=\mathbf{54°}$$
+バッテリーが前なら $\tan\varphi_c=\dfrac{0.600-0.441}{0.180}=0.886$、$\varphi_c=\mathbf{41.5°}$。<br>
+<strong>答</strong>　(a) $G=(0.350,\ 0.180)$ m。(b) 後輪 179.9 N、前輪 251.8 N。(c) $G=(0.441,\ 0.180)$ m、後輪 114.5 N、前輪 317.2 N。(d) 後ろ置き 40.7 kg、前置き 27.3 kg。(e) 後ろ置き約 54°、前置き約 41.5°。</p></div>
+<div class="warn"><span class="label">注意：(e) の「滑らないとして」</span>実際には、54° の坂では車輪がその前に<strong>滑る</strong>（タイヤと路面の摩擦係数で決まる。第6回）。(e) の値は、「滑らず、倒れる側が先に来る」と仮定したときの上限である。また (d) も、荷物が 40 kg を超えるのはアームの強度も超えるはずで、数値は「考え方の確認」のための仮定である。</div>
+<h3><span class="no">6.1</span>この回の手順のまとめ：重心を使う釣合いの問題</h3>
+<ol>
+<li><strong>系を決め、FBD を描く</strong>：重さ $W$ は<strong>重心 G に集めた1つの力</strong>として、下向きに描く（1章）。複数の部品に分かれているときは、部品ごとに描くか、先に全体の G を求めて1つにする。分布荷重は<strong>合力 $R$ を図心に</strong>置き換える（5章）。</li>
+<li>座標軸と、モーメントの基準点（未知の力が多く集まる点）を決める。</li>
+<li>重心を、部分の重心から (2.7) で合成する（分割・欠損）。必要なら積分。</li>
+<li>釣合い式（第4回）を立てる。</li>
+<li>解く。</li>
+<li>確かめる：重心が<strong>形の内側または支持面の上</strong>にあるか、使わなかった式で検算する。</li>
+</ol>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 6｜現実</p>
+<div class="ph"><img src="img/05_a6_spot.jpg" alt="森の中の小道に立つ、黄色い車体と黒い脚の四足歩行ロボット" loading="lazy"></div>
+<p class="cap">四本の足で立つロボットは、静止するとき、足の接地点を結んだ内側に重心を置いている。</p>
+<p class="cr">Jonte／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Spot_by_Boston_Dynamics.jpg">Wikimedia Commons</a>（四足歩行ロボット Spot）</p></div>
+<div class="side b"><p class="kick">MITATE 6｜見立て</p>
+<div class="ph"><img src="img/05_b6_yamaboko.jpg" alt="赤と金の飾りで高く飾られた山鉾を、白い装束の人々が曳いて街を進む" loading="lazy"></div>
+<p class="cap">高い飾りを載せた山鉾は、小さな車輪の接地点の内側に、重心を保ったまま町を進む。</p>
+<p class="cr">Japanexperterna.se／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Yamaboko_Gion.jpg">Wikimedia Commons</a>（祇園祭の山鉾、2013年）</p></div>
+</figure>
+
+
+<!-- ============================================================ -->
+<h2><span class="no">7</span>章末例題</h2>
+<p class="meta">出典の問題文は本教材で日本語に書き直した（図の寸法の読み取りを含む。原文・原図は出典を参照）。出典の単位（in・ft・lb）は<strong>そのまま</strong>にした（換算しても考え方は変わらない）。解答は、手順にそって本教材で書いた。数値は検算済み（<code>draft/check_05.py</code>、探索係の <code>draft/ext05/verify_ext05.py</code>）。</p>
+
+<div class="ex"><span class="label">例題6〔B｜Mechanics Map A2.4 例題1〕円孔のある台形板の図心</span>
+<figure class="slide"><img src="img/ext05/mmA24_q1_prob.png" alt="左下を原点とする台形の板。上辺4 in、下辺8 in、高さ3 in。左下から右上へ、上辺の左端は原点の真上。板に直径2 inの円孔があり、中心は原点から右へ2 in、上へ1.5 inの位置" loading="lazy" style="width:460px;max-width:92%;height:auto;background:#fff"><figcaption>原図（Mechanics Map, A2.4）。</figcaption></figure>
+<p>下辺 8 in、上辺 4 in、高さ 3 in の台形の均質な板に、直径 2 in の円孔が開いている（円孔の中心は、左下の原点から右へ 2 in、上へ 1.5 in）。板の図心の座標を求めよ。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, A2.4 Centroids of Composite Parts, 例題1（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>、CC 表示・継承。版は不明）。公式解答 $\bar x=3.34$、$\bar y=1.29$ in と照合済み（公式は円の面積を 3.14 に丸めた値で、正確には $3.346$、$1.298$ in）。</p>
+<p><strong>解答</strong></p>
+<p>① 系：台形の板。<strong>長方形＋直角三角形−円</strong>に分ける（2.4）。<br>
+② 座標：左下を原点、$x$ を右、$y$ を上。<br>
+③ 部分：<br>
+・長方形（幅 4、高さ 3）：$S_1=12$、中心 $(2,\ 1.5)$。<br>
+・直角三角形（底辺 4：$x=4$〜8、高さ 3）：$S_2=\tfrac12\cdot4\cdot3=6$。重心は、直角の頂点（$x=4$、高さ 3 の辺）から底辺方向へ $\tfrac13\cdot4$、底辺から上へ $\tfrac13\cdot3$（3.2 節の補足）：$(4+\tfrac43,\ 1)=(5.333,\ 1)$。<br>
+・円孔（負の面積）：$S_3=\pi\cdot1^2=3.1416$、中心 $(2,\ 1.5)$。<br>
+全体の面積：$S=12+6-\pi=14.858$ in²。<br>
+④⑤ $\bar x=\dfrac{12\times2+6\times5.333-3.1416\times2}{14.858}=\dfrac{24+32-6.283}{14.858}=\mathbf{3.346}$ in、<br>
+$\bar y=\dfrac{12\times1.5+6\times1-3.1416\times1.5}{14.858}=\dfrac{18+6-4.712}{14.858}=\mathbf{1.298}$ in。<br>
+⑥ 確かめ：孔のない台形の図心は $\bar x=\dfrac{24+32}{18}=3.11$、$\bar y=\dfrac{18+6}{18}=1.33$。円孔は、この図心より左（$x=2$）・上（$y=1.5$）にあるので、取り除くと図心は<strong>右・下</strong>にずれる。$(3.35,\ 1.30)$ は確かにそうなっている ✓。<br>
+<strong>答</strong>　$(\bar x,\ \bar y)=(3.35\ \text{in},\ 1.30\ \text{in})$。</p></div>
+
+<div class="ex"><span class="label">例題7〔C｜Engineering Statics 例7.7.12〕2つの曲線で囲まれた領域の図心（積分）</span>
+<figure class="slide"><img src="img/ext05/es_ex7712_prob.png" alt="直線y1 = x/4と放物線y2 = x^2/2で囲まれた細長い領域。原点0と交点(a, b)の間に灰色で塗られ、重心の記号がある。xの範囲は0から約0.5" loading="lazy" style="width:520px;max-width:96%;height:auto;background:#fff"><figcaption>原図（Engineering Statics, 例7.7.12）。</figcaption></figure>
+<p>直線 $y_1=\dfrac x4$ と放物線 $y_2=\dfrac{x^2}2$ で囲まれた領域（均質な薄板）の図心を、積分で求めよ。（数値は無次元の長さ。）</p>
+<p class="cr">出典：Baker & Haynes, <i>Engineering Statics: Open and Interactive</i>, §7.7, Example 7.7.12（<a href="https://engineeringstatics.org/">https://engineeringstatics.org/</a>、CC BY-NC-SA 4.0）。公式解答（$A=1/96$、$Q_y=1/384$、$Q_x=1/1920$、$\bar x=1/4$、$\bar y=1/20$）と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 系：領域。2曲線の交点は $\dfrac x4=\dfrac{x^2}{2}$ より $x=0$ と $x=\dfrac12$。この間では $y_1\ge y_2$（直線が上）。<br>
+② 座標：原点は交点の1つ。$x$ を右、$y$ を上。<br>
+③ 小片：位置 $x$、幅 $dx$ の<strong>縦長の短冊</strong>。高さは $y_1-y_2$、面積は $dA=(y_1-y_2)\,dx$。短冊の重心は中央で、高さ方向の位置は $\dfrac{y_1+y_2}{2}$。<br>
+④ 面積と一次モーメント：
+$$A=\int_0^{1/2}\!\Bigl(\frac x4-\frac{x^2}2\Bigr)dx=\Bigl[\frac{x^2}8-\frac{x^3}6\Bigr]_0^{1/2}=\frac1{32}-\frac1{48}=\frac1{96}$$
+$$Q_y=\int x\,dA=\int_0^{1/2}x\Bigl(\frac x4-\frac{x^2}2\Bigr)dx=\Bigl[\frac{x^3}{12}-\frac{x^4}8\Bigr]_0^{1/2}=\frac1{96}-\frac1{128}=\frac1{384}$$
+$$Q_x=\int\frac{y_1+y_2}2\,dA=\int_0^{1/2}\frac{y_1^2-y_2^2}{2}\,dx=\int_0^{1/2}\Bigl(\frac{x^2}{32}-\frac{x^4}8\Bigr)dx=\Bigl[\frac{x^3}{96}-\frac{x^5}{40}\Bigr]_0^{1/2}=\frac1{768}-\frac1{1280}=\frac1{1920}$$
+<span class="note">← $Q_x$ の被積分関数：短冊の面積 $(y_1-y_2)dx$ に重心の高さ $\frac{y_1+y_2}2$ を掛けると、$\frac{(y_1-y_2)(y_1+y_2)}2=\frac{y_1^2-y_2^2}2$。</span><br>
+⑤ $\bar x=\dfrac{Q_y}{A}=\dfrac{96}{384}=\mathbf{\dfrac14}$、$\bar y=\dfrac{Q_x}{A}=\dfrac{96}{1920}=\mathbf{\dfrac1{20}}$。<br>
+⑥ 確かめ：領域は $0\le x\le\dfrac12$ なので、$\bar x=\dfrac14$ はちょうど中央 ✓（偶然ではない：短冊の高さ $y_1-y_2=-\tfrac12\bigl(x-\tfrac14\bigr)^2+\tfrac1{32}$ が $x=\tfrac14$ について左右対称）。$\bar y=0.05$ は、$x=\tfrac14$ での直線の高さ $y_1=0.0625$ と放物線の高さ $y_2=0.03125$ の間（平均 0.047）にあり、わずかに上側 ✓。<br>
+<strong>答</strong>　$(\bar x,\ \bar y)=\bigl(\tfrac14,\ \tfrac1{20}\bigr)$。</p></div>
+
+<div class="ex"><span class="label">例題8〔B｜Mechanics Map 4.5 例題5〕台形＋三角形の分布荷重を受ける単純梁</span>
+<figure class="slide"><img src="img/ext05/mm45_q5_prob.png" alt="長さ12 mの単純支持梁。左端Aがピン、右端Bがローラー。分布荷重は、Aで4 kN/mから6 mの位置の6 kN/mまで直線的に増え、そこからBの0まで直線的に減る" loading="lazy" style="width:520px;max-width:96%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 4.5）。</figcaption></figure>
+<p>長さ 12 m の梁の左端 A はピン、右端 B はローラーで支えられている。下向きの分布荷重が、A で 4 kN/m、A から 6 m の位置で 6 kN/m まで直線的に増え、そこから B で 0 まで直線的に減る。分布荷重と等価な集中荷重の大きさと位置、および反力 $A_y$、$B_y$ を求めよ。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 4.5 Equivalent Point Load by Integration, 例題5（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。公式解答（$F=48$ kN、A から 5 m、$A_y=28$ kN、$B_y=20$ kN）と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 系：梁。分布を<strong>長方形1つと三角形2つ</strong>に分ける（5.2 節）。<br>
+② 座標：A を原点、$x$ を右。反時計回りを正。<br>
+③ 合力と作用点：<br>
+・長方形（A〜6 m、4 kN/m）：$R_1=4\times6=24$ kN、作用点 $x=3$ m。<br>
+・三角形1（A〜6 m、0 から 2 kN/m に増える部分）：$R_2=\tfrac12\times2\times6=6$ kN、0 の端（A）から $\tfrac23\times6=4$ m。<br>
+・三角形2（6 m〜12 m、6 kN/m から 0 に減る）：$R_3=\tfrac12\times6\times6=18$ kN、ピークの端（$x=6$）から $\tfrac13\times6=2$ m、すなわち $x=8$ m。<br>
+合力：$R=24+6+18=\mathbf{48}$ kN。作用点：$d=\dfrac{24\times3+6\times4+18\times8}{48}=\dfrac{72+24+144}{48}=\mathbf5$ m（A から）。<br>
+④ A まわり：$B_y\times12-48\times5=0$。力：$A_y+B_y-48=0$。<br>
+⑤ $B_y=\dfrac{240}{12}=\mathbf{20}$ kN、$A_y=48-20=\mathbf{28}$ kN。<br>
+⑥ 確かめ：B まわり：$A_y\times12-48\times(12-5)=336-336=0$ ✓。荷重の重心（5 m）は梁の中央（6 m）より A 側にあるので、$A_y&gt;B_y$ ✓。<br>
+<strong>答</strong>　等価な集中荷重 48 kN（A から 5 m）。$A_y=28$ kN、$B_y=20$ kN。</p></div>
+
+<div class="ex"><span class="label">例題9〔C｜Mechanics Map 4.5 例題3〕横風を受けるトレーラ（転倒の傾向）</span>
+<figure class="slide"><img src="img/ext05/mm45_q3_prob.png" alt="トレーラを後ろから見た図。荷台の高さは9 ft、荷台の底の下にタイヤがあり、荷台の底は地面の2 ft上。左右のタイヤの間隔は8 ft。左から横風が、荷台の底で400 lb/ft、上端で700 lb/ftに直線的に増える分布荷重として当たる。左のタイヤがA、右のタイヤがB" loading="lazy" style="width:440px;max-width:92%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 4.5）。</figcaption></figure>
+<p>空のトレーラ（重さ 17 000 lb、重心は荷台の中央）に、左から横風が当たる。風の力は、荷台の底で 400 lb/ft、上端（底から 9 ft 上）で 700 lb/ft に直線的に増える分布荷重で表される。荷台の底は地面から 2 ft の高さにあり、左右のタイヤ（A、B）の間隔は 8 ft。左右のタイヤが地面から受ける垂直抗力 $F_A$、$F_B$ を求めよ。（水平方向の力は地面の摩擦が受けるとする。）</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 4.5 Equivalent Point Load by Integration, 例題3（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。<strong>公式解答の $F_B=11\,537.5$ lb は誤り</strong>（下の注意を参照）。正しくは $F_B=12\,775$ lb、$F_A=4225$ lb。</p>
+<p><strong>解答</strong></p>
+<p>① 系：トレーラ全体。外力：風の分布荷重（水平、右向き）、重さ $W=17\,000$ lb（重心：左右の中央、地上から $2+4.5=6.5$ ft）、地面から受ける垂直抗力 $F_A$、$F_B$（上向き）と摩擦力 $H$（水平、左向き）。<br>
+② 座標：左のタイヤ A の接地点を原点、$x$ を右、$y$ を上。反時計回りを正。<br>
+③ 風の合力：長方形（400 lb/ft × 9 ft）$=3600$ lb（荷台の底から 4.5 ft）＋三角形（300 lb/ft が増える部分）$=\tfrac12\times300\times9=1350$ lb（底から $\tfrac23\times9=6$ ft）。合力 $R=3600+1350=4950$ lb、作用点（荷台の底から）$\dfrac{3600\times4.5+1350\times6}{4950}=\dfrac{24300}{4950}=4.909$ ft。<strong>地上からは $2+4.909=6.909$ ft</strong>。<br>
+④ A まわりのモーメント（$F_A$、$H$ は A の接地点にあるので腕 0）：風 $R$ は右向きで A の<strong>上方</strong> $6.909$ ft にあるので時計回り（−）、重さは A の右 4 ft で下向きなので時計回り（−）、$F_B$ は A の右 8 ft で上向きなので反時計回り（＋）：
+$$8F_B-4950\times6.909-17000\times4=0,\qquad F_A+F_B-17000=0$$
+⑤ $F_B=\dfrac{34200+68000}{8}=\mathbf{12\,775}$ lb、$F_A=17000-12775=\mathbf{4225}$ lb。<br>
+⑥ 確かめ：B まわり：$F_A\times8-17000\times4+4950\times6.909=33800-68000+34200=0$ ✓（風が右に押すと、風上（左）のタイヤの荷重が減り、風下（右）が増える ✓）。風がないとき（$R=0$）は $F_A=F_B=8500$ lb。<br>
+<strong>答</strong>　$F_A=4225$ lb、$F_B=12\,775$ lb。</p>
+<p><strong>発展（自作）</strong>：風の強さを $k$ 倍にすると、$F_A=17000-\dfrac{k\times4950\times6.909+68000}{8}$ が 0 になるのは $k=\dfrac{68000}{4950\times6.909}=1.99$。<strong>風が約 2 倍になると、風上のタイヤが浮いて横転しはじめる</strong>（4.2 節の転倒条件：重力と風の合力の合成が、タイヤの間隔の外に出る）。</p></div>
+<div class="warn"><span class="label">注意：出典の公式解答の誤り</span>Mechanics Map の手書き解答は、$F_B=11\,537.5$ lb としている。これは、風の合力の作用点を<strong>荷台の底から</strong> $4.909$ ft として計算した値で、タイヤの上の 2 ft を足し忘れている（モーメントの腕は、A の接地点から測る必要がある）。正しい腕は $6.909$ ft で、$F_B=12\,775$ lb。本教材は、探索係が sympy で検算した値（および上の ⑥ の B まわりの検算）にもとづいて、正しい値を載せた。<strong>公式解答も、自分で解き直して確かめる。</strong></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">8</span>演習問題</h2>
+<p class="meta">各問題に段階（A 確認／B 標準／C 発展）を付けた。解答は <code>&lt;details&gt;</code> の中。外部問題の出典は各問題の下に記した。</p>
+
+<div class="box"><span class="label">問1〔A｜自作〕一直線上の3つの質点の重心</span>
+<p>一直線（$x$ 軸）上に、質量 3 kg、5 kg、2 kg の質点が、それぞれ $x=0$、$2$、$5$ m の位置にある。重心の位置と、全体を支えるのに必要な力を求めよ。（$g=9.81\ \mathrm{m/s^2}$）</p>
+<details><summary>解答</summary><p>式 (1.5) より $x_G=\dfrac{3\times0+5\times2+2\times5}{3+5+2}=\dfrac{20}{10}=\mathbf{2.0}$ m。全質量 10 kg なので、支える力は $W=10\times9.81=\mathbf{98.1}$ N（上向き、$x=2.0$ m の点で）。確かめ：重心まわりのずれ $3(0-2)+5(2-2)+2(5-2)=-6+0+6=0$ ✓。</p></details></div>
+
+<div class="box"><span class="label">問2〔A｜自作〕直方体の転倒角</span>
+<p>幅 0.30 m、高さ 1.20 m の一様な直方体を、底面の端を支点にゆっくり傾ける。何度を超えると、手を離しても元に戻らず倒れるか。幅 0.60 m、高さ 0.60 m の立方体ではどうか。</p>
+<details><summary>解答</summary><p>式 (4.2) $\tan\theta_c=\dfrac bh$。直方体：$\tan\theta_c=\dfrac{0.30}{1.20}=0.25$ より $\theta_c=\mathbf{14.0°}$。立方体：$\tan\theta_c=1$ より $\theta_c=\mathbf{45°}$。背が高く幅が狭いほど倒れやすい。確かめ：$\theta_c$ のとき重心が支点の真上、つまり $\tfrac b2\cos\theta=\tfrac h2\sin\theta$ ✓。</p></details></div>
+
+<div class="box"><span class="label">問3〔B｜Mechanics Map A2.4 例題3〕アーチ形の板の図心</span>
+<figure class="slide"><img src="img/ext05/mmA24_q3_prob.png" alt="幅3 in、高さ5 inの長方形の板から、中央の幅2 inの溝（下から3 inの高さまでの長方形）と、その上の半径1 inの半円（半円の頂点が下から4 inの高さ）を取り除いた、アーチ形の板。左下が原点" loading="lazy" style="width:300px;max-width:80%;height:auto;background:#fff"><figcaption>原図（Mechanics Map, A2.4）。</figcaption></figure>
+<p>図のアーチ形の均質な板（外形は幅 3 in、高さ 5 in の長方形。中央に、幅 2 in の溝が下端から高さ 3 in まであり、その上に半径 1 in の半円の穴が続く）の図心を求めよ。左下の角が原点。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, A2.4, 例題3（CC 表示・継承）。公式解答 $\bar x=1.5$、$\bar y=3.11$ in と照合済み。</p>
+<details><summary>解答</summary><p>全体の長方形（$S=15$、重心 $(1.5,\ 2.5)$）から、溝の長方形（$2\times3=6$、重心 $(1.5,\ 1.5)$）と半円（$S=\tfrac\pi2=1.571$、重心は直径の中点（高さ 3）から $\dfrac{4r}{3\pi}=0.4244$ だけ上：$(1.5,\ 3.424)$）を引く。<br>
+$\bar x=1.5$（左右対称）。$\bar y=\dfrac{15\times2.5-6\times1.5-1.571\times3.424}{15-6-1.571}=\dfrac{37.5-9-5.379}{7.429}=\mathbf{3.11}$ in。<br>
+確かめ：材料は上部に多く残るので、全体の中央（2.5）より上 ✓。</p></details></div>
+
+<div class="box"><span class="label">問4〔B｜Mechanics Map 宿題 A2.1〕放物線で囲まれた板の図心（積分）</span>
+<figure class="slide"><img src="img/ext05/mmhwA2_1_prob.png" alt="y軸、x軸、放物線y = -x^2/2 + 8で囲まれた灰色の図形。y軸上の最大値は8 cm、x軸上の幅は4 cm" loading="lazy" style="width:300px;max-width:80%;height:auto;background:#fff"><figcaption>原図（Mechanics Map, 宿題 A2.1）。</figcaption></figure>
+<p>$y$ 軸、$x$ 軸と、放物線 $y=-\dfrac{x^2}{2}+8$（$0\le x\le4$ cm）で囲まれた図形（均質な板）の図心を、積分で求めよ。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 宿題 A2.1（答えのみ：$\bar x=1.5$、$\bar y=3.2$ cm）。解答は本教材の自作。</p>
+<details><summary>解答（自作）</summary><p>縦長の短冊（位置 $x$、幅 $dx$、高さ $y$）を小片にとる：$dA=y\,dx$、短冊の重心の高さは $y/2$。<br>
+$A=\displaystyle\int_0^4\Bigl(8-\frac{x^2}2\Bigr)dx=\Bigl[8x-\frac{x^3}6\Bigr]_0^4=32-\frac{32}{3}=\frac{64}3$ cm²。<br>
+$Q_y=\displaystyle\int_0^4x\,y\,dx=\Bigl[4x^2-\frac{x^4}8\Bigr]_0^4=64-32=32$。$\bar x=\dfrac{32}{64/3}=\mathbf{1.5}$ cm。<br>
+$Q_x=\displaystyle\int_0^4\frac{y^2}2dx=\frac12\int_0^4\Bigl(\frac{x^4}4-8x^2+64\Bigr)dx=\frac12\Bigl[\frac{x^5}{20}-\frac{8x^3}3+64x\Bigr]_0^4=\frac12\times136.53=68.27$。$\bar y=\dfrac{68.27}{21.33}=\mathbf{3.2}$ cm。<br>
+確かめ：図形は左（$x$ が小さい側）が高いので、$\bar x=1.5&lt;2$（中央）✓。高さの最大 8 の 0.4 倍あたり。公式の答えと一致。</p></details></div>
+
+<div class="box"><span class="label">問5〔B｜Mechanics Map 4.6 例題2〕階段状＋三角形の分布荷重を受ける梁</span>
+<figure class="slide"><img src="img/ext05/mm46_q2_prob.png" alt="長さ10 ftの梁。左から2 ftの区間は40 lb/ft、次の2 ftは60 lb/ft、その先の6 ftは60 lb/ftから0まで直線的に減る。支点Aは左端から1 ft内側、Bは右端から1 ft内側" loading="lazy" style="width:520px;max-width:96%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 4.6）。</figcaption></figure>
+<p>長さ 10 ft の梁に、左から $0\sim2$ ft で 40 lb/ft、$2\sim4$ ft で 60 lb/ft、$4\sim10$ ft で 60 lb/ft から 0 まで直線的に減る分布荷重が働く。支点 A は左端から 1 ft、B は左端から 9 ft の位置（A はピン、B はローラー）。荷重と等価な集中荷重（大きさと位置）と、A・B の反力を求めよ。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 4.6 Equivalent Point Load by Composite Parts, 例題2（CC 表示・継承）。公式解答（$F=380$ lb、左端から 4 ft、$F_A=237.5$ lb、$F_B=142.5$ lb）と照合済み。</p>
+<details><summary>解答</summary><p>3つに分ける：長方形 $R_1=40\times2=80$ lb（$x=1$）、長方形 $R_2=60\times2=120$ lb（$x=3$）、三角形 $R_3=\tfrac12\times60\times6=180$ lb（ピーク側の端 $x=4$ から $\tfrac13\times6=2$ ft：$x=6$）。<br>
+合力 $R=380$ lb、作用点 $d=\dfrac{80\times1+120\times3+180\times6}{380}=\dfrac{1520}{380}=4$ ft。<br>
+A（$x=1$）まわり：$8F_B-380\times(4-1)=0$ より $F_B=\dfrac{1140}{8}=\mathbf{142.5}$ lb、$F_A=380-142.5=\mathbf{237.5}$ lb。確かめ：B まわり：$8F_A-380\times(9-4)=1900-1900=0$ ✓。</p></details></div>
+
+<div class="box"><span class="label">問6〔B〜C｜Mechanics Map 宿題 A2.3〕円錐台の水槽の重心の高さ（積分）</span>
+<figure class="slide"><img src="img/ext05/mmhwA2_3_prob.png" alt="逆円錐台の水槽。底面の直径4 ft、上面の直径8 ft、高さ4 ft。原点は底面の中心で、z軸は上向き" loading="lazy" style="width:340px;max-width:84%;height:auto;background:#fff"><figcaption>原図（Mechanics Map, 宿題 A2.3）。</figcaption></figure>
+<p>逆円錐台の水槽（底面の直径 4 ft、上面の直径 8 ft、高さ 4 ft）に水が満たされている。壁の質量は無視する。底面の中心を原点に、水の重心の高さ $\bar z$ を、積分で求めよ。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 宿題 A2.3（答えのみ：$\bar z=2.43$ ft）。解答は本教材の自作。</p>
+<details><summary>解答（自作）</summary><p>高さ $z$ での水平な薄い円板（厚さ $dz$）を小片にとる。半径は底の 2 ft から直線的に増えて $r(z)=2+\dfrac z2$（$z=4$ で 4 ft）。体積 $dV=\pi r^2dz$（水は均質なので重さは体積に比例、2.3）。<br>
+$V=\pi\displaystyle\int_0^4\Bigl(2+\frac z2\Bigr)^2dz=\pi\int_0^4\Bigl(4+2z+\frac{z^2}4\Bigr)dz=\pi\Bigl[4z+z^2+\frac{z^3}{12}\Bigr]_0^4=\pi\times37.33$。<br>
+$\int z\,dV=\pi\displaystyle\int_0^4\Bigl(4z+2z^2+\frac{z^3}4\Bigr)dz=\pi\Bigl[2z^2+\frac{2z^3}3+\frac{z^4}{16}\Bigr]_0^4=\pi\times90.67$。<br>
+$\bar z=\dfrac{90.67}{37.33}=\mathbf{2.43}$ ft。対称性から $\bar x=\bar y=0$。<br>
+確かめ：上が広いので、重心は中央（2 ft）より高い ✓。円柱（$\bar z=2$）と円錐（$\bar z=3$ ft：頂点が下）の間 ✓。</p></details></div>
+
+<div class="box"><span class="label">問7〔C｜Engineering Statics 例7.5.3〕密度の異なる部品の重心（3次元）</span>
+<figure class="slide"><img src="img/ext05/es_ex753_prob.png" alt="直方体のコンクリートブロック（x方向6 ft、y方向4 ft、高さ9 ft、軽量コンクリート125 lb/ft^3）の前面に、円孔（半径2 ft、高さ6 ftの位置、貫通）が開き、前面の下に鋼のくさび（底2 ft、高さ3 ft、x方向4 ft、493 lb/ft^3）が付いている" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"><figcaption>原図（Engineering Statics, 例7.5.3）。</figcaption></figure>
+<p>軽量コンクリート（125 lb/ft³）のブロック（$x$ 方向 6 ft、$y$ 方向 4 ft、高さ 9 ft）に、半径 2 ft の円孔が前後に貫通している（円孔の中心：高さ 6 ft、$x$ 方向はブロックの中央）。ブロックの前面には、断面が底 2 ft・高さ 3 ft の直角三角形で、$x$ 方向に 4 ft 押し出された鋼（493 lb/ft³）のくさびが付いている。全体の重量と重心を求めよ。座標は、ブロックが $x\in[-6,0]$、$y\in[0,4]$、$z\in[0,9]$ ft となるようにとる。</p>
+<p class="cr">出典：Baker & Haynes, <i>Engineering Statics: Open and Interactive</i>, Example 7.5.3（CC BY-NC-SA 4.0）。公式解答（$W=26\,633$ lb、$(-3.22,\ 2.59,\ 3.37)$ ft）と照合済み。図の寸法の読み取り（くさびは $x\in[-6,-2]$、$y\in[4,6]$）は、公式の答えが再現できる範囲で採用した。</p>
+<details><summary>解答</summary><p>重さで重みをつけた分割法（式 2.7）。ブロック：$125\times(6\times4\times9)=27\,000$ lb、重心 $(-3,\ 2,\ 4.5)$。円孔（負）：$125\times\pi\cdot2^2\cdot4=6\,283$ lb、重心 $(-3,\ 2,\ 6)$。くさび：$493\times\bigl(\tfrac12\cdot2\cdot3\cdot4\bigr)=5\,916$ lb、重心は断面の重心（直角の頂点から底辺方向に $\tfrac13\cdot2$、上方へ $\tfrac13\cdot3$）で $y=4+\tfrac23=4.667$、$z=1$、$x=-4$（押し出し方向の中央）。<br>
+$W=27000-6283+5916=\mathbf{26\,633}$ lb。<br>
+$\bar x=\dfrac{27000(-3)-6283(-3)+5916(-4)}{26633}=-3.22$、$\bar y=\dfrac{27000\cdot2-6283\cdot2+5916\cdot4.667}{26633}=2.59$、$\bar z=\dfrac{27000\cdot4.5-6283\cdot6+5916\cdot1}{26633}=3.37$ ft。<br>
+確かめ：ブロックの中心（$-3,\ 2,\ 4.5$）に対し、円孔で上部が軽くなり、くさびで下の前（$y$ が大きい側）が重くなるので、重心は下方（$z$ 小）・前寄り（$y$ 大）にずれる ✓。</p></details></div>
+
+<div class="box"><span class="label">問8〔B｜自作〕半円板・扇形・穴あき円板の重心</span>
+<p>(a) 半径 $r=0.20$ m の均質な半円板の、直径から測った重心の位置を、式 (3.3) から求めよ。(b) 中心角 $120°$（$\alpha=60°$）、半径 0.50 m の扇形の重心は、中心からいくらか。(c) 半径 $r$ の均質な円板から、半径 $r/2$ の円形の穴を、穴が円板の縁に内接するようにくり抜いた（穴の中心は円板の中心から $r/2$）。残った板の重心は、円板の中心からどちらへ、いくらずれるか。</p>
+<details><summary>解答</summary><p>(a) $\alpha=\dfrac\pi2$ とおいて $x_G=\dfrac{2r\sin(\pi/2)}{3\cdot\pi/2}=\dfrac{4r}{3\pi}=\dfrac{4\times0.20}{3\pi}=\mathbf{0.0849}$ m（半円の中心から、半円の弧の側へ）。<br>
+(b) 式 (3.3)：$x_G=\dfrac{2\times0.50\times\sin60°}{3\times\pi/3}=\dfrac{0.8660}{\pi}=\mathbf{0.2757}$ m（中心から）。<br>
+(c) 円板の中心を原点、穴の中心を $x=r/2$ とする。円板（面積 $\pi r^2$、重心 0）から穴（面積 $\tfrac{\pi r^2}4$、重心 $x=\tfrac r2$）を引く（2.4）：$x_G=\dfrac{\pi r^2\cdot0-\tfrac{\pi r^2}4\cdot\tfrac r2}{\pi r^2-\tfrac{\pi r^2}4}=\dfrac{-\tfrac18}{\tfrac34}\,r=\mathbf{-\dfrac r6}$。穴と<strong>反対側</strong>へ $r/6$ ずれる。確かめ：穴の反対側に材料が多く残るので、穴と反対へ寄る ✓。</p></details></div>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ <strong>重心</strong>を、「全重量を1点に作用させて等価になる点＝重力のモーメントが釣合う点」と言える。1.1 の棒（式 3.43〜3.45）と、$n$ 質点の式 $\boldsymbol r_G=\sum w_i\boldsymbol r_i/W$ を、<strong>等価と釣合いの2通り</strong>で導ける。</li>
+<li>□ 質量中心・重心・図心の違い（一様な重力場・均質）を言える。物体の向きを変えても、重心は物体の同じ点であることを示せる（1.4・1.6）。</li>
+<li>□ 和を積分に置き換えて $\boldsymbol r_G=\frac1W\int\boldsymbol r\,dw$ を導け、<strong>一次モーメント</strong>の意味が言える。均質なら体積・面積・長さで約分できる（図心）。</li>
+<li>□ 分割の式 $x_G=(W_1x_{G1}+W_2x_{G2})/(W_1+W_2)$ と、欠損を<strong>負の面積</strong>で引く方法を使える。対称性で積分を省ける。</li>
+<li>□ 長方形（$a/2,\ b/2$）、三角形（底辺から高さの $1/3$）、扇形（$2r\sin\alpha/(3\alpha)$、半円 $4r/3\pi$）、L字板（$5a/6,\ 5b/6$）を<strong>積分で導け</strong>、極限で検算できる。</li>
+<li>□ 安定・不安定・中立を、重心の<strong>高さ</strong>の変化と復元モーメントで説明できる。直方体の転倒角 $\tan\theta_c=b/h$ を導け、<strong>重心の鉛直線が支持面の外に出ると転倒する</strong>ことを言える。</li>
+<li>□ 分布荷重の合力は<strong>荷重分布の面積</strong>で、作用点は<strong>その図形の図心</strong>であることを導け、梁の支点反力を求められる。</li>
+<li>□ 台車のように部品が分かれた物体の重心を、部品の和から求め、車輪の荷重・転倒の限界を計算できる。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第6回・10/22）</strong>：摩擦力（教科書 3.3）。この回の「台車が坂で倒れる前に滑る」という注意（6章(e)）が、まさに次回の主題である。接触面が受けられる力には<strong>上限</strong>があり、釣合いは「等式」ではなく「不等式」になる。床の抗力の作用点が、この回の重心の議論の<strong>支持面の内側</strong>という条件と同じ形で現れる。<br>
+<a href="index.html">← 目次へ</a>
+</div>
+
+<div class="box"><span class="label">講義資料との対応（どこで扱ったか）</span>
+<table class="tb">
+<tr><th>講義資料</th><th>本教材</th></tr>
+<tr><td>p.1–3 3・2 重心の扉、今日のポイント</td><td>序</td></tr>
+<tr><td>p.4–5 3・2・1 質点系の重心：はじめに（式 3.43〜3.45）、重心の定義</td><td>1.1、1.2</td></tr>
+<tr><td>p.6–11 質点系の重心（考え方1・考え方2）</td><td>1.3</td></tr>
+<tr><td>p.12 ベクトル表記・質量中心</td><td>1.4（導出は本教材の追加）</td></tr>
+<tr><td>p.13–15 物体の向きが変化した場合</td><td>1.6</td></tr>
+<tr><td>p.16–17 連続体の重心</td><td>2.2</td></tr>
+<tr><td>p.18–19 物体の分割と重心</td><td>2.4</td></tr>
+<tr><td>p.20–21 質点系→連続体の関係、一次モーメント</td><td>2.2</td></tr>
+<tr><td>p.22 重心の計算（均質・薄板・線、図心）</td><td>2.3</td></tr>
+<tr><td>p.23 計算例1（長方形）</td><td>3.1</td></tr>
+<tr><td>p.24–25 つりあいの安定度、物体の転倒</td><td>4.1、4.2</td></tr>
+<tr><td>p.26 ロボットの歩行</td><td>4.3</td></tr>
+<tr><td>p.27–30 補足資料：分布荷重</td><td>5.1</td></tr>
+<tr><td>p.31–33 例題：はりの支点反力</td><td>5.3</td></tr>
+<tr><td>p.34–35 計算例2（三角形）</td><td>3.2</td></tr>
+<tr><td>p.36–37 練習問題【3・2】（L字板）</td><td>3.4</td></tr>
+<tr><td>p.38–42 計算例3（扇形）と別解</td><td>3.3</td></tr>
+<tr><td>p.2 小型移動マニピュレータの図（重心の位置）</td><td>序、6章</td></tr>
+</table></div>
+
+<p class="meta">出典：講義資料「第5回」の内容と、本教材の追加（導出・例・図・計算）。図は、講義資料から切り出したもの（<code>img/slide05/</code>、個人の学習用の転載・再配布しない）と、数値から計算して描いたもの。章末例題・演習問題の出典は各問題の下に記した（原図は個人の学習用に転載。再配布しない）。写真の出典は各写真の下に記した。解答の検算は Python（sympy・numpy・scipy）。6章の台車の数値、3.4 節の図の寸法の読み取り、外部問題の日本語化と一部の解答は本教材によるもので、誤りがあれば本教材側の誤りである。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a></nav>
+
+</body>
+</html>
