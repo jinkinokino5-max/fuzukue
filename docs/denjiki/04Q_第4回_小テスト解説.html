@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4回 小テスト解説</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 小テスト解説はページ固有の題字（扉写真なし）。テンプレートのCSSは変えず、ここで足す -->
+<style>
+  .qhead{ border-bottom:1px solid var(--ink); padding:28px 0 14px; margin-bottom:6px; }
+  .qhead .vol{ font-family:var(--num); color:var(--shu); font-size:15px; letter-spacing:.2em; margin:0; }
+  .qhead h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(22px,3.4vw,32px); line-height:1.4; margin:4px 0 0; letter-spacing:.06em; }
+</style>
+
+<header class="qhead">
+<p class="vol">QUIZ 4 ― 第4回・10/19</p>
+<h1>小テスト：ヒントと解説<br><small style="font-size:.6em">一様に帯電した球の「電場」と「エネルギー」</small></h1>
+</header>
+<p class="lead">10/19 小テストの解き方。まず<strong>ヒントを1つずつ開いて</strong>自分で解き、最後に解説で答え合わせをする使い方を想定している。(1)(2) は第2回のガウスの法則、(3) は第4回の「電場のエネルギー密度 $\tfrac12\varepsilon_0E^2$」を、<strong>電荷が球の内部にも広がっている場合</strong>に使う問題である。</p>
+
+<div class="navi">
+関連：<a href="04_第4回_電場のエネルギー.html">第4回 本編</a> の §4（エネルギー密度。導体球の場合を 4.3 節で計算している）、<a href="02_第2回_ガウスの法則の導出とその応用.html">第2回</a>（ガウスの法則と球対称の電場）。<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="03Q_第3回_小テスト解説.html">第3回の小テスト解説</a>
+</div>
+
+<div class="warn">
+<span class="label">出典・注意</span>
+問題は 10/19 の講義で配布された小テスト（<code>reference/講義資料/第4回/第4回小テスト.pdf</code>）。以下は本教材での要約で、原文ではない。配布PDFには各設問の導出の式が（一部は結果まで）書かれているが、本教材では<strong>独自に導出し直して</strong>、PDFの式と一致することを確かめた。解説は自作のため、正答は Moodle の採点結果で確認すること。<br>
+<strong>原文の読み取りに関する注意</strong>：(a) (3) の見出しの式は $E(r)=\dots$ と書かれているが、求めるのは<strong>電気エネルギーの総量 $U$</strong> と解釈した（PDFの本文が「総量 [J]」と言っている）。(b) (3) の最後に「以下省略」とあり、<strong>内側と外側の和を取る部分が問題として残されている</strong>と解釈した。この読みが授業の意図と違えば直すこと。(c) (3) の形式には $r$ の指数 $l$ の欄がない（積分で $r$ は消えるため）。
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>問題の要約</h2>
+<div class="box">
+<p>真空中で、総量 $Q$ の電荷が半径 $a$ [m] の球の中に<strong>一様な密度</strong>で分布している（電荷の雲）。中心からの距離を $r$ [m]、真空の誘電率を $\varepsilon_0$ [C²/(N·m²)] とする。次の量を
+$$b\,\pi^{\,i}\,\varepsilon_0^{\,j}\,a^{\,k}\,r^{\,l}\,Q^{\,m}$$
+の形で表すとき、<strong>係数 $b$ と指数 $i\sim m$ を答える</strong>（(1)〜(3) で同じとは限らない）。</p>
+<ol>
+<li>$r\ge a$（雲の外）の電場の強さ $E(r)$ [N/C]</li>
+<li>$0\le r\le a$（雲の内部）の電場の強さ $E(r)$ [N/C]</li>
+<li>単位体積あたりの電場のエネルギーが $\tfrac12\varepsilon_0E^2$ であることを使って、この電荷分布のもつ<strong>電気エネルギーの総量</strong> $U$ [J]（形式は $b\,\pi^{i}\varepsilon_0^{\,j}a^{k}Q^{m}$）</li>
+</ol>
+<p class="note">$l$ は「エル」で、数字ではない。</p>
+</div>
+
+<div class="why">
+<span class="label">この出題形式の読み方（第1〜3回と同じ）</span>
+<ul>
+<li>分母にあるもの → 指数がマイナス：$\dfrac1{\varepsilon_0}=\varepsilon_0^{-1}$、$\dfrac1{r^2}=r^{-2}$</li>
+<li>式に出てこない文字 → 指数は 0</li>
+<li>$\pi$ は $b$ に含めず $\pi^i$ として別に数える（$b$ は $\tfrac14$ のような純粋な数）。</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>ヒント（1つずつ開く）</h2>
+
+<details><summary>ヒント1：どんな閉曲面を選ぶか</summary>
+<div class="box">電荷が球対称に分布しているので、電場も中心から外向き（または内向き）に向き、<strong>大きさは中心からの距離 $r$ だけで決まる</strong>。だから閉曲面は、中心が同じで半径 $r$ の<strong>球面</strong>を選ぶ。この球面上では $E$ が一定で、向きも面に垂直なので、ガウスの法則の左辺が $4\pi r^2\cdot E$ と簡単になる。</div>
+</details>
+
+<details><summary>ヒント2：(1) 雲の外 $r\ge a$</summary>
+<div class="box">半径 $r$ の球面の内側に含まれる電荷はいくつか？ $r\ge a$ なら球面は雲を<strong>全部</strong>包んでいるので $Q$。ガウスの法則 $4\pi r^2E=\dfrac{(\text{内側の電荷})}{\varepsilon_0}$ に入れよう。点電荷と同じ答えになる。</div>
+</details>
+
+<details><summary>ヒント3：(2) 雲の内部 $0\le r\le a$</summary>
+<div class="box">半径 $r$ の球面の内側に含まれる電荷は、雲の一部だけ。<strong>電荷は体積に比例</strong>する（密度が一様だから）ので、内側の電荷 $=Q\times\dfrac{\text{半径 }r\text{ の球の体積}}{\text{半径 }a\text{ の球の体積}}=Q\times\dfrac{\tfrac43\pi r^3}{\tfrac43\pi a^3}=Q\dfrac{r^3}{a^3}$。あとは (1) と同じ。</div>
+</details>
+
+<details><summary>ヒント4：(3) 積分の立て方</summary>
+<div class="box">エネルギー密度 $w=\tfrac12\varepsilon_0E^2$ [J/m³] に体積をかけて足し合わせる。電場は $r$ だけで決まるので、半径 $r$・厚さ $\mathrm dr$ の<strong>球殻</strong>（体積 $4\pi r^2\mathrm dr$）で切って、内側 $0\to a$ と外側 $a\to\infty$ の2つに分けて積分する。<strong>内側と外側で $E$ の式が違う</strong>ので、それぞれ別の式を代入する。</div>
+</details>
+
+<details><summary>ヒント5：(3) 最後の和</summary>
+<div class="box">内側と外側の結果は $\dfrac{Q^2}{40\pi\varepsilon_0a}$ と $\dfrac{Q^2}{8\pi\varepsilon_0a}$。分母をそろえて（$8=\tfrac{40}{5}$ なので）足す。全体のエネルギーは、$\dfrac{Q^2}{8\pi\varepsilon_0a}$ の何倍になるだろう？</div>
+</details>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>解説</h2>
+
+<h3><span class="no">3.1</span>(1) 雲の外：$r\ge a$</h3>
+<div class="proof">
+<p><span class="step">STEP 1（対称性）</span>　球対称なので、半径 $r$ の球面上では $E$ は向きが面に垂直、大きさが一定。ゆえに $\oint\boldsymbol E\cdot\mathrm d\boldsymbol S=E\cdot4\pi r^2$（球面の面積 $4\pi r^2$）。</p>
+<p><span class="step">STEP 2（含まれる電荷）</span>　$r\ge a$ の球面は雲全体を包むので、内側の電荷は $Q$。</p>
+<p><span class="step">STEP 3（ガウスの法則）</span>　$4\pi r^2E=\dfrac{Q}{\varepsilon_0}$。両辺を $4\pi r^2$ で割って</p>
+$$E(r)=\frac{Q}{4\pi\varepsilon_0r^2}\qquad(r\ge a)$$
+</div>
+<div class="box"><strong>答え (1)</strong>　$b=\tfrac14,\ i=-1,\ j=-1,\ k=0,\ l=-2,\ m=1$。<br>
+（$a$ は答えの式に出てこない → $k=0$。外から見ると、球の大きさによらず、中心の点電荷と同じ。）</div>
+
+<h3><span class="no">3.2</span>(2) 雲の内部：$0\le r\le a$</h3>
+<div class="proof">
+<p><span class="step">STEP 1（密度）</span>　電荷が一様なので、体積密度は $\rho=\dfrac{Q}{\tfrac43\pi a^3}$。</p>
+<p><span class="step">STEP 2（含まれる電荷）</span>　半径 $r$ の球の中にある電荷は $\rho\cdot\tfrac43\pi r^3=Q\dfrac{r^3}{a^3}$。</p>
+<p><span class="step">STEP 3（ガウスの法則）</span>　$4\pi r^2E=\dfrac1{\varepsilon_0}\dfrac{r^3}{a^3}Q$。両辺を $4\pi r^2$ で割る：</p>
+$$E=\frac{r^3Q}{4\pi\varepsilon_0r^2a^3}=\frac{rQ}{4\pi\varepsilon_0a^3}\qquad(0\le r\le a)$$
+<p>（$r^3/r^2=r$ と約分した。）</p>
+</div>
+<div class="box"><strong>答え (2)</strong>　$b=\tfrac14,\ i=-1,\ j=-1,\ k=-3,\ l=1,\ m=1$。<br>
+（$E$ は中心から $r$ に<strong>比例</strong>して大きくなる。中心では $E=0$。）</div>
+
+<div class="proof">
+<p><span class="step">確かめ（境界でつながるか）</span>　$r=a$ を代入：(1) は $\dfrac{Q}{4\pi\varepsilon_0a^2}$、(2) は $\dfrac{aQ}{4\pi\varepsilon_0a^3}=\dfrac{Q}{4\pi\varepsilon_0a^2}$。<strong>一致する</strong>（電荷が表面にだけある導体球とは違い、一様な雲の電場は境界で飛ばない）。</p>
+</div>
+
+<figure><svg viewBox="0 0 600 300" width="600" role="img" aria-label="一様に帯電した球の電場の強さ。内部は半径に比例して増え、r=aで最大、外側は1/r^2で減る">
+<defs><marker id="e4q-arw" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a2723"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723"><line x1="187.5" y1="30" x2="187.5" y2="260" stroke="#ddd6c8"/><text x="187.5" y="278" text-anchor="middle" font-size="12">1</text><line x1="305.0" y1="30" x2="305.0" y2="260" stroke="#ddd6c8"/><text x="305.0" y="278" text-anchor="middle" font-size="12">2</text><line x1="422.5" y1="30" x2="422.5" y2="260" stroke="#ddd6c8"/><text x="422.5" y="278" text-anchor="middle" font-size="12">3</text><line x1="540.0" y1="30" x2="540.0" y2="260" stroke="#ddd6c8"/><text x="540.0" y="278" text-anchor="middle" font-size="12">4</text><text x="70.0" y="278" text-anchor="middle" font-size="12">0</text><line x1="70" y1="168.3" x2="540" y2="168.3" stroke="#ddd6c8"/><text x="64" y="172.3" text-anchor="end" font-size="12">0.5</text><line x1="70" y1="76.7" x2="540" y2="76.7" stroke="#ddd6c8"/><text x="64" y="80.7" text-anchor="end" font-size="12">1</text>
+<line x1="66" y1="260" x2="554" y2="260" stroke="#2a2723" marker-end="url(#e4q-arw)"/>
+<line x1="70" y1="264" x2="70" y2="26" stroke="#2a2723" marker-end="url(#e4q-arw)"/>
+<text x="560" y="264">r/a</text><text x="78" y="24">E / E(a)</text>
+<path d="M70.0,260.0 L71.2,258.2 L72.3,256.3 L73.5,254.5 L74.7,252.7 L75.9,250.8 L77.0,249.0 L78.2,247.2 L79.4,245.3 L80.6,243.5 L81.8,241.7 L82.9,239.8 L84.1,238.0 L85.3,236.2 L86.5,234.3 L87.6,232.5 L88.8,230.7 L90.0,228.8 L91.2,227.0 L92.3,225.2 L93.5,223.3 L94.7,221.5 L95.8,219.7 L97.0,217.8 L98.2,216.0 L99.4,214.2 L100.5,212.3 L101.7,210.5 L102.9,208.7 L104.1,206.8 L105.2,205.0 L106.4,203.2 L107.6,201.3 L108.8,199.5 L110.0,197.7 L111.1,195.8 L112.3,194.0 L113.5,192.2 L114.7,190.3 L115.8,188.5 L117.0,186.7 L118.2,184.8 L119.3,183.0 L120.5,181.2 L121.7,179.3 L122.9,177.5 L124.1,175.7 L125.2,173.8 L126.4,172.0 L127.6,170.2 L128.8,168.3 L129.9,166.5 L131.1,164.7 L132.3,162.8 L133.4,161.0 L134.6,159.2 L135.8,157.3 L137.0,155.5 L138.1,153.7 L139.3,151.8 L140.5,150.0 L141.7,148.2 L142.8,146.3 L144.0,144.5 L145.2,142.7 L146.4,140.8 L147.6,139.0 L148.7,137.2 L149.9,135.3 L151.1,133.5 L152.2,131.7 L153.4,129.8 L154.6,128.0 L155.8,126.2 L156.9,124.3 L158.1,122.5 L159.3,120.7 L160.5,118.8 L161.7,117.0 L162.8,115.2 L164.0,113.3 L165.2,111.5 L166.3,109.7 L167.5,107.8 L168.7,106.0 L169.9,104.2 L171.1,102.3 L172.2,100.5 L173.4,98.7 L174.6,96.8 L175.8,95.0 L176.9,93.2 L178.1,91.3 L179.3,89.5 L180.4,87.7 L181.6,85.8 L182.8,84.0 L184.0,82.2 L185.1,80.3 L186.3,78.5 L187.5,76.7 L188.7,80.3 L189.9,83.8 L191.0,87.2 L192.2,90.5 L193.4,93.7 L194.6,96.8 L195.7,99.9 L196.9,102.8 L198.1,105.7 L199.2,108.5 L200.4,111.2 L201.6,113.8 L202.8,116.4 L203.9,118.9 L205.1,121.4 L206.3,123.8 L207.5,126.1 L208.7,128.3 L209.8,130.5 L211.0,132.7 L212.2,134.8 L213.3,136.8 L214.5,138.8 L215.7,140.8 L216.9,142.7 L218.1,144.5 L219.2,146.3 L220.4,148.1 L221.6,149.8 L222.8,151.5 L223.9,153.2 L225.1,154.8 L226.3,156.4 L227.5,157.9 L228.6,159.4 L229.8,160.9 L231.0,162.3 L232.1,163.7 L233.3,165.1 L234.5,166.5 L235.7,167.8 L236.8,169.1 L238.0,170.3 L239.2,171.6 L240.4,172.8 L241.5,174.0 L242.7,175.2 L243.9,176.3 L245.1,177.4 L246.2,178.5 L247.4,179.6 L248.6,180.6 L249.8,181.7 L251.0,182.7 L252.1,183.7 L253.3,184.7 L254.5,185.6 L255.7,186.6 L256.8,187.5 L258.0,188.4 L259.2,189.3 L260.4,190.1 L261.5,191.0 L262.7,191.8 L263.9,192.7 L265.0,193.5 L266.2,194.3 L267.4,195.0 L268.6,195.8 L269.8,196.6 L270.9,197.3 L272.1,198.0 L273.3,198.7 L274.4,199.4 L275.6,200.1 L276.8,200.8 L278.0,201.5 L279.1,202.1 L280.3,202.8 L281.5,203.4 L282.7,204.0 L283.9,204.7 L285.0,205.3 L286.2,205.8 L287.4,206.4 L288.6,207.0 L289.7,207.6 L290.9,208.1 L292.1,208.7 L293.2,209.2 L294.4,209.7 L295.6,210.3 L296.8,210.8 L297.9,211.3 L299.1,211.8 L300.3,212.3 L301.5,212.8 L302.6,213.2 L303.8,213.7 L305.0,214.2 L306.2,214.6 L307.4,215.1 L308.5,215.5 L309.7,215.9 L310.9,216.4 L312.1,216.8 L313.2,217.2 L314.4,217.6 L315.6,218.0 L316.8,218.4 L317.9,218.8 L319.1,219.2 L320.3,219.6 L321.5,220.0 L322.6,220.3 L323.8,220.7 L325.0,221.1 L326.2,221.4 L327.3,221.8 L328.5,222.1 L329.7,222.5 L330.9,222.8 L332.0,223.1 L333.2,223.5 L334.4,223.8 L335.5,224.1 L336.7,224.4 L337.9,224.7 L339.1,225.0 L340.2,225.3 L341.4,225.6 L342.6,225.9 L343.8,226.2 L344.9,226.5 L346.1,226.8 L347.3,227.1 L348.5,227.4 L349.6,227.6 L350.8,227.9 L352.0,228.2 L353.2,228.4 L354.3,228.7 L355.5,229.0 L356.7,229.2 L357.9,229.5 L359.1,229.7 L360.2,229.9 L361.4,230.2 L362.6,230.4 L363.8,230.7 L364.9,230.9 L366.1,231.1 L367.3,231.4 L368.4,231.6 L369.6,231.8 L370.8,232.0 L372.0,232.2 L373.2,232.5 L374.3,232.7 L375.5,232.9 L376.7,233.1 L377.9,233.3 L379.0,233.5 L380.2,233.7 L381.4,233.9 L382.6,234.1 L383.7,234.3 L384.9,234.5 L386.1,234.7 L387.2,234.9 L388.4,235.0 L389.6,235.2 L390.8,235.4 L392.0,235.6 L393.1,235.8 L394.3,235.9 L395.5,236.1 L396.6,236.3 L397.8,236.4 L399.0,236.6 L400.2,236.8 L401.3,236.9 L402.5,237.1 L403.7,237.3 L404.9,237.4 L406.1,237.6 L407.2,237.7 L408.4,237.9 L409.6,238.0 L410.8,238.2 L411.9,238.4 L413.1,238.5 L414.3,238.6 L415.4,238.8 L416.6,238.9 L417.8,239.1 L419.0,239.2 L420.1,239.4 L421.3,239.5 L422.5,239.6 L423.7,239.8 L424.9,239.9 L426.0,240.0 L427.2,240.2 L428.4,240.3 L429.6,240.4 L430.7,240.5 L431.9,240.7 L433.1,240.8 L434.2,240.9 L435.4,241.0 L436.6,241.2 L437.8,241.3 L438.9,241.4 L440.1,241.5 L441.3,241.6 L442.5,241.8 L443.7,241.9 L444.8,242.0 L446.0,242.1 L447.2,242.2 L448.4,242.3 L449.5,242.4 L450.7,242.5 L451.9,242.6 L453.0,242.7 L454.2,242.9 L455.4,243.0 L456.6,243.1 L457.8,243.2 L458.9,243.3 L460.1,243.4 L461.3,243.5 L462.4,243.6 L463.6,243.7 L464.8,243.8 L466.0,243.9 L467.1,244.0 L468.3,244.0 L469.5,244.1 L470.7,244.2 L471.8,244.3 L473.0,244.4 L474.2,244.5 L475.4,244.6 L476.6,244.7 L477.7,244.8 L478.9,244.9 L480.1,244.9 L481.2,245.0 L482.4,245.1 L483.6,245.2 L484.8,245.3 L485.9,245.4 L487.1,245.5 L488.3,245.5 L489.5,245.6 L490.7,245.7 L491.8,245.8 L493.0,245.9 L494.2,245.9 L495.4,246.0 L496.5,246.1 L497.7,246.2 L498.9,246.2 L500.1,246.3 L501.2,246.4 L502.4,246.5 L503.6,246.5 L504.8,246.6 L505.9,246.7 L507.1,246.8 L508.3,246.8 L509.5,246.9 L510.6,247.0 L511.8,247.0 L513.0,247.1 L514.1,247.2 L515.3,247.2 L516.5,247.3 L517.7,247.4 L518.8,247.4 L520.0,247.5 L521.2,247.6 L522.4,247.6 L523.5,247.7 L524.7,247.8 L525.9,247.8 L527.1,247.9 L528.2,247.9 L529.4,248.0 L530.6,248.1 L531.8,248.1 L533.0,248.2 L534.1,248.2 L535.3,248.3 L536.5,248.4 L537.6,248.4 L538.8,248.5 L540.0,248.5" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<line x1="187.5" y1="76.7" x2="187.5" y2="260" stroke="#a8322a" stroke-dasharray="3 3"/>
+<circle cx="187.5" cy="76.7" r="4" fill="#a8322a"/>
+<text x="108.8" y="128.3" fill="#a8322a">内部：E ∝ r</text>
+<text x="269.8" y="159.2" fill="#a8322a">外部：E ∝ 1/r²</text>
+</g></svg>
+<figcaption>図4Q.1　一様に帯電した球（半径 $a$）の電場の強さ（$r=a$ での値で規格化）。内部は $E\propto r$、外部は $E\propto r^{-2}$ で、$r=a$ で最大かつ連続につながる。数値から計算して描いた。</figcaption></figure>
+
+<h3><span class="no">3.3</span>(3) 電気エネルギーの総量</h3>
+<p>電場が存在する<strong>全空間</strong>（雲の内側 $0\to a$ ＋ 外側 $a\to\infty$）で、エネルギー密度 $w=\tfrac12\varepsilon_0E^2$ を積分する。半径 $r$・厚さ $\mathrm dr$ の球殻の体積は $4\pi r^2\mathrm dr$。</p>
+
+<div class="proof">
+<p><span class="step">STEP 1（内側）</span>　(2) の $E$ を代入する。$\Bigl(\dfrac{Qr}{4\pi\varepsilon_0a^3}\Bigr)^2=\dfrac{Q^2r^2}{16\pi^2\varepsilon_0^2a^6}$ なので</p>
+$$U_{\text{内}}=\frac{\varepsilon_0}{2}\int_0^a\frac{Q^2r^2}{16\pi^2\varepsilon_0^2a^6}\,4\pi r^2\,\mathrm dr=\frac{Q^2}{8\pi\varepsilon_0a^6}\int_0^ar^4\,\mathrm dr$$
+<p>（係数：$\dfrac{\varepsilon_0}{2}\cdot\dfrac{4\pi}{16\pi^2\varepsilon_0^2}=\dfrac{1}{8\pi\varepsilon_0}$。$r^2\cdot r^2=r^4$。）$\displaystyle\int_0^ar^4\mathrm dr=\dfrac{a^5}{5}$ だから</p>
+$$U_{\text{内}}=\frac{Q^2}{8\pi\varepsilon_0a^6}\cdot\frac{a^5}{5}=\frac{Q^2}{40\pi\varepsilon_0a}$$
+<p><span class="step">STEP 2（外側）</span>　(1) の $E$ を代入する。$\Bigl(\dfrac{Q}{4\pi\varepsilon_0r^2}\Bigr)^2=\dfrac{Q^2}{16\pi^2\varepsilon_0^2r^4}$ なので、係数は STEP 1 と同じ $\dfrac1{8\pi\varepsilon_0}$、$r$ のべきは $r^{-4}\cdot r^2=r^{-2}$：</p>
+$$U_{\text{外}}=\frac{Q^2}{8\pi\varepsilon_0}\int_a^\infty\frac{\mathrm dr}{r^2}=\frac{Q^2}{8\pi\varepsilon_0}\Bigl[-\frac1r\Bigr]_a^\infty=\frac{Q^2}{8\pi\varepsilon_0a}$$
+<p><span class="step">STEP 3（和）</span>　通分する：$\dfrac1{40}+\dfrac1{8}=\dfrac1{40}+\dfrac5{40}=\dfrac6{40}=\dfrac3{20}$。</p>
+$$U=U_{\text{内}}+U_{\text{外}}=\frac{Q^2}{40\pi\varepsilon_0a}+\frac{Q^2}{8\pi\varepsilon_0a}=\frac{3Q^2}{20\pi\varepsilon_0a}$$
+</div>
+<div class="box"><strong>答え (3)</strong>　$U=\dfrac{3Q^2}{20\pi\varepsilon_0a}$：$b=\tfrac3{20},\ i=-1,\ j=-1,\ k=-1,\ m=2$。</div>
+
+<table class="tb">
+<tr><th></th><th>$b$</th><th>$i$（$\pi$）</th><th>$j$（$\varepsilon_0$）</th><th>$k$（$a$）</th><th>$l$（$r$）</th><th>$m$（$Q$）</th></tr>
+<tr><td>(1) $E(r),\ r\ge a$</td><td>1/4</td><td>−1</td><td>−1</td><td>0</td><td>−2</td><td>1</td></tr>
+<tr><td>(2) $E(r),\ r\le a$</td><td>1/4</td><td>−1</td><td>−1</td><td>−3</td><td>1</td><td>1</td></tr>
+<tr><td>(3) $U$</td><td>3/20</td><td>−1</td><td>−1</td><td>−1</td><td>（なし）</td><td>2</td></tr>
+</table>
+
+<h3><span class="no">3.4</span>検算</h3>
+<div class="proof">
+<p><span class="step">検算1（単位）</span>　(3) の単位：$\dfrac{\mathrm C^2}{\mathrm C^2\mathrm N^{-1}\mathrm m^{-2}\cdot\mathrm m}=\mathrm N\,\mathrm m=\mathrm J$ ✓。(1)(2) は第3回と同じ方法で、$\dfrac{\mathrm C}{\mathrm C^2\mathrm N^{-1}\mathrm m^{-2}\cdot\mathrm m^{2}}=\mathrm N/\mathrm C$ ✓（(2) は $\dfrac{\mathrm m\cdot\mathrm C}{\mathrm C^2\mathrm N^{-1}\mathrm m^{-2}\cdot\mathrm m^{3}}=\mathrm N/\mathrm C$ ✓）。</p>
+<p><span class="step">検算2（別の道筋）</span>　電荷の見方でもう一度計算する。一様な球の電位は、内部で $V(r)=\dfrac{Q(3a^2-r^2)}{8\pi\varepsilon_0a^3}$（外部は $\dfrac{Q}{4\pi\varepsilon_0r}$、$r=a$ でつながる）。エネルギーは「各電荷が自分のいる場所の電位から受けるエネルギーの合計の半分」$U=\tfrac12\int\rho V\,\mathrm dv$ なので $\dfrac12\cdot\dfrac{3Q}{4\pi a^3}\displaystyle\int_0^a\dfrac{Q(3a^2-r^2)}{8\pi\varepsilon_0a^3}4\pi r^2\mathrm dr=\dfrac{3Q^2}{20\pi\varepsilon_0a}$。<strong>場の積分と一致する</strong>（4.3 節で導体球についてやったのと同じ「2つの見方が一致」）。この式 $U=\tfrac12\int\rho V\,\mathrm dv$ は本編では扱っていない補足で、ここでは検算にだけ使った。</p>
+<p><span class="step">検算3（SymPy）</span>　内側・外側の積分と和（$\tfrac{3}{20\pi}$）、および境界での電場の連続を、Python（SymPy）でも確かめた。</p>
+<p><span class="step">検算4（数値）</span>　$Q=1.0$ nC、$a=0.10$ m：$E(a)=\dfrac{8.99\times10^{9}\times10^{-9}}{0.10^2}=9.0\times10^{2}$ N/C、$E(a/2)=\tfrac12E(a)=4.5\times10^{2}$ N/C、$U=\dfrac{3\times(10^{-9})^2}{20\pi\times8.85\times10^{-12}\times0.10}=5.4\times10^{-8}$ J（約 54 nJ。内側 9.0 nJ ＋ 外側 44.9 nJ）。</p>
+</div>
+
+<h3><span class="no">3.5</span>この答えが教えること：導体球との比べ</h3>
+<div class="why"><span class="label">同じ $Q$ と $a$ でも、電荷の置き方でエネルギーが変わる</span>
+<p>第4回 4.3 節の<strong>導体球</strong>（電荷が表面にだけある）の全エネルギーは $\dfrac{Q^2}{8\pi\varepsilon_0a}$。これは今回の「雲の外側」の分 $U_{\text{外}}$ とまったく同じで、<strong>内部に電場がない</strong>ので内側の分が 0 だからである。一様な雲は、内部にも電場があり、その分だけ多く $U=\dfrac65\cdot\dfrac{Q^2}{8\pi\varepsilon_0a}$（導体球の $1.2$ 倍）になる。電荷を同じ半径 $a$ の中で「表面に集める」より「中に広げる」ほうが、<strong>電荷どうしが近くに寄るぶんエネルギーが高い</strong>。そしてこの差は、エネルギーが電場のあるところに蓄えられている、という見方がそのまま数字になったものである。</p>
+</div>
+
+<div class="warn">
+<span class="label">よくあるミス</span>
+<ul>
+<li>(2) で内側の電荷を $Q$ のままにする → 半径 $r$ の球面が包むのは雲の一部だけ。体積比 $r^3/a^3$ を忘れない。</li>
+<li>(2) の $r^3/r^2$ の約分を忘れて $r$ の指数を $l=-2$ のままにする → $l=+1$（電場は $r$ に比例）。</li>
+<li>(3) で内側にも (1) の $E\propto1/r^2$ を使って積分する（$0$ で発散する）→ 内側は (2) の式を使う。区間ごとに式が違う。</li>
+<li>(3) で $4\pi r^2\mathrm dr$（球殻の体積）をかけ忘れる、または $\varepsilon_0/2$ の $\tfrac12$ を落とす。</li>
+<li>(3) の足し算で $\tfrac1{40}+\tfrac18=\tfrac1{48}$（分母を足す）としてしまう → 通分して $\tfrac6{40}=\tfrac3{20}$。</li>
+<li>(3) の指数：$\pi$ は $\dfrac1{40\pi}$ でも $\dfrac{3}{20\pi}$ でも $i=-1$。$a$ は分母なので $k=-1$、$Q$ は2乗なので $m=2$。$\varepsilon_0$ は $j=-1$。</li>
+</ul>
+<p class="note">分数（$3/20$ など）の入力形式は Moodle の指示に従うこと。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>まとめ</h2>
+<div class="box">
+<ul>
+<li>□ 球対称の問題では、同心の球面を閉曲面に選び、「内側に含まれる電荷」だけを数える</li>
+<li>□ 雲の外は点電荷と同じ $E=\dfrac{Q}{4\pi\varepsilon_0r^2}$、内部は $E=\dfrac{Qr}{4\pi\varepsilon_0a^3}$（$r$ に比例）、境界でつながる</li>
+<li>□ エネルギーは $\tfrac12\varepsilon_0E^2$ に球殻の体積 $4\pi r^2\mathrm dr$ をかけ、<strong>区間ごとに式を変えて</strong>積分する</li>
+<li>□ 内側 $\dfrac{Q^2}{40\pi\varepsilon_0a}$ ＋ 外側 $\dfrac{Q^2}{8\pi\varepsilon_0a}$ ＝ $\dfrac{3Q^2}{20\pi\varepsilon_0a}$（導体球の $\tfrac65$ 倍）</li>
+</ul>
+</div>
+
+<p class="meta">出典：10/19 講義配布の小テスト（要約）。ヒント・解説・検算方法は本教材の自作。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="04_第4回_電場のエネルギー.html"><small>LESSON 4</small>← 教材：第4回</a></nav>
+
+</body>
+</html>
