@@ -156,6 +156,16 @@ $$F\times0.910=N\times0.380$$</p>
 $$F=N\cdot\frac{0.380}{0.910}=784\times0.41758=327.4\ \mathrm{N}$$
 ⑥ <strong>確かめ</strong>：(i) <strong>てこの向き</strong>：$F$ の腕（910 mm）が $N$ の腕（380 mm）より長いので $F\lt N$ ✓。 (ii) <strong>「最小」の意味</strong>：$F$ を増やすと $N$ が増え、摩擦の上限 $\mu N$ が増えて、滑車は止まる（$F$ が 327 N より小さいと $\mu N\lt196$ で滑車が回り、おもりが落ちる）✓。 (iii) <strong>単位</strong>：$mg$ [N]、$\mu$ は無次元、長さの比は無次元で、答えは N ✓。</p>
 <p><strong>答え：$F\approx327\ \mathrm{N}$</strong>（$g=9.80$ のとき 327.4 N）</p></div>
+<div class="why"><span class="label">🙋 質問から追加：なぜ「最小の $F$」で $f=\mu N$（等号）になるのか</span>
+<p><strong>① 必要な摩擦と、出せる摩擦は別物</strong>。滑車を止めるのに<strong>必要な</strong>摩擦力は、モーメントの釣合いから $f=196\ \mathrm N$ と決まり、$F$ が何でも変わらない。一方、接触面が<strong>出せる</strong>摩擦力には上限 $\mu N$ がある。止まる条件は「必要な分 ≦ 出せる上限」：
+$$196\le\mu N$$</p>
+<p><strong>② $F$ は上限 $\mu N$ を通して効く</strong>。$F$ を増やすと、てこで $N=F	imes\dfrac{910}{380}$ が増え、上限 $\mu N$ も増える。条件 $196\le\mu N$ は $N\ge784\ \mathrm N$、すなわち $F\ge327.4\ \mathrm N$ と同じ。</p>
+<table class="tb"><tr><th>$F$ [N]</th><th>$N$ [N]</th><th>上限 $\mu N$ [N]</th><th>必要な $f$ [N]</th><th>結果</th></tr>
+<tr><td>200</td><td>479</td><td>120</td><td>196</td><td>上限が足りず<strong>滑る</strong></td></tr>
+<tr><td>327.4</td><td>784</td><td>196</td><td>196</td><td><strong>ぎりぎり止まる</strong></td></tr>
+<tr><td>400</td><td>958</td><td>240</td><td>196</td><td>止まる（余裕あり）</td></tr></table>
+<p><strong>③ だから等号</strong>。「止まる $F$ の範囲」は $F\ge327.4$ で、その<strong>最小値は境目</strong>の 327.4 N。境目では上限と必要な力がちょうど等しいので、$f=\mu N$ となる。</p>
+<p><strong>④ 注意</strong>。$F=400$ N のとき、摩擦力が上限の 240 N になるわけではない。出るのは必要な 196 N だけ。$f=\mu N$ が成り立つのは、滑り出す直前（境目）だけである。</p></div>
 <div class="warn"><span class="label">よくある誤り</span>(1) 「$F$ と $N$ が同じ」と考えてしまう：レバーは<strong>てこ</strong>なので、A からの距離の比 380 : 910 を掛ける。 (2) 摩擦力を最初から $\mu N$ と置いて、おもりの重さ（$f=mg$ という釣合い）を使わない：摩擦力の大きさは<strong>釣合いが決め</strong>、$\mu N$ は上限。「滑車を止めるのに必要な $f$」から逆算して $N$ を出す。 (3) 直径 300 mm や滑車の半径を式に入れてしまう（実際は約分で消える）。 (4) 摩擦のモーメントを A まわりに入れる：レバーが水平で、摩擦も水平なので、A まわりのモーメントは 0（レバーの厚みは無視）。</div>
 
 <!-- ============================================================ -->
