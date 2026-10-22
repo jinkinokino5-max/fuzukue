@@ -672,6 +672,15 @@ $$U=\sum_{\text{ペア }i\lt j}\frac{q_iq_j}{4\pi\varepsilon_0\,r_{ij}}\qquad(5.
 <p>③ 外側：4.3節と同じ計算で $W_{\text{外}}=\dfrac{Q^2}{8\pi\varepsilon_0R}=\dfrac{5Q^2}{40\pi\varepsilon_0R}$。</p>
 <p>④ 合計：$W_{\mathrm e}=\dfrac{(1+5)Q^2}{40\pi\varepsilon_0R}=\dfrac{3Q^2}{20\pi\varepsilon_0R}$。</p>
 <p>⑤ 【比較】表面だけに分布する導体球は $\dfrac{Q^2}{8\pi\varepsilon_0R}=\dfrac{5Q^2}{40\pi\varepsilon_0R}$。一様な球はその $\dfrac65$ 倍で、内側にも電場があるぶんだけ大きい。差は内側の $\dfrac{Q^2}{40\pi\varepsilon_0R}$ にほかならない。</p></div>
+<div class="why"><span class="label">🙋 質問から追加：例題2の体積分はどう扱っているのか</span>
+<p>(4.1) は「エネルギー密度 $w$ [J/m³] × 体積」を全空間で足す式 $W=\displaystyle\int w\,\mathrm dV$ である。体積分と言っても、<strong>$w$ が場所によらず $r$ だけで決まる</strong>（球対称）ので、1変数の積分に直せる。</p>
+<p><span class="step">STEP 1</span>　$w=\tfrac12\varepsilon_0E^2$ で、$E$ は中心からの距離 $r$ だけの関数。よって同じ $r$ の点は、球面上のどこでも $w$ が同じ値である。</p>
+<p><span class="step">STEP 2</span>　空間を、半径 $r$ と $r+\mathrm dr$ の球面にはさまれた薄い球殻に切り分ける。1つの殻の中では $w$ を一定とみなせる（薄いので）。</p>
+<p><span class="step">STEP 3</span>　殻の体積：球の体積 $\tfrac43\pi r^3$ を $r$ で微分して $\mathrm dV=4\pi r^2\,\mathrm dr$（＝表面積 $4\pi r^2$ × 厚さ $\mathrm dr$。薄い殻は、球面を厚さ分だけ引き伸ばした形だから）。</p>
+<p><span class="step">STEP 4</span>　殻1つのエネルギーは $w(r)\cdot4\pi r^2\mathrm dr$。これを $r$ について足し合わせる：$W=\displaystyle\int_0^\infty w(r)\,4\pi r^2\,\mathrm dr$。</p>
+<p><span class="step">STEP 5</span>　$E$ の式が $r\lt R$ と $r\gt R$ で違うので、積分を $\int_0^R$（内側、例題の②）と $\int_R^\infty$（外側、③）に<strong>2つに分ける</strong>。</p>
+<p>補足：球座標の体積要素 $r^2\sin\theta\,\mathrm dr\,\mathrm d\theta\,\mathrm d\phi$ で、$w$ が角度によらないとき、角度部分は $\displaystyle\int_0^\pi\sin\theta\,\mathrm d\theta\int_0^{2\pi}\mathrm d\phi=2\times2\pi=4\pi$ となり、同じ $4\pi r^2\mathrm dr$ になる。</p>
+<p>確かめ（次元）：$w\,[\mathrm{J/m^3}]\times4\pi r^2\mathrm dr\,[\mathrm{m^3}]=[\mathrm J]$ で、エネルギーになっている。</p></div>
 
 <div class="ex"><span class="label">例題3〔B〕充電したコンデンサをつなぐ</span>
 <p>$40\ \mathrm{pF}$ のコンデンサを $500\ \mathrm V$ に充電し、その端子を、充電されていない $10\ \mathrm{pF}$ のコンデンサの端子につなぐ。(a) $40\ \mathrm{pF}$ のコンデンサの最初の電荷、(b) つないだ後の各コンデンサの電荷、(c) つないだ後の各コンデンサの電圧を求めよ。また (d) つなぐ前後のエネルギーを比べよ。</p>
