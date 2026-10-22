@@ -730,6 +730,30 @@ $$c_1=\frac1{\sqrt3},\qquad c_2=\sqrt{\frac23},\qquad c_n=0\ (n\ne1,2)$$
 <p>(4) $\langle H\rangle=\frac{\langle p^2\rangle}{2m}+\frac12m\omega^2\langle x^2\rangle=\frac{\hbar\omega}{4}+\frac{\hbar\omega}{4}=\frac12\hbar\omega$。固有値 $E$ と一致する（固有状態なので $\Delta H=0$、測れば必ず $\frac12\hbar\omega$）。運動と位置のエネルギーが半分ずつ。</p>
 <p>(5) $\langle x\rangle=\langle p\rangle=0$（偶関数・実関数）なので $\Delta x\,\Delta p=\sqrt{\frac{\hbar}{2m\omega}\cdot\frac{m\hbar\omega}{2}}=\frac{\hbar}{2}$。第3回のガウス波束と同じく、不確定性関係の下限ちょうど。</p></div>
 
+<div class="why"><span class="label">🙋 質問から追加：例題 8-3 (3)〜(5) を1行ずつほどく</span>
+<p>使う道具は3つだけ：$\langle A\rangle=\int\psi^*\hat A\psi\,dx$（命題 IV）、$\hat p=-i\hbar\,\partial_x$、(2) で求めた $\langle x^2\rangle=b^2/2$。$\psi_0$ は実数なので $\psi^*=\psi$ である。</p>
+<p><strong>(3) $\langle p^2\rangle$：</strong></p>
+<p>① $\hat p^2=(-i\hbar\,\partial_x)^2=-\hbar^2\partial_x^2$ なので、$\langle p^2\rangle=\displaystyle\int\psi\,(-\hbar^2\psi'')\,dx$。2階微分を直接計算するのは面倒なので、微分を片方に回す。</p>
+<p>② <strong>部分積分</strong>（$\int fg'dx=[fg]-\int f'g\,dx$ で $f=\psi$、$g=\psi'$）：
+$$\int\psi\,\psi''dx=\big[\psi\,\psi'\big]_{-\infty}^{\infty}-\int(\psi')^2dx$$
+$\psi$ はガウス関数で $x\to\pm\infty$ で 0 に落ちるので、境界項 $[\psi\psi']$ は 0。よって $\langle p^2\rangle=-\hbar^2\cdot\big(-\int(\psi')^2dx\big)=\hbar^2\displaystyle\int(\psi')^2dx$。</p>
+<p>③ $\psi'$ を計算する。$\psi=Ce^{-x^2/2b^2}$ を微分すると、指数部分の微分 $-x/b^2$ が前に出て $\psi'=-\dfrac{x}{b^2}\psi$。</p>
+<p>④ ②に代入：$(\psi')^2=\dfrac{x^2}{b^4}\psi^2$ なので
+$$\langle p^2\rangle=\frac{\hbar^2}{b^4}\int x^2\psi^2dx=\frac{\hbar^2}{b^4}\langle x^2\rangle=\frac{\hbar^2}{b^4}\cdot\frac{b^2}{2}=\frac{\hbar^2}{2b^2}$$
+最後の積分は $\langle x^2\rangle$ の定義そのもので、(2) の結果を使えた。</p>
+<p>⑤ $b^2=\hbar/m\omega$ を入れる：$\dfrac{\hbar^2}{2b^2}=\dfrac{\hbar^2}{2}\cdot\dfrac{m\omega}{\hbar}=\dfrac{m\hbar\omega}{2}$。</p>
+<p><strong>(4) $\langle H\rangle$：</strong>調和振動子のエネルギーは $\hat H=\dfrac{\hat p^2}{2m}+\dfrac12m\omega^2x^2$（運動 ＋ ばねの位置エネルギー）。平均は項ごとにとれるので、$\langle H\rangle=\dfrac{\langle p^2\rangle}{2m}+\dfrac12m\omega^2\langle x^2\rangle$。
+・第1項：$\dfrac{1}{2m}\cdot\dfrac{m\hbar\omega}{2}=\dfrac{\hbar\omega}{4}$
+・第2項：$\dfrac12m\omega^2\cdot\dfrac{\hbar}{2m\omega}=\dfrac{\hbar\omega}{4}$
+合計 $\dfrac12\hbar\omega$。$\psi_0$ は $\hat H$ の固有関数（固有値 $\frac12\hbar\omega$）なので、何度測っても同じ値で、平均と一致するのは自然である。</p>
+<p><strong>(5) $\Delta x\,\Delta p$：</strong></p>
+<p>① $\Delta x=\sqrt{\langle x^2\rangle-\langle x\rangle^2}$、$\Delta p=\sqrt{\langle p^2\rangle-\langle p\rangle^2}$（第3回の標準偏差の定義）。平均 $\langle x\rangle$、$\langle p\rangle$ を先に求める必要がある。</p>
+<p>② $\langle x\rangle=\int x\,\psi^2dx$：$x$ は奇関数、$\psi^2$ は偶関数なので、積分される関数は奇関数。左右で打ち消し合って 0。</p>
+<p>③ $\langle p\rangle=\int\psi\,(-i\hbar\psi')dx=-\dfrac{i\hbar}{2}\big[\psi^2\big]_{-\infty}^{\infty}=0$（$\psi\psi'=\frac12(\psi^2)'$ で、両端で 0）。</p>
+<p>④ よって $(\Delta x)^2=\dfrac{\hbar}{2m\omega}$、$(\Delta p)^2=\dfrac{m\hbar\omega}{2}$。掛けると
+$$(\Delta x)^2(\Delta p)^2=\frac{\hbar}{2m\omega}\cdot\frac{m\hbar\omega}{2}=\frac{\hbar^2}{4}\ \Rightarrow\ \Delta x\,\Delta p=\frac{\hbar}{2}$$
+$m$ と $\omega$ が約分で消えるのがポイントで、ばねの強さによらず積は一定になる。これは不確定性関係 $\Delta x\,\Delta p\ge\hbar/2$ の下限ちょうどである。</p></div>
+
 <!-- ============================================================ -->
 <h2><span class="no">9</span>演習問題</h2>
 
