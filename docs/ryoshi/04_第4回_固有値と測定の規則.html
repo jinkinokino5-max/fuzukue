@@ -701,6 +701,16 @@ $$[\hat x,\hat p]=i\hbar\tag{7.1}$$</p></div>
 <p>(2) $\langle p\rangle=\tfrac13p_1+\tfrac23p_2=\tfrac13\cdot\tfrac hL+\tfrac23\cdot\tfrac{2h}{L}=\tfrac53\,\tfrac hL$。</p>
 <p>(3) 1回目の後、状態は $u_2$（命題 V の 2）。2回目は確率 1 で $p_2=2h/L$、$\langle p\rangle=2h/L$、$\Delta p=0$。<strong>測定は状態を変える</strong>ので、1回目の前の $\langle p\rangle=\frac53\frac hL$ とは違う。なお、測定と測定の間に時間がたっても、$u_2$ はエネルギーの固有関数でもある（$\hat H=\hat p^2/2m$ なので $\hat Hu_2=\frac{p_2^2}{2m}u_2$）から、6.5 節の定常状態で、結果は変わらない。</p></div>
 
+<div class="why"><span class="label">🙋 質問から追加：例題 8-2 の $c_1,c_2$ とは何か（$x$ はどこへ行ったか）</span>
+<p><strong>$c_n$ は新しい変数ではなく、問題文の係数に付けた名前である。</strong>$x$ の関数であることは変わっておらず、$x$ は $u_n(x)$ の中に入っている。</p>
+<p>① 基本命題 VI の展開 (5.1) $\psi(x)=\sum_a c_a\,\psi_a(x)$ を、円周上の粒子（運動量の固有関数 $u_n(x)=e^{2\pi inx/L}/\sqrt L$、3.4 節）に当てはめると $\psi(x)=\sum_n c_n\,u_n(x)$。ここで $c_n$ は $x$ によらない<strong>ただの数</strong>で、「$\psi$ の中に $u_n$ がどれだけ含まれるか」を表す。</p>
+<p>② 問題文の $\psi=\dfrac{1}{\sqrt3}\,u_1+\sqrt{\dfrac23}\,u_2$ を、①の形と見比べる。$u_1$ の前の数が $c_1$、$u_2$ の前の数が $c_2$ で、ほかの $n$ には項がないので $c_n=0$：
+$$c_1=\frac1{\sqrt3},\qquad c_2=\sqrt{\frac23},\qquad c_n=0\ (n\ne1,2)$$
+解答 (1) の $\sum|c_n|^2=\tfrac13+\tfrac23$ は、これを代入したものである。</p>
+<p>③ 読み方は、2次元のベクトル $\vec v=c_1\vec e_1+c_2\vec e_2$ と同じである。$\vec e_1,\vec e_2$ が $u_1,u_2$、成分 $c_1,c_2$ が展開係数に当たる。$\vec e_n$ が直交する単位ベクトルであるように、$u_n$ も直交規格化されている（3.7 式）。</p>
+<p>④ <strong>確かめ</strong>：$\psi$ に左から $u_1^*$ をかけて積分すると、(5.3) と (3.7) より $\int u_1^*\psi\,dx=c_1\cdot1+c_2\cdot0=c_1$。係数 $c_1$ はこの積分で取り出せる。</p>
+<p>⑤ $|c_n|^2$ は $p_n$ が出る確率である。したがって $P(p_1)=\tfrac13$、$P(p_2)=\tfrac23$、(2) の $\langle p\rangle=\tfrac13p_1+\tfrac23p_2$ が出る。</p></div>
+
 <div class="ex"><span class="label">例題 8-3【B 標準】調和振動子の基底状態の期待値</span>
 <p>例題 3-2 の $\psi_0=C\,e^{-x^2/2b^2}$（$b=\sqrt{\hbar/m\omega}$）について、(1) 規格化定数 $C$、(2) $\langle x^2\rangle$、(3) $\langle p^2\rangle$、(4) $\langle H\rangle$、(5) $\Delta x\,\Delta p$ を求めよ。ガウス積分 $\int e^{-x^2/b^2}dx=\sqrt\pi\,b$、$\int x^2e^{-x^2/b^2}dx=\frac{\sqrt\pi}{2}b^3$ を使ってよい（第3回 6.1 節、後者は前者を $1/b^2$ で微分して得られる）。</p>
 <p><strong>解答</strong></p>
