@@ -151,6 +151,12 @@ $$V=Ed\qquad(1.2)$$
 
 <h3><span class="no">1.3</span>点電荷の電位</h3>
 <p>球対称な電場では、電場は電荷から遠ざかる向きを向いている。基準点を<strong>無限遠</strong>（資料：「基準点としてはしばしば無限遠点が選ばれる」）にとると、点電荷 $Q$ から距離 $r$ の点の電位 $\phi(r)$ は、<strong>無限遠から $r$ まで単位正電荷を運ぶ仕事</strong>である。ただし電場の力に逆らう向きに運ぶので、これは電場が単位電荷に（$r$ から無限遠まで動かすときに）する仕事 $\int_r^\infty E\,\mathrm dr'$ と同じ値になる。</p>
+<div class="why"><span class="label">🙋 質問から追加：この文は符号が逆になっていないか？</span>
+<p>結論：<strong>逆にならない</strong>。比べているのは「向きの違う2つの道筋の仕事」だからである（$Qgt 0$、$E$ は外向き）。</p>
+<p>① 求めたいもの：$\infty\to r$ へ内向きに運ぶ<strong>外力</strong>の仕事。外力は進行方向（内向き）を向くので正：$W_{\text{外力}}=-\int_\infty^r E\,\mathrm dr'=\int_r^\infty E\,\mathrm dr'gt 0$（積分の上下端を入れ替えると符号が変わる）。</p>
+<p>② 文中の仕事：$r\to\infty$ へ外向きに動くときに<strong>電場</strong>がする仕事。電場の力は外向きで進行方向と同じなので正：$\int_r^\infty E\,\mathrm dr'gt 0$。</p>
+<p>①と②は同じ積分なので等しい。逆符号になるのは、<strong>同じ道筋（$\infty\to r$）</strong>で「外力の仕事」と「電場の仕事」を比べたとき（$W_{\text{場}}=-W_{\text{外力}}$）であり、それは文中の比較ではない。</p>
+<p>確認：$Qgt 0$ なら $\phi(r)gt 0$（正電荷を近づけるには押し込む仕事が要る）。式 $\phi=\dfrac{Q}{4\pi\varepsilon_0 r}gt 0$ と一致する。</p></div>
 <div class="proof">
 <p><span class="step">STEP 1</span>　距離 $r'$ での電場の大きさ（外向き）は $E(r')=\dfrac{Q}{4\pi\varepsilon_0r'^2}$（第1回）。</p>
 <p><span class="step">STEP 2</span>　$r'$ から $r'+\mathrm dr'$ まで動く間の仕事は $E(r')\,\mathrm dr'$（距離が短ければ、その間 $E$ を一定とみなせる）。これを $r$ から $\infty$ まで足し合わせる：
