@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6回 摩擦力｜機械力学</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 第6回（2026-10-22）講義資料「第6回.pdf」対応（CLAUDE.md §8【最重要2】：順序と説明を組み直した）。設計：draft/06_設計.md。読み物コラムは保留（ユーザー指示）。 -->
+<figure class="hero">
+<img src="img/hero_06.jpg" alt="青空の下、角の丸い巨大な灰色の石が隙間なく積まれた、横に長い石垣。手前は乾いた芝">
+<div class="ttl" style="left:3%;top:4%;background:rgba(247,244,236,.88);padding:12px 22px 14px"><p class="vol">第6回</p><h1>摩擦力</h1></div>
+<figcaption><p class="cap">モルタルのない石垣の石は、自分の重さと、接する面の摩擦力だけで、互いを押さえている。</p><p class="cr">Diego Delso／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Sacsayhuam%C3%A1n,_Cusco,_Per%C3%BA,_2015-07-31,_DD_27.JPG">Wikimedia Commons</a>（サクサイワマンの石積み、2015年撮影）</p></figcaption>
+</figure>
+<p class="lead">2026-10-22／講義資料「第6回」（教科書 3.3節 p.39〜、例題3・6、3・7）と、補足資料（摩擦の法則、ねじ、ロープ・ベルト、転がり）の範囲。これまでの釣合いの問題では、床や壁が物体に及ぼす力を、面に垂直な <strong>垂直抗力</strong> だけと見てきた。しかし現実の面は、面に<strong>沿った</strong>力も出す。それが摩擦力である。この回の目標は、摩擦力を「いつも $\mu N$ の力」と思い込まず、<strong>釣合いから決まる未知数</strong>として扱い、<strong>動き出す直前だけ</strong>上限 $\mu_sN$ を使い、そのとき<strong>向きを正しく決める</strong>ことである。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：<br>
+【動機】押しても動かない箱——摩擦力は押す力に応じて変わる（1.1）→ 【定義】静止摩擦力は釣合いで決まり、上限が $F_{s\,\max}=\mu_sN$、運動中は $F_k=\mu_kN$（1.1）<br>
+→ 【原則】摩擦力は未知数として釣合い式から求め、<strong>上限を超えないか</strong>を確かめる／動き出す直前だけ $F=\mu_sN$ を使い、向きは<strong>運動しようとする向きの逆</strong>（2章）<br>
+→ 【例】斜面の摩擦角、立てかけた棒、斜面の物体を押す・引く（2章）、積み重なった2物体のどちらが先に滑るか（3章）<br>
+→ 【機械要素】ねじの斜面モデル、ロープの巻き付き、転がり抵抗（4章）→ 【運用】台車は<strong>滑るのが先か、倒れるのが先か</strong>（5章）
+</div>
+
+<div class="box"><span class="label">この回で使う前提</span>
+<ul>
+<li><strong>仮定する</strong>：第1〜5回（力の分解、モーメント、釣合い式、FBD、支点反力、重心と、重さを重心に置く等価）。</li>
+<li><strong>この回で一から説明する</strong>：斜面での重力の成分への分解、三角関数の加法定理（ねじの式で使う）、指数関数 $e^{-x}$ の値の読み方と、微小量の近似 $\sin\varepsilon\simeq\varepsilon$（ロープの式で使う）、不等式の形の釣合い条件。</li>
+<li><strong>後回しにする</strong>：運動中の摩擦による加速度（動力学。第10回以降）、ブレーキやクラッチなど摩擦の応用の詳細、流体の摩擦（粘性）。</li>
+</ul></div>
+
+<div class="box"><span class="label">この教材の作り方について</span>講義スライドは穴埋め式で、空欄の答えのうち<strong>PDFのテキスト層に残っていたもの</strong>（静止摩擦力、静止摩擦係数、最大静止摩擦力、動摩擦係数、摩擦角、凹凸、釣合い、滑らない、摩擦力の向きの取扱い、など）は、本文に普通の文章として入れた。<strong>答えが画像の中にあって読み取れなかった空欄</strong>は、前後の式・図・標準的な内容から埋めて、そのつど<strong>「推定」</strong>と明記した（スライド9の3か所、19〜22の仮定と矛盾の判定、24の「摩擦の法則」の一部、26のねじの自己ロック、34の $a$ の名称）。スライドの数値の丸めなど気づいた点は <code>.warn</code> で注記した。計算はすべて Python（sympy・numpy）で検算してある（<code>draft/check_06.py</code>）。</div>
+
+<h2>序　この回の問い</h2>
+<p>第5回の最後（6章 (e)）で、台車を前向きに下り坂へ置いたとき、台車は <strong>54°</strong> の坂で前に倒れる、と計算した。そしてそのすぐ後に、「実際には、その前に車輪が<strong>滑る</strong>」と注意した。本当だろうか。何度の坂で滑るのか。倒れるのと滑るのと、どちらが先に起こるのか。——答えは、床と車輪の間に働く<strong>摩擦力</strong>に上限があるかどうかで決まる。これが今回の問いである。</p>
+<p>講義資料が挙げた「今日のポイント」は次の2つ。</p>
+<ol><li>摩擦は <strong>$F=\mu N$ じゃない</strong>！（1・2章）</li><li>摩擦力は<strong>向き</strong>の設定が大事（2章）</li></ol>
+<p>以下、この2つを軸に、教科書 3.3節（固体摩擦、釣合い、例題 3・6、3・7）→ 補足（複数の接触面、ねじ、ロープ、転がり）→ 台車の運用の順に進む。</p>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>固体摩擦の基本</h2>
+
+<h3><span class="no">1.1</span>動機と定義：摩擦力は「押す力に応じて変わる」</h3>
+<p><strong>動機</strong>：床に置いた重い箱を、手で軽く押してみる。動かない。もう少し強く押す。まだ動かない。さらに強く押すと、ある瞬間に急に動き出す。箱は押している間ずっと<strong>釣合って</strong>いる。つまり、押す力 $F$ と大きさが等しく、逆向きの力が、床から箱に働いているはずである。それが<strong>静止摩擦力</strong>である。押す力が大きくなれば、それに等しく大きくなる。</p>
+<figure class="slide"><img src="img/slide06/block.jpg" alt="床の上の物体Aに、上から重さW、右向きに作用力F。床からは上向きの垂直抗力Nと、左向きの静止摩擦力Fsが働く" loading="lazy" style="width:320px;max-width:80%;height:auto;background:#fff"><figcaption>講義資料の図（教科書 図3.16 相当）。作用力 $F$ に、床の摩擦力 $F_s$ が対抗する。出典：講義資料 第6回 p.3</figcaption></figure>
+<div class="def"><span class="label">定義（固体摩擦、静止摩擦力、最大静止摩擦力、動摩擦力）</span>
+<strong>固体摩擦</strong>（乾燥摩擦）：固体どうしが接触しているときに生じる摩擦。<br>
+<strong>静止摩擦力</strong> $\boldsymbol F_s$（static friction force）：力 $\boldsymbol F$ を作用させても物体が動かないとき、接触面に沿って $\boldsymbol F$ に対抗する力。大きさは釣合いで決まり、$F\le\mu_sN$ のあいだは静止、$F&gt;\mu_sN$ で運動する。<br>
+<strong>静止摩擦係数</strong> $\mu_s$（coefficient of static friction）。<br>
+<strong>最大静止摩擦力</strong> $F_{s\,\max}$（maximum static friction force）：$F_s$ のとりうる最大値。
+$$F_{s\,\max}=\mu_sN\qquad(1.1)\quad\text{（教科書 (3.63)）}$$
+運動が始まると<strong>動摩擦</strong>（kinetic friction）に移る。<strong>動摩擦力</strong> $F_k$ と<strong>動摩擦係数</strong> $\mu_k$（coefficient of kinetic friction）：
+$$F_k=\mu_kN\qquad(1.2)\quad\text{（教科書 (3.64)）}$$
+ここで $N$ は接触面に<strong>垂直な力の大きさ</strong>（垂直抗力）である。</div>
+<p>ここで大事なのは、(1.1) の等号が成り立つのは<strong>「動き出す直前」だけ</strong>だという点である。動いていない間の摩擦力は $F_s=\mu_sN$ ではなく、釣合いの式から決まる。講義資料の第1の「今日のポイント」——「摩擦は $F=\mu N$ ［じゃない］！」——は、この意味である。次の数値例で確かめる。</p>
+<div class="ex"><span class="label">例題1〔A｜自作〕箱を押す：摩擦力はいくらか</span>
+<p>水平な床に、質量 10 kg の箱が置かれている。床との間の静止摩擦係数は $\mu_s=0.5$、動摩擦係数は $\mu_k=0.4$。$g=9.81\ \mathrm{m/s^2}$。水平な力 $F$ で押すとき、(a) $F=20$ N、(b) $F=49$ N、(c) $F=60$ N のとき、箱に働く摩擦力はそれぞれいくらか。</p>
+<p><strong>解答</strong></p>
+<p>① 系：箱。外力は重さ $mg$（下）、垂直抗力 $N$（上）、押す力 $F$（右）、摩擦力（左）。<br>
+② 座標：右を $x$、上を $y$。<br>
+③④ 鉛直の釣合い：$N-mg=0$ より $N=mg=10\times9.81=98.1$ N。<br>
+⑤ 最大静止摩擦力 $F_{s\,\max}=\mu_sN=0.5\times98.1=\mathbf{49.05}$ N。動摩擦力 $F_k=\mu_kN=0.4\times98.1=\mathbf{39.24}$ N。<br>
+(a) $F=20$ N $&lt;49.05$ N：動かない。水平の釣合いから $F_s=F=\mathbf{20}$ N（$\mu_sN=49.05$ ではない）。<br>
+(b) $F=49$ N $&lt;49.05$ N：まだ動かない。$F_s=\mathbf{49}$ N（上限のすぐ手前）。<br>
+(c) $F=60$ N $&gt;49.05$ N：動き出す。動いている間の摩擦力は $F_k=\mathbf{39.24}$ N（このとき釣合っていない。加速度は $a=\dfrac{60-39.24}{10}=2.08\ \mathrm{m/s^2}$。動力学の内容なので、結果だけ）。<br>
+⑥ 確かめ：(a)(b) は「静止」なので水平方向が釣合う ✓。動き出すと摩擦力が <strong>$49.05\to39.24$ N に下がる</strong>（$\mu_s&gt;\mu_k$）。図1.1 のグラフでその段差が見える。</p></div>
+<figure><svg viewBox="0 0 520 290" width="520" role="img" aria-label="押す力 F と摩擦力の関係">
+<defs><marker id="fr-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="fr-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="fr-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="fr-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="fr-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="fr-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="156.5" y1="32.0" x2="156.5" y2="238.0" stroke="#e2dccf"/>
+<line x1="251.0" y1="32.0" x2="251.0" y2="238.0" stroke="#e2dccf"/>
+<line x1="345.5" y1="32.0" x2="345.5" y2="238.0" stroke="#e2dccf"/>
+<line x1="440.0" y1="32.0" x2="440.0" y2="238.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="203.7" x2="440.0" y2="203.7" stroke="#e2dccf"/>
+<line x1="62.0" y1="169.3" x2="440.0" y2="169.3" stroke="#e2dccf"/>
+<line x1="62.0" y1="135.0" x2="440.0" y2="135.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="100.7" x2="440.0" y2="100.7" stroke="#e2dccf"/>
+<line x1="62.0" y1="66.3" x2="440.0" y2="66.3" stroke="#e2dccf"/>
+<line x1="62.0" y1="32.0" x2="440.0" y2="32.0" stroke="#e2dccf"/>
+<line x1="58" y1="238.0" x2="454" y2="238.0" stroke="#2a2723" marker-end="url(#fr-k)"/>
+<line x1="62.0" y1="242" x2="62.0" y2="18" stroke="#2a2723" marker-end="url(#fr-k)"/>
+<text x="458" y="242.0">F [N]</text>
+<text x="68.0" y="18">摩擦力 [N]</text>
+<line x1="62.0" y1="238.0" x2="62.0" y2="242.0" stroke="#2a2723"/>
+<text x="62.0" y="255.0" text-anchor="middle" font-size="11">0</text>
+<line x1="156.5" y1="238.0" x2="156.5" y2="242.0" stroke="#2a2723"/>
+<text x="156.5" y="255.0" text-anchor="middle" font-size="11">20</text>
+<line x1="251.0" y1="238.0" x2="251.0" y2="242.0" stroke="#2a2723"/>
+<text x="251.0" y="255.0" text-anchor="middle" font-size="11">40</text>
+<line x1="345.5" y1="238.0" x2="345.5" y2="242.0" stroke="#2a2723"/>
+<text x="345.5" y="255.0" text-anchor="middle" font-size="11">60</text>
+<line x1="440.0" y1="238.0" x2="440.0" y2="242.0" stroke="#2a2723"/>
+<text x="440.0" y="255.0" text-anchor="middle" font-size="11">80</text>
+<line x1="58.0" y1="238.0" x2="62.0" y2="238.0" stroke="#2a2723"/>
+<text x="55.0" y="242.0" text-anchor="end" font-size="11">0</text>
+<line x1="58.0" y1="169.3" x2="62.0" y2="169.3" stroke="#2a2723"/>
+<text x="55.0" y="173.3" text-anchor="end" font-size="11">20</text>
+<line x1="58.0" y1="100.7" x2="62.0" y2="100.7" stroke="#2a2723"/>
+<text x="55.0" y="104.7" text-anchor="end" font-size="11">40</text>
+<line x1="58.0" y1="32.0" x2="62.0" y2="32.0" stroke="#2a2723"/>
+<text x="55.0" y="36.0" text-anchor="end" font-size="11">60</text>
+<path d="M62.0,69.6 L440.0,69.6" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="5 4" opacity="1"/>
+<path d="M62.0,238.0 L293.8,69.6" fill="none" stroke="#2b3a67" stroke-width="2.6" opacity="1"/>
+<path d="M293.8,69.6 L293.8,103.3" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="4 3" opacity="1"/>
+<path d="M293.8,103.3 L440.0,103.3" fill="none" stroke="#a8322a" stroke-width="2.6" opacity="1"/>
+<circle cx="156.5" cy="169.3" r="4.5" fill="#2b3a67"/>
+<circle cx="293.8" cy="69.6" r="4.5" fill="#2b3a67"/>
+<circle cx="345.5" cy="103.3" r="4.5" fill="#a8322a"/>
+<text x="66.7" y="63.4" fill="#968d80" text-anchor="start" font-size="11">最大静止摩擦力 μsN = 49.1 N</text>
+<text x="161.2" y="177.9" fill="#2b3a67" text-anchor="start" font-size="11">F = 20 N のとき Fs = 20 N（μsN ではない）</text>
+<text x="440.0" y="118.7" fill="#a8322a" text-anchor="end" font-size="11">動摩擦力 μkN = 39.2 N</text>
+<text x="300.8" y="141.9" fill="#2a2723" text-anchor="start" font-size="11">動き出す</text>
+</g></svg>
+<figcaption>図1.1　例題1の箱（10 kg、$\mu_s=0.5$、$\mu_k=0.4$）について、押す力 $F$ と摩擦力の関係。数値から計算して描いた。静止している間（青）は $F_s=F$ の直線で、最大静止摩擦力 $\mu_sN$ に達すると動き出し、動摩擦力（赤）に移る。</figcaption></figure>
+<figure class="slide"><img src="img/slide06/graph.jpg" alt="横軸が作用力F、縦軸が摩擦力。原点から右上がりの直線（Fs、青）が最大静止摩擦力Fsmax = μsNの高さまで伸び、そこから右では水平な線（Fk、橙）がμkNの高さにある" loading="lazy" style="width:480px;max-width:92%;height:auto;background:#fff"><figcaption>講義資料の同じ図。「注．運動開始後は適用外」：運動開始後（$F&gt;\mu_sN$）、青い線はもう成り立たない。出典：講義資料 第6回 p.6</figcaption></figure>
+<div class="warn"><span class="label">よくある誤解：「摩擦力 ＝ $\mu N$」</span>$\mu N$ は<strong>上限</strong>（静止のとき）または<strong>運動中の値</strong>であって、いつもの値ではない。静止しているときの摩擦力は、<strong>釣合い式</strong>から決める。「摩擦のある問題だから $F=\mu N$ を代入する」と覚えると、(a) のような問題で 49.05 N と答えて間違える。<br>
+また、$N$ は「$mg$」とは限らない。斜面（2.2）、斜めに引く場合（2.5）、他の物体が上に載る場合（3章）では、$N$ も釣合いの式から求める。</div>
+
+<h3><span class="no">1.2</span>摩擦のしくみと、摩擦の法則</h3>
+<p>なめらかに見える面でも、顕微鏡で見れば<strong>凹凸</strong>がある。2つの面が接触するのは、凹凸の先どうしの<strong>接触部分</strong>だけである。この接触部分を引きはがそうとする（あるいはずらそうとする）ときに抵抗する力が<strong>摩擦力</strong>である。物体を強く押しつけると（$W&lt;W'$）、接触部分が増えて、ずらすのに必要な力が増える。この関係を式にしたのが $F_{s\,\max}=\mu_sN$ である（押しつける力 $N$ に比例する）。</p>
+<figure class="slide"><img src="img/slide06/rough.jpg" alt="物体1と物体2の接触面の凹凸の模式図。左は荷重W、右はそれより大きな荷重W'で、右のほうが凹凸が深くかみ合っている" loading="lazy" style="width:680px;max-width:98%;height:auto;background:#fff"><figcaption>講義資料の図。荷重が大きい（$W&lt;W'$）ほど、凹凸が深くかみ合う。出典：講義資料 第6回 p.7</figcaption></figure>
+<p>摩擦係数は、<strong>物質の組み合わせ</strong>によって決まる。「アルミニウムの $\mu_s$」と言っても意味がなく、「アルミニウムと鉄の $\mu_s$」と言わなければならない（物質<strong>単体</strong>では論じられない）。講義資料の表（教科書 p.40 左上の表に相当）は、鉄との静止摩擦係数の例である。</p>
+<table class="tb">
+<tr><th>材料（鉄との組み合わせ）</th><th>静止摩擦係数 $\mu_s$</th></tr>
+<tr><td>炭素</td><td>0.15</td></tr><tr><td>アルミニウム</td><td>0.82</td></tr><tr><td>鉄</td><td>0.52</td></tr><tr><td>銅</td><td>0.46</td></tr><tr><td>銀</td><td>0.32</td></tr><tr><td>すず</td><td>0.29</td></tr><tr><td>金</td><td>0.54</td></tr>
+</table>
+<div class="warn"><span class="label">注意：係数の値</span>表の値は講義資料のまま転記した。実際の摩擦係数は、表面の粗さ・汚れ・湿り・温度で大きく変わるので、設計や試験では<strong>問題文で与えられた値</strong>を使う。</div>
+<div class="box"><span class="label">摩擦の法則（講義資料 補足資料「1. 摩擦の法則」）</span>
+<ol>
+<li>摩擦係数 $\mu$ は<strong>見かけの接触面積</strong>によらない。〔推定：空欄の答えは画像内で読み取れず、標準的な内容（アモントン・クーロンの法則）で埋めた〕</li>
+<li>摩擦係数 $\mu$ は<strong>垂直荷重</strong>によらない（摩擦力が荷重に比例する、ということ）。〔推定：同上〕</li>
+<li>$\mu_s&gt;\mu_k$（静止摩擦係数のほうが動摩擦係数より大きい）。</li>
+<li>物体の速度が小さいとき → 摩擦は速度によらない。</li>
+<li>物体の速度が大きいとき → 摩擦は減少する。</li>
+<li>摩擦力は、物体を動かし始めるのに<strong>要する力</strong>（$\mu_sN$）を超えない。摩擦力は<strong>未知数</strong>とし、運動が<strong>起こる直前</strong>のみ $F=\mu N$。〔これは2章の内容。空欄は推定〕</li>
+</ol></div>
+<p>1番目の法則は意外に感じる。広い面ほど摩擦が大きそうに思えるが、広くなると<strong>単位面積あたりの圧力が下がる</strong>ので、接触部分の総面積はほぼ $N$ だけで決まる。そのため、箱を寝かせても立てても、動き出す力はほぼ同じである。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/06_a1_vinci.jpg" alt="白地に黒いペンで描かれたスケッチ。机の上に置かれた箱と、その端の滑車、滑車から下がる錘を、いくつかの向きから描いた装置の図" loading="lazy"></div>
+<p class="cap">レオナルドの手稿には、箱を錘で引いて摩擦を調べる実験装置が描かれている。</p>
+<p class="cr">レオナルド・ダ・ヴィンチ（手稿のスケッチ）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Tribometre_Vinci_1.jpg">Wikimedia Commons</a>（摩擦計のスケッチ）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/06_b1_shigemasa.jpg" alt="淡い色の浮世絵。3人の子どもが、布の帯を口にくわえて、左右から引き合っている" loading="lazy"></div>
+<p class="cap">引き合う力が釣合っているあいだ、子どもたちは動かない。</p>
+<p class="cr">喜多尾重政（北尾重政）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:%27Boys_Playing_Tug_of_War%27_by_Kitao_Shigemasa,_c._1781,_Honolulu_Museum_of_Art,_13791.JPG">Wikimedia Commons</a>（『子供の綱引き』1781年ごろ、ホノルル美術館所蔵）</p></div>
+</figure>
+
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>摩擦のある釣合い：未知数として解き、上限と向きを確かめる</h2>
+
+<h3><span class="no">2.1</span>2つの原則</h3>
+<p><strong>動機</strong>：1章で、摩擦力は「釣合いで決まる量」で、「上限がある量」だと分かった。では、釣合いの問題の中で、摩擦力をどう式に入れればよいか。講義資料（3・3・2「固体摩擦が作用する場合の釣合い」）の注意を、2つの原則にまとめる。</p>
+<div class="thm"><span class="label">原則（摩擦のある釣合いの問題）</span>
+<strong>原則1（常に）</strong>　釣合いのために<strong>必要な摩擦力</strong>が、最大静止摩擦力 $\mu_sN$ 以下でなければ、釣合わない（滑る）。摩擦力は、物体を動かし始める力（$\mu_sN$）を超えられない。<span class="note">〔推定：スライド9の「摩擦力 ≦［　］に要する力」の空欄は画像内で読み取れない。直後のスライド11の比較「釣合いに必要な力 $&lt;$ 最大静止摩擦力」から、この意味と読んだ〕</span><br>
+<strong>原則2（解き方）</strong>　(a) 摩擦力が<strong>未知数</strong>のときは、向きをどちら向きに仮定してもよい。釣合い式が符号まで決める。(b) 摩擦力が<strong>既知</strong>になるのは、<strong>最大静止摩擦力 $\mu_sN$ を与える場合</strong>（動き出す直前）だけで、このときは<strong>向きを正しく設定する</strong>必要がある。正しい向きは、<strong>運動しようとする方向の逆向き</strong>。</div>
+<p>講義資料の言い方（スライド9）では、「摩擦力は［未知数］とする」「運動が［起こる直前］のみ $F_s=\mu_sN$」である（括弧は推定を含む）。この2つの原則から、摩擦の問題は次の2つの型に分かれる。</p>
+<table class="tb">
+<tr><th>型</th><th>問い</th><th>摩擦力の扱い</th></tr>
+<tr><td>(I) 滑るか判定</td><td>この状態で釣合っているか／滑らないか</td><td>摩擦力を<strong>未知数</strong> $F$ として釣合い式から求め、$F\le\mu_sN$ を<strong>確かめる</strong>（向きは自由）</td></tr>
+<tr><td>(II) 限界を求める</td><td>動き出す直前の力・角度・摩擦係数は？</td><td>$F=\mu_sN$ と<strong>置く</strong>。向きは「運動しようとする向きの逆」に<strong>正しく</strong>設定する</td></tr>
+</table>
+<p>以下の例題は、(I) と (II) のどちらなのかを、毎回意識して読んでほしい。</p>
+
+<h3><span class="no">2.2</span>例題3・6：斜面で滑り出す角と摩擦角（型 II）</h3>
+<figure class="slide"><img src="img/slide06/incline.jpg" alt="傾斜角θの斜面B上に置かれた物体A。物体に重さmg（下向き）、斜面に垂直な垂直抗力N、斜面に沿った摩擦力Fsが働く。教科書 図3.17【例題3・6】" loading="lazy" style="width:380px;max-width:86%;height:auto;background:#fff"><figcaption>教科書 図3.17【例題3・6】。出典：講義資料 第6回 p.8</figcaption></figure>
+<div class="ex"><span class="label">例題2〔A/B｜教科書 例題3・6〕斜面を傾けて滑り始める角から静止摩擦係数を求める</span>
+<p>斜面の上に物体Aを置き、斜面の傾斜角 $\theta$ を0から増やしていく。$\theta=\theta_0$ で物体が<strong>滑り始めた</strong>。物体と斜面の間の静止摩擦係数 $\mu_s$ を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 系：物体A。外力は、重さ $mg$（鉛直下向き）、斜面からの垂直抗力 $N$、斜面に沿った摩擦力 $F_s$。滑りは斜面の下向きに起ころうとするので、摩擦力は<strong>斜面の上向き</strong>（運動しようとする向きの逆）。<br>
+② 座標：斜面に平行な向き（上り）を $x$、斜面に垂直な向きを $y$。<br>
+③ 重さの成分：斜面に沿って下向きに $mg\sin\theta$、斜面に垂直に（面を押す向きに）$mg\cos\theta$。<span class="note">← 角 $\theta$ の斜面では、重力と「斜面に垂直な線」のなす角が $\theta$ になる。</span><br>
+④ 釣合い式：
+$$x\text{ 方向}：F_s-mg\sin\theta=0,\qquad y\text{ 方向}：N-mg\cos\theta=0\qquad(2.1)\quad\text{（教科書 (3.65)）}$$
+⑤ 解く：$F_s=mg\sin\theta$、$N=mg\cos\theta$。$\theta$ が小さいうちは、これで $F_s$ が求まる（型 I）。$\theta=\theta_0$ で滑り始める＝<strong>動き出す直前</strong>なので $F_s=F_{s\,\max}=\mu_sN$（型 II）。2式を代入して
+$$\mu_s=\frac{F_{s\,\max}}{N}=\frac{mg\sin\theta_0}{mg\cos\theta_0}=\tan\theta_0\qquad(2.2)$$
+⑥ 確かめ：$mg$ が約分されて消えた。つまり<strong>滑り出す角は物体の質量によらない</strong>（軽い物体も重い物体も、同じ斜面で同じ角度で滑り始める）。$\mu_s=0.5$ なら $\theta_0=\arctan0.5=26.6°$。$\mu_s\to0$ で $\theta_0\to0$（氷のような面）、$\mu_s=1$ で $45°$ ✓。<br>
+<strong>答</strong>　$\mu_s=\tan\theta_0$。</p></div>
+<div class="def"><span class="label">定義（摩擦角）</span>$\theta_0$（$\tan\theta_0=\mu_s$）を<strong>摩擦角</strong>という。以後 $\lambda$ で表す：$\tan\lambda=\mu_s$。</div>
+<p>摩擦角には、斜面の話を超えた意味がある。接触面が物体に及ぼす力は、垂直抗力 $N$ と摩擦力 $F_s$ の合力 $R$ ひとつにまとめられる。$R$ が面の垂線となす角を $\beta$ とすると、$\tan\beta=F_s/N$。静止しているかぎり $F_s\le\mu_sN$ なので $\tan\beta\le\mu_s=\tan\lambda$、すなわち
+$$\beta\le\lambda\qquad(2.3)$$
+<strong>反力 $R$ は、垂線から摩擦角 $\lambda$ の範囲（3次元では円錐。<strong>摩擦円錐</strong>）の内側にあるかぎり、物体は滑らない。</strong>斜面の例では、重力と釣合う反力は鉛直上向きで、その垂線からの角が斜面の傾き $\theta$ に等しいので、$\theta\le\lambda$ なら静止し、$\theta=\lambda$ が限界である。これは (2.2) と同じ結論である。この見方は、ねじ（4.1）で使う。</p>
+<figure><svg viewBox="0 0 510 230" width="510" role="img" aria-label="摩擦角 λ と摩擦円錐">
+<g transform="translate(0,0)"><svg viewBox="0 0 250 230" width="250" role="img" aria-label="反力 R を、垂直抗力 N と摩擦力 Fs に分けて見る">
+<defs><marker id="cn0-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="cn0-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="cn0-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="cn0-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="cn0-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="cn0-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M20.0,174.9 L217.1,174.9" fill="none" stroke="#2a2723" stroke-width="1.8" opacity="1"/>
+<path d="M125.6,174.9 L125.6,48.2" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 3" opacity="1"/>
+<path d="M62.2,48.2 L125.6,48.2" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 3" opacity="1"/>
+<line x1="62.2" y1="174.9" x2="62.2" y2="48.2" stroke="#4f7a4a" stroke-width="2.4" marker-end="url(#cn0-g)"/>
+<text x="56.6" y="48.2" fill="#4f7a4a" text-anchor="end" font-size="13">N</text>
+<line x1="62.2" y1="174.9" x2="125.6" y2="174.9" stroke="#a8322a" stroke-width="2.4" marker-end="url(#cn0-r)"/>
+<text x="93.2" y="189.0" fill="#a8322a" text-anchor="middle" font-size="13">Fs</text>
+<line x1="62.2" y1="174.9" x2="125.6" y2="48.2" stroke="#a06a32" stroke-width="2.4" marker-end="url(#cn0-o)"/>
+<text x="132.6" y="41.1" fill="#a06a32" text-anchor="start" font-size="13">R</text>
+<path d="M62.2,135.5 L63.9,135.5 L65.6,135.6 L67.2,135.8 L68.9,136.0 L70.5,136.3 L72.1,136.7 L73.7,137.2 L75.3,137.7 L76.8,138.3 L78.4,138.9 L79.9,139.6" fill="none" stroke="#2a2723" stroke-width="1.2" opacity="1"/>
+<text x="67.9" y="118.6" fill="#2a2723" text-anchor="start" font-size="13">λ</text>
+<text x="139.7" y="111.5" fill="#2a2723" text-anchor="start" font-size="11">tan λ = Fs/N</text>
+</g></svg></g>
+<g transform="translate(255,0)"><svg viewBox="0 0 250 230" width="250" role="img" aria-label="摩擦円錐：反力 R が半頂角 λ の扇形の内側にあれば滑らない">
+<defs><marker id="cn1-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="cn1-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="cn1-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="cn1-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="cn1-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="cn1-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M20.0,128.0 L236.0,128.0" fill="none" stroke="#2a2723" stroke-width="1.8" opacity="1"/>
+<path d="M128.0,128.0 L174.6,34.7 L81.4,34.7 z" fill="#dfe6f0" stroke="#2b3a67" opacity="0.9"/>
+<line x1="128.0" y1="128.0" x2="128.0" y2="39.6" stroke="#4f7a4a" stroke-width="1.8" marker-end="url(#cn1-g)"/>
+<line x1="128.0" y1="128.0" x2="145.7" y2="69.1" stroke="#a06a32" stroke-width="2.4" marker-end="url(#cn1-o)"/>
+<text x="149.6" y="76.9" fill="#a06a32" text-anchor="start" font-size="10">R（内側：釣合う）</text>
+<line x1="128.0" y1="128.0" x2="49.5" y2="78.9" stroke="#a8322a" stroke-width="2.4" stroke-dasharray="5 3" marker-end="url(#cn1-r)"/>
+<text x="49.5" y="67.1" fill="#a8322a" text-anchor="start" font-size="10">R（外側：滑る）</text>
+<text x="128.0" y="27.9" fill="#2b3a67" text-anchor="middle" font-size="11">半頂角 λ（tan λ = μs）</text>
+</g></svg></g>
+</svg>
+<figcaption>図2.1　左：反力 $R$ を、垂直抗力 $N$ と摩擦力 $F_s$ に分けて見る。$\tan\lambda=F_s/N$。右：$R$ が半頂角 $\lambda$（$\tan\lambda=\mu_s$）の扇形（3次元では円錐）の内側にあれば釣合い、外側なら滑る。</figcaption></figure>
+<div class="warn"><span class="label">注意：摩擦角は「物体の性質」ではなく「2つの面の組み合わせの性質」</span>$\mu_s$ が組み合わせで決まる（1.2）ので、摩擦角も組み合わせで決まる。また (2.2) は、斜面を<strong>ゆっくり傾けて</strong>滑り出す角を測れば $\mu_s$ が求まる、という実験方法にもなる。</div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/06_a2_dune.jpg" alt="砂丘の急な斜面。表面に、上から下へ縦に走る細かな流れの筋が並び、中ほどに崩れた跡の溝がある" loading="lazy"></div>
+<p class="cap">砂は、自分の摩擦角より急な斜面では崩れ、それより緩やかな斜面では止まる。</p>
+<p class="cr">Great Sand Dunes National Park and Preserve（NPS）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Avalanche_Slope_on_Dunes_(46116909755).jpg">Wikimedia Commons</a>（砂丘の急斜面、2018年撮影）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/06_b2_ginkakuji.jpg" alt="松の庭を背に、白い砂を円錐台に盛り上げた銀閣寺の向月台。手前に砂紋の広がる白い庭" loading="lazy"></div>
+<p class="cap">砂を盛り上げた向月台は、砂が崩れずにいられる角度の内側に収まっている。</p>
+<p class="cr">Jmhullot／<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Ginkakuji_K%C5%8D_getsudai.jpg">Wikimedia Commons</a>（銀閣寺の向月台、2012年撮影）</p></div>
+</figure>
+
+<h3><span class="no">2.3</span>例題3・7：壁に立てかけた棒は滑るか（型 I）</h3>
+<figure class="slide"><img src="img/slide06/rod.jpg" alt="(a)壁に立てかけられた棒：長さl、質量mの棒が、傾斜角θで床と壁に接している。床との静止摩擦係数はμs。(b)棒に作用する力：上端の壁からの水平な反力Rx、重さmg（棒の中央）、下端Aの床からの垂直抗力Ryと摩擦力Fs。座標はx右、y上" loading="lazy" style="width:420px;max-width:92%;height:auto;background:#fff"><figcaption>教科書の図（例題3・7）。(b) が自由物体図。点 A は棒の下端。壁はなめらか（壁から棒へは水平な反力 $R_x$ だけ）。出典：講義資料 第6回 p.10</figcaption></figure>
+<div class="ex"><span class="label">例題3〔B｜教科書 例題3・7〕立てかけた棒は、$\theta=60°$ のとき滑るか</span>
+<p>質量 $m$、長さ $l$ の一様な棒を、なめらかな鉛直の壁と、粗い水平な床の間に、床との角 $\theta$ で立てかける。棒と床の静止摩擦係数を $\mu_s$ とする。$\theta=60°$ のとき、棒は滑るか。（講義資料の図は解像度が低く $\mu_s$ の値が読めない。後で出てくる式 (3.70) $F_{s\,\max}=\mu_sR_y=mg/2$ から、$\mu_s=0.5$ と<strong>逆算</strong>できる。<strong>本教材の推定</strong>。）</p>
+<p><strong>解答例1（摩擦力 $F_s$ を壁の向き（$+x$）に仮定）</strong></p>
+<p>① 系：棒。点 A（下端）で床から $R_y$（上）と $F_s$（水平）、上端で壁から $R_x$（水平）、重心（中央）に重さ $mg$。<br>
+② 座標：図のとおり、右を $x$、上を $y$（壁は右）。基準点は A（未知の力 $R_y$、$F_s$ が通る点）。<br>
+③④ 力の釣合い、点 A まわりのモーメントの釣合い：
+$$F_s-R_x=0,\qquad R_y-mg=0\qquad(2.4)$$
+$$R_x\,l\sin60°-\frac{mg\,l}{2}\cos60°=0\qquad(2.5)$$
+<span class="note">← 壁の反力 $R_x$ は、A から鉛直方向に $l\sin60°$ の高さに働くので腕は $l\sin60°$。重さは A から水平方向に $\frac l2\cos60°$ の位置を通るので腕は $\frac l2\cos60°$（腕は力の作用線への垂線の長さ）。</span><br>
+⑤ (2.5) から $R_x=\dfrac{mg\cos60°}{2\sin60°}$。(2.4) から $F_s=R_x$、$R_y=mg$：
+$$F_s=R_x=\frac{mg\cos60°}{2\sin60°}=\frac{mg}{2\sqrt3}\simeq0.289\,mg\qquad(2.6)\quad\text{（教科書 (3.69)）}$$
+これが、<strong>釣合いに必要な摩擦力</strong>である。一方、最大静止摩擦力は $F_{s\,\max}=\mu_sR_y=0.5\times mg=\dfrac{mg}{2}$（(3.70)）。
+$$F_s=0.289\,mg&lt;F_{s\,\max}=0.5\,mg$$
+（釣合いに必要な力 $&lt;$ 最大静止摩擦力）なので、棒は<strong>釣合いの状態、すなわち滑らない</strong>。<br>
+⑥ 確かめ：$R_x$ と $F_s$ は正の値（仮定した向きのとおり）✓。使っていない式は、A 以外の点（たとえば上端）まわりのモーメントで検算できる。</p>
+<p><strong>解答例2（$F_s$ を逆向き（$-x$）に仮定）</strong>　釣合い式は $-F_s-R_x=0$、$R_y-mg=0$、および (2.5)。(2.5) は変わらないので $R_x=\dfrac{mg}{2\sqrt3}$。よって
+$$F_s=-R_x=-\frac{mg}{2\sqrt3}$$
+答えが<strong>負</strong>になった。これは、仮定した向きとは<strong>逆向き</strong>、すなわち $+x$ 方向が正しい、という意味である。大きさ $\dfrac{mg}{2\sqrt3}$ は解答例1と同じ。摩擦力を<strong>未知数</strong>とするかぎり、<strong>向きをどちらに仮定しても、答えは同じ</strong>（原則2(a)）。</p></div>
+<p>この例題は型 (I) である。$\theta$ を小さくしていくと、必要な摩擦力は変わる。(2.6) を一般の $\theta$ で書くと、(2.5) の $60°$ を $\theta$ に置き換えて
+$$F_s=R_x=\frac{mg\cos\theta}{2\sin\theta}=\frac{mg}{2\tan\theta}\qquad(2.7)$$
+$\theta$ が小さい（棒が寝る）ほど、床で支える水平力が増える。滑らない条件は $F_s\le\mu_sR_y$、つまり $\dfrac{mg}{2\tan\theta}\le\mu_s\,mg$ より
+$$\tan\theta\ge\frac{1}{2\mu_s}\qquad(2.8)$$
+$\mu_s=0.5$ なら $\tan\theta\ge1$、すなわち <strong>$\theta\ge45°$</strong>。$45°$ が滑る限界（型 II）で、このとき $F_s=F_{s\,\max}$ になる。$60°$ は余裕がある。図2.2 は、必要な摩擦力（赤）と出せる上限（青い破線）の関係である。</p>
+<figure><svg viewBox="0 0 520 280" width="520" role="img" aria-label="壁に立てかけた棒：釣合うのに必要な摩擦力と、出せる摩擦力の上限">
+<defs><marker id="ld-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ld-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ld-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ld-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ld-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ld-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="125.0" y1="32.0" x2="125.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="188.0" y1="32.0" x2="188.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="251.0" y1="32.0" x2="251.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="314.0" y1="32.0" x2="314.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="377.0" y1="32.0" x2="377.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="440.0" y1="32.0" x2="440.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="185.0" x2="440.0" y2="185.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="134.0" x2="440.0" y2="134.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="83.0" x2="440.0" y2="83.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="32.0" x2="440.0" y2="32.0" stroke="#e2dccf"/>
+<line x1="58" y1="236.0" x2="454" y2="236.0" stroke="#2a2723" marker-end="url(#ld-k)"/>
+<line x1="62.0" y1="240" x2="62.0" y2="18" stroke="#2a2723" marker-end="url(#ld-k)"/>
+<text x="458" y="240.0">θ [°]</text>
+<text x="68.0" y="18">F / mg</text>
+<line x1="62.0" y1="236.0" x2="62.0" y2="240.0" stroke="#2a2723"/>
+<text x="62.0" y="253.0" text-anchor="middle" font-size="11">20</text>
+<line x1="125.0" y1="236.0" x2="125.0" y2="240.0" stroke="#2a2723"/>
+<text x="125.0" y="253.0" text-anchor="middle" font-size="11">30</text>
+<line x1="188.0" y1="236.0" x2="188.0" y2="240.0" stroke="#2a2723"/>
+<text x="188.0" y="253.0" text-anchor="middle" font-size="11">40</text>
+<line x1="251.0" y1="236.0" x2="251.0" y2="240.0" stroke="#2a2723"/>
+<text x="251.0" y="253.0" text-anchor="middle" font-size="11">50</text>
+<line x1="314.0" y1="236.0" x2="314.0" y2="240.0" stroke="#2a2723"/>
+<text x="314.0" y="253.0" text-anchor="middle" font-size="11">60</text>
+<line x1="377.0" y1="236.0" x2="377.0" y2="240.0" stroke="#2a2723"/>
+<text x="377.0" y="253.0" text-anchor="middle" font-size="11">70</text>
+<line x1="440.0" y1="236.0" x2="440.0" y2="240.0" stroke="#2a2723"/>
+<text x="440.0" y="253.0" text-anchor="middle" font-size="11">80</text>
+<line x1="58.0" y1="236.0" x2="62.0" y2="236.0" stroke="#2a2723"/>
+<text x="55.0" y="240.0" text-anchor="end" font-size="11">0</text>
+<line x1="58.0" y1="185.0" x2="62.0" y2="185.0" stroke="#2a2723"/>
+<text x="55.0" y="189.0" text-anchor="end" font-size="11">0.25</text>
+<line x1="58.0" y1="134.0" x2="62.0" y2="134.0" stroke="#2a2723"/>
+<text x="55.0" y="138.0" text-anchor="end" font-size="11">0.5</text>
+<line x1="58.0" y1="83.0" x2="62.0" y2="83.0" stroke="#2a2723"/>
+<text x="55.0" y="87.0" text-anchor="end" font-size="11">0.75</text>
+<line x1="58.0" y1="32.0" x2="62.0" y2="32.0" stroke="#2a2723"/>
+<text x="55.0" y="36.0" text-anchor="end" font-size="11">1.0</text>
+<path d="M62.0,32.0 L65.2,32.0 L68.3,32.0 L71.5,32.0 L74.6,32.0 L77.8,32.0 L80.9,32.0 L84.0,32.0 L87.2,32.0 L90.3,32.0 L93.5,32.0 L96.7,32.0 L99.8,32.0 L103.0,32.0 L106.1,35.8 L109.2,40.1 L112.4,44.2 L115.5,48.1 L118.7,52.0 L121.8,55.7 L125.0,59.3 L128.1,62.8 L131.3,66.2 L134.4,69.6 L137.6,72.8 L140.8,75.9 L143.9,78.9 L147.1,81.9 L150.2,84.8 L153.3,87.6 L156.5,90.3 L159.7,93.0 L162.8,95.6 L165.9,98.2 L169.1,100.6 L172.2,103.1 L175.4,105.4 L178.6,107.8 L181.7,110.0 L184.9,112.3 L188.0,114.4 L191.2,116.6 L194.3,118.7 L197.4,120.7 L200.6,122.7 L203.8,124.7 L206.9,126.6 L210.1,128.5 L213.2,130.4 L216.3,132.2 L219.5,134.0 L222.7,135.8 L225.8,137.5 L228.9,139.2 L232.1,140.9 L235.2,142.5 L238.4,144.2 L241.5,145.8 L244.7,147.3 L247.8,148.9 L251.0,150.4 L254.1,151.9 L257.3,153.4 L260.5,154.9 L263.6,156.3 L266.8,157.7 L269.9,159.1 L273.1,160.5 L276.2,161.9 L279.4,163.2 L282.5,164.6 L285.6,165.9 L288.8,167.2 L291.9,168.5 L295.1,169.8 L298.2,171.0 L301.4,172.3 L304.6,173.5 L307.7,174.7 L310.9,175.9 L314.0,177.1 L317.1,178.3 L320.3,179.5 L323.4,180.6 L326.6,181.8 L329.8,182.9 L332.9,184.0 L336.1,185.1 L339.2,186.3 L342.4,187.3 L345.5,188.4 L348.6,189.5 L351.8,190.6 L354.9,191.6 L358.1,192.7 L361.2,193.8 L364.4,194.8 L367.6,195.8 L370.7,196.8 L373.8,197.9 L377.0,198.9 L380.1,199.9 L383.3,200.9 L386.4,201.9 L389.6,202.9 L392.8,203.8 L395.9,204.8 L399.1,205.8 L402.2,206.8 L405.4,207.7 L408.5,208.7 L411.7,209.6 L414.8,210.6 L417.9,211.5 L421.1,212.5 L424.2,213.4 L427.4,214.3 L430.6,215.2 L433.7,216.2 L436.9,217.1 L440.0,218.0" fill="none" stroke="#a8322a" stroke-width="2.6" opacity="1"/>
+<path d="M62.0,134.0 L440.0,134.0" fill="none" stroke="#2b3a67" stroke-width="2" stroke-dasharray="6 4" opacity="1"/>
+<circle cx="219.5" cy="134.0" r="5" fill="#2a2723"/>
+<circle cx="314.0" cy="177.1" r="4.5" fill="#a8322a"/>
+<text x="440.0" y="126.9" fill="#2b3a67" text-anchor="end" font-size="11">出せる上限 μs·mg = 0.5 mg（μs = 0.5）</text>
+<text x="225.8" y="113.6" fill="#2a2723" text-anchor="start" font-size="11">θ = 45°：必要量 ＝ 上限</text>
+<text x="320.3" y="168.7" fill="#a8322a" text-anchor="start" font-size="11">θ = 60°：mg/(2√3) = 0.289 mg</text>
+<text x="320.3" y="180.9" fill="#a8322a" text-anchor="start" font-size="11">（上限より小さい：滑らない）</text>
+<text x="225.8" y="46.3" fill="#a8322a" text-anchor="start" font-size="11">必要な摩擦力 F = mg/(2 tanθ)</text>
+<text x="225.8" y="58.5" fill="#2a2723" text-anchor="start" font-size="11">上限を超える範囲（θ < 45°）では滑る</text>
+</g></svg>
+<figcaption>図2.2　壁に立てかけた棒（$\mu_s=0.5$）。必要な摩擦力 $F_s=mg/(2\tan\theta)$（赤）が、出せる上限 $\mu_smg$（青い破線）を超える $\theta&lt;45°$ では滑る。例題3の $\theta=60°$（点）は上限の内側。数値から計算して描いた。</figcaption></figure>
+<div class="warn"><span class="label">注意：スライド10の $\mu_s$ について</span>本教材は、スライドの式 (3.70) から $\mu_s=0.5$ と逆算した。図の $\mu_s$ の値は読めず、教科書の問題文は手元にない。教科書では $\mu_s$ が別の値かもしれないので、<strong>断定しない</strong>。結論「滑らない」は、$\mu_s\ge0.289$（$=1/(2\tan60°)=\frac1{2\sqrt3}$）であれば成り立つ。</div>
+
+<h3><span class="no">2.4</span>摩擦力の向き：押す？ 引き下ろす？（型 II）</h3>
+<p>ここが、第2の「今日のポイント」である。斜面の上に質量 $m$ の物体 A があり、斜面に平行な力 $P$ で引き上げようとしている。静止摩擦係数は $\mu$（$\mu_s$）。</p>
+<figure class="slide"><img src="img/slide06/inclP1.jpg" alt="傾斜角θの斜面上の物体A。斜面に沿って上向きの引く力P、鉛直下向きの重さmg、斜面に垂直な垂直抗力N、斜面の下向き（赤）の摩擦力Fsが描かれている" loading="lazy" style="width:440px;max-width:92%;height:auto;background:#fff"><figcaption>解答例1の自由物体図：摩擦力 $F_s$ は<strong>斜面の下向き</strong>。出典：講義資料 第6回 p.14</figcaption></figure>
+<div class="ex"><span class="label">例題4〔B｜講義資料 例題〕力 $P$ を増やしていくとき、物体Aが動き出す直前の $P$</span>
+<p>力 $P$（斜面に沿って上向き）を<strong>増加</strong>させていくとき、物体 A が動き出す直前の $P$ の大きさを求めよ。</p>
+<p><strong>解答例1（摩擦力 $F_s$ を斜面の<strong>下向き</strong>に仮定）</strong>　座標は斜面に沿って上向きを正に。
+$$P-F_s-mg\sin\theta=0,\qquad N-mg\cos\theta=0\qquad(2.9)$$
+動き出す直前なので $F_s=F_{s\,\max}=\mu_sN$。(2.9) から $N=mg\cos\theta$、$F_s=\mu mg\cos\theta$。よって
+$$P=mg(\sin\theta+\mu\cos\theta)\qquad(2.10)$$</p>
+<p><strong>解答例2（$F_s$ を斜面の<strong>上向き</strong>に仮定）</strong>
+$$P+F_s-mg\sin\theta=0,\qquad N-mg\cos\theta=0\qquad(2.11)$$
+$F_s=\mu_sN=\mu mg\cos\theta$ を代入して
+$$P=mg(\sin\theta-\mu\cos\theta)\qquad(2.12)$$</p></div>
+<figure class="slide"><img src="img/slide06/inclP2.jpg" alt="解答例2の自由物体図。摩擦力Fsが斜面の上向き（赤）に描かれている以外は同じ" loading="lazy" style="width:440px;max-width:92%;height:auto;background:#fff"><figcaption>解答例2の自由物体図：摩擦力 $F_s$ を<strong>斜面の上向き</strong>に仮定。出典：講義資料 第6回 p.16</figcaption></figure>
+<p>答えが違う。(2.10) では $+\mu\cos\theta$、(2.12) では $-\mu\cos\theta$。資料の問い：<strong>どちらが正しいか。解の矛盾点は？</strong></p>
+<p><strong>答え：解答例1が正しい。</strong>理由を、<strong>運動しようとする向き</strong>から考える。問題は、「$P$ を<strong>増加</strong>させていって、物体 A が動き出す」場面である。動き出すとき、物体は<strong>斜面の上向き</strong>に動こうとしている。摩擦力は<strong>その逆向き＝斜面の下向き</strong>でなければならない。これが解答例1である。</p>
+<p>解答例2 の仮定（摩擦力が上向き）は、「物体が<strong>下向き</strong>に動こうとしている」場面の向きである。実際、(2.12) の $P=mg(\sin\theta-\mu\cos\theta)$ は、$P$ を<strong>減少</strong>させていって、<strong>斜面を滑り落ちる直前</strong>の $P$ にほかならない。講義資料はこの対応を、次のように整理している。</p>
+<div class="def"><span class="label">摩擦力の向き（講義資料 p.17）</span>物体 A が動き出す直前の摩擦力 $F_s$ の向き：<br>
+・ $P$ を<strong>増加</strong>させるとき → <strong>下</strong>向き（物体は上へ動こうとする）<br>
+・ $P$ を<strong>減少</strong>させるとき → <strong>上</strong>向き（物体は下へ動こうとする）<br>
+この2つは<strong>異なる問題</strong>として成立する。<strong>正しい向きを設定しないと間違う</strong>。</div>
+<p><strong>矛盾点</strong>：解答例2 の $P=mg(\sin\theta-\mu\cos\theta)$ は、解答例1 の $P=mg(\sin\theta+\mu\cos\theta)$ より小さい。$P$ を 0 から増やしていくとき、解答例2 の値は<strong>解答例1 の値より先に通り過ぎる</strong>。その時点では物体はまだ<strong>動き出していない</strong>（上へ動く直前ではない）ので、「<strong>上へ</strong>動き出す直前」という前提と矛盾する。その時点の物体は、むしろ「<strong>下へ</strong>滑り落ちる直前」（摩擦力は上向きに上限 $\mu_sN$）の状態にある。</p>
+<p>では、なぜ 3.7（棒）では向きをどちらに仮定してもよく、ここでは正しい向きにしなければいけないのか。違いは、摩擦力が<strong>未知数</strong>か<strong>既知</strong>かである。</p>
+<ul>
+<li><strong>未知数</strong>のとき（例題3）：摩擦力 $F_s$ を文字で置いて釣合い式を解く。仮定と逆向きなら答えが<strong>負</strong>になって、釣合い式の方が向きを教えてくれる。</li>
+<li><strong>既知</strong>のとき（本例題）：$F_s=\mu_sN$ という<strong>正の値</strong>を代入してしまう。符号を決める余地がないので、向きを自分で正しく決めないといけない。上向きの仮定は「正の $\mu_sN$ が上向きに働く」という、別の物理状況の式になる。</li>
+</ul>
+<p>摩擦力が上限に達するのは、<strong>動き出す直前の1点</strong>だけである。$P$ が (2.12) と (2.10) の間にあれば、物体は静止し、摩擦力は上向きにも下向きにも、$\mu_sN$ より小さな値で釣合う。まとめると、釣合って静止できる $P$ の範囲は
+$$mg(\sin\theta-\mu\cos\theta)\ \le\ P\ \le\ mg(\sin\theta+\mu\cos\theta)\qquad(2.13)$$
+（左辺が負なら $P\ge0$ まで。たとえば $\tan\theta&lt;\mu$、つまり $\theta$ が摩擦角より小さいときは、$P=0$ でも滑らない。）図2.3 は $\mu=0.3$ の場合。$\theta=30°$ では $0.240\,mg\le P\le0.760\,mg$。</p>
+<figure><svg viewBox="0 0 520 300" width="520" role="img" aria-label="斜面の物体を釣合わせる P の範囲">
+<defs><marker id="pr-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="pr-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="pr-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="pr-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="pr-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="pr-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="125.0" y1="32.0" x2="125.0" y2="248.0" stroke="#e2dccf"/>
+<line x1="188.0" y1="32.0" x2="188.0" y2="248.0" stroke="#e2dccf"/>
+<line x1="251.0" y1="32.0" x2="251.0" y2="248.0" stroke="#e2dccf"/>
+<line x1="314.0" y1="32.0" x2="314.0" y2="248.0" stroke="#e2dccf"/>
+<line x1="377.0" y1="32.0" x2="377.0" y2="248.0" stroke="#e2dccf"/>
+<line x1="440.0" y1="32.0" x2="440.0" y2="248.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="204.8" x2="440.0" y2="204.8" stroke="#e2dccf"/>
+<line x1="62.0" y1="161.6" x2="440.0" y2="161.6" stroke="#e2dccf"/>
+<line x1="62.0" y1="118.4" x2="440.0" y2="118.4" stroke="#e2dccf"/>
+<line x1="62.0" y1="75.2" x2="440.0" y2="75.2" stroke="#e2dccf"/>
+<line x1="62.0" y1="32.0" x2="440.0" y2="32.0" stroke="#e2dccf"/>
+<line x1="58" y1="248.0" x2="454" y2="248.0" stroke="#2a2723" marker-end="url(#pr-k)"/>
+<line x1="62.0" y1="252" x2="62.0" y2="18" stroke="#2a2723" marker-end="url(#pr-k)"/>
+<text x="458" y="252.0">θ [°]</text>
+<text x="68.0" y="18">P / mg</text>
+<line x1="62.0" y1="248.0" x2="62.0" y2="252.0" stroke="#2a2723"/>
+<text x="62.0" y="265.0" text-anchor="middle" font-size="11">0</text>
+<line x1="125.0" y1="248.0" x2="125.0" y2="252.0" stroke="#2a2723"/>
+<text x="125.0" y="265.0" text-anchor="middle" font-size="11">10</text>
+<line x1="188.0" y1="248.0" x2="188.0" y2="252.0" stroke="#2a2723"/>
+<text x="188.0" y="265.0" text-anchor="middle" font-size="11">20</text>
+<line x1="251.0" y1="248.0" x2="251.0" y2="252.0" stroke="#2a2723"/>
+<text x="251.0" y="265.0" text-anchor="middle" font-size="11">30</text>
+<line x1="314.0" y1="248.0" x2="314.0" y2="252.0" stroke="#2a2723"/>
+<text x="314.0" y="265.0" text-anchor="middle" font-size="11">40</text>
+<line x1="377.0" y1="248.0" x2="377.0" y2="252.0" stroke="#2a2723"/>
+<text x="377.0" y="265.0" text-anchor="middle" font-size="11">50</text>
+<line x1="440.0" y1="248.0" x2="440.0" y2="252.0" stroke="#2a2723"/>
+<text x="440.0" y="265.0" text-anchor="middle" font-size="11">60</text>
+<line x1="58.0" y1="248.0" x2="62.0" y2="248.0" stroke="#2a2723"/>
+<text x="55.0" y="252.0" text-anchor="end" font-size="11">0</text>
+<line x1="58.0" y1="204.8" x2="62.0" y2="204.8" stroke="#2a2723"/>
+<text x="55.0" y="208.8" text-anchor="end" font-size="11">0.2</text>
+<line x1="58.0" y1="161.6" x2="62.0" y2="161.6" stroke="#2a2723"/>
+<text x="55.0" y="165.6" text-anchor="end" font-size="11">0.4</text>
+<line x1="58.0" y1="118.4" x2="62.0" y2="118.4" stroke="#2a2723"/>
+<text x="55.0" y="122.4" text-anchor="end" font-size="11">0.6</text>
+<line x1="58.0" y1="75.2" x2="62.0" y2="75.2" stroke="#2a2723"/>
+<text x="55.0" y="79.2" text-anchor="end" font-size="11">0.8</text>
+<line x1="58.0" y1="32.0" x2="62.0" y2="32.0" stroke="#2a2723"/>
+<text x="55.0" y="36.0" text-anchor="end" font-size="11">1.0</text>
+<path d="M62.0,183.2 L65.2,181.3 L68.3,179.4 L71.5,177.6 L74.6,175.7 L77.8,173.8 L80.9,172.0 L84.0,170.1 L87.2,168.3 L90.3,166.5 L93.5,164.6 L96.7,162.8 L99.8,161.0 L103.0,159.2 L106.1,157.4 L109.2,155.6 L112.4,153.8 L115.5,152.0 L118.7,150.2 L121.8,148.4 L125.0,146.7 L128.1,144.9 L131.3,143.2 L134.4,141.4 L137.6,139.7 L140.8,138.0 L143.9,136.3 L147.1,134.6 L150.2,132.9 L153.4,131.2 L156.5,129.5 L159.7,127.8 L162.8,126.2 L165.9,124.5 L169.1,122.9 L172.2,121.2 L175.4,119.6 L178.6,118.0 L181.7,116.4 L184.9,114.8 L188.0,113.2 L191.2,111.7 L194.3,110.1 L197.4,108.5 L200.6,107.0 L203.8,105.5 L206.9,104.0 L210.1,102.4 L213.2,100.9 L216.3,99.5 L219.5,98.0 L222.7,96.5 L225.8,95.1 L228.9,93.6 L232.1,92.2 L235.2,90.8 L238.4,89.4 L241.6,88.0 L244.7,86.6 L247.9,85.2 L251.0,83.9 L254.1,82.5 L257.3,81.2 L260.5,79.9 L263.6,78.6 L266.8,77.3 L269.9,76.0 L273.1,74.7 L276.2,73.5 L279.4,72.3 L282.5,71.0 L285.6,69.8 L288.8,68.6 L291.9,67.4 L295.1,66.3 L298.2,65.1 L301.4,64.0 L304.6,62.8 L307.7,61.7 L310.9,60.6 L314.0,59.5 L317.1,58.4 L320.3,57.4 L323.4,56.3 L326.6,55.3 L329.8,54.3 L332.9,53.3 L336.1,52.3 L339.2,51.3 L342.4,50.4 L345.5,49.4 L348.6,48.5 L351.8,47.6 L354.9,46.7 L358.1,45.8 L361.2,45.0 L364.4,44.1 L367.6,43.3 L370.7,42.5 L373.8,41.7 L377.0,40.9 L380.1,40.1 L383.3,39.4 L386.4,38.6 L389.6,37.9 L392.8,37.2 L395.9,36.5 L399.1,35.8 L402.2,35.2 L405.4,34.5 L408.5,33.9 L411.7,33.3 L414.8,32.7 L417.9,32.1 L421.1,31.6 L424.2,31.0 L427.4,30.5 L430.6,30.0 L433.7,29.5 L436.9,29.0 L440.0,28.5 L440.0,93.3 L436.9,94.8 L433.7,96.2 L430.6,97.7 L427.4,99.2 L424.2,100.6 L421.1,102.1 L417.9,103.6 L414.8,105.2 L411.7,106.7 L408.5,108.2 L405.4,109.8 L402.2,111.3 L399.1,112.9 L395.9,114.5 L392.8,116.1 L389.6,117.7 L386.4,119.3 L383.3,120.9 L380.1,122.5 L377.0,124.2 L373.8,125.8 L370.7,127.5 L367.6,129.2 L364.4,130.8 L361.2,132.5 L358.1,134.2 L354.9,135.9 L351.8,137.6 L348.6,139.4 L345.5,141.1 L342.4,142.8 L339.2,144.6 L336.1,146.3 L332.9,148.1 L329.8,149.8 L326.6,151.6 L323.4,153.4 L320.3,155.2 L317.1,157.0 L314.0,158.8 L310.9,160.6 L307.7,162.4 L304.6,164.2 L301.4,166.1 L298.2,167.9 L295.1,169.8 L291.9,171.6 L288.8,173.5 L285.6,175.3 L282.5,177.2 L279.4,179.1 L276.2,180.9 L273.1,182.8 L269.9,184.7 L266.8,186.6 L263.6,188.5 L260.5,190.4 L257.3,192.3 L254.1,194.2 L251.0,196.1 L247.9,198.0 L244.7,200.0 L241.6,201.9 L238.4,203.8 L235.2,205.7 L232.1,207.7 L228.9,209.6 L225.8,211.6 L222.7,213.5 L219.5,215.4 L216.3,217.4 L213.2,219.3 L210.1,221.3 L206.9,223.3 L203.8,225.2 L200.6,227.2 L197.4,229.1 L194.3,231.1 L191.2,233.1 L188.0,235.0 L184.9,237.0 L181.7,238.9 L178.6,240.9 L175.4,242.9 L172.2,244.8 L169.1,246.8 L165.9,248.0 L162.8,248.0 L159.7,248.0 L156.5,248.0 L153.4,248.0 L150.2,248.0 L147.1,248.0 L143.9,248.0 L140.8,248.0 L137.6,248.0 L134.4,248.0 L131.3,248.0 L128.1,248.0 L125.0,248.0 L121.8,248.0 L118.7,248.0 L115.5,248.0 L112.4,248.0 L109.2,248.0 L106.1,248.0 L103.0,248.0 L99.8,248.0 L96.7,248.0 L93.5,248.0 L90.3,248.0 L87.2,248.0 L84.0,248.0 L80.9,248.0 L77.8,248.0 L74.6,248.0 L71.5,248.0 L68.3,248.0 L65.2,248.0 L62.0,248.0 z" fill="#dfe6f0" stroke="none" opacity="0.9"/>
+<path d="M62.0,183.2 L65.2,181.3 L68.3,179.4 L71.5,177.6 L74.6,175.7 L77.8,173.8 L80.9,172.0 L84.0,170.1 L87.2,168.3 L90.3,166.5 L93.5,164.6 L96.7,162.8 L99.8,161.0 L103.0,159.2 L106.1,157.4 L109.2,155.6 L112.4,153.8 L115.5,152.0 L118.7,150.2 L121.8,148.4 L125.0,146.7 L128.1,144.9 L131.3,143.2 L134.4,141.4 L137.6,139.7 L140.8,138.0 L143.9,136.3 L147.1,134.6 L150.2,132.9 L153.4,131.2 L156.5,129.5 L159.7,127.8 L162.8,126.2 L165.9,124.5 L169.1,122.9 L172.2,121.2 L175.4,119.6 L178.6,118.0 L181.7,116.4 L184.9,114.8 L188.0,113.2 L191.2,111.7 L194.3,110.1 L197.4,108.5 L200.6,107.0 L203.8,105.5 L206.9,104.0 L210.1,102.4 L213.2,100.9 L216.3,99.5 L219.5,98.0 L222.7,96.5 L225.8,95.1 L228.9,93.6 L232.1,92.2 L235.2,90.8 L238.4,89.4 L241.6,88.0 L244.7,86.6 L247.9,85.2 L251.0,83.9 L254.1,82.5 L257.3,81.2 L260.5,79.9 L263.6,78.6 L266.8,77.3 L269.9,76.0 L273.1,74.7 L276.2,73.5 L279.4,72.3 L282.5,71.0 L285.6,69.8 L288.8,68.6 L291.9,67.4 L295.1,66.3 L298.2,65.1 L301.4,64.0 L304.6,62.8 L307.7,61.7 L310.9,60.6 L314.0,59.5 L317.1,58.4 L320.3,57.4 L323.4,56.3 L326.6,55.3 L329.8,54.3 L332.9,53.3 L336.1,52.3 L339.2,51.3 L342.4,50.4 L345.5,49.4 L348.6,48.5 L351.8,47.6 L354.9,46.7 L358.1,45.8 L361.2,45.0 L364.4,44.1 L367.6,43.3 L370.7,42.5 L373.8,41.7 L377.0,40.9 L380.1,40.1 L383.3,39.4 L386.4,38.6 L389.6,37.9 L392.8,37.2 L395.9,36.5 L399.1,35.8 L402.2,35.2 L405.4,34.5 L408.5,33.9 L411.7,33.3 L414.8,32.7 L417.9,32.1 L421.1,31.6 L424.2,31.0 L427.4,30.5 L430.6,30.0 L433.7,29.5 L436.9,29.0 L440.0,28.5" fill="none" stroke="#a8322a" stroke-width="2.4" opacity="1"/>
+<path d="M62.0,248.0 L65.2,248.0 L68.3,248.0 L71.5,248.0 L74.6,248.0 L77.8,248.0 L80.9,248.0 L84.0,248.0 L87.2,248.0 L90.3,248.0 L93.5,248.0 L96.7,248.0 L99.8,248.0 L103.0,248.0 L106.1,248.0 L109.2,248.0 L112.4,248.0 L115.5,248.0 L118.7,248.0 L121.8,248.0 L125.0,248.0 L128.1,248.0 L131.3,248.0 L134.4,248.0 L137.6,248.0 L140.8,248.0 L143.9,248.0 L147.1,248.0 L150.2,248.0 L153.4,248.0 L156.5,248.0 L159.7,248.0 L162.8,248.0 L165.9,248.0 L169.1,246.8 L172.2,244.8 L175.4,242.9 L178.6,240.9 L181.7,238.9 L184.9,237.0 L188.0,235.0 L191.2,233.1 L194.3,231.1 L197.4,229.1 L200.6,227.2 L203.8,225.2 L206.9,223.3 L210.1,221.3 L213.2,219.3 L216.3,217.4 L219.5,215.4 L222.7,213.5 L225.8,211.6 L228.9,209.6 L232.1,207.7 L235.2,205.7 L238.4,203.8 L241.6,201.9 L244.7,200.0 L247.9,198.0 L251.0,196.1 L254.1,194.2 L257.3,192.3 L260.5,190.4 L263.6,188.5 L266.8,186.6 L269.9,184.7 L273.1,182.8 L276.2,180.9 L279.4,179.1 L282.5,177.2 L285.6,175.3 L288.8,173.5 L291.9,171.6 L295.1,169.8 L298.2,167.9 L301.4,166.1 L304.6,164.2 L307.7,162.4 L310.9,160.6 L314.0,158.8 L317.1,157.0 L320.3,155.2 L323.4,153.4 L326.6,151.6 L329.8,149.8 L332.9,148.1 L336.1,146.3 L339.2,144.6 L342.4,142.8 L345.5,141.1 L348.6,139.4 L351.8,137.6 L354.9,135.9 L358.1,134.2 L361.2,132.5 L364.4,130.8 L367.6,129.2 L370.7,127.5 L373.8,125.8 L377.0,124.2 L380.1,122.5 L383.3,120.9 L386.4,119.3 L389.6,117.7 L392.8,116.1 L395.9,114.5 L399.1,112.9 L402.2,111.3 L405.4,109.8 L408.5,108.2 L411.7,106.7 L414.8,105.2 L417.9,103.6 L421.1,102.1 L424.2,100.6 L427.4,99.2 L430.6,97.7 L433.7,96.2 L436.9,94.8 L440.0,93.3" fill="none" stroke="#2b3a67" stroke-width="2.4" opacity="1"/>
+<text x="74.6" y="47.1" fill="#a8322a" text-anchor="start" font-size="11">上へ動き出す直前：P = mg(sinθ + μcosθ)</text>
+<text x="269.9" y="200.5" fill="#2b3a67" text-anchor="start" font-size="11">下へ動き出す直前：</text>
+<text x="269.9" y="213.4" fill="#2b3a67" text-anchor="start" font-size="11">P = mg(sinθ − μcosθ)</text>
+<text x="276.2" y="135.7" fill="#2a2723" text-anchor="start" font-size="11">この帯の中なら釣合って静止</text>
+<circle cx="251.0" cy="83.9" r="4" fill="#a8322a"/>
+<circle cx="251.0" cy="196.1" r="4" fill="#2b3a67"/>
+<text x="169.1" y="237.2" fill="#968d80" text-anchor="start" font-size="10">θ < 16.7°（= arctan μ）では P = 0 でも静止</text>
+</g></svg>
+<figcaption>図2.3　斜面の物体を釣合わせられる $P/mg$（$\mu=0.3$）。赤い線が「上へ動き出す直前」、青い線が「下へ動き出す直前」。数値から計算して描いた。$\theta&lt;16.7°$（$=\arctan0.3$、摩擦角）では青い線は 0 になる。</figcaption></figure>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/06_a3_chains.jpg" alt="大型車のタイヤを正面から見た写真。タイヤ全体を金属の鎖が網のように覆い、ホイールの凹みに雪が詰まっている" loading="lazy"></div>
+<p class="cap">雪道では、タイヤに鎖を巻いて、路面との摩擦を稼ぐ。</p>
+<p class="cr">Oregon Department of Transportation／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Truck_chains_(5123859267).jpg">Wikimedia Commons</a>（雪道のタイヤチェーン、2008年撮影）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/06_b3_gozu.jpg" alt="見開きの木版挿絵。鳥居と建物のあいだで、大勢の人が綱を左右に分かれて引き合っている" loading="lazy"></div>
+<p class="cap">綱引きでは、引く向きは正反対で、勝負は足が地面から受ける摩擦力が決める。</p>
+<p class="cr">竹原春朝斎／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Gozutenno_tsunahiki.jpg">Wikimedia Commons</a>（『摂津名所図会』より牛頭天王の綱引き、1796〜98年ごろ）</p></div>
+</figure>
+
+<h3><span class="no">2.5</span>$N$ は $mg$ とは限らない：斜めに引く</h3>
+<p>型 II で $F=\mu_sN$ を使うとき、$N$ は釣合いの式から求める。$N=mg$ と決めつけてはいけない例を挙げる。</p>
+<div class="ex"><span class="label">例題5〔B｜自作〕重い箱を斜めに引く：いちばん小さい力は？</span>
+<p>水平な床に、質量 20 kg の箱がある（$\mu_s=0.5$、$g=9.81\ \mathrm{m/s^2}$）。ひもを床と角 $\varphi$ をなす斜め上向きに引く。箱が動き出す直前の引く力 $P$ を $\varphi$ の関数で求め、$P$ が最小になる $\varphi$ と、そのときの $P$ を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 系：箱。外力は重さ $mg$、垂直抗力 $N$、引く力 $P$（斜め上）、摩擦力 $F_s$（動こうとする向き（右）の逆＝左）。<br>
+② 座標：右を $x$、上を $y$。<br>
+③④ 釣合い式：
+$$x：P\cos\varphi-F_s=0,\qquad y：N+P\sin\varphi-mg=0$$
+⑤ 動き出す直前：$F_s=\mu_sN$。$y$ 式から $N=mg-P\sin\varphi$（<strong>$mg$ より小さい</strong>。引き上げる分だけ床を押す力が減る）。$x$ 式に代入して
+$$P\cos\varphi=\mu_s(mg-P\sin\varphi)\ \Longrightarrow\ P(\cos\varphi+\mu_s\sin\varphi)=\mu_smg\ \Longrightarrow\ P=\frac{\mu_smg}{\cos\varphi+\mu_s\sin\varphi}\qquad(2.14)$$
+$\varphi=0$（水平）のとき $P=\mu_smg=0.5\times196.2=98.1$ N。<br>
+最小：$P$ を最小にするには、分母 $D=\cos\varphi+\mu_s\sin\varphi$ を最大にすればよい。$\tan\lambda=\mu_s$ となる摩擦角 $\lambda$ を使うと $\cos\lambda=\dfrac1{\sqrt{1+\mu_s^2}}$、$\sin\lambda=\dfrac{\mu_s}{\sqrt{1+\mu_s^2}}$ なので
+$$D=\sqrt{1+\mu_s^2}\,(\cos\varphi\cos\lambda+\sin\varphi\sin\lambda)=\sqrt{1+\mu_s^2}\cos(\varphi-\lambda)\quad\text{（加法定理）}$$
+$\cos(\varphi-\lambda)\le1$ で、等号は $\varphi=\lambda$ のとき。したがって
+$$\varphi=\lambda=\arctan\mu_s=26.6°,\qquad P_{\min}=\frac{\mu_smg}{\sqrt{1+\mu_s^2}}=\frac{98.1}{\sqrt{1.25}}=\mathbf{87.7}\ \text{N}$$
+⑥ 確かめ：このとき $N=mg-P\sin\varphi=196.2-87.74\times0.4472=157.0$ N、$\mu_sN=78.5$ N。一方、$P\cos\varphi=87.74\times0.8944=78.5$ N ✓（釣合っている）。水平に引くより 10% 小さい。$\varphi$ が大きくなりすぎると、$N$ が減って得をする分より、引く力の水平成分が減る損のほうが大きくなる（図2.4）。<br>
+<strong>答</strong>　$P=\dfrac{\mu_smg}{\cos\varphi+\mu_s\sin\varphi}$。最小は $\varphi=\arctan\mu_s=26.6°$ で $P=87.7$ N。</p></div>
+<figure><svg viewBox="0 0 520 280" width="520" role="img" aria-label="箱を引く角度と、動き出すのに必要な力">
+<defs><marker id="pl-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="pl-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="pl-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="pl-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="pl-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="pl-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="125.0" y1="32.0" x2="125.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="188.0" y1="32.0" x2="188.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="251.0" y1="32.0" x2="251.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="314.0" y1="32.0" x2="314.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="377.0" y1="32.0" x2="377.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="440.0" y1="32.0" x2="440.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="202.0" x2="440.0" y2="202.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="168.0" x2="440.0" y2="168.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="134.0" x2="440.0" y2="134.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="100.0" x2="440.0" y2="100.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="66.0" x2="440.0" y2="66.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="32.0" x2="440.0" y2="32.0" stroke="#e2dccf"/>
+<line x1="58" y1="236.0" x2="454" y2="236.0" stroke="#2a2723" marker-end="url(#pl-k)"/>
+<line x1="62.0" y1="240" x2="62.0" y2="18" stroke="#2a2723" marker-end="url(#pl-k)"/>
+<text x="458" y="240.0">φ [°]</text>
+<text x="68.0" y="18">P [N]</text>
+<line x1="62.0" y1="236.0" x2="62.0" y2="240.0" stroke="#2a2723"/>
+<text x="62.0" y="253.0" text-anchor="middle" font-size="11">0</text>
+<line x1="125.0" y1="236.0" x2="125.0" y2="240.0" stroke="#2a2723"/>
+<text x="125.0" y="253.0" text-anchor="middle" font-size="11">10</text>
+<line x1="188.0" y1="236.0" x2="188.0" y2="240.0" stroke="#2a2723"/>
+<text x="188.0" y="253.0" text-anchor="middle" font-size="11">20</text>
+<line x1="251.0" y1="236.0" x2="251.0" y2="240.0" stroke="#2a2723"/>
+<text x="251.0" y="253.0" text-anchor="middle" font-size="11">30</text>
+<line x1="314.0" y1="236.0" x2="314.0" y2="240.0" stroke="#2a2723"/>
+<text x="314.0" y="253.0" text-anchor="middle" font-size="11">40</text>
+<line x1="377.0" y1="236.0" x2="377.0" y2="240.0" stroke="#2a2723"/>
+<text x="377.0" y="253.0" text-anchor="middle" font-size="11">50</text>
+<line x1="440.0" y1="236.0" x2="440.0" y2="240.0" stroke="#2a2723"/>
+<text x="440.0" y="253.0" text-anchor="middle" font-size="11">60</text>
+<line x1="58.0" y1="236.0" x2="62.0" y2="236.0" stroke="#2a2723"/>
+<text x="55.0" y="240.0" text-anchor="end" font-size="11">80</text>
+<line x1="58.0" y1="168.0" x2="62.0" y2="168.0" stroke="#2a2723"/>
+<text x="55.0" y="172.0" text-anchor="end" font-size="11">90</text>
+<line x1="58.0" y1="100.0" x2="62.0" y2="100.0" stroke="#2a2723"/>
+<text x="55.0" y="104.0" text-anchor="end" font-size="11">100</text>
+<line x1="58.0" y1="32.0" x2="62.0" y2="32.0" stroke="#2a2723"/>
+<text x="55.0" y="36.0" text-anchor="end" font-size="11">110</text>
+<path d="M62.0,112.9 L65.2,115.8 L68.3,118.6 L71.5,121.3 L74.6,124.0 L77.8,126.5 L80.9,129.1 L84.0,131.5 L87.2,133.9 L90.3,136.2 L93.5,138.4 L96.7,140.6 L99.8,142.7 L103.0,144.8 L106.1,146.8 L109.2,148.7 L112.4,150.6 L115.5,152.4 L118.7,154.2 L121.8,155.9 L125.0,157.5 L128.1,159.1 L131.3,160.6 L134.4,162.1 L137.6,163.5 L140.8,164.9 L143.9,166.2 L147.1,167.5 L150.2,168.7 L153.3,169.9 L156.5,171.0 L159.7,172.0 L162.8,173.1 L165.9,174.0 L169.1,174.9 L172.2,175.8 L175.4,176.6 L178.6,177.4 L181.7,178.1 L184.9,178.8 L188.0,179.4 L191.2,180.0 L194.3,180.5 L197.4,181.0 L200.6,181.4 L203.8,181.8 L206.9,182.2 L210.1,182.5 L213.2,182.7 L216.3,183.0 L219.5,183.1 L222.7,183.2 L225.8,183.3 L228.9,183.3 L232.1,183.3 L235.2,183.3 L238.4,183.2 L241.5,183.0 L244.7,182.8 L247.8,182.6 L251.0,182.3 L254.1,181.9 L257.3,181.6 L260.5,181.1 L263.6,180.7 L266.8,180.1 L269.9,179.6 L273.1,178.9 L276.2,178.3 L279.4,177.6 L282.5,176.8 L285.6,176.0 L288.8,175.2 L291.9,174.3 L295.1,173.3 L298.2,172.3 L301.4,171.3 L304.6,170.2 L307.7,169.0 L310.9,167.8 L314.0,166.6 L317.1,165.3 L320.3,163.9 L323.4,162.5 L326.6,161.0 L329.8,159.5 L332.9,157.9 L336.1,156.3 L339.2,154.6 L342.4,152.9 L345.5,151.1 L348.6,149.2 L351.8,147.3 L354.9,145.3 L358.1,143.3 L361.2,141.2 L364.4,139.0 L367.6,136.8 L370.7,134.5 L373.8,132.1 L377.0,129.7 L380.1,127.2 L383.3,124.6 L386.4,122.0 L389.6,119.3 L392.8,116.5 L395.9,113.7 L399.1,110.7 L402.2,107.7 L405.4,104.7 L408.5,101.5 L411.7,98.2 L414.8,94.9 L417.9,91.5 L421.1,88.0 L424.2,84.4 L427.4,80.7 L430.6,76.9 L433.7,73.1 L436.9,69.1 L440.0,65.0" fill="none" stroke="#a8322a" stroke-width="2.6" opacity="1"/>
+<circle cx="229.4" cy="183.3" r="5" fill="#2a2723"/>
+<path d="M229.4,236.0 L229.4,183.3" fill="none" stroke="#968d80" stroke-width="1" stroke-dasharray="4 3" opacity="1"/>
+<text x="242.0" y="207.1" fill="#2a2723" text-anchor="start" font-size="11">最小：φ = arctan μ = 26.6°、P = 87.7 N</text>
+<circle cx="62.0" cy="112.9" r="4" fill="#a8322a"/>
+<text x="71.5" y="99.3" fill="#a8322a" text-anchor="start" font-size="11">水平（φ = 0）：98.1 N</text>
+</g></svg>
+<figcaption>図2.4　例題5の $P(\varphi)$。数値から計算して描いた。最小値は摩擦角 $\lambda$ の向きに引いたとき（点）。</figcaption></figure>
+<p>最小の方向が摩擦角になるのは偶然ではない。$\varphi=\lambda$ は、箱が受ける反力（$N$ と $F_s$ の合力 $R$）の向きと、引く力 $P$ の向きが<strong>逆向きに一直線</strong>になる場合で、箱は3力（重さ、$P$、$R$）の釣合いになる。2.2 の「摩擦円錐」の考え方で見ても、最も小さい $P$ は、$R$ が円錐の縁にあるときである。</p>
+
+<h3><span class="no">2.6</span>摩擦のある釣合いの手順</h3>
+<ol>
+<li><strong>系を決め、FBD を描く</strong>：重さ、垂直抗力 $N$、<strong>摩擦力 $F$（接触面に沿う）</strong>、ほかの外力。摩擦力の向きは、(I) ならどちらでもよい。(II) なら<strong>運動しようとする向きの逆</strong>（迷ったら「力を加えていくと、何が先にどちらへ動くか」を考える）。</li>
+<li>座標軸を決める。斜面なら斜面に平行・垂直に取ると式が簡単。</li>
+<li>力を成分で書く。</li>
+<li>釣合い式（力の成分、モーメント）を立てる。</li>
+<li>解く：(I) 摩擦力 $F$ を求め、<strong>$F\le\mu_sN$ か</strong>を確かめる。(II) $F=\mu_sN$ を代入して、角度・力・係数を求める。</li>
+<li>確かめる：摩擦力の向きは物理的に正しいか（負になったら逆向き）、単位、極端な場合（$\mu\to0$、$\theta\to0$ など）で既知の結果に戻るか、使わなかった式で検算する。</li>
+</ol>
+
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>複数の接触面：どの面が先に滑るか</h2>
+<p><strong>動機</strong>：2章では、摩擦面が1つの問題を扱った。しかし、物体が積み重なっていると、摩擦面が2つ以上になる。どの面が先に滑るかは、<strong>解く前には分からない</strong>。講義資料はこの状況の扱いを、次の例題で示している（スライド18〜22）。</p>
+<figure class="slide"><img src="img/slide06/AB.jpg" alt="床の上に物体B、その上に物体Aが載っている。物体Aに右向きの水平力Pが作用する" loading="lazy" style="width:320px;max-width:80%;height:auto;background:#fff"><figcaption>講義資料の図。床の上に B、B の上に A。A だけに水平力 $P$ を加える。出典：講義資料 第6回 p.18</figcaption></figure>
+<div class="ex"><span class="label">例題6〔B｜講義資料 例題〕積み重なった2つの物体：A が動き出す直前の $P$</span>
+<p>物体 A（質量 $m_A=3$ kg）が物体 B（$m_B=2$ kg）の上に載り、B は水平な床の上にある。A に水平力 $P$ を加えて増やしていく。摩擦係数は A–B 間が $0.3$、B–床間が $0.2$。物体 A が動き出す瞬間（直前）の力 $P$ を求めよ。（資料に合わせ $g=9.8\ \mathrm{m/s^2}$ とする。$m_Ag=29.4$ N、$m_Bg=19.6$ N。）</p>
+<p><strong>解答</strong></p>
+<p>① 系：A と B を<strong>別々に</strong>切り出す（接触面の力は作用・反作用で A と B に逆向きに働くため）。A：重さ $m_Ag$、床（B）からの垂直抗力 $N_A$、水平力 $P$、B からの摩擦力 $F_A$（$P$ と逆向き）。B：重さ $m_Bg$、A からの $N_A$（下向き）と $F_A$（右向き、反作用）、床からの $N_B$（上向き）と摩擦力 $F_B$（左向き）。<br>
+② 座標：鉛直（V）上向き、水平（H）右向きを正。<br>
+③④ 力の釣合い：
+$$\text{A, V}：N_A-m_Ag=0\ (1),\qquad\text{A, H}：P-F_A=0\ (2)$$
+$$\text{B, V}：N_B-N_A-m_Bg=0\ (3),\qquad\text{B, H}：F_A-F_B=0\ (4)$$
+⑤ 解く：(1)(3) から $N_A=29.4$ N、$N_B=29.4+19.6=49.0$ N。(2)(4) から $P=F_A=F_B$（A の水平力が、そのまま B を通って床へ伝わる）。未知数は $P$、$F_A$、$F_B$、$N_A$、$N_B$ の5つ、式は4つ。<strong>1つ足りない</strong>。足りない1式は、「<strong>どの面が滑り出すのか</strong>」から来る。摩擦面が2つあるので、解く前には<strong>どちらが先に滑るか分からない</strong>。そこで、一方が滑る（動き出す直前）と<strong>仮定</strong>して解き、答えに<strong>矛盾がなければ仮定は正しい</strong>、矛盾があれば<strong>仮定は誤り</strong>と判定する。</p>
+<figure class="slide"><img src="img/slide06/ABfbd.jpg" alt="物体Aと物体Bの自由物体図。Aには重さmAg、右向きの力P、左向きの摩擦力FA、上向きの垂直抗力NA。Bには重さmBg、上から押すNA、右向きのFA、左向きのFB、床からの垂直抗力NB" loading="lazy" style="width:300px;max-width:70%;height:auto;background:#fff"><figcaption>講義資料の自由物体図（A と B）。出典：講義資料 第6回 p.20</figcaption></figure>
+<p><strong>仮定1：B と床の間が滑る</strong>（B が A を乗せたまま動き出す）。このとき床の摩擦は上限：
+$$F_B=F_{B\,\max}=0.2\,N_B=0.2\times49.0=9.8\text{ N}\qquad(5)$$
+(4) から $F_A=F_B=9.8$ N、(2) から $P=9.8$ N。ここで A–B 間の最大静止摩擦力は $F_{A\,\max}=0.3\,N_A=0.3\times29.4=8.82$ N。ところが $F_A=9.8$ N $&gt;F_{A\,\max}=8.82$ N。<strong>A–B 間が支えられる摩擦力（8.82 N）を超えて</strong>いる。→ <strong>矛盾。仮定1は誤り</strong>。（実際には、$P$ が 8.82 N に達した時点で A–B 間が先に滑り出す。）</p>
+<p><strong>仮定2：A と B の間が滑る</strong>（A が B の上を滑る）。このとき A–B の摩擦は上限：
+$$F_A=F_{A\,\max}=0.3\,N_A=8.82\text{ N}\qquad(5)'$$
+(2) から $P=\mathbf{8.82}$ N、(4) から $F_B=8.82$ N。B–床間の最大静止摩擦力は $F_{B\,\max}=0.2\,N_B=9.8$ N なので、$F_B=8.82$ N $&lt;9.8$ N。<strong>B は床の上で静止したまま保てる</strong>（B–床間は滑らない）。→ <strong>矛盾なし。仮定2は正しい</strong>。<br>
+⑥ 確かめ：（別の見方）A も B も動いていないとき、必要な摩擦力は $F_A=F_B=P$。A–B 間が耐えられるのは $P\le8.82$、B–床間は $P\le9.8$。<strong>どちらの条件も満たす最大の $P$</strong> が 8.82 N。すなわち<strong>耐えられる上限が小さいほうの面</strong>が、先に滑る。<br>
+<strong>答</strong>　$P=\mathbf{8.82}\ \text{N}$（A と B の間が滑り出す）。</p></div>
+<div class="warn"><span class="label">よくある誤解：「摩擦係数が小さい面が先に滑る」</span>床との摩擦係数（0.2）のほうが、A–B 間（0.3）より小さい。それでも先に滑るのは A–B 間である。<strong>垂直抗力が違う</strong>からだ。床には A と B の両方の重さがかかる（$N_B=49.0$ N、A–B 間は $N_A=29.4$ N）。上限は<strong>$\mu N$ の積</strong>で決まる：床 $0.2\times49.0=9.8$ N、A–B $0.3\times29.4=8.82$ N。係数だけで判断しない。</div>
+<div class="box"><span class="label">スライドの数値について</span>講義資料は $g=9.8$ の値（$29.4$、$19.6$、$8.82$、$9.8$ N）。$g=9.81$ とすると $N_A=29.43$、$F_{A\,\max}=8.829$ N、$F_{B\,\max}=9.81$ N で、結論（8.83 N、A–B 間が先）は変わらない。</div>
+<p>複数の接触面の問題の型は、次のとおり。<br>
+① 物体を<strong>別々に</strong>切り出し、FBD を描く。② 垂直抗力 $N$ を、釣合いから先に決める。③ 各面の上限 $\mu N$ を計算する。④ <strong>上限の小さい面が先に滑る、と仮定</strong>して解き、他の面で $F\le\mu N$ を確かめる（満たさなければ仮定を変える）。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/06_a4_jenga.jpg" alt="机の上に立つ、細長い積み木を何段にも積み重ねた塔" loading="lazy"></div>
+<p class="cap">積み木の塔は、1本引き抜くとき、いちばん弱い面から先に滑る。</p>
+<p class="cr">Bobjgalindo／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Jenga_tower.JPG">Wikimedia Commons</a>（ジェンガの塔、2005年撮影（一部を切り出し））</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/06_b4_daruma.jpg" alt="畳の上に、赤い顔の頭と色違いの円柱を積んだだるま落としと、その横に置かれた木槌" loading="lazy"></div>
+<p class="cap">だるま落としは、槌で打った一段だけが滑り、上の段は、そのまま下に載り直す。</p>
+<p class="cr">Japanexperterna.se／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Daruma_otoshi.jpg">Wikimedia Commons</a>（だるま落とし、2013年撮影）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>摩擦に関係する機械要素：ねじ・ロープ・転がり</h2>
+<p>講義資料の「2. 摩擦に関係する機械要素など」を、1〜3章の道具で導く。ねじは<strong>斜面と摩擦角</strong>（2.2）、ロープは<strong>微小部分の釣合い</strong>と積分、転がりは<strong>モーメントの釣合い</strong>である。</p>
+
+<h3><span class="no">4.1</span>ねじ：斜面を巻いたもの</h3>
+<p><strong>動機</strong>：ボルトを締めるとき、ねじ面の摩擦に打ち勝って回すのに、どれだけの力が要るか。逆に、締めたボルトは、なぜ緩まないのか。</p>
+<p><strong>モデル</strong>：ねじ面は<strong>らせん</strong>である。これを平面に展開すると、傾斜角 $\alpha$（<strong>リード角</strong>）の斜面になる。ナットはその上の<strong>くさび状の物体</strong>と見なせる。ねじの軸方向の力を $Q$、ねじを回す力（接線方向）を $P$、斜面からの垂直抗力を $N$、摩擦力を $F$ とする。（以下は、講義資料 p.25〜27 の導出。）</p>
+<figure class="slide"><img src="img/slide06/screwmodel.jpg" alt="上：らせん（青）を平面に展開すると傾斜角αの斜面になる。下：斜面αの上の楔形の物体。上から軸方向の力Q、斜面からの垂直抗力Nと摩擦力F、横から押す力P（赤）とP'（青）が描かれている" loading="lazy" style="width:520px;max-width:92%;height:auto;background:#fff"><figcaption>ねじのモデル。らせんを平面に展開した斜面（$\alpha$）と、くさび状のナットに働く力。出典：講義資料 第6回 p.27</figcaption></figure>
+<div class="proof"><span class="label">導出：ねじを締める力 $P$ と軸力 $Q$ の関係</span>
+<p>① 系：くさび。締めるとき（ナットが斜面を上る向きに動こうとするとき）、摩擦力 $F$ は斜面の下向き（運動の逆）。斜面は水平に対して $\alpha$、垂直抗力 $N$ は斜面に垂直。</p>
+<p>② 座標：水平（$P$ の向き）と鉛直（$Q$ の向き）。$N$ の成分は水平に $N\sin\alpha$、鉛直に $N\cos\alpha$。$F$ は斜面に沿うので、水平に $F\cos\alpha$、鉛直に $F\sin\alpha$。<span class="note">← 斜面の向きが水平から $\alpha$ なので、斜面に沿う力は $\cos\alpha$ が水平成分、垂直な力は $\sin\alpha$ が水平成分。</span></p>
+<p>③④ 釣合い式（講義資料の式 (1)(2)）：
+$$N\sin\alpha+F\cos\alpha-P=0\qquad(4.1)$$
+$$N\cos\alpha-F\sin\alpha-Q=0\qquad(4.2)$$
+動き出す直前なので $F=\mu N=N\tan\lambda$（$\tan\lambda=\mu$、$\lambda$ は摩擦角）　(4.3)</p>
+<p>⑤ (4.3) を (4.1)(4.2) に代入して $F$ を消す：
+$$P=N(\sin\alpha+\tan\lambda\cos\alpha),\qquad Q=N(\cos\alpha-\tan\lambda\sin\alpha)$$
+両式の比をとると $N$ が消える。分子分母を $\cos\alpha$ で割って
+$$\frac PQ=\frac{\sin\alpha+\tan\lambda\cos\alpha}{\cos\alpha-\tan\lambda\sin\alpha}=\frac{\tan\alpha+\tan\lambda}{1-\tan\alpha\tan\lambda}=\tan(\alpha+\lambda)$$
+最後の変形は、$\tan$ の加法定理 $\tan(a+b)=\dfrac{\tan a+\tan b}{1-\tan a\tan b}$ による（これは $\sin(a+b)=\sin a\cos b+\cos a\sin b$ と $\cos(a+b)=\cos a\cos b-\sin a\sin b$ の比）。よって
+$$P=Q\tan(\alpha+\lambda)\qquad(4.4)$$</p></div>
+<p>(4.4) は、「斜面の傾き $\alpha$ に、摩擦角 $\lambda$ を<strong>足した</strong>傾きの斜面」を上るのに必要な力と同じ、という意味である。摩擦がなければ（$\lambda=0$）$P=Q\tan\alpha$。</p>
+<p><strong>ねじを緩める（逆に回す）とき</strong>：ナットの運動の向きが逆になるので、摩擦力 $F$ の向きも逆になる。(4.1)(4.2) の $F$ の符号を変えて同様に解くと、水平方向に必要な力 $P'$（図の青い矢印の向き）は
+$$P'=-Q\tan(\alpha-\lambda)\qquad(4.5)$$
+となる。符号で場合分けする。</p>
+<ul>
+<li>$\alpha&lt;\lambda$ のとき：$\tan(\alpha-\lambda)&lt;0$ なので $P'&gt;0$。緩めるのに<strong>力を加え続けなければならない</strong>。手を離しても、ねじは<strong>戻らない</strong>。これを<strong>自己ロック</strong>（セルフロック）という。〔推定：スライド26の空欄は画像内で読み取れず、(4.5) の符号から導いた〕</li>
+<li>$\alpha&gt;\lambda$ のとき：$P'&lt;0$。ねじを緩める向きに<strong>力を加える必要がなく</strong>、手を離すとねじは<strong>自然に緩んで（戻って）しまう</strong>。〔推定：同上〕</li>
+</ul>
+<p><strong>数値例（自作の仮定）</strong>：ピッチ $p=2$ mm、有効径 $d=10$ mm のねじ（リード角 $\tan\alpha=\dfrac{p}{\pi d}$）、$\mu=0.15$。$\alpha=\arctan\dfrac{2}{10\pi}=3.64°$、$\lambda=\arctan0.15=8.53°$。締める力：$P/Q=\tan(3.64°+8.53°)=\tan12.17°=\mathbf{0.216}$（軸力の約 22%）。緩める力：$P'=-Q\tan(3.64°-8.53°)=+0.0855\,Q&gt;0$。$\alpha&lt;\lambda$ なので<strong>自己ロック</strong>する（振動などで摩擦が減らなければ、自然に緩まない）。</p>
+<div class="warn"><span class="label">注意</span>実際のねじの設計では、ねじ山の角度（三角ねじは斜面が軸に対してさらに傾く）や、座面の摩擦も考える。講義資料は<strong>四角ねじのモデル</strong>（ねじ面がらせんの斜面）である。数値例の $p$、$d$、$\mu$ は説明のために置いたもので、実際のねじの仕様ではない。</div>
+
+<h3><span class="no">4.2</span>ロープ・ベルト：巻き付けると摩擦が指数的に増える</h3>
+<p><strong>動機</strong>：船は、細いロープ数巻きで、巨大な力に耐える。ロープを係留杭（ボラード）に巻き付けると、手で引く小さな力で、大きな力を支えられる。巻き数と力の関係はどうなっているか。</p>
+<p><strong>問題</strong>：ロープを円柱（半径は問わない）に角 $\alpha$ だけ巻き付けて、両端を引く。両端の張力を $T_1$、$T_2$ とする。ロープが滑り出す直前の比 $T_2/T_1$ を求める。（講義資料 p.28〜30。）</p>
+<figure class="slide"><img src="img/slide06/ropefig.jpg" alt="左：円柱にロープが角αだけ巻き付き、両端の張力T1（下）とT2（左上）が描かれている。角θの位置の微小部分PQを取る。右：微小部分PQの拡大。両端の張力TとT+dT、垂直抗力dN、摩擦力μdN、角dθ/2" loading="lazy" style="width:680px;max-width:98%;height:auto;background:#fff"><figcaption>ロープの微小部分 PQ（中心角 $d\theta$）に働く力。張力 $T$（一端）と $T+dT$（他端）、垂直抗力 $dN$、摩擦力 $\mu\,dN$。出典：講義資料 第6回 p.30</figcaption></figure>
+<div class="proof"><span class="label">導出：キャプスタン方程式 $T_2=T_1e^{-\mu\alpha}$</span>
+<p>① 系：巻き付いたロープのうち、中心角 $d\theta$ の微小部分 PQ だけを切り出す。ロープの張力は、巻き付いた区間でゆるやかに変化するので、PQ の一端で $T$、他端で $T+dT$（$dT$ は微小）。</p>
+<p>② 座標：PQ の中央での<strong>半径方向</strong>と<strong>円周方向（接線方向）</strong>。各端の張力は接線方向で、PQ の中央の接線に対して $\dfrac{d\theta}2$ だけ傾いている。</p>
+<p>③ 半径方向の釣合い：2つの張力の、円の中心向きの成分と、円柱からの垂直抗力 $dN$（外向き）が釣合う：
+$$T\sin\frac{d\theta}{2}+(T+dT)\sin\frac{d\theta}{2}=dN\qquad(4.6)$$
+$d\theta$ は微小なので $\sin\dfrac{d\theta}2\simeq\dfrac{d\theta}2$（<span class="note">$\varepsilon$ が小さいとき $\sin\varepsilon\simeq\varepsilon$。ラジアンで測った角の弧と、その角の正弦はほぼ等しい</span>）。$dT\,d\theta$ は<strong>2つの微小量の積</strong>なので無視できる：
+$$T\,d\theta=dN\qquad(4.7)$$</p>
+<p>④ 円周方向の釣合い：2つの張力の差 $dT$ と、摩擦力 $\mu\,dN$（動き出す直前なので最大静止摩擦力 $\mu\,dN$）が釣合う（$T_2$ 側が小さい張力の側として、向きの関係から）：
+$$dT+\mu\,dN=0\qquad(4.8)$$
+<span class="note">← 向きの理由：ロープは大きい張力の側 $T_1$ へ滑り出そうとする。摩擦力はその逆向き（小さい張力の側）に働くので、$T$ は $\theta$ とともに減る。</span></p>
+<p>⑤ (4.7) の $dN$ を (4.8) に代入：$dT=-\mu T\,d\theta$。$T$ のものを左辺に集めて、接触部分全体（$\theta=0$ から $\alpha$、張力 $T_1$ から $T_2$）で積分する：
+$$\int_{T_1}^{T_2}\frac{dT}{T}=-\mu\int_0^{\alpha}d\theta\ \Longrightarrow\ \ln\frac{T_2}{T_1}=-\mu\alpha$$
+$$T_2=T_1e^{-\mu\alpha}\qquad(4.9)$$</p></div>
+<p>(4.9) の読み方：$T_1$ を大きい張力（荷重を吊るす側）、$T_2$ を小さい張力（手で引く側）とすると、滑らずに保持できる<strong>最小の</strong>手の力は $T_2=T_1e^{-\mu\alpha}$。巻き角 $\alpha$ が増えるほど、<strong>指数関数的</strong>に小さい力で保持できる（図4.1）。</p>
+<figure><svg viewBox="0 0 520 280" width="520" role="img" aria-label="ロープの巻き数と張力の比 T2/T1">
+<defs><marker id="rp-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="rp-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="rp-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="rp-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="rp-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="rp-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="156.5" y1="32.0" x2="156.5" y2="236.0" stroke="#e2dccf"/>
+<line x1="251.0" y1="32.0" x2="251.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="345.5" y1="32.0" x2="345.5" y2="236.0" stroke="#e2dccf"/>
+<line x1="440.0" y1="32.0" x2="440.0" y2="236.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="195.2" x2="440.0" y2="195.2" stroke="#e2dccf"/>
+<line x1="62.0" y1="154.4" x2="440.0" y2="154.4" stroke="#e2dccf"/>
+<line x1="62.0" y1="113.6" x2="440.0" y2="113.6" stroke="#e2dccf"/>
+<line x1="62.0" y1="72.8" x2="440.0" y2="72.8" stroke="#e2dccf"/>
+<line x1="62.0" y1="32.0" x2="440.0" y2="32.0" stroke="#e2dccf"/>
+<line x1="58" y1="236.0" x2="454" y2="236.0" stroke="#2a2723" marker-end="url(#rp-k)"/>
+<line x1="62.0" y1="240" x2="62.0" y2="18" stroke="#2a2723" marker-end="url(#rp-k)"/>
+<text x="458" y="240.0">巻き数</text>
+<text x="68.0" y="18">T2 / T1</text>
+<line x1="62.0" y1="236.0" x2="62.0" y2="240.0" stroke="#2a2723"/>
+<text x="62.0" y="253.0" text-anchor="middle" font-size="11">0</text>
+<line x1="156.5" y1="236.0" x2="156.5" y2="240.0" stroke="#2a2723"/>
+<text x="156.5" y="253.0" text-anchor="middle" font-size="11">0.5</text>
+<line x1="251.0" y1="236.0" x2="251.0" y2="240.0" stroke="#2a2723"/>
+<text x="251.0" y="253.0" text-anchor="middle" font-size="11">1</text>
+<line x1="345.5" y1="236.0" x2="345.5" y2="240.0" stroke="#2a2723"/>
+<text x="345.5" y="253.0" text-anchor="middle" font-size="11">1.5</text>
+<line x1="440.0" y1="236.0" x2="440.0" y2="240.0" stroke="#2a2723"/>
+<text x="440.0" y="253.0" text-anchor="middle" font-size="11">2</text>
+<line x1="58.0" y1="236.0" x2="62.0" y2="236.0" stroke="#2a2723"/>
+<text x="55.0" y="240.0" text-anchor="end" font-size="11">0</text>
+<line x1="58.0" y1="195.2" x2="62.0" y2="195.2" stroke="#2a2723"/>
+<text x="55.0" y="199.2" text-anchor="end" font-size="11">0.2</text>
+<line x1="58.0" y1="154.4" x2="62.0" y2="154.4" stroke="#2a2723"/>
+<text x="55.0" y="158.4" text-anchor="end" font-size="11">0.4</text>
+<line x1="58.0" y1="113.6" x2="62.0" y2="113.6" stroke="#2a2723"/>
+<text x="55.0" y="117.6" text-anchor="end" font-size="11">0.6</text>
+<line x1="58.0" y1="72.8" x2="62.0" y2="72.8" stroke="#2a2723"/>
+<text x="55.0" y="76.8" text-anchor="end" font-size="11">0.8</text>
+<line x1="58.0" y1="32.0" x2="62.0" y2="32.0" stroke="#2a2723"/>
+<text x="55.0" y="36.0" text-anchor="end" font-size="11">1.0</text>
+<path d="M62.0,32.0 L63.9,34.5 L65.8,37.1 L67.7,39.5 L69.6,42.0 L71.5,44.4 L73.3,46.8 L75.2,49.2 L77.1,51.5 L79.0,53.8 L80.9,56.1 L82.8,58.3 L84.7,60.6 L86.6,62.7 L88.5,64.9 L90.3,67.0 L92.2,69.2 L94.1,71.2 L96.0,73.3 L97.9,75.3 L99.8,77.3 L101.7,79.3 L103.6,81.3 L105.5,83.2 L107.4,85.1 L109.2,87.0 L111.1,88.9 L113.0,90.7 L114.9,92.5 L116.8,94.3 L118.7,96.1 L120.6,97.8 L122.5,99.5 L124.4,101.2 L126.3,102.9 L128.2,104.6 L130.0,106.2 L131.9,107.9 L133.8,109.5 L135.7,111.0 L137.6,112.6 L139.5,114.1 L141.4,115.7 L143.3,117.2 L145.2,118.6 L147.1,120.1 L148.9,121.6 L150.8,123.0 L152.7,124.4 L154.6,125.8 L156.5,127.2 L158.4,128.5 L160.3,129.9 L162.2,131.2 L164.1,132.5 L165.9,133.8 L167.8,135.1 L169.7,136.3 L171.6,137.6 L173.5,138.8 L175.4,140.0 L177.3,141.2 L179.2,142.4 L181.1,143.6 L183.0,144.7 L184.9,145.9 L186.7,147.0 L188.6,148.1 L190.5,149.2 L192.4,150.3 L194.3,151.4 L196.2,152.4 L198.1,153.5 L200.0,154.5 L201.9,155.5 L203.8,156.5 L205.6,157.5 L207.5,158.5 L209.4,159.5 L211.3,160.4 L213.2,161.4 L215.1,162.3 L217.0,163.2 L218.9,164.1 L220.8,165.0 L222.7,165.9 L224.5,166.8 L226.4,167.6 L228.3,168.5 L230.2,169.3 L232.1,170.2 L234.0,171.0 L235.9,171.8 L237.8,172.6 L239.7,173.4 L241.6,174.2 L243.4,174.9 L245.3,175.7 L247.2,176.5 L249.1,177.2 L251.0,177.9 L252.9,178.7 L254.8,179.4 L256.7,180.1 L258.6,180.8 L260.5,181.5 L262.3,182.2 L264.2,182.8 L266.1,183.5 L268.0,184.1 L269.9,184.8 L271.8,185.4 L273.7,186.1 L275.6,186.7 L277.5,187.3 L279.4,187.9 L281.2,188.5 L283.1,189.1 L285.0,189.7 L286.9,190.3 L288.8,190.8 L290.7,191.4 L292.6,192.0 L294.5,192.5 L296.4,193.1 L298.2,193.6 L300.1,194.1 L302.0,194.6 L303.9,195.2 L305.8,195.7 L307.7,196.2 L309.6,196.7 L311.5,197.2 L313.4,197.6 L315.3,198.1 L317.1,198.6 L319.0,199.1 L320.9,199.5 L322.8,200.0 L324.7,200.4 L326.6,200.9 L328.5,201.3 L330.4,201.7 L332.3,202.2 L334.2,202.6 L336.1,203.0 L337.9,203.4 L339.8,203.8 L341.7,204.2 L343.6,204.6 L345.5,205.0 L347.4,205.4 L349.3,205.8 L351.2,206.2 L353.1,206.5 L354.9,206.9 L356.8,207.3 L358.7,207.6 L360.6,208.0 L362.5,208.3 L364.4,208.7 L366.3,209.0 L368.2,209.4 L370.1,209.7 L372.0,210.0 L373.9,210.3 L375.7,210.7 L377.6,211.0 L379.5,211.3 L381.4,211.6 L383.3,211.9 L385.2,212.2 L387.1,212.5 L389.0,212.8 L390.9,213.1 L392.8,213.4 L394.6,213.7 L396.5,213.9 L398.4,214.2 L400.3,214.5 L402.2,214.8 L404.1,215.0 L406.0,215.3 L407.9,215.5 L409.8,215.8 L411.7,216.0 L413.5,216.3 L415.4,216.5 L417.3,216.8 L419.2,217.0 L421.1,217.3 L423.0,217.5 L424.9,217.7 L426.8,218.0 L428.7,218.2 L430.6,218.4 L432.4,218.6 L434.3,218.8 L436.2,219.1 L438.1,219.3 L440.0,219.5" fill="none" stroke="#4f7a4a" stroke-width="2.4" opacity="1"/>
+<path d="M62.0,32.0 L63.9,37.1 L65.8,42.0 L67.7,46.8 L69.6,51.5 L71.5,56.1 L73.3,60.6 L75.2,64.9 L77.1,69.2 L79.0,73.3 L80.9,77.3 L82.8,81.3 L84.7,85.1 L86.6,88.9 L88.5,92.5 L90.3,96.1 L92.2,99.5 L94.1,102.9 L96.0,106.2 L97.9,109.5 L99.8,112.6 L101.7,115.7 L103.6,118.6 L105.5,121.6 L107.4,124.4 L109.2,127.2 L111.1,129.9 L113.0,132.5 L114.9,135.1 L116.8,137.6 L118.7,140.0 L120.6,142.4 L122.5,144.7 L124.4,147.0 L126.3,149.2 L128.2,151.4 L130.0,153.5 L131.9,155.5 L133.8,157.5 L135.7,159.5 L137.6,161.4 L139.5,163.2 L141.4,165.0 L143.3,166.8 L145.2,168.5 L147.1,170.2 L148.9,171.8 L150.8,173.4 L152.7,174.9 L154.6,176.5 L156.5,177.9 L158.4,179.4 L160.3,180.8 L162.2,182.2 L164.1,183.5 L165.9,184.8 L167.8,186.1 L169.7,187.3 L171.6,188.5 L173.5,189.7 L175.4,190.8 L177.3,192.0 L179.2,193.1 L181.1,194.1 L183.0,195.2 L184.9,196.2 L186.7,197.2 L188.6,198.1 L190.5,199.1 L192.4,200.0 L194.3,200.9 L196.2,201.7 L198.1,202.6 L200.0,203.4 L201.9,204.2 L203.8,205.0 L205.6,205.8 L207.5,206.5 L209.4,207.3 L211.3,208.0 L213.2,208.7 L215.1,209.4 L217.0,210.0 L218.9,210.7 L220.8,211.3 L222.7,211.9 L224.5,212.5 L226.4,213.1 L228.3,213.7 L230.2,214.2 L232.1,214.8 L234.0,215.3 L235.9,215.8 L237.8,216.3 L239.7,216.8 L241.6,217.3 L243.4,217.7 L245.3,218.2 L247.2,218.6 L249.1,219.1 L251.0,219.5 L252.9,219.9 L254.8,220.3 L256.7,220.7 L258.6,221.1 L260.5,221.4 L262.3,221.8 L264.2,222.1 L266.1,222.5 L268.0,222.8 L269.9,223.1 L271.8,223.5 L273.7,223.8 L275.6,224.1 L277.5,224.4 L279.4,224.7 L281.2,224.9 L283.1,225.2 L285.0,225.5 L286.9,225.7 L288.8,226.0 L290.7,226.3 L292.6,226.5 L294.5,226.7 L296.4,227.0 L298.2,227.2 L300.1,227.4 L302.0,227.6 L303.9,227.8 L305.8,228.0 L307.7,228.2 L309.6,228.4 L311.5,228.6 L313.4,228.8 L315.3,229.0 L317.1,229.1 L319.0,229.3 L320.9,229.5 L322.8,229.6 L324.7,229.8 L326.6,230.0 L328.5,230.1 L330.4,230.2 L332.3,230.4 L334.2,230.5 L336.1,230.7 L337.9,230.8 L339.8,230.9 L341.7,231.1 L343.6,231.2 L345.5,231.3 L347.4,231.4 L349.3,231.5 L351.2,231.6 L353.1,231.7 L354.9,231.9 L356.8,232.0 L358.7,232.1 L360.6,232.2 L362.5,232.2 L364.4,232.3 L366.3,232.4 L368.2,232.5 L370.1,232.6 L372.0,232.7 L373.9,232.8 L375.7,232.9 L377.6,232.9 L379.5,233.0 L381.4,233.1 L383.3,233.2 L385.2,233.2 L387.1,233.3 L389.0,233.4 L390.9,233.4 L392.8,233.5 L394.6,233.6 L396.5,233.6 L398.4,233.7 L400.3,233.7 L402.2,233.8 L404.1,233.8 L406.0,233.9 L407.9,233.9 L409.8,234.0 L411.7,234.0 L413.5,234.1 L415.4,234.1 L417.3,234.2 L419.2,234.2 L421.1,234.3 L423.0,234.3 L424.9,234.4 L426.8,234.4 L428.7,234.4 L430.6,234.5 L432.4,234.5 L434.3,234.6 L436.2,234.6 L438.1,234.6 L440.0,234.7" fill="none" stroke="#a8322a" stroke-width="2.4" opacity="1"/>
+<path d="M62.0,32.0 L63.9,39.5 L65.8,46.8 L67.7,53.8 L69.6,60.6 L71.5,67.0 L73.3,73.3 L75.2,79.3 L77.1,85.1 L79.0,90.7 L80.9,96.1 L82.8,101.2 L84.7,106.2 L86.6,111.0 L88.5,115.7 L90.3,120.1 L92.2,124.4 L94.1,128.5 L96.0,132.5 L97.9,136.3 L99.8,140.0 L101.7,143.6 L103.6,147.0 L105.5,150.3 L107.4,153.5 L109.2,156.5 L111.1,159.5 L113.0,162.3 L114.9,165.0 L116.8,167.6 L118.7,170.2 L120.6,172.6 L122.5,174.9 L124.4,177.2 L126.3,179.4 L128.2,181.5 L130.0,183.5 L131.9,185.4 L133.8,187.3 L135.7,189.1 L137.6,190.8 L139.5,192.5 L141.4,194.1 L143.3,195.7 L145.2,197.2 L147.1,198.6 L148.9,200.0 L150.8,201.3 L152.7,202.6 L154.6,203.8 L156.5,205.0 L158.4,206.2 L160.3,207.3 L162.2,208.3 L164.1,209.4 L165.9,210.3 L167.8,211.3 L169.7,212.2 L171.6,213.1 L173.5,213.9 L175.4,214.8 L177.3,215.5 L179.2,216.3 L181.1,217.0 L183.0,217.7 L184.9,218.4 L186.7,219.1 L188.6,219.7 L190.5,220.3 L192.4,220.9 L194.3,221.4 L196.2,222.0 L198.1,222.5 L200.0,223.0 L201.9,223.5 L203.8,223.9 L205.6,224.4 L207.5,224.8 L209.4,225.2 L211.3,225.6 L213.2,226.0 L215.1,226.4 L217.0,226.7 L218.9,227.1 L220.8,227.4 L222.7,227.7 L224.5,228.0 L226.4,228.3 L228.3,228.6 L230.2,228.9 L232.1,229.1 L234.0,229.4 L235.9,229.6 L237.8,229.9 L239.7,230.1 L241.6,230.3 L243.4,230.5 L245.3,230.7 L247.2,230.9 L249.1,231.1 L251.0,231.3 L252.9,231.5 L254.8,231.6 L256.7,231.8 L258.6,232.0 L260.5,232.1 L262.3,232.2 L264.2,232.4 L266.1,232.5 L268.0,232.7 L269.9,232.8 L271.8,232.9 L273.7,233.0 L275.6,233.1 L277.5,233.2 L279.4,233.3 L281.2,233.4 L283.1,233.5 L285.0,233.6 L286.9,233.7 L288.8,233.8 L290.7,233.9 L292.6,233.9 L294.5,234.0 L296.4,234.1 L298.2,234.2 L300.1,234.2 L302.0,234.3 L303.9,234.4 L305.8,234.4 L307.7,234.5 L309.6,234.5 L311.5,234.6 L313.4,234.6 L315.3,234.7 L317.1,234.7 L319.0,234.8 L320.9,234.8 L322.8,234.9 L324.7,234.9 L326.6,235.0 L328.5,235.0 L330.4,235.0 L332.3,235.1 L334.2,235.1 L336.1,235.1 L337.9,235.2 L339.8,235.2 L341.7,235.2 L343.6,235.3 L345.5,235.3 L347.4,235.3 L349.3,235.3 L351.2,235.4 L353.1,235.4 L354.9,235.4 L356.8,235.4 L358.7,235.5 L360.6,235.5 L362.5,235.5 L364.4,235.5 L366.3,235.5 L368.2,235.5 L370.1,235.6 L372.0,235.6 L373.9,235.6 L375.7,235.6 L377.6,235.6 L379.5,235.6 L381.4,235.7 L383.3,235.7 L385.2,235.7 L387.1,235.7 L389.0,235.7 L390.9,235.7 L392.8,235.7 L394.6,235.7 L396.5,235.7 L398.4,235.8 L400.3,235.8 L402.2,235.8 L404.1,235.8 L406.0,235.8 L407.9,235.8 L409.8,235.8 L411.7,235.8 L413.5,235.8 L415.4,235.8 L417.3,235.8 L419.2,235.8 L421.1,235.8 L423.0,235.8 L424.9,235.9 L426.8,235.9 L428.7,235.9 L430.6,235.9 L432.4,235.9 L434.3,235.9 L436.2,235.9 L438.1,235.9 L440.0,235.9" fill="none" stroke="#2b3a67" stroke-width="2.4" opacity="1"/>
+<circle cx="251.0" cy="219.5" r="4.5" fill="#a8322a"/>
+<circle cx="440.0" cy="234.7" r="4.5" fill="#a8322a"/>
+<text x="156.5" y="101.4" fill="#4f7a4a" text-anchor="start" font-size="11">μ = 0.2</text>
+<text x="114.9" y="172.8" fill="#a8322a" text-anchor="start" font-size="11">μ = 0.4</text>
+<text x="77.1" y="207.4" fill="#2b3a67" text-anchor="start" font-size="11">μ = 0.6</text>
+<text x="262.3" y="205.4" fill="#a8322a" text-anchor="start" font-size="11">1巻き：0.081</text>
+<text x="354.9" y="223.8" fill="#a8322a" text-anchor="start" font-size="11">2巻き：0.0066</text>
+</g></svg>
+<figcaption>図4.1　巻き数と張力の比 $T_2/T_1=e^{-\mu\alpha}$（$\alpha=2\pi\times$巻き数）。数値から計算して描いた。$\mu=0.4$（赤）では、1巻きで 0.081、2巻きで 0.0066。</figcaption></figure>
+<div class="ex"><span class="label">例題7〔B｜講義資料 例題（ロープ）〕柱にロープを巻きつけて、おもりを吊る</span>
+<figure class="slide"><img src="img/slide06/ropeex.jpg" alt="横向きの円柱にロープが1巻きされ、一端（T1）に質量mのおもりが吊るされ、他端（T2）は上向きに引かれている" loading="lazy" style="width:280px;max-width:70%;height:auto;background:#fff"><figcaption>講義資料の図。出典：講義資料 第6回 p.31</figcaption></figure>
+<p>図のように、ロープを柱に<strong>1巻き</strong>してから、おもり（質量 $m$）を吊るす。おもりを支える力（ロープの他端を引く力 $T_2$）はどうなるか。ロープと柱の間の摩擦係数は $0.4$。2巻きの場合は。</p>
+<p><strong>解答</strong></p>
+<p>① 系：ロープ（式 (4.9) が成り立つ）。おもりの側の張力 $T_1=mg$（おもりの釣合い）。<br>
+②③④ (4.9) を使う：1巻き $\alpha=2\pi$：
+$$T_2=e^{-\mu\alpha}T_1=e^{-0.4\times2\pi}\,mg=\mathbf{0.0810}\,mg\simeq\frac{1}{12.35}mg$$
+⑤ 2巻き：$\alpha=4\pi$：$T_2=e^{-0.4\times4\pi}mg=\mathbf{0.00656}\,mg\simeq\dfrac{1}{152.4}mg$。<br>
+⑥ 確かめ：$e^{-0.4\times2\pi}=e^{-2.513}=0.0810$。ロープをもう1巻きすると、前の値の2乗（$0.0810^2=0.00656$）になる ✓（$e^{-a}\cdot e^{-a}$）。1巻きで約 $\frac1{12}$、2巻きで約 $\frac1{150}$ になる。100 kgf の荷物を支えるのに、2巻きすれば 0.66 kgf の力で足りる。<br>
+<strong>答</strong>　1巻き：$T_2=0.081\,mg$、2巻き：$T_2=0.00656\,mg$。</p></div>
+<div class="warn"><span class="label">注意：スライドの丸め</span>講義資料は2巻きを「$0.00656\,mg$（$\simeq1/152.5\,mg$）」と書いている。$1/0.00656=152.4$ なので、資料の「152.5」は丸めの違いと思われる（影響は小さい）。</div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 5｜現実</p>
+<div class="ph"><img src="img/06_a5_bollard.jpg" alt="木の係船柱に、太い撚り縄が何周も巻き付けられた、近くからの写真" loading="lazy"></div>
+<p class="cap">係船柱に巻いた綱は、巻き数が増えるほど、指数関数的に小さな力で船を留める。</p>
+<p class="cr">Bernard Spragg. NZ／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Rope_round_the_bollard._(10324708893).jpg">Wikimedia Commons</a>（係船柱に巻かれた綱）</p></div>
+<div class="side b"><p class="kick">MITATE 5｜見立て</p>
+<div class="ph"><img src="img/06_b5_shimenawa.jpg" alt="緑の木々に囲まれた大きな岩に、紙垂（しで）を下げた注連縄が一周巻かれている" loading="lazy"></div>
+<p class="cap">大石を一巻きする縄は、巻き付け角 α を 2π ぶんだけ稼いでいる。</p>
+<p class="cr">Urashimataro／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Shimenawa-Meigetsuin.jpg">Wikimedia Commons</a>（鎌倉・明月院の岩の注連縄、2008年撮影）</p></div>
+</figure>
+<p>ロープ・ベルトの式 (4.9) は、<strong>摩擦力が働く向き</strong>（滑ろうとする向き）で $T_1&gt;T_2$ の関係が決まる点に注意する。ベルト駆動では、ベルトが滑らずに動力を伝えられるのは、張力比が $e^{\mu\alpha}$ 以下のときである。</p>
+
+<h3><span class="no">4.3</span>転がり：滑らずに転がるときにも抵抗がある</h3>
+<p><strong>動機</strong>：円柱（車輪）は、滑らずに転がるとき、摩擦力は $\mu N$ より小さい。それでも<strong>水平に押さないと転がり続けない</strong>のはなぜか。（理想的な剛体の円柱なら、接触点は1点で、床の反力は真下を通り、モーメントを生まない。）</p>
+<p><strong>モデル</strong>：実際の円柱と床は、接触部分がわずかに<strong>変形</strong>し、接触点が1点ではなく<strong>ある幅</strong>になる。この変形から生じる反力 $R$ の作用点が、円柱の真下から、進む向きに少し<strong>前へずれる</strong>。重さ $W$ が円柱の中心にあるのに、反力が中心の真下から $a$ だけずれた点 A に働くため、<strong>転がりを妨げる向きのモーメント</strong> $Wa$ が生じる。（講義資料 p.34。）</p>
+<figure class="slide"><img src="img/slide06/rolling.jpg" alt="半径rの円柱。中心に右向きの水平力P、下向きの重さW（中心から距離aだけ離れた位置）。接触点付近の点Aに、斜め左上向きの反力R。点Aと中心の高さの差がh" loading="lazy" style="width:340px;max-width:80%;height:auto;background:#fff"><figcaption>講義資料の図。反力 $R$ の作用点 A が、真下から $a$ だけ前にずれる。$h$ は点 A から力 $P$ の作用線までの高さ。出典：講義資料 第6回 p.34</figcaption></figure>
+<p>点 A まわりのモーメントの釣合い（反力 $R$ は A を通るのでモーメントなし）：
+$$Wa-Ph=0\qquad(4.10)\quad\text{（講義資料 式 (10)）}$$
+重さ $W$ の腕は $a$、押す力 $P$ の腕は $h$。いま $h\simeq r$（変形は微小で、点 A は接地点とほぼ同じ）なので
+$$P=a\,\frac{W}{r}\qquad(4.11)\quad\text{（講義資料 式 (11)）}$$
+この $a$ を<strong>転がり抵抗係数</strong>と呼ぶ（coefficient of rolling resistance）。〔推定：スライドの空欄は画像内で読み取れず、標準的な名称で埋めた〕$a$ は<strong>長さ</strong>の次元を持つ（$\mu$ は無次元）。</p>
+<p><strong>数値例（自作の仮定）</strong>：鉄の車輪が鉄のレール上を転がる場合、$a$ は 0.5 mm 程度のオーダーと言われる〔本教材の数値の仮定。出典は未確認〕。半径 $r=0.3$ m、$W=500$ N のとき、$P=\dfrac{0.5\times10^{-3}}{0.3}\times500=0.83$ N。同じ物体を<strong>引きずる</strong>のに必要な力は、$\mu=0.3$ として $\mu W=150$ N。転がしたほうが<strong>約 180 分の 1</strong> の力で済む。車輪が発明された理由である。</p>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 6｜現実</p>
+<div class="ph"><img src="img/06_a6_layard.jpg" alt="古い書物の挿絵。巨像を載せた橇を、大勢の人が綱と梃子で引き、前方に丸太が置かれている" loading="lazy"></div>
+<p class="cap">アッシリアの巨像は、橇の前に丸太を敷き、綱で引いて運ばれた。</p>
+<p class="cr">Internet Archive Book Images（Layard, 1882）／No restrictions／<a href="https://commons.wikimedia.org/wiki/File:Nineveh_and_Babylon_-_a_narrative_of_a_second_expedition_to_Assyria_during_the_years_1849,_1850,_and_1851_(1882)_(14580556070).jpg">Wikimedia Commons</a>（レイヤード『ニネヴェとバビロン』の挿絵）</p></div>
+<div class="side b"><p class="kick">MITATE 6｜見立て</p>
+<div class="ph"><img src="img/06_b6_sisyphus.jpg" alt="暗い背景のなか、岩を背負うように押し上げる筋肉質の男を描いた油彩画" loading="lazy"></div>
+<p class="cap">坂の上へ岩を押し上げる男は、手を休めた瞬間、岩の重さだけで元に戻される。</p>
+<p class="cr">ティツィアーノ／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Titian_-_Sisyphus_-_Madrid_-_Prado.jpg">Wikimedia Commons</a>（《シーシュポス》1548〜49年、プラド美術館所蔵）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>運用：台車は滑るのが先か、倒れるのが先か</h2>
+<p>序の問いに答える。第5回6章の台車（質量 44 kg、重心 G は後輪の接地点から前へ $x_G=0.350$ m、高さ $z_G=0.180$ m、前後車輪の接地点の間隔 0.6 m、バッテリーを前に置くと $x_G=0.441$ m。数値は<strong>第5回の自作の仮定</strong>）を、前を下にして傾斜 $\varphi$ の坂に置く。</p>
+<div class="ex"><span class="label">例題8〔B｜自作〕台車を坂に置く：滑るか、倒れるか</span>
+<p>第5回の台車（バッテリーを<strong>後ろ</strong>に置いた状態）を、前を下にして傾斜 $\varphi$ の坂に停める。車輪はブレーキで回らないとし、車輪と路面の静止摩擦係数を $\mu=1.0$ とする（乾いた路面のゴムタイヤを想定した<strong>仮定値</strong>）。(a) 台車が<strong>滑り出す</strong>角 $\varphi_s$ を求めよ。(b) 第5回 6章 (e) の<strong>倒れる</strong>角 $\varphi_c$ と比べて、どちらが先に起こるか。(c) バッテリーを前に置いたらどうなるか。(d) $\varphi=30°$ のとき、後輪・前輪の荷重と、釣合いに必要な摩擦力を求め、滑らない最小の $\mu$ を求めよ。</p>
+<figure><svg viewBox="0 0 330 250" width="330" role="img" aria-label="斜面に置いた台車：重さ W、垂直抗力 N、摩擦力 F">
+<defs><marker id="cs-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="cs-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="cs-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="cs-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="cs-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="cs-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<path d="M38.2,67.6 L251.9,190.9" fill="none" stroke="#2a2723" stroke-width="2" opacity="1"/>
+<path d="M113.6,101.5 L199.0,150.9 L209.7,132.4 L124.2,83.0 z" fill="#d8d1c2" stroke="#2a2723" opacity="1"/>
+<circle cx="113.6" cy="101.5" r="8.2" fill="#bdb5a5" stroke="#2a2723"/>
+<circle cx="199.0" cy="150.9" r="8.2" fill="#bdb5a5" stroke="#2a2723"/>
+<circle cx="174.1" cy="111.8" r="4" fill="#2a2723"/>
+<circle cx="174.1" cy="111.8" r="8" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="165.9" y="100.3" fill="#2a2723" text-anchor="end" font-size="11">G</text>
+<line x1="174.1" y1="111.8" x2="174.1" y2="174.3" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#cs-b)"/>
+<text x="179.0" y="166.1" fill="#2b3a67" text-anchor="start" font-size="12">W</text>
+<line x1="109.4" y1="108.7" x2="134.1" y2="65.9" stroke="#4f7a4a" stroke-width="2.2" marker-end="url(#cs-g)"/>
+<line x1="194.9" y1="158.0" x2="219.6" y2="115.3" stroke="#4f7a4a" stroke-width="2.2" marker-end="url(#cs-g)"/>
+<text x="129.2" y="61.0" fill="#4f7a4a" text-anchor="end" font-size="11">N後</text>
+<text x="224.5" y="110.3" fill="#4f7a4a" text-anchor="start" font-size="11">N前</text>
+<line x1="104.5" y1="117.2" x2="47.5" y2="84.3" stroke="#a8322a" stroke-width="2.4" marker-end="url(#cs-r)"/>
+<text x="43.1" y="120.5" fill="#a8322a" text-anchor="start" font-size="11">F（摩擦力の合計）</text>
+<path d="M22.2,223.8 L22.2,182.7" fill="none" stroke="#968d80" stroke-width="0.1" opacity="1"/>
+<text x="236.0" y="42.9" fill="#2a2723" text-anchor="start" font-size="11">φ = 30°（前が下）</text>
+</g></svg>
+<figcaption>図5.1　坂（前が下、$\varphi=30°$）に置いた台車。重さ $W$ は重心 G から鉛直下向き。垂直抗力 $N$（前後輪）は坂に垂直、摩擦力 $F$（前後輪の合計）は坂に沿って上向き。</figcaption></figure>
+<p><strong>解答</strong></p>
+<p>① 系：台車全体（重さを G に集めた1つの力に置き換える。第5回 1.2 の「等価」）。外力は、重さ $W=Mg$、前後輪の垂直抗力 $N_f$、$N_r$（坂に垂直）、摩擦力の合計 $F$（坂に沿って上向き）。<br>
+② 座標：坂に<strong>沿って</strong>下向きを $x$、坂に<strong>垂直</strong>に上向きを $z$。<br>
+③ 重さの成分：坂に沿って下向きに $W\sin\varphi$、坂に垂直に（面を押す向き）$W\cos\varphi$。<br>
+④ 釣合い式：
+$$x：W\sin\varphi-F=0,\qquad z：N_f+N_r-W\cos\varphi=0\qquad(5.1)$$
+（$x$ 軸は下向きなので、重さの成分 $W\sin\varphi$ が正、坂の上向きの摩擦力 $F$ が負。）<br>
+(a) ⑤ 滑り出す直前：$F=\mu(N_f+N_r)=\mu W\cos\varphi$。(5.1) の2式から $W\sin\varphi=\mu W\cos\varphi$ より
+$$\tan\varphi_s=\mu\ \Longrightarrow\ \varphi_s=\arctan1.0=\mathbf{45.0°}$$
+（例題2の斜面と同じ結論：質量によらず $\tan\varphi_s=\mu$。）<br>
+(b) 倒れる角は第5回 6章 (e) で求めた $\tan\varphi_c=\dfrac{0.6-x_G}{z_G}=\dfrac{0.250}{0.180}=1.39$、$\varphi_c=\mathbf{54.3°}$。$\varphi_s=45.0°&lt;\varphi_c=54.3°$ なので、<strong>坂を急にしていくと、先に滑り出す</strong>。台車は、倒れる前に滑る。第5回の注意のとおりである。<br>
+(c) バッテリー前（$x_G=0.441$ m）：$\tan\varphi_c=\dfrac{0.600-0.441}{0.180}=0.886$、$\varphi_c=\mathbf{41.5°}$。滑る角は 45.0° のまま。$41.5°&lt;45.0°$ なので、<strong>先に倒れる</strong>（前に倒れる直前に、後輪が浮き上がる）。同じ台車でも、バッテリーの置き場所によって、滑りが先か倒れが先かが逆転する。<br>
+(d) $\varphi=30°$（バッテリー後ろ、$W=44\times9.81=431.6$ N）：釣合いに必要な摩擦力 $F=W\sin30°=\mathbf{215.8}$ N。垂直抗力の合計は $W\cos30°=373.8$ N。前輪まわりのモーメントの釣合いから（重さの腕は坂に沿って $(0.6-x_G)$、高さ $z_G$）
+$$N_r\times0.6=W\bigl[(0.6-x_G)\cos\varphi-z_G\sin\varphi\bigr]$$
+$$N_r=\frac{431.6\,(0.250\times0.8660-0.180\times0.5)}{0.6}=\frac{431.6\times0.1265}{0.6}=\mathbf{91.2}\ \text{N},\qquad N_f=373.8-91.2=\mathbf{282.6}\ \text{N}$$
+滑らない最小の $\mu$：$F\le\mu(N_f+N_r)$ より $\mu\ge\tan30°=\mathbf{0.577}$。<br>
+⑥ 確かめ：$N_r=0$ となる $\varphi$ が倒れる角（(b) と同じ $\tan\varphi=0.250/0.180$）✓。$N_r&gt;0$（30° では後輪はまだ路面にいる）✓。$\mu=1.0$ の限界は $\varphi=45°$。<br>
+<strong>答</strong>　(a) 45.0°。(b) 滑りが先（倒れる角は 54.3°）。(c) 41.5° で倒れる（倒れが先）。(d) $N_r=91.2$ N、$N_f=282.6$ N、$F=215.8$ N、$\mu\ge0.577$。</p></div>
+<figure><svg viewBox="0 0 520 290" width="520" role="img" aria-label="摩擦係数と、台車が滑り出す角・倒れる角">
+<defs><marker id="ct-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ct-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ct-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ct-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ct-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ct-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="156.5" y1="32.0" x2="156.5" y2="238.0" stroke="#e2dccf"/>
+<line x1="251.0" y1="32.0" x2="251.0" y2="238.0" stroke="#e2dccf"/>
+<line x1="345.5" y1="32.0" x2="345.5" y2="238.0" stroke="#e2dccf"/>
+<line x1="440.0" y1="32.0" x2="440.0" y2="238.0" stroke="#e2dccf"/>
+<line x1="62.0" y1="208.6" x2="440.0" y2="208.6" stroke="#e2dccf"/>
+<line x1="62.0" y1="179.1" x2="440.0" y2="179.1" stroke="#e2dccf"/>
+<line x1="62.0" y1="149.7" x2="440.0" y2="149.7" stroke="#e2dccf"/>
+<line x1="62.0" y1="120.3" x2="440.0" y2="120.3" stroke="#e2dccf"/>
+<line x1="62.0" y1="90.9" x2="440.0" y2="90.9" stroke="#e2dccf"/>
+<line x1="62.0" y1="61.4" x2="440.0" y2="61.4" stroke="#e2dccf"/>
+<line x1="62.0" y1="32.0" x2="440.0" y2="32.0" stroke="#e2dccf"/>
+<line x1="58" y1="238.0" x2="454" y2="238.0" stroke="#2a2723" marker-end="url(#ct-k)"/>
+<line x1="62.0" y1="242" x2="62.0" y2="18" stroke="#2a2723" marker-end="url(#ct-k)"/>
+<text x="458" y="242.0">μ</text>
+<text x="68.0" y="18">傾斜 φ [°]</text>
+<line x1="62.0" y1="238.0" x2="62.0" y2="242.0" stroke="#2a2723"/>
+<text x="62.0" y="255.0" text-anchor="middle" font-size="11">0</text>
+<line x1="156.5" y1="238.0" x2="156.5" y2="242.0" stroke="#2a2723"/>
+<text x="156.5" y="255.0" text-anchor="middle" font-size="11">0.5</text>
+<line x1="251.0" y1="238.0" x2="251.0" y2="242.0" stroke="#2a2723"/>
+<text x="251.0" y="255.0" text-anchor="middle" font-size="11">1.0</text>
+<line x1="345.5" y1="238.0" x2="345.5" y2="242.0" stroke="#2a2723"/>
+<text x="345.5" y="255.0" text-anchor="middle" font-size="11">1.5</text>
+<line x1="440.0" y1="238.0" x2="440.0" y2="242.0" stroke="#2a2723"/>
+<text x="440.0" y="255.0" text-anchor="middle" font-size="11">2.0</text>
+<line x1="58.0" y1="238.0" x2="62.0" y2="238.0" stroke="#2a2723"/>
+<text x="55.0" y="242.0" text-anchor="end" font-size="11">0</text>
+<line x1="58.0" y1="208.6" x2="62.0" y2="208.6" stroke="#2a2723"/>
+<text x="55.0" y="212.6" text-anchor="end" font-size="11">10</text>
+<line x1="58.0" y1="179.1" x2="62.0" y2="179.1" stroke="#2a2723"/>
+<text x="55.0" y="183.1" text-anchor="end" font-size="11">20</text>
+<line x1="58.0" y1="149.7" x2="62.0" y2="149.7" stroke="#2a2723"/>
+<text x="55.0" y="153.7" text-anchor="end" font-size="11">30</text>
+<line x1="58.0" y1="120.3" x2="62.0" y2="120.3" stroke="#2a2723"/>
+<text x="55.0" y="124.3" text-anchor="end" font-size="11">40</text>
+<line x1="58.0" y1="90.9" x2="62.0" y2="90.9" stroke="#2a2723"/>
+<text x="55.0" y="94.9" text-anchor="end" font-size="11">50</text>
+<line x1="58.0" y1="61.4" x2="62.0" y2="61.4" stroke="#2a2723"/>
+<text x="55.0" y="65.4" text-anchor="end" font-size="11">60</text>
+<line x1="58.0" y1="32.0" x2="62.0" y2="32.0" stroke="#2a2723"/>
+<text x="55.0" y="36.0" text-anchor="end" font-size="11">70</text>
+<path d="M62.0,238.0 L63.9,236.3 L65.8,234.6 L67.7,232.9 L69.6,231.3 L71.5,229.6 L73.3,227.9 L75.2,226.2 L77.1,224.5 L79.0,222.9 L80.9,221.2 L82.8,219.5 L84.7,217.9 L86.6,216.2 L88.5,214.5 L90.3,212.9 L92.2,211.2 L94.1,209.6 L96.0,208.0 L97.9,206.3 L99.8,204.7 L101.7,203.1 L103.6,201.5 L105.5,199.9 L107.4,198.3 L109.2,196.7 L111.1,195.1 L113.0,193.5 L114.9,192.0 L116.8,190.4 L118.7,188.9 L120.6,187.3 L122.5,185.8 L124.4,184.3 L126.3,182.7 L128.2,181.2 L130.0,179.7 L131.9,178.2 L133.8,176.8 L135.7,175.3 L137.6,173.8 L139.5,172.4 L141.4,171.0 L143.3,169.5 L145.2,168.1 L147.1,166.7 L148.9,165.3 L150.8,163.9 L152.7,162.5 L154.6,161.2 L156.5,159.8 L158.4,158.5 L160.3,157.1 L162.2,155.8 L164.1,154.5 L165.9,153.2 L167.8,151.9 L169.7,150.6 L171.6,149.4 L173.5,148.1 L175.4,146.9 L177.3,145.6 L179.2,144.4 L181.1,143.2 L183.0,142.0 L184.9,140.8 L186.7,139.6 L188.6,138.5 L190.5,137.3 L192.4,136.2 L194.3,135.0 L196.2,133.9 L198.1,132.8 L200.0,131.7 L201.9,130.6 L203.8,129.5 L205.6,128.4 L207.5,127.4 L209.4,126.3 L211.3,125.3 L213.2,124.2 L215.1,123.2 L217.0,122.2 L218.9,121.2 L220.8,120.2 L222.7,119.2 L224.5,118.2 L226.4,117.3 L228.3,116.3 L230.2,115.4 L232.1,114.4 L234.0,113.5 L235.9,112.6 L237.8,111.7 L239.7,110.8 L241.6,109.9 L243.4,109.0 L245.3,108.1 L247.2,107.3 L249.1,106.4 L251.0,105.6 L252.9,104.7 L254.8,103.9 L256.7,103.1 L258.6,102.3 L260.5,101.5 L262.3,100.7 L264.2,99.9 L266.1,99.1 L268.0,98.3 L269.9,97.5 L271.8,96.8 L273.7,96.0 L275.6,95.3 L277.5,94.6 L279.4,93.8 L281.2,93.1 L283.1,92.4 L285.0,91.7 L286.9,91.0 L288.8,90.3 L290.7,89.6 L292.6,88.9 L294.5,88.2 L296.4,87.6 L298.2,86.9 L300.1,86.3 L302.0,85.6 L303.9,85.0 L305.8,84.3 L307.7,83.7 L309.6,83.1 L311.5,82.5 L313.4,81.8 L315.3,81.2 L317.1,80.6 L319.0,80.0 L320.9,79.5 L322.8,78.9 L324.7,78.3 L326.6,77.7 L328.5,77.2 L330.4,76.6 L332.3,76.0 L334.2,75.5 L336.1,74.9 L337.9,74.4 L339.8,73.9 L341.7,73.3 L343.6,72.8 L345.5,72.3 L347.4,71.8 L349.3,71.3 L351.2,70.8 L353.1,70.3 L354.9,69.8 L356.8,69.3 L358.7,68.8 L360.6,68.3 L362.5,67.8 L364.4,67.3 L366.3,66.9 L368.2,66.4 L370.1,65.9 L372.0,65.5 L373.9,65.0 L375.7,64.6 L377.6,64.1 L379.5,63.7 L381.4,63.2 L383.3,62.8 L385.2,62.4 L387.1,61.9 L389.0,61.5 L390.9,61.1 L392.8,60.7 L394.6,60.3 L396.5,59.9 L398.4,59.4 L400.3,59.0 L402.2,58.6 L404.1,58.3 L406.0,57.9 L407.9,57.5 L409.8,57.1 L411.7,56.7 L413.5,56.3 L415.4,55.9 L417.3,55.6 L419.2,55.2 L421.1,54.8 L423.0,54.5 L424.9,54.1 L426.8,53.7 L428.7,53.4 L430.6,53.0 L432.4,52.7 L434.3,52.3 L436.2,52.0 L438.1,51.7 L440.0,51.3" fill="none" stroke="#a8322a" stroke-width="2.6" opacity="1"/>
+<path d="M62.0,78.2 L440.0,78.2" fill="none" stroke="#2b3a67" stroke-width="2.2" stroke-dasharray="7 4" opacity="1"/>
+<path d="M62.0,115.9 L440.0,115.9" fill="none" stroke="#4f7a4a" stroke-width="2.2" stroke-dasharray="7 4" opacity="1"/>
+<text x="65.8" y="42.3" fill="#a8322a" text-anchor="start" font-size="11">滑り出す角：φ = arctan μ（曲線）</text>
+<text x="440.0" y="69.7" fill="#2b3a67" text-anchor="end" font-size="11">倒れる角：バッテリーが後ろ 54.3°</text>
+<text x="440.0" y="130.6" fill="#4f7a4a" text-anchor="end" font-size="11">倒れる角：バッテリーが前 41.5°</text>
+<circle cx="251.0" cy="105.6" r="5" fill="#2a2723"/>
+<text x="260.5" y="102.0" fill="#2a2723" text-anchor="start" font-size="11">μ = 1.0：滑るのは 45°</text>
+<text x="69.6" y="220.3" fill="#2a2723" text-anchor="start" font-size="11">曲線が破線より下の範囲では、滑りが先に起こる</text>
+</g></svg>
+<figcaption>図5.2　例題8の台車：摩擦係数 $\mu$ と、滑り出す角 $\varphi=\arctan\mu$（赤い曲線）、倒れる角（バッテリーが後ろ 54.3°、前 41.5°：破線）。曲線が破線より下のとき滑りが先、上のとき倒れが先。数値から計算して描いた。</figcaption></figure>
+<p>図5.2 で、赤い曲線と破線の交点が分かれ目である。バッテリーが後ろなら $\mu=1.39$（それより大きい $\mu$ なら倒れが先）、前なら $\mu=0.886$ である。<strong>摩擦が大きい路面ほど、倒れる側が先</strong>になる。タイヤの摩擦が非常に大きいレース用タイヤでは、急坂で車が滑るよりも先に転倒する。</p>
+<div class="warn"><span class="label">注意</span>この例題は、「ブレーキで車輪が回らず、4つの車輪の摩擦係数が同じ」という簡略化である。実際には、前輪と後輪の荷重が違うので、ブレーキを効かせたときに滑り出す輪が違ったり、動力学（制動中の荷重移動）が効いたりする。$\mu=1.0$ も、本教材の仮定である。</div>
+<h3><span class="no">5.1</span>この回の手順のまとめ</h3>
+<ol>
+<li><strong>系を切り出し、FBD を描く</strong>：各接触面に、垂直抗力 $N$ と摩擦力 $F$（面に沿う）。物体が複数なら、別々に描く。</li>
+<li>座標軸：斜面なら面に平行・垂直。</li>
+<li>摩擦力を<strong>未知数</strong>として、釣合い式を立てる（力とモーメント）。</li>
+<li><strong>釣合いから $N$ を決める</strong>（$N=mg$ とは限らない）。</li>
+<li>型 (I)：摩擦力を求め、$F\le\mu_sN$ を確かめる。型 (II)：<strong>動き出す直前</strong>として $F=\mu_sN$ を置く（向きは運動しようとする向きの逆）。面が複数なら、「上限の小さい面が先に滑る」と仮定して、他の面で矛盾がないか確かめる。</li>
+<li>確かめる：摩擦力の符号と向き、単位、極端な場合、使わなかった式。<strong>滑りのほかに、転倒（第5回）も起こりうる</strong>ので、両方を調べて、先に起こるほうが答え。</li>
+</ol>
+
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>章末例題</h2>
+<p class="meta">出典の問題文は本教材で日本語に書き直した（図の寸法の読み取りを含む。原文・原図は出典を参照）。出典の単位（lb・ft・in）は<strong>そのまま</strong>にした。解答は、手順にそって本教材で書いた。数値は検算済み（<code>draft/check_06.py</code>、探索係の <code>draft/ext06/verify_ext06.py</code>。公式解答との照合の結果は各問題の出典の下に記した）。</p>
+
+<div class="ex"><span class="label">例題9〔B｜Mechanics Map 7.2 例題3〕箱を斜め上に押す：滑るのが先か、倒れるのが先か</span>
+<figure class="slide"><img src="img/ext06/mm72_q3_prob.png" alt="床の上に立つ長方形の箱（80 lb、幅1 ft、高さ3 ft）。静止摩擦係数は0.45。箱の左上の角に、水平から35°上向き（右上向き）の押す力Fpushが働く" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 7.2）。</figcaption></figure>
+<p>80 lb の一様な箱（幅 1 ft、高さ 3 ft）が水平な床に立っている。箱と床の静止摩擦係数は $\mu_s=0.45$。箱の左上の角に、水平から $35°$ 上向きの力 $F$ を加えて、0 から増やしていく。箱は<strong>滑る</strong>か、<strong>倒れる</strong>か。どちらが先に起こり、そのときの $F$ はいくらか。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 7.2 Slipping vs. Tipping, 例題3（CC 表示・継承、版は不明）。公式解答（滑り 33.42 lb、転倒 13.20 lb、転倒が先）と照合済み。</p>
+<p><strong>解答</strong></p>
+<p>① 系：箱。外力は、重さ $W=80$ lb（重心＝箱の中央）、押す力 $F$（左上の角、右上向き）、床の反力（垂直抗力 $N$、摩擦力 $f$）。<br>
+② 座標：右を $x$、上を $y$。<br>
+③④ 力の釣合い：$F\cos35°-f=0$、$N+F\sin35°-W=0$（$N=W-F\sin35°$。<strong>押す力の上向き成分の分だけ $N$ が減る</strong>）。<br>
+⑤-1 <strong>滑り</strong>（型 II）：$f=\mu_sN$ とおく：$F\cos35°=0.45(80-F\sin35°)$ より
+$$F=\frac{0.45\times80}{\cos35°+0.45\sin35°}=\frac{36}{0.8192+0.2581}=\mathbf{33.42}\ \text{lb}$$
+⑤-2 <strong>転倒</strong>：倒れる直前は、床の反力が<strong>右下の角 A に集中</strong>する（箱が角 A を支点に回り始める）。点 A まわりのモーメントの釣合いをとる。A を通る $N$ と $f$ は消える。重さ（A から左へ 0.5 ft）は元に戻す向き：$W\times0.5=40$ lb·ft。押す力 $F$ は、左上の角（A から左へ 1 ft、上へ 3 ft）に働くので、成分 $F\cos35°$ の腕は 3 ft、$F\sin35°$ の腕は 1 ft（どちらも倒す向き）：
+$$F\,(3\cos35°+1\cdot\sin35°)=40\ \Longrightarrow\ F=\frac{40}{2.4575+0.5736}=\mathbf{13.20}\ \text{lb}$$
+⑥ 確かめ：<strong>小さいほうが先に起こる</strong>：転倒 13.20 lb < 滑り 33.42 lb なので、<strong>先に転倒</strong>する。転倒の瞬間（$F=13.20$）の摩擦力は $f=F\cos35°=10.81$ lb、上限は $\mu_s(W-F\sin35°)=0.45\times(80-7.57)=32.59$ lb。$10.81&lt;32.59$ で、床は滑らず支えられている ✓（転倒の計算に摩擦の上限は使っていない点にも注意）。<br>
+<strong>答</strong>　先に<strong>転倒</strong>する。$F=13.20$ lb（滑りなら 33.42 lb）。</p></div>
+
+<div class="ex"><span class="label">例題10〔C｜Mechanics Map 7.3 例題2〕金庫を、くさびで壁から離す（3面の摩擦）</span>
+<figure class="slide"><img src="img/ext06/mm73_q2_prob.png" alt="L字形の床と壁の隅。壁と金庫（150 kg）の間の上部に、上から鉛直に打ち込まれる細いくさび。くさびの上に鉛直下向きの力Fpush" loading="lazy" style="width:300px;max-width:76%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 7.3）。壁は左、金庫は右。くさびは壁と金庫の上の角の間に打ち込まれる。</figcaption></figure>
+<p>重い金庫（150 kg）を壁から離すため、くさび（頂角 $5°$、質量は無視）を壁と金庫の上の角の間に、上から鉛直に打ち込む。くさびの金庫側の面は、鉛直から $5°$ 傾いている。摩擦係数（静止・動摩擦とも同じ値）は、くさびと金庫の間が $0.16$、くさびと壁の間・金庫と床の間はともに $0.35$。金庫を動かすのに必要な力 $F$ を求めよ。（$g=9.81\ \mathrm{m/s^2}$。）</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 7.3 Wedges, 例題2（CC 表示・継承、版は不明）。公式解答（$F=339.3$ N、$N_1=564.6$、$N_2=574.9$、$N_3=1613.2$ N）と照合済み。公式の $N_2=574.9$ は丸めで、本教材の計算は $574.83$。</p>
+<p><strong>解答</strong></p>
+<p>① 系：<strong>くさびと金庫を別々に</strong>切り出す（3章の型）。未知数：壁がくさびに及ぼす垂直抗力 $N_1$（右向き）、くさびと金庫の間の垂直抗力 $N_2$（面に垂直）、床が金庫に及ぼす垂直抗力 $N_3$、押す力 $F$。摩擦は、「<strong>金庫が動き出す直前</strong>」なので3面とも $\mu N$。<br>
+② 座標：右を $x$、上を $y$。くさびの面は鉛直から $5°$ なので、$N_2$ は水平から $5°$ だけ下向きに傾く（水平成分 $\cos5°$、鉛直成分 $\sin5°$）。<br>
+③ 摩擦の向き（運動しようとする向きの逆）：くさびは<strong>下へ</strong>動く。よって、壁がくさびに及ぼす摩擦 $0.35N_1$ は<strong>上向き</strong>。くさびと金庫の間の摩擦 $0.16N_2$：くさびに対しては<strong>面に沿って上向き</strong>、金庫に対しては逆向き（作用・反作用）で<strong>面に沿って下向き</strong>。金庫は<strong>右へ</strong>動こうとするので、床の摩擦 $0.35N_3$ は<strong>左向き</strong>。<br>
+④ 釣合い式：<br>
+金庫（$x$）：$N_2\cos5°-0.16N_2\sin5°-0.35N_3=0$　（面に沿って下向きの摩擦 $0.16N_2$ は、水平には左向きに $\sin5°$ の成分）<br>
+金庫（$y$）：$N_3-N_2\sin5°-0.16N_2\cos5°-mg=0$<br>
+くさび（$x$）：$N_1-N_2\cos5°+0.16N_2\sin5°=0$<br>
+くさび（$y$）：$F-0.35N_1-0.16N_2\cos5°-N_2\sin5°=0$<br>
+⑤ 解く：金庫の2式から $N_3$ を消す。$N_3=mg+N_2(\sin5°+0.16\cos5°)=1471.5+0.2466N_2$。これを金庫の $x$ 式に代入：$N_2(0.99619-0.01394)=0.35(1471.5+0.2466N_2)$。$0.98225N_2-0.08631N_2=515.0$。よって
+$$N_2=\frac{515.0}{0.89594}=574.8\ \text{N},\qquad N_3=1471.5+0.2466\times574.8=1613.2\ \text{N}$$
+くさびの $x$ 式：$N_1=574.8\times(0.99619-0.01394)=564.6$ N。$y$ 式：
+$$F=0.35\times564.6+574.8\times(0.15939+0.08716)=197.6+141.7=\mathbf{339.3}\ \text{N}$$
+⑥ 確かめ：金庫に必要な力は、床の摩擦に打ち勝つだけなら $0.35\times1471.5=515$ N の水平力。くさびは、$F=339$ N の鉛直力を、約 $\dfrac{574.8\times0.996}{339.3}=1.7$ 倍の水平力に変えている（ほぼ摩擦のない 5° のくさびなら $\dfrac1{\tan5°}=11$ 倍だが、3面の摩擦で大きく減る）。$N_1$、$N_2$、$N_3$ がすべて正 ✓。<br>
+<strong>答</strong>　$F=339$ N。（$N_1=565$ N、$N_2=575$ N、$N_3=1613$ N。）</p></div>
+
+<div class="ex"><span class="label">例題11〔C｜Mechanics Map 7.4 例題2〕ねじ式リフトのセルフロックとピッチ</span>
+<p>自動車整備用のねじ式リフトが、20 kN の荷重まで支える。ねじ面の摩擦係数を $\mu=0.1$ とする。(a) セルフロックになる（荷重を下ろす向きにねじが回らない）リード角 $\theta$ の条件を求めよ。(b) ねじの直径を 5 cm とし、モーターのトルク 60 N·m で 20 kN を持ち上げたい。ねじの最大のピッチを求めよ。（公式解答は、直径 5 cm の<strong>半径 2.5 cm を、力のモーメントの腕</strong>として使っている。講義資料の4.1節の記号では、$\alpha$ がリード角、$\lambda$ が摩擦角。）</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 7.4 Power Screws, 例題2（CC 表示・継承、版は不明）。公式解答（(a) $5.7°$、(b) $\theta=1.132°$、ピッチ 3.1 mm）と照合済み。公式は直径 5 cm を<strong>平均半径 2.5 cm</strong>とみなしている（実際には、ねじ谷径と山径の平均を使う）。</p>
+<p><strong>解答</strong></p>
+<p>(a) ① 4.1 節の自己ロックの条件：$\alpha\le\lambda$。$\lambda=\arctan\mu=\arctan0.1=\mathbf{5.71°}$。したがって<strong>リード角 $\alpha\le5.7°$</strong>。<br>
+(b) ① 系：ねじ。モーターのトルク $T$ は、半径 $r=2.5$ cm に作用する接線力 $P$ が作るモーメント：$T=Pr$。<br>
+② ③④ 締める（持ち上げる）力は (4.4)：$P=Q\tan(\alpha+\lambda)$（軸力 $Q=W=20$ kN）。よって
+$$T=Q\,r\tan(\alpha+\lambda)\ \Longrightarrow\ \tan(\alpha+\lambda)=\frac{T}{Qr}=\frac{60}{20000\times0.025}=0.12$$
+⑤ $\alpha+\lambda=\arctan0.12=6.843°$。$\lambda=5.711°$ を引いて $\alpha=\mathbf{1.132°}$。リード（ねじが1回転で進む距離）は、らせんを展開した斜面の高さ：$l=2\pi r\tan\alpha=2\pi\times25\ \text{mm}\times\tan1.132°=\mathbf{3.10}$ mm。一条ねじではリード＝ピッチ。<br>
+⑥ 確かめ：(b) の $\alpha=1.13°$ は (a) の条件 $\alpha\le5.7°$ を満たすので、<strong>自己ロック</strong>する（持ち上げたあとに、荷重でねじが戻らない）✓。摩擦がなければ（$\lambda=0$）$\tan\alpha=0.12$ で $\alpha=6.84°$、ピッチ 18.8 mm。摩擦があるぶん、ねじ山を細かくしなければならない。<br>
+<strong>答</strong>　(a) $\alpha\le5.7°$。(b) 最大のピッチ 3.1 mm（$\alpha=1.13°$）。</p></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">7</span>演習問題</h2>
+<p class="meta">各問題に段階（A 確認／B 標準／C 発展）を付けた。解答は <code>&lt;details&gt;</code> の中。外部問題の出典は各問題の下に記した。</p>
+
+<div class="box"><span class="label">問1〔A｜自作〕斜面の物体の摩擦力と静止摩擦係数</span>
+<p>質量 5 kg の物体を、板の上に置く。板を水平から少しずつ傾けていくと、傾斜が $35°$ になったとき、物体が滑り出した。(a) 静止摩擦係数 $\mu_s$ はいくらか。(b) 傾斜が $20°$ のとき、物体に働く摩擦力と垂直抗力はいくらか。（$g=9.81\ \mathrm{m/s^2}$）</p>
+<details><summary>解答</summary><p>(a) 式 (2.2)：$\mu_s=\tan35°=\mathbf{0.700}$。<br>
+(b) 滑らないので型 (I)：釣合い式 $F_s=mg\sin20°=5\times9.81\times0.3420=\mathbf{16.8}$ N（斜面に沿って上向き）、$N=mg\cos20°=49.05\times0.9397=\mathbf{46.1}$ N。確かめ：$F_s=16.8&lt;\mu_sN=0.700\times46.1=32.3$ N ✓（上限の内側）。<strong>$F_s=\mu_sN=32.3$ ではない</strong>。</p></details></div>
+
+<div class="box"><span class="label">問2〔A｜自作〕ロープの巻き付き</span>
+<p>質量 80 kg の荷物を、ボラード（円柱）に 1.5 回巻いたロープで吊って支える。ロープと円柱の摩擦係数は $0.3$。手で支える力の最小値はいくらか。（$g=9.81\ \mathrm{m/s^2}$）</p>
+<details><summary>解答</summary><p>巻き角 $\alpha=1.5\times2\pi=3\pi$ rad。荷物側の張力 $T_1=mg=80\times9.81=784.8$ N。式 (4.9)：$T_2=T_1e^{-\mu\alpha}=784.8\times e^{-0.3\times3\pi}=784.8\times e^{-2.827}=784.8\times0.0592=\mathbf{46.4}$ N。確かめ：荷物の約 6% の力で支えられる。巻き数を増やすほど指数関数的に小さくなる（図4.1）。</p></details></div>
+
+<div class="box"><span class="label">問3〔A/B｜自作〕引かれる箱の下の箱：Bを引く</span>
+<p>例題6と同じ物体（A：3 kg、B：2 kg、摩擦係数は A–B 間 0.3、B–床間 0.2、$g=9.8\ \mathrm{m/s^2}$）で、今度は<strong>下の B に</strong>水平力 $P$ を加え、増やしていく。B が動き出す直前の $P$ と、そのときの A–B 間の摩擦力を求めよ。</p>
+<details><summary>解答</summary><p>動き出す直前は、A も B も<strong>静止</strong>。A に水平方向の外力はないので、A–B 間の摩擦力は $F_A=\mathbf{0}$（A は摩擦なしで B の上に載っている）。B–床間：$N_B=(3+2)\times9.8=49.0$ N、$F_{B\,\max}=0.2\times49.0=9.8$ N。B の水平の釣合い：$P-F_B=0$ より、動き出す直前は $P=\mathbf{9.8}$ N（A–B 間の摩擦は 0）。例題6の「A を押す」場合（8.82 N）より大きいのは、A–B 間の摩擦が $P$ を受けもたないから。<br>
+（動き出したあとは、A は摩擦で B に引きずられる。そのとき A が滑らない最大の加速度は $\mu_{AB}g=2.94\ \mathrm{m/s^2}$。動力学の内容。）</p></details></div>
+
+<div class="box"><span class="label">問4〔B｜Mechanics Map 7.1 例題4〕一輪車（摩擦は後ろの脚だけ）</span>
+<figure class="slide"><img src="img/ext06/mm71_q4_prob.png" alt="赤い一輪車（手押し車）の側面。左に引く力Fpull（地面から70 cmの高さ）、左の脚A（地面と接する、摩擦あり）、右の車輪B。重心Gは車輪Bから左へ60 cm、脚Aの位置から右へ80 cm" loading="lazy" style="width:420px;max-width:92%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 7.1）。</figcaption></figure>
+<p>質量 60 kg の一輪車の脚 A と地面の間の静止摩擦係数は $0.4$（車輪 B の摩擦は無視してよい）。左向きに、地面から 70 cm の高さで水平な力 $F_{pull}$ を引くとき、一輪車が動き出す直前の $F_{pull}$ はいくらか。（脚 A から重心 G までの水平距離 80 cm、G から車輪 B まで 60 cm。$g=9.81\ \mathrm{m/s^2}$）</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 7.1 Dry Friction, 例題4（CC 表示・継承）。公式解答（$F=126.1$ N、$N_A=315.3$ N）と照合済み。公式の手書き式は $\Sigma M_A$ の符号が行ごとに不統一だが、最終値は正しい。</p>
+<details><summary>解答</summary><p>車輪 B は摩擦なしで、地面からの力は垂直抗力 $N_B$ のみ。A：$N_A$、摩擦力 $f$（動こうとする向きの逆）。水平：$F-f=0$、鉛直：$N_A+N_B=mg$、A まわりのモーメント：$F\times0.7$（引く力の腕は 70 cm）$+N_B\times1.4-mg\times0.8=0$（G の腕は 0.8 m、B の腕は A–B 間 $0.8+0.6=1.4$ m）。動き出す直前 $f=0.4N_A$。<br>
+$N_A=mg-N_B$、$F=0.4N_A$ を代入：$0.7\times0.4N_A+1.4(mg-N_A)-0.8mg=0$ より $0.28N_A-1.4N_A=-0.6mg$、$N_A=\dfrac{0.6\times588.6}{1.12}=\mathbf{315.3}$ N、$F=0.4\times315.3=\mathbf{126.1}$ N。<br>
+確かめ：引く力を（上向き成分ではなく）水平に引くので、$N_A$ は重さの半分程度（$mg=588.6$ N の 54%）✓。</p></details></div>
+
+<div class="box"><span class="label">問5〔B｜Mechanics Map 7.7 例題1〕ケーブルを円柱にかけて60 kgを吊る</span>
+<figure class="slide"><img src="img/ext06/mm77_q1_prob.png" alt="水平な台の端にある円柱にケーブルがかかり、左側に60 kgのおもりが吊られ、右側（台の上）で水平に右向きに力Fpullで引かれている" loading="lazy" style="width:320px;max-width:76%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 7.7）。</figcaption></figure>
+<p>鋼のケーブルが 60 kg の質量を吊り、鋼の円柱の上を $\tfrac14$ 周（$\beta=\tfrac\pi2$）かかって、水平に引かれる。静止摩擦係数 $\mu_s=0.3$。(a) 持ち上げるのに必要な最小の引く力、(b) 落とさないために必要な最小の引く力はいくらか。（$g=9.81\ \mathrm{m/s^2}$）</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 7.7 Belt Friction, 例題1（CC 表示・継承）。公式解答（(a) 942.9 N、(b) 367.4 N）と照合済み。</p>
+<details><summary>解答</summary><p>おもりの側の張力は $mg=588.6$ N。(4.9) は、「滑りかけるとき、<strong>引っ張られる（滑る）側が大きい張力</strong>」の関係。<br>
+(a) 持ち上げる：手の側が<strong>大きい</strong>張力。ケーブルは手の側へ滑ろうとするので $F=mg\,e^{\mu\beta}=588.6\times e^{0.3\times\pi/2}=588.6\times1.602=\mathbf{942.9}$ N。<br>
+(b) 落とさない：おもりの側が大きい張力。$F=mg\,e^{-\mu\beta}=588.6\times0.6242=\mathbf{367.4}$ N。<br>
+確かめ：(b) < 588.6 N < (a)。この範囲の力なら、ケーブルは滑らない（静止）。</p></details></div>
+
+<div class="box"><span class="label">問6〔B〜C｜OpenStax University Physics Vol.1 12.37〕はしご：床の反力と摩擦力（＋発展）</span>
+<p>質量 70.0 kg の人が、質量 10.0 kg・長さ 6.00 m のアルミのはしごを、<strong>床の端（底）が家の壁から 2.00 m の位置</strong>になるように立てかける。はしごは、壁の上端の<strong>樋</strong>（摩擦なしと仮定。力は壁に垂直、すなわち水平）にもたれる。はしごの重心は底から 2.00 m の位置、人は底から 3.00 m の位置に立つ。(a) 底での垂直抗力と摩擦力を求めよ。(b)（発展）静止摩擦係数が $0.30$ のとき、人は底から何 m まで登れるか。（$g=9.8\ \mathrm{m/s^2}$。原問は文章のみで図がない。）</p>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, 第12章 問題37（CC BY-NC-SA 表記。<a href="https://openstax.org/books/university-physics-volume-1/pages/12-problems">https://openstax.org/books/university-physics-volume-1/pages/12-problems</a>）。(a) は奇数番号の公式解答（$N=784$ N、$f=132.8$ N）と照合済み。(b) は本教材の自作の発展設問で、公式解答はない（自作の解答）。</p>
+<details><summary>解答</summary><p>(a) ① 系：はしごと人（全体）。外力：重さ $70g$（人）と $10g$（はしご）、底の垂直抗力 $N$ と摩擦力 $f$、樋の水平な反力 $P$。<br>
+② 壁の高さ：$h=\sqrt{6.00^2-2.00^2}=5.657$ m。<br>
+③④ 鉛直：$N=(70+10)\times9.8=\mathbf{784}$ N。水平：$f=P$。底まわりのモーメント（$N$、$f$ は消える）：重さの腕は、底から水平に測って、人 $3\times\dfrac26=1.00$ m、はしご $2\times\dfrac26=0.667$ m。樋の反力 $P$ の腕は高さ $h=5.657$ m：
+$$P\times5.657=70\times9.8\times1.00+10\times9.8\times0.667=686+65.3\ \Longrightarrow\ P=\frac{751.3}{5.657}=132.8\ \text{N}$$
+$f=P=\mathbf{132.8}$ N。確かめ：必要な $\mu_s\ge132.8/784=0.169$（床はこれ以上なら滑らない）。<br>
+(b) 人が底から $s$ m の位置にいるとき、人の腕は $s\times\dfrac13$ m：$P\,h=686\cdot\dfrac s3+65.3$。滑る限界は $f=P=\mu_sN=0.30\times784=235.2$ N。$235.2\times5.657=1330.5=\dfrac{686}{3}s+65.3$ より $s=\dfrac{1265.2\times3}{686}=\mathbf{5.53}$ m（はしごの長さ 6.00 m の手前まで）。確かめ：$s=3$ のとき $f=132.8$ N、$s$ が大きくなるほど $f$ が増える。</p></details></div>
+
+<div class="box"><span class="label">問7〔C｜Mechanics Map 7.7 例題3〕ベルト駆動：必要なベルトの張力</span>
+<figure class="slide"><img src="img/ext06/mm77_q3_prob.png" alt="平ベルトで結ばれた2つのプーリー。左が入力（モーター）で半径10 cm、右が出力（オルタネーター）で半径7 cm" loading="lazy" style="width:460px;max-width:96%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 7.7）。</figcaption></figure>
+<p>平ベルトで、モーター（半径 10 cm のプーリー）から、オルタネーター（半径 7 cm）へ動力を伝える。摩擦係数は $0.5$、伝える動力は 100 W、入力軸の回転数は 1000 rpm（出力軸は 1428.6 rpm）。ベルトが接触する角は、どちらのプーリーも約 $180°$（$\pi$）とする。ベルトが滑らないために必要な、ゆるみ側の張力の最小値を求めよ。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 7.7 Belt Friction, 例題3（CC 表示・継承）。公式解答（$T_{rest}=2.51$ N）と照合済み。公式の解答は記号 $T_1$ と $T_{rest}$ が混在しており、本教材では「ゆるみ側の張力」と読んで解いた。遠心力による張力は無視。</p>
+<details><summary>解答</summary><p>① 入力軸の角速度 $\omega=1000\times\dfrac{2\pi}{60}=104.72$ rad/s。伝達トルク $M=\dfrac{100}{104.72}=0.955$ N·m。<br>
+② 入力プーリー（半径 $r=0.10$ m）まわりのモーメントの釣合い：$M=(T_1-T_2)r$、$T_1$ は張り側、$T_2$ はゆるみ側。$T_1-T_2=\dfrac{0.955}{0.10}=9.549$ N。（出力側：$M'=100/149.6=0.668$ N·m、$r'=0.07$ m で $0.668/0.07=9.549$ N。同じ。）<br>
+③ 滑る直前：(4.9) より $\dfrac{T_1}{T_2}=e^{\mu\beta}=e^{0.5\pi}=4.810$。<br>
+④ 2式を解く：$T_2(4.810-1)=9.549$ より $T_2=\dfrac{9.549}{3.810}=\mathbf{2.51}$ N（$T_1=12.06$ N）。<br>
+確かめ：$T_1-T_2=12.06-2.51=9.55$ ✓。張力の差が動力を伝える。</p></details></div>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 静止摩擦力は<strong>釣合いで決まる</strong>量で、上限 $F_{s\,\max}=\mu_sN$ がある。運動中は $F_k=\mu_kN$（$\mu_s&gt;\mu_k$）。<strong>「摩擦力 $=\mu N$」は動き出す直前（と運動中）だけ</strong>と言える。</li>
+<li>□ 摩擦係数は<strong>物質の組み合わせ</strong>で決まり、摩擦力は接触面積によらない。摩擦の法則を6つ言える。</li>
+<li>□ 摩擦のある釣合いを、型 (I)（摩擦力を未知数とし、$F\le\mu_sN$ を確かめる）と型 (II)（$F=\mu_sN$ と置く）で使い分けられる。</li>
+<li>□ <strong>摩擦力の向き</strong>：未知数なら仮定は自由（答えの符号で決まる）、$\mu_sN$ を代入するなら<strong>運動しようとする向きの逆</strong>。斜面を引く問題で、$\pm\mu\cos\theta$ の違いを説明できる。</li>
+<li>□ 斜面の $\mu_s=\tan\theta_0$（<strong>摩擦角</strong>）、摩擦円錐を導け、立てかけた棒が滑らない角（$\tan\theta\ge1/(2\mu_s)$）を求められる。</li>
+<li>□ 垂直抗力 $N$ は $mg$ とは限らない（斜め引き、重なった物体）。</li>
+<li>□ 複数の接触面：物体を別々に切り出し、上限 $\mu N$ の小さい面が先に滑る、と仮定して矛盾を確かめる。</li>
+<li>□ ねじ $P=Q\tan(\alpha\pm\lambda)$ と自己ロック（$\alpha\le\lambda$）、ロープ $T_2=T_1e^{-\mu\alpha}$、転がり抵抗 $P=aW/r$ を導ける。</li>
+<li>□ 台車や箱で、<strong>滑りと転倒の両方</strong>を調べ、先に起こるほうを答えにできる。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第7回・10/27）</strong>：平面トラスの静解析（教科書 3.4）。部材は両端が節点でピンされた棒で、第4回の釣合い式を、節点ごとに繰り返し使う。この回の「物体を別々に切り出す」「未知数の向きは仮定でよい、答えの符号が決める」という考え方が、そのまま使える。その次（10/29）が中間試験で、これまでの範囲（第1〜7回）が出る。<br>
+<a href="index.html">← 目次へ</a>
+</div>
+
+<div class="box"><span class="label">講義資料との対応（どこで扱ったか）</span>
+<table class="tb">
+<tr><th>講義資料</th><th>本教材</th></tr>
+<tr><td>p.1–2 3・3 摩擦力の扉、今日のポイント</td><td>序</td></tr>
+<tr><td>p.3–4 3・3・1 固体摩擦、$F_s$、$F_{s\,\max}$、$F_k$（式 3.63、3.64）</td><td>1.1</td></tr>
+<tr><td>p.5 鉄との静止摩擦係数の例（表）</td><td>1.2</td></tr>
+<tr><td>p.6 作用力と摩擦力の関係（グラフ）</td><td>1.1（図1.1とスライドの図）</td></tr>
+<tr><td>p.7 摩擦の概念（凹凸、接触部分）</td><td>1.2</td></tr>
+<tr><td>p.8 例題3・6（斜面、摩擦角）</td><td>2.2</td></tr>
+<tr><td>p.9 3・3・2 摩擦が作用する釣合い（注意）</td><td>2.1</td></tr>
+<tr><td>p.10–12 例題3・7（棒、解答例1・2）</td><td>2.3</td></tr>
+<tr><td>p.13–17 例題（$P$ を増加、解答例1・2、摩擦力の向き）</td><td>2.4</td></tr>
+<tr><td>p.18–22 例題（A・B、摩擦面が2つ）</td><td>3章</td></tr>
+<tr><td>p.23–24 補足資料：摩擦、摩擦の法則</td><td>1.2</td></tr>
+<tr><td>p.25–27 ねじ、ねじのモデル</td><td>4.1</td></tr>
+<tr><td>p.28–30 ロープ、ベルト</td><td>4.2</td></tr>
+<tr><td>p.31–33 例題（ロープ）、ロープの摩擦の利用例</td><td>4.2</td></tr>
+<tr><td>p.34 転がり</td><td>4.3</td></tr>
+<tr><td>（資料にない：台車の滑りと転倒、斜め引き、摩擦円錐）</td><td>5章、2.5、2.2（本教材の追加）</td></tr>
+</table></div>
+
+<p class="meta">出典：講義資料「第6回」の内容と、本教材の追加（導出・例・図・計算）。図は、講義資料から切り出したもの（<code>img/slide06/</code>、個人の学習用の転載・再配布しない）と、数値から計算して描いたもの。章末例題・演習問題の出典は各問題の下に記した（原図は個人の学習用に転載。再配布しない）。写真の出典は各写真の下に記した。解答の検算は Python（sympy・numpy）で行った（<code>draft/check_06.py</code>）。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a></nav>
+
+</body>
+</html>
