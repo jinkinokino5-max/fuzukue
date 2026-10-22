@@ -581,6 +581,16 @@ $$i\hbar\frac{\partial\Psi}{\partial t}=-\frac{\hbar^2}{2m}\frac{\partial^2\Psi}
 を満たす。</p>
 <p>⑤ <strong>条件3（重ね合わせ）</strong>：(6.1) は $\Psi$ について線形（両辺とも $\Psi$ の1次）なので、解を重ね合わせたものも解である。第3回のフーリエ展開により、どんな波動関数も平面波の重ね合わせなので、自由粒子の<strong>どんな状態</strong>も (6.1) に従って時間発展する。</p></div>
 
+<div class="why"><span class="label">🙋 質問から追加：6.2節の演算子の符号・微分変数・「右辺どうしが等しい」</span>
+<p><strong>(a) 6.2節③に運動量演算子は出てこない。</strong>③の2式のうち、1つ目の $i\hbar\,\partial_t$ は<strong>エネルギー演算子</strong> $\hat E$ で、運動量演算子ではない。運動量演算子 $\hat p=-i\hbar\,\partial_x$（第3回 (5.1)）の符号は、教材のとおりで合っている。③に出ているのは「$\hat E=+i\hbar\,\partial_t$」と「$\hat p^{\,2}/2m$」の2つである。</p>
+<p><strong>(b) 微分の変数が $t$ と $x$ で違うのは、取り出したい量が違うから。</strong>平面波 $\Psi=e^{i(kx-\omega t)}$ では、$\omega$ は $t$ のところに、$k$ は $x$ のところにある。$\omega$ を取り出すなら $t$ で微分し、$k$ を取り出すなら $x$ で微分する。</p>
+<p>・$E$ を取り出す：$\partial_t\Psi=-i\omega\Psi$。$i\hbar$ をかけると $i\hbar\cdot(-i\omega)\Psi=\hbar\omega\Psi$。<br>
+・$p$ を取り出す：$\partial_x\Psi=ik\Psi$。$-i\hbar$ をかけると $-i\hbar\cdot ik\,\Psi=\hbar k\Psi$。</p>
+<p>($\hat E$ だけ $\partial_x$ に変わったわけではない。) 運動エネルギー $p^2/2m$ に $x$ の微分が出るのは、$p$ が $\hat p=-i\hbar\,\partial_x$ だから、$p^2$ は $\hat p$ を2回かけたもの、つまり $(-i\hbar\,\partial_x)^2=-\hbar^2\partial_x^2$ になるためである。「運動量演算子からきている」という理解で正しく、これは許される操作である。確かめ：$-\dfrac{\hbar^2}{2m}\partial_x^2\Psi=-\dfrac{\hbar^2}{2m}(ik)^2\Psi=\dfrac{\hbar^2k^2}{2m}\Psi$。</p>
+<p><strong>(c) 「右辺どうしが等しい」のはどこか。</strong>本文では④の文である（質問の「③」と番号がずれている）。③の2式の右辺は $\hbar\omega\,\Psi$ と $\dfrac{\hbar^2k^2}{2m}\Psi$ で、見た目は違う。しかし②は $\hbar\omega=\dfrac{\hbar^2k^2}{2m}$、つまり<strong>係数が等しい</strong>と言っている。$\Psi$ は同じ平面波なので、右辺は2つとも同じ関数 $\Psi$ の定数倍で、倍率も等しい。だから右辺は<strong>同じもの</strong>である。同じものに等しい2つの左辺も等しい：</p>
+<p>$$i\hbar\,\partial_t\Psi=\hbar\omega\Psi=\frac{\hbar^2k^2}{2m}\Psi=-\frac{\hbar^2}{2m}\partial_x^2\Psi$$</p>
+<p>これが (6.1) である。見た目の違い（$\omega$ の式と $k$ の式）を、②（エネルギーと運動量の関係）が結びつけている。</p></div>
+
 <h3><span class="no">6.3</span>位置エネルギーを加える</h3>
 <p>力が働くとき、エネルギーは $E=\dfrac{p^2}{2m}+V(x)$。(6.1) の右辺の演算子を、3.3 節のハミルトニアンに置き換える。</p>
 <div class="thm"><span class="label">シュレディンガー方程式</span>
