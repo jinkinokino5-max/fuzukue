@@ -339,6 +339,38 @@ $$\psi_E(x)=Ae^{i\alpha x}+Be^{-i\alpha x},\qquad E=\frac{\hbar^2\alpha^2}{2m}\t
 <p>③ $\alpha$ が実数なら $E\ge0$。$\alpha$ が虚数（$E\lt0$）だと $e^{\pm i\alpha x}$ が実の指数関数になり、どちらかの側で発散するので除く。運動エネルギーだけの粒子のエネルギーが負にならないのは、古典力学と同じ。</p>
 <p>④ 読み取り：$e^{i\alpha x}$ は運動量 $+\hbar\alpha$、$e^{-i\alpha x}$ は $-\hbar\alpha$ の平面波で、<strong>同じエネルギー $E$ に二つの独立な固有関数</strong>が属している（右向き・左向きに同じ速さで走る粒子）。このように一つの固有値に複数の固有関数が属することを<span class="key">縮退</span>と呼ぶ（第5回で扱う）。</p></div>
 
+<div class="why"><span class="label">🙋 質問から追加：例題 3-1 の微分方程式の解き方（道具としての数学）</span>
+<p>例題 3-1 の核心は、次の微分方程式を解くことである。</p>
+$$\psi''(x)=-\alpha^2\psi(x)\qquad(\alpha\text{ は定数})$$
+<p>この型は、この先の問題（無限井戸など）で何度も出る。解き方を手順に分けて、各手順で使う数学の道具に名前をつけておく。</p>
+
+<p><strong>STEP 1　試す関数を決める【道具：指数関数は微分しても形が変わらない】</strong><br>
+式は「$\psi$ を2回微分したら、$\psi$ の定数倍になる」と言っている。微分しても形が変わらない関数は指数関数だけなので、$\psi=e^{\lambda x}$（$\lambda$ は未知の定数）とおいて試す。これは「天下り」ではなく、<em>式の形から候補を絞った</em>のである。$(e^{\lambda x})'=\lambda e^{\lambda x}$ だから、2回微分すると $\lambda^2e^{\lambda x}$ になる。</p>
+
+<p><strong>STEP 2　微分方程式を代数方程式に変える【道具：特性方程式】</strong><br>
+代入すると $\lambda^2e^{\lambda x}=-\alpha^2e^{\lambda x}$。$e^{\lambda x}$ は0にならないので両辺を割れる（なぜ割れるか：$e^{\lambda x}\ne0$）。</p>
+$$\lambda^2=-\alpha^2\quad\Longrightarrow\quad\lambda=\pm i\alpha$$
+<p>微分方程式が、ただの2次方程式に変わった。これを<span class="key">特性方程式</span>という。解が2つ（$\lambda=+i\alpha,\ -i\alpha$）出たので、$e^{i\alpha x}$ と $e^{-i\alpha x}$ が解の候補になる。</p>
+
+<p><strong>STEP 3　一般解をつくる【道具：線形性と重ね合わせ】</strong><br>
+方程式 $\psi''+\alpha^2\psi=0$ は $\psi$ について1次（線形）である。そこで $\psi_1,\psi_2$ が解なら、$A\psi_1+B\psi_2$ も解になる。確かめ：</p>
+$$(A\psi_1+B\psi_2)''=A\psi_1''+B\psi_2''=-\alpha^2(A\psi_1+B\psi_2)$$
+<p>2階の微分方程式は積分を2回するので、任意定数が2個ある。つまり、<em>独立な解を2つ見つければ全部</em>である。$e^{i\alpha x}$ と $e^{-i\alpha x}$ は一方が他方の定数倍にならないので独立であり、これで一般解 $Ae^{i\alpha x}+Be^{-i\alpha x}$ が尽くされる（例題の (3.5)）。第2回で導入した「演算子の線形性」と同じ考え方である。</p>
+
+<p><strong>STEP 4　実の形に書き直す【道具：オイラーの公式】</strong><br>
+$e^{\pm i\alpha x}=\cos\alpha x\pm i\sin\alpha x$ を代入して整理すると</p>
+$$Ae^{i\alpha x}+Be^{-i\alpha x}=(A+B)\cos\alpha x+i(A-B)\sin\alpha x\equiv C\cos\alpha x+D\sin\alpha x$$
+<p>になる。つまり $\cos\alpha x,\ \sin\alpha x$ を基本の解として使ってもよい。<strong>どちらを使うかは目的で決める</strong>。運動量の固有状態（走る波）を見たいときは $e^{\pm i\alpha x}$、壁があって境界条件で定数を決めるとき（第6回の無限井戸）は $\cos,\sin$ のほうが楽である。</p>
+
+<p><strong>STEP 5　使ってよい解かを選ぶ【道具：場合分け】</strong><br>
+$\alpha^2=2mE/\hbar^2$ の符号で解の形が変わる。</p>
+<p>・$E\gt0$（$\alpha$ が実数）：上の振動する解。</p>
+<p>・$E\lt0$：$\alpha=i\kappa$（$\kappa\gt0$）とおくと $\psi''=\kappa^2\psi$ で、解は $e^{\kappa x},\ e^{-\kappa x}$。前者は $x\to+\infty$、後者は $x\to-\infty$ で発散する。両側とも有限に保つには $A=B=0$ しかなく、$\psi\equiv0$ になって状態でなくなる。したがって除く。</p>
+<p>・$E=0$：$\psi''=0$ なので $\psi=C+Dx$。$D\ne0$ だと発散するので、定数関数 $\psi=C$ だけが残る。この場合は $e^{i\alpha x}=e^{-i\alpha x}=1$ で2つの解が重なり、縮退は起きない。</p>
+<p>「平面波も $\int|\psi|^2dx=\infty$ で規格化できない」のと、「発散する」のは別のことである。平面波は $|\psi|=$ 一定で<em>有界</em>であり、δ関数と同じく極限として使える。発散する解にはそれもできないので、除くのである。</p>
+
+<p><strong>確かめ</strong>：①代入：$(e^{i\alpha x})''=(i\alpha)^2e^{i\alpha x}=-\alpha^2e^{i\alpha x}$ で元の式に戻る。②次元：$\alpha$ は 1/長さで、$E=\hbar^2\alpha^2/2m=(\hbar\alpha)^2/2m=p^2/2m$ と書ける（$p=\hbar\alpha$）。古典の運動エネルギーと一致する。③境界条件がないので $\alpha$ に制限がつかず、$E$ は連続である。壁をつけると境界条件で $\alpha$ が選ばれ、$E$ がとびとびになる（第6回）。</p></div>
+
 <p>次は、位置エネルギーがある場合の例である。レジュメ後半 問2 で、ばねの力 $F=-ax$ に対する位置エネルギーが $V=\frac12m\omega^2x^2$（$\omega=\sqrt{a/m}$ は角振動数）と求まる（演習 問2）。これを<strong>調和振動子</strong>という。</p>
 
 <div class="ex"><span class="label">例題 3-2【B 標準】調和振動子のいちばん低いエネルギー（自作）</span>
