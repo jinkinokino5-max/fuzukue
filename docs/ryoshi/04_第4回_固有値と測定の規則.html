@@ -763,6 +763,13 @@ $m$ と $\omega$ が約分で消えるのがポイントで、ばねの強さに
 <div class="box"><span class="label">問2【A】ばねの位置エネルギー（レジュメ後半 問2）</span>粒子が位置 $x$ にいるとき力 $F(x)$ がかかり、位置エネルギー $V(x)$ と $F=-dV/dx$ の関係にある。復元力 $F=-ax$ が働くとき、位置エネルギーを粒子の角振動数で表せ。
 <details><summary>解答</summary><p>① $-\dfrac{dV}{dx}=-ax$ より $V=\frac12ax^2$（基準 $V(0)=0$）。</p><p>② 運動方程式 $m\ddot x=-ax$ の解は $x=A\sin\omega t$（2回微分すると $-\omega^2$ 倍）で、代入すると $-m\omega^2=-a$、$a=m\omega^2$。</p><p>③ $V=\frac12m\omega^2x^2$。</p></details></div>
 
+<div class="why"><span class="label">🙋 質問から追加：問2の出題意図（どこで生きるのか）</span>
+<p>問2は量子力学の新しい内容ではなく、<strong>古典力学で $\hat H$ の中身を用意する準備問題</strong>である。使う場所は2つある。</p>
+<p>① <strong>第3章の調和振動子の例題</strong>（$\psi=e^{-x^2/2b^2}$ が $\hat H$ の固有関数になる $b$ と $E$ を求める問題）。固有値方程式 $\hat H\psi=E\psi$ の $\hat H=\dfrac{\hat p^2}{2m}+V(x)$ に、問2の $V=\frac12m\omega^2x^2$ を入れる。すると $x^2$ の項が打ち消し合う条件から $b^2=\hbar/m\omega$、$E=\frac12\hbar\omega$ が決まる。</p>
+<p>② <strong>例題の (4)</strong>（$\langle H\rangle=\langle p^2\rangle/2m+\frac12m\omega^2\langle x^2\rangle$）。この $V$ が同じく必要になる。</p>
+<p><strong>なぜ $a$ でなく $\omega$ で書くのか。</strong>$V=\frac12ax^2$ のままでは、量子力学の側で $\hbar,m,a$ が混ざって見通しが悪い。$a=m\omega^2$ と置き換えると、結果が $\hbar\omega$（エネルギーの次元）で書ける。確かめ：$\hbar\omega$ は J·s × s⁻¹ = J で、エネルギーの次元になる。</p>
+<p>要するに、問2は「ばねの力から $V$ を出す」→「その $V$ を $\hat H$ に入れる」→「固有値方程式を解く」という流れの<strong>最初の一歩</strong>である。（試験でも、$V$ が与えられず「ばね定数 $a$」や「角振動数 $\omega$」だけ与えられる形で出る可能性がある。出題の保証はない。）</p></div>
+
 <div class="box"><span class="label">問3【B】自由粒子のエネルギー固有値（レジュメ後半 問3）</span>$V=0$ のとき、$\hat E=\hat p^2/2m$ の固有値と固有関数を求めよ。
 <details><summary>解答</summary><p>例題 3-1。固有関数 $\psi_E=Ae^{i\alpha x}+Be^{-i\alpha x}$、固有値 $E=\hbar^2\alpha^2/2m$（$\alpha^2=2mE/\hbar^2$）。</p></details></div>
 
