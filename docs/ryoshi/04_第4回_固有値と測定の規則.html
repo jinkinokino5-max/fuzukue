@@ -339,37 +339,57 @@ $$\psi_E(x)=Ae^{i\alpha x}+Be^{-i\alpha x},\qquad E=\frac{\hbar^2\alpha^2}{2m}\t
 <p>③ $\alpha$ が実数なら $E\ge0$。$\alpha$ が虚数（$E\lt0$）だと $e^{\pm i\alpha x}$ が実の指数関数になり、どちらかの側で発散するので除く。運動エネルギーだけの粒子のエネルギーが負にならないのは、古典力学と同じ。</p>
 <p>④ 読み取り：$e^{i\alpha x}$ は運動量 $+\hbar\alpha$、$e^{-i\alpha x}$ は $-\hbar\alpha$ の平面波で、<strong>同じエネルギー $E$ に二つの独立な固有関数</strong>が属している（右向き・左向きに同じ速さで走る粒子）。このように一つの固有値に複数の固有関数が属することを<span class="key">縮退</span>と呼ぶ（第5回で扱う）。</p></div>
 
-<div class="why"><span class="label">🙋 質問から追加：例題 3-1 の微分方程式の解き方（道具としての数学）</span>
-<p>例題 3-1 の核心は、次の微分方程式を解くことである。</p>
-$$\psi''(x)=-\alpha^2\psi(x)\qquad(\alpha\text{ は定数})$$
-<p>この型は、この先の問題（無限井戸など）で何度も出る。解き方を手順に分けて、各手順で使う数学の道具に名前をつけておく。</p>
+<div class="why"><span class="label">🙋 質問から追加：例題 3-1 の微分方程式の解き方（「道具としての数学」の注釈つき）</span>
+<p>解く式は $\psi''=-\alpha^2\psi$ である。「道具としての数学」の第28・29回で扱った<strong>2階線形定数係数の微分方程式</strong>（第29回は $m\ddot x+c\dot x+kx=0$）と同じ型で、$c=0$ の場合にあたる。ここでは、使う道具ごとに、元の説明へのリンクを付ける。覚えている人は、リンク先を飛ばしてよい。</p>
 
-<p><strong>STEP 1　試す関数を決める【道具：指数関数は微分しても形が変わらない】</strong><br>
-式は「$\psi$ を2回微分したら、$\psi$ の定数倍になる」と言っている。微分しても形が変わらない関数は指数関数だけなので、$\psi=e^{\lambda x}$（$\lambda$ は未知の定数）とおいて試す。これは「天下り」ではなく、<em>式の形から候補を絞った</em>のである。$(e^{\lambda x})'=\lambda e^{\lambda x}$ だから、2回微分すると $\lambda^2e^{\lambda x}$ になる。</p>
+<p><strong>0　この箇所で出る記号</strong>（省略せずに書く）</p>
+<p>・$\psi''$　読み方：「プサイ ダブルプライム」。意味：$\psi$ を $x$ で2回微分した関数。省略前の形：$\dfrac{d^2\psi}{dx^2}(x)$。出会う場所：量子力学のシュレディンガー方程式。→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/07_第7回_微分.html">道具 第7回（プライムの意味）</a></p>
+<p>・$\psi$（引数の省略）：省略前は $\psi(x)$。「$x$ の関数 $\psi$ の、$x$ での値」を、$x$ を略して $\psi$ と書いている。→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/03_第3回_関数と写像.html">道具 第3回（$f$ と $f(x)$ の違い・引数の省略）</a></p>
+<p>・$\alpha$　読み方：「アルファ」。意味：この式の中で一定の値をもつ定数。ここでは $\alpha^2=2mE/\hbar^2$ と<strong>おいた</strong>（式を短く書くための名前で、新しい物理量ではない）。</p>
+<p>・$\lambda$　読み方：「ラムダ」。意味：これから決める未知の定数（試す関数 $e^{\lambda x}$ の指数の係数）。→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#sym-char-eq">道具 第29回（特性方程式の記号）</a></p>
+<p>・$\Longrightarrow$　読み方：「ならば」。意味：左の式が成り立てば、右の式が成り立つ。→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/02_第2回_集合と論理.html">道具 第2回（ならば・同値）</a></p>
 
-<p><strong>STEP 2　微分方程式を代数方程式に変える【道具：特性方程式】</strong><br>
-代入すると $\lambda^2e^{\lambda x}=-\alpha^2e^{\lambda x}$。$e^{\lambda x}$ は0にならないので両辺を割れる（なぜ割れるか：$e^{\lambda x}\ne0$）。</p>
-$$\lambda^2=-\alpha^2\quad\Longrightarrow\quad\lambda=\pm i\alpha$$
-<p>微分方程式が、ただの2次方程式に変わった。これを<span class="key">特性方程式</span>という。解が2つ（$\lambda=+i\alpha,\ -i\alpha$）出たので、$e^{i\alpha x}$ と $e^{-i\alpha x}$ が解の候補になる。</p>
+<p><strong>STEP 1　どんな関数を試すか決める</strong>　→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#sec-1-3">道具 第29回 1.3（微分しても形が変わらない関数）</a>、<a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#sec-1-4">1.4（勘で当てているのか）</a></p>
+<p>式は「$\psi$ を2回微分した結果が、$\psi$ の定数倍（$-\alpha^2$ 倍）になる」と言っている。指数関数 $e^{\lambda x}$ は、微分しても $e^{\lambda x}$ の定数倍にしかならない。そこで $\psi=e^{\lambda x}$ を<em>試す</em>。当てずっぽうではなく、「微分しても形が変わらない関数」という条件から選んだ候補である。後で代入して、本当に解になっているかを確かめる（STEP 2 と確かめ ①）。</p>
 
-<p><strong>STEP 3　一般解をつくる【道具：線形性と重ね合わせ】</strong><br>
-方程式 $\psi''+\alpha^2\psi=0$ は $\psi$ について1次（線形）である。そこで $\psi_1,\psi_2$ が解なら、$A\psi_1+B\psi_2$ も解になる。確かめ：</p>
-$$(A\psi_1+B\psi_2)''=A\psi_1''+B\psi_2''=-\alpha^2(A\psi_1+B\psi_2)$$
-<p>2階の微分方程式は積分を2回するので、任意定数が2個ある。つまり、<em>独立な解を2つ見つければ全部</em>である。$e^{i\alpha x}$ と $e^{-i\alpha x}$ は一方が他方の定数倍にならないので独立であり、これで一般解 $Ae^{i\alpha x}+Be^{-i\alpha x}$ が尽くされる（例題の (3.5)）。第2回で導入した「演算子の線形性」と同じ考え方である。</p>
+<p><strong>STEP 2　代入して、微分方程式を代数方程式に直す</strong>　→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#sec-2-1">道具 第29回 2.1（1行に1操作）</a>、<a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#sym-char-eq">特性方程式</a></p>
+<p>①　$\psi=e^{\lambda x}$　（試す関数）</p>
+<p>②　$\psi'=\lambda e^{\lambda x}$　（理由：$\lambda x$ を $x$ で微分すると $\lambda$。$\lambda$ は定数なので、微分の外に出せる）</p>
+<p>③　$\psi''=\lambda\cdot\lambda e^{\lambda x}=\lambda^2e^{\lambda x}$　（理由：②をもう一度微分した）</p>
+<p>④　$\lambda^2e^{\lambda x}=-\alpha^2e^{\lambda x}$　（理由：元の式 $\psi''=-\alpha^2\psi$ に ①③ を入れた）</p>
+<p>⑤　$\lambda^2=-\alpha^2$　（理由：どんな $x$ でも $e^{\lambda x}\ne0$ なので、両辺を $e^{\lambda x}$ で割れる）</p>
+<p>⑥　$\lambda=\pm i\alpha$　（理由：2乗して $-\alpha^2$ になる数は $i\alpha$ と $-i\alpha$。$i$ は $i^2=-1$ の虚数単位）→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/34_第34回_複素数とオイラーの公式.html#sym-imag-unit">道具 第34回（$i$ の定義）</a></p>
+<p>⑤の形（$\lambda$ だけの2次方程式）を<span class="key">特性方程式</span>という。微分方程式が、ふつうの方程式に変わったところが道具のポイントである。</p>
 
-<p><strong>STEP 4　実の形に書き直す【道具：オイラーの公式】</strong><br>
-$e^{\pm i\alpha x}=\cos\alpha x\pm i\sin\alpha x$ を代入して整理すると</p>
-$$Ae^{i\alpha x}+Be^{-i\alpha x}=(A+B)\cos\alpha x+i(A-B)\sin\alpha x\equiv C\cos\alpha x+D\sin\alpha x$$
-<p>になる。つまり $\cos\alpha x,\ \sin\alpha x$ を基本の解として使ってもよい。<strong>どちらを使うかは目的で決める</strong>。運動量の固有状態（走る波）を見たいときは $e^{\pm i\alpha x}$、壁があって境界条件で定数を決めるとき（第6回の無限井戸）は $\cos,\sin$ のほうが楽である。</p>
+<p><strong>STEP 3　解を足してよい：一般解をつくる</strong>　→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#thm-superposition">道具 第29回 定理3.1（重ね合わせの原理）</a>、<a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#sec-3-2">3.2（なぜ定数が2つか）</a></p>
+<p>この方程式は $\psi$ について1次式（線形）なので、$\psi_1,\psi_2$ が解なら、定数 $A,B$ を使った $A\psi_1+B\psi_2$ も解になる。確かめ：</p>
+<p>　$(A\psi_1+B\psi_2)''=A\psi_1''+B\psi_2''$　（理由：微分は和と定数倍を保つ）</p>
+<p>　$\qquad=A(-\alpha^2\psi_1)+B(-\alpha^2\psi_2)$　（理由：$\psi_1,\psi_2$ が解だから）</p>
+<p>　$\qquad=-\alpha^2(A\psi_1+B\psi_2)$　（理由：$-\alpha^2$ をくくり出した）</p>
+<p>2階の方程式は「位置にあたる値」と「傾きにあたる値」を決めるために定数が2つ要る。独立な解は2つ（$e^{i\alpha x}$ と $e^{-i\alpha x}$）で、片方は他方の定数倍にならない。よって一般解は</p>
+$$\psi(x)=Ae^{i\alpha x}+Be^{-i\alpha x}$$
+<p>である（例題の (3.5)）。この回の例題 2-1 の演算子の線形性（和と定数倍を保つ）と同じ考え方である。</p>
 
-<p><strong>STEP 5　使ってよい解かを選ぶ【道具：場合分け】</strong><br>
-$\alpha^2=2mE/\hbar^2$ の符号で解の形が変わる。</p>
-<p>・$E\gt0$（$\alpha$ が実数）：上の振動する解。</p>
-<p>・$E\lt0$：$\alpha=i\kappa$（$\kappa\gt0$）とおくと $\psi''=\kappa^2\psi$ で、解は $e^{\kappa x},\ e^{-\kappa x}$。前者は $x\to+\infty$、後者は $x\to-\infty$ で発散する。両側とも有限に保つには $A=B=0$ しかなく、$\psi\equiv0$ になって状態でなくなる。したがって除く。</p>
-<p>・$E=0$：$\psi''=0$ なので $\psi=C+Dx$。$D\ne0$ だと発散するので、定数関数 $\psi=C$ だけが残る。この場合は $e^{i\alpha x}=e^{-i\alpha x}=1$ で2つの解が重なり、縮退は起きない。</p>
-<p>「平面波も $\int|\psi|^2dx=\infty$ で規格化できない」のと、「発散する」のは別のことである。平面波は $|\psi|=$ 一定で<em>有界</em>であり、δ関数と同じく極限として使える。発散する解にはそれもできないので、除くのである。</p>
+<p><strong>STEP 4　$\cos,\sin$ の形に書き直す</strong>　→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/34_第34回_複素数とオイラーの公式.html#sec-4-4">道具 第34回 4.4（オイラーの公式）</a>、<a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#sec-6-3">第29回 6.3（実数の解に直す）</a></p>
+<p>①　$Ae^{i\alpha x}+Be^{-i\alpha x}$</p>
+<p>②　$=A(\cos\alpha x+i\sin\alpha x)+B(\cos(-\alpha x)+i\sin(-\alpha x))$　（理由：オイラーの公式 $e^{i\theta}=\cos\theta+i\sin\theta$ を $\theta=\pm\alpha x$ で使った）</p>
+<p>③　$=A(\cos\alpha x+i\sin\alpha x)+B(\cos\alpha x-i\sin\alpha x)$　（理由：$\cos(-\theta)=\cos\theta$、$\sin(-\theta)=-\sin\theta$）</p>
+<p>④　$=(A+B)\cos\alpha x+i(A-B)\sin\alpha x$　（理由：$\cos\alpha x$ の係数どうし、$\sin\alpha x$ の係数どうしをまとめた）</p>
+<p>$A+B$ と $i(A-B)$ を新しい定数 $C,D$ と書けば、$\psi=C\cos\alpha x+D\sin\alpha x$ になる。どちらの形を使うかは目的で決める。走る波（運動量の固有状態）を見たいなら $e^{\pm i\alpha x}$、壁があって境界条件で定数を決めるなら $\cos,\sin$ が使いやすい（第6回）。</p>
 
-<p><strong>確かめ</strong>：①代入：$(e^{i\alpha x})''=(i\alpha)^2e^{i\alpha x}=-\alpha^2e^{i\alpha x}$ で元の式に戻る。②次元：$\alpha$ は 1/長さで、$E=\hbar^2\alpha^2/2m=(\hbar\alpha)^2/2m=p^2/2m$ と書ける（$p=\hbar\alpha$）。古典の運動エネルギーと一致する。③境界条件がないので $\alpha$ に制限がつかず、$E$ は連続である。壁をつけると境界条件で $\alpha$ が選ばれ、$E$ がとびとびになる（第6回）。</p></div>
+<p><strong>STEP 5　$E$ の符号で場合分けして、使ってよい解を選ぶ</strong>　→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/29_第29回_2階線形定数係数.html#sec-4">道具 第29回 4〜6章（根が実数・重根・複素数の3場合）</a></p>
+<p>$\alpha^2=2mE/\hbar^2$ なので、$E$ の符号が $\alpha^2$ の符号を決める。</p>
+<p>・$E\gt0$：$\alpha$ は実数。上の振動する解。</p>
+<p>・$E\lt0$：$\alpha=i\kappa$（$\kappa\gt0$ の実数）とおくと $\alpha^2=-\kappa^2$ で、方程式は $\psi''=\kappa^2\psi$。STEP 2 と同じ手順で $\lambda^2=\kappa^2$、$\lambda=\pm\kappa$ となり、解は $e^{\kappa x}$ と $e^{-\kappa x}$。前者は $x\to+\infty$、後者は $x\to-\infty$ で値が限りなく大きくなる。$Ae^{\kappa x}+Be^{-\kappa x}$ が $x$ 全体で有限であるためには $A=B=0$ しかなく、$\psi\equiv0$（どこでも $0$）になって状態を表さない。したがって除く。</p>
+<p>・$E=0$：$\psi''=0$。2回積分して $\psi=C+Dx$。$D\ne0$ だと発散するので、定数関数 $\psi=C$ だけが残る。このとき $e^{i\alpha x}$ と $e^{-i\alpha x}$ は両方とも $1$ で、独立な解が2つ取れず、縮退は起きない。</p>
+<p>「発散する」と「規格化できない」は別のことである。平面波は $\int|\psi|^2dx=\infty$ で規格化できないが、$|\psi|$ は一定で有界なので、δ関数と同じく理想化として使える。発散する解にはそれもできない。</p>
+
+<p><strong>確かめ</strong></p>
+<p>①　代入：$(e^{i\alpha x})''=(i\alpha)^2e^{i\alpha x}=-\alpha^2e^{i\alpha x}$。元の式に戻る（sympy でも $\psi''+\alpha^2\psi=0$ と確認した）。→ <a href="https://jinkinokino5-max.github.io/fuzukue/dougu-sugaku/28_第28回_微分方程式とは・1階.html#sec-2-1">道具 第28回 2.1（解は代入して確かめる）</a></p>
+<p>②　次元：$\alpha$ の次元は 1/長さ。$E=\dfrac{\hbar^2\alpha^2}{2m}=\dfrac{(\hbar\alpha)^2}{2m}=\dfrac{p^2}{2m}$（$p=\hbar\alpha$）で、古典の運動エネルギーに一致する。</p>
+<p>③　境界条件がないので $\alpha$ に制限がつかず、$E$ は連続になる。壁を付けると境界条件が $\alpha$ を選び、$E$ がとびとびになる（第6回）。</p>
+
+<p><strong>ひとことで</strong>：「微分しても形が変わらない $e^{\lambda x}$ を試して、微分方程式を $\lambda$ の2次方程式に直し、出た2つの解を足し合わせる」。これが2階線形定数係数の解き方で、第6回の無限井戸でもそのまま使う。</p></div>
 
 <p>次は、位置エネルギーがある場合の例である。レジュメ後半 問2 で、ばねの力 $F=-ax$ に対する位置エネルギーが $V=\frac12m\omega^2x^2$（$\omega=\sqrt{a/m}$ は角振動数）と求まる（演習 問2）。これを<strong>調和振動子</strong>という。</p>
 
