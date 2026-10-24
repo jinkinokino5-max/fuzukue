@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6回 静電場中の絶縁体</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- HERO -->
+<p class="lead">2026年10月29日／配布資料「絶縁体（＝誘電体）」対応。第5回の導体では、電荷が自由に動いて、内部の電場を消した。この回の絶縁体では、電荷は動けない。それでも電場の中に置くと、<strong>分子の中で正負の電荷がほんの少しだけずれる</strong>。そのわずかなずれが、コンデンサの電気容量を何倍にもし、「電束密度」という新しい量を必要にする。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：<br>
+①【準備】電気双極子と「分極ベクトル $\boldsymbol P$」（1章）<br>
+→ ②【現象】電場の中で、分子の正負の電荷がずれる。内部では打ち消し合い、表面にだけ分極電荷が現れる（2章）<br>
+→ ③【結果1】電圧一定のコンデンサに入れると、板の電荷が $(1+\chi)$ 倍になり、容量が $(1+\chi)$ 倍になる（3章）<br>
+→ ④【結果2】電場 $\boldsymbol E$ は分極電荷にも左右される。真電荷だけで決まる量 $\boldsymbol D=\varepsilon_0\boldsymbol E+\boldsymbol P$ を作ると、ガウスの法則が真電荷だけで書ける（4章）<br>
+→ ⑤【使う】電荷一定・電圧一定、層・並列、エネルギー（5章）<br>
+→ 次回（第7回）：電荷が動き続ける場合（定常電流）
+</div>
+
+<div class="box"><span class="label">この回で使う前提</span>
+<ul>
+<li><strong>仮定する</strong>：ガウスの法則（第2回）、電位と電位差（第3回）、電気容量 $C=Q/V$・平板コンデンサ $C_0=\varepsilon_0S/d$・エネルギー $\tfrac12CV^2$（第4回）、導体の性質と $E=\sigma/\varepsilon_0$（第5回）。</li>
+<li><strong>1章で説明する</strong>：電気双極子と分極ベクトル。</li>
+<li><strong>記号</strong>：資料の電気感受率 $\chi$（無次元）、比誘電率 $1+\chi$、誘電率 $\varepsilon=(1+\chi)\varepsilon_0$。教科書でよく使われる比誘電率の記号 $\kappa$（または $\varepsilon_r$）を、$\kappa=1+\chi$ として併記する。式番号は資料の (6.1)〜(6.7) に合わせ、本教材で補う式は (3.x)、(4.x)、(5.x) とする。</li>
+<li><strong>用語</strong>：資料は絶縁体を、この回の途中から<strong>誘電体</strong>とよぶ。電場の中で分極する性質に注目したときの名前で、同じものを指す。</li>
+</ul></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>数学準備：電気双極子と分極ベクトル</h2>
+
+<h3><span class="no">1.1</span>電気双極子</h3>
+<p>$+q$ と $-q$ の2つの電荷が、近い距離 $\ell$ だけ離れて並んでいるものを<strong>電気双極子</strong>という。全体の電荷は 0 だが、正負の位置がずれているので、ごく近くでは電場をつくる。向きと大きさを一つにまとめて、<strong>$-q$ から $+q$ へ向かうベクトル $\boldsymbol\ell$</strong>（長さ $\ell$）を使い、</p>
+$$\boldsymbol p=q\boldsymbol\ell\qquad(1.1)$$
+<p>を<strong>双極子モーメント</strong>とよぶ。単位は $\mathrm{C\cdot m}$。分子の中で正の電荷の中心と負の電荷の中心がずれると、その分子は双極子になる。</p>
+
+<h3><span class="no">1.2</span>分極ベクトル $\boldsymbol P$：資料の定義と同じもの</h3>
+<p>資料は、分極の強さを「電場に垂直な面内の分極電荷密度 $\sigma_{\mathrm P}$（C/m²）を大きさとし、双極子の向き（＝電場の向き）をもつベクトル $\boldsymbol P$」と定義している。この定義が、「単位体積あたりの双極子モーメント」と同じであることを示す。</p>
+<div class="proof">
+<p><span class="step">STEP 1</span>　誘電体の中に、電場に垂直な仮想の平面を考える。単位体積あたり $n$ 個の分子があり、どの分子も、正負の中心が電場の向きに $\ell$ だけずれた双極子（$p=q\ell$）になっているとする。</p>
+<p><span class="step">STEP 2</span>　この面の面積 $\Delta S$ を通り抜ける電荷を数える。電場がかかる前は、正負の中心が一致していた。かかったあと、正電荷は電場の向きに $\ell/2$、負電荷は逆向きに $\ell/2$ だけ動く。正電荷については、面の手前の厚さ $\ell/2$ の層にあったものが、面を電場の向きに通り抜ける：$q\cdot n\dfrac{\ell}{2}\Delta S$。負電荷については、面の向こうの厚さ $\ell/2$ の層にあったものが、逆向きに通り抜ける。負電荷が逆向きに動くことは、正電荷が電場の向きに動くのと同じ電気的な効果なので、これも $q\cdot n\dfrac{\ell}{2}\Delta S$。合わせて、電場の向きに通り抜けた電荷は $nq\ell\,\Delta S$。</p>
+<p><span class="step">STEP 3</span>　誘電体の内部では、面のこちら側とあちら側で、通り抜けた電荷は同じ量なので、打ち消し合って、電荷は現れない（2.2）。しかし誘電体の端（表面）の外には、続く分子がないので、通り抜けた電荷がそのまま現れる。電場に垂直な表面に現れる電荷密度は</p>
+$$\sigma_{\mathrm P}=\frac{nq\ell\,\Delta S}{\Delta S}=nq\ell=np$$
+<p><span class="step">STEP 4</span>　$np$ は「単位体積あたりの双極子モーメント」である。したがって、資料の定義の $\boldsymbol P$ は、<strong>単位体積あたりの双極子モーメント</strong> $\boldsymbol P=n\boldsymbol p$ と同じもので、大きさは $P=\sigma_{\mathrm P}$。単位は $\mathrm{(C\cdot m)/m^3=C/m^2}$ で、電荷密度の単位と一致する。</p>
+</div>
+<p>表面が電場に斜めのとき、表面の分極電荷密度は、表面から外向きの単位法線ベクトル $\boldsymbol n$ を使って $\sigma_{\mathrm P}=\boldsymbol P\cdot\boldsymbol n$ と書ける（面が電場に平行なら 0）。この回では、電場に垂直な面（極板に接する面）だけを使う。</p>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>誘電分極：動けない電荷が、少しだけずれる</h2>
+
+<h3><span class="no">2.1</span>動機：導体と絶縁体の違い</h3>
+<p>導体では、電荷が自由に動けるので、内部の電場がちょうど 0 になるまで動いた（第5回）。絶縁体の中には、自由に動ける電荷がない。では、絶縁体を電場の中に入れたら、何も起こらないのか。</p>
+<p>起こる。絶縁体を作っている<strong>分子や原子の内部には電荷がある</strong>。電場の中では、正の電荷は電場の向きに、負の電荷は電場と逆向きに力を受ける。ただし、どちらの電荷も分子・原子に束縛されていて、分子の外へは出られない。動けるのは、分子の内部で、わずかに相対的にずれることだけである（資料）。これを<strong>分極</strong>とよぶ。</p>
+<figure><svg viewBox="0 0 640 300" width="640" role="img" aria-label="誘電体の分極。電場がないとき分子の正負の中心は一致し、電場があると互いに逆向きにずれる。内部では打ち消し合い、左右の端にだけ電荷が現れる">
+<defs><marker id="e6po-k" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a2723"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<text x="155" y="24" text-anchor="middle">(a) 電場なし</text>
+<circle cx="55" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="55" y="84" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="105" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="105" y="84" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="155" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="155" y="84" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="205" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="205" y="84" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="255" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="255" y="84" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="55" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="55" y="130" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="105" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="105" y="130" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="155" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="155" y="130" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="205" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="205" y="130" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="255" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="255" y="130" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="55" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="55" y="176" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="105" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="105" y="176" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="155" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="155" y="176" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="205" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="205" y="176" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<circle cx="255" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="255" y="176" text-anchor="middle" fill="#968d80" font-size="12">±</text>
+<text x="155" y="240" text-anchor="middle" font-size="12" fill="#968d80">各分子は中性。どこにも電荷は現れない</text>
+<text x="475" y="24" text-anchor="middle">(b) 電場 E あり</text>
+<circle cx="375" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="381" y="84" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="369" y="84" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="425" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="431" y="84" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="419" y="84" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="475" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="481" y="84" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="469" y="84" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="525" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="531" y="84" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="519" y="84" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="575" cy="80" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="581" y="84" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="569" y="84" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="375" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="381" y="130" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="369" y="130" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="425" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="431" y="130" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="419" y="130" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="475" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="481" y="130" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="469" y="130" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="525" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="531" y="130" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="519" y="130" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="575" cy="126" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="581" y="130" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="569" y="130" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="375" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="381" y="176" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="369" y="176" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="425" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="431" y="176" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="419" y="176" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="475" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="481" y="176" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="469" y="176" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="525" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="531" y="176" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="519" y="176" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<circle cx="575" cy="172" r="15" fill="#ddd6c8" fill-opacity="0.8" stroke="#968d80" stroke-width="1"/><text x="581" y="176" text-anchor="middle" fill="#a8322a" font-size="12">＋</text><text x="569" y="176" text-anchor="middle" fill="#4a5f8c" font-size="12">−</text>
+<line x1="348" y1="200" x2="602" y2="200" stroke="#2a2723" stroke-width="1.6" marker-end="url(#e6po-k)"/>
+<text x="475" y="218" text-anchor="middle" font-size="13">E</text>
+<rect x="348" y="52" width="14" height="136" fill="#4a5f8c" fill-opacity="0.18"/><rect x="588" y="52" width="14" height="136" fill="#a8322a" fill-opacity="0.18"/>
+<text x="355" y="248" text-anchor="middle" fill="#4a5f8c" font-size="12">左端：−σP</text><text x="595" y="248" text-anchor="middle" fill="#a8322a" font-size="12">右端：＋σP</text>
+<text x="475" y="276" text-anchor="middle" font-size="12" fill="#968d80">内部：となり合う ＋ と − が打ち消す</text>
+</g></svg>
+<figcaption>図2.1　誘電体の分極（模式図）。(a) 電場がないとき、分子の正負の中心は一致する。(b) 電場があると、正は電場の向きに、負は逆向きに、わずかにずれる。内部ではとなり合う分子の $+$ と $-$ が打ち消し合い、左右の端にだけ分極電荷 $\mp\sigma_{\mathrm P}$ が現れる（ずれは誇張してある）。</figcaption></figure>
+
+<h3><span class="no">2.2</span>内部では打ち消し合い、表面にだけ電荷が現れる</h3>
+<p>図2.1 (b) で、となり合う2つの分子を見ると、左の分子の $+$ と、右の分子の $-$ が隣り合っている。この2つはほぼ同じ場所にあり、打ち消し合う。内部のどの場所でも、平均すると電気的に中性のままである（資料：「分極が起きても内部では平均的に打ち消しあって電気的に中性であるが、両端のみには異符号の電荷が現れる」）。打ち消す相手がいないのは、一番端の分子だけで、そこに $\mp\sigma_{\mathrm P}$ が残る。1.2 で、この量が $P$ に等しいことを示した。</p>
+
+<h3><span class="no">2.3</span>真電荷と分極電荷</h3>
+<div class="def"><span class="label">定義（分極電荷・真電荷）</span><strong>分極電荷</strong>：誘電分極によって誘電体の表面に現れた電荷。分子の内部に束縛されているので、外部に取り出すことはできない。<br><strong>真電荷</strong>：これまで扱ってきた、自由に動かせる（外から与えたり取り出したりできる）電荷。〔資料〕</div>
+<p>電場をつくる電荷としては、どちらも区別がない（どちらも同じクーロンの法則に従う）。区別の意味は「<strong>外から自由に操作できるか</strong>」にある。</p>
+
+<h3><span class="no">2.4</span>最小の具体例：原子のずれは、原子の大きさの100万分の2</h3>
+<p>分極の大きさを見積もる。原子を、半径 $a$ の球に一様に広がった電子の雲（全電荷 $-e$）と、中心の原子核（$+e$）でモデル化する。電場 $E$ の中で、原子核が雲の中心から $x$ だけずれたとする。雲の内部（中心から距離 $x$）の電場は、第2回のガウスの法則から $\dfrac{e\,x}{4\pi\varepsilon_0a^3}$（球の内部では、中の電荷が距離の3乗に比例して減る）。原子核が受ける力は、外の電場の力 $eE$ と、この復元力がつり合う：</p>
+$$eE=e\cdot\frac{ex}{4\pi\varepsilon_0a^3}\ \Longrightarrow\ x=\frac{4\pi\varepsilon_0a^3E}{e}\qquad(2.1)$$
+<p>$a=0.53\times10^{-10}\ \mathrm m$、$E=10^6\ \mathrm{V/m}$ とすると $x=\dfrac{4\pi\times8.85\times10^{-12}\times(0.53\times10^{-10})^3\times10^6}{1.60\times10^{-19}}=1.0\times10^{-16}\ \mathrm m$。原子の大きさの約 $2\times10^{-6}$ 倍にすぎない。<strong>ずれはきわめて小さい</strong>のに、分子の数が非常に多い（$10^{28}\ \mathrm{m^{-3}}$ 程度）ため、全体の効果は無視できない大きさになる。<span class="meta">※2.4 は講義資料にない自作の見積りで、一様な雲のモデルによる概算である（実際の原子とは数値が異なりうる）。</span></p>
+
+<h3><span class="no">2.5</span>分極の大きさと電場：比例関係</h3>
+<p>分極電荷の大きさは、一般に、<strong>電場に比例する</strong>。</p>
+$$\sigma_{\mathrm P}=\chi\varepsilon_0E\qquad\Longleftrightarrow\qquad\boldsymbol P=\chi\varepsilon_0\boldsymbol E\qquad(6.2)$$
+<p>比例定数を $\chi\varepsilon_0$ と書くのは、$\chi$ を無次元にするため（資料）。$\chi$ は<strong>電気感受率</strong>とよばれる物質定数。(6.2) は、電場がそれほど強くない範囲での実験事実である（強い電場では比例からずれる）。(2.1) の小さなずれが電場に比例することとも整合している（ずれ $x$ が $E$ に比例するので、$P=nex$ も $E$ に比例する）。</p>
+<div class="warn"><span class="label">よくある誤解</span>「絶縁体の中には電場がない」と考える。<strong>導体と絶縁体は違う</strong>。導体は、電荷が動いて内部の電場が 0 になる。絶縁体は、分極電荷が外の電場を<strong>弱める</strong>が、0 にはならない（内部の電場は、外の電場の $1/(1+\chi)$ 倍になる。3.4）。</div>
+
+<!-- SPREAD_1 -->
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>電気容量の増加：誘電体をはさんだコンデンサ</h2>
+
+<h3><span class="no">3.1</span>動機：ファラデーの発見</h3>
+<p>ファラデーは、コンデンサの極板の間に絶縁体を入れると、電気容量が増えることを発見した（資料）。なぜ増えるのか。第4回では、$C_0=\varepsilon_0S/d$ という、真空の場合の式を得た。分極の考え方を使って、誘電体を入れたときの容量を導く。</p>
+
+<h3><span class="no">3.2</span>導出（電圧一定）</h3>
+<p>設定：極板の面積 $S$、間隔 $d$。電池で電位差 $V$ を与え、<strong>つないだまま</strong>にする。</p>
+<figure><svg viewBox="0 0 600 300" width="600" role="img" aria-label="誘電体をはさんだ平板コンデンサ。極板の電荷±σ、誘電体の表面に分極電荷∓σP。誘電体の中の電場は(σ−σP)/ε0">
+<defs><marker id="e6cd-k" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a2723"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<rect x="130" y="40" width="290" height="10" fill="#a8322a" opacity="0.85"/><rect x="130" y="250" width="290" height="10" fill="#4a5f8c" opacity="0.85"/>
+<rect x="130" y="76" width="290" height="148" fill="#a06a32" fill-opacity="0.16" stroke="#a06a32"/>
+<text x="144" y="150" fill="#a06a32" font-size="13">誘電体</text><text x="144" y="168" fill="#a06a32" font-size="12">比誘電率 1+χ</text>
+<text x="150.0" y="66" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="150.0" y="88" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="150.0" y="220" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="150.0" y="244" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="185.7" y="66" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="185.7" y="88" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="185.7" y="220" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="185.7" y="244" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="221.4" y="66" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="221.4" y="88" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="221.4" y="220" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="221.4" y="244" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="257.1" y="66" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="257.1" y="88" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="257.1" y="220" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="257.1" y="244" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="292.9" y="66" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="292.9" y="88" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="292.9" y="220" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="292.9" y="244" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="328.6" y="66" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="328.6" y="88" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="328.6" y="220" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="328.6" y="244" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="364.3" y="66" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="364.3" y="88" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="364.3" y="220" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="364.3" y="244" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="400.0" y="66" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="400.0" y="88" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<text x="400.0" y="220" text-anchor="middle" fill="#a8322a" font-size="13">＋</text>
+<text x="400.0" y="244" text-anchor="middle" fill="#4a5f8c" font-size="15">−</text>
+<line x1="260" y1="100" x2="260" y2="200" stroke="#2a2723" stroke-width="1.3" marker-end="url(#e6cd-k)"/>
+<line x1="310" y1="100" x2="310" y2="200" stroke="#2a2723" stroke-width="1.3" marker-end="url(#e6cd-k)"/>
+<line x1="360" y1="100" x2="360" y2="200" stroke="#2a2723" stroke-width="1.3" marker-end="url(#e6cd-k)"/>
+<text x="432" y="50" fill="#a8322a" font-size="13">＋σ（真電荷）</text><text x="432" y="262" fill="#4a5f8c" font-size="13">−σ（真電荷）</text>
+<text x="432" y="86" fill="#4a5f8c" font-size="13">−σP（分極電荷）</text><text x="432" y="226" fill="#a8322a" font-size="13">＋σP（分極電荷）</text>
+<text x="432" y="156" font-size="13">E = (σ − σP)/ε₀</text>
+<line x1="104" y1="50" x2="104" y2="250" stroke="#2a2723" marker-start="url(#e6cd-k)" marker-end="url(#e6cd-k)"/><text x="96" y="154" text-anchor="end">d</text>
+</g></svg>
+<figcaption>図3.1　誘電体をはさんだ平板コンデンサ。極板の真電荷 $\pm\sigma$ に対して、誘電体の表面に分極電荷 $\mp\sigma_{\mathrm P}$ が現れる。誘電体の中の電場は $(\sigma-\sigma_{\mathrm P})/\varepsilon_0$。</figcaption></figure>
+<div class="proof">
+<p><span class="step">STEP 0</span>　【挿入前】真空のコンデンサで、正極板の電荷密度を $\sigma_0$ とする。極板間の電場は $E_0=\sigma_0/\varepsilon_0$（第4回）。電位差は $V=E_0d$、容量は $C_0=\dfrac{\varepsilon_0S}{d}$。</p>
+<p><span class="step">STEP 1</span>　【電場は変わらない】誘電体を入れても、電池が電位差を $V$ に保ち、間隔 $d$ も変わらない。電位差は「電場の線積分」なので、極板の間の電場の大きさは $V/d=E_0$ のまま。<strong>以下の $E_0$ は、誘電体を入れたあとの、誘電体の中の電場そのものである</strong>（挿入前の真空の電場に等しい値）。</p>
+<p><span class="step">STEP 2</span>　【分極電荷】誘電体の中の電場は $E_0$。2.5 の (6.2) より、誘電体の表面に分極電荷が現れる。正極板に接する面には $-\sigma_{\mathrm P}$、負極板に接する面には $+\sigma_{\mathrm P}$。大きさは $\sigma_{\mathrm P}=\chi\varepsilon_0E_0$。</p>
+<p><span class="step">STEP 3</span>　【正極板でガウスの法則】正極板の表面をまたぐ薄い円筒をとる。上の底面は極板の金属の中（$E=0$）、下の底面は誘電体の中（電場 $E_0$）。円筒の中の電荷は、極板の $\sigma\Delta S$ と、誘電体の表面の $-\sigma_{\mathrm P}\Delta S$。ガウスの法則は</p>
+$$\varepsilon_0E_0=\sigma-\sigma_{\mathrm P}\qquad(6.1)$$
+<p>「極板の電荷 $\sigma$ が出す分のうち、$\sigma_{\mathrm P}$ を分極電荷が打ち消し、残りが誘電体の中の電場をつくる」と読める。</p>
+<p><span class="step">STEP 4</span>　【極板の電荷が増える】(6.1) に $\sigma_{\mathrm P}=\chi\varepsilon_0E_0$ を入れて整理する：$\varepsilon_0E_0=\sigma-\chi\varepsilon_0E_0$ から</p>
+$$(1+\chi)\varepsilon_0E_0=\sigma\qquad(6.3)$$
+<p>電場 $E_0$ を同じに保つために、極板は $(1+\chi)$ 倍の電荷密度（挿入前の $\sigma_0=\varepsilon_0E_0$ に対して）をもつ。分極電荷が逆向きの電場をつくって電場を弱めるので、それを打ち消して電位差を一定にするために、電池が余分に電荷を送り込む。増えた分がちょうど $\sigma_{\mathrm P}$。</p>
+<p><span class="step">STEP 5</span>　【容量】$Q=\sigma S$、$V=E_0d$ を (6.3) に入れる：$(1+\chi)\varepsilon_0\dfrac{V}{d}=\dfrac{Q}{S}$。$C=Q/V$ について解くと</p>
+$$C=(1+\chi)\,\varepsilon_0\frac{S}{d}=(1+\chi)\,C_0\qquad(3.1)$$
+</div>
+<p>誘電体を入れると、容量は $(1+\chi)$ 倍になる。これは、真空の誘電率 $\varepsilon_0$ を $(1+\chi)\varepsilon_0$ に置き換えたことと同じである。<strong>確かめ</strong>：$\chi=0$（誘電体なし）で $C=C_0$。単位は第4回と同じ。</p>
+<p><strong>最小の具体例</strong>：$S=100\ \mathrm{cm^2}=1.0\times10^{-2}\ \mathrm{m^2}$、$d=1.0\ \mathrm{mm}$、$V=100\ \mathrm V$、比誘電率 $\kappa=5$（$\chi=4$）。$C_0=\dfrac{8.85\times10^{-12}\times1.0\times10^{-2}}{1.0\times10^{-3}}=88.5\ \mathrm{pF}$、$C=5C_0=443\ \mathrm{pF}$。電荷は $Q_0=C_0V=8.85\ \mathrm{nC}$ から $Q=CV=44.3\ \mathrm{nC}$ に増える。電荷密度は $\sigma_0=8.85\times10^{-7}\ \mathrm{C/m^2}$ から $\sigma=4.43\times10^{-6}\ \mathrm{C/m^2}$ に。分極電荷は $\sigma_{\mathrm P}=\chi\varepsilon_0E_0=4\times8.85\times10^{-12}\times10^5=3.54\times10^{-6}\ \mathrm{C/m^2}$（$E_0=V/d=10^5\ \mathrm{V/m}$）。(6.1) の確かめ：$\sigma-\sigma_{\mathrm P}=4.43-3.54=0.885\times10^{-6}=\varepsilon_0E_0$ ✓。</p>
+
+<h3><span class="no">3.3</span>比誘電率と誘電率</h3>
+<div class="def"><span class="label">定義（比誘電率・誘電率）</span>$1+\chi=\kappa$（$=\varepsilon_r$）を物質の<strong>比誘電率</strong>、$\varepsilon=(1+\chi)\varepsilon_0=\kappa\varepsilon_0$ を物質の<strong>誘電率</strong>とよぶ。〔資料〕</div>
+<table class="tb">
+<tr><th>物質</th><th>比誘電率 $\kappa$ の目安</th></tr>
+<tr><td>真空</td><td>1（定義）</td></tr>
+<tr><td>空気（0 °C）</td><td>1.0006</td></tr>
+<tr><td>テフロン</td><td>2.1</td></tr>
+<tr><td>ポリエチレン</td><td>2.25</td></tr>
+<tr><td>ガラス（パイレックス）</td><td>4.7（3.7〜10 の範囲）</td></tr>
+<tr><td>水（20 °C）</td><td>80</td></tr>
+<tr><td>チタン酸バリウム磁器</td><td>1200〜10000</td></tr>
+</table>
+<p class="meta">※値は目安で、温度・周波数で変わる。Wikipedia "Relative permittivity" の表（2026-10-25 確認）による。講義資料には無い。</p>
+<p>水の $\kappa\approx80$ は、水分子がもともと正負の偏りをもつ（極性分子）ために、電場にそろいやすいことによる。この回の資料の「分子内でのずれ」のほかに、そうした分子の向きがそろう効果もある。この向きがそろう効果は、本資料では扱っていない。</p>
+<p>これで、絶縁体を誘電体とよぶ理由が分かる。誘電率 $\varepsilon$ をもち、電場の中で分極する物質だから、である（資料：「絶縁体はこのような性質から誘電体ともよばれる」）。</p>
+
+<h3><span class="no">3.4</span>電荷一定の場合（講義資料にない補足）</h3>
+<p>電池を<strong>外して</strong>、極板の電荷 $Q$ が変わらないようにした場合を考える。極板の電荷密度 $\sigma$ は一定のまま。誘電体の中の電場を $E$ とすると、3.2 の STEP 3 と同じガウスの法則から $\varepsilon_0E=\sigma-\chi\varepsilon_0E$、つまり</p>
+$$E=\frac{\sigma}{(1+\chi)\varepsilon_0}=\frac{E_{\text{真空}}}{\kappa}\qquad(3.2)$$
+<p>電場は $1/\kappa$ に弱まり、電位差も $V=Ed=V_0/\kappa$ に下がる。容量は $C=Q/V=\kappa C_0$（電圧一定の場合と同じ）。<strong>容量が $\kappa$ 倍になることは、どちらの場合も同じ</strong>で、電場・電位差・電荷のどれが変わるかが違う。5.1 で表にまとめる。</p>
+<div class="warn"><span class="label">よくある誤解：$E_0$ は「誘電体を入れる前の電場」とは限らない</span>資料の $E_0$ は、電圧一定の場合だけ「入れる前も後も同じ電場」になる。電荷一定の場合は、入れたあとの電場は $E_0$ の $1/\kappa$ に変わる。どちらの場合か（電池がつながっているか）を、まず確認する。</div>
+
+<!-- SPREAD_2 -->
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>電束密度 $\boldsymbol D$：真電荷だけで決まる量</h2>
+
+<h3><span class="no">4.1</span>動機：電場は、分極電荷にも左右される</h3>
+<p>電場 $\boldsymbol E$ は、すべての電荷がつくる電場である。ガウスの法則は、</p>
+$$\oint_S\varepsilon_0\boldsymbol E\cdot\boldsymbol n\,\mathrm dS=Q_{\text{真}}+Q_{\text{分極}}\qquad(4.1)$$
+<p>右辺に分極電荷が入る。ところが分極電荷は、電場の中の誘電体の反応として現れるもので、<strong>電場が決まらないと分極電荷が決まらず、分極電荷が決まらないと電場が決まらない</strong>、という循環になる。そこで、<strong>真電荷だけで決まる量</strong>がほしい。それが電束密度 $\boldsymbol D$ である。</p>
+
+<h3><span class="no">4.2</span>電気力線と電束線（資料）</h3>
+<p>第2回では、1 C の電荷から $1/\varepsilon_0$ 本の電気力線が出ると数えると、「電気力線の面密度が電場の強さ」になって便利だった。ここでは、1 C から<strong>1本</strong>の線が出ると数え、この線の面密度を電束密度とよぶ。資料は、従来の電気力線と区別するために仮に「電束線」とよんでいる（資料：「一般的に使われている言葉ではないので注意」）。</p>
+<p>誘電体をはさんだ極板で、電束線の本数を数える（単位面積あたり）。資料の数え方に従うと、</p>
+<ul>
+<li>正極板から出る線：$\sigma$ 本（$=\varepsilon_0E_0+\sigma_{\mathrm P}$）。</li>
+<li>誘電体の正極側の面には $-\sigma_{\mathrm P}$ があり、$\sigma_{\mathrm P}$ 本を吸い込む。誘電体の中では $\varepsilon_0E_0$ 本に減る（$\sigma-\sigma_{\mathrm P}$、(6.1)）。</li>
+<li>負極側の面の $+\sigma_{\mathrm P}$ から、$\sigma_{\mathrm P}$ 本が新しく出る。合計 $\sigma$ 本が負極板に入る。</li>
+</ul>
+<figure><svg viewBox="0 0 640 330" width="640" role="img" aria-label="誘電体をはさんだコンデンサの、電気力線と電束線の本数。電気力線は誘電体の中で6本から2本に減るが、電束線は6本のまま">
+<defs><marker id="e6ln-k" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a2723"/></marker><marker id="e6ln-b" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4a5f8c"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<text x="155" y="22" text-anchor="middle">(a) 電気力線（1/ε₀ 本 /C）</text>
+<rect x="20" y="40" width="270" height="8" fill="#a8322a" opacity="0.85"/><rect x="20" y="262" width="270" height="8" fill="#4a5f8c" opacity="0.85"/>
+<rect x="20" y="100" width="270" height="110" fill="#a06a32" fill-opacity="0.14" stroke="#a06a32"/>
+<text x="155" y="160" text-anchor="middle" fill="#a06a32" font-size="12" stroke="#ebdfcc" stroke-width="4" paint-order="stroke">誘電体（κ = 3）</text>
+<line x1="45" y1="50" x2="45" y2="100" stroke="#2a2723" stroke-width="1.4"/>
+<circle cx="45" cy="100" r="3.5" fill="#4a5f8c"/>
+<line x1="45" y1="210" x2="45" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/><circle cx="45" cy="210" r="3.5" fill="#a8322a"/>
+<line x1="89" y1="50" x2="89" y2="130" stroke="#2a2723" stroke-width="1.4"/>
+<line x1="89" y1="130" x2="89" y2="180" stroke="#2a2723" stroke-width="1.4"/>
+<line x1="89" y1="180" x2="89" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/>
+<line x1="133" y1="50" x2="133" y2="100" stroke="#2a2723" stroke-width="1.4"/>
+<circle cx="133" cy="100" r="3.5" fill="#4a5f8c"/>
+<line x1="133" y1="210" x2="133" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/><circle cx="133" cy="210" r="3.5" fill="#a8322a"/>
+<line x1="177" y1="50" x2="177" y2="100" stroke="#2a2723" stroke-width="1.4"/>
+<circle cx="177" cy="100" r="3.5" fill="#4a5f8c"/>
+<line x1="177" y1="210" x2="177" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/><circle cx="177" cy="210" r="3.5" fill="#a8322a"/>
+<line x1="221" y1="50" x2="221" y2="130" stroke="#2a2723" stroke-width="1.4"/>
+<line x1="221" y1="130" x2="221" y2="180" stroke="#2a2723" stroke-width="1.4"/>
+<line x1="221" y1="180" x2="221" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/>
+<line x1="265" y1="50" x2="265" y2="100" stroke="#2a2723" stroke-width="1.4"/>
+<circle cx="265" cy="100" r="3.5" fill="#4a5f8c"/>
+<line x1="265" y1="210" x2="265" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/><circle cx="265" cy="210" r="3.5" fill="#a8322a"/>
+<text x="155" y="88" text-anchor="middle" font-size="12" fill="#4a5f8c" stroke="#f7f4ec" stroke-width="4" paint-order="stroke">4本が −σP に吸われて止まる</text>
+<text x="155" y="300" text-anchor="middle" font-size="12" fill="#a8322a">＋σP から新しく4本が出る → 6本が −σ へ</text>
+<text x="155" y="318" text-anchor="middle" font-size="12" fill="#968d80">誘電体の中は 2本（E が 1/3）</text>
+<text x="475" y="22" text-anchor="middle">(b) 電束線（1 本 /C）</text>
+<rect x="340" y="40" width="270" height="8" fill="#a8322a" opacity="0.85"/><rect x="340" y="262" width="270" height="8" fill="#4a5f8c" opacity="0.85"/>
+<rect x="340" y="100" width="270" height="110" fill="#a06a32" fill-opacity="0.14" stroke="#a06a32"/>
+<text x="475" y="160" text-anchor="middle" fill="#a06a32" font-size="12" stroke="#ebdfcc" stroke-width="4" paint-order="stroke">誘電体（κ = 3）</text>
+<line x1="365" y1="50" x2="365" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/>
+<line x1="409" y1="50" x2="409" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/>
+<line x1="453" y1="50" x2="453" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/>
+<line x1="497" y1="50" x2="497" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/>
+<line x1="541" y1="50" x2="541" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/>
+<line x1="585" y1="50" x2="585" y2="260" stroke="#2a2723" stroke-width="1.4" marker-end="url(#e6ln-k)"/>
+<text x="475" y="88" text-anchor="middle" font-size="12" fill="#968d80" stroke="#f7f4ec" stroke-width="4" paint-order="stroke">電束線は分極電荷の影響を受けない</text>
+<text x="475" y="300" text-anchor="middle" font-size="12" fill="#a8322a">真電荷 σ から出て、真電荷 −σ に入る：6本</text>
+</g></svg>
+<figcaption>図4.1　$\kappa=3$ の誘電体をはさんだコンデンサで、極板から6本出るとき（分極電荷は $\sigma_{\mathrm P}=\tfrac{\kappa-1}{\kappa}\sigma$ で4本分）。(a) 電気力線は、誘電体の中で2本に減る（電場が $1/3$）。(b) 電束線は、分極電荷に影響されず、6本のまま。</figcaption></figure>
+
+<h3><span class="no">4.3</span>電束密度の定義</h3>
+<p>誘電体の内部で電気力線の本数が減った分は、ちょうど分極ベクトルの大きさ $P$ である。誘電体の外では、本数が減らない代わりに分極ベクトルもない。つまり「電気力線の本数＋分極ベクトルの大きさ」は、誘電体の内でも外でも変わらない。この量を一つのベクトルにする。</p>
+<div class="def"><span class="label">定義（電束密度）</span>$$\boldsymbol D=\varepsilon_0\boldsymbol E+\boldsymbol P\qquad(6.4)$$
+単位は $\mathrm{C/m^2}$（$\varepsilon_0E$ も $P$ も同じ単位）。〔資料〕</div>
+<p>(6.2) $\boldsymbol P=\chi\varepsilon_0\boldsymbol E$ を使うと</p>
+$$\boldsymbol D=(1+\chi)\varepsilon_0\boldsymbol E=\varepsilon\boldsymbol E\qquad(6.5)$$
+<p>平板コンデンサでは、(6.4) に (6.1) を使うと</p>
+$$D=\varepsilon_0E_0+P=(\sigma-\sigma_{\mathrm P})+\sigma_{\mathrm P}=\sigma\qquad(6.6)$$
+<p>つまり<strong>電束密度の大きさは、極板の（真電荷の）電荷密度に等しい</strong>。分極電荷 $\sigma_{\mathrm P}$ が消えている。<strong>確かめ</strong>：3.2 の数値例で、$\varepsilon_0E_0=0.885\times10^{-6}$、$P=\sigma_{\mathrm P}=3.54\times10^{-6}$、足して $D=4.43\times10^{-6}\ \mathrm{C/m^2}=\sigma$ ✓。また (6.5) で $\varepsilon E_0=5\times8.85\times10^{-12}\times10^5=4.43\times10^{-6}$ ✓。</p>
+
+<h3><span class="no">4.4</span>$\boldsymbol D$ のガウスの法則（一般の閉曲面）</h3>
+<p>資料は、平板で $D=\sigma$（真電荷）を示したうえで、「閉曲面 $S$ に対して $\oint\boldsymbol D\cdot\boldsymbol n\,\mathrm dS=$（$S$ 内の真電荷の総和）が成り立つ」(6.7) と述べている。一般の閉曲面でも成り立つことを、次の2段階で示す。</p>
+<div class="proof">
+<p><span class="step">STEP 1</span>　<strong>分極電荷を $\boldsymbol P$ で書く</strong>。1.2 で、面積 $\mathrm dS$ を通り抜けた電荷は $P\,\mathrm dS$（面に垂直な成分）だった。閉曲面 $S$ では、$\boldsymbol P\cdot\boldsymbol n\,\mathrm dS$（外向き $\boldsymbol n$）の総和 $\oint\boldsymbol P\cdot\boldsymbol n\,\mathrm dS$ が、$S$ から<strong>外へ出て行った</strong>正電荷の量である。内部にはその分だけ負電荷が残るから</p>
+$$Q_{\text{分極}}=-\oint_S\boldsymbol P\cdot\boldsymbol n\,\mathrm dS\qquad(4.2)$$
+<p><span class="step">STEP 2</span>　(4.2) を (4.1) に代入する：$\oint\varepsilon_0\boldsymbol E\cdot\boldsymbol n\,\mathrm dS=Q_{\text{真}}-\oint\boldsymbol P\cdot\boldsymbol n\,\mathrm dS$。右辺の積分を左辺に移して</p>
+$$\oint_S(\varepsilon_0\boldsymbol E+\boldsymbol P)\cdot\boldsymbol n\,\mathrm dS=\oint_S\boldsymbol D\cdot\boldsymbol n\,\mathrm dS=Q_{\text{真}}\qquad(6.7)$$
+</div>
+<p>誘電体と真空の境目をまたぐ閉曲面でも成り立つ（真空では $\boldsymbol P=\boldsymbol 0$ として、$\boldsymbol D=\varepsilon_0\boldsymbol E$）。ただし (4.2) の導き方は、電荷の移動を数える直観的な説明で、厳密にはベクトル解析（発散）を使って示す。<span class="meta">※一般の閉曲面への拡張は本教材の補足。資料は平板の場合で述べている。</span></p>
+<div class="why"><span class="label">直感：電束は、真電荷から湧き出し、真電荷に吸い込まれる</span>電気力線は、途中の分極電荷に吸われたり、新しく出たりして、本数が変わる。電束は、<strong>途中にある誘電体や分極電荷の影響を受けない</strong>。正の真電荷から湧き出し、負の真電荷に吸い込まれる、という素直な流れである。（資料）</div>
+
+<h3><span class="no">4.5</span>$\boldsymbol E$、$\boldsymbol D$、$\boldsymbol P$ の使い分け</h3>
+<table class="tb">
+<tr><th></th><th>$\boldsymbol E$（電場）</th><th>$\boldsymbol D$（電束密度）</th><th>$\boldsymbol P$（分極）</th></tr>
+<tr><td>何を表すか</td><td>電荷が受ける力（$q\boldsymbol E$）、電位差は $\int\boldsymbol E\cdot\mathrm d\boldsymbol r$</td><td>真電荷が出す電束</td><td>誘電体の分極の強さ（単位体積あたりの双極子モーメント）</td></tr>
+<tr><td>源になる電荷</td><td>真電荷＋分極電荷</td><td>真電荷だけ</td><td>—</td></tr>
+<tr><td>関係式</td><td colspan="3">$\boldsymbol D=\varepsilon_0\boldsymbol E+\boldsymbol P=\varepsilon\boldsymbol E$、$\boldsymbol P=\chi\varepsilon_0\boldsymbol E=\bigl(1-\tfrac1\kappa\bigr)\boldsymbol D$</td></tr>
+</table>
+<p>誘電体のある問題の解き方の基本は、<strong>先に $\boldsymbol D$ を求める</strong>ことである。平板・球・円筒のように対称性がよければ、(6.7) だけで $\boldsymbol D$ が真電荷から決まる。そのあと $\boldsymbol E=\boldsymbol D/\varepsilon$ で電場を求め、電位差を積分する。</p>
+<p><strong>例：2層の誘電体</strong>。極板の間に、厚さ $d_1$（$\kappa_1$）と $d_2$（$\kappa_2$）の2層が重なっている（図4.2）。真電荷の密度を $\sigma$ とすると、極板に平行な面で (6.7) を使って、どの層でも $D=\sigma$（一定）。電場は層ごとに $E_1=\dfrac{\sigma}{\kappa_1\varepsilon_0}$、$E_2=\dfrac{\sigma}{\kappa_2\varepsilon_0}$ で<strong>層の境で飛ぶ</strong>。分極は $P=(1-1/\kappa)D$。</p>
+<figure><svg viewBox="0 0 560 300" width="560" role="img" aria-label="2層の誘電体の中の電束密度D、電場E、分極Pの大きさ。Dは一定で、Eは層ごとに違う">
+<defs><marker id="e6ly-arw" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a2723"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<line x1="70.0" y1="30" x2="70.0" y2="250" stroke="#ddd6c8"/>
+<line x1="213.3" y1="30" x2="213.3" y2="250" stroke="#ddd6c8"/>
+<line x1="356.7" y1="30" x2="356.7" y2="250" stroke="#ddd6c8"/>
+<line x1="500.0" y1="30" x2="500.0" y2="250" stroke="#ddd6c8"/>
+<line x1="70" y1="250.0" x2="500" y2="250.0" stroke="#ddd6c8"/>
+<line x1="70" y1="154.3" x2="500" y2="154.3" stroke="#ddd6c8"/>
+<line x1="70" y1="58.7" x2="500" y2="58.7" stroke="#ddd6c8"/>
+<line x1="66" y1="250.0" x2="514" y2="250.0" stroke="#2a2723" marker-end="url(#e6ly-arw)"/>
+<line x1="70.0" y1="254" x2="70.0" y2="16" stroke="#2a2723" marker-end="url(#e6ly-arw)"/>
+<text x="520" y="254.0">z [mm]</text>
+<text x="78.0" y="18"></text>
+<line x1="70.0" y1="250.0" x2="70.0" y2="254.0" stroke="#2a2723"/>
+<text x="70.0" y="268.0" text-anchor="middle" font-size="12">0</text>
+<line x1="213.3" y1="250.0" x2="213.3" y2="254.0" stroke="#2a2723"/>
+<text x="213.3" y="268.0" text-anchor="middle" font-size="12">1</text>
+<line x1="356.7" y1="250.0" x2="356.7" y2="254.0" stroke="#2a2723"/>
+<text x="356.7" y="268.0" text-anchor="middle" font-size="12">2</text>
+<line x1="500.0" y1="250.0" x2="500.0" y2="254.0" stroke="#2a2723"/>
+<text x="500.0" y="268.0" text-anchor="middle" font-size="12">3</text>
+<line x1="66.0" y1="250.0" x2="70.0" y2="250.0" stroke="#2a2723"/>
+<text x="63.0" y="254.0" text-anchor="end" font-size="12">0</text>
+<line x1="66.0" y1="154.3" x2="70.0" y2="154.3" stroke="#2a2723"/>
+<text x="63.0" y="158.3" text-anchor="end" font-size="12">0.5</text>
+<line x1="66.0" y1="58.7" x2="70.0" y2="58.7" stroke="#2a2723"/>
+<text x="63.0" y="62.7" text-anchor="end" font-size="12">1</text>
+<path d="M70.0,58.7 L213.3,58.7" fill="none" stroke="#2a2723" stroke-width="2.4"/>
+<path d="M70.0,202.2 L213.3,202.2" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<path d="M70.0,106.5 L213.3,106.5" fill="none" stroke="#4a5f8c" stroke-width="2.4" stroke-dasharray="6 4"/>
+<path d="M213.3,58.7 L500.0,58.7" fill="none" stroke="#2a2723" stroke-width="2.4"/>
+<path d="M213.3,154.3 L500.0,154.3" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+<path d="M213.3,154.3 L500.0,154.3" fill="none" stroke="#4a5f8c" stroke-width="2.4" stroke-dasharray="6 4"/>
+<path d="M213.3,250.0 L213.3,39.6" fill="none" stroke="#968d80" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="292.2" y="51.0" fill="#2a2723" text-anchor="start" font-size="13">D（一定）</text>
+<text x="242.0" y="135.2" fill="#a8322a" text-anchor="start" font-size="13">ε₀E / D = 1/κ</text>
+<text x="242.0" y="177.3" fill="#4a5f8c" text-anchor="start" font-size="13">P / D = 1 − 1/κ</text>
+<text x="141.7" y="238.5" fill="#968d80" text-anchor="middle" font-size="12">層1 κ=4</text>
+<text x="356.7" y="238.5" fill="#968d80" text-anchor="middle" font-size="12">層2 κ=2</text>
+<text x="435.5" y="154.3" fill="#968d80" text-anchor="middle" font-size="11">（層2では重なる）</text>
+</g></svg>
+<figcaption>図4.2　2層の誘電体（層1：厚さ $1\ \mathrm{mm}$、$\kappa=4$、層2：厚さ $2\ \mathrm{mm}$、$\kappa=2$）の中の $D$、$\varepsilon_0E$、$P$（$D$ で割った値）。$D$（黒）は層の境でつながり、$E$（赤）は不連続に変わる。$P$（青）は $D-\varepsilon_0E$ に等しい。</figcaption></figure>
+<p>電位差は $V=E_1d_1+E_2d_2=\dfrac{\sigma}{\varepsilon_0}\Bigl(\dfrac{d_1}{\kappa_1}+\dfrac{d_2}{\kappa_2}\Bigr)$。したがって容量は $C=\dfrac{\sigma S}{V}=\dfrac{\varepsilon_0S}{d_1/\kappa_1+d_2/\kappa_2}$（5.2 で直列の合成として再び現れる）。</p>
+
+<!-- SPREAD_3 -->
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>応用：誘電体を入れる条件、入れ方、エネルギー</h2>
+
+<h3><span class="no">5.1</span>電圧一定と電荷一定の比較（講義資料にない補足）</h3>
+<p>平板コンデンサに、板の間をすべて満たすように、比誘電率 $\kappa$ の誘電体を入れる。添字 0 は入れる前。</p>
+<table class="tb">
+<tr><th>量</th><th>電圧一定（電池つなぎっぱなし）</th><th>電荷一定（電池を外してから）</th></tr>
+<tr><td>容量 $C$</td><td>$\kappa C_0$</td><td>$\kappa C_0$</td></tr>
+<tr><td>電位差 $V$</td><td>$V_0$（不変）</td><td>$V_0/\kappa$</td></tr>
+<tr><td>極板の電荷 $Q$</td><td>$\kappa Q_0$</td><td>$Q_0$（不変）</td></tr>
+<tr><td>誘電体中の電場 $E$</td><td>$E_0$（不変）</td><td>$E_0/\kappa$</td></tr>
+<tr><td>電束密度 $D=\sigma$</td><td>$\kappa D_0$</td><td>$D_0$（不変）</td></tr>
+<tr><td>エネルギー $W$</td><td>$\kappa W_0$（増える）</td><td>$W_0/\kappa$（減る）</td></tr>
+</table>
+<p>エネルギーは、第4回の $W=\tfrac12CV^2=Q^2/2C$ から得られる。電荷一定ではエネルギーが減るので、誘電体は、外から仕事をしなくても、板の間に<strong>引き込まれる</strong>（エネルギーの低い状態へ）。電圧一定では、エネルギーは増えるが、電池が $\Delta Q\,V=(\kappa-1)Q_0V=2(\kappa-1)W_0$ の仕事をするので、そのうち半分 $(\kappa-1)W_0$ が $W$ の増加となり、残り $(\kappa-1)W_0$ が、誘電体を引き込む力のする仕事にまわる。数値は問4で確かめる。</p>
+
+<h3><span class="no">5.2</span>部分的に入れる：直列と並列</h3>
+<figure><svg viewBox="0 0 640 260" width="640" role="img" aria-label="誘電体の入れ方。(a) 板に平行な層に重ねる：直列。(b) 板を左右に分けて並べる：並列">
+<defs></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<text x="155" y="22" text-anchor="middle">(a) 層に重ねる → 直列</text>
+<rect x="60" y="44" width="190" height="7" fill="#a8322a" opacity="0.85"/><rect x="60" y="214" width="190" height="7" fill="#4a5f8c" opacity="0.85"/>
+<rect x="60" y="51" width="190" height="55" fill="#a06a32" fill-opacity="0.22" stroke="#a06a32"/><rect x="60" y="106" width="190" height="108" fill="#6b8a5a" fill-opacity="0.22" stroke="#6b8a5a"/>
+<text x="155" y="84" text-anchor="middle" font-size="12">κ₁，厚さ d₁</text><text x="155" y="164" text-anchor="middle" font-size="12">κ₂，厚さ d₂</text>
+<text x="155" y="244" text-anchor="middle" font-size="12" fill="#a8322a">D が共通 ⇒ V = σ(d₁/κ₁ + d₂/κ₂)/ε₀</text>
+<text x="485" y="22" text-anchor="middle">(b) 左右に並べる → 並列</text>
+<rect x="390" y="44" width="190" height="7" fill="#a8322a" opacity="0.85"/><rect x="390" y="214" width="190" height="7" fill="#4a5f8c" opacity="0.85"/>
+<rect x="390" y="51" width="95" height="163" fill="#a06a32" fill-opacity="0.22" stroke="#a06a32"/><rect x="485" y="51" width="95" height="163" fill="#6b8a5a" fill-opacity="0.22" stroke="#6b8a5a"/>
+<text x="437" y="136" text-anchor="middle" font-size="12">κ₁，面積 S₁</text><text x="532" y="136" text-anchor="middle" font-size="12">κ₂，面積 S₂</text>
+<text x="485" y="244" text-anchor="middle" font-size="12" fill="#a8322a">E（= V/d）が共通 ⇒ C = ε₀(κ₁S₁ + κ₂S₂)/d</text>
+</g></svg>
+<figcaption>図5.1　誘電体の入れ方。(a) 板に平行な層に重ねる：直列（$D$ が共通）。(b) 板を左右に分けて並べる：並列（$E=V/d$ が共通）。</figcaption></figure>
+<ul>
+<li><strong>(a) 直列</strong>：電束密度 $D=\sigma$ が共通（4.5）。$V=\dfrac{\sigma}{\varepsilon_0}\Bigl(\dfrac{d_1}{\kappa_1}+\dfrac{d_2}{\kappa_2}\Bigr)$、$C=\dfrac{\varepsilon_0S}{d_1/\kappa_1+d_2/\kappa_2}$。<strong>各層を $C_i=\kappa_i\varepsilon_0S/d_i$ のコンデンサとみて、$1/C=1/C_1+1/C_2$ と書いたもの</strong>（第4回の直列）に等しい。</li>
+<li><strong>(b) 並列</strong>：極板は等電位なので、どの場所でも電場 $E=V/d$ が共通。左の部分の電荷密度は $\sigma_1=\kappa_1\varepsilon_0E$、右は $\sigma_2=\kappa_2\varepsilon_0E$（(6.3) と同じ形）。全電荷は $Q=\sigma_1S_1+\sigma_2S_2=\varepsilon_0(\kappa_1S_1+\kappa_2S_2)\dfrac{V}{d}$ で、$C=\dfrac{\varepsilon_0(\kappa_1S_1+\kappa_2S_2)}{d}$（第4回の並列 $C_1+C_2$ と一致）。</li>
+</ul>
+
+<h3><span class="no">5.3</span>誘電体中のエネルギー密度</h3>
+<p>第4回の電場のエネルギー密度は $w=\tfrac12\varepsilon_0E^2$ だった。誘電体のあるときは、$\varepsilon_0$ を $\varepsilon$ に置き換えた $w=\tfrac12\varepsilon E^2=\tfrac12DE$ となる。平板コンデンサで確かめる：$W=w\cdot Sd=\tfrac12\kappa\varepsilon_0\Bigl(\dfrac Vd\Bigr)^2Sd=\tfrac12\Bigl(\kappa\varepsilon_0\dfrac Sd\Bigr)V^2=\tfrac12CV^2$ で、(3.1) と整合する。<span class="meta">※5.3 は講義資料にない補足。一般的な導出（$\boldsymbol D$ と $\boldsymbol E$ の内積）は省略した。</span></p>
+<p class="meta">※5.1〜5.3 は講義資料にない補足（本教材の自作。講義内容と食い違えば修正する）。</p>
+
+<!-- SPREAD_4 -->
+
+<!-- ============================================================ -->
+<h2><span class="no">6</span>章末例題</h2>
+<p class="meta">※〔A〕小テスト水準、〔B〕定期試験水準、〔C〕定期試験で満点を取るための発展。例題3は本教材の自作。例題1・2・4・5は OpenStax <i>University Physics Volume 2</i>（CC BY-NC-SA 4.0）の問題を和訳（または言い換え）したもので、出典と、公式解答との照合の有無を各問題の下に書いた。数値はすべて Python で検算した。</p>
+
+<div class="ex"><span class="label">例題1〔A〕平板コンデンサの容量</span>
+<p>空気で満たされた平行板コンデンサの、極板の間隔は $1.0\ \mathrm{mm}$、面積は $8.0\ \mathrm{cm^2}$ である。(a) 電気容量、(b) 板の間を比誘電率 $\kappa=6.0$ の誘電体で満たしたときの電気容量を求めよ。</p>
+<p class="cr">出典：OpenStax <i>University Physics Volume 2</i>, Ch.8 Problems #51（奇数番：公式解答 (a) 7.1 pF、(b) 42 pF と一致、照合済み。(b) は計算値 42.5 pF で、公式解答は丸めた値）。</p>
+<p><strong>解答</strong></p>
+<p>① (a) $C_0=\dfrac{\varepsilon_0S}{d}=\dfrac{8.85\times10^{-12}\times8.0\times10^{-4}}{1.0\times10^{-3}}=7.1\times10^{-12}\ \mathrm F=7.1\ \mathrm{pF}$（空気の比誘電率 1.0006 は 1 とした）。</p>
+<p>② (b) (3.1) より $C=\kappa C_0=6.0\times7.08\ \mathrm{pF}=42.5\ \mathrm{pF}$。</p>
+<p>③ 【確かめ】面積 $8.0\ \mathrm{cm^2}$ と間隔 $1.0\ \mathrm{mm}$ の組では、容量が pF 程度の小さい値になる。これは、第4回の「$1\ \mathrm F$ に $110\ \mathrm{km^2}$」（$d=1\ \mathrm{mm}$）と整合する。</p></div>
+
+<div class="ex"><span class="label">例題2〔B〕電荷一定で誘電体を入れる</span>
+<p>空気中の平行板コンデンサに電荷 $9.00\ \mu\mathrm C$ がたまっており、電気容量は $3.00\ \mu\mathrm F$、極板の間隔は $2.00\ \mathrm{mm}$ である。電荷を保ったまま、板の間を $\kappa=5$ の誘電体で満たす。誘電体を入れる前後の、(a) 極板の電位差、(b) 板の間の中央の電場を求めよ。</p>
+<p class="cr">出典：OpenStax <i>University Physics Volume 2</i>, Ch.8 Problems #53（奇数番：公式解答 (a) 3.00 V → 0.600 V、(b) 1500 V/m → 300 V/m と一致、照合済み）。</p>
+<p><strong>解答</strong></p>
+<p>① (a) 入れる前：$V_0=\dfrac{Q}{C_0}=\dfrac{9.00\ \mu\mathrm C}{3.00\ \mu\mathrm F}=3.00\ \mathrm V$。</p>
+<p>② 入れたあと：電荷一定なので (3.2) より電位差は $1/\kappa$ 倍：$V=\dfrac{3.00}{5}=0.600\ \mathrm V$。（容量が $\kappa C_0=15\ \mu\mathrm F$ になるので $V=Q/C=0.600\ \mathrm V$ でも同じ。）</p>
+<p>③ (b) 電場は $E=V/d$：入れる前 $\dfrac{3.00}{2.00\times10^{-3}}=1500\ \mathrm{V/m}$、入れたあと $\dfrac{0.600}{2.00\times10^{-3}}=300\ \mathrm{V/m}$（$1/5$）。</p>
+<p>④ 【確かめ】エネルギーは $W=\tfrac12QV$ で、$13.5\ \mu\mathrm J\to2.70\ \mu\mathrm J$（$1/5$）。5.1 の表と一致する。</p></div>
+
+<div class="ex"><span class="label">例題3〔B〕2層の誘電体</span>
+<p>面積 $50\ \mathrm{cm^2}$ の極板の間に、厚さ $1.0\ \mathrm{mm}$（$\kappa_1=4$）と厚さ $2.0\ \mathrm{mm}$（$\kappa_2=2$）の誘電体が重ねて入っている。極板に $100\ \mathrm V$ をかける。(1) 電気容量、(2) 電束密度 $D$、(3) 各層の電場、(4) 各層の分極 $P$ を求めよ。</p>
+<p class="cr">出典：本教材の自作。</p>
+<p><strong>解答</strong></p>
+<p>① (1) 5.2 (a) より $C=\dfrac{\varepsilon_0S}{d_1/\kappa_1+d_2/\kappa_2}=\dfrac{8.85\times10^{-12}\times5.0\times10^{-3}}{2.5\times10^{-4}+1.0\times10^{-3}}=3.54\times10^{-11}\ \mathrm F=35.4\ \mathrm{pF}$。</p>
+<p>② (2) $Q=CV=3.54\times10^{-9}\ \mathrm C$。$D=\sigma=\dfrac{Q}{S}=\dfrac{3.54\times10^{-9}}{5.0\times10^{-3}}=7.1\times10^{-7}\ \mathrm{C/m^2}$（どちらの層でも同じ）。</p>
+<p>③ (3) $E_1=\dfrac{D}{\kappa_1\varepsilon_0}=\dfrac{7.08\times10^{-7}}{4\times8.85\times10^{-12}}=2.0\times10^4\ \mathrm{V/m}$、$E_2=\dfrac{D}{\kappa_2\varepsilon_0}=4.0\times10^4\ \mathrm{V/m}$（$\kappa$ が小さい層ほど電場が強い）。</p>
+<p>④ (4) $P=\Bigl(1-\dfrac1\kappa\Bigr)D$：$P_1=\dfrac34D=5.3\times10^{-7}\ \mathrm{C/m^2}$、$P_2=\dfrac12D=3.5\times10^{-7}\ \mathrm{C/m^2}$。</p>
+<p>⑤ 【確かめ】電位差：$E_1d_1+E_2d_2=2.0\times10^4\times1.0\times10^{-3}+4.0\times10^4\times2.0\times10^{-3}=20+80=100\ \mathrm V$ で、与えた電圧に一致する。</p></div>
+
+<div class="ex"><span class="label">例題4〔C〕電圧計の読みから $\kappa$ を求める：解釈の食い違いに注意</span>
+<p>電池から外した、空気中のコンデンサの電圧を電圧計で測ると $45.0\ \mathrm V$ だった。極板の間を誘電体で満たすと、読みは $11.5\ \mathrm V$ になった。(a) 誘電体の比誘電率、(b) 誘電体が板の間の<strong>一部</strong>（「隙間の $1/3$」）しか占めていなかったら、電圧計の読みは何 V か。占め方を、(b1) 極板の<strong>面積</strong>の $1/3$（横に並べる）、(b2) 極板の間隔の $1/3$ の<strong>厚さの層</strong>（重ねる）の2通りで考えよ。</p>
+<p class="cr">出典：OpenStax <i>University Physics Volume 2</i>, Ch.8 Problems #55（奇数番：公式解答 (a) 3.91、(b) 22.8 V。(a) は一致。(b) の公式解答は (b1) の解釈で再現でき、(b2) の解釈では一致しない。原文の正確な表現は未確認なので、2通りを示す）。</p>
+<p><strong>解答</strong></p>
+<p>① (a) 電池を外してあるので電荷は一定。電位差は容量に反比例するから $V=V_0/\kappa$。$\kappa=\dfrac{45.0}{11.5}=3.91$。</p>
+<p>② (b1) 並列（図5.1 (b)）：誘電体のある部分の面積が $S/3$、ない部分が $2S/3$。(5.2) の並列から $C=\dfrac{\varepsilon_0}{d}\Bigl(\dfrac{2S}{3}+\kappa\dfrac S3\Bigr)=C_0\Bigl(1+\dfrac{\kappa-1}{3}\Bigr)=C_0\bigl(1+0.971\bigr)=1.97\,C_0$。電荷一定なので $V=\dfrac{V_0}{1.971}=\dfrac{45.0}{1.971}=22.8\ \mathrm V$。</p>
+<p>③ (b2) 直列（図5.1 (a)）：厚さ $2d/3$ の真空の層と、厚さ $d/3$ の誘電体の層。$D$ が共通なので、電位差は $V=\dfrac{\sigma}{\varepsilon_0}\Bigl(\dfrac{2d}{3}+\dfrac{d}{3\kappa}\Bigr)=V_0\Bigl(\dfrac23+\dfrac1{3\kappa}\Bigr)=45.0\times(0.667+0.0852)=33.8\ \mathrm V$。</p>
+<p>④ 【確かめ】(b1) では誘電体を入れた部分の容量が増えるので電圧が下がりやすい（22.8 V）。(b2) では、厚さの $2/3$ が真空のままなので、電圧はあまり下がらない（33.8 V）。(a) の 11.5 V（全部満たした場合）と 45.0 V（空気）の間に入っており、どちらも妥当。<strong>どちらの置き方かは、設問の図や文で確認する</strong>。</p></div>
+
+<div class="ex"><span class="label">例題5〔C〕細胞膜の電場とエネルギー</span>
+<p>細胞膜の両側の面には、電荷密度 $\pm0.50\times10^{-3}\ \mathrm{C/m^2}$ の電荷があり、膜の厚さは $5.0\times10^{-9}\ \mathrm m$、比誘電率は $5.4$ である。平行板コンデンサとみなして、(a) 膜の中の電場、(b) 膜の両側の電位差の大きさ、(c) 体積 $10^{-16}\ \mathrm{m^3}$ の球形の細胞の膜に蓄えられるエネルギーを求めよ。</p>
+<p class="cr">出典：OpenStax <i>University Physics Volume 2</i>, Ch.8 Problems #54（偶数番のため公式解答なし。解答は自作。原問の「どちら側の電位が高いか」の設問は省いた）。</p>
+<p><strong>解答</strong></p>
+<p>① (a) 面の電荷密度は真電荷（極板にあたる）とみなせるので、(6.6) より $D=\sigma=0.50\times10^{-3}\ \mathrm{C/m^2}$。$E=\dfrac{D}{\kappa\varepsilon_0}=\dfrac{0.50\times10^{-3}}{5.4\times8.85\times10^{-12}}=1.05\times10^7\ \mathrm{V/m}$。</p>
+<p>② (b) $V=Ed=1.05\times10^7\times5.0\times10^{-9}=5.2\times10^{-2}\ \mathrm V$（52 mV）。</p>
+<p>③ (c) 球の半径は $\dfrac43\pi r^3=10^{-16}$ から $r=2.88\times10^{-6}\ \mathrm m$。膜の体積は、表面積×厚さ $\approx4\pi r^2\times5.0\times10^{-9}=5.2\times10^{-19}\ \mathrm{m^3}$（厚さが半径に比べ十分小さいとして）。エネルギー密度は (5.3) より $w=\tfrac12\kappa\varepsilon_0E^2=\tfrac12\times5.4\times8.85\times10^{-12}\times(1.05\times10^7)^2=2.6\times10^3\ \mathrm{J/m^3}$。蓄えられるエネルギーは $W=w\times5.2\times10^{-19}=1.4\times10^{-15}\ \mathrm J$。</p>
+<p>④ 【確かめ】$W=\tfrac12QV$ でも：$Q=\sigma\times4\pi r^2=0.50\times10^{-3}\times1.04\times10^{-10}=5.2\times10^{-14}\ \mathrm C$、$\tfrac12QV=\tfrac12\times5.2\times10^{-14}\times5.2\times10^{-2}=1.4\times10^{-15}\ \mathrm J$ で一致する。</p></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">7</span>演習問題</h2>
+<p class="meta">※〔A〕小テスト水準、〔B〕定期試験水準、〔C〕定期試験で満点を取るための発展。問1・3〜7 は本教材の自作。問2・8 は OpenStax <i>University Physics Volume 2</i>（CC BY-NC-SA 4.0）の問題の和訳（または言い換え）で、出典と照合の有無を各問題の下に書いた。解答は折りたたんである。</p>
+
+<div class="box"><span class="label">問1〔A〕$\boldsymbol P$、$\sigma_{\mathrm P}$、$\boldsymbol D$ の関係</span>比誘電率 $\kappa=5$ の誘電体の中の電場が $2.0\times10^4\ \mathrm{V/m}$ であった。(1) 分極 $P$、(2) 誘電体の表面（電場に垂直な面）の分極電荷密度、(3) 電束密度 $D$、(4) $D=\varepsilon_0E+P$ が成り立つことの確認、を行え。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (1) $\chi=\kappa-1=4$。$P=\chi\varepsilon_0E=4\times8.85\times10^{-12}\times2.0\times10^4=7.1\times10^{-7}\ \mathrm{C/m^2}$。</p>
+<p>② (2) 電場に垂直な面では $\sigma_{\mathrm P}=P=7.1\times10^{-7}\ \mathrm{C/m^2}$。</p>
+<p>③ (3) $D=\kappa\varepsilon_0E=5\times8.85\times10^{-12}\times2.0\times10^4=8.9\times10^{-7}\ \mathrm{C/m^2}$。これは極板の真電荷密度に等しい。</p>
+<p>④ (4) $\varepsilon_0E=8.85\times10^{-12}\times2.0\times10^4=1.8\times10^{-7}$、$+P=7.1\times10^{-7}$ で合計 $8.9\times10^{-7}$ ✓。</p></details></div>
+
+<div class="box"><span class="label">問2〔A〕同心球の間に誘電体</span>半径 $5.00\ \mathrm{cm}$ と $8.00\ \mathrm{cm}$ の同心の導体球でできたコンデンサの、(a) 電気容量、(b) 球の間を $\kappa=6.00$ の誘電体で満たしたときの電気容量を求めよ。
+<p class="cr">出典：OpenStax Ch.8 #52（偶数番のため公式解答なし。解答は自作）。</p>
+<details><summary>解答</summary>
+<p>① (a) 第4回の同心球の式 $C_0=\dfrac{4\pi\varepsilon_0ab}{b-a}=\dfrac{4\pi\times8.85\times10^{-12}\times0.0500\times0.0800}{0.0300}=1.48\times10^{-11}\ \mathrm F=14.8\ \mathrm{pF}$。</p>
+<p>② (b) 容量は $\kappa$ 倍（(3.1) と同様。$\boldsymbol E=\boldsymbol D/\kappa\varepsilon_0$ で電位差が $1/\kappa$）：$C=6.00\times14.8=89.0\ \mathrm{pF}$。</p></details></div>
+
+<div class="box"><span class="label">問3〔A〕双極子がそろったときの分極</span>単位体積あたり $n=2.0\times10^{28}\ \mathrm{m^{-3}}$ 個の分子があり、どの分子も双極子モーメント $p=1.0\times10^{-30}\ \mathrm{C\cdot m}$ をもち、すべて電場の向きにそろっている。分極 $P$ と、電場に垂直な表面の分極電荷密度を求めよ。
+<p class="cr">出典：本教材の自作（数値は仮定）。</p>
+<details><summary>解答</summary>
+<p>① 1.2 より $P=np=2.0\times10^{28}\times1.0\times10^{-30}=2.0\times10^{-2}\ \mathrm{C/m^2}$。</p>
+<p>② 表面の分極電荷密度は $\sigma_{\mathrm P}=P=2.0\times10^{-2}\ \mathrm{C/m^2}$。</p>
+<p>③ これは「すべてがそろった」ときの上限で、実際には電場が弱いので、ずれは小さい（2.4）。</p></details></div>
+
+<div class="box"><span class="label">問4〔B〕誘電体を入れるときの仕事とエネルギー</span>電気容量 $100\ \mathrm{pF}$ の真空の平行板コンデンサに、$50\ \mathrm V$ を与えている。$\kappa=4$ の誘電体を、板の間全体に入れる。(1) 電池をつないだまま入れる場合、(2) 電池を外してから入れる場合について、入れたあとの容量・電位差・電荷・エネルギーと、エネルギーの変化を求めよ。また (1) で、電池がした仕事と、誘電体を引き込む力の仕事を求めよ。
+<p class="cr">出典：本教材の自作（標準的な型）。</p>
+<details><summary>解答</summary>
+<p>① 入れる前：$Q_0=C_0V_0=5.0\times10^{-9}\ \mathrm C$、$W_0=\tfrac12C_0V_0^2=1.25\times10^{-7}\ \mathrm J$。</p>
+<p>② (1) 電圧一定：$C=400\ \mathrm{pF}$、$V=50\ \mathrm V$、$Q=CV=2.0\times10^{-8}\ \mathrm C$、$W=\tfrac12CV^2=5.0\times10^{-7}\ \mathrm J$。エネルギーの変化 $\Delta W=3.75\times10^{-7}\ \mathrm J$（増加）。電池がした仕事は $\Delta Q\,V=(2.0\times10^{-8}-5.0\times10^{-9})\times50=7.5\times10^{-7}\ \mathrm J$。残り $7.5-3.75=3.75\times10^{-7}\ \mathrm J$ が、誘電体を引き込む力のした仕事（外に取り出せる）。</p>
+<p>③ (2) 電荷一定：$Q=5.0\times10^{-9}\ \mathrm C$、$C=400\ \mathrm{pF}$、$V=Q/C=12.5\ \mathrm V$、$W=\dfrac{Q^2}{2C}=3.1\times10^{-8}\ \mathrm J$。変化 $\Delta W=-9.4\times10^{-8}\ \mathrm J$（減少）。この分が、引き込む力のした仕事になる。</p>
+<p>④ 【確かめ】5.1 の表：(1) は $W\to\kappa W_0=5.0\times10^{-7}$ ✓、(2) は $W\to W_0/\kappa=3.1\times10^{-8}$ ✓。</p></details></div>
+
+<div class="box"><span class="label">問5〔B〕面積の半分に誘電体（並列）</span>面積 $200\ \mathrm{cm^2}$、間隔 $2.0\ \mathrm{mm}$ の平行板コンデンサの、面積の左半分だけに、$\kappa=3$ の誘電体を板の間いっぱいに入れた。(1) 電気容量、(2) $V=100\ \mathrm V$ のとき、左右それぞれの極板の電荷密度と、板の間の電場を求めよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (1) 5.2 (b) より $C=\dfrac{\varepsilon_0}{d}\Bigl(\kappa\dfrac S2+\dfrac S2\Bigr)=\dfrac{8.85\times10^{-12}\times0.020}{2.0\times10^{-3}}\times\dfrac{3+1}{2}=8.85\times10^{-11}\times2=1.8\times10^{-10}\ \mathrm F$（誘電体なしの $C_0=88.5\ \mathrm{pF}$ の2倍）。</p>
+<p>② (2) 電場はどちらも $E=V/d=\dfrac{100}{2.0\times10^{-3}}=5.0\times10^4\ \mathrm{V/m}$（極板は等電位）。電荷密度は、誘電体の側（左）で $\sigma_1=\kappa\varepsilon_0E=3\times8.85\times10^{-12}\times5.0\times10^4=1.3\times10^{-6}\ \mathrm{C/m^2}$、右で $\sigma_2=\varepsilon_0E=4.4\times10^{-7}\ \mathrm{C/m^2}$（左が3倍）。</p></details></div>
+
+<div class="box"><span class="label">問6〔B〕厚さの半分に誘電体（直列）</span>間隔 $d$ の平行板コンデンサの、一方の極板に接して、厚さ $d/2$、$\kappa=4$ の誘電体の板が入っている（反対側の厚さ $d/2$ は真空）。(1) 電気容量は、真空のときの何倍か、(2) 真空部分と誘電体の中の電場の比を求めよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (1) 5.2 (a) より $C=\dfrac{\varepsilon_0S}{d/2+d/(2\kappa)}=\dfrac{C_0}{\tfrac12+\tfrac18}=\dfrac{C_0}{0.625}=1.6\,C_0$（1.6倍）。</p>
+<p>② (2) $D$ が共通なので $E_{\text{真空}}=\dfrac{D}{\varepsilon_0}$、$E_{\text{誘電体}}=\dfrac{D}{\kappa\varepsilon_0}$。比は $E_{\text{真空}}:E_{\text{誘電体}}=\kappa:1=4:1$。</p>
+<p>③ 【確かめ】全部を誘電体で満たすと 4 倍、全部真空で 1 倍。半分が誘電体で 1.6 倍は、その間（直列は小さい方に引っ張られる）。</p></details></div>
+
+<div class="box"><span class="label">問7〔C〕誘電体の殻に囲まれた導体球</span>半径 $a=2.0\ \mathrm{cm}$ の導体球に電荷 $Q=2.0\ \mathrm{nC}$ を与え、そのまわりを、内半径 $a$、外半径 $b=4.0\ \mathrm{cm}$、$\kappa=3$ の誘電体の殻で囲む（殻の外は真空）。(1) $D$ と $E$ を $r$ の関数として、(2) 導体球の電位（無限遠を 0）、(3) 電気容量、(4) 誘電体の内面・外面の分極電荷、を求めよ。
+<p class="cr">出典：本教材の自作（標準的な型）。</p>
+<details><summary>解答</summary>
+<p>① (1) 真電荷は導体球の $Q$ だけ。半径 $r$ の同心球面に (6.7) を使って、どの $r\gt a$ でも $D=\dfrac{Q}{4\pi r^2}$。したがって $a\lt r\lt b$：$E=\dfrac{D}{\kappa\varepsilon_0}=\dfrac{Q}{4\pi\kappa\varepsilon_0r^2}$、$r\gt b$：$E=\dfrac{D}{\varepsilon_0}=\dfrac{Q}{4\pi\varepsilon_0r^2}$。</p>
+<p>② (2) $\phi=\displaystyle\int_a^bE\,\mathrm dr+\int_b^\infty E\,\mathrm dr=\dfrac{Q}{4\pi\varepsilon_0}\Bigl[\dfrac1\kappa\Bigl(\dfrac1a-\dfrac1b\Bigr)+\dfrac1b\Bigr]=8.99\times10^9\times2.0\times10^{-9}\times\Bigl[\dfrac13(50-25)+25\Bigr]=5.99\times10^2\ \mathrm V$。</p>
+<p>③ (3) $C=\dfrac{Q}{\phi}=\dfrac{2.0\times10^{-9}}{599}=3.3\times10^{-12}\ \mathrm F$（誘電体なしの孤立球 $4\pi\varepsilon_0a=2.2\ \mathrm{pF}$ より大きい）。</p>
+<p>④ (4) $P=\Bigl(1-\dfrac1\kappa\Bigr)D=\dfrac23\cdot\dfrac{Q}{4\pi r^2}$（外向き）。内面（$r=a$）は、誘電体の外向き法線が球の中心向きなので $\sigma_{\mathrm P}=\boldsymbol P\cdot\boldsymbol n=-P$：分極電荷の総量は $-\tfrac23Q=-1.3\times10^{-9}\ \mathrm C$。外面（$r=b$）は $+\tfrac23Q=+1.3\times10^{-9}\ \mathrm C$。</p>
+<p>⑤ 【確かめ】誘電体の中の電場は、真電荷 $Q$ と内面の分極電荷 $-\tfrac23Q$ の和 $\tfrac13Q$ が中心にあるのと同じ：$\dfrac{k\,Q/3}{r^2}=\dfrac{Q}{4\pi\cdot3\varepsilon_0r^2}$ で、① の $E$ と一致する。</p></details></div>
+
+<div class="box"><span class="label">問8〔C〕蓄えられる最大エネルギー</span>ある誘電体は、電場が $E_{\max}$ をこえると絶縁が破れる。この誘電体を平行板コンデンサにはさんだとき、蓄えられる最大のエネルギーは、誘電体の体積に比例することを示せ。
+<p class="cr">出典：OpenStax Ch.8 #50（偶数番のため公式解答なし。解答は自作）。</p>
+<details><summary>解答</summary>
+<p>① 誘電体の中の電場が $E_{\max}$ のとき、エネルギー密度は (5.3) より $w_{\max}=\tfrac12\kappa\varepsilon_0E_{\max}^2$。この値は、材料だけで決まる（形によらない）。</p>
+<p>② 極板の間いっぱいに誘電体があれば、エネルギーは $W_{\max}=w_{\max}\times Sd$（$Sd$ は誘電体の体積）。</p>
+<p>③ よって $W_{\max}=\tfrac12\kappa\varepsilon_0E_{\max}^2\cdot V_{\text{体積}}$ で、体積に比例する。（$S$ と $d$ を別々にどう選んでも、体積 $Sd$ が同じなら最大エネルギーは同じ。ただし、そのとき電圧は $E_{\max}d$ で、$d$ が大きいほど高い電圧が必要。）</p></details></div>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 電気双極子 $\boldsymbol p=q\boldsymbol\ell$ と分極ベクトル $\boldsymbol P=n\boldsymbol p$ を定義でき、資料の定義（面の分極電荷密度）と同じであること（$P=\sigma_{\mathrm P}$）を説明できる</li>
+<li>□ 誘電分極（分子内での正負のずれ）で、内部は打ち消し合い、表面にだけ分極電荷が現れることを説明できる。真電荷と分極電荷の違いを言える</li>
+<li>□ 分極電荷が電場に比例すること $\sigma_{\mathrm P}=\chi\varepsilon_0E$、$\boldsymbol P=\chi\varepsilon_0\boldsymbol E$ と、$\chi$（電気感受率）、比誘電率 $\kappa=1+\chi$、誘電率 $\varepsilon=\kappa\varepsilon_0$ の関係を言える</li>
+<li>□ 電圧一定のコンデンサに誘電体を入れたとき、(6.1)(6.3) から、$C=(1+\chi)C_0$ をガウスの法則で導ける（電場は不変、極板の電荷が増える）</li>
+<li>□ 資料の $E_0$ が何であるか（電圧一定のときだけ、挿入前後で同じ値）を説明でき、電荷一定のときは $E\to E/\kappa$、$V\to V/\kappa$ になることを言える</li>
+<li>□ 電束密度 $\boldsymbol D=\varepsilon_0\boldsymbol E+\boldsymbol P=\varepsilon\boldsymbol E$ を定義でき、平板で $D=\sigma$（真電荷）になることを示せる</li>
+<li>□ $\oint\boldsymbol D\cdot\boldsymbol n\,\mathrm dS=Q_{\text{真}}$ を、「分極電荷 $=-\oint\boldsymbol P\cdot\boldsymbol n\,\mathrm dS$」から導ける。電気力線は本数が変わるが、電束は変わらないことを説明できる</li>
+<li>□ 誘電体のある問題で、先に $\boldsymbol D$ を真電荷から求め、$\boldsymbol E=\boldsymbol D/\varepsilon$、電位差、容量を求められる（層・同心球）</li>
+<li>□ 電圧一定／電荷一定で、$C$、$V$、$Q$、$E$、$W$ がどう変わるかを表にして言え、誘電体が引き込まれる理由を説明できる</li>
+<li>□ 部分的に入れたとき、層（直列）と横並び（並列）の違いを区別して容量を求められる</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第7回・11/2）</strong>：定常電流とオームの法則。これまでは、電荷が止まった状態（静電場）を扱ってきた。次回は、電荷が動き続ける場合を扱う。（確認テスト2（11/5）は、第5〜7回が範囲の見込み。）<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="05_第5回_導体.html">← 第5回へ</a>　｜　第7回（準備中）
+</div>
+
+<p class="meta">出典：配布資料「絶縁体（＝誘電体）」の範囲を、本教材の方針（説明の順序を組み直し、導出を省かない）で書き直したもの。1.2 の分極ベクトルと双極子の関係の導出、2.4 の原子のずれの見積り、3.4 の電荷一定、4.4 の一般の閉曲面への拡張、5章の応用は資料に記載がなく、本教材で補った（講義内容と食い違えば修正する）。比誘電率の目安は Wikipedia "Relative permittivity" による。外部の問題は OpenStax, <i>University Physics Volume 2</i>（Ling, Sanny, Moebs ほか, CC BY-NC-SA 4.0, https://openstax.org/books/university-physics-volume-2）Ch.8 の問題の和訳または言い換え。</p>
+
+<!-- 読み物コラムは保留中（2026-10-25 ユーザー指示）。作成するときは、ここの nav.switch に「読み物：〔題〕 →」ボタンを追加する。 -->
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="05_第5回_導体.html"><small>LESSON 5</small>← 第5回</a></nav>
+
+</body>
+</html>
