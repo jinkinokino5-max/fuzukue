@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8回 中間模擬試験 基礎セット</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<header style="padding-top:48px">
+<p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第8回・中間試験 前日までに</p>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">中間模擬試験　基礎セット（A）</h1>
+</header>
+<p class="lead">範囲は第1〜6回（第7回の平面トラスは含まない）。第1〜6回を<strong>1回につき1問</strong>、合計6問・100点。まず何も見ずに解き、そのあとで各問の「解答と採点基準」を開いて自己採点する。</p>
+
+<div class="box"><span class="label">この模擬試験の使い方</span>
+<ul>
+<li><strong>目安の時間は 60 分</strong>（タイマーを使う）。本番の試験時間・配点・持込の可否は<strong>未確認</strong>なので、ここでは仮定にすぎない。分かり次第、教材の冒頭と合わせて書き換える。</li>
+<li>答案は紙に書く：①自由物体図 → ②軸 → ③力を成分で → ④釣合い式 → ⑤解く → ⑥符号・単位・有効数字（3〜4桁）の確かめ、の<strong>手順を省かずに</strong>書く。採点基準は「答えだけ」でなく「式の立て方」に配点がある。</li>
+<li>重力加速度は $g=9.80\ \mathrm{m/s^2}$。数値は有効数字 3〜4 桁。</li>
+<li>採点後は、巻末の採点表に点を書き、<strong>7割未満の問</strong>だけ該当する教材の節に戻る。</li>
+</ul></div>
+<div class="warn"><span class="label">この模擬試験について</span>問題は<strong>自作</strong>（教科書・講義資料の典型問題の型に倣い、数値は新しく決めて Python で検算した：draft/check_08.py）。本番の出題を予想したものではなく、範囲の確認用。第6回のねじ・ロープ・転がりは入れていない（教材 第6回 4章で確認すること）。解答は自作で、教員の解答とは照合していない。</div>
+<h2><span class="no">1</span>問1　力の合成と分解〔第1回〕<span class="meta" style="font-size:14px;margin-left:8px">15点</span></h2>
+<div class="ex"><span class="label">問1〔A 確認／B 標準〕</span>
+<p>(1)〔6点〕点 O に、力 $F_1=200\ \mathrm{N}$（$x$ 軸から反時計回りに $30^\circ$ の向き）と $F_2=300\ \mathrm{N}$（同じく $135^\circ$ の向き）が作用する。合力の大きさと、$x$ 軸から反時計回りに測った向きを求めよ。</p>
+<p>(2)〔9点〕質量 $120\ \mathrm{kg}$ の照明を、2本のロープ AC、BC で吊す（下図）。AC は水平と $35^\circ$、BC は水平と $25^\circ$ をなす。$g=9.80\ \mathrm{m/s^2}$ として、各ロープの張力 $T_A$、$T_B$ を、有効数字 4 桁で求めよ。</p>
+<figure><svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問1 照明を2本のロープで吊る" style="width:600px;max-width:100%;height:auto;background:#fff"><defs><marker id="q1r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><defs><marker id="q1b" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#2b3a67"/></marker></defs><line x1="111.6" y1="10.0" x2="111.6" y2="123.1" stroke="#222" stroke-width="2"/><line x1="111.6" y1="10.0" x2="101.6" y2="18.0" stroke="#777" stroke-width="1"/><line x1="111.6" y1="22.6" x2="101.6" y2="30.6" stroke="#777" stroke-width="1"/><line x1="111.6" y1="35.1" x2="101.6" y2="43.1" stroke="#777" stroke-width="1"/><line x1="111.6" y1="47.7" x2="101.6" y2="55.7" stroke="#777" stroke-width="1"/><line x1="111.6" y1="60.3" x2="101.6" y2="68.3" stroke="#777" stroke-width="1"/><line x1="111.6" y1="72.8" x2="101.6" y2="80.8" stroke="#777" stroke-width="1"/><line x1="111.6" y1="85.4" x2="101.6" y2="93.4" stroke="#777" stroke-width="1"/><line x1="111.6" y1="97.9" x2="101.6" y2="105.9" stroke="#777" stroke-width="1"/><line x1="111.6" y1="110.5" x2="101.6" y2="118.5" stroke="#777" stroke-width="1"/><line x1="111.6" y1="123.1" x2="101.6" y2="131.1" stroke="#777" stroke-width="1"/><line x1="526.6" y1="49.3" x2="526.6" y2="149.3" stroke="#222" stroke-width="2"/><line x1="526.6" y1="49.3" x2="536.6" y2="57.3" stroke="#777" stroke-width="1"/><line x1="526.6" y1="61.8" x2="536.6" y2="69.8" stroke="#777" stroke-width="1"/><line x1="526.6" y1="74.3" x2="536.6" y2="82.3" stroke="#777" stroke-width="1"/><line x1="526.6" y1="86.8" x2="536.6" y2="94.8" stroke="#777" stroke-width="1"/><line x1="526.6" y1="99.3" x2="536.6" y2="107.3" stroke="#777" stroke-width="1"/><line x1="526.6" y1="111.8" x2="536.6" y2="119.8" stroke="#777" stroke-width="1"/><line x1="526.6" y1="124.3" x2="536.6" y2="132.3" stroke="#777" stroke-width="1"/><line x1="526.6" y1="136.8" x2="536.6" y2="144.8" stroke="#777" stroke-width="1"/><line x1="526.6" y1="149.3" x2="536.6" y2="157.3" stroke="#777" stroke-width="1"/><line x1="111.6" y1="83.1" x2="300.0" y2="215.0" stroke="#222" stroke-width="3"/><line x1="526.6" y1="109.3" x2="300.0" y2="215.0" stroke="#222" stroke-width="3"/><circle cx="300" cy="215" r="4" fill="#a8322a"/><rect x="274" y="249" width="52" height="26" fill="#f1ede3" stroke="#222"/><line x1="300.0" y1="215.0" x2="300.0" y2="249.0" stroke="#222" stroke-width="2"/><line x1="350.0" y1="245.0" x2="350.0" y2="303.0" stroke="#a8322a" stroke-width="2.4" marker-end="url(#q1r)"/><text x="358.0" y="285.0" font-size="14" fill="#a8322a" text-anchor="start" >W = mg</text><text x="125.6" y="77.1" font-size="15" fill="#222" text-anchor="start" >A</text><text x="502.6" y="101.3" font-size="15" fill="#222" text-anchor="start" >B</text><text x="294.0" y="203.0" font-size="15" fill="#222" text-anchor="start" >C</text><line x1="240.0" y1="215.0" x2="300.0" y2="215.0" stroke="#555" stroke-width="1" stroke-dasharray="4 3"/><line x1="300.0" y1="215.0" x2="360.0" y2="215.0" stroke="#555" stroke-width="1" stroke-dasharray="4 3"/><text x="200.0" y="209.0" font-size="13" fill="#555" text-anchor="start" >35°</text><text x="346.0" y="209.0" font-size="13" fill="#555" text-anchor="start" >25°</text><text x="270.0" y="297.0" font-size="13" fill="#222" text-anchor="start" >m = 120 kg</text></svg><figcaption>問1(2)の図。照明（質量 120 kg）を、水平と 35°（AC）と 25°（BC）をなす2本のロープで吊る。</figcaption></figure></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> ① 点 O に作用する 2 力。② 軸は $x$ 右、$y$ 上。③ 成分で書く：
+$$F_1=(200\cos30^\circ,\ 200\sin30^\circ)=(173.2,\ 100.0),\qquad F_2=(300\cos135^\circ,\ 300\sin135^\circ)=(-212.1,\ 212.1)\ \mathrm{N}$$
+④⑤ 成分ごとに足す：$R_x=173.2-212.1=-38.93\ \mathrm N$、$R_y=100.0+212.1=312.1\ \mathrm N$。
+$$|R|=\sqrt{38.93^2+312.1^2}=314.6\ \mathrm N$$
+向き：$\tan^{-1}(R_y/R_x)=\tan^{-1}(312.1/(-38.93))=-82.89^\circ$ だが、$R_x\lt0,\ R_y\gt0$ は<strong>第2象限</strong>なので、$180^\circ-82.89^\circ=\mathbf{97.11^\circ}$。<br>
+⑥ 確かめ：$F_1$ が右上、$F_2$ が左上（$F_2$ のほうが大きい）なので、合力はほぼ真上で少し左に傾く ✓。<br>
+<strong>答え：314.6 N、$x$ 軸から 97.11°</strong>
+<span class="meta">採点：成分 2／合力の大きさ 2／向き（象限の判定）2。象限を直さず $-82.89^\circ$ のままなら向きは 0 点。</span></p>
+<p><strong>(2)</strong> ① 結び目 C を切り出す（ロープの張力 $T_A$、$T_B$ と重さ $W$ の 3 力）。重さ：$W=mg=120\times9.80=1176\ \mathrm N$。② $x$ 右、$y$ 上。③ 成分：
+$$T_A=(-T_A\cos35^\circ,\ T_A\sin35^\circ),\quad T_B=(T_B\cos25^\circ,\ T_B\sin25^\circ),\quad W=(0,\ -1176)$$
+④ 釣合い：
+$$\sum F_x=0:\ -T_A\cos35^\circ+T_B\cos25^\circ=0,\qquad \sum F_y=0:\ T_A\sin35^\circ+T_B\sin25^\circ-1176=0$$
+⑤ 第1式から $T_B=T_A\cos35^\circ/\cos25^\circ$。第2式に代入：
+$$T_A\Bigl(\sin35^\circ+\cos35^\circ\tan25^\circ\Bigr)=1176\ \Longrightarrow\ T_A\,\frac{\sin35^\circ\cos25^\circ+\cos35^\circ\sin25^\circ}{\cos25^\circ}=T_A\,\frac{\sin60^\circ}{\cos25^\circ}=1176$$
+（加法定理 $\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta$ を使った。）よって
+$$T_A=\frac{1176\cos25^\circ}{\sin60^\circ}=1231\ \mathrm N,\qquad T_B=\frac{1176\cos35^\circ}{\sin60^\circ}=1112\ \mathrm N$$
+⑥ 確かめ：水平成分 $1230.7\cos35^\circ=1008.1$、$1112.3\cos25^\circ=1008.1$ で釣合う ✓。鉛直成分 $705.9+470.1=1176.0$ ✓。どちらのロープも $W/2=588\ \mathrm N$ より大きい（斜めに引くので、鉛直に吊るより大きくなる）✓。<br>
+<strong>答え：$T_A\approx1231\ \mathrm N$、$T_B\approx1112\ \mathrm N$</strong>
+<span class="meta">採点：$W$ の計算（単位 N）1／成分の式 3／連立を解く 3（$T_A$・$T_B$ 各 1.5）／検算・有効数字 2。</span></p>
+
+</div>
+</details>
+<h2><span class="no">2</span>問2　モーメント・偶力・力の移動〔第2回〕<span class="meta" style="font-size:14px;margin-left:8px">15点</span></h2>
+<div class="ex"><span class="label">問2〔B 標準〕</span>
+<p>下図の板で、原点 P を基準に考える（反時計回りを正）。点 A $(0.60,\ 0.20)\ \mathrm m$ に力 $\boldsymbol F=(-30,\ 40)\ \mathrm N$（大きさ 50 N）が作用し、さらに板に、大きさ 25 N の 2 力からなる偶力（間隔 0.80 m、<strong>時計回り</strong>）が加わっている。</p>
+<p>(1)〔5点〕力 $\boldsymbol F$ の点 P まわりのモーメント $M_P$ を求めよ。<br>
+(2)〔5点〕力 $\boldsymbol F$ と偶力を、点 P に移した「力 ＋ モーメント」で表せ。<br>
+(3)〔5点〕この力と偶力は、等価な 1 本の力に置き換えられる。その力の作用線が $x$ 軸と交わる点の $x$ 座標を求めよ。</p>
+<figure><svg viewBox="0 0 600 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問2 板に働く力と偶力" style="width:600px;max-width:100%;height:auto;background:#fff"><defs><marker id="q2r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><defs><marker id="q2b" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#2b3a67"/></marker></defs><rect x="40" y="20" width="520" height="250" rx="8" fill="#f1ede3" stroke="#bbb"/><line x1="40.0" y1="230.0" x2="540.0" y2="230.0" stroke="#555" stroke-width="1" stroke-dasharray="5 3"/><line x1="70.0" y1="250.0" x2="70.0" y2="30.0" stroke="#555" stroke-width="1" stroke-dasharray="5 3"/><text x="542.0" y="224.0" font-size="14" fill="#555" text-anchor="end" >x</text><text x="78.0" y="34.0" font-size="14" fill="#555" text-anchor="start" >y</text><circle cx="70" cy="230" r="5" fill="#222"/><text x="52.0" y="248.0" font-size="15" fill="#222" text-anchor="start" >P</text><circle cx="250.0" cy="170.0" r="5" fill="#a8322a"/><text x="258.0" y="188.0" font-size="13" fill="#222" text-anchor="start" >A (0.60, 0.20) m</text><line x1="250.0" y1="170.0" x2="172.0" y2="66.0" stroke="#a8322a" stroke-width="3" marker-end="url(#q2r)"/><text x="154.0" y="52.0" font-size="14" fill="#a8322a" text-anchor="start" >F = (−30, 40) N</text><line x1="340.0" y1="160.0" x2="340.0" y2="98.0" stroke="#2b3a67" stroke-width="3" marker-end="url(#q2b)"/><line x1="460.0" y1="100.0" x2="460.0" y2="162.0" stroke="#2b3a67" stroke-width="3" marker-end="url(#q2b)"/><line x1="340.0" y1="174.0" x2="460.0" y2="174.0" stroke="#555" stroke-width="1"/><text x="400.0" y="192.0" font-size="13" fill="#555" text-anchor="middle" >0.80 m</text><text x="332.0" y="90.0" font-size="13" fill="#2b3a67" text-anchor="end" >25 N</text><text x="468.0" y="180.0" font-size="13" fill="#2b3a67" text-anchor="start" >25 N</text><path d="M 364 82 A 40 20 0 0 1 436.0 82" fill="none" stroke="#2b3a67" stroke-width="1.5" marker-end="url(#q2b)"/><text x="400.0" y="68.0" font-size="13" fill="#2b3a67" text-anchor="middle" >偶力（時計回り）</text></svg><figcaption>問2の図。板に、点 A に作用する力 $\boldsymbol F$ と、1組の偶力が加わる（偶力は板のどこにあってもよい）。</figcaption></figure></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> 点 P から作用点へのベクトルを $\boldsymbol r=(0.60,\ 0.20)$ として、第2回の式（2.30′）：
+$$M_P=F_yr_x-F_xr_y=40\times0.60-(-30)\times0.20=24+6=30\ \mathrm{N\cdot m}\quad(\text{反時計回り})$$
+確かめ：$F_y$（上向き 40）が点 A に作用 → $x=0.60$ の腕で反時計回り（+24）。$F_x$（左向き 30）が P より 0.20 m 上に作用 → 左へ押されて反時計回り（+6）。どちらも + で ✓。
+<span class="meta">採点：式 2／代入 2／符号・単位 1。$\boldsymbol r$ と $\boldsymbol F$ の順序が逆（符号が逆転）なら 2 点まで。</span></p>
+<p><strong>(2)</strong> 偶力のモーメントは $-25\times0.80=-20\ \mathrm{N\cdot m}$（時計回りだから負）。<strong>偶力はどの点まわりでも同じ値</strong>（基準点によらない）で、板のどこにあってもよい。したがって点 P での合計は
+$$\boldsymbol R=\boldsymbol F=(-30,\ 40)\ \mathrm N,\qquad M_P^{\text{合計}}=30+(-20)=10\ \mathrm{N\cdot m}\ (\text{反時計回り})$$
+<span class="meta">採点：偶力の値と符号 2／力はそのまま 1／モーメントの和 2。</span></p>
+<p><strong>(3)</strong> 「力 $\boldsymbol R$ ＋ モーメント $M$」は、力を $d=M/|\boldsymbol R|$ だけずらした 1 本の力と等価：$d=10/50=0.20\ \mathrm m$。作用線が $x$ 軸上の点 $(x_0,\ 0)$ を通るとすると、その力の点 P まわりのモーメントが 10 に等しい：
+$$M_P=F_yx_0-F_x\cdot0=40\,x_0=10\ \Longrightarrow\ x_0=\mathbf{0.25\ m}$$
+確かめ：力の向きは $(-30,40)$ で、$x$ 軸の正の側（$x_0=0.25$）を通って左上へ進む。この線は P の右側を通るので、P のまわりに<strong>反時計回り</strong>（+）で、$M=10$ の符号と合う ✓。
+<span class="meta">採点：$d=M/R$ または $M_P$ の式 3／$x_0=0.25$ 2。</span></p>
+
+</div>
+</details>
+<h2><span class="no">3</span>問3　3次元の力とモーメント〔第3回〕<span class="meta" style="font-size:14px;margin-left:8px">20点</span></h2>
+<div class="ex"><span class="label">問3〔B 標準〕</span>
+<p>右手系の座標 $(x,y,z)$ [m] で、点 Q $(2,\ 3,\ 0)$ に取り付けたケーブルが、他端の点 P $(0,\ 0,\ 6)$ の側へ張力 700 N で引いている。</p>
+<p>(1)〔6点〕ケーブルが Q に及ぼす力 $\boldsymbol F$ を成分で書け。<br>
+(2)〔7点〕原点 O まわりのモーメント $\boldsymbol M_O$ を求めよ。<br>
+(3)〔7点〕O を通り、方向ベクトル $(1,\ 2,\ 2)$ の軸まわりのモーメント $\tau$ を求めよ（軸の向きは $(1,2,2)$ の向きを正とする）。</p></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> ① Q を切り出し、ケーブルの張力だけを考える。向きは Q → P：$\overrightarrow{\mathrm{QP}}=(0-2,\ 0-3,\ 6-0)=(-2,\ -3,\ 6)$。長さ $\sqrt{4+9+36}=7$ m（きれいに 7）。単位ベクトル $\boldsymbol e=(-2,-3,6)/7$。
+$$\boldsymbol F=700\,\boldsymbol e=(-200,\ -300,\ 600)\ \mathrm N$$
+確かめ：$|\boldsymbol F|=\sqrt{200^2+300^2+600^2}=700$ ✓。向きは「終点 − 始点」（Q から P へ）。
+<span class="meta">採点：向きベクトル（終点−始点）2／単位ベクトル 2／成分 2。向きを P→Q にすると符号が全部逆になる（(2)(3) も連鎖して逆）が、(1) で 2 点減、(2)(3) は「連鎖の誤り」として方法が正しければ満点。</span></p>
+<p><strong>(2)</strong> $\boldsymbol M_O=\boldsymbol r\times\boldsymbol F$、$\boldsymbol r=\overrightarrow{\mathrm{OQ}}=(2,3,0)$（基準点 → 作用点の順）。外積の成分：
+$$\begin{aligned}M_x&=r_yF_z-r_zF_y=3\times600-0=1800\\ M_y&=r_zF_x-r_xF_z=0-2\times600=-1200\\ M_z&=r_xF_y-r_yF_x=2\times(-300)-3\times(-200)=-600+600=0\end{aligned}$$
+$$\boldsymbol M_O=(1800,\ -1200,\ 0)\ \mathrm{N\cdot m}$$
+確かめ：$\boldsymbol M_O\cdot\boldsymbol F=1800(-200)+(-1200)(-300)+0=-360000+360000=0$ ✓（$\boldsymbol M=\boldsymbol r\times\boldsymbol F$ は $\boldsymbol F$ に垂直）。
+<span class="meta">採点：順序 $\boldsymbol r\times\boldsymbol F$ 2／成分の式 2／数値 3。</span></p>
+<p><strong>(3)</strong> 軸の単位ベクトル：$|(1,2,2)|=\sqrt{1+4+4}=3$ なので $\boldsymbol u=(1,2,2)/3$。軸まわりのモーメントは
+$$\tau=\boldsymbol u\cdot\boldsymbol M_O=\frac{1\times1800+2\times(-1200)+2\times0}{3}=\frac{-600}{3}=\mathbf{-200\ N\cdot m}$$
+負号は、$\boldsymbol u$ の向きに右ねじを進める回転の<strong>逆</strong>向きに回そうとしている、という意味。<br>
+確かめ（軸上の別の点を基準にしても同じ）：軸上の点 $(1,2,2)$ を基準にすると $\boldsymbol r'=(1,1,-2)$、$\boldsymbol M'=\boldsymbol r'\times\boldsymbol F=(0,\ -200,\ -100)$、$\boldsymbol u\cdot\boldsymbol M'=(0-400-200)/3=-200$ ✓（軸<strong>上</strong>の点なら、どれを選んでも同じ）。
+<span class="meta">採点：単位ベクトル（÷3 を忘れない）2／内積 3／符号と単位 2。$\boldsymbol u$ を単位化し忘れたら $-600$ となり 3 点まで。</span></p>
+
+</div>
+</details>
+<h2><span class="no">4</span>問4　力とモーメントの釣合い〔第4回〕<span class="meta" style="font-size:14px;margin-left:8px">20点</span></h2>
+<div class="ex"><span class="label">問4〔B 標準〕</span>
+<p>下図の構造：長さ $4.0\ \mathrm m$ の水平な棒 AB が、A で壁にピン留めされ、B はケーブル BC（C は A の真上 $3.0\ \mathrm m$）で吊られている。棒の中央に 900 N の鉛直下向きの荷重がかかる。棒とケーブルの自重は無視する。</p>
+<p>(1)〔4点〕棒 AB の自由物体図の未知数の数と、立てられる釣合い式の数を答え、静定かどうかを述べよ。<br>
+(2)〔9点〕ケーブルの張力 $T$ と、A の反力の成分 $A_x$、$A_y$ を求めよ。<br>
+(3)〔4点〕ケーブル BC と、棒 AB は、それぞれ二力部材か。理由とともに答えよ。<br>
+(4)〔3点〕もし B にもう 1 本ケーブル BC′ を張ったら、何が起こるか。</p>
+<figure><svg viewBox="0 0 560 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問4 壁に固定した棒とケーブル" style="width:560px;max-width:100%;height:auto;background:#fff"><defs><marker id="q4r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><defs><marker id="q4b" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#2b3a67"/></marker></defs><line x1="84.0" y1="10.0" x2="84.0" y2="280.0" stroke="#222" stroke-width="2"/><line x1="84.0" y1="10.0" x2="74.0" y2="18.0" stroke="#777" stroke-width="1"/><line x1="84.0" y1="22.3" x2="74.0" y2="30.3" stroke="#777" stroke-width="1"/><line x1="84.0" y1="34.5" x2="74.0" y2="42.5" stroke="#777" stroke-width="1"/><line x1="84.0" y1="46.8" x2="74.0" y2="54.8" stroke="#777" stroke-width="1"/><line x1="84.0" y1="59.1" x2="74.0" y2="67.1" stroke="#777" stroke-width="1"/><line x1="84.0" y1="71.4" x2="74.0" y2="79.4" stroke="#777" stroke-width="1"/><line x1="84.0" y1="83.6" x2="74.0" y2="91.6" stroke="#777" stroke-width="1"/><line x1="84.0" y1="95.9" x2="74.0" y2="103.9" stroke="#777" stroke-width="1"/><line x1="84.0" y1="108.2" x2="74.0" y2="116.2" stroke="#777" stroke-width="1"/><line x1="84.0" y1="120.5" x2="74.0" y2="128.5" stroke="#777" stroke-width="1"/><line x1="84.0" y1="132.7" x2="74.0" y2="140.7" stroke="#777" stroke-width="1"/><line x1="84.0" y1="145.0" x2="74.0" y2="153.0" stroke="#777" stroke-width="1"/><line x1="84.0" y1="157.3" x2="74.0" y2="165.3" stroke="#777" stroke-width="1"/><line x1="84.0" y1="169.5" x2="74.0" y2="177.5" stroke="#777" stroke-width="1"/><line x1="84.0" y1="181.8" x2="74.0" y2="189.8" stroke="#777" stroke-width="1"/><line x1="84.0" y1="194.1" x2="74.0" y2="202.1" stroke="#777" stroke-width="1"/><line x1="84.0" y1="206.4" x2="74.0" y2="214.4" stroke="#777" stroke-width="1"/><line x1="84.0" y1="218.6" x2="74.0" y2="226.6" stroke="#777" stroke-width="1"/><line x1="84.0" y1="230.9" x2="74.0" y2="238.9" stroke="#777" stroke-width="1"/><line x1="84.0" y1="243.2" x2="74.0" y2="251.2" stroke="#777" stroke-width="1"/><line x1="84.0" y1="255.5" x2="74.0" y2="263.5" stroke="#777" stroke-width="1"/><line x1="84.0" y1="267.7" x2="74.0" y2="275.7" stroke="#777" stroke-width="1"/><line x1="84.0" y1="280.0" x2="74.0" y2="288.0" stroke="#777" stroke-width="1"/><line x1="90.0" y1="250.0" x2="370.0" y2="250.0" stroke="#222" stroke-width="8"/><line x1="370.0" y1="250.0" x2="90.0" y2="40.0" stroke="#2b3a67" stroke-width="2.5"/><circle cx="90" cy="250" r="6" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="90" cy="40" r="5" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="370" cy="250" r="5" fill="#fff" stroke="#222" stroke-width="2"/><text x="102.0" y="274.0" font-size="15" fill="#222" text-anchor="start" >A</text><text x="380.0" y="256.0" font-size="15" fill="#222" text-anchor="start" >B</text><text x="100.0" y="45.0" font-size="15" fill="#222" text-anchor="start" >C</text><line x1="230.0" y1="190.0" x2="230.0" y2="244.0" stroke="#a8322a" stroke-width="3" marker-end="url(#q4r)"/><text x="238.0" y="202.0" font-size="14" fill="#a8322a" text-anchor="start" >900 N</text><line x1="90.0" y1="284.0" x2="370.0" y2="284.0" stroke="#555" stroke-width="1"/><text x="230.0" y="302.0" font-size="13" fill="#555" text-anchor="middle" >4.0 m（中央に荷重）</text><line x1="56.0" y1="40.0" x2="56.0" y2="250.0" stroke="#555" stroke-width="1"/><text x="50.0" y="145.0" font-size="13" fill="#555" text-anchor="end" >3.0 m</text><text x="240.0" y="139.0" font-size="13" fill="#2b3a67" text-anchor="start" >ケーブル</text></svg><figcaption>問4の図。棒 AB は A で壁にピン留め、B はケーブル BC で、A の真上 3.0 m の壁の点 C とつながる。棒の自重は無視する。</figcaption></figure></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> 未知数：A の反力（ピンなので $A_x$、$A_y$ の 2 つ）＋ケーブルの張力 $T$（向きは BC に沿うと分かっているので大きさだけ 1 つ）＝<strong>3 つ</strong>。2 次元の釣合い式は $\sum F_x=0,\ \sum F_y=0,\ \sum M=0$ の<strong>3 本</strong>。未知数 = 式の数 → <strong>静定</strong>。<span class="meta">採点：未知数 2／式の数と静定の判定 2。</span></p>
+<p><strong>(2)</strong> ① 棒 AB を切り出す。② $x$ 右、$y$ 上。③ ケーブルが B に及ぼす力は B → C の向き。$\overrightarrow{\mathrm{BC}}=(-4,\ 3)$、長さ 5（3-4-5 の三角形）。
+$$\boldsymbol T=T\left(-\tfrac45,\ \tfrac35\right),\qquad \boldsymbol A=(A_x,\ A_y),\qquad \boldsymbol W=(0,\ -900)\ \text{（棒の中央、A から 2.0 m）}$$
+④ <strong>未知数を一度に減らす点＝A</strong> でモーメントを取る（A の反力が消える）：
+$$\sum M_A=0:\quad 4.0\times\tfrac35T-2.0\times900=0\ \Longrightarrow\ T=\frac{1800}{2.4}=\mathbf{750\ N}$$
+（B にかかる力 $\boldsymbol T$ の $y$ 成分 $0.6T$ が、腕 4.0 m で反時計回り。荷重は腕 2.0 m で時計回り。）
+$$\sum F_x=0:\ A_x-\tfrac45\times750=0\Rightarrow A_x=600\ \mathrm N,\qquad \sum F_y=0:\ A_y+\tfrac35\times750-900=0\Rightarrow A_y=450\ \mathrm N$$
+⑥ 確かめ（使わなかった式）：B まわりのモーメント。A の反力は腕 4.0 m で $-4.0\times A_y=-1800$、荷重は腕 2.0 m で $+2.0\times900=+1800$、$\boldsymbol T$ は B に作用するので 0。合計 0 ✓。<br>
+<strong>答え：$T=750\ \mathrm N$、$A_x=600\ \mathrm N$（右向き）、$A_y=450\ \mathrm N$（上向き）</strong>（$|\boldsymbol A|=750\ \mathrm N$）。
+<span class="meta">採点：自由物体図と成分の式 3／A まわりのモーメント式 2／$T$ 1／$A_x$・$A_y$ 各 1／検算 1。</span></p>
+<p><strong>(3)</strong> <strong>ケーブル BC は二力部材</strong>：力が加わるのは両端 B・C の 2 点だけ（途中に荷重なし、自重は無視）なので、力は B と C を結ぶ直線に沿う（引張）。これが「張力の向きは BC に沿う」と決めてよい理由。<br>
+<strong>棒 AB は二力部材ではない</strong>：力が加わる点が A、中央の荷重点、B の 3 か所ある。実際、A の反力 $(600,\ 450)$ は棒（水平）に沿っていない。<span class="meta">採点：各 2（理由が「力の加わる点の数」に触れていること）。</span></p>
+<p><strong>(4)</strong> 未知数が $A_x,A_y,T,T'$ の 4 つになり、式は 3 本のままなので<strong>不静定</strong>（未知数＞式）。剛体の釣合いの式だけでは $T$ と $T'$ が決まらない（ケーブルの伸びなど、変形を考える必要がある）。<span class="meta">採点：不静定 2／理由（未知数＞式）1。</span></p>
+
+</div>
+</details>
+<h2><span class="no">5</span>問5　重心と分布荷重〔第5回〕<span class="meta" style="font-size:14px;margin-left:8px">15点</span></h2>
+<div class="ex"><span class="label">問5〔A 確認／B 標準〕</span>
+<p>(1)〔8点〕下図の均質な板（長方形 $120\times80\ \mathrm{mm}$ から、右上の角の $40\times30\ \mathrm{mm}$ を切り取った形）の図心 $(x_G,\ y_G)$ を、原点 O（左下の角）から測って求めよ。<br>
+(2)〔7点〕長さ $6.0\ \mathrm m$ の梁 AB（A：ピン、B：ローラー）が、A で 0、B で $3.0\ \mathrm{kN/m}$ となる直線的な分布荷重を受ける（下図）。分布荷重と等価な 1 つの力の大きさと作用点を求め、支点反力 $A_y$、$B_y$ を求めよ。</p>
+<figure><svg viewBox="0 0 520 285" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問5(1) 欠損のある板" style="width:520px;max-width:100%;height:auto;background:#fff"><polygon points="90.0,230.0 402.0,230.0 402.0,100.0 298.0,100.0 298.0,22.0 90.0,22.0" fill="#d8e4f0" stroke="#222" stroke-width="2"/><rect x="298.0" y="22.0" width="104.0" height="78.0" fill="none" stroke="#999" stroke-dasharray="4 3"/><text x="350.0" y="65.0" font-size="12" fill="#888" text-anchor="middle" >切欠き</text><line x1="78.0" y1="240.0" x2="420.0" y2="240.0" stroke="#555" stroke-width="1" stroke-dasharray="5 3"/><line x1="78.0" y1="240.0" x2="78.0" y2="0.0" stroke="#555" stroke-width="1" stroke-dasharray="5 3"/><circle cx="90" cy="230" r="4" fill="#222"/><text x="84.0" y="256.0" font-size="14" fill="#222" text-anchor="start" >O</text><text x="246.0" y="264.0" font-size="13" fill="#555" text-anchor="middle" >120 mm</text><text x="72.0" y="126.0" font-size="13" fill="#555" text-anchor="end" >80 mm</text><text x="350.0" y="120.0" font-size="12" fill="#555" text-anchor="middle" >40 mm</text><text x="408.0" y="65.0" font-size="12" fill="#555" text-anchor="start" >30 mm</text></svg><figcaption>問5(1)の図。長方形 120 mm × 80 mm の板の右上の角から、40 mm × 30 mm を切り取った形。原点 O は左下の角。</figcaption></figure><figure><svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問5(2) 三角形分布荷重の梁" style="width:500px;max-width:100%;height:auto;background:#fff"><defs><marker id="q5r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><line x1="60.0" y1="120.0" x2="420.0" y2="120.0" stroke="#222" stroke-width="7"/><polygon points="60,114 420,114 420,44" fill="#f4e3dc" stroke="#a8322a" stroke-width="1.5"/><line x1="120.0" y1="102.3" x2="120.0" y2="112.0" stroke="#a8322a" stroke-width="1.4" marker-end="url(#q5r)"/><line x1="180.0" y1="90.7" x2="180.0" y2="112.0" stroke="#a8322a" stroke-width="1.4" marker-end="url(#q5r)"/><line x1="240.0" y1="79.0" x2="240.0" y2="112.0" stroke="#a8322a" stroke-width="1.4" marker-end="url(#q5r)"/><line x1="300.0" y1="67.3" x2="300.0" y2="112.0" stroke="#a8322a" stroke-width="1.4" marker-end="url(#q5r)"/><line x1="360.0" y1="55.7" x2="360.0" y2="112.0" stroke="#a8322a" stroke-width="1.4" marker-end="url(#q5r)"/><line x1="420.0" y1="44.0" x2="420.0" y2="112.0" stroke="#a8322a" stroke-width="1.4" marker-end="url(#q5r)"/><polygon points="60,124 46,150 74,150" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="420" cy="134" r="9" fill="#fff" stroke="#222" stroke-width="2"/><line x1="402.0" y1="144.0" x2="438.0" y2="144.0" stroke="#222" stroke-width="2"/><text x="56.0" y="172.0" font-size="13" fill="#222" text-anchor="middle" >A（ピン）</text><text x="420.0" y="172.0" font-size="13" fill="#222" text-anchor="middle" >B（ローラー）</text><text x="428.0" y="40.0" font-size="13" fill="#a8322a" text-anchor="start" >3.0 kN/m</text><line x1="60.0" y1="186.0" x2="420.0" y2="186.0" stroke="#555" stroke-width="1"/><text x="240.0" y="204.0" font-size="13" fill="#555" text-anchor="middle" >6.0 m</text></svg><figcaption>問5(2)の図。A で 0、B で 3.0 kN/m になる直線的な分布荷重を受ける梁。</figcaption></figure></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> <strong>欠損は「負の面積」</strong>として、分割と合成の式（第5回 2.4）を使う。長方形 ① $(A_1=120\times80=9600\ \mathrm{mm^2}$、図心 $(60,\ 40))$ から、切欠き ② $(A_2=40\times30=1200\ \mathrm{mm^2}$、図心 $(100,\ 65))$ を引く。
+$$x_G=\frac{A_1x_1-A_2x_2}{A_1-A_2}=\frac{9600\times60-1200\times100}{8400}=\frac{456000}{8400}=54.29\ \mathrm{mm}$$
+$$y_G=\frac{9600\times40-1200\times65}{8400}=\frac{306000}{8400}=36.43\ \mathrm{mm}$$
+（切欠きの図心：$x=80+20=100$、$y=50+15=65$。）<br>
+⑥ 確かめ：切り取ったのは右上なので、図心は長方形の中心 $(60,\ 40)$ から<strong>左下へ</strong>ずれるはず。$54.29\lt60$、$36.43\lt40$ ✓。<br>
+<strong>答え：$(x_G,\ y_G)\approx(54.3,\ 36.4)\ \mathrm{mm}$</strong>
+<span class="meta">採点：分割と各図心 3／面積の引き算 2／$x_G$・$y_G$ 各 1.5。</span></p>
+<p><strong>(2)</strong> 分布荷重の合力は<strong>荷重分布の面積</strong>、作用点は<strong>その図形の図心</strong>（第5回 5.1）。三角形の面積：
+$$R=\tfrac12\times6.0\times3.0=9.0\ \mathrm{kN}$$
+図心は、高さの大きい B 端から底辺の $1/3$ → A から $\tfrac23\times6.0=4.0\ \mathrm m$ の位置。<br>
+釣合い：A まわりのモーメントで $A_y$ を消す：$B_y\times6.0-9.0\times4.0=0\Rightarrow B_y=6.0\ \mathrm{kN}$。$\sum F_y=0$：$A_y+B_y-9.0=0\Rightarrow A_y=3.0\ \mathrm{kN}$。（水平方向の荷重はないので $A_x=0$。）<br>
+⑥ 確かめ：荷重は B 側に集中しているので $B_y\gt A_y$ ✓。B まわりで確かめる：$-A_y\times6.0+9.0\times(6.0-4.0)=-18+18=0$ ✓。<br>
+<strong>答え：合力 9.0 kN（A から 4.0 m）、$A_y=3.0\ \mathrm{kN}$、$B_y=6.0\ \mathrm{kN}$</strong>
+<span class="meta">採点：合力 2／作用点 2／$B_y$ 2／$A_y$ 1。作用点を中央（3.0 m）とした場合は作用点 0 点、以降は方法が正しければ連鎖誤りとして減点しない。</span></p>
+
+</div>
+</details>
+<h2><span class="no">6</span>問6　摩擦〔第6回〕<span class="meta" style="font-size:14px;margin-left:8px">15点</span></h2>
+<div class="ex"><span class="label">問6〔A 確認／B 標準〕</span>
+<p>質量 $40\ \mathrm{kg}$ の箱がある。接触面の静止摩擦係数 $\mu_s=0.40$、動摩擦係数 $\mu_k=0.30$。$g=9.80\ \mathrm{m/s^2}$。</p>
+<p>(1)〔4点〕水平な床の上の箱を、水平に $P=150\ \mathrm N$ で押した。箱は動くか。そのときの摩擦力はいくらか。<br>
+(2)〔5点〕同じ箱を、水平から $25^\circ$ 傾けた粗い斜面（$\mu_s=0.50$）に置いた。箱は滑り出すか。摩擦力の大きさはいくらか。<br>
+(3)〔6点〕(1) の水平な床の上で、箱を水平から $20^\circ$ <strong>上向き</strong>に引く。動き出す最小の力 $P$ を求め、水平に引くときの限界と比べよ。</p></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> 垂直抗力 $N=mg=40\times9.80=392\ \mathrm N$。静止摩擦力の<strong>上限</strong>は $\mu_sN=0.40\times392=156.8\ \mathrm N$。押す力 $150\ \mathrm N\lt156.8\ \mathrm N$ なので、<strong>動かない</strong>。静止しているので水平方向の釣合いから摩擦力 $f=P=\mathbf{150\ N}$（$\mu_sN=156.8$ では<strong>ない</strong>。それは上限）。
+<span class="meta">採点：上限の計算 1／動かない 1／$f=150$ N 2。$f=156.8$ と答えたら「摩擦力＝μN」の誤り（第6回 2.1）で 2 点減。</span></p>
+<p><strong>(2)</strong> 斜面方向と垂直方向に分ける。$N=mg\cos25^\circ=355.3\ \mathrm N$、斜面方向の釣合いで摩擦力 $f=mg\sin25^\circ=165.7\ \mathrm N$（斜面を上る向き）。上限 $\mu_sN=0.50\times355.3=177.6\ \mathrm N$。$f=165.7\lt177.6$ なので<strong>滑り出さない</strong>。<br>
+別の見方（摩擦角）：$\tan25^\circ=0.466\lt\mu_s=0.50$ なので滑らない。滑り出す境目は $\tan\theta_0=\mu_s$、すなわち $\theta_0=26.6^\circ$（質量によらない）。<br>
+<strong>答え：滑らない。摩擦力は約 166 N（$\mu_sN=178$ N ではない）</strong>
+<span class="meta">採点：$N$ 1／$f$ 2／上限との比較 1／結論 1。</span></p>
+<p><strong>(3)</strong> 型 (II)（動き出す直前なので $f=\mu_sN$）。① 箱を切り出す。② $x$ 右（引く向き）、$y$ 上。③ 力：引く力 $P(\cos20^\circ,\ \sin20^\circ)$、重さ $(0,\ -mg)$、垂直抗力 $(0,\ N)$、摩擦力 $(-f,\ 0)$（動こうとする向きの逆）。④
+$$\sum F_x=0:\ P\cos20^\circ-\mu_sN=0,\qquad \sum F_y=0:\ N+P\sin20^\circ-mg=0$$
+⑤ $N=mg-P\sin20^\circ$ を第1式へ：$P\cos20^\circ=\mu_s(mg-P\sin20^\circ)$ より
+$$P=\frac{\mu_smg}{\cos20^\circ+\mu_s\sin20^\circ}=\frac{156.8}{0.9397+0.4\times0.3420}=\frac{156.8}{1.0765}=145.7\ \mathrm N$$
+⑥ 確かめ：水平に引くときの限界は 156.8 N。それより<strong>小さい</strong>のは、上向きに引くと $N$ が減って（$N=392-145.7\times0.3420=342.2\ \mathrm N$）摩擦の上限が下がるから ✓。$\alpha=0^\circ$ に戻すと式は $P=\mu_smg$ になる ✓。<br>
+<strong>答え：$P\approx145.7\ \mathrm N$（水平に引く 156.8 N より約 7% 小さい）</strong>
+<span class="meta">採点：$N$ が $mg$ でなくなることを式に入れる 2／式 2／$P$ 1／比較 1。摩擦の向きが逆（$+f$）なら式 0。</span></p>
+
+</div>
+</details>
+<h2><span class="no">7</span>採点表と復習先</h2>
+<table class="tb">
+<tr><th>問</th><th>範囲</th><th>配点</th><th>得点</th><th>7割未満なら読む節</th></tr>
+<tr><td>1</td><td>力の合成・分解</td><td>15</td><td>／15</td><td><a href="01_第1回_イントロダクションと力.html">第1回</a> 4章・5章・6章</td></tr>
+<tr><td>2</td><td>モーメント・偶力</td><td>15</td><td>／15</td><td><a href="02_第2回_モーメント.html">第2回</a> 3章〜5章</td></tr>
+<tr><td>3</td><td>3次元のモーメント</td><td>20</td><td>／20</td><td><a href="03_第3回_3次元の力とモーメント.html">第3回</a> 1章・4章・5章</td></tr>
+<tr><td>4</td><td>釣合い・二力部材</td><td>20</td><td>／20</td><td><a href="04_第4回_力とモーメントの釣合い.html">第4回</a> 1章・3章・4章</td></tr>
+<tr><td>5</td><td>図心・分布荷重</td><td>15</td><td>／15</td><td><a href="05_第5回_重心.html">第5回</a> 2.4節・5章</td></tr>
+<tr><td>6</td><td>摩擦</td><td>15</td><td>／15</td><td><a href="06_第6回_摩擦力.html">第6回</a> 2章</td></tr>
+<tr><th colspan="2">合計</th><th>100</th><th>／100</th><th></th></tr>
+</table>
+<div class="navi">次は <a href="08B_中間模擬試験_発展セット.html">発展セット（B）</a>：複数の回をまたぐ総合問題。基礎セットで 70 点以上取れてから挑む。</div>
+<p class="meta">出典：すべて自作問題。数値は Python（draft/check_08.py）で検算した。図は Python で座標から組んだ。解答は教員の公式解答とは未照合。</p>
+<div class="navi"><a href="index.html">← 目次へ</a>　｜　<a href="08_第8回_中間まとめ.html">中間まとめ</a>　｜　<strong>模擬試験 基礎セット</strong>　｜　<a href="08B_中間模擬試験_発展セット.html">模擬試験 発展セット</a></div>
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="08B_中間模擬試験_発展セット.html"><small>NEXT</small>模擬試験 発展セット →</a></nav>
+</body>
+</html>

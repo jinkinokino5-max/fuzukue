@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8回 中間模擬試験 発展セット</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<header style="padding-top:48px">
+<p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第8回・中間試験 前日までに</p>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">中間模擬試験　発展セット（B）</h1>
+</header>
+<p class="lead">基礎セットで 70 点以上取れたあとの<strong>総合問題</strong>。複数の回の道具を組み合わせる 5 問（各 20 点・合計 100 点）。問1だけは導出（証明）を書かせる。</p>
+<div class="box"><span class="label">使い方</span>
+<ul>
+<li><strong>目安の時間は 90 分</strong>（本番の試験時間は<strong>未確認</strong>の仮定）。問題文だけを見て、紙に書く。</li>
+<li>はじめの 5 分で全問に目を通し、<strong>解けそうな順</strong>に取り組む（出題順どおりでなくてよい）。</li>
+<li>解答を見る前に、②座標軸、③力の成分の書き方、④どの点でモーメントを取ると未知数が減るか、を自分で決めておく。</li>
+<li>$g=9.80\ \mathrm{m/s^2}$。数値は有効数字 3〜4 桁。</li>
+</ul></div>
+<div class="warn"><span class="label">この模擬試験について</span>問題は<strong>自作</strong>（教科書・Schaum's・Mechanics Map に典型的な形に倣い、数値は新しく決めて Python で検算した：draft/check_08.py）。教科書・演習書の外部問題そのものは、各回の「章末例題・演習問題」（出典つき）にある。解答は教員の解答とは照合していない。</div>
+<h2><span class="no">1</span>問1　偶力・力の移動の導出〔第1・2回〕<span class="meta" style="font-size:14px;margin-left:8px">20点</span></h2>
+<div class="ex"><span class="label">問1〔B 標準〜C 発展：導出〕</span>
+<p>(1)〔8点〕大きさが等しく向きが逆の 2 力 $\boldsymbol F$（点 A）、$-\boldsymbol F$（点 B）からなる偶力のモーメントは、<strong>基準点 Q によらない</strong>ことを、位置ベクトルを用いて示せ。2 次元で、その大きさが $Fd$（$d$：2 力の作用線の間隔）になることも述べよ。<br>
+(2)〔6点〕点 A に作用する力 $\boldsymbol F$ を、別の点 P へ移す。「点 P の力 $\boldsymbol F$ ＋ 偶力のモーメント」と等価になることを、なぜその式になるかを含めて説明し、移動後のモーメントを $\boldsymbol r_{\mathrm{PA}}$ と $\boldsymbol F$ で表せ。<br>
+(3)〔6点〕長さ 5 m の水平な棒（質量は無視）の左端から $1\ \mathrm m$ と $4\ \mathrm m$ の位置に、鉛直下向きの力 $40\ \mathrm N$ と $60\ \mathrm N$ が作用している。合力の大きさと、左端からの作用点の位置を求めよ。この結果は、どの回のどの量と同じ形か。</p></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> 基準点 Q から A、B へのベクトルを $\boldsymbol r_{\mathrm{QA}}$、$\boldsymbol r_{\mathrm{QB}}$ とする。<span class="step">なぜ外積か</span>：点まわりのモーメントは $\boldsymbol r\times\boldsymbol F$（基準点 → 作用点の順）。2 力の和：
+$$\boldsymbol M_Q=\boldsymbol r_{\mathrm{QA}}\times\boldsymbol F+\boldsymbol r_{\mathrm{QB}}\times(-\boldsymbol F)=(\boldsymbol r_{\mathrm{QA}}-\boldsymbol r_{\mathrm{QB}})\times\boldsymbol F$$
+（外積の分配法則と、$\boldsymbol a\times(-\boldsymbol F)=-\boldsymbol a\times\boldsymbol F$ を使った。）ここで $\boldsymbol r_{\mathrm{QA}}-\boldsymbol r_{\mathrm{QB}}=\overrightarrow{\mathrm{BA}}=\boldsymbol r_{\mathrm{BA}}$ は、<strong>Q を含まない</strong>（A と B の位置だけで決まる）。したがって $\boldsymbol M_Q=\boldsymbol r_{\mathrm{BA}}\times\boldsymbol F$ は Q によらない。<br>
+2 次元では、$|\boldsymbol r_{\mathrm{BA}}\times\boldsymbol F|=|\boldsymbol r_{\mathrm{BA}}|\,F\sin\varphi$（$\varphi$ は $\boldsymbol r_{\mathrm{BA}}$ と $\boldsymbol F$ のなす角）。$|\boldsymbol r_{\mathrm{BA}}|\sin\varphi$ は 2 つの作用線の<strong>垂直距離</strong> $d$ に等しいから、$|M|=Fd$。
+<span class="meta">採点：式の立て方（2 項の和）3／分配法則でまとめる 2／Q が消えると明言 2／$Fd$ 1。</span></p>
+<p><strong>(2)</strong> 点 P に、大きさが等しく向きが逆の 2 力 $\boldsymbol F$、$-\boldsymbol F$ を<strong>つけ足す</strong>。つけ足した 2 力は互いに打ち消すので、物体への作用は変わらない（これが「等価」の根拠）。すると、もとの A の $\boldsymbol F$ と、P の $-\boldsymbol F$ が<strong>偶力</strong>をなし、P の $\boldsymbol F$ が残る。偶力のモーメントは (1) より
+$$\boldsymbol M=\boldsymbol r_{\mathrm{PA}}\times\boldsymbol F\qquad(\boldsymbol r_{\mathrm{PA}}:\ \text{P から A へ})$$
+つまり「点 P の力 $\boldsymbol F$ ＋ モーメント $\boldsymbol r_{\mathrm{PA}}\times\boldsymbol F$」。これは、P を基準にした A の力のモーメントそのもの。
+<span class="meta">採点：「打ち消す 2 力をつけ足す」2／偶力ができる 2／式 2。</span></p>
+<p><strong>(3)</strong> 合力：$40+60=100\ \mathrm N$（下向き）。作用点を左端から $\bar x$ とする。<span class="step">等価の条件</span>：左端まわりのモーメントが等しい：
+$$100\,\bar x=40\times1+60\times4=280\ \Longrightarrow\ \bar x=2.8\ \mathrm m$$
+確かめ：$x=2.8$ のまわりのモーメント：$40\times1.8=72$（反時計回り）と $60\times1.2=72$（時計回り）が打ち消す ✓。合力の作用点が荷重の大きい側（右）に寄る ✓。<br>
+同じ形：<strong>第5回の重心</strong>（$x_G=\sum w_ix_i/\sum w_i$）。重心は「重力の合力の作用点」で、同じ「モーメントが等価」の式から出る。
+<span class="meta">採点：合力 1／モーメント式 2／$\bar x$ 1／検算 1／重心との対応 1。</span></p>
+
+</div>
+</details>
+<h2><span class="no">2</span>問2　支線つきマストの3次元の釣合い〔第3・4回〕<span class="meta" style="font-size:14px;margin-left:8px">20点</span></h2>
+<div class="ex"><span class="label">問2〔C 発展〕</span>
+<p>下図のマストは、質量を無視できる棒 OA（長さ 6 m）で、下端 O はボールジョイントで地面に、先端 A は 2 本の支線 AB、AC で支えられている。A に荷重 $\boldsymbol P=(-140,\ -630,\ 0)\ \mathrm N$ がかかる。座標は $x,y,z$ [m]（右手系、$z$ が鉛直上向き）。支線の質量・伸びは無視する。</p>
+<p>(1)〔4点〕棒 OA が二力部材であることを説明し、棒が A に及ぼす力の向きを述べよ。<br>
+(2)〔10点〕支線の張力 $T_B$、$T_C$ と、棒が A に及ぼす力の大きさ $N$ を求めよ。<br>
+(3)〔3点〕O の反力を求めよ。<br>
+(4)〔3点〕O まわりのモーメントの釣合いで、答えを確かめよ。</p>
+<figure><svg viewBox="0 0 640 370" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問2 支線つきマスト" style="width:640px;max-width:100%;height:auto;background:#fff"><defs><marker id="b2r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><defs><marker id="b2b" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#2b3a67"/></marker></defs><polygon points="280,262 204,338 344,338 420,262" fill="#f1ede3" stroke="#bbb"/><line x1="270.0" y1="300.0" x2="270.0" y2="132.0" stroke="#222" stroke-width="6"/><line x1="270.0" y1="132.0" x2="328.8" y2="325.2" stroke="#2b3a67" stroke-width="2"/><line x1="270.0" y1="132.0" x2="379.2" y2="274.8" stroke="#2b3a67" stroke-width="2"/><circle cx="270" cy="300" r="4" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="270" cy="132" r="4" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="329" cy="325" r="4" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="379" cy="275" r="4" fill="#fff" stroke="#222" stroke-width="2"/><text x="244.0" y="316.0" font-size="14" fill="#222" text-anchor="start" >O</text><text x="252.0" y="124.0" font-size="13" fill="#222" text-anchor="end" >A (0, 0, 6)</text><text x="336.8" y="341.2" font-size="13" fill="#222" text-anchor="start" >B (2, 3, 0)</text><text x="387.2" y="278.8" font-size="13" fill="#222" text-anchor="start" >C (−2, 3, 0)</text><line x1="270.0" y1="132.0" x2="175.0" y2="140.0" stroke="#a8322a" stroke-width="3" marker-end="url(#b2r)"/><text x="80.0" y="166.0" font-size="13" fill="#a8322a" text-anchor="start" >P = (−140, −630, 0) N</text><line x1="70.0" y1="330.0" x2="70.0" y2="270.0" stroke="#555" stroke-width="1.4" marker-end="url(#b2b)"/><text x="76.0" y="270.0" font-size="13" fill="#555" text-anchor="start" >z</text><line x1="70.0" y1="330.0" x2="120.0" y2="330.0" stroke="#555" stroke-width="1.4" marker-end="url(#b2b)"/><text x="124.0" y="334.0" font-size="13" fill="#555" text-anchor="start" >y</text><line x1="70.0" y1="330.0" x2="50.0" y2="350.0" stroke="#555" stroke-width="1.4" marker-end="url(#b2b)"/><text x="34.0" y="360.0" font-size="13" fill="#555" text-anchor="start" >x</text></svg><figcaption>問2の図（斜投影）。軽い棒 OA（O はボールジョイントで地面に接続、A は先端）が、支線 AB・AC で支えられ、A に荷重 $\boldsymbol P$ がかかる。座標の単位は m。</figcaption></figure></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> 棒 OA に力が加わる点は、両端 O（ボールジョイント）と A（ピン接合の支線・荷重の作用点）の 2 つだけで、棒は軽く、途中に荷重もない。ボールジョイントはモーメントを伝えないので、<strong>二力部材</strong>。力は O と A を結ぶ直線（$z$ 軸）に沿う：棒が A に及ぼす力は $(0,\ 0,\ N)$ の形（$N\gt0$ なら棒は圧縮されて上向きに押す）。<span class="meta">採点：二力部材と言える 2／向きが $z$ 軸 2。</span></p>
+<p><strong>(2)</strong> ① 節点 A を切り出す（外力は 支線 2 本・荷重・棒の力）。<span class="step">モーメントは不要</span>：A に作用する力はすべて 1 点に集中する（第4回 1.2）ので、$\sum\boldsymbol F=\boldsymbol 0$ の 3 式だけで足りる。② 軸は図のとおり。③ A から B、C への向き：
+$$\overrightarrow{\mathrm{AB}}=(2,\ 3,\ -6),\quad \overrightarrow{\mathrm{AC}}=(-2,\ 3,\ -6),\quad |\cdot|=\sqrt{4+9+36}=7\ \mathrm m$$
+$$\boldsymbol T_B=\tfrac{T_B}7(2,\ 3,\ -6),\quad \boldsymbol T_C=\tfrac{T_C}7(-2,\ 3,\ -6),\quad \boldsymbol N=(0,\ 0,\ N),\quad \boldsymbol P=(-140,\ -630,\ 0)$$
+④ 釣合い：
+$$\begin{aligned}x:&\ \tfrac27(T_B-T_C)-140=0\\ y:&\ \tfrac37(T_B+T_C)-630=0\\ z:&\ -\tfrac67(T_B+T_C)+N=0\end{aligned}$$
+⑤ $y$ 式より $T_B+T_C=1470$。$x$ 式より $T_B-T_C=490$。辺々を足し引きして
+$$T_B=980\ \mathrm N,\qquad T_C=490\ \mathrm N,\qquad N=\tfrac67\times1470=1260\ \mathrm N$$
+⑥ 確かめ：$T_B,\ T_C\gt0$（支線は引張にしか耐えない。負なら緩んで張力 0 になるので、仮定が崩れる）✓。$N\gt0$ ✓。$z$ 式の符号：支線が A を<strong>下向き</strong>に引くので、棒が上向きに押し返す ✓。
+<span class="meta">採点：向きベクトルと長さ 3／3 式 3／$T_B$・$T_C$・$N$ 各 1／符号の確認 1。</span></p>
+<p><strong>(3)</strong> 棒が二力部材なので、O が棒に及ぼす力は、A での力と大きさが同じで逆向き：<strong>$(0,\ 0,\ 1260)\ \mathrm N$（上向き）</strong>。水平方向の反力は 0（ボールジョイントが水平力を受けていない）。<span class="meta">採点：向き 1／大きさ 2。</span></p>
+<p><strong>(4)</strong> 棒に働く力は、O の反力 $(0,0,1260)$（作用点 O）と、A で受ける力 $(0,0,-1260)$（作用点 A、$\boldsymbol r=(0,0,6)$）。O まわりのモーメント：$\boldsymbol r\times\boldsymbol F=(0,0,6)\times(0,0,-1260)=\boldsymbol 0$ ✓。2 力は同一作用線上にあるので、釣合う。<br>
+別の確認：マスト全体（棒）に外から加わるものは、支線の力と荷重の合力 $=-\boldsymbol N$、すなわち $(0,0,-1260)$：$x$: $\tfrac27(490)-\ldots$ のように 3 式が成り立つことは (2) で確認済み。
+<span class="meta">採点：モーメントの式 2／結果 1。</span></p>
+
+</div>
+</details>
+<h2><span class="no">3</span>問3　分布荷重と偶力を受ける梁〔第4・5回〕<span class="meta" style="font-size:14px;margin-left:8px">20点</span></h2>
+<div class="ex"><span class="label">問3〔C 発展〕</span>
+<p>下図の梁 AB（長さ 8 m、自重は無視）。A はピン、B は鉛直方向の反力だけを出すローラー。</p>
+<p>(1)〔8点〕2 つの分布荷重それぞれについて、合力の大きさと、A からの作用点の位置を求めよ。<br>
+(2)〔8点〕支点反力 $A_x$、$A_y$、$B_y$ を求めよ。<br>
+(3)〔4点〕B まわりのモーメントの釣合いで答えを確かめよ。偶力の置き場所を図の位置からずらすと答えは変わるか。</p>
+<figure><svg viewBox="0 0 560 255" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問3 分布荷重と偶力を受ける梁" style="width:560px;max-width:100%;height:auto;background:#fff"><defs><marker id="b3r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><defs><marker id="b3b" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#2b3a67"/></marker></defs><line x1="50.0" y1="150.0" x2="498.0" y2="150.0" stroke="#222" stroke-width="7"/><rect x="50" y="110" width="224" height="34" fill="#f4e3dc" stroke="#a8322a"/><line x1="50.0" y1="110.0" x2="50.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="78.0" y1="110.0" x2="78.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="106.0" y1="110.0" x2="106.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="134.0" y1="110.0" x2="134.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="162.0" y1="110.0" x2="162.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="190.0" y1="110.0" x2="190.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="218.0" y1="110.0" x2="218.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="246.0" y1="110.0" x2="246.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="274.0" y1="110.0" x2="274.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><polygon points="274,144 498,144 498,78" fill="#f4e3dc" stroke="#a8322a"/><line x1="330.0" y1="127.5" x2="330.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="386.0" y1="111.0" x2="386.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="442.0" y1="94.5" x2="442.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><line x1="498.0" y1="78.0" x2="498.0" y2="142.0" stroke="#a8322a" stroke-width="1.3" marker-end="url(#b3r)"/><text x="162.0" y="102.0" font-size="13" fill="#a8322a" text-anchor="middle" >4 kN/m</text><text x="504.0" y="80.0" font-size="13" fill="#a8322a" text-anchor="start" >6 kN/m</text><path d="M 248 88 A 26 26 0 1 1 300 88" fill="none" stroke="#2b3a67" stroke-width="2" transform="translate(0,-26)" marker-end="url(#b3b)"/><text x="274.0" y="32.0" font-size="13" fill="#2b3a67" text-anchor="middle" >10 kN·m（時計回り）</text><polygon points="50,154 36,180 64,180" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="498" cy="164" r="9" fill="#fff" stroke="#222" stroke-width="2"/><line x1="480.0" y1="174.0" x2="516.0" y2="174.0" stroke="#222" stroke-width="2"/><text x="50.0" y="200.0" font-size="14" fill="#222" text-anchor="middle" >A</text><text x="498.0" y="200.0" font-size="14" fill="#222" text-anchor="middle" >B</text><line x1="50.0" y1="208.0" x2="50.0" y2="216.0" stroke="#555" stroke-width="1"/><line x1="274.0" y1="208.0" x2="274.0" y2="216.0" stroke="#555" stroke-width="1"/><line x1="498.0" y1="208.0" x2="498.0" y2="216.0" stroke="#555" stroke-width="1"/><line x1="50.0" y1="212.0" x2="498.0" y2="212.0" stroke="#555" stroke-width="1"/><text x="162.0" y="230.0" font-size="12" fill="#555" text-anchor="middle" >4 m</text><text x="386.0" y="230.0" font-size="12" fill="#555" text-anchor="middle" >4 m</text></svg><figcaption>問3の図。A（ピン）と B（ローラー）で支えられた梁 AB（8 m）。$0\sim4$ m に等分布 4 kN/m、$4\sim8$ m に 0 から 6 kN/m へ直線的に増える分布、偶力 10 kN·m（時計回り）。</figcaption></figure></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> 合力＝荷重分布の面積、作用点＝その図形の図心（第5回 5.1）。<br>
+等分布（長方形、$0\sim4$ m）：$R_1=4\times4=16\ \mathrm{kN}$、作用点は中央 $x_1=2\ \mathrm m$。<br>
+三角形（$4\sim8$ m、右が高い）：$R_2=\tfrac12\times4\times6=12\ \mathrm{kN}$。図心は高い側（B 端）から底辺の $1/3$ なので、$4\ \mathrm m$ の底辺の左端から $\tfrac23\times4=2.67\ \mathrm m$ → A から $x_2=4+\tfrac83=6.67\ \mathrm m$。
+<span class="meta">採点：各 4（大きさ 2、位置 2）。三角形の図心を底辺の中央（6 m）にした場合は位置 0 点。</span></p>
+<p><strong>(2)</strong> ① 梁を切り出す。② $x$ 右、$y$ 上、反時計回りを＋。③ 力：$R_1=16$、$R_2=12$（下向き）、偶力 $-10\ \mathrm{kN\cdot m}$（時計回り）、$A_x,A_y,B_y$。④ 水平方向に荷重はないので $A_x=0$。<span class="step">A まわり</span>で $A_x,A_y$ を消す：
+$$\sum M_A=0:\quad B_y\times8-16\times2-12\times\tfrac{20}3-10=0$$
+$$B_y=\frac{32+80+10}8=15.25\ \mathrm{kN}$$
+$\sum F_y=0$：$A_y+15.25-16-12=0\Rightarrow A_y=12.75\ \mathrm{kN}$。<br>
+<strong>答え：$A_x=0$、$A_y=12.75\ \mathrm{kN}$、$B_y=15.25\ \mathrm{kN}$</strong>
+<span class="meta">採点：偶力の符号を入れた式 3／$B_y$ 2／$A_y$ 2／$A_x=0$ 1。偶力の符号を逆にすると $B_y=14.75$ となる（その場合、式 1 点のみ減点で、以降は連鎖誤りとして減点しない）。</span></p>
+<p><strong>(3)</strong> B まわり：$-A_y\times8+16\times6+12\times\tfrac43-10=-102+96+16-10=0$ ✓（A の腕 8 m、荷重 1 の腕 $8-2=6$、荷重 2 の腕 $8-\tfrac{20}3=\tfrac43$）。<br>
+偶力は<strong>どこにあっても</strong>（図の 4 m の位置でも、梁のどこでも）モーメントが同じ値で基準点によらない（第2回 4章）ので、答えは<strong>変わらない</strong>。ただし、あとで梁の内部のモーメントを調べるなら、その位置は意味をもつ。
+<span class="meta">採点：B まわりの式と値 3／偶力の位置の独立性 1。</span></p>
+
+</div>
+</details>
+<h2><span class="no">4</span>問4　押された箱は滑るか、倒れるか〔第5・6回〕<span class="meta" style="font-size:14px;margin-left:8px">20点</span></h2>
+<div class="ex"><span class="label">問4〔C 発展〕</span>
+<p>質量 $50\ \mathrm{kg}$ の一様な箱（幅 $b=0.60\ \mathrm m$、高さ $h=1.20\ \mathrm m$）を水平な床に置き、床から高さ $y$ の位置を水平に押す（下図）。床との静止摩擦係数は $\mu_s=0.35$。$g=9.80\ \mathrm{m/s^2}$。力 $P$ を 0 から徐々に大きくしていくとき、次に答えよ。</p>
+<p>(1)〔6点〕$y=0.60\ \mathrm m$ のとき、箱は滑るのが先か、倒れるのが先か。そのときの $P$ を求めよ。<br>
+(2)〔6点〕$y=1.00\ \mathrm m$ のとき、同様に答えよ。<br>
+(3)〔8点〕滑りと倒れが同時に起こる高さ $y^*$ を、文字式で導け。$y\lt y^*$ と $y\gt y^*$ でどちらが先に起こるか。</p>
+<figure><svg viewBox="0 0 420 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問4 床の上の箱を押す" style="width:420px;max-width:100%;height:auto;background:#fff"><defs><marker id="b4r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><line x1="40.0" y1="270.0" x2="400.0" y2="270.0" stroke="#222" stroke-width="2"/><line x1="40.0" y1="270.0" x2="32.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="52.0" y1="270.0" x2="44.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="64.0" y1="270.0" x2="56.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="76.0" y1="270.0" x2="68.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="88.0" y1="270.0" x2="80.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="100.0" y1="270.0" x2="92.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="112.0" y1="270.0" x2="104.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="124.0" y1="270.0" x2="116.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="136.0" y1="270.0" x2="128.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="148.0" y1="270.0" x2="140.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="160.0" y1="270.0" x2="152.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="172.0" y1="270.0" x2="164.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="184.0" y1="270.0" x2="176.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="196.0" y1="270.0" x2="188.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="208.0" y1="270.0" x2="200.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="220.0" y1="270.0" x2="212.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="232.0" y1="270.0" x2="224.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="244.0" y1="270.0" x2="236.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="256.0" y1="270.0" x2="248.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="268.0" y1="270.0" x2="260.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="280.0" y1="270.0" x2="272.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="292.0" y1="270.0" x2="284.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="304.0" y1="270.0" x2="296.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="316.0" y1="270.0" x2="308.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="328.0" y1="270.0" x2="320.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="340.0" y1="270.0" x2="332.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="352.0" y1="270.0" x2="344.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="364.0" y1="270.0" x2="356.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="376.0" y1="270.0" x2="368.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="388.0" y1="270.0" x2="380.0" y2="280.0" stroke="#777" stroke-width="1"/><line x1="400.0" y1="270.0" x2="392.0" y2="280.0" stroke="#777" stroke-width="1"/><rect x="120" y="90.0" width="90.0" height="180.0" fill="#d8e4f0" stroke="#222" stroke-width="2"/><circle cx="165.0" cy="180.0" r="4" fill="#222"/><text x="171.0" y="184.0" font-size="13" fill="#222" text-anchor="start" >G</text><line x1="40.0" y1="150.0" x2="118.0" y2="150.0" stroke="#a8322a" stroke-width="3.2" marker-end="url(#b4r)"/><text x="36.0" y="142.0" font-size="15" fill="#a8322a" text-anchor="end" font-style="italic">P</text><line x1="20.0" y1="270.0" x2="20.0" y2="150.0" stroke="#555" stroke-width="1"/><text x="16.0" y="210.0" font-size="13" fill="#555" text-anchor="end" font-style="italic">y</text><line x1="120.0" y1="294.0" x2="210.0" y2="294.0" stroke="#555" stroke-width="1"/><text x="165.0" y="310.0" font-size="12" fill="#555" text-anchor="middle" >b = 0.60 m</text><line x1="236.0" y1="270.0" x2="236.0" y2="90.0" stroke="#555" stroke-width="1"/><text x="242.0" y="180.0" font-size="12" fill="#555" text-anchor="start" >h = 1.20 m</text><text x="165.0" y="166.0" font-size="12" fill="#222" text-anchor="middle" >50 kg</text></svg><figcaption>問4の図。質量 50 kg の一様な箱（幅 $b=0.60$ m、高さ $h=1.20$ m）を、床から高さ $y$ のところで水平に押す。</figcaption></figure></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>準備</strong>：2 つの限界を別々に求めて、<strong>小さいほうが先に起こる</strong>。重さ $W=mg=490\ \mathrm N$、垂直抗力 $N=W$。<br>
+<span class="step">滑りの限界</span>：床の摩擦力が上限に達するとき $P_s=\mu_sW=0.35\times490=171.5\ \mathrm N$。<br>
+<span class="step">倒れの限界</span>：倒れる直前、垂直抗力の作用点は押す側の下の角に来る（底面の端：重心から $b/2$）。重心の真下の床の点まわりのモーメント：$P\,y$（時計回り）と $N\cdot x_N$（反時計回り）の釣合いから $x_N=Py/W$。$x_N=b/2$ になるとき
+$$P_t=\frac{W\,b}{2y}$$
+（床が受ける力が底面からはみ出せないので、$x_N\le b/2$ が条件。第5回の転倒の条件と同じ形。）</p>
+<p><strong>(1)</strong> $y=0.60$：$P_t=\dfrac{490\times0.60}{2\times0.60}=245\ \mathrm N$。$P_s=171.5\lt245$ なので<strong>滑るのが先</strong>、$P=171.5\ \mathrm N$。確かめ：そのときの $x_N=Py/W=171.5\times0.60/490=0.21\ \mathrm m\lt b/2=0.30$ ✓（まだ倒れない）。<span class="meta">採点：2 つの限界 3／判定 1／確かめ 2。</span></p>
+<p><strong>(2)</strong> $y=1.00$：$P_t=\dfrac{490\times0.60}{2\times1.00}=147\ \mathrm N$。$P_t=147\lt P_s=171.5$ なので<strong>倒れるのが先</strong>、$P=147\ \mathrm N$。確かめ：そのとき必要な摩擦力は $f=P=147\lt\mu_sN=171.5$ ✓（滑らない）。<span class="meta">採点：同上 6。</span></p>
+<p><strong>(3)</strong> $P_s=P_t$：$\mu_sW=\dfrac{Wb}{2y}\Rightarrow$
+$$y^*=\frac{b}{2\mu_s}=\frac{0.60}{2\times0.35}=0.857\ \mathrm m$$
+$W$ が両辺で約分されるので、<strong>質量によらない</strong>。$y\lt y^*$（低い位置を押す）なら $P_t\gt P_s$ で<strong>滑りが先</strong>、$y\gt y^*$ なら<strong>倒れが先</strong>。(1)(2) はこの結果と一致（$0.60\lt0.857\lt1.00$）✓。極端な場合：$\mu_s\to0$ なら $y^*\to\infty$（いつも滑る）、$b\to0$（細長い箱）なら $y^*\to0$（ほとんど常に倒れが先）で、直感と合う ✓。
+<span class="meta">採点：式 3／$y^*$ 2／$y$ の大小と先の現象 2／極限などの確かめ 1。</span></p>
+
+</div>
+</details>
+<h2><span class="no">5</span>問5　はしごを登れる限界〔第4・6回〕<span class="meta" style="font-size:14px;margin-left:8px">20点</span></h2>
+<div class="ex"><span class="label">問5〔C 発展〕</span>
+<p>一様なはしご（質量 $15\ \mathrm{kg}$、長さ $L=5.0\ \mathrm m$）を、水平な床と滑らかな壁（摩擦なし）に、床との角 $60^\circ$ で立てかけた。床とはしごの静止摩擦係数は $\mu_s=0.40$。質量 $70\ \mathrm{kg}$ の人が、はしごの下端 B から<strong>はしごに沿って</strong> $s$ の位置まで登る。$g=9.80\ \mathrm{m/s^2}$。</p>
+<p>(1)〔4点〕はしご（人を含む）の自由物体図を描き、未知の力を書け。<br>
+(2)〔8点〕はしごが滑り出す直前の、人の位置 $s$ を求めよ。<br>
+(3)〔4点〕人ははしごの頂上まで登れるか。<br>
+(4)〔4点〕壁にも摩擦があったら、$s$ は大きくなるか小さくなるか。理由とともに答えよ。</p>
+<figure><svg viewBox="0 0 480 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="問5 壁に立てかけたはしご" style="width:480px;max-width:100%;height:auto;background:#fff"><defs><marker id="b5r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><defs><marker id="b5b" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#2b3a67"/></marker></defs><line x1="30.0" y1="290.0" x2="250.0" y2="290.0" stroke="#222" stroke-width="2"/><line x1="30.0" y1="290.0" x2="22.0" y2="300.0" stroke="#777" stroke-width="1"/><line x1="42.2" y1="290.0" x2="34.2" y2="300.0" stroke="#777" stroke-width="1"/><line x1="54.4" y1="290.0" x2="46.4" y2="300.0" stroke="#777" stroke-width="1"/><line x1="66.7" y1="290.0" x2="58.7" y2="300.0" stroke="#777" stroke-width="1"/><line x1="78.9" y1="290.0" x2="70.9" y2="300.0" stroke="#777" stroke-width="1"/><line x1="91.1" y1="290.0" x2="83.1" y2="300.0" stroke="#777" stroke-width="1"/><line x1="103.3" y1="290.0" x2="95.3" y2="300.0" stroke="#777" stroke-width="1"/><line x1="115.6" y1="290.0" x2="107.6" y2="300.0" stroke="#777" stroke-width="1"/><line x1="127.8" y1="290.0" x2="119.8" y2="300.0" stroke="#777" stroke-width="1"/><line x1="140.0" y1="290.0" x2="132.0" y2="300.0" stroke="#777" stroke-width="1"/><line x1="152.2" y1="290.0" x2="144.2" y2="300.0" stroke="#777" stroke-width="1"/><line x1="164.4" y1="290.0" x2="156.4" y2="300.0" stroke="#777" stroke-width="1"/><line x1="176.7" y1="290.0" x2="168.7" y2="300.0" stroke="#777" stroke-width="1"/><line x1="188.9" y1="290.0" x2="180.9" y2="300.0" stroke="#777" stroke-width="1"/><line x1="201.1" y1="290.0" x2="193.1" y2="300.0" stroke="#777" stroke-width="1"/><line x1="213.3" y1="290.0" x2="205.3" y2="300.0" stroke="#777" stroke-width="1"/><line x1="225.6" y1="290.0" x2="217.6" y2="300.0" stroke="#777" stroke-width="1"/><line x1="237.8" y1="290.0" x2="229.8" y2="300.0" stroke="#777" stroke-width="1"/><line x1="250.0" y1="290.0" x2="242.0" y2="300.0" stroke="#777" stroke-width="1"/><line x1="210.0" y1="7.5" x2="210.0" y2="290.0" stroke="#222" stroke-width="2"/><line x1="210.0" y1="7.5" x2="220.0" y2="15.5" stroke="#777" stroke-width="1"/><line x1="210.0" y1="19.8" x2="220.0" y2="27.8" stroke="#777" stroke-width="1"/><line x1="210.0" y1="32.1" x2="220.0" y2="40.1" stroke="#777" stroke-width="1"/><line x1="210.0" y1="44.4" x2="220.0" y2="52.4" stroke="#777" stroke-width="1"/><line x1="210.0" y1="56.6" x2="220.0" y2="64.6" stroke="#777" stroke-width="1"/><line x1="210.0" y1="68.9" x2="220.0" y2="76.9" stroke="#777" stroke-width="1"/><line x1="210.0" y1="81.2" x2="220.0" y2="89.2" stroke="#777" stroke-width="1"/><line x1="210.0" y1="93.5" x2="220.0" y2="101.5" stroke="#777" stroke-width="1"/><line x1="210.0" y1="105.8" x2="220.0" y2="113.8" stroke="#777" stroke-width="1"/><line x1="210.0" y1="118.1" x2="220.0" y2="126.1" stroke="#777" stroke-width="1"/><line x1="210.0" y1="130.3" x2="220.0" y2="138.3" stroke="#777" stroke-width="1"/><line x1="210.0" y1="142.6" x2="220.0" y2="150.6" stroke="#777" stroke-width="1"/><line x1="210.0" y1="154.9" x2="220.0" y2="162.9" stroke="#777" stroke-width="1"/><line x1="210.0" y1="167.2" x2="220.0" y2="175.2" stroke="#777" stroke-width="1"/><line x1="210.0" y1="179.5" x2="220.0" y2="187.5" stroke="#777" stroke-width="1"/><line x1="210.0" y1="191.7" x2="220.0" y2="199.7" stroke="#777" stroke-width="1"/><line x1="210.0" y1="204.0" x2="220.0" y2="212.0" stroke="#777" stroke-width="1"/><line x1="210.0" y1="216.3" x2="220.0" y2="224.3" stroke="#777" stroke-width="1"/><line x1="210.0" y1="228.6" x2="220.0" y2="236.6" stroke="#777" stroke-width="1"/><line x1="210.0" y1="240.9" x2="220.0" y2="248.9" stroke="#777" stroke-width="1"/><line x1="210.0" y1="253.2" x2="220.0" y2="261.2" stroke="#777" stroke-width="1"/><line x1="210.0" y1="265.4" x2="220.0" y2="273.4" stroke="#777" stroke-width="1"/><line x1="210.0" y1="277.7" x2="220.0" y2="285.7" stroke="#777" stroke-width="1"/><line x1="210.0" y1="290.0" x2="220.0" y2="298.0" stroke="#777" stroke-width="1"/><line x1="70.0" y1="290.0" x2="210.0" y2="47.5" stroke="#222" stroke-width="6"/><line x1="140.0" y1="168.8" x2="140.0" y2="214.8" stroke="#a8322a" stroke-width="2.6" marker-end="url(#b5r)"/><text x="146.0" y="208.8" font-size="12" fill="#a8322a" text-anchor="start" >15 kg</text><circle cx="154.0" cy="130.5077321642143" r="9" fill="#e6e1d5" stroke="#222"/><line x1="154.0" y1="139.5" x2="154.0" y2="146.5" stroke="#222" stroke-width="3"/><line x1="168.0" y1="148.5" x2="168.0" y2="196.5" stroke="#a8322a" stroke-width="2.6" marker-end="url(#b5r)"/><text x="174.0" y="192.5" font-size="12" fill="#a8322a" text-anchor="start" >70 kg</text><path d="M 104 290 A 34 34 0 0 0 87.0 260.6" fill="none" stroke="#555" stroke-width="1.3"/><text x="108.0" y="282.0" font-size="12" fill="#555" text-anchor="start" >60°</text><text x="74.0" y="312.0" font-size="12" fill="#222" text-anchor="start" >床 μs = 0.40</text><text x="218.0" y="168.8" font-size="12" fill="#222" text-anchor="start" >壁（滑らか）</text><text x="88.0" y="160.8" font-size="12" fill="#555" text-anchor="end" >L = 5.0 m</text><line x1="70.0" y1="290.0" x2="154.0" y2="144.5" stroke="#555" stroke-width="1" stroke-dasharray="3 3"/><text x="124.0" y="120.5" font-size="14" fill="#2b3a67" text-anchor="end" font-style="italic">s</text></svg><figcaption>問5の図。一様なはしご（質量 15 kg、長さ 5.0 m）が、$60^\circ$ で滑らかな壁に立てかけてある。質量 70 kg の人が、足元から $s$ の位置まで登る。</figcaption></figure></div>
+<details><summary>解答と採点基準</summary>
+<div class="proof">
+
+<p><strong>(1)</strong> 力は：はしごの重さ $m_lg=147\ \mathrm N$（中央）、人の重さ $m_pg=686\ \mathrm N$（下端から $s$）、床から<strong>垂直抗力 $N_f$（上向き）と摩擦力 $f$（壁の向き）</strong>、壁から<strong>垂直抗力 $R$（壁から離れる向き＝水平）</strong>。壁は滑らかなので壁の摩擦は 0。未知数は $N_f,\ f,\ R$ の 3 つ。床の摩擦の向き：下端は壁から離れる向きに動こうとするので、摩擦力は<strong>壁に向かう向き</strong>。<span class="meta">採点：力 4 つの向きがすべて正しい 3／摩擦の向きの根拠 1。</span></p>
+<p><strong>(2)</strong> ① 系は「はしご＋人」。② 水平を $x$（壁へ向かう向きを＋）、鉛直を $y$。④ 釣合い：
+$$\sum F_y=0:\ N_f=(m_l+m_p)g=85\times9.80=833\ \mathrm N,\qquad \sum F_x=0:\ f=R$$
+<span class="step">モーメントは下端まわり</span>（$N_f$ と $f$ が消える）：壁の力 $R$ の腕は高さ $L\sin\theta$、重さの腕は水平距離（$\cos\theta$ をかけた長さ）：
+$$R\,L\sin\theta=m_lg\,\tfrac L2\cos\theta+m_pg\,s\cos\theta$$
+滑り出す直前：$f=\mu_sN_f=0.40\times833=333.2\ \mathrm N$。$R=f$ より
+$$333.2\times5.0\times0.8660=147\times2.5\times0.5+686\times s\times0.5$$
+$$1442.8=183.75+343\,s\ \Longrightarrow\ s=\frac{1258.9}{343}=\mathbf{3.67\ m}$$
+文字式では $s=\dfrac{\mu_s(m_l+m_p)L\tan\theta-m_lL/2}{m_p}=\dfrac{0.40\times85\times5\times1.732-37.5}{70}=3.67\ \mathrm m$。<br>
+⑥ 確かめ：人がいない（$s=0$、はしごだけ）場合の限界角は $\tan\theta\ge1/(2\mu_s)$ → $\theta\ge51.3^\circ$。$60^\circ$ はそれより大きいので、人がいなくても滑らない ✓。人が高く登るほど、$R$ が必要になり、滑りやすくなる ✓。
+<span class="meta">採点：$N_f$ 1／モーメントの式（基準点が下端）3／$f=\mu_sN_f$ の代入 1／$R=f$ 1／$s$ 2。</span></p>
+<p><strong>(3)</strong> $s=3.67\ \mathrm m\lt L=5.0\ \mathrm m$（全長の 73%）なので、頂上まで<strong>登れない</strong>（約 3.7 m で滑り出す）。<span class="meta">採点：比較と結論 4。</span></p>
+<p><strong>(4)</strong> <strong>大きくなる</strong>。壁の摩擦力 $\mu_wR$ は、はしごの上端を<strong>上向きに支える</strong>（上端は壁に沿って下がろうとするので、摩擦力は上向き）。式にすると、鉛直方向が $N_f+\mu_wR=833$、水平方向が $f=R$、滑り出す直前が $f=\mu_sN_f$。下端まわりのモーメントには、壁の摩擦力（腕 $L\cos\theta$、反時計回り）が加わる：
+$$R\,L(\sin\theta+\mu_w\cos\theta)=m_lg\,\tfrac L2\cos\theta+m_pg\,s\cos\theta$$
+例として $\mu_w=0.30$ とすると、$R=\mu_s\cdot833/(1+\mu_s\mu_w)=297.5\ \mathrm N$、左辺 $=1511.3$ なので $s=(1511.3-183.75)/343=3.87\ \mathrm m$（$\gt3.67$）。壁の摩擦が上端を支えるぶん、必要な $R$ が小さくて済むので、$s$ が伸びる。
+<span class="meta">採点：「大きくなる」1／壁の摩擦が上向きに支えるという理由 2／（任意）数値例 1。数値は draft/check_08.py で検算した。</span></p>
+
+</div>
+</details>
+<h2><span class="no">6</span>採点表と復習先</h2>
+<table class="tb">
+<tr><th>問</th><th>範囲</th><th>配点</th><th>得点</th><th>7割未満なら読む節</th></tr>
+<tr><td>1</td><td>偶力・力の移動・合力</td><td>20</td><td>／20</td><td><a href="02_第2回_モーメント.html">第2回</a> 4章・5章、<a href="05_第5回_重心.html">第5回</a> 1章</td></tr>
+<tr><td>2</td><td>3次元の釣合い・二力部材</td><td>20</td><td>／20</td><td><a href="03_第3回_3次元の力とモーメント.html">第3回</a> 1章・4章、<a href="04_第4回_力とモーメントの釣合い.html">第4回</a> 4章・7章</td></tr>
+<tr><td>3</td><td>分布荷重・梁の反力</td><td>20</td><td>／20</td><td><a href="05_第5回_重心.html">第5回</a> 5章、<a href="04_第4回_力とモーメントの釣合い.html">第4回</a> 1章・3章</td></tr>
+<tr><td>4</td><td>滑りと倒れ</td><td>20</td><td>／20</td><td><a href="05_第5回_重心.html">第5回</a> 4章、<a href="06_第6回_摩擦力.html">第6回</a> 2章・5章</td></tr>
+<tr><td>5</td><td>摩擦つきの釣合い（はしご）</td><td>20</td><td>／20</td><td><a href="06_第6回_摩擦力.html">第6回</a> 2.3節・3章</td></tr>
+<tr><th colspan="2">合計</th><th>100</th><th>／100</th><th></th></tr>
+</table>
+<div class="navi">戻る：<a href="08_第8回_中間まとめ.html">中間まとめ</a>（式・道具・よくある誤りの一覧）。</div>
+<p class="meta">出典：すべて自作問題。数値は Python（draft/check_08.py）で検算した。図は Python で座標から組んだ。解答は教員の公式解答とは未照合。</p>
+<div class="navi"><a href="index.html">← 目次へ</a>　｜　<a href="08_第8回_中間まとめ.html">中間まとめ</a>　｜　<a href="08A_中間模擬試験_基礎セット.html">模擬試験 基礎セット</a>　｜　<strong>模擬試験 発展セット</strong></div>
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="08_第8回_中間まとめ.html"><small>NEXT</small>← 中間まとめへ戻る</a></nav>
+</body>
+</html>

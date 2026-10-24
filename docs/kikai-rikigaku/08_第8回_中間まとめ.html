@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8回 中間まとめ</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<header style="padding-top:48px">
+<p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第8回・10/29</p>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">中間まとめ　論理の幹と、使い方の地図</h1>
+</header>
+<p class="lead">第1〜6回を、「何から何が導かれるか」と「どの問題でどの道具を使うか」の 2 つの目で 1 枚にまとめる。式の導出は各回に任せ、ここでは<strong>つながり</strong>と<strong>使い分け</strong>を書く。まとめを読んだら、<a href="08A_中間模擬試験_基礎セット.html">模擬試験 基礎セット</a>と<a href="08B_中間模擬試験_発展セット.html">発展セット</a>で試す。</p>
+<div class="warn"><span class="label">範囲と未確認事項</span>
+<ul>
+<li><strong>第7回（平面トラスの静解析、10/27）は含まない</strong>。講義資料が届き次第、このまとめと模擬試験に節を追加して改訂する（図の⑦、§9 の予定）。中間試験は第1〜7回が範囲（第6回教材の次回案内より）なので、トラスは別に確認すること。</li>
+<li>試験の形式（時間・配点・持込・出題数）は<strong>未確認</strong>。このまとめは「式の導出を求められる問題」と「数値を出す問題」の両方に備える作りにしてある（教員の方針＝導出と運用の両立）。</li>
+<li>講義資料のない第8回なので、対応表は「各回のチェックリスト→模擬試験の問」（§8）にした。</li>
+</ul></div>
+<h2><span class="no">1</span>論理の幹：何から何が導かれるか</h2>
+<figure><svg viewBox="0 0 710 305" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="第1〜7回の論理の地図" style="width:710px;max-width:100%;height:auto;background:#fff"><defs><marker id="cm1" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#555"/></marker></defs><rect x="20" y="20" width="150" height="56" rx="4" fill="#fff" stroke="#2b3a67" stroke-width="1.8"/><text x="95.0" y="42.0" font-size="14" fill="#222" text-anchor="middle" font-weight="bold">①力（第1回）</text><text x="95.0" y="62.0" font-size="12" fill="#555" text-anchor="middle" >ベクトル・合成・分解</text><rect x="20" y="120" width="150" height="56" rx="4" fill="#fff" stroke="#2b3a67" stroke-width="1.8"/><text x="95.0" y="142.0" font-size="14" fill="#222" text-anchor="middle" font-weight="bold">②モーメント（第2回）</text><text x="95.0" y="162.0" font-size="12" fill="#555" text-anchor="middle" >M＝FL、偶力、力の移動</text><rect x="20" y="220" width="150" height="56" rx="4" fill="#fff" stroke="#2b3a67" stroke-width="1.8"/><text x="95.0" y="242.0" font-size="14" fill="#222" text-anchor="middle" font-weight="bold">③3次元（第3回）</text><text x="95.0" y="262.0" font-size="12" fill="#555" text-anchor="middle" >M＝r×F、軸まわり τ＝u·M</text><rect x="250" y="120" width="190" height="56" rx="4" fill="#fff" stroke="#a8322a" stroke-width="1.8"/><text x="345.0" y="142.0" font-size="14" fill="#222" text-anchor="middle" font-weight="bold">④釣合い（第4回）</text><text x="345.0" y="162.0" font-size="12" fill="#555" text-anchor="middle" >ΣF＝0 かつ ΣM＝0</text><rect x="520" y="40" width="170" height="56" rx="4" fill="#fff" stroke="#6b8a5a" stroke-width="1.8"/><text x="605.0" y="62.0" font-size="14" fill="#222" text-anchor="middle" font-weight="bold">⑤重心（第5回）</text><text x="605.0" y="82.0" font-size="12" fill="#555" text-anchor="middle" >分布した重さ＝等価な1つの力</text><rect x="520" y="200" width="170" height="56" rx="4" fill="#fff" stroke="#6b8a5a" stroke-width="1.8"/><text x="605.0" y="222.0" font-size="14" fill="#222" text-anchor="middle" font-weight="bold">⑥摩擦（第6回）</text><text x="605.0" y="242.0" font-size="12" fill="#555" text-anchor="middle" >釣合い＋不等式 f≤μN</text><rect x="250" y="240" width="190" height="50" rx="4" fill="#fff" stroke="#aaa" stroke-width="1.8"/><text x="345.0" y="262.0" font-size="14" fill="#222" text-anchor="middle" font-weight="bold">⑦トラス（第7回）</text><text x="345.0" y="282.0" font-size="12" fill="#555" text-anchor="middle" >節点ごとに ΣF＝0（未作成）</text><line x1="95.0" y1="76.0" x2="95.0" y2="118.0" stroke="#555" stroke-width="1.8" marker-end="url(#cm1)"/><line x1="95.0" y1="176.0" x2="95.0" y2="218.0" stroke="#555" stroke-width="1.8" marker-end="url(#cm1)"/><line x1="170.0" y1="48.0" x2="248.0" y2="140.0" stroke="#555" stroke-width="1.8" marker-end="url(#cm1)"/><line x1="170.0" y1="148.0" x2="248.0" y2="148.0" stroke="#555" stroke-width="1.8" marker-end="url(#cm1)"/><line x1="170.0" y1="248.0" x2="248.0" y2="160.0" stroke="#555" stroke-width="1.8" marker-end="url(#cm1)"/><line x1="440.0" y1="135.0" x2="518.0" y2="80.0" stroke="#555" stroke-width="1.8" marker-end="url(#cm1)"/><line x1="440.0" y1="160.0" x2="518.0" y2="215.0" stroke="#555" stroke-width="1.8" marker-end="url(#cm1)"/><line x1="345.0" y1="240.0" x2="345.0" y2="178.0" stroke="#aaa" stroke-width="1.8" marker-end="url(#cm1)"/><text x="110.0" y="104.0" font-size="11" fill="#555" text-anchor="start" >力のずらし</text><text x="110.0" y="204.0" font-size="11" fill="#555" text-anchor="start" >3次元へ</text></svg><figcaption>第1〜6回の論理の地図。①②③は「力とモーメントを数で表す道具」、④はそれを使う唯一の原理（物体が止まる条件）、⑤⑥は④に新しい量（等価な1つの力、上限のある力）を持ち込む回。</figcaption></figure>
+<p><strong>幹は一本</strong>：物体が止まる条件 $\sum\boldsymbol F=\boldsymbol 0$ かつ $\sum\boldsymbol M=\boldsymbol 0$（第4回）。それ以外の回は、この 2 式を<strong>使えるようにする</strong>ための準備か、応用である。</p>
+<ol>
+<li><strong>第1回</strong>：力はベクトル。合成・分解で、力を「成分」という数に直す。→ $\sum\boldsymbol F=\boldsymbol 0$ を<strong>書ける</strong>。</li>
+<li><strong>第2・3回</strong>：力は物体を並進させるだけでなく<strong>回す</strong>。回す働き＝モーメント $M=FL$（2 次元）、$\boldsymbol M=\boldsymbol r\times\boldsymbol F$（3 次元）。力をずらすと「力＋モーメント」になる。→ $\sum\boldsymbol M=\boldsymbol 0$ を<strong>書ける</strong>。</li>
+<li><strong>第4回</strong>：2 式を<strong>使う</strong>。①自由物体図（外力だけ、内力は現れない）、②未知数と式の数、③二力部材（向きが分かる力）。</li>
+<li><strong>第5回</strong>：分布した重さ・荷重は、<strong>モーメントが等価になる 1 つの力</strong>に置き換えられる。置く位置が重心（図心）。→ 4 の入力が 1 点の力だけでなくなる。</li>
+<li><strong>第6回</strong>：接触面の力には<strong>上限</strong>がある。釣合いの等式の一部が不等式 $f\le\mu_sN$ になる。→ 4 の出力が「答え」でなく「条件の判定」になる。</li>
+</ol>
+<div class="why"><span class="label">一言で</span>第1〜3回＝<strong>書き方</strong>、第4回＝<strong>原理</strong>、第5・6回＝<strong>原理に入れる新しい量</strong>。試験問題の大半は「どの未知数を、どの点まわりのどの式で消すか」を選ぶ問題になる。</div>
+<h2><span class="no">2</span>回別の式・定義の一覧</h2>
+<p class="note">式番号は教科書『機械工学のための力学』のもの（教材の各回に導出がある）。ここでは使う場面だけ書く。</p>
+<h4>第1回　力はベクトル（<a href='01_第1回_イントロダクションと力.html'>教材</a>）</h4>
+<table class="tb"><tr><th style="width:36%">式・定義</th><th>意味と、使う場面</th></tr>
+<tr><td style="text-align:left">$\boldsymbol F=(F_x,F_y)$、$F_x=F\cos\theta,\ F_y=F\sin\theta$</td><td style="text-align:left">角度から成分（どの象限でも）。逆は $\tan^{-1}$ の<strong>象限を成分の符号で判定</strong></td></tr>
+<tr><td style="text-align:left">合力 $\boldsymbol R=\sum\boldsymbol F_i$（成分ごとに和）</td><td style="text-align:left">$R^2=F_1^2+F_2^2+2F_1F_2\cos\varphi$（$\varphi$ は 2 力のなす角、内積から導く）</td></tr>
+<tr><td style="text-align:left">単位ベクトル $\boldsymbol e=\overrightarrow{\mathrm{AB}}/|\overrightarrow{\mathrm{AB}}|$（終点−始点）</td><td style="text-align:left">ケーブル・部材の力 $\boldsymbol F=F\boldsymbol e$。2 次元でも 3 次元でも同じ</td></tr>
+<tr><td style="text-align:left">内積 $\boldsymbol a\cdot\boldsymbol b=a_xb_x+a_yb_y=ab\cos\theta$</td><td style="text-align:left">$\boldsymbol u\cdot\boldsymbol F$＝$\boldsymbol u$ 方向の成分（$\boldsymbol u$ は単位ベクトル）</td></tr>
+<tr><td style="text-align:left">任意の 2 方向への分解（教科書 式2.23）</td><td style="text-align:left">2 元連立方程式。符号が負なら仮定と逆向き、$d=0$ なら分解できない</td></tr>
+<tr><td style="text-align:left">$W=mg$（N）、安全率＝破断強さ／使用荷重</td><td style="text-align:left">質量 [kg] は力 [N] に直してから使う。有効数字 3〜4 桁</td></tr>
+</table>
+<h4>第2回　2次元のモーメント（<a href='02_第2回_モーメント.html'>教材</a>）</h4>
+<table class="tb"><tr><th style="width:36%">式・定義</th><th>意味と、使う場面</th></tr>
+<tr><td style="text-align:left">$M=FL$（$L$：点から<strong>作用線への垂線</strong>）、反時計回りが＋</td><td style="text-align:left">腕は着力点までの距離ではない。単位 N·m</td></tr>
+<tr><td style="text-align:left">$M_P=F_yr_x-F_xr_y$（式2.30′、$\boldsymbol r$＝基準点→作用点）</td><td style="text-align:left">斜めの力を分力で計算する形（バリニオンの定理）。外積 $\boldsymbol r\times\boldsymbol F$ の $z$ 成分</td></tr>
+<tr><td style="text-align:left">作用線上で力をずらしてもモーメントは同じ</td><td style="text-align:left">計算しやすい位置（軸上など）に力を移して成分を出す</td></tr>
+<tr><td style="text-align:left">偶力 $|M|=Fd$。基準点によらない</td><td style="text-align:left">板のどこにあってもよい（自由ベクトル）</td></tr>
+<tr><td style="text-align:left">力の移動：点 A の $\boldsymbol F$ → 点 P の $\boldsymbol F$ ＋ $M=\boldsymbol r_{\mathrm{PA}}\times\boldsymbol F$</td><td style="text-align:left">式2.40・2.41（複数の力を 1 点に集める）。逆に 力＋モーメント → 1 本の力：$d=M/F$</td></tr>
+<tr><td style="text-align:left">基準点を移す：$M_Q=M_P+\overrightarrow{\mathrm{QP}}\times\boldsymbol F$</td><td style="text-align:left">$\boldsymbol R=\boldsymbol 0$ なら $M$ は基準点によらない（第4回で使う）</td></tr>
+</table>
+<h4>第3回　3次元（<a href='03_第3回_3次元の力とモーメント.html'>教材</a>）</h4>
+<table class="tb"><tr><th style="width:36%">式・定義</th><th>意味と、使う場面</th></tr>
+<tr><td style="text-align:left">右手系：$\boldsymbol i\times\boldsymbol j=\boldsymbol k$ など</td><td style="text-align:left">外積の向きは右ねじ。順序を入れ替えると符号が逆（反交換）</td></tr>
+<tr><td style="text-align:left">$\boldsymbol M=\boldsymbol r\times\boldsymbol F=(r_yF_z-r_zF_y,\ r_zF_x-r_xF_z,\ r_xF_y-r_yF_x)$</td><td style="text-align:left">各成分＝各軸まわりのモーメント。$z$ 成分が第2回の式2.30′</td></tr>
+<tr><td style="text-align:left">軸まわり：$\tau=\boldsymbol u\cdot\boldsymbol M$（$\boldsymbol u$ は<strong>単位</strong>ベクトル、軸上の点を基準に）</td><td style="text-align:left">三重積 $\boldsymbol u\cdot(\boldsymbol r\times\boldsymbol F)$ の行列式でも計算できる。答えに軸の向きを書く</td></tr>
+<tr><td style="text-align:left">3 次元の力の分解（三元連立方程式）</td><td style="text-align:left">消去法、または外積・三重積で</td></tr>
+<tr><td style="text-align:left">3 次元の偶力・力の移動</td><td style="text-align:left">2 次元と同じ。ベクトルで書くだけ</td></tr>
+</table>
+<h4>第4回　釣合い（<a href='04_第4回_力とモーメントの釣合い.html'>教材</a>）</h4>
+<table class="tb"><tr><th style="width:36%">式・定義</th><th>意味と、使う場面</th></tr>
+<tr><td style="text-align:left">$\sum\boldsymbol F=\boldsymbol 0,\ \sum\boldsymbol M=\boldsymbol 0$（2 次元 3 式、3 次元 6 式）</td><td style="text-align:left">1 点に作用する力だけなら力の式だけ（式3.3・3.6）</td></tr>
+<tr><td style="text-align:left">基準点・力の軸は任意に選べる</td><td style="text-align:left"><strong>未知数が一番多く集まる点</strong>を基準にして、式を連立せず 1 つずつ解く</td></tr>
+<tr><td style="text-align:left">内力は釣合いに現れない</td><td style="text-align:left">自由物体図には外力だけ。切り出した面の力は、切り出した物体にとっては外力</td></tr>
+<tr><td style="text-align:left">反力：ローラー 1、ピン 2、固定端 3（2 次元）</td><td style="text-align:left">動きを妨げる方向の数。ケーブルは引張りの 1 つ、滑らかな面は垂直方向 1 つ</td></tr>
+<tr><td style="text-align:left">静定／不静定（未知数と式の数）</td><td style="text-align:left">未知数＞式 なら不静定（剛体の仮定だけでは決まらない）</td></tr>
+<tr><td style="text-align:left">二力部材：力は 2 つのピンを結ぶ直線に沿う</td><td style="text-align:left">途中に荷重のない両端ピンの部材（曲がっていても）。引張・圧縮は節点に働く力の向きで判断</td></tr>
+</table>
+<h4>第5回　重心（<a href='05_第5回_重心.html'>教材</a>）</h4>
+<table class="tb"><tr><th style="width:36%">式・定義</th><th>意味と、使う場面</th></tr>
+<tr><td style="text-align:left">$\boldsymbol r_G=\sum w_i\boldsymbol r_i/W$、連続体 $\boldsymbol r_G=\frac1W\int\boldsymbol r\,dw$</td><td style="text-align:left">全重量を 1 点に作用させて<strong>モーメントが等価</strong>になる点。均質なら体積・面積・長さで約分（図心）</td></tr>
+<tr><td style="text-align:left">分割と合成 $x_G=(W_1x_{G1}+W_2x_{G2})/(W_1+W_2)$</td><td style="text-align:left">欠損は<strong>負の面積</strong>として引く。対称性があれば積分を省く</td></tr>
+<tr><td style="text-align:left">長方形 $(a/2,\ b/2)$、三角形：底辺から高さの $1/3$</td><td style="text-align:left">扇形 $2r\sin\alpha/(3\alpha)$（半角 $\alpha$）、半円 $4r/(3\pi)$、L 字板 $(5a/6,\ 5b/6)$（教材 3章で導出）</td></tr>
+<tr><td style="text-align:left">分布荷重：合力＝荷重分布の<strong>面積</strong>、作用点＝その<strong>図心</strong></td><td style="text-align:left">三角形分布の合力は高い側から底辺の $1/3$ の位置</td></tr>
+<tr><td style="text-align:left">転倒：重心の鉛直線が底面の外に出たら倒れる、$\tan\theta_c=b/h$</td><td style="text-align:left">台車の車輪荷重：重心の位置のモーメント釣合い</td></tr>
+</table>
+<h4>第6回　摩擦（<a href='06_第6回_摩擦力.html'>教材</a>）</h4>
+<table class="tb"><tr><th style="width:36%">式・定義</th><th>意味と、使う場面</th></tr>
+<tr><td style="text-align:left">$F_s\le\mu_sN$（上限）、運動中 $F_k=\mu_kN$、$\mu_s\gt\mu_k$</td><td style="text-align:left"><strong>摩擦力＝μN は、動き出す直前と運動中だけ</strong>。それ以前は釣合いで決まる未知数</td></tr>
+<tr><td style="text-align:left">型 (I)：$f$ を未知数にして解き、$f\le\mu_sN$ を確かめる</td><td style="text-align:left">「滑るか」「摩擦力はいくつか」</td></tr>
+<tr><td style="text-align:left">型 (II)：$f=\mu_sN$ と置いて解く（向き＝運動しようとする向きの逆）</td><td style="text-align:left">「動き出す直前」「最小の力」「限界の角」</td></tr>
+<tr><td style="text-align:left">摩擦角 $\tan\phi=\mu_s$、斜面で $\mu_s=\tan\theta_0$</td><td style="text-align:left">立てかけた棒（壁が滑らか）：$\tan\theta\ge1/(2\mu_s)$。摩擦円錐</td></tr>
+<tr><td style="text-align:left">$N$ は $mg$ とは限らない</td><td style="text-align:left">斜めに引く：$P=\mu_smg/(\cos\alpha+\mu_s\sin\alpha)$。重なった物体</td></tr>
+<tr><td style="text-align:left">複数の接触面：上限 $\mu N$ の小さい面が先に滑る</td><td style="text-align:left">物体を別々に切り出し、「どの面が滑る」と仮定して矛盾がないか確かめる</td></tr>
+<tr><td style="text-align:left">ねじ・ロープ・転がり</td><td style="text-align:left">$P=Q\tan(\alpha\pm\lambda)$、自己ロック $\alpha\le\lambda$；ロープ $T_{大}=T_{小}e^{\mu\alpha}$；転がり抵抗 $P=aW/r$</td></tr>
+</table>
+<h2><span class="no">3</span>問題文のことば → 使う道具</h2>
+<table class="tb">
+<tr><th style="width:30%">問題文にあることば</th><th>まず何をするか</th><th>参照</th></tr>
+<tr><td style="text-align:left">「合力」「2本のロープで吊る」</td><td style="text-align:left">力を成分に分け、$\sum F_x=0,\ \sum F_y=0$（または成分ごとに和）</td><td>第1回 4〜6章</td></tr>
+<tr><td style="text-align:left">「点 P まわりのモーメント」</td><td style="text-align:left">$M=F_yr_x-F_xr_y$（2D）、$\boldsymbol r\times\boldsymbol F$（3D）。$\boldsymbol r$ は基準点→作用点</td><td>第2・3回</td></tr>
+<tr><td style="text-align:left">「偶力」「純粋モーメント」</td><td style="text-align:left">どこでも同じ値。基準点を移しても変えない</td><td>第2回 4章</td></tr>
+<tr><td style="text-align:left">「軸 a まわり」「ヒンジ」</td><td style="text-align:left">$\boldsymbol M$ を出してから $\tau=\boldsymbol u\cdot\boldsymbol M$。軸上の点を基準に</td><td>第3回 5章</td></tr>
+<tr><td style="text-align:left">「力と偶力を 1 点に／1 本の力に」</td><td style="text-align:left">1 点に集める：力はそのまま＋モーメント。1 本に戻す：$d=M/F$</td><td>第2・3回</td></tr>
+<tr><td style="text-align:left">「支点反力」「ピン」「ローラー」</td><td style="text-align:left">自由物体図 → 未知数を数える → 未知数が集まる点まわりでモーメント</td><td>第4回 3・5章</td></tr>
+<tr><td style="text-align:left">「ケーブル」「リンク」「両端ピンの棒」</td><td style="text-align:left">二力部材：力の向きが既知（未知数は大きさ 1 つ）</td><td>第4回 4章</td></tr>
+<tr><td style="text-align:left">「支線」「3 次元」「ボールジョイント」</td><td style="text-align:left">1 点に集まる力なら力の 3 式だけ。それ以外は 6 式</td><td>第4回 7章</td></tr>
+<tr><td style="text-align:left">「図心」「重心」「切り欠き」「穴」</td><td style="text-align:left">分割と合成。欠損は負の面積</td><td>第5回 2〜3章</td></tr>
+<tr><td style="text-align:left">「分布荷重」</td><td style="text-align:left">面積＝合力、図心＝作用点で 1 つの力に置き換えてから釣合い</td><td>第5回 5章</td></tr>
+<tr><td style="text-align:left">「倒れるか」</td><td style="text-align:left">垂直抗力の作用点が底面の内側か（限界は端）</td><td>第5回 4章</td></tr>
+<tr><td style="text-align:left">「滑るか」「摩擦力はいくつ」</td><td style="text-align:left">型 (I)：$f$ を未知数にし $f\le\mu_sN$ を確かめる</td><td>第6回 2.1</td></tr>
+<tr><td style="text-align:left">「動き出す直前」「最小の力」「限界の角」</td><td style="text-align:left">型 (II)：$f=\mu_sN$、向きは運動しようとする向きの逆</td><td>第6回 2.1</td></tr>
+<tr><td style="text-align:left">「滑るのが先か倒れるのが先か」</td><td style="text-align:left">両方の限界を別々に求めて、小さいほうが先</td><td>第6回 5章</td></tr>
+</table>
+<h2><span class="no">4</span>解き方の型（毎回同じ）</h2>
+<div class="thm"><span class="label">手順①〜⑥</span>
+<ol>
+<li><strong>系を切り出して自由物体図</strong>：何を 1 つの物体と見るか。<strong>外力だけ</strong>（接触面ごとに反力、重さ、与えられた荷重）。</li>
+<li><strong>座標軸を決める</strong>：斜面があれば斜面に沿う向きにとる手もある。3 次元は右手系。</li>
+<li><strong>力を成分（または 単位ベクトル×大きさ）で書く</strong>：向きが分からない未知数は、仮定でよい（答えの符号が決める）。</li>
+<li><strong>釣合い式を立てる</strong>：力の式（2 本）とモーメントの式。<strong>モーメントの基準点は、未知数が集まる点</strong>。</li>
+<li><strong>解く</strong>：1 つずつ解けるように式を選ぶ。連立が必要なら 2 元から。</li>
+<li><strong>確かめ</strong>：符号（仮定の向き）、単位、有効数字 3〜4 桁、<strong>使わなかった式で検算</strong>、極端な場合（角を 0 や 90° にする）。</li>
+</ol></div>
+<div class="box"><span class="label">未知数の選び方（時間を節約する）</span>
+<ul>
+<li>未知数と式の数を<strong>最初に数える</strong>（2 次元 3 式、3 次元 6 式）。合わなければ静定ではない（第4回 3.3）。</li>
+<li>モーメントの基準点を、<strong>反力が 2 つ集まる点</strong>（ピン）にすると未知数が 2 つ消える。</li>
+<li>力の式の軸を、<strong>未知の力に垂直</strong>にとると、その力が消える（第4回 1.4）。</li>
+<li>分布荷重は、<strong>釣合いの式を立てる前に</strong>面積と図心で 1 つの力に直す。</li>
+<li>摩擦は、<strong>どの面が滑るか</strong>を先に決めてから $f=\mu_sN$ を入れる。</li>
+</ul></div>
+<h2><span class="no">5</span>回をまたぐ接続：同じ式の別の顔</h2>
+<ul>
+<li><strong>$M_P=F_yr_x-F_xr_y$（第2回）＝ $\boldsymbol M=\boldsymbol r\times\boldsymbol F$ の $z$ 成分（第3回）</strong>。3 次元の式は、2 次元の式を拡張しただけ。</li>
+<li><strong>偶力が基準点によらない（第2回）</strong>が、<strong>「$\boldsymbol R=\boldsymbol 0$ ならモーメントは基準点によらない」（第4回）</strong>の特別な場合。だから釣合いの問題では基準点を自由に選べる。</li>
+<li><strong>重心（第5回）</strong>は、<strong>重力の合力の作用点</strong>。第2回の「力を 1 本にまとめる」（$d=M/F$）と同じ考え。分布荷重の面積・図心も同じ。</li>
+<li><strong>摩擦の釣合い（第6回）</strong>は、第4回の釣合いに<strong>不等式</strong>を足しただけ。滑る直前は不等式が等式になり、未知数が 1 つ減る（式が 1 つ増える）。</li>
+<li><strong>倒れる（第5回）と滑る（第6回）</strong>は、床の力の位置の条件（底面の内側）と大きさの条件（$f\le\mu_sN$）の 2 つで、同時に調べる。</li>
+</ul>
+<h2><span class="no">6</span>よくある誤り（点を落とす所）</h2>
+<table class="tb">
+<tr><th style="width:5%">#</th><th style="width:40%">誤り</th><th>正しくは</th></tr>
+<tr><td>1</td><td style="text-align:left">質量 [kg] をそのまま力として使う</td><td style="text-align:left">$W=mg$（N）。$g=9.80$（問題の指示に従う）</td></tr>
+<tr><td>2</td><td style="text-align:left">$\tan^{-1}$ の値をそのまま向きにする</td><td style="text-align:left">成分の符号で象限を判定し、$180^\circ$ を足す（問1(1)）</td></tr>
+<tr><td>3</td><td style="text-align:left">モーメントの腕を、基準点から着力点までの距離にする</td><td style="text-align:left">作用線への<strong>垂線</strong>。または成分の式 $F_yr_x-F_xr_y$</td></tr>
+<tr><td>4</td><td style="text-align:left">$\boldsymbol F\times\boldsymbol r$ と順序を逆にする</td><td style="text-align:left">$\boldsymbol r\times\boldsymbol F$（基準点→作用点の $\boldsymbol r$ が先）。逆にすると符号が反転</td></tr>
+<tr><td>5</td><td style="text-align:left">軸の方向ベクトルを単位化しない</td><td style="text-align:left">$\boldsymbol u=(1,2,2)/3$ のように大きさで割る（模擬 A問3）</td></tr>
+<tr><td>6</td><td style="text-align:left">向きベクトルを「始点−終点」で作る</td><td style="text-align:left">「終点−始点」。力が引く先（ケーブルの他端）が終点</td></tr>
+<tr><td>7</td><td style="text-align:left">内力を自由物体図に描く／切り出し面の力を忘れる</td><td style="text-align:left">切り出した物体にとっての外力だけ描く</td></tr>
+<tr><td>8</td><td style="text-align:left">荷重のある棒を二力部材にする</td><td style="text-align:left">力の加わる点が 2 つだけの部材のみ（模擬 A問4(3)）</td></tr>
+<tr><td>9</td><td style="text-align:left">偶力のモーメントを、置き場所で変わるとする</td><td style="text-align:left">基準点・置き場所によらない（模擬 B問3(3)）</td></tr>
+<tr><td>10</td><td style="text-align:left">三角形分布荷重の合力を中央に置く</td><td style="text-align:left">高い側から底辺の $1/3$（模擬 A問5(2)・B問3）</td></tr>
+<tr><td>11</td><td style="text-align:left">摩擦力を常に $\mu N$ とする</td><td style="text-align:left">上限が $\mu_sN$。動かないとき摩擦力は釣合いで決まる値（模擬 A問6(1)(2)）</td></tr>
+<tr><td>12</td><td style="text-align:left">$N=mg$ と決めつける</td><td style="text-align:left">斜めに引く・斜面・重なった物体では変わる（模擬 A問6(3)）</td></tr>
+<tr><td>13</td><td style="text-align:left">モーメントの基準点を適当に選び、未知数が増える</td><td style="text-align:left">未知数が集まる点を基準にする</td></tr>
+<tr><td>14</td><td style="text-align:left">摩擦の向きを運動と同じにする</td><td style="text-align:left">相手に対して<strong>動こうとする向きの逆</strong></td></tr>
+</table>
+<h2><span class="no">7</span>検算の習慣（答案の最後の 1 分）</h2>
+<ul>
+<li><strong>使わなかった式で確かめる</strong>：A まわりで解いたら、B まわりのモーメントが 0 になるか。</li>
+<li><strong>符号</strong>：求めた力が負なら、仮定と逆向き（答えの文に向きを書く）。ケーブルの張力・摩擦の垂直力は負にならない。</li>
+<li><strong>極端な場合</strong>：角を 0° や 90° にしたら既知の結果に戻るか。摩擦なし（$\mu=0$）で「すぐ滑る」になるか。</li>
+<li><strong>桁と単位</strong>：N と N·m を混ぜない。有効数字 3〜4 桁。途中で丸めない（最後に丸める）。</li>
+<li><strong>向き・作用点の書き忘れ</strong>：合力は大きさ・向き・作用点の 3 つで答える（第1回 3.1）。</li>
+</ul>
+<h2><span class="no">8</span>自己診断：各回の項目と、模擬試験の対応</h2>
+<table class="tb"><tr><th>回</th><th style="text-align:left">確認する項目（各回末尾のチェックリストの要約）</th><th>模擬試験の問</th></tr>
+<tr><td><a href="01_第1回_イントロダクションと力.html">第1回</a></td><td style="text-align:left">合成・分解（成分、象限）、単位ベクトル、内積、手順①〜⑥、安全率</td><td>A問1、B問1(3)</td></tr>
+<tr><td><a href="02_第2回_モーメント.html">第2回</a></td><td style="text-align:left">M＝FL、符号、M＝F_y r_x−F_x r_y、偶力、力の移動、基準点を移す式</td><td>A問2、B問1</td></tr>
+<tr><td><a href="03_第3回_3次元の力とモーメント.html">第3回</a></td><td style="text-align:left">右手系、外積、r×F、τ＝u·M、3次元の偶力</td><td>A問3、B問2</td></tr>
+<tr><td><a href="04_第4回_力とモーメントの釣合い.html">第4回</a></td><td style="text-align:left">ΣF＝0・ΣM＝0、内力、支点、静定、二力部材、3次元の6式</td><td>A問4、B問2・3・5</td></tr>
+<tr><td><a href="05_第5回_重心.html">第5回</a></td><td style="text-align:left">重心・図心、分割と合成、分布荷重、転倒</td><td>A問5、B問1(3)・3・4</td></tr>
+<tr><td><a href="06_第6回_摩擦力.html">第6回</a></td><td style="text-align:left">μ_sN、型(I)(II)、摩擦角、斜め引き、複数の面、台車（滑りvs倒れ）</td><td>A問6、B問4・5</td></tr>
+</table>
+<div class="warn"><span class="label">模擬試験に入れていない範囲</span>第6回 4章（ねじ・ロープ・転がり）の公式は、問題として出す頻度が読めないので模擬試験には入れていない。<a href="06_第6回_摩擦力.html">第6回</a> 4章の例題を一度解いておく。また第7回（トラス）は未作成。</div>
+<h2><span class="no">9</span>試験までの進め方（案）</h2>
+<p class="note">本人の予定は確認していない。次は一つの案で、合わなければ組み替えてよい。</p>
+<table class="tb">
+<tr><th>日</th><th style="text-align:left">やること</th></tr>
+<tr><td>10/24〜25</td><td style="text-align:left">このまとめを通読 → 基礎セット（A）を時間を計って解く → 自己採点、7 割未満の問の節を読み直す</td></tr>
+<tr><td>10/26</td><td style="text-align:left">発展セット（B）。解けなかった問は、解答の手順①〜⑥を<strong>見ずに</strong>もう一度書く</td></tr>
+<tr><td>10/27</td><td style="text-align:left"><strong>第7回（平面トラス）の講義</strong>。資料が届いたら、教材とこのまとめ・模擬試験に追加する（Claude に依頼）</td></tr>
+<tr><td>10/28</td><td style="text-align:left">間違えた問を解き直す。トラスの例題を 2〜3 問</td></tr>
+<tr><td>10/29</td><td style="text-align:left">中間試験。<strong>最初の 5 分で全問に目を通し、解きやすい順に</strong>取り組む</td></tr>
+</table>
+<div class="box"><span class="label">第7回（平面トラス）の予定欄</span>資料到着後に追加：節点法・切断法、零部材、引張・圧縮の判定、静定条件 $m+r=2j$（要確認）。ここは<strong>未作成</strong>で、資料と照合してから書く。</div>
+<p class="meta">出典：第1〜6回の教材（本フォルダ output/）の要約と再編。式番号は教科書『機械工学のための力学』（日本機械学会）による。試験の形式は未確認。第7回は未作成。</p>
+<div class="navi"><a href="index.html">← 目次へ</a>　｜　<strong>中間まとめ</strong>　｜　<a href="08A_中間模擬試験_基礎セット.html">模擬試験 基礎セット</a>　｜　<a href="08B_中間模擬試験_発展セット.html">模擬試験 発展セット</a></div>
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="08A_中間模擬試験_基礎セット.html"><small>NEXT</small>模擬試験 基礎セット →</a></nav>
+</body>
+</html>
