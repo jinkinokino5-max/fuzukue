@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第7回 小テスト解説（課題7A）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<header style="padding-top:48px">
+<p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第7回・小テスト解説</p>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">課題 7A の解き方</h1>
+</header>
+<p class="lead">2026/10/27／第7回「平面トラスの静解析」の Moodle 小テスト（課題 7A〔必修〕全2問）。各問を、教材 第7回の道具（節点法・切断法）で、手順①〜⑥にそって解き直したもの。</p>
+
+<div class="navi">
+<strong>2問に共通する道具</strong>：トラスの部材は<strong>二力部材</strong>（両端のピンだけで力を受ける）なので、力は棒に沿った<strong>1つの値</strong>になる（教材 1.2節）。本解説では<strong>引張を正、圧縮を負</strong>とする。矢印は、<strong>節点から部材の方へ向かう向き</strong>（部材が節点を引っぱる向き）に描き、答えが負なら圧縮と読む。<br>
+<strong>2つの攻め方</strong>：<strong>節点法</strong>＝1つの節点を切り出し、$\sum F_x=0,\ \sum F_y=0$ の2式で<strong>未知の部材力が2本以下</strong>の節点から順に解く（7A-1）。<strong>切断法</strong>＝トラスを切って一部を取り出し、<strong>3本以下</strong>を切るように切断して、$\sum F_x,\ \sum F_y,\ \sum M$ の3式で解く（7A-2）。<strong>手順</strong>：①系を切り出して自由物体図 → ②座標軸 → ③力を成分で → ④釣合い式 → ⑤解く → ⑥符号・単位・検算。
+</div>
+
+<div class="warn"><span class="label">この解説の位置づけ</span>問題文と図は Moodle の画面（reference/講義資料/第7回小テスト.png）から転載した。解答は<strong>自作</strong>で、<strong>公式解答とは未照合</strong>（Moodle 画面に正解表示がなかった）。数値は Python（draft/check_quiz07.py）で、手計算（節点法・切断法）とは別に、<strong>全節点の釣合いを1本の連立一次方程式として数値で解いて</strong>検算し、一致した。図から読み取った前提：7A-1 は A がローラー（鉛直反力のみ）、D がピン（反力2成分）、BC ⊥ AC、A・C・D は一直線／7A-2 は B がピン、A が壁に沿うローラー（水平反力のみ）、E は F の真下で下弦 A–C–E–G は一直線（図の寸法から E は上弦の $\tfrac23$ m 下）。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>7A-1　全部材の力を求める（節点法）</h2>
+<div class="ex"><span class="label">7A-1〔B 標準〕</span>
+<p>Determine the internal forces in all members of the truss.<br>
+（このトラスの全部材の内力を求めなさい。）</p>
+<figure class="slide"><img src="img/quiz07/q7a1.png" alt="A（ローラー）から2本の部材が30°と60°で出て、B と C に至る。B–D は水平2 m、D は壁にピン。C は A–D 上の点で BC は AD に垂直、C に下向き10 kN" loading="lazy" style="width:520px;max-width:95%;height:auto;background:#fff"><figcaption>7A-1 の図。出典：第7回小テスト（Moodle 課題 7A 問題1）</figcaption></figure>
+<p class="note">解答欄：$F_{AB},F_{BC},F_{BD},F_{AC},F_{CD}$ それぞれの大きさ [kN] と、引張／圧縮。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>形を読む</strong>：$AB=2$ m、$\angle BAC=30^\circ$、$\angle ACB=90^\circ$ なので、直角三角形 ABC から
+$$AC=AB\cos30^\circ=\sqrt3\ \mathrm m,\qquad BC=AB\sin30^\circ=1\ \mathrm m$$
+A を原点にとると、AB は水平から $60^\circ$、AC は $30^\circ$ なので
+$$A(0,0),\quad B(1,\sqrt3),\quad C\Big(\tfrac32,\tfrac{\sqrt3}2\Big),\quad D(3,\sqrt3)$$
+（$BD=2$ m が水平なので D の高さは B と同じ $\sqrt3$。このとき D は直線 AC の延長上にある：$y=x\tan30^\circ=3/\sqrt3=\sqrt3$ ✓。）<br>
+<strong>どの節点から解くか</strong>：節点法は「未知が2本以下」の節点から始める。いまは A（AB, AC と反力 $A_y$：3つ）、B（AB, BC, BD：3つ）、C（AC, BC, CD：3つ）、D（BD, CD と反力2成分：4つ）で、<strong>どこも3つ以上</strong>。そこで<strong>まず全体の釣合いで反力 $A_y$ を出して</strong> A の未知を2つにする。</p>
+<figure><svg viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="7A-1 の結果" style="width:520px;max-width:100%;height:auto;background:#fff">
+<defs><marker id="f1k" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#222"/></marker></defs><defs><marker id="f1g" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#2a7a3b"/></marker></defs><line x1="70.0" y1="265.0" x2="165.0" y2="100.5" stroke="#2b3a67" stroke-width="5"/><text x="18" y="177" font-size="14" fill="#2b3a67" font-weight="bold">AB 8.66 圧縮</text><line x1="165.0" y1="100.5" x2="212.5" y2="182.7" stroke="#a8322a" stroke-width="5"/><text x="77" y="156" font-size="14" fill="#a8322a" font-weight="bold">BC 8.66 引張</text><line x1="165.0" y1="100.5" x2="355.0" y2="100.5" stroke="#2b3a67" stroke-width="5"/><text x="220" y="88" font-size="14" fill="#2b3a67" font-weight="bold">BD 8.66 圧縮</text><line x1="70.0" y1="265.0" x2="212.5" y2="182.7" stroke="#a8322a" stroke-width="5"/><text x="127" y="250" font-size="14" fill="#a8322a" font-weight="bold">AC 5.00 引張</text><line x1="212.5" y1="182.7" x2="355.0" y2="100.5" stroke="#a8322a" stroke-width="5"/><text x="214" y="120" font-size="14" fill="#a8322a" font-weight="bold">CD 10.0 引張</text><circle cx="70.0" cy="265.0" r="5" fill="#fff" stroke="#222" stroke-width="2"/><text x="52" y="256" font-size="15">A</text><circle cx="165.0" cy="100.5" r="5" fill="#fff" stroke="#222" stroke-width="2"/><text x="147" y="91" font-size="15">B</text><circle cx="212.5" cy="182.7" r="5" fill="#fff" stroke="#222" stroke-width="2"/><text x="194" y="174" font-size="15">C</text><circle cx="355.0" cy="100.5" r="5" fill="#fff" stroke="#222" stroke-width="2"/><text x="337" y="91" font-size="15">D</text><line x1="212.5" y1="188.7" x2="212.5" y2="244.7" stroke="#222" stroke-width="3" marker-end="url(#f1k)"/><text x="220" y="241" font-size="14">10 kN</text><line x1="70.0" y1="325.0" x2="70.0" y2="273.0" stroke="#2a7a3b" stroke-width="3" marker-end="url(#f1g)"/><text x="78" y="319" font-size="13" fill="#2a7a3b">A_y = 5 kN</text><line x1="355.0" y1="160.5" x2="355.0" y2="108.5" stroke="#2a7a3b" stroke-width="3" marker-end="url(#f1g)"/><text x="363" y="154" font-size="13" fill="#2a7a3b">D_y = 5 kN</text>
+<text x="20" y="352" font-size="12" fill="#555">赤：引張　青：圧縮　緑：反力（D_x = 0）</text></svg><figcaption>7A-1 の結果。赤＝引張、青＝圧縮（数値は大きさ [kN]）。A は鉛直反力 5 kN、D も鉛直反力 5 kN（水平反力は 0）。</figcaption></figure>
+<p>② <strong>全体の釣合いから $A_y$</strong>：A はローラーで反力は鉛直（$A_y$、上向き）のみ。D のピンの反力 $D_x,D_y$ は D を通るので、<strong>D まわりのモーメント</strong>で消せる。D から見て $A_y$ の腕（水平距離）は $3$ m、10 kN の荷重（C）の腕は $3-\tfrac32=\tfrac32$ m：
+$$A_y\times3-10\times\tfrac32=0\ \Longrightarrow\ A_y=5.00\ \mathrm{kN}$$
+<span class="note">（念のため：水平方向の外力は荷重にも A にもないので $D_x=0$、鉛直は $A_y+D_y=10$ より $D_y=5.00$ kN。）</span></p>
+<p>③ <strong>節点 A</strong>（未知：$F_{AB},F_{AC}$）。単位ベクトルは AB が $(\cos60^\circ,\sin60^\circ)=(\tfrac12,\tfrac{\sqrt3}2)$、AC が $(\cos30^\circ,\sin30^\circ)=(\tfrac{\sqrt3}2,\tfrac12)$。
+$$\sum F_x:\ \tfrac12F_{AB}+\tfrac{\sqrt3}2F_{AC}=0\ \Longrightarrow\ F_{AB}=-\sqrt3\,F_{AC}$$
+$$\sum F_y:\ 5+\tfrac{\sqrt3}2F_{AB}+\tfrac12F_{AC}=0$$
+$F_{AB}$ を代入：$5+\tfrac{\sqrt3}2(-\sqrt3F_{AC})+\tfrac12F_{AC}=5-\tfrac32F_{AC}+\tfrac12F_{AC}=5-F_{AC}=0$。よって
+$$F_{AC}=+5.00\ \mathrm{kN}\ (\text{引張}),\qquad F_{AB}=-5\sqrt3=-8.66\ \mathrm{kN}\ (\text{圧縮})$$
+④ <strong>節点 C</strong>（未知：$F_{BC},F_{CD}$。$F_{AC}$ は既知）。ここは <strong>BC が AD に垂直</strong>という形を使う：軸を AD に沿う $u=(\tfrac{\sqrt3}2,\tfrac12)$ と、それに垂直で B 向きの $n=(-\tfrac12,\tfrac{\sqrt3}2)$ にとると、BC は $n$ だけ、AC と CD は $u$ だけに成分をもつので、式が<strong>1本ずつ別々に</strong>解ける。荷重 $(0,-10)$ の成分は $u$：$-10\times\tfrac12=-5$、$n$：$-10\times\tfrac{\sqrt3}2=-8.66$。AC が C を引く向きは A の方（$-u$）。
+$$u:\ -F_{AC}+F_{CD}-5=0\ \Longrightarrow\ F_{CD}=5+5=10.0\ \mathrm{kN}\ (\text{引張})$$
+$$n:\ F_{BC}-8.66=0\ \Longrightarrow\ F_{BC}=5\sqrt3=8.66\ \mathrm{kN}\ (\text{引張})$$
+⑤ <strong>節点 B</strong>（未知：$F_{BD}$ だけ）。B から A へ向かう向き $(-\tfrac12,-\tfrac{\sqrt3}2)$、C へ向かう向き $(\tfrac12,-\tfrac{\sqrt3}2)$、D へ向かう向き $(1,0)$：
+$$\sum F_y:\ -\tfrac{\sqrt3}2(F_{AB}+F_{BC})=-\tfrac{\sqrt3}2(-8.66+8.66)=0\ \ ✓\ (\text{検算になっている})$$
+$$\sum F_x:\ -\tfrac12F_{AB}+\tfrac12F_{BC}+F_{BD}=0\ \Longrightarrow\ F_{BD}=\tfrac12(F_{AB}-F_{BC})=\tfrac12(-8.66-8.66)=-8.66\ \mathrm{kN}\ (\text{圧縮})$$
+⑥ <strong>確かめ</strong>：(i) <strong>節点 B の $\sum F_y$</strong>：B では未知が $F_{BD}$ だけ（水平）で、鉛直の式は未使用。それがちょうど 0 になった ✓。 (ii) <strong>節点 D</strong>：D が受ける力は、BD から $(+8.66,0)$（圧縮なので D を B から遠ざける向き＝右）、CD から $10\times(-\tfrac{\sqrt3}2,-\tfrac12)=(-8.66,-5)$、反力 $(D_x,D_y)$。合計 0 より $D_x=0,\ D_y=5$：全体の釣合いの結果と一致 ✓。 (iii) <strong>連立方程式で解き直し</strong>：全節点の式を1本の連立方程式にして数値で解いても同じ ✓。 (iv) <strong>向きの感覚</strong>：C にぶら下がった荷重を、A–C–D の線が引き上げる形で支える（AC・CD は引張）。AB と BD は B を支える<strong>押す</strong>部材（圧縮）。</p>
+<table class="tb"><tr><th>部材</th><th>$F_{AB}$</th><th>$F_{BC}$</th><th>$F_{BD}$</th><th>$F_{AC}$</th><th>$F_{CD}$</th></tr>
+<tr><td>大きさ [kN]</td><td>8.66</td><td>8.66</td><td>8.66</td><td>5.00</td><td>10.0</td></tr>
+<tr><td>引張／圧縮</td><td>圧縮</td><td>引張</td><td>圧縮</td><td>引張</td><td>引張</td></tr></table>
+<p><strong>答え：</strong>$F_{AB}=F_{BD}=5\sqrt3\approx8.66$ kN（圧縮）、$F_{BC}=5\sqrt3\approx8.66$ kN（引張）、$F_{AC}=5.00$ kN（引張）、$F_{CD}=10.0$ kN（引張）</p></div>
+<div class="warn"><span class="label">よくある誤り</span>(1) <strong>反力を出さずに節点 A から始める</strong>：A の未知が3つ（AB, AC, $A_y$）で式が足りない。節点法でも、先に<strong>全体の釣合いで反力</strong>を出すのが普通（教材 2.1節）。 (2) <strong>A はローラーなのに反力を2成分にする</strong>：ローラーは動ける方向（水平）には力を出せない。反力は<strong>支持面に垂直</strong>の1成分だけ。 (3) 引張・圧縮の<strong>符号の約束を途中で変える</strong>：矢印は必ず<strong>節点から部材の方へ</strong>（引張を正）に統一し、答えの符号で判定する。 (4) <strong>ピン D の反力</strong>を節点 B の計算に混ぜる：D の反力は D の節点にだけ関係する。 (5) 角度の取り違え：AB は水平から 30° ではなく <strong>60°</strong>（図の 30° は AB と AC の間、もう一つが AC と水平の間）。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>7A-2　片持ちトラスの3本を切断法で求める</h2>
+<div class="ex"><span class="label">7A-2〔B 標準〕</span>
+<p>Determine the forces in members CE, DE and DF of the cantilever truss. Use the method of sections.<br>
+（片持ちトラスの部材 CE, DE, DF の力を求めなさい。切断法を使うこと。）</p>
+<figure class="slide"><img src="img/quiz07/q7a2.png" alt="壁に B（ピン）と A（ローラー）で支えられた片持ちトラス。上弦 B–D–F–G は 2 m ずつ、荷重は D に2 kN、F に3 kN、G に2 kN（下向き）。下弦 A–C–E–G は一直線" loading="lazy" style="width:560px;max-width:95%;height:auto;background:#fff"><figcaption>7A-2 の図。出典：第7回小テスト（Moodle 課題 7A 問題2）</figcaption></figure>
+<p class="note">解答欄：「"Method of sections" を使って解きましたか？」→<strong>はい</strong>。$F_{CE},F_{DE},F_{DF}$ の大きさ [kN] と、引張／圧縮。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>形を読む</strong>：A を原点に、$A(0,0),\ B(0,2),\ D(2,2),\ F(4,2),\ G(6,2)$。下弦は A から G まで一直線で、$A(0,0)\to G(6,2)$ の傾きは $\tfrac13$ なので
+$$C\Big(2,\tfrac23\Big),\qquad E\Big(4,\tfrac43\Big)$$
+（E は F の真下 $2-\tfrac43=\tfrac23$ m。）CE も DE も水平 2 m に対して鉛直 $\tfrac23$ m ずれる<strong>傾き $\tfrac13$</strong> の部材で、E から見た単位ベクトルは
+$$E\to C:\ \tfrac1{\sqrt{10}}(-3,-1),\qquad E\to D:\ \tfrac1{\sqrt{10}}(-3,+1)$$
+（水平 3：鉛直 1 の比。長さ $\sqrt{3^2+1^2}=\sqrt{10}$ で割った。）</p>
+<p>② <strong>どこで切るか</strong>：求めたいのは DF, DE, CE の<strong>ちょうど3本</strong>。この3本を横切る線（図の破線：D と F の間、たとえば $x=3$ m）で切ると、トラスは左（A, B, C, D）と右（E, F, G）の2つに分かれる。<strong>右側</strong>をとると、<strong>反力 A, B を知らなくてよい</strong>（右側には支持がない）。これが切断法の利点：全体の反力を先に出さなくても済む。</p>
+<figure><svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="7A-2 の切断面と右側の自由物体図" style="width:560px;max-width:100%;height:auto;background:#fff">
+<defs><marker id="f2k" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#222"/></marker></defs><defs><marker id="f2r" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#a8322a"/></marker></defs><line x1="180.0" y1="90.0" x2="290.0" y2="90.0" stroke="#222" stroke-width="4"/><line x1="290.0" y1="90.0" x2="510.0" y2="90.0" stroke="#222" stroke-width="4"/><line x1="180.0" y1="126.7" x2="290.0" y2="163.3" stroke="#222" stroke-width="4"/><line x1="180.0" y1="200.0" x2="290.0" y2="163.3" stroke="#222" stroke-width="4"/><line x1="290.0" y1="90.0" x2="290.0" y2="163.3" stroke="#222" stroke-width="4"/><line x1="290.0" y1="163.3" x2="510.0" y2="90.0" stroke="#222" stroke-width="4"/><line x1="180.0" y1="46.0" x2="180.0" y2="255.0" stroke="#555" stroke-width="2" stroke-dasharray="7 5"/><circle cx="290.0" cy="163.3" r="5" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="290.0" cy="90.0" r="5" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="510.0" cy="90.0" r="5" fill="#fff" stroke="#222" stroke-width="2"/><text x="298" y="181" font-size="15">E</text><text x="294" y="64" font-size="15">F</text><text x="518" y="64" font-size="15">G</text><line x1="290.0" y1="28.0" x2="290.0" y2="82.0" stroke="#222" stroke-width="3" marker-end="url(#f2k)"/><text x="270" y="22" font-size="14">3 kN</text><line x1="510.0" y1="28.0" x2="510.0" y2="82.0" stroke="#222" stroke-width="3" marker-end="url(#f2k)"/><text x="490" y="22" font-size="14">2 kN</text><line x1="180.0" y1="90.0" x2="122.0" y2="90.0" stroke="#a8322a" stroke-width="3" marker-end="url(#f2r)"/><text x="114" y="80" font-size="14" fill="#a8322a">F_DF</text><line x1="180.0" y1="126.7" x2="125.0" y2="108.3" stroke="#a8322a" stroke-width="3" marker-end="url(#f2r)"/><text x="79" y="112" font-size="14" fill="#a8322a">F_DE</text><line x1="180.0" y1="200.0" x2="125.0" y2="218.3" stroke="#a8322a" stroke-width="3" marker-end="url(#f2r)"/><text x="79" y="224" font-size="14" fill="#a8322a">F_CE</text>
+<text x="20" y="292" font-size="12" fill="#555">破線＝切断面（x = 3 m）。DF は水平、DE と CE は傾き 1/3（水平 3 : 鉛直 1）。</text></svg><figcaption>切断面（破線）で切った右側の自由物体図。切った3本の力は、部材が右側を<strong>左へ引く</strong>向き（引張を正）に描いた。外力は F の 3 kN と G の 2 kN。</figcaption></figure>
+<p>③ <strong>モーメントの点を選ぶ</strong>：3本のうち<strong>2本が通る点</strong>をモーメントの中心にすると、その2本が消えて<strong>残る1本だけの式</strong>になる。DE と CE は E で交わり、DF と DE は D で交わる。したがって：</p>
+<ul>
+<li><strong>E まわり</strong> → $F_{DF}$ だけが残る</li>
+<li><strong>D まわり</strong> → $F_{CE}$ だけが残る</li>
+<li>残る $F_{DE}$ は<strong>鉛直方向の力の釣合い</strong>で求める</li>
+</ul>
+<p>④ <strong>E まわりのモーメント</strong>（反時計回りを正）：DE と CE は E を通るので消える。$F_{DF}$（切断部で左向き、E より鉛直に $\tfrac23$ m 上）は E を中心に反時計回り、G の 2 kN（E より水平に 2 m 右）は時計回り、F の 3 kN は E の真上で腕が 0：
+$$\tfrac23F_{DF}-2\times2=0\ \Longrightarrow\ F_{DF}=6.00\ \mathrm{kN}\ (\text{引張})$$
+⑤ <strong>D まわりのモーメント</strong>：DF と DE は D を通るので消える。$F_{CE}$ は E に作用し、力は $\tfrac1{\sqrt{10}}(-3,-1)\,F_{CE}$。E は D から見て $(+2,\,-\tfrac23)$ の位置（水平 2 m 右、鉛直 $\tfrac23$ m 下）。モーメント $=x F_y-yF_x$ より
+$$2\cdot\Big(-\tfrac{F_{CE}}{\sqrt{10}}\Big)-\Big(-\tfrac23\Big)\Big(-\tfrac{3F_{CE}}{\sqrt{10}}\Big)=-\tfrac{2F_{CE}}{\sqrt{10}}-\tfrac{2F_{CE}}{\sqrt{10}}=-\tfrac{4F_{CE}}{\sqrt{10}}$$
+荷重のモーメントは、F の 3 kN が D の 2 m 右で $2\times(-3)=-6$、G の 2 kN が 4 m 右で $4\times(-2)=-8$（合計 $-14$）。釣合い：
+$$-\tfrac{4}{\sqrt{10}}F_{CE}-14=0\ \Longrightarrow\ F_{CE}=-\tfrac{7\sqrt{10}}{2}=-3.5\times3.162=-11.07\ \mathrm{kN}\ (\text{圧縮})$$
+⑥ <strong>$F_{DE}$：鉛直方向の釣合い</strong>（右側全体、上向き正）。DE が右側にかける力は $\tfrac{F_{DE}}{\sqrt{10}}(-3,+1)$、CE は $\tfrac{F_{CE}}{\sqrt{10}}(-3,-1)$：
+$$\sum F_y:\ \frac{F_{DE}}{\sqrt{10}}-\frac{F_{CE}}{\sqrt{10}}-3-2=0\ \Longrightarrow\ F_{DE}=5\sqrt{10}+F_{CE}=5\sqrt{10}-3.5\sqrt{10}=1.5\sqrt{10}$$
+$$F_{DE}=+4.74\ \mathrm{kN}\ (\text{引張})$$
+<strong>確かめ</strong>：(i) <strong>水平方向の釣合い</strong>（まだ使っていない式）：$\sum F_x=-F_{DF}-\tfrac{3}{\sqrt{10}}(F_{DE}+F_{CE})=-6-\tfrac{3}{\sqrt{10}}(-2\sqrt{10})=-6+6=0$ ✓。 (ii) <strong>別の方法（節点法）</strong>：節点 F に集まる部材は DF, FG（どちらも水平）と EF（鉛直）だけなので、水平の釣合いから $F_{FG}=F_{DF}=6.00$ kN、鉛直の釣合いから $F_{EF}=-3.00$ kN（圧縮、F の 3 kN を受け止める）。全節点を連立方程式で解いた数値解でも DF = 6.000、FG = 6.000、EF = −3.000 ✓。 (iii) <strong>数値解との一致</strong>：同じ連立方程式の解で CE = −11.068、DE = 4.743 ✓。 (iv) <strong>向きの感覚</strong>：荷重は下向きで、片持ち梁と同じく上弦（DF）は<strong>引張</strong>、下弦（CE）は<strong>圧縮</strong>になる ✓（教材 第7回 4.2節：上下の弦材が曲げを担う）。</p>
+<table class="tb"><tr><th>部材</th><th>$F_{CE}$</th><th>$F_{DE}$</th><th>$F_{DF}$</th></tr>
+<tr><td>大きさ [kN]</td><td>11.07</td><td>4.74</td><td>6.00</td></tr>
+<tr><td>引張／圧縮</td><td>圧縮</td><td>引張</td><td>引張</td></tr></table>
+<p><strong>答え：</strong>$F_{CE}=3.5\sqrt{10}\approx11.07$ kN（圧縮）、$F_{DE}=1.5\sqrt{10}\approx4.74$ kN（引張）、$F_{DF}=6.00$ kN（引張）。「Method of sections を使って解きましたか？」は<strong>はい</strong>。</p></div>
+<div class="why"><span class="label">なぜこの切り方・この点なのか</span>
+<p>① <strong>切る本数は3本まで</strong>：右側の釣合い式は $\sum F_x,\sum F_y,\sum M$ の<strong>3本</strong>。切った部材が4本以上だと未知が式より多くなる。② <strong>E と D は「2本が交わる点」</strong>：その点まわりのモーメントでは、2本の力の腕が 0 になり式から消える。残る1本の力の<strong>腕</strong>だけを測ればよいので、連立方程式を解かずに1本ずつ求まる。③ 3本のうち2本が平行だと交点がない（遠方にある）ので、その場合は<strong>平行な2本に垂直な方向の力の釣合い</strong>を使う、と使い分ける。今回は3本とも交点があるので、モーメント2本＋鉛直1本で済んだ。</p></div>
+<div class="warn"><span class="label">よくある誤り</span>(1) <strong>切る本数が4本以上</strong>：たとえば BD・CD まで一緒に切ってしまう。切断線が横切る部材を数え、DF, DE, CE の3本だけになるように線を引く。 (2) <strong>切った部材の力の向きを間違える</strong>：引張を正にするなら、切断面で<strong>部材が自分の切片を引く向き</strong>に描く。右側の切片では、部材は左（D 側）へ引く。 (3) <strong>E まわりで DE の力が残ると思う</strong>：DE は E を通るのでモーメントは 0。 (4) <strong>E の位置を勘違いする</strong>：E は上弦から $\tfrac23$ m 下で、図の見た目より浅い。DF の腕は $\tfrac23$ m（2 m ではない）。 (5) <strong>斜め部材の成分</strong>：CE と DE は傾き $\tfrac13$ で、鉛直成分は $\tfrac{1}{\sqrt{10}}F$、水平成分は $\tfrac{3}{\sqrt{10}}F$。45° と同じに扱う誤りが多い。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ 部材力は<strong>棒に沿った1つの値</strong>で、引張を正・圧縮を負とする。矢印は節点から部材の方へ描き、符号で判定する（全問）。</li>
+<li>□ 節点法は<strong>未知が2本以下の節点</strong>から。足りなければ先に<strong>全体の釣合いで反力</strong>を出す（7A-1）。</li>
+<li>□ ローラーの反力は支持面に垂直の<strong>1成分だけ</strong>（7A-1 の A、7A-2 の A）。</li>
+<li>□ 直角などの<strong>形の特徴</strong>（BC ⊥ AD）を使い、軸をそれに合わせて式を分離する（7A-1 の節点 C）。</li>
+<li>□ 切断法は<strong>3本以下</strong>を切る。2本が交わる点まわりのモーメントで、残る1本を直接求める（7A-2）。</li>
+<li>□ 切断法では、支持のない側を選ぶと<strong>反力が要らない</strong>（7A-2）。</li>
+<li>□ 傾き $\tfrac13$ の部材の成分は $\tfrac{3}{\sqrt{10}}$（水平）と $\tfrac{1}{\sqrt{10}}$（鉛直）。腕の長さは<strong>点からの垂線</strong>で測る（7A-2）。</li>
+<li>□ 検算：<strong>使っていない式</strong>（節点 B の $\sum F_y$、右側の $\sum F_x$）が 0 になるか、別の節点（D, F）で成り立つか（全問）。</li>
+</ul></div>
+
+<div class="navi">
+<a href="index.html">← 目次へ</a>　｜　<a href="07_第7回_平面トラスの静解析.html">教材：第7回 平面トラスの静解析</a>
+</div>
+
+<p class="meta">出典：問題文と図は第7回小テスト（Moodle 課題 7A）の画面より転載（個人の学習用・再配布しない）。解答・解説は自作で、公式解答とは未照合。数値は Python（draft/check_quiz07.py）で、手計算（節点法・切断法）と、全節点の釣合いを連立一次方程式で解く方法の2通りで検算した。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="07_第7回_平面トラスの静解析.html"><small>LESSON</small>← 教材：第7回 平面トラスの静解析</a></nav>
+</body>
+</html>
