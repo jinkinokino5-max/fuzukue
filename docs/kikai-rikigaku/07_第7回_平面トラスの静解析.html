@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第7回 平面トラスの静解析｜機械力学</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<!-- 第7回（2026-10-27）講義資料「第7回.pdf」対応（CLAUDE.md §8【最重要2】：順序と説明を組み直した）。設計：draft/07_設計.md。読み物コラムは今回は作らない（目次・切替ボタンは「目次」だけ）。 -->
+<figure class="hero">
+<img src="img/hero_07.jpg" alt="黄色い空の下、青い湖面に、細い橋脚に支えられた長い木の橋が斜めに横切る浮世絵。遠くに山と帆かけ舟">
+<div class="ttl" style="left:auto;right:3%;top:6%;background:rgba(247,244,236,.88);padding:12px 22px 14px"><p class="vol">第7回</p><h1>平面トラスの静解析</h1></div>
+<figcaption><p class="cap">湖を渡る長い橋は、同じ形の橋脚と梁のくり返しで、1本ずつが荷重を受けもっている。</p><p class="cr">歌川広重『近江八景』の一図（『瀬田夕照』と思われるが、題は目視による推定）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Hiroshige_View_of_a_long_bridge_across_a_lake.jpg">Wikimedia Commons</a>（1834年ごろ）</p></figcaption>
+</figure>
+<p class="lead">2026-10-27／講義資料「第7回」（教科書 3.4節 p.41〜44、図3.19〜3.21、練習問題 3・4）の範囲。部材を三角形に組んだ骨組み——<strong>トラス</strong>——の、どの棒にどれだけの力が働くかを求める。使う道具は新しいものではなく、これまで使ってきた<strong>力の釣合い</strong>である。今回の目標は、①「なぜ各部材の力が棒に沿った1つの値になるのか」を導き、②その値を<strong>節点法</strong>と<strong>切断法</strong>の2つで求め、③どちらを使うかを選べるようになることである。</p>
+
+<div class="navi">
+<strong>この回の論理の幹</strong>：<br>
+【動機】軽くて強い骨組み（ロボットアーム）の各棒の力を知りたい（序）→ 【定義と仮定】ピンで結んだ軽い棒、荷重は節点だけ（1.1）<br>
+→ 【導出】各部材は<strong>二力部材</strong>：力は棒に沿った1つの値 $F$（引張を正）（1.2〜1.3）→ 【数え方】$m+r=2j$ なら釣合いだけで解ける（1.5）<br>
+→ 【解法1】<strong>節点法</strong>：節点ごとに釣合い式2本（2章）→ 【解法2】<strong>切断法</strong>：切った一部も釣合う、3本まで・モーメントの点を選ぶ（3章）<br>
+→ 【運用】ロボットアームの弦材が曲げモーメントを担う（4章）→ 【演習】解法の使い分け（5章）
+</div>
+
+<div class="box"><span class="label">この回で使う前提</span>
+<ul>
+<li><strong>仮定する</strong>：第1〜6回（力の分解、モーメント、釣合い式 $\sum F_x=\sum F_y=0$・$\sum M=0$、FBD、支点（ピン・ローラー）の反力、第6回までの「系を切り出して考える」習慣）。</li>
+<li><strong>この回で一から説明する</strong>：二力部材（なぜ棒に沿うのか）、引張と圧縮の符号の約束、傾いた力の成分の求め方（座標から）、トラスが釣合いだけで解ける条件 $m+r=2j$、零力部材。</li>
+<li><strong>後回しにする</strong>：釣合いだけでは解けない（不静定な）トラス、部材の強さ・座屈（材料力学）、立体トラス、動力学。</li>
+</ul></div>
+
+<div class="box"><span class="label">この教材の作り方について</span>講義スライドは穴埋め式だが、PDFのテキスト層が文字化けしていて、<strong>空欄の答えは画像の中にも出てこない</strong>（ほとんどが空白のまま）。そこで、全30ページを描画して目で読み、空欄は<strong>前後の式・図と標準的な内容（教科書 3.4節に相当する一般的な説明）から埋めた</strong>。式や図から確定できる箇所（例：節点の未知数の数、全部材を引張と仮定する、など）は断定し、スライドの文言を推定で補った箇所は、そのつど<strong>「推定」</strong>と明記した。講義資料の数値・答えは、本教材の検算コード（<code>draft/check_07.py</code>：節点ごとの釣合い式をすべて立てて numpy で解く）で再計算し、すべて一致することを確かめてある。</div>
+
+<h2>序　この回の問い</h2>
+<p>小型移動マニピュレータの腕を、ふつうの箱形の太い棒ではなく、<strong>細い棒を三角形に組んだ骨組み</strong>に置き換えると、腕の質量を大きく減らしながら、曲げに強いままにできる（講義資料 p.2 は「アームの質量を 30〜50 % 程度に低減（設計による）」と書いている）。では、その骨組みの<strong>どの棒に、何ニュートンの力が、引っ張る向き・押す向きのどちらで</strong>働くのか。これを知らなければ、棒の太さも、つなぎ方も、決められない。</p>
+<figure class="slide"><img src="img/slide07/robot.jpg" alt="小型移動マニピュレータのアームのトラス化の例。1従来の剛体構造、2アームのトラス化、3トラスアームの構造例（リンク長0.4、0.3、0.2 m）、4リンクの詳細（上弦材圧縮、下弦材引張、斜材）、5ジョイント部、6全体構成" loading="lazy" style="width:760px;max-width:98%;height:auto;background:#fff"><figcaption>講義資料 p.2「小型移動マニピュレータのアームのトラス化の例」。腕のリンクを、棒の組合せ（トラス）に置き換える。出典：講義資料 第7回 p.2</figcaption></figure>
+<p>講義資料が挙げた今日のポイントは次の3つ。</p>
+<ol><li>トラスの構造と二つの解法を理解する</li><li>解法1：<strong>節点法</strong></li><li>解法2：<strong>切断法</strong></li></ol>
+<p>以下、まず「トラスとは何か」（1章）を、仮定から<strong>力が棒に沿うこと</strong>まで導き、次に2つの解法（2・3章）、最後にロボットアームの数値例（4章）と演習（5章）に進む。</p>
+
+<!-- ============================================================ -->
+<h2><span class="no">1</span>トラスとは何か</h2>
+
+<h3><span class="no">1.1</span>定義と、置く仮定</h3>
+<p><strong>動機</strong>：棒を1本、壁から横に突き出して先に荷物を吊るすと、棒の付け根に大きな曲げが働く。同じ荷物を、棒を三角形に組んだ骨組みで支えると、各棒には「引っ張られるか、押されるか」しか働かない。曲げを考えずに済み、材料も少なくて済む。これが橋・クレーン・鉄塔・ロボットアームでトラスが使われる理由である。</p>
+<div class="def"><span class="label">定義（トラス、節点）</span>
+<strong>トラス</strong>（truss）：部材の両端が、すべて他の部材と<strong>滑らかなピン</strong>で結合されているフレーム構造。〔推定：スライド p.4 の空欄。教科書 3.4節の定義〕<br>
+<strong>節点</strong>（joint）：部材の接合点。<br>
+<strong>平面トラス</strong>：全部材が1つの平面内にあるトラス。この回は平面トラスだけを扱う。</div>
+<p>トラスの問題を「解く」とは、次の2つを求めることである（スライド p.7）。</p>
+<ul><li>各部材に作用している力（<strong>内力</strong>）</li><li><strong>支点反力</strong></li></ul>
+<p>そのために、次の仮定を置く（スライド p.4。空欄は、前後の式と教科書から埋めた〔推定〕）。</p>
+<table class="tb">
+<tr><th>仮定</th><th>意味</th><th>なぜ置くか</th></tr>
+<tr><td>① 部材は<strong>剛体</strong>（変形しない）</td><td>棒は伸び縮み・曲がりを無視する</td><td>節点の位置を変えずに釣合いを書くため</td></tr>
+<tr><td>② 部材は<strong>軽い</strong>（重さを無視）</td><td>部材の自重は荷重に比べて小さいとして0とする</td><td>部材の途中に力が作用しなくなる</td></tr>
+<tr><td>③ 荷重は<strong>節点</strong>に作用</td><td>外力は、節点（と支点）にしか加えない</td><td>〃</td></tr>
+<tr><td>④ 滑らかな<strong>ピン</strong>で結合</td><td>節点まわりに自由に回転でき、<strong>モーメントを伝えない</strong>（モーメント＝0）</td><td>節点に力しか働かないようにするため</td></tr>
+</table>
+<div class="warn"><span class="label">注意：現実との差</span>実際のトラス橋やロボットアームは、ボルトやプレートで<strong>固く</strong>結合されていることが多い（講義資料 p.2 の「ジョイント部の例」）。それでも、棒が細長く、荷重が節点に集中していれば、ピン結合のモデルは<strong>よい近似</strong>になる。この回の解析は、すべてこのモデルの上での話である。また、講義資料 p.6 のように、部材が太く節点が固く結合された<strong>ラーメン構造</strong>（V脚ラーメン橋など）は、節点でモーメントを伝えるので、トラスの解法は使えない。</div>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 1｜現実</p>
+<div class="ph"><img src="img/07_a1_warren.jpg" alt="赤く塗られた鋲接合の鉄の橋を正面から見た写真。両側に三角形を連ねた骨組みが立ち、木の床板が奥へ続く。手前に説明板" loading="lazy"></div>
+<p class="cap">三角形を連ねたワーレン型のトラス橋では、斜材が引張と圧縮を交互に受けもつ。</p>
+<p class="cr">Kreuz und quer／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Warren_pony_truss_bridge_-_National_Road_Museum,_Ohio,_2025.jpg">Wikimedia Commons</a>（オハイオ州の国道博物館のトラス橋、2025年撮影）</p></div>
+<div class="side b"><p class="kick">MITATE 1｜見立て</p>
+<div class="ph"><img src="img/07_b1_eden.jpg" alt="曇り空の下、六角形の白い膜のパネルを張った半球形のドームが、いくつも連なる庭園の施設" loading="lazy"></div>
+<p class="cap">六角形と三角形の骨組みは、薄い膜を空に張ったまま保っている。</p>
+<p class="cr">Rob Young／<a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Eden_Project_Biomes_(9757315094).jpg">Wikimedia Commons</a>（エデン・プロジェクトのバイオーム、2013年撮影）</p></div>
+</figure>
+
+<h3><span class="no">1.2</span>導出：各部材は「二力部材」——力は棒に沿った1つの値になる</h3>
+<p>節点法も切断法も、「各部材の力は、棒に沿った向きで、大きさが1つ」という事実の上に立っている。これは仮定から導ける。</p>
+<div class="thm"><span class="label">定理（二力部材）</span>トラスの1本の部材は、両端の節点から<strong>だけ</strong>力を受ける。その2つの力は、<strong>棒に沿って、大きさが等しく、向きが逆</strong>である。</div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　部材 AB を、両端の節点から切り離して FBD を描く。仮定②③より、部材の途中に外力はない。仮定④（滑らかなピン）より、節点は部材に<strong>力しか</strong>及ぼさない（モーメントは伝えない）。したがって部材に働く力は、A に働く力 $\boldsymbol F_A$ と B に働く力 $\boldsymbol F_B$ の<strong>2つだけ</strong>。〔なぜこの図を描くか：釣合いは「注目する物体に働く力の全部」で書くので、まず働く力が何個かを数える〕</p>
+<p><span class="step">STEP 2</span>　部材は静止しているので、力の釣合い（$\sum\boldsymbol F=\boldsymbol 0$）より
+$$\boldsymbol F_A+\boldsymbol F_B=\boldsymbol 0\ \Longrightarrow\ \boldsymbol F_B=-\boldsymbol F_A$$
+2つの力は<strong>大きさが等しく、逆向き</strong>。〔2つしかないので、足して0になるには逆向きの同じ大きさしかない〕</p>
+<p><span class="step">STEP 3</span>　次に、A まわりのモーメントの釣合いを書く。$\boldsymbol F_A$ は A を通るので、A まわりのモーメントは 0。残る $\boldsymbol F_B$ のモーメント（腕は線分 AB の長さ $L$、力の AB に垂直な成分を $F_{B\perp}$ とする）は $L\,F_{B\perp}$。釣合いより
+$$L\,F_{B\perp}=0\ \Longrightarrow\ F_{B\perp}=0$$
+〔$L\ne0$ なので、$F_B$ の AB に垂直な成分が 0。つまり $\boldsymbol F_B$ は<strong>棒に沿っている</strong>〕</p>
+<p><span class="step">STEP 4</span>　STEP 2 より $\boldsymbol F_A=-\boldsymbol F_B$ も棒に沿う。以上より、2つの力は<strong>同じ作用線（棒そのもの）上</strong>にあり、大きさが等しく逆向き。$\blacksquare$</p>
+</div>
+<svg viewBox="0 0 760 230" width="760" role="img" aria-label="ピンで両端だけが外とつながった棒。力が棒に沿っていないとモーメントが残って回り出し、釣合うのは2力が棒に沿って同じ大きさで逆向きのときだけ">
+<defs><marker id="tf-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="tf-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="tf-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="tf-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="tf-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="tf-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<text x="100.0" y="22.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">(a) 力が棒に沿っていない</text>
+<line x1="30" y1="140" x2="190" y2="140" stroke="#2a2723" stroke-width="9" stroke-linecap="round" opacity=".22"/>
+<line x1="30" y1="140" x2="190" y2="140" stroke="#2a2723" stroke-width="2"/>
+<circle cx="30" cy="140" r="5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="190" cy="140" r="5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="30.0" y1="140.0" x2="30.0" y2="80.0" stroke="#a8322a" stroke-width="2.4" marker-end="url(#tf-r)"/>
+<line x1="190.0" y1="140.0" x2="190.0" y2="200.0" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#tf-b)"/>
+<text x="44.0" y="100.0" fill="#a8322a" text-anchor="start" font-size="13">F<tspan baseline-shift="sub" font-size="75%">A</tspan></text>
+<text x="176.0" y="190.0" fill="#2b3a67" text-anchor="end" font-size="13">F<tspan baseline-shift="sub" font-size="75%">B</tspan></text>
+<path d="M96,114 A22,22 0 1 1 124,114" fill="none" stroke="#4f7a4a" stroke-width="1.8" marker-end="url(#tf-g)"/>
+<text x="110.0" y="104.0" fill="#4f7a4a" text-anchor="middle" font-size="12">回り出す</text>
+<text x="380.0" y="22.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">(b) 沿うが大きさが違う</text>
+<line x1="300" y1="140" x2="460" y2="140" stroke="#2a2723" stroke-width="9" stroke-linecap="round" opacity=".22"/>
+<line x1="300" y1="140" x2="460" y2="140" stroke="#2a2723" stroke-width="2"/>
+<circle cx="300" cy="140" r="5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="460" cy="140" r="5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="300.0" y1="140.0" x2="240.0" y2="140.0" stroke="#a8322a" stroke-width="2.4" marker-end="url(#tf-r)"/>
+<line x1="460.0" y1="140.0" x2="500.0" y2="140.0" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#tf-b)"/>
+<text x="266.0" y="128.0" fill="#a8322a" text-anchor="middle" font-size="13">F<tspan baseline-shift="sub" font-size="75%">A</tspan></text>
+<text x="486.0" y="128.0" fill="#2b3a67" text-anchor="middle" font-size="13">F<tspan baseline-shift="sub" font-size="75%">B</tspan></text>
+<text x="380.0" y="185.0" fill="#2a2723" text-anchor="middle" font-size="12">力の釣合い F<tspan baseline-shift="sub" font-size="75%">A</tspan>=F<tspan baseline-shift="sub" font-size="75%">B</tspan> が必要</text>
+<text x="380.0" y="205.0" fill="#2a2723" text-anchor="middle" font-size="12">（向きは逆）</text>
+<text x="640.0" y="22.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">(c) 釣合う唯一の場合</text>
+<line x1="570" y1="140" x2="710" y2="140" stroke="#2a2723" stroke-width="9" stroke-linecap="round" opacity=".22"/>
+<line x1="570" y1="140" x2="710" y2="140" stroke="#2a2723" stroke-width="2"/>
+<circle cx="570" cy="140" r="5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="710" cy="140" r="5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="570.0" y1="140.0" x2="520.0" y2="140.0" stroke="#a8322a" stroke-width="2.4" marker-end="url(#tf-r)"/>
+<line x1="710.0" y1="140.0" x2="760.0" y2="140.0" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#tf-b)"/>
+<text x="545.0" y="128.0" fill="#a8322a" text-anchor="middle" font-size="13">F</text>
+<text x="738.0" y="128.0" fill="#2b3a67" text-anchor="middle" font-size="13">F</text>
+<text x="640.0" y="185.0" fill="#2a2723" text-anchor="middle" font-size="12">同じ作用線・同じ大きさ</text>
+<text x="640.0" y="205.0" fill="#2a2723" text-anchor="middle" font-size="12">逆向き</text>
+</g></svg>
+<p class="meta">図1.1　(a) 力が棒に沿っていないと、モーメントが残って棒は回り出す（釣合わない）。(b) 沿っていても、大きさが違えば力の釣合いが破れる。(c) 同じ作用線上で、大きさ等しく逆向きのときだけ釣合う。</p>
+<p>この定理のおかげで、1本の部材の力は<strong>1つの数 $F$</strong>（大きさ）と、引くか押すかの区別（符号）だけで表せる。節点法の「釣合い式は2本」という性質も、切断法で「切り口の力は棒に沿った1つの未知数」としてよいことも、ここから来る。</p>
+
+<h3><span class="no">1.3</span>引張と圧縮、符号の約束</h3>
+<p>二力部材の2つの力が、棒の外向きなら棒は<strong>引っ張られている</strong>（引張）、内向きなら<strong>押されている</strong>（圧縮）。計算では、1つの文字 $F$ で表し、次の約束を<strong>最初に宣言</strong>する。</p>
+<div class="def"><span class="label">定義（内力の符号）</span>
+部材の内力 $F$ は、<strong>引張を正、圧縮を負</strong>とする。<br>
+節点の FBD では、部材が節点に及ぼす力を、<strong>節点から部材のほうへ向かう矢印</strong>（棒に沿って節点から離れる向き）として描く。$F&gt;0$ なら引張、$F&lt;0$ なら圧縮。</div>
+<div class="why"><span class="label">直感：なぜ「節点から離れる矢印」が引張か</span>引っ張られている棒は、両端の節点を<strong>自分のほうへ引き寄せる</strong>。節点から見ると、力は棒の向き（節点から遠ざかる向き）に働く。押されている棒は、節点を<strong>押し返す</strong>ので、棒から遠ざかる向き＝節点に向かう矢印で表す。
+</div>
+<svg viewBox="0 0 640 290" width="640" role="img" aria-label="引張の部材は両端の節点を部材のほうへ引き、圧縮の部材は両端の節点を部材から遠ざけるように押す。節点の釣合い図では、引張なら節点から部材のほうへ、圧縮なら部材から遠ざかる向きに矢印を描く">
+<defs><marker id="sg-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="sg-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="sg-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="sg-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="sg-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="sg-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<text x="6.0" y="22.0" fill="#a8322a" text-anchor="start" font-size="13" font-weight="bold">引張（内力 F>0）：部材は伸びようとする</text>
+<line x1="200" y1="64" x2="440" y2="64" stroke="#a8322a" stroke-width="8" stroke-linecap="round"/>
+<circle cx="110" cy="64" r="7" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="530" cy="64" r="7" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="118.0" y1="64.0" x2="176.0" y2="64.0" stroke="#a8322a" stroke-width="3.2" marker-end="url(#sg-r)"/>
+<line x1="522.0" y1="64.0" x2="464.0" y2="64.0" stroke="#a8322a" stroke-width="3.2" marker-end="url(#sg-r)"/>
+<text x="320.0" y="98.0" fill="#2a2723" text-anchor="middle" font-size="12">部材が両端の節点を引く → 節点の図では、節点から<tspan font-weight="bold">部材のほうへ</tspan>矢印</text>
+<text x="6.0" y="160.0" fill="#2b3a67" text-anchor="start" font-size="13" font-weight="bold">圧縮（内力 F<0）：部材は縮もうとする</text>
+<line x1="200" y1="202" x2="440" y2="202" stroke="#2b3a67" stroke-width="8" stroke-linecap="round"/>
+<circle cx="110" cy="202" r="7" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="530" cy="202" r="7" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="102.0" y1="202.0" x2="44.0" y2="202.0" stroke="#2b3a67" stroke-width="3.2" marker-end="url(#sg-b)"/>
+<line x1="538.0" y1="202.0" x2="596.0" y2="202.0" stroke="#2b3a67" stroke-width="3.2" marker-end="url(#sg-b)"/>
+<text x="320.0" y="236.0" fill="#2a2723" text-anchor="middle" font-size="12">部材が両端の節点を押す → 節点の図では、部材から<tspan font-weight="bold">遠ざかる向きに</tspan>矢印</text>
+<text x="320.0" y="270.0" fill="#968d80" text-anchor="middle" font-size="11">（円は節点。矢印は「部材が節点に及ぼす力」＝節点の釣合い図に描く力）</text>
+</g></svg>
+<p class="meta">図1.2　引張（上）と圧縮（下）。矢印は、部材が節点に及ぼす力（節点の釣合い図に描く力）。</p>
+<p>すべての内力を<strong>最初から「引張」と仮定</strong>して矢印を描き、解いた $F$ の符号で判定する方式にすると、記号がそろう。講義資料の表（p.9）もこの内容である。</p>
+<table class="tb">
+<tr><th>仮定</th><th>計算結果の符号</th><th>部材の内力</th></tr>
+<tr><td rowspan="2">引張り</td><td>＋</td><td>引張</td></tr>
+<tr><td>−</td><td>圧縮</td></tr>
+<tr><td rowspan="2">圧縮</td><td>＋</td><td>圧縮</td></tr>
+<tr><td>−</td><td>引張</td></tr>
+</table>
+<div class="warn"><span class="label">よくある誤解：答えを「−○○ N」だけで終える</span>答えには必ず<strong>「引張」または「圧縮」</strong>を書く（講義資料 p.9、p.16）。「$F_{BC}=-707$ N」は、約束（引張を正）を知らない人には意味が伝わらない。「$F_{BC}=707$ N（圧縮）」と書く。また、仮定は<strong>統一</strong>する。引張・圧縮を節点ごとにばらばらに仮定すると、符号の読み替えを間違える（講義資料 p.10 が「お勧めしません」とした理由。〔推定：空欄は「引張」と「圧縮」の混在〕）。</div>
+
+<h3><span class="no">1.4</span>数学の準備：傾いた部材の力の成分</h3>
+<p>斜めの部材の力 $F$ を、$x$、$y$ の成分に分けて釣合い式に入れる。角度が分からなくても、<strong>節点の座標</strong>から求められる。部材が節点 $\mathrm P(x_1,y_1)$ から $\mathrm Q(x_2,y_2)$ へ向かうとし、$\Delta x=x_2-x_1$、$\Delta y=y_2-y_1$、長さ $L=\sqrt{\Delta x^2+\Delta y^2}$ とする。P が部材から受ける力の大きさを $F$（引張を正）とすると、その向きは P→Q なので、
+$$F_x=F\cos\theta=F\,\frac{\Delta x}{L},\qquad F_y=F\sin\theta=F\,\frac{\Delta y}{L}\qquad(1.1)$$</p>
+<svg viewBox="0 0 420 260" width="420" role="img" aria-label="傾いた部材に沿う力Fを、水平成分F cosθと鉛直成分F sinθに分ける。部材の長さLと座標の差Δx、Δyから、cosθ=Δx/L、sinθ=Δy/L">
+<defs><marker id="dc-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="dc-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="dc-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="dc-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="dc-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="dc-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<line x1="60" y1="215" x2="360" y2="215" stroke="#968d80" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="360" y1="215" x2="360" y2="65" stroke="#968d80" stroke-width="1" stroke-dasharray="4,3"/>
+<line x1="60" y1="215" x2="360" y2="65" stroke="#a8322a" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+<circle cx="60" cy="215" r="6" fill="#fff" stroke="#2a2723" stroke-width="1.8"/><circle cx="360" cy="65" r="6" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="60.0" y1="215.0" x2="180.0" y2="155.0" stroke="#2a2723" stroke-width="2.6" marker-end="url(#dc-k)"/>
+<text x="125.0" y="168.0" fill="#2a2723" text-anchor="middle" font-size="13">F</text>
+<line x1="60.0" y1="215.0" x2="180.0" y2="215.0" stroke="#4f7a4a" stroke-width="2.2" marker-end="url(#dc-g)"/>
+<line x1="60.0" y1="215.0" x2="60.0" y2="155.0" stroke="#2b3a67" stroke-width="2.2" marker-end="url(#dc-b)"/>
+<text x="125.0" y="236.0" fill="#4f7a4a" text-anchor="middle" font-size="13">Fcosθ=F Δ x/L</text>
+<text x="52.0" y="190.0" fill="#2b3a67" text-anchor="end" font-size="13">Fsinθ</text>
+<text x="52.0" y="170.0" fill="#2b3a67" text-anchor="end" font-size="12">=F Δ y/L</text>
+<path d="M96,215 A36,36 0 0 0 91,198" fill="none" stroke="#2a2723" stroke-width="1.2"/>
+<text x="112.0" y="205.0" fill="#2a2723" text-anchor="middle" font-size="13">θ</text>
+<text x="330.0" y="238.0" fill="#968d80" text-anchor="middle" font-size="13">Δ x</text>
+<text x="378.0" y="140.0" fill="#968d80" text-anchor="start" font-size="13">Δ y</text>
+<text x="200.0" y="120.0" fill="#968d80" text-anchor="end" font-size="12">部材の長さ L</text>
+</g></svg>
+<p class="meta">図1.3　直角三角形の相似から、$\cos\theta=\Delta x/L$、$\sin\theta=\Delta y/L$。</p>
+<div class="ex"><span class="label">例（成分の求め方）</span>P(0, 1)、Q(1, 0)（図3.20 の部材 BC）。$\Delta x=1$、$\Delta y=-1$、$L=\sqrt2$。B（P）が受ける力の成分は $F_x=F/\sqrt2$、$F_y=-F/\sqrt2$。C（Q）が受ける力は<strong>逆向き</strong>で $(-F/\sqrt2,\ +F/\sqrt2)$（作用・反作用）。確かめ：$\sqrt{F_x^2+F_y^2}=F$ ✓。45°（$\cos45°=\sin45°=1/\sqrt2=0.7071$）に一致する。</div>
+
+<h3><span class="no">1.5</span>釣合いだけで解けるか：$m+r=2j$</h3>
+<p>解きたい量（未知数）の数と、立てられる釣合い式の数を数えておく。トラスの<strong>部材の数</strong>を $m$、<strong>支点反力の成分の数</strong>を $r$（ピンは2、ローラーは1）、<strong>節点の数</strong>を $j$ とする。</p>
+<ul>
+<li>未知数：各部材の内力 $m$ 個（1.2 より、1本につき1つ）と、反力 $r$ 個。合計 $m+r$。</li>
+<li>式の数：各節点で、力の釣合い $\sum F_x=0$、$\sum F_y=0$ の<strong>2本</strong>（1.2 より、節点では力しか働かないのでモーメントの式は意味を持たない。〔推定：スライド p.8 の空欄〕）。合計 $2j$ 本。</li>
+</ul>
+<div class="thm"><span class="label">条件（釣合いだけで解ける＝静定）</span>$$m+r=2j\qquad(1.2)$$</div>
+<p>等しければ未知数と式の数が合い、釣合い式だけで全部が決まる（<strong>静定</strong>）。$m+r&gt;2j$ なら式が足りず、釣合いだけでは解けない（<strong>不静定</strong>、材料のたわみまで考える必要がある。今回は扱わない）。$m+r&lt;2j$ なら、骨組みがつぶれる（<strong>不安定</strong>）。</p>
+<div class="ex"><span class="label">例題1〔A｜自作〕数えて確かめる</span>
+<p>次のトラスで $m$、$r$、$j$ を数え、静定かどうか判定せよ。(a) 図3.20（三角形、A がピン、C がローラー）。(b) 図3.21（5節点、7部材、C がピン、D がローラー）。</p>
+<p><strong>解答</strong>：(a) $j=3$（A、B、C）、$m=3$（AB、BC、AC）、$r=2+1=3$。$m+r=6=2j$ ✓ 静定。(b) $j=5$、$m=7$（AB、AE、BE、BC、EC、ED、CD）、$r=3$。$m+r=10=2j$ ✓ 静定。<br>
+確かめ：三角形を1つ足すと、節点が1つと部材が2つ増える（$j\to j+1$、$m\to m+2$）ので、$m+r=2j$ が保たれる。トラスが<strong>三角形の組合せ</strong>で作られる理由もここにある（三角形は変形しない最小の形）。</p></div>
+<div class="meta">注：図3.21 の D の支点は、元の図の記号が小さく判別しにくいが、反力が水平方向だけのローラー（$r=3$）と解釈すると $m+r=2j$ となる。切断法の解答（3章）には影響しない。</div>
+
+<!-- ============================================================ -->
+<h2><span class="no">2</span>節点法（method of joints）</h2>
+
+<h3><span class="no">2.1</span>考え方と手順</h3>
+<p><strong>動機</strong>：1.2 で、各部材の力は棒に沿った1つの数 $F$ だとわかった。では、その $F$ をどうやって決めるか。決め手は<strong>節点を1つ取り出す</strong>ことである。節点は静止しているので、そこに集まる力（各部材から受ける力＋外力＋支点反力）は釣合っている。</p>
+<div class="def"><span class="label">定義（節点法）</span>トラス内の<strong>各節点</strong>について、そこに作用する力の釣合い式を立て、それを<strong>順に（連立して）解く</strong>方法。〔推定：スライド p.8 の空欄〕</div>
+<p>節点法の特徴（スライド p.8。空欄は1.2・1.5から確定できるので、推定ではなく導出として書く）：</p>
+<ol>
+<li>ピン結合なので、節点に集まる力は<strong>すべて棒に沿った力と外力だけ</strong>。力は<strong>1点に集中する</strong>（共点力）。</li>
+<li>共点力の<strong>モーメントの式は意味を持たない</strong>（どの力も節点を通るので、節点まわりのモーメントは自動的に 0）。</li>
+<li>だから、1つの節点で立てられる釣合い式は $\sum F_x=0$、$\sum F_y=0$ の<strong>2本</strong>だけ。</li>
+<li>したがって、<strong>未知数が3個以上ある節点では、その節点だけでは解けない</strong>。2個以下の節点から始めて、解けた値を隣の節点に引き継ぐ。</li>
+</ol>
+<div class="def"><span class="label">解答の手順（節点法）</span>講義資料 p.9 の手順を、教材の共通手順 ①〜⑥ に合わせて書く。
+<ol>
+<li>全部材の内力を<strong>引張</strong>と仮定し、全支点の反力を仮定する（支点の種類に注意：ピンは2成分、ローラーは1成分）。</li>
+<li>座標軸（$x$ 右、$y$ 上など）を決める。</li>
+<li>必要な節点の FBD を描く。傾いた力は 1.4 の方法で成分に分ける。</li>
+<li>未知数が<strong>2個以下</strong>の節点から釣合い式を立てて解き、結果を次の節点へ引き継ぐ。</li>
+<li>別の節点の式、または<strong>トラス全体の釣合い</strong>で検算する。</li>
+<li>解（内力）には<strong>「引張」か「圧縮」</strong>を明記する。支点反力は<strong>向き</strong>を明記する（座標軸を宣言しているなら $+/-$ でもよい）。</li>
+</ol></div>
+
+<h3><span class="no">2.2</span>例題2〔B｜講義資料・教科書 図3.20〕3部材のトラス</h3>
+<div class="ex"><span class="label">例題2〔B｜図3.20〕全部材の内力と、支点 A、C の反力</span>
+<p>図のトラスの全部材に生じる力と、支点 A（ピン）、C（ローラー）における支持力を求めよ。B に右向きの力 500 N が作用する。AB＝AC＝1 m（AB は鉛直、AC は水平）。</p>
+<svg viewBox="0 0 400 310" width="400" role="img" aria-label="三角形のトラス。点Aが左下で回転支持、点Cが右下でローラー支持、点Bが左上。Bに右向き500 Nの力">
+<defs><marker id="f320-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="f320-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="f320-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="f320-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="f320-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="f320-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<line x1="100.0" y1="230.0" x2="100.0" y2="80.0" stroke="#2a2723" stroke-width="3.2"/>
+<line x1="100.0" y1="80.0" x2="250.0" y2="230.0" stroke="#2a2723" stroke-width="3.2"/>
+<line x1="100.0" y1="230.0" x2="250.0" y2="230.0" stroke="#2a2723" stroke-width="3.2"/>
+<circle cx="100.0" cy="230.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="100.0" cy="80.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="250.0" cy="230.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<path d="M100.0,230.0 L90.2,244.0 L109.8,244.0 z" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="86.0" y1="244.0" x2="114.0" y2="244.0" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="86.9" y1="244.0" x2="82.9" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="91.2" y1="244.0" x2="87.2" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="95.6" y1="244.0" x2="91.6" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="100.0" y1="244.0" x2="96.0" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="104.4" y1="244.0" x2="100.4" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="108.8" y1="244.0" x2="104.8" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="113.1" y1="244.0" x2="109.1" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<path d="M250.0,230.0 L240.9,243.0 L259.1,243.0 z" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="245.4" cy="247.0" r="3.5" fill="#fff" stroke="#2a2723"/><circle cx="254.6" cy="247.0" r="3.5" fill="#fff" stroke="#2a2723"/>
+<line x1="237.0" y1="251.0" x2="263.0" y2="251.0" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="237.8" y1="251.0" x2="233.8" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="241.9" y1="251.0" x2="237.9" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="245.9" y1="251.0" x2="241.9" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="250.0" y1="251.0" x2="246.0" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="254.1" y1="251.0" x2="250.1" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="258.1" y1="251.0" x2="254.1" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="262.2" y1="251.0" x2="258.2" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<text x="84.0" y="222.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">A</text>
+<text x="86.0" y="74.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+<text x="266.0" y="222.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">C</text>
+<line x1="100.0" y1="80.0" x2="182.5" y2="80.0" stroke="#2a2723" stroke-width="3" marker-end="url(#f320-k)"/>
+<text x="187.0" y="85.0" fill="#2a2723" text-anchor="start" font-size="13">500 N</text>
+<text x="201.0" y="151.0" fill="#968d80" text-anchor="middle" font-size="11">1 m</text>
+<text x="66.0" y="159.0" fill="#968d80" text-anchor="middle" font-size="11">1 m</text>
+<text x="175.0" y="268.0" fill="#968d80" text-anchor="middle" font-size="11">1 m</text>
+<path d="M118.0,222.5" fill="none"/>
+</g></svg>
+<p class="meta">図2.1　図3.20 のトラス（教科書の図は節点 A が左下、B が上、C が右下）。</p>
+<p><strong>解答</strong></p>
+<p>① 系と仮定：全部材を<strong>引張</strong>と仮定し、$F_{AB}$、$F_{BC}$、$F_{AC}$ とする。反力は、A のピンが $R_{Ax}$（$+x$ 向き）、$R_{Ay}$（$+y$ 向き）、C のローラーが $R_C$（$+y$ 向き）と仮定する（講義資料 p.11「おすすめ」）。<br>
+② 座標：右を $+x$、上を $+y$。各節点の FBD は次のとおり（講義資料の図）。</p>
+<figure class="slide"><div style="display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:flex-end;background:#fff;padding:6px 8px"><img src="img/slide07/jointA.jpg" alt="節点Aの図。上向きにF_AB、右向きにF_AC、左向きにR_Ax、下から上向きにR_Ay" loading="lazy" style="height:150px;width:auto"><img src="img/slide07/jointB.jpg" alt="節点Bの図。右向きに500 N、真下にF_AB、右下にF_BC" loading="lazy" style="height:130px;width:auto"><img src="img/slide07/jointC.jpg" alt="節点Cの図。左上にF_BC、左向きにF_AC、上向きにR_C" loading="lazy" style="height:150px;width:auto"></div><figcaption>各節点の FBD（講義資料 p.11）。引張を仮定したので、部材の力は節点から部材のほうへ描く。出典：講義資料 第7回 p.11</figcaption></figure>
+<p>各節点の未知数の数：A は $F_{AB},F_{AC},R_{Ax},R_{Ay}$ の<strong>4個</strong>、B は $F_{AB},F_{BC}$ の<strong>2個</strong>、C は $F_{BC},F_{AC},R_C$ の<strong>3個</strong>。解けるのは B だけなので、<strong>B から始める</strong>。</p>
+<p>③④⑤ <strong>節点 B</strong>：B から C へ向かう単位ベクトルは $(1,-1)/\sqrt2$（1.4 より）、B から A へは $(0,-1)$。B が部材から受ける力は $F_{BC}(1,-1)/\sqrt2$ と $F_{AB}(0,-1)$、外力は $(500,0)$。
+$$x:\ 500+\frac{F_{BC}}{\sqrt2}=0\ \Rightarrow\ F_{BC}=-500\sqrt2=-707.1\ \text{N}$$
+$$y:\ -\frac{F_{BC}}{\sqrt2}-F_{AB}=0\ \Rightarrow\ F_{AB}=-\frac{F_{BC}}{\sqrt2}=500\ \text{N}$$
+〔$x$ の式から $F_{BC}$ が先に決まり、それを $y$ の式に入れて $F_{AB}$ が決まる〕</p>
+<p><strong>節点 C</strong>（$F_{BC}$ が既知になった）：C から B へ向かう単位ベクトルは $(-1,1)/\sqrt2$、C から A へは $(-1,0)$。
+$$x:\ -\frac{F_{BC}}{\sqrt2}-F_{AC}=0\ \Rightarrow\ F_{AC}=-\frac{-707.1}{\sqrt2}=500\ \text{N}$$
+$$y:\ \frac{F_{BC}}{\sqrt2}+R_C=0\ \Rightarrow\ R_C=500\ \text{N}$$</p>
+<p><strong>節点 A</strong>（$F_{AB}$、$F_{AC}$ が既知）：A から B へは $(0,1)$、A から C へは $(1,0)$。
+$$x:\ F_{AC}+R_{Ax}=0\ \Rightarrow\ R_{Ax}=-500\ \text{N},\qquad y:\ F_{AB}+R_{Ay}=0\ \Rightarrow\ R_{Ay}=-500\ \text{N}$$</p>
+<p>⑥ <strong>答</strong>：$F_{AB}=500$ N（<strong>引張</strong>）、$F_{BC}=707$ N（<strong>圧縮</strong>）、$F_{AC}=500$ N（<strong>引張</strong>）。$R_{Ax}=500$ N（<strong>左向き</strong>）、$R_{Ay}=500$ N（<strong>下向き</strong>）、$R_C=500$ N（<strong>上向き</strong>）。</p>
+<svg viewBox="0 0 440 310" width="440" role="img" aria-label="三角形のトラス。点Aが左下で回転支持、点Cが右下でローラー支持、点Bが左上。Bに右向き500 Nの力">
+<defs><marker id="f320r-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="f320r-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="f320r-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="f320r-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="f320r-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="f320r-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<line x1="100.0" y1="230.0" x2="100.0" y2="80.0" stroke="#a8322a" stroke-width="6.389087296526011"/>
+<line x1="100.0" y1="80.0" x2="250.0" y2="230.0" stroke="#2b3a67" stroke-width="8.0"/>
+<line x1="100.0" y1="230.0" x2="250.0" y2="230.0" stroke="#a8322a" stroke-width="6.389087296526011"/>
+<circle cx="100.0" cy="230.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="100.0" cy="80.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="250.0" cy="230.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<path d="M100.0,230.0 L90.2,244.0 L109.8,244.0 z" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="86.0" y1="244.0" x2="114.0" y2="244.0" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="86.9" y1="244.0" x2="82.9" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="91.2" y1="244.0" x2="87.2" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="95.6" y1="244.0" x2="91.6" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="100.0" y1="244.0" x2="96.0" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="104.4" y1="244.0" x2="100.4" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="108.8" y1="244.0" x2="104.8" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="113.1" y1="244.0" x2="109.1" y2="250.0" stroke="#2a2723" stroke-width="1"/>
+<path d="M250.0,230.0 L240.9,243.0 L259.1,243.0 z" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="245.4" cy="247.0" r="3.5" fill="#fff" stroke="#2a2723"/><circle cx="254.6" cy="247.0" r="3.5" fill="#fff" stroke="#2a2723"/>
+<line x1="237.0" y1="251.0" x2="263.0" y2="251.0" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="237.8" y1="251.0" x2="233.8" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="241.9" y1="251.0" x2="237.9" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="245.9" y1="251.0" x2="241.9" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="250.0" y1="251.0" x2="246.0" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="254.1" y1="251.0" x2="250.1" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="258.1" y1="251.0" x2="254.1" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="262.2" y1="251.0" x2="258.2" y2="257.0" stroke="#2a2723" stroke-width="1"/>
+<text x="84.0" y="222.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">A</text>
+<text x="86.0" y="74.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+<text x="266.0" y="222.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">C</text>
+<line x1="100.0" y1="80.0" x2="182.5" y2="80.0" stroke="#2a2723" stroke-width="3" marker-end="url(#f320r-k)"/>
+<text x="187.0" y="85.0" fill="#2a2723" text-anchor="start" font-size="13">500 N</text>
+<path d="M118.0,222.5" fill="none"/>
+<text x="90.0" y="159.0" fill="#a8322a" text-anchor="end" font-size="12">500N（引張）</text>
+<text x="175.0" y="220.0" fill="#a8322a" text-anchor="middle" font-size="12">500N（引張）</text>
+<text x="189.0" y="151.0" fill="#2b3a67" text-anchor="start" font-size="12">707N（圧縮）</text>
+<line x1="94.0" y1="234.0" x2="44.0" y2="234.0" stroke="#2a2723" stroke-width="2.6" marker-end="url(#f320r-k)"/>
+<text x="69.0" y="250.0" fill="#2a2723" text-anchor="middle" font-size="11">500 N</text>
+<line x1="100.0" y1="244.0" x2="100.0" y2="290.0" stroke="#2a2723" stroke-width="2.6" marker-end="url(#f320r-k)"/>
+<text x="108.0" y="306.0" fill="#2a2723" text-anchor="start" font-size="11">500 N</text>
+<line x1="250.0" y1="288.0" x2="250.0" y2="244.0" stroke="#2a2723" stroke-width="2.6" marker-end="url(#f320r-k)"/>
+<text x="258.0" y="286.0" fill="#2a2723" text-anchor="start" font-size="11">500 N</text>
+</g></svg>
+<p class="meta">図2.2　結果。引張を朱、圧縮を藍で、太さを力の大きさに比例させて描いた（図は数値から計算して生成）。</p>
+<p>⑤ <strong>検算</strong>（トラス全体の釣合い）：$x$：$500+R_{Ax}=500-500=0$ ✓。$y$：$R_{Ay}+R_C=-500+500=0$ ✓。A まわりのモーメント：B の力 500 N（右向き、A から高さ 1 m）は時計回りに $500\times1$、$R_C$（C は A から右へ 1 m）は反時計回りに $500\times1$。$-500+500=0$ ✓。符号の物理的な確認：B が部材から受ける力は、BC が $(-500,+500)$（B を左上へ押し返す＝圧縮）、AB が $(0,-500)$（B を下へ引き戻す＝引張）で、荷重 $(500,0)$ との合計が 0 になる ✓。</p>
+</div>
+<div class="why"><span class="label">直感：なぜ A の鉛直反力が「下向き」なのか</span>500 N の力は、支点 A・C を結ぶ線から<strong>高さ 1 m</strong> のところを押している。これは、構造全体を A を中心に時計回りに倒そうとする。倒れないように、C は<strong>上向きに押し返し</strong>（$R_C&gt;0$）、その反作用で A は<strong>下向きに引かれる</strong>（$R_{Ay}&lt;0$）。</div>
+<div class="box"><span class="label">講義資料との違い：教科書の解答（お勧めしない方法）</span>教科書の解答例（p.10）は、図を見て「BC は圧縮、BA と CA は引張、…」と<strong>予想した向きで仮定</strong>している。当たれば符号がそろうが、<strong>外れると引張と圧縮が混在</strong>し、符号の読み替えで間違えやすい。講義資料は、<strong>全部引張、反力は $+x$・$+y$</strong> と<strong>機械的に仮定</strong>する方法を「おすすめ」としている。本教材もそれに従った。</div>
+<div class="ex"><span class="label">例題2（別解）反力を先に求める</span>
+<p>講義資料 p.13 の別解。<strong>トラス全体</strong>の釣合いから、先に反力を求める。未知数は $R_{Ax}$、$R_{Ay}$、$R_C$ の3個なので、式は3本必要。<br>
+力の釣合い：$x$：$500+R_{Ax}=0\Rightarrow R_{Ax}=-500$ N。$y$：$R_{Ay}+R_C=0$。<br>
+A まわりのモーメントの釣合い：$-500\times1+R_C\times1=0\Rightarrow R_C=500$ N。よって $R_{Ay}=-500$ N。<br>
+次に節点 A（外力は反力 $(-500,-500)$）：$x$：$F_{AC}-500=0$、$y$：$F_{AB}-500=0$ より $F_{AB}=F_{AC}=500$ N（ともに引張）。あとは節点 B または C の釣合いから $F_{BC}=707$ N（圧縮）。<br>
+確かめ：先の答えと一致 ✓。</p></div>
+<div class="box"><span class="label">どちらの順序がよいか</span>反力を先に求める方法は、<strong>反力が絡む節点の未知数を減らせる</strong>のが利点（A の未知数が4個から2個になる）。ただし、支点が多いトラスでは、反力が全体の釣合いだけで求められないこともある（その場合は、節点法の中で連立する）。どちらでも答えは同じ。試験では、<strong>求められるものから求める</strong>のが基本である。</div>
+
+<h3><span class="no">2.3</span>零力部材：計算を飛ばせる棒</h3>
+<p>節点法では、節点を見ただけで「この棒の力は0」と分かる場合がある。この棒を<strong>零力部材</strong>（zero-force member）という（資料にはない追加。標準的な教科書に必ず出てくる）。2つの形がある。</p>
+<svg viewBox="0 0 640 190" width="640" role="img" aria-label="零力部材の2つの形。(a) T字の節点：外力がなく、2本が一直線で、3本目は零力。(b) L字の節点：外力がなく、2本だけが集まるなら、その2本とも零力">
+<defs><marker id="zr-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="zr-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="zr-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="zr-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="zr-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="zr-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<text x="150.0" y="20.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">(a) T字の節点（荷重なし）</text>
+<line x1="40" y1="100" x2="260" y2="100" stroke="#2a2723" stroke-width="5"/>
+<line x1="150" y1="100" x2="150" y2="40" stroke="#968d80" stroke-width="5" stroke-dasharray="6,4"/>
+<line x1="150" y1="100" x2="150" y2="40" stroke="#968d80" stroke-width="0"/>
+<circle cx="150" cy="100" r="6" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<text x="150.0" y="125.0" fill="#2a2723" text-anchor="middle" font-size="12">一直線の2本</text>
+<text x="178.0" y="70.0" fill="#968d80" text-anchor="start" font-size="12">零力</text>
+<text x="150.0" y="150.0" fill="#2a2723" text-anchor="middle" font-size="12">Σ F⊥=0 より 3本目は 0</text>
+<text x="480.0" y="20.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">(b) L字の節点（荷重なし）</text>
+<line x1="420" y1="100" x2="540" y2="100" stroke="#968d80" stroke-width="5" stroke-dasharray="6,4"/>
+<line x1="420" y1="100" x2="420" y2="40" stroke="#968d80" stroke-width="5" stroke-dasharray="6,4"/>
+<circle cx="420" cy="100" r="6" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<text x="480.0" y="125.0" fill="#968d80" text-anchor="middle" font-size="12">どちらも零力</text>
+<text x="480.0" y="150.0" fill="#2a2723" text-anchor="middle" font-size="12">x,y の釣合いから両方 0</text>
+</g></svg>
+<p class="meta">図2.3　零力部材の2つの形。どちらも、<strong>その節点に外力も支点反力もない</strong>ことが条件。</p>
+<div class="thm"><span class="label">定理（零力部材）</span>外力・反力の作用しない節点で、
+<ol><li><strong>T字</strong>：3本の部材が集まり、そのうち2本が<strong>一直線</strong>なら、残りの1本は零力。</li>
+<li><strong>L字</strong>：2本の部材だけが集まり、<strong>一直線でない</strong>なら、その2本とも零力。</li></ol></div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　(a) T字。一直線の2本を $x$ 軸方向にとる。3本目は $x$ 軸と角 $\varphi\ne0$ をなし、力は $F_3$。<span class="step">STEP 2</span>　節点の釣合いのうち、<strong>$x$ に垂直な方向</strong>（$y$ 方向）の式を書く。一直線の2本の力は $y$ 成分をもたず（棒が $x$ 軸に沿っているので）、外力もない。残るのは3本目だけ：$F_3\sin\varphi=0$。〔なぜ $y$ 方向の式を選ぶか：未知数の多い2本が現れず、$F_3$ だけの式になるから〕<span class="step">STEP 3</span>　$\sin\varphi\ne0$ なので $F_3=0$。$\blacksquare$</p>
+<p><span class="step">STEP 4</span>　(b) L字。部材1に垂直な方向の式：部材2の力 $F_2$ の成分 $F_2\sin\varphi=0$（部材1の力はこの方向に成分をもたず、外力もない）。$\sin\varphi\ne0$ より $F_2=0$。次に部材1に沿う方向の式：$F_1+F_2\cos\varphi=0$ で $F_2=0$ だから $F_1=0$。$\blacksquare$</p>
+</div>
+<div class="ex"><span class="label">例題3〔B｜自作〕零力部材を見つけて、残りを求める</span>
+<p>図のトラス（A(0,0)、B(2,0)、C(4,0)、D(2,2) 〔m〕）は、A がピン、C がローラーで支えられ、頂点 D に鉛直下向きの力 $P$ が作用する。5本の部材（AB、BC、BD、AD、CD）の内力を求めよ。</p>
+<svg viewBox="0 0 520 320" width="520" role="img" aria-label="底辺ABCの中点Bと頂点Dを縦棒で結んだ三角形トラス。頂点Dに下向きの力P。縦棒BDは零力部材">
+<defs><marker id="zx-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="zx-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="zx-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="zx-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="zx-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="zx-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<line x1="50.0" y1="265.0" x2="260.0" y2="265.0" stroke="#a8322a" stroke-width="6.389087296526011"/>
+<line x1="260.0" y1="265.0" x2="470.0" y2="265.0" stroke="#a8322a" stroke-width="6.389087296526011"/>
+<line x1="260.0" y1="265.0" x2="260.0" y2="55.0" stroke="#968d80" stroke-width="2.2" stroke-dasharray="5,4"/>
+<line x1="50.0" y1="265.0" x2="260.0" y2="55.0" stroke="#2b3a67" stroke-width="8.0"/>
+<line x1="470.0" y1="265.0" x2="260.0" y2="55.0" stroke="#2b3a67" stroke-width="8.0"/>
+<circle cx="50.0" cy="265.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="260.0" cy="265.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="470.0" cy="265.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="260.0" cy="55.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<path d="M50.0,265.0 L40.9,278.0 L59.1,278.0 z" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="37.0" y1="278.0" x2="63.0" y2="278.0" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="37.8" y1="278.0" x2="33.8" y2="284.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="41.9" y1="278.0" x2="37.9" y2="284.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="45.9" y1="278.0" x2="41.9" y2="284.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="50.0" y1="278.0" x2="46.0" y2="284.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="54.1" y1="278.0" x2="50.1" y2="284.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="58.1" y1="278.0" x2="54.1" y2="284.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="62.2" y1="278.0" x2="58.2" y2="284.0" stroke="#2a2723" stroke-width="1"/>
+<path d="M470.0,265.0 L461.6,277.0 L478.4,277.0 z" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="465.8" cy="281.0" r="3.5" fill="#fff" stroke="#2a2723"/><circle cx="474.2" cy="281.0" r="3.5" fill="#fff" stroke="#2a2723"/>
+<line x1="458.0" y1="285.0" x2="482.0" y2="285.0" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="458.8" y1="285.0" x2="454.8" y2="291.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="462.5" y1="285.0" x2="458.5" y2="291.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="466.2" y1="285.0" x2="462.2" y2="291.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="470.0" y1="285.0" x2="466.0" y2="291.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="473.8" y1="285.0" x2="469.8" y2="291.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="477.5" y1="285.0" x2="473.5" y2="291.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="481.2" y1="285.0" x2="477.2" y2="291.0" stroke="#2a2723" stroke-width="1"/>
+<text x="36.0" y="261.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">A</text>
+<text x="260.0" y="293.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+<text x="484.0" y="261.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">C</text>
+<text x="260.0" y="41.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">D</text>
+<line x1="260.0" y1="3.0" x2="260.0" y2="47.0" stroke="#2a2723" stroke-width="3" marker-end="url(#zx-k)"/>
+<text x="270.0" y="25.0" fill="#2a2723" text-anchor="start" font-size="13" font-weight="bold">P</text>
+<text x="282.0" y="164.0" fill="#968d80" text-anchor="start" font-size="12">零力</text>
+<text x="129.0" y="156.0" fill="#2b3a67" text-anchor="end" font-size="12">圧縮</text>
+<text x="391.0" y="156.0" fill="#2b3a67" text-anchor="start" font-size="12">圧縮</text>
+<text x="155.0" y="255.0" fill="#a8322a" text-anchor="middle" font-size="12">引張</text>
+<text x="365.0" y="255.0" fill="#a8322a" text-anchor="middle" font-size="12">引張</text>
+</g></svg>
+<p class="meta">図2.4　結果（朱＝引張、藍＝圧縮、灰の破線＝零力）。大きさは答えに示す。</p>
+<p><strong>解答</strong></p>
+<p>① 全部引張と仮定。反力はピン A が $R_{Ax}$、$R_{Ay}$、ローラー C が $R_C$（すべて $+$ 向き）。<br>
+② 全体の釣合い：$x$：$R_{Ax}=0$（水平の外力はない）。A まわりのモーメント：$-P\times2+R_C\times4=0\Rightarrow R_C=P/2$。$y$：$R_{Ay}+R_C-P=0\Rightarrow R_{Ay}=P/2$。<br>
+③ <strong>零力部材の判定</strong>：節点 B には AB、BC、BD の3本が集まり、AB と BC は一直線（$x$ 軸上）。B には外力も反力もない。T字なので <strong>$F_{BD}=0$</strong>（図の破線）。〔節点 B の $y$ 方向：$F_{BD}=0$ と直接書ける〕<br>
+④ 節点 A：A から B へ $(1,0)$、A から D へ $(1,1)/\sqrt2$。<br>
+$$y:\ \frac{F_{AD}}{\sqrt2}+\frac P2=0\ \Rightarrow\ F_{AD}=-\frac{P}{\sqrt2}=-0.7071P,\qquad x:\ F_{AB}+\frac{F_{AD}}{\sqrt2}=0\ \Rightarrow\ F_{AB}=\frac P2$$
+節点 B（$F_{BD}=0$）：$x$：$-F_{AB}+F_{BC}=0$ より $F_{BC}=P/2$。<br>
+節点 D で対称性から $F_{CD}=F_{AD}$。確かめ（節点 D の $y$ 方向）：D から A へは $(-1,-1)/\sqrt2$、D から C へは $(1,-1)/\sqrt2$ なので、D が部材から受ける $y$ 成分は $-\dfrac{F_{AD}+F_{CD}}{\sqrt2}=-\dfrac{-1.4142P}{\sqrt2}=+P$（上向き）。外力 $-P$（下向き）と釣合う ✓。<br>
+⑥ <strong>答</strong>：$F_{AB}=F_{BC}=\dfrac P2$（<strong>引張</strong>）、$F_{AD}=F_{CD}=\dfrac{P}{\sqrt2}\approx0.707P$（<strong>圧縮</strong>）、$F_{BD}=0$（零力）。</p></div>
+<div class="warn"><span class="label">注意：零力部材は「いらない部材」ではない</span>零力になるのは、<strong>この荷重のとき</strong>だけである。荷重が B に移れば BD は $P$ の引張になる。また、零力部材は、構造の形を保ち、圧縮される他の部材が<strong>座屈</strong>（横に曲がること）しないよう支える役目も持つ。「零力だから取り除いてよい」とは言えない。また、<strong>節点に外力や反力がある</strong>ときは、T字・L字でも零力とは限らない（上の定理の条件）。</div>
+
+<h3><span class="no">2.4</span>節点法の検算と、全体を一度に解く見方</h3>
+<ul>
+<li><strong>最後の節点の式は検算に使う</strong>：未知数を順に解くと、最後の節点（例題2では A）の式は、すでに全部解けたあとの確認になる（$m+r=2j$ なので式は全部使うが、順序の最後の式は余る＝検算）。</li>
+<li><strong>トラス全体の釣合い</strong>（$\sum F_x=\sum F_y=\sum M=0$）が成り立つか確かめる。</li>
+<li><strong>符号の物理的な確認</strong>：荷重で押された棒は圧縮、引かれた棒は引張になる向きになっているか。</li>
+</ul>
+<div class="box"><span class="label">補足：全節点の式を一度に解く</span>未知数（$m+r$ 個）と式（$2j$ 本）が同数なので、全節点の釣合い式をまとめて<strong>連立一次方程式</strong>として解くこともできる。例題2 なら未知数6個（$F_{AB},F_{BC},F_{AC},R_{Ax},R_{Ay},R_C$）、式6本。これを行列で書いて計算機に解かせれば、手で順番を考えなくてよい。本教材の検算コード（<code>draft/truss07.py</code>）はこの方法を使い、講義資料と外部問題のすべての値を確かめた。ただし、手計算では「どの節点から始めるか」を考える節点法のほうが、見通しがよく、検算もしやすい。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 2｜現実</p>
+<div class="ph"><img src="img/07_a2_haer.jpg" alt="白黒の写真。下から見上げた鉄橋の骨組みで、斜めの部材が丸いピンの1点に集まる節点が2か所写る" loading="lazy"></div>
+<p class="cap">トラスの節点では、何本もの部材が1本のピンに集まり、力が1点で釣合う。</p>
+<p class="cr">C. N. Beasley（HAER／米国歴史的技術記録）／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Close-up_view_of_portion_of_swing-span_truss_showing_members_and_their_pin_connections_at_joints._HAER_ALA,36-BRIPO.V,1-17.tif">Wikimedia Commons</a>（旋回橋のトラスの節点、1980年撮影。下端の黒帯を切除）</p></div>
+<div class="side b"><p class="kick">MITATE 2｜見立て</p>
+<div class="ph"><img src="img/07_b2_boss.jpg" alt="白い天井に、4本の灰色のリブが斜めに伸びて、中央の金色の飾りの要石に集まっている。リブのあいだに緑と赤の植物の文様" loading="lazy"></div>
+<p class="cap">4本のリブが1つの要石に集まるとき、石の重さはその一点で受け渡される。</p>
+<p class="cr">Roman Eisele／<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Murrhardt_-_Altstadt_-_Stadtkirche_-_Gew%C3%B6lbe_der_Vierung_-_Schlussstein.jpg">Wikimedia Commons</a>（ムルハルトの教会の交差ヴォールト、2013年撮影）</p></div>
+</figure>
+<!-- ============================================================ -->
+<h2><span class="no">3</span>切断法（method of sections）</h2>
+
+<h3><span class="no">3.1</span>動機：1本だけ知りたいのに、全部の節点を回るのか</h3>
+<p>節点法は確実だが、<strong>知りたい部材が離れた場所にある</strong>と、そこへたどり着くまで多くの節点を順に解かなければならない。講義資料 p.14 の例で、赤丸の3本の力<strong>だけ</strong>が知りたいとしよう。</p>
+<figure class="slide"><img src="img/slide07/longtruss.jpg" alt="左端の下に下向きの力を受け、右端の壁に上と下の2点で支えられた8区画のトラス。中央付近の上弦、斜材、下弦の3本に赤丸" loading="lazy" style="width:760px;max-width:98%;height:auto;background:#fff"><figcaption>講義資料の図。左端に荷重、右の壁に支持。赤丸の3本の力を求めたい。出典：講義資料 第7回 p.14</figcaption></figure>
+<p>節点法で解くなら、荷重のある左端の節点から、右へ向かって節点を1つずつ（未知数2個以下の節点を探しながら）解き進め、赤丸の部材にたどり着く必要がある。その間、<strong>求めたくない部材の力</strong>も全部計算する。そこで、<strong>求めたい部材を通るように、トラスを切る</strong>。</p>
+
+<h3><span class="no">3.2</span>原理：切った一部も釣合っている</h3>
+<div class="thm"><span class="label">定理（切断法の原理）</span>トラスを平面の切り口で2つに分けたとき、一方の部分には、<strong>外力・支点反力</strong>と、<strong>切られた部材が切り口で及ぼす力（内力）</strong>とが作用し、これらが釣合っている。つまり、その部分は<strong>1つの剛体として</strong>、$\sum F_x=\sum F_y=\sum M=0$ の3本の式を満たす。</div>
+<div class="proof">
+<p><span class="step">STEP 1</span>　切り取った部分に含まれる<strong>各節点</strong>は静止している。各節点について、そこに働く力（各部材から受ける力＋外力＋反力）の和は 0。〔節点法の式そのもの〕</p>
+<p><span class="step">STEP 2</span>　これらの式を、切り取った部分のすべての節点について<strong>足し合わせる</strong>。切り取った部分の<strong>内側の部材</strong>は、両端の節点が両方ともこの部分に含まれる。その部材が両端に及ぼす力は、作用・反作用の法則（1.2）で<strong>大きさが等しく逆向き</strong>。足すと打ち消し合う。〔なぜ足すか：内側の力を消して、外から来る力だけを残すため〕</p>
+<p><span class="step">STEP 3</span>　打ち消されずに残るのは、<strong>外力・反力</strong>と、<strong>切り口で切られた部材の力</strong>（切られた部材の一端だけがこの部分に含まれる）。したがって、それらの力の合力が 0。モーメントについても、各節点で「力の和＝0」なので、<strong>任意の点まわりのモーメントの和も 0</strong>。これを全節点で足すと、内側の部材の2つの力は<strong>同じ作用線上で逆向き</strong>（1.2）なので、モーメントも打ち消し合う。残るのは外力・反力・切り口の力のモーメントで、その和が 0。$\blacksquare$</p>
+</div>
+<p>要するに、<strong>切った部分を「1つの物体」として FBD を描く</strong>だけである。切った部材の力は、1.2 の二力部材の結果から、<strong>棒に沿った1つの未知数</strong>として描ける。</p>
+<svg viewBox="0 0 640 250" width="640" role="img" aria-label="左は切断前のトラス全体、右は切った後の左の部分。切り口の3本の部材には、切り捨てた右の部分から内力が外力として加わる">
+<defs><marker id="ci-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ci-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ci-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ci-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ci-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ci-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<text x="130.0" y="18.0" fill="#2a2723" text-anchor="middle" font-size="12" font-weight="bold">切る前：全体で釣合っている</text>
+<text x="490.0" y="18.0" fill="#2a2723" text-anchor="middle" font-size="12" font-weight="bold">切った後：左の部分も釣合っている</text>
+<line x1="20" y1="80" x2="90" y2="80" stroke="#2a2723" stroke-width="3"/>
+<line x1="90" y1="80" x2="160" y2="80" stroke="#2a2723" stroke-width="3"/>
+<line x1="160" y1="80" x2="230" y2="80" stroke="#2a2723" stroke-width="3"/>
+<line x1="20" y1="170" x2="90" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="90" y1="170" x2="160" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="160" y1="170" x2="230" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="20" y1="80" x2="20" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="90" y1="80" x2="90" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="160" y1="80" x2="160" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="230" y1="80" x2="230" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="20" y1="170" x2="90" y2="80" stroke="#2a2723" stroke-width="3"/>
+<line x1="90" y1="170" x2="160" y2="80" stroke="#2a2723" stroke-width="3"/>
+<line x1="160" y1="170" x2="230" y2="80" stroke="#2a2723" stroke-width="3"/>
+<circle cx="20" cy="80" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="90" cy="80" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="160" cy="80" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="230" cy="80" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="20" cy="170" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="90" cy="170" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="160" cy="170" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="230" cy="170" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="20.0" y1="170.0" x2="20.0" y2="215.0" stroke="#2a2723" stroke-width="3" marker-end="url(#ci-k)"/>
+<text x="34.0" y="205.0" fill="#2a2723" text-anchor="start" font-size="13" font-weight="bold">W</text>
+<line x1="130" y1="60" x2="130" y2="195" stroke="#a06a32" stroke-width="1.8" stroke-dasharray="6,4"/>
+<text x="130.0" y="208.0" fill="#a06a32" text-anchor="middle" font-size="12">切断面</text>
+<line x1="370" y1="80" x2="440" y2="80" stroke="#2a2723" stroke-width="3"/>
+<line x1="440" y1="80" x2="510" y2="80" stroke="#2a2723" stroke-width="3"/>
+<line x1="370" y1="170" x2="440" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="440" y1="170" x2="510" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="370" y1="80" x2="370" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="440" y1="80" x2="440" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="510" y1="80" x2="510" y2="170" stroke="#2a2723" stroke-width="3"/>
+<line x1="370" y1="170" x2="440" y2="80" stroke="#2a2723" stroke-width="3"/>
+<line x1="440" y1="170" x2="510" y2="80" stroke="#2a2723" stroke-width="3"/>
+<circle cx="370" cy="80" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="440" cy="80" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="510" cy="80" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="370" cy="170" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="440" cy="170" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="510" cy="170" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="510.0" y1="80.0" x2="565.0" y2="80.0" stroke="#a8322a" stroke-width="3" marker-end="url(#ci-r)"/>
+<line x1="510.0" y1="170.0" x2="565.0" y2="170.0" stroke="#a8322a" stroke-width="3" marker-end="url(#ci-r)"/>
+<line x1="510.0" y1="170.0" x2="558.0" y2="118.0" stroke="#a8322a" stroke-width="3" marker-end="url(#ci-r)"/>
+<text x="570.0" y="84.0" fill="#a8322a" text-anchor="start" font-size="13">F<tspan baseline-shift="sub" font-size="75%">1</tspan></text>
+<text x="570.0" y="174.0" fill="#a8322a" text-anchor="start" font-size="13">F<tspan baseline-shift="sub" font-size="75%">3</tspan></text>
+<text x="564.0" y="114.0" fill="#a8322a" text-anchor="start" font-size="13">F<tspan baseline-shift="sub" font-size="75%">2</tspan></text>
+<line x1="370.0" y1="170.0" x2="370.0" y2="215.0" stroke="#2a2723" stroke-width="3" marker-end="url(#ci-k)"/>
+<text x="384.0" y="205.0" fill="#2a2723" text-anchor="start" font-size="13" font-weight="bold">W</text>
+<text x="490.0" y="242.0" fill="#968d80" text-anchor="middle" font-size="11">切り口の内力＝切った部材が残した力（外力になる）</text>
+</g></svg>
+<p class="meta">図3.1　左の部分を切り出すと、切り口の部材（上弦、斜材、下弦）の力が外力として現れる。引張を仮定するので、矢印は切り口から<strong>外向き</strong>（残した部分が、取り除いた部分に引っ張られる向き）に描く。</p>
+<figure class="slide"><img src="img/slide07/cut15.jpg" alt="上は赤丸の部分で切断した左側の部分。下は切断後の左の部分の力の図で、切り口の3本に右向きの青い矢印" loading="lazy" style="width:640px;max-width:98%;height:auto;background:#fff"><figcaption>講義資料の図。切断した左の部分（上）と、その部分に働く力（下、青い矢印が切り口の内力）。出典：講義資料 第7回 p.15</figcaption></figure>
+<p>講義資料 p.15 の空欄「切断された［部分］でも釣合いが成立⇒解ける ↑ ［内力］の作用による」は、この意味である〔推定〕。</p>
+
+<h3><span class="no">3.3</span>手順と、3つの注意</h3>
+<div class="def"><span class="label">解答の手順（切断法）</span>講義資料 p.16。
+<ol>
+<li>求めたい箇所を通るように<strong>切断</strong>する（注1）。</li>
+<li>切断された<strong>どちらの部分</strong>を用いるかを決める（注2）。</li>
+<li>対象部分に作用する<strong>力を仮定</strong>する（切り口の内力は、引張として外向きに描く）。</li>
+<li>対象部分<strong>全体</strong>の FBD を描く。</li>
+<li>対象部分全体の<strong>力とモーメントの釣合い式</strong>を順次導き、解く（注3）。</li>
+<li>解には<strong>「引張」か「圧縮」</strong>を明記する（節点法と同じ）。</li>
+</ol></div>
+<p><strong>注1：何本まで切れるか</strong>（スライド p.17）。切った部分に立てられる釣合い式は、力が2本・モーメントが1本の<strong>最大3本</strong>。未知数が3より多ければ解けない。だから切断できるのは<strong>3箇所（3本）まで</strong>である。〔空欄の「3」は、平面の剛体の釣合い式の数から確定できる〕<br>
+<span class="meta">（4本以上切っても、未知力のうち3本が一点で交わるなど、特別な場合には解けることがある〔外部問題の K 形トラスなど〕。しかし、まず「3本まで」を原則にする。）</span></p>
+<p><strong>注2：どちらの部分を使うか</strong>（スライド p.18）。<strong>支点反力</strong>など<strong>未知の外力</strong>を含む側を選ぶと、未知数が 3 を超える（＝解けない）ことが多い。そこで、<strong>既知の外力</strong>（荷重）だけを含む側を選ぶ。ただし、<strong>先にトラス全体の釣合いから支点反力を求めておけば</strong>、どちらの部分を選んでも解ける。</p>
+<p><strong>注3：モーメントの点をうまく選ぶ</strong>（スライド p.19）。<strong>未知の力の作用線が交わる点</strong>（力が多く集まる点）まわりのモーメントの釣合いを使うとよい。その点を通る力はモーメントを生まないので、<strong>未知数が1つだけ</strong>の式ができ、直ちに解が求まる。2本の未知力が<strong>平行</strong>なら、それに垂直な方向の力の釣合いを使う。</p>
+<div class="warn"><span class="label">ルール：「切断法で解け」と言われたら</span>「切断法を用いて解きなさい」と指示のある問題では、<strong>節点の力の釣合いを用いてはいけない</strong>（スライド p.19）。これは試験の<strong>ルール違反（反則）</strong>になるからである〔推定：空欄は「反則」。ここは、問題が「切断法の理解」を問うているため〕。切断法で求めた値を節点法で<strong>検算</strong>するのは自由だが、解答には書かない。</div>
+
+<h3><span class="no">3.4</span>例題4〔B｜講義資料・教科書 図3.21〕切断法で3本を求める</h3>
+<div class="ex"><span class="label">例題4〔B｜図3.21〕部材 BC、EC、ED に生じる力</span>
+<p>図のトラス（節点 A(0,0)、E(1,0)、D(2,0)、B(1,1)、C(2,1)〔m〕、BE と CD は鉛直、AB と EC は 45°）で、A に鉛直下向き 1000 N が作用する。C と D は壁で支持されている。部材 BC、EC、ED に生じる力を、<strong>切断法</strong>で求めよ。</p>
+<figure class="slide"><img src="img/slide07/sec22.jpg" alt="節点A、B、C、Eを含む左の部分。切り口の3本に、BCにF_BC、ECにF_CE、EDにF_DEの右向きの青い矢印。Aに下向き1000 N" loading="lazy" style="width:300px;max-width:80%;height:auto;background:#fff"><figcaption>切断面に作用する力（講義資料 p.22）。出典：講義資料 第7回 p.22</figcaption></figure>
+<p><strong>解答</strong>（講義資料 p.21「おすすめ」）</p>
+<p>① 切断：BC、EC、ED の3本を通る鉛直線で切る（3本、注1 ✓）。<br>
+② どちらの部分：<strong>左の部分</strong>（A、B、E を含む）。〔荷重 1000 N（既知）だけを含み、反力（C、D の未知）を含まない。注2 ✓〕<br>
+③ 力の仮定：切り口の3本はすべて<strong>引張</strong>と仮定し、$F_{BC}$、$F_{EC}$、$F_{ED}$ を、切り口から外向き（右向き、EC は右上向き）に描く。<br>
+④⑤ 釣合い（反時計回りを正とし、各点まわりのモーメントを取る）。</p>
+<p><strong>E まわり</strong>（$F_{EC}$、$F_{ED}$ は E を通るのでモーメント 0。残るのは $F_{BC}$ と 1000 N）：1000 N の腕は E の鉛直線から<strong>左へ 1 m</strong>、$F_{BC}$ の腕は E から<strong>上へ 1 m</strong>（作用線 BC は E より 1 m 上）。1000 N は E のまわりを<strong>反時計回り</strong>（A が E の左で、下向きの力）、$F_{BC}$（右向き、E より上）は<strong>時計回り</strong>：
+$$1\times1000-1\times F_{BC}=0\ \Rightarrow\ F_{BC}=1000\ \text{N（引張）}$$
+<strong>C まわり</strong>（$F_{BC}$、$F_{EC}$ は C を通る。残るのは $F_{ED}$ と 1000 N）：1000 N の腕は C から水平に 2 m、$F_{ED}$ の腕は C から下へ 1 m。1000 N は C のまわりを反時計回り、$F_{ED}$（右向き、C より下）も反時計回り：
+$$2\times1000+1\times F_{ED}=0\ \Rightarrow\ F_{ED}=-2000\ \text{N（圧縮）}$$
+〔C は切断法の対象部分（左側）に<strong>含まれない点</strong>だが、モーメントの基準点にはどの点を選んでもよい。EC と BC が通る点を選ぶと未知数が1つの式になる〕<br>
+<strong>$y$ 方向の力の釣合い</strong>（水平の $F_{BC}$、$F_{ED}$ は $y$ 成分がない）：
+$$F_{EC}\sin45°-1000=0\ \Rightarrow\ F_{EC}=\frac{1000}{\sin45°}=1414\ \text{N（引張）}$$
+⑥ <strong>答</strong>：$F_{BC}=1000$ N（引張）、$F_{EC}=1414$ N（引張）、$F_{ED}=2000$ N（圧縮）。</p>
+<svg viewBox="0 0 620 300" width="620" role="img" aria-label="5つの節点を持つトラス。Aが左下、Eが下の中央、Dが右下、Bが上の左、Cが上の右。Aに下向き1000 N。BC、EC、EDを切断する">
+<defs><marker id="f321-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="f321-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="f321-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="f321-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="f321-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="f321-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<line x1="70.0" y1="200.0" x2="220.0" y2="50.0" stroke="#a8322a" stroke-width="6.389087296526011"/>
+<line x1="70.0" y1="200.0" x2="220.0" y2="200.0" stroke="#2b3a67" stroke-width="5.25"/>
+<line x1="220.0" y1="50.0" x2="220.0" y2="200.0" stroke="#2b3a67" stroke-width="5.25"/>
+<line x1="220.0" y1="50.0" x2="370.0" y2="50.0" stroke="#a8322a" stroke-width="5.25"/>
+<line x1="220.0" y1="200.0" x2="370.0" y2="50.0" stroke="#a8322a" stroke-width="6.389087296526011"/>
+<line x1="220.0" y1="200.0" x2="370.0" y2="200.0" stroke="#2b3a67" stroke-width="8.0"/>
+<line x1="370.0" y1="50.0" x2="370.0" y2="200.0" stroke="#968d80" stroke-width="2.2" stroke-dasharray="5,4"/>
+<circle cx="70.0" cy="200.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="220.0" cy="200.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="370.0" cy="200.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="220.0" cy="50.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="370.0" cy="50.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<line x1="310.0" y1="5.0" x2="310.0" y2="245.0" stroke="#a06a32" stroke-width="2" stroke-dasharray="7,5"/>
+<text x="310.0" y="263.0" fill="#a06a32" text-anchor="middle" font-size="12">切断面</text>
+<text x="56.0" y="194.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">A</text>
+<text x="220.0" y="226.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">E</text>
+<text x="384.0" y="224.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">D</text>
+<text x="212.0" y="38.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+<text x="384.0" y="38.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">C</text>
+<line x1="70.0" y1="206.0" x2="70.0" y2="256.0" stroke="#2a2723" stroke-width="3" marker-end="url(#f321-k)"/>
+<text x="78.0" y="262.0" fill="#2a2723" text-anchor="start" font-size="13">1000 N</text>
+<text x="392.0" y="55.0" fill="#a8322a" text-anchor="start" font-size="12">F<tspan baseline-shift="sub" font-size="75%">BC</tspan>：引張 1000 N</text>
+<text x="392.0" y="130.0" fill="#a8322a" text-anchor="start" font-size="12">F<tspan baseline-shift="sub" font-size="75%">EC</tspan>：引張 1414 N</text>
+<text x="392.0" y="205.0" fill="#2b3a67" text-anchor="start" font-size="12">F<tspan baseline-shift="sub" font-size="75%">ED</tspan>：圧縮 2000 N</text>
+</g></svg>
+<p class="meta">図3.2　全部材の内力（反力と全節点を連立して数値計算した結果）。切断面（破線）で切った3本は、上の手計算と一致する。AB は引張 1414 N、AE と BE は圧縮 1000 N（節点法で確かめた値）、CD は 0。図の支持は、C がピン、D が水平反力だけのローラーとして計算した。</p>
+<p>確かめ：<strong>連立なしで</strong>3本とも1つの式から求められた（注3 の効果）。講義資料の補足：符号は「正→引張、負→圧縮」と一貫しているので、仮定した向きとの照合が不要で、手間が少ない。教科書の解答は BC、EC を引張、ED を圧縮と<strong>予想した向きで仮定</strong>していて、ここでも「お勧めしない」とされている（引張・圧縮の混在、p.20）。</p></div>
+<div class="warn"><span class="label">よくある誤り</span>
+<ul>
+<li>切り口で<strong>4本</strong>以上を切る（注1）。まず3本までに収める。</li>
+<li>反力を含む側を、反力を求めずに選ぶ（注2）。→ 未知数が増えて解けなくなる。</li>
+<li>モーメントの基準点を、対象部分の中の点に限ってしまう。<strong>どこでもよい</strong>。未知力が交わる点を選ぶ。</li>
+<li>切り口の力の向きを、<strong>残した部分から見て内向き</strong>に描いてしまう。引張仮定なら外向き（切り口から遠ざかる向き）。</li>
+</ul></div>
+
+<h3><span class="no">3.5</span>例題5〔B｜講義資料・教科書 練習問題 3・4〕同じ問題を節点法と切断法で解く</h3>
+<div class="ex"><span class="label">例題5〔B｜図3.25〕部材 AB、AE と、支点 D に作用する力</span>
+<p>図のトラスは、A がピン、D がローラーで支えられ、下辺中央の E に鉛直下向きの力 $P$ が作用する。AE＝ED＝$L$。三角形はすべて<strong>正三角形</strong>（AB、BC、CD、BE、CE も長さ $L$、B・C の高さ $\frac{\sqrt3}{2}L$）。部材 AB、AE と支点 D に作用する力を求めよ。</p>
+<figure class="slide"><img src="img/slide07/full24.jpg" alt="台形のトラスの全体図。A、E、Dが下の辺、B、Cが上の辺。Aに右向きのR_Axと上向きのR_Ay、E点に下向きのP、Dに上向きのR_D" loading="lazy" style="width:560px;max-width:98%;height:auto;background:#fff"><figcaption>全体の FBD（講義資料 p.24）。出典：講義資料 第7回 p.24</figcaption></figure>
+<p><strong>解答</strong></p>
+<p><strong>0. 共通：トラス全体の釣合い（反力）</strong>：<br>
+$x$：$R_{Ax}=0$。$y$：$R_{Ay}-P+R_D=0$。A まわりのモーメント（E は A から $L$、D は $2L$）：$-LP+2L\,R_D=0$。
+$$\therefore\ R_D=\frac P2,\qquad R_{Ax}=0,\qquad R_{Ay}=\frac P2$$</p>
+<p><strong>(a) 節点法</strong>：全部材を引張と仮定。A から B へ $(\cos60°,\sin60°)$、A から E へ $(1,0)$。節点 A の外力は反力 $(0,\,P/2)$（上向き）。
+$$x:\ F_{AB}\cos60°+F_{AE}=0,\qquad y:\ F_{AB}\sin60°+\frac P2=0$$
+$y$ の式から $F_{AB}=-\dfrac{P}{2\sin60°}=-\dfrac{P}{\sqrt3}$。$x$ の式から $F_{AE}=-F_{AB}\cos60°=\dfrac{P}{2\sqrt3}$。<br>
+<strong>答</strong>：$F_{AB}=\dfrac{\sqrt3}{3}P$（<strong>圧縮</strong>）、$F_{AE}=\dfrac{\sqrt3}{6}P$（<strong>引張</strong>）、$R_D=\dfrac P2$（上向き）。</p>
+<figure class="slide"><img src="img/slide07/fbdA25.jpg" alt="節点Aの図。F_ABが右上向き、F_AEが右向き、反力P/2が上向き" loading="lazy" style="width:200px;max-width:50%;height:auto;background:#fff"><figcaption>節点 A の FBD（講義資料 p.25）。出典：講義資料 第7回 p.25</figcaption></figure>
+<p><strong>(b) 切断法</strong>（AB と AE を切って<strong>節点 A を1つの部分</strong>として切り出す。切った2本の内力は引張として外向きに描く）：E まわりのモーメント（$F_{AE}$ は E を通るので消える。$R_{Ax}=0$ は腕 0）：
+$$-L\cdot\frac P2-L\,F_{AB}\sin60°=0\ \Rightarrow\ F_{AB}=-\frac{P}{2\sin60°}=-\frac{P}{\sqrt3}$$
+〔$R_{Ay}$ は A（E の左 $L$）で上向きなので時計回り。$F_{AB}$ の鉛直成分も A で上向き（引張なら）で、同じ向きに効く〕。次に $x$ の力の釣合い：$F_{AE}+F_{AB}\cos60°=0\Rightarrow F_{AE}=\dfrac{P}{2\sqrt3}$。<br>
+<strong>答</strong>：節点法と<strong>一致</strong>。</p>
+<p><strong>(c) 別の切り方</strong>（AE だけを1本ずつ知りたいとき）：BC、BE、AE の3本を通る線で切り、左の部分（A、B）を取る。B まわりのモーメントで、BC と BE は B を通って消える。残るのは $R_{Ay}$（B から水平に $\frac L2$ だけ左、上向き）と $F_{AE}$（B から下へ $\frac{\sqrt3}{2}L$、右向き）：
+$$-\frac L2\cdot\frac P2+\frac{\sqrt3}{2}L\,F_{AE}=0\ \Rightarrow\ F_{AE}=\frac{P}{2\sqrt3}=\frac{\sqrt3}{6}P\ \text{（引張）}$$
+1本の式で、<strong>他の部材を計算せずに</strong> $F_{AE}$ が求まった。これが切断法の強みである。</p>
+<svg viewBox="0 0 560 270" width="560" role="img" aria-label="台形のトラス。下辺A-E-D、上辺B-C。AとDが支点で、下辺中央Eに下向きの力P。全ての三角形は正三角形">
+<defs><marker id="f325-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="f325-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="f325-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="f325-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="f325-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="f325-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<line x1="90.0" y1="190.0" x2="185.0" y2="25.5" stroke="#2b3a67" stroke-width="7.999999999999998"/>
+<line x1="185.0" y1="25.5" x2="375.0" y2="25.5" stroke="#2b3a67" stroke-width="8.0"/>
+<line x1="375.0" y1="25.5" x2="470.0" y2="190.0" stroke="#2b3a67" stroke-width="7.999999999999998"/>
+<line x1="90.0" y1="190.0" x2="280.0" y2="190.0" stroke="#a8322a" stroke-width="5.25"/>
+<line x1="280.0" y1="190.0" x2="470.0" y2="190.0" stroke="#a8322a" stroke-width="5.25"/>
+<line x1="185.0" y1="25.5" x2="280.0" y2="190.0" stroke="#a8322a" stroke-width="7.999999999999998"/>
+<line x1="375.0" y1="25.5" x2="280.0" y2="190.0" stroke="#a8322a" stroke-width="7.999999999999998"/>
+<circle cx="90.0" cy="190.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="280.0" cy="190.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="470.0" cy="190.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="185.0" cy="25.5" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="375.0" cy="25.5" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<path d="M90.0,190.0 L81.6,202.0 L98.4,202.0 z" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="78.0" y1="202.0" x2="102.0" y2="202.0" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="78.8" y1="202.0" x2="74.8" y2="208.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="82.5" y1="202.0" x2="78.5" y2="208.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="86.2" y1="202.0" x2="82.2" y2="208.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="90.0" y1="202.0" x2="86.0" y2="208.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="93.8" y1="202.0" x2="89.8" y2="208.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="97.5" y1="202.0" x2="93.5" y2="208.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="101.2" y1="202.0" x2="97.2" y2="208.0" stroke="#2a2723" stroke-width="1"/>
+<path d="M470.0,190.0 L462.3,201.0 L477.7,201.0 z" fill="#fff" stroke="#2a2723" stroke-width="1.6"/>
+<circle cx="466.1" cy="205.0" r="3.5" fill="#fff" stroke="#2a2723"/><circle cx="473.9" cy="205.0" r="3.5" fill="#fff" stroke="#2a2723"/>
+<line x1="459.0" y1="209.0" x2="481.0" y2="209.0" stroke="#2a2723" stroke-width="1.6"/>
+<line x1="459.7" y1="209.0" x2="455.7" y2="215.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="463.1" y1="209.0" x2="459.1" y2="215.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="466.6" y1="209.0" x2="462.6" y2="215.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="470.0" y1="209.0" x2="466.0" y2="215.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="473.4" y1="209.0" x2="469.4" y2="215.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="476.9" y1="209.0" x2="472.9" y2="215.0" stroke="#2a2723" stroke-width="1"/>
+<line x1="480.3" y1="209.0" x2="476.3" y2="215.0" stroke="#2a2723" stroke-width="1"/>
+<text x="76.0" y="186.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">A</text>
+<text x="264.0" y="212.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">E</text>
+<text x="484.0" y="186.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">D</text>
+<text x="175.0" y="15.5" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+<text x="385.0" y="15.5" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">C</text>
+<line x1="280.0" y1="196.0" x2="280.0" y2="236.0" stroke="#2a2723" stroke-width="3" marker-end="url(#f325-k)"/>
+<text x="292.0" y="242.0" fill="#2a2723" text-anchor="start" font-size="13" font-weight="bold">P</text>
+<text x="127.5" y="108.3" fill="#2b3a67" text-anchor="end" font-size="12">圧縮 √3/3P</text>
+<text x="432.5" y="108.3" fill="#2b3a67" text-anchor="start" font-size="12">圧縮 √3/3P</text>
+<text x="280.0" y="15.5" fill="#2b3a67" text-anchor="middle" font-size="12">圧縮 √3/3P</text>
+<text x="171.0" y="208.0" fill="#a8322a" text-anchor="middle" font-size="12">引張 √3/6P</text>
+<text x="389.0" y="208.0" fill="#a8322a" text-anchor="middle" font-size="12">引張 √3/6P</text>
+</g></svg>
+<p class="meta">図3.3　全部材の内力（数値計算）。AB・BC・CD は圧縮 $\frac{\sqrt3}{3}P$、AE・ED は引張 $\frac{\sqrt3}{6}P$、BE・CE は引張 $\frac{\sqrt3}{3}P$。</p>
+<p>確かめ：(a)(b)(c) の3通りが一致 ✓。節点 E の $y$：BE、CE の鉛直成分 $\frac{\sqrt3}{3}P\sin60°\times2=P$（引張で E を上へ引く）が荷重 $P$ と釣合う ✓。</p></div>
+
+<h3><span class="no">3.6</span>節点法と切断法の使い分け</h3>
+<table class="tb">
+<tr><th></th><th>節点法</th><th>切断法</th></tr>
+<tr><td>釣合いの対象</td><td>1つの節点（共点力）</td><td>切った部分（剛体）</td></tr>
+<tr><td>使える式</td><td>$\sum F_x=\sum F_y=0$（<strong>2本</strong>）</td><td>$\sum F_x=\sum F_y=\sum M=0$（<strong>3本</strong>）</td></tr>
+<tr><td>未知数の上限</td><td>1節点あたり2個</td><td>切る部材は3本まで</td></tr>
+<tr><td>得意</td><td><strong>全部材</strong>の力を求める／反力側から順に解ける</td><td><strong>特定の1〜3本</strong>だけを求める／連立が不要</td></tr>
+<tr><td>苦手</td><td>求めたい棒が遠い（途中の棒も全部解く）</td><td>全部材を求めるには何度も切る／反力が必要な場合がある</td></tr>
+<tr><td>検算</td><td>最後の節点の式、全体の釣合い</td><td>別の点まわりのモーメント、節点法</td></tr>
+</table>
+<div class="box"><span class="label">併用の型</span>実際の問題は、<strong>全体の釣合いで反力 → 切断法で特定の棒 → 残りは節点法</strong>のように、組み合わせることが多い（外部問題 5章、4章のアームで実践）。「切断法で」と指定がなければ、どちらを使ってもよい。選ぶ基準は「<strong>連立方程式を作らずに済む道</strong>」である。</div>
+
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 3｜現実</p>
+<div class="ph"><img src="img/07_a3_forth.jpg" alt="古い大判のアルバムの写真。4本の太い円筒の柱と、斜めに交差する鉄の斜材が、空に向かって組み上がっている建設中の橋" loading="lazy"></div>
+<p class="cap">建設中のフォース橋は、柱と斜材を三角形に組み上げて、空へ張り出していく。</p>
+<p class="cr">Philip Phillips／Public domain／<a href="https://commons.wikimedia.org/wiki/File:Forth_Bridge_-_Fife_cantilever_from_the_east_side.jpg">Wikimedia Commons</a>（フォース橋のファイフ側カンチレバー、1887年2月撮影）</p></div>
+<div class="side b"><p class="kick">MITATE 3｜見立て</p>
+<div class="ph"><img src="img/07_b3_douglasfir.jpg" alt="丸太を輪切りにした断面。中心から外へ同心円の年輪が広がり、中ほどに縦の割れ目が入る。上に年代の札" loading="lazy"></div>
+<p class="cap">丸太を切ると、外から見えなかった内側の年輪が、切り口に現れる。</p>
+<p class="cr">Mr. Satterly／<a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>／<a href="https://commons.wikimedia.org/wiki/File:Douglas_fir_trunk_cross-section_at_Lakeway_Learning_Center_in_Gillette,_Wyoming.jpg">Wikimedia Commons</a>（ダグラスファーの丸太の断面、2019年撮影（周辺を切除））</p></div>
+</figure>
+<!-- ============================================================ -->
+<h2><span class="no">4</span>運用：ロボットアームのトラス</h2>
+<p>序で見た小型移動マニピュレータの腕を、今回の道具で解析する。講義資料 p.2 は「外力によって生じるモーメントは、トラスの上下弦材の軸力の組によって抵抗する」と書いている（下図）。これを、数値で確かめる。</p>
+<figure class="slide"><div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:flex-start;background:#fff;padding:6px 8px"><img src="img/slide07/robotside.jpg" alt="トラスアームの構造例（側面図）。リンク1（0.4 m）、リンク2（0.3 m）、リンク3（0.2 m）。三角形の組合せのトラス構造" loading="lazy" style="height:220px;width:auto"><img src="img/slide07/chord.jpg" alt="リンクの詳細（拡大図）。上弦材（圧縮）、下弦材（引張）、斜材（引張または圧縮）。外力によって生じるモーメントはトラスの上下弦材の軸力の組によって抵抗する" loading="lazy" style="height:220px;width:auto"></div><figcaption>講義資料 p.2 より：アームの構造例（左）とリンクの詳細（右）。出典：講義資料 第7回 p.2</figcaption></figure>
+
+<h3><span class="no">4.1</span>モデル化と数値例</h3>
+<div class="ex"><span class="label">例題6〔B｜自作の数値例〕片持ちトラスのアーム</span>
+<p>リンク1（長さ 0.4 m）を、図のような平面トラスで近似する。節点は A(0, 0)、B(0.2, 0)、C(0.4, 0)、D(0, 0.1)、E(0.2, 0.1)〔m〕。腕の付け根（ジョイントの板）に、A がピン、D が水平方向の力だけを受けるローラーで取り付けられている（反力は $R_{Ax}$、$R_{Ay}$、$R_{Dx}$）。部材は AB、BC、DE、AD、BE、AE、EC の7本。先端 C に、質量 5 kg の物体をつかんで水平に保つ。$g=9.8\ \mathrm{m/s^2}$、部材の自重は無視する。各部材の内力と、付け根の反力を求めよ。</p>
+<svg viewBox="0 0 640 290" width="640" role="img" aria-label="水平に伸びた片持ちのトラスアーム。左の壁側にAとD、先端にC。Cに下向き49 N。上弦DEは引張196 N、下弦ABとBCは圧縮98 N、斜材AEは圧縮110 N、ECは引張110 N、縦の2本は零力">
+<defs><marker id="arm-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="arm-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="arm-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="arm-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="arm-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="arm-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<rect x="66.0" y="51.0" width="16" height="148.0" fill="#d9d2c2" stroke="#2a2723"/>
+<line x1="100.0" y1="175.0" x2="300.0" y2="175.0" stroke="#2b3a67" stroke-width="5.25"/>
+<line x1="300.0" y1="175.0" x2="500.0" y2="175.0" stroke="#2b3a67" stroke-width="5.25"/>
+<line x1="100.0" y1="75.0" x2="300.0" y2="75.0" stroke="#a8322a" stroke-width="8.0"/>
+<line x1="100.0" y1="175.0" x2="100.0" y2="75.0" stroke="#968d80" stroke-width="2.2" stroke-dasharray="5,4"/>
+<line x1="300.0" y1="175.0" x2="300.0" y2="75.0" stroke="#968d80" stroke-width="2.2" stroke-dasharray="5,4"/>
+<line x1="100.0" y1="175.0" x2="300.0" y2="75.0" stroke="#2b3a67" stroke-width="5.574593469062211"/>
+<line x1="300.0" y1="75.0" x2="500.0" y2="175.0" stroke="#a8322a" stroke-width="5.574593469062211"/>
+<circle cx="100.0" cy="175.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="300.0" cy="175.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="500.0" cy="175.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="100.0" cy="75.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="300.0" cy="75.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<text x="90.0" y="201.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">A</text>
+<text x="300.0" y="201.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+<text x="512.0" y="199.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">C</text>
+<text x="90.0" y="65.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">D</text>
+<text x="300.0" y="63.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">E</text>
+<line x1="500.0" y1="181.0" x2="500.0" y2="231.0" stroke="#2a2723" stroke-width="3.2" marker-end="url(#arm-k)"/>
+<text x="510.0" y="237.0" fill="#2a2723" text-anchor="start" font-size="13" font-weight="bold">W=49 N</text>
+<text x="220.0" y="57.0" fill="#a8322a" text-anchor="middle" font-size="12">F<tspan baseline-shift="sub" font-size="75%">DE</tspan>＝引張 196 N</text>
+<text x="330.0" y="225.0" fill="#2b3a67" text-anchor="middle" font-size="12">F<tspan baseline-shift="sub" font-size="75%">AB</tspan>=F<tspan baseline-shift="sub" font-size="75%">BC</tspan>＝圧縮 98 N</text>
+<text x="416.0" y="121.0" fill="#a8322a" text-anchor="start" font-size="11">F<tspan baseline-shift="sub" font-size="75%">EC</tspan>＝引張 110 N</text>
+<text x="202.0" y="149.0" fill="#2b3a67" text-anchor="start" font-size="11">F<tspan baseline-shift="sub" font-size="75%">AE</tspan>＝圧縮 110 N</text>
+<text x="308.0" y="129.0" fill="#968d80" text-anchor="start" font-size="11">零力</text>
+</g></svg>
+<p class="meta">図4.1　結果（朱＝引張、藍＝圧縮、灰の破線＝零力、太さは力の大きさに比例）。寸法 0.4 m は講義資料 p.2 のリンク1の長さ、他の寸法・荷重は本教材の仮定。</p>
+<p><strong>解答</strong></p>
+<p>① 荷重 $W=5\times9.8=49$ N（C に下向き）。部材は全部引張と仮定する。<br>
+② 座標：右を $+x$、上を $+y$。<br>
+③ <strong>全体の釣合い</strong>（付け根の反力）：
+$$x:\ R_{Ax}+R_{Dx}=0,\qquad y:\ R_{Ay}-49=0\ \Rightarrow\ R_{Ay}=49\ \text{N}$$
+A まわりのモーメント（D は A の真上 0.1 m で、水平力 $R_{Dx}$ の腕は 0.1 m。荷重の腕は 0.4 m）：
+$$-0.1\,R_{Dx}-0.4\times49=0\ \Rightarrow\ R_{Dx}=-196\ \text{N（左向き）},\ R_{Ax}=+196\ \text{N（右向き）}$$
+④ <strong>切断法</strong>（節点 B と E の間、$x=0.1$ m で DE、AE、AB の3本を切る。右の部分は荷重 49 N だけを含み、反力を含まない。注2 ✓）：</p>
+<ul>
+<li><strong>A まわり</strong>のモーメント（AE と AB は A を通る）。DE を引張と仮定した力は、右の部分を左向きに引く。腕は 0.1 m。荷重の腕は 0.4 m（時計回り）：$0.1\,F_{DE}-0.4\times49=0\ \Rightarrow\ F_{DE}=196$ N（<strong>引張</strong>）。</li>
+<li><strong>E まわり</strong>のモーメント（DE と AE は E を通る）。AB（引張仮定で左向き、E より 0.1 m 下）は時計回りに $-0.1F_{AB}$、荷重（E より右へ 0.2 m）は時計回りに $-0.2\times49$：$-0.1\,F_{AB}-0.2\times49=0\ \Rightarrow\ F_{AB}=-98$ N（<strong>圧縮</strong>）。</li>
+<li><strong>$y$ 方向</strong>の力の釣合い：AE は A のほうへ向く（左下向き、$\sin\varphi=0.1/\sqrt{0.2^2+0.1^2}=0.4472$）：$-0.4472\,F_{AE}-49=0\ \Rightarrow\ F_{AE}=-109.6$ N（<strong>圧縮</strong>）。</li>
+</ul>
+<p>⑤ <strong>節点法</strong>で残りを求める。<strong>節点 B</strong>：AB と BC は一直線で、B に荷重はない。T字なので BE は<strong>零力</strong>（2.3）。BC は AB と同じ $x$ 方向の釣合い：$F_{BC}=F_{AB}=-98$ N（<strong>圧縮</strong>）。<strong>節点 C</strong>：EC は E から C へ向かい、C から見て左上向き $(-0.894,\,0.447)$。$y$：$0.4472F_{EC}-49=0\Rightarrow F_{EC}=109.6$ N（<strong>引張</strong>）。$x$：$-F_{BC}-0.894\times109.6=98-98=0$ ✓。<strong>節点 D</strong>：DE（引張 196 N、右向き）と反力 $R_{Dx}$（左向き 196 N）で水平方向が釣合い、鉛直の AD は<strong>零力</strong>（T字）。<br>
+⑥ <strong>答</strong>：$F_{DE}=196$ N（引張）、$F_{AB}=F_{BC}=98$ N（圧縮）、$F_{AE}=110$ N（圧縮）、$F_{EC}=110$ N（引張）、$F_{AD}=F_{BE}=0$。反力：$R_{Ax}=196$ N（右）、$R_{Ay}=49$ N（上）、$R_{Dx}=196$ N（左）。<br>
+確かめ：全節点の連立方程式を数値で解いた結果（<code>check_07.py</code>）と一致 ✓。節点 E の釣合い：E が部材から受ける力は、ED 方向（E から D へ $(-1,0)$）に 196 N、EA 方向（E から A へ $(-0.894,-0.447)$）に $-109.6$ N すなわち $(+98,+49)$、EC 方向（E から C へ $(0.894,-0.447)$）に $+109.6$ N すなわち $(+98,-49)$、BE は 0。合計 $(-196+98+98,\ 49-49)=(0,0)$ ✓。</p></div>
+
+<h3><span class="no">4.2</span>なぜ上下の弦材が「曲げ」を担うのか</h3>
+<p>荷重 49 N が先端（付け根から 0.4 m）にあるので、付け根には<strong>モーメント</strong> $M=0.4\times49=19.6$ N·m が働く。1本の細い棒なら、これは棒を曲げる（大きな曲げ応力が出る）。トラスでは、このモーメントを、<strong>上弦 DE の引張 $T$</strong> と <strong>下弦の圧縮 $C$</strong> の<strong>偶力</strong>として受ける。</p>
+<svg viewBox="0 0 520 220" width="520" role="img" aria-label="トラスの断面。上弦材が引張Tで右、下弦材が圧縮Cで左へ、間隔hをおいて向き合う。偶力のモーメントTh">
+<defs><marker id="ch-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="ch-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="ch-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="ch-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="ch-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="ch-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<line x1="120" y1="60" x2="400" y2="60" stroke="#a8322a" stroke-width="7" stroke-linecap="round"/>
+<line x1="120" y1="160" x2="400" y2="160" stroke="#2b3a67" stroke-width="7" stroke-linecap="round"/>
+<line x1="200" y1="60" x2="200" y2="160" stroke="#968d80" stroke-width="2" stroke-dasharray="5,4"/><line x1="320" y1="60" x2="320" y2="160" stroke="#968d80" stroke-width="2" stroke-dasharray="5,4"/>
+<line x1="400.0" y1="60.0" x2="470.0" y2="60.0" stroke="#a8322a" stroke-width="3.2" marker-end="url(#ch-r)"/>
+<text x="486.0" y="56.0" fill="#a8322a" text-anchor="start" font-size="13">T</text>
+<line x1="120.0" y1="160.0" x2="50.0" y2="160.0" stroke="#2b3a67" stroke-width="3.2" marker-end="url(#ch-b)"/>
+<text x="34.0" y="156.0" fill="#2b3a67" text-anchor="end" font-size="13">C</text>
+<line x1="440" y1="70" x2="440" y2="150" stroke="#2a2723" stroke-width="1.2"/>
+<line x1="436" y1="70" x2="444" y2="70" stroke="#2a2723" stroke-width="1.2"/><line x1="436" y1="150" x2="444" y2="150" stroke="#2a2723" stroke-width="1.2"/>
+<text x="452.0" y="114.0" fill="#2a2723" text-anchor="start" font-size="13">h</text>
+<text x="260.0" y="110.0" fill="#2a2723" text-anchor="middle" font-size="14">M=Th=Ch（偶力）</text>
+<text x="260.0" y="32.0" fill="#a8322a" text-anchor="middle" font-size="12">上弦材：引張（右へ引く）</text>
+<text x="260.0" y="196.0" fill="#2b3a67" text-anchor="middle" font-size="12">下弦材：圧縮（左へ押す）</text>
+</g></svg>
+<p class="meta">図4.2　上弦材の引張 $T$ と下弦材の圧縮 $C$ が、間隔 $h$ をおいて向き合う偶力をつくる。偶力のモーメントは $M=Th=Ch$（第2回の偶力）。</p>
+<div class="thm"><span class="label">関係式</span>付け根のモーメントを $M$、弦材の間隔を $h$ とすると、弦材の力は
+$$T=C=\frac Mh\qquad(4.1)$$</div>
+<p>本例では $T=19.6/0.1=196$ N（DE）で、計算結果と一致する。下弦 AB の 98 N は、E まわりの区間では腕が半分（荷重の腕が 0.2 m）のためで、モーメントが先端に近いほど小さいことによる（$M$ は荷重から測った距離に比例する）。</p>
+<table class="tb">
+<tr><th>弦材の間隔 $h$ [m]</th><th>付け根の弦材の力 $M/h$ [N]</th></tr>
+<tr><td>0.05</td><td>392</td></tr><tr><td>0.10（本例）</td><td>196</td></tr><tr><td>0.20</td><td>98</td></tr>
+</table>
+<p>間隔を大きくするほど弦材の力は小さくなる。つまり、<strong>腕を「厚く」（弦材を離して）すれば、細い棒で大きなモーメントを支えられる</strong>。トラスが軽くて強い理由は、材料を、断面の中心ではなく<strong>離れた2本の弦材</strong>に集める点にある。</p>
+<div class="warn"><span class="label">注意：引張と圧縮の入れ替わり</span>講義資料 p.2 の注記は「上弦材（圧縮）、下弦材（引張）」だが、本例（先端に<strong>下向き</strong>の荷重）では、上弦が<strong>引張</strong>、下弦が<strong>圧縮</strong>になった。これは矛盾ではなく、<strong>荷重の向き・腕の向き</strong>で入れ替わる。腕が上へ持ち上がった姿勢や荷重の向きが変わる場合（スライドの図の腕は斜め上に伸びて荷物をつかむ）は、各リンクで上下が逆転しうる。符号は計算で決めること。</div>
+
+<h3><span class="no">4.3</span>設計への読み取り</h3>
+<ul>
+<li><strong>圧縮される棒は座屈しやすい</strong>：細長い棒が圧縮されると、材料が耐えられる前に横へ曲がる（<strong>座屈</strong>、材料力学で扱う）。本例では AB、BC、AE（圧縮 98〜110 N）を太く、または短くする。引張の棒（DE、EC）は細くてよい。内力の符号は、棒の<strong>太さと材料を決める第一の情報</strong>である。</li>
+<li><strong>零力部材（AD、BE）</strong>も、構造の形を保ち、圧縮の棒の座屈を防ぐ役目がある（2.3）。この荷重の姿勢では力が0だが、腕を別の向きに動かすと力が出る。</li>
+<li><strong>付け根へ伝わる力</strong>：ジョイント板に、$R_{Ax}=196$ N（右）、$R_{Dx}=196$ N（左）の<strong>水平の偶力</strong>（間隔 0.1 m、モーメント 19.6 N·m）と、鉛直 49 N が伝わる。この偶力のモーメントが、さらに台車に伝わる。第5回で扱った<strong>台車の転倒・荷重配分</strong>は、この力をもとに考える。</li>
+</ul>
+<figure class="spread">
+<div class="side a"><p class="kick">PHOTO 4｜現実</p>
+<div class="ph"><img src="img/07_a4_canadarm2.jpg" alt="黒い宇宙を背に、白い筒状のリンクが関節で折れ曲がったロボットアームが、橙色の太陽電池パドルの前に伸びている。右側に格子状の骨組みの一部" loading="lazy"></div>
+<p class="cap">国際宇宙ステーションのロボットアームは、トラスの上に取り付けられて荷物を動かす。</p>
+<p class="cr">NASA／Public domain／<a href="https://commons.wikimedia.org/wiki/File:ISS-66_The_Canadarm2_robotic_arm_with_Dextre_attached.jpg">Wikimedia Commons</a>（カナダアーム2とデクスター、2021年撮影）</p></div>
+<div class="side b"><p class="kick">MITATE 4｜見立て</p>
+<div class="ph"><img src="img/07_b4_leafveins.jpg" alt="黒い背景に、葉脈だけが残った葉の骨格標本。中央の太い主脈から細い側脈が枝分かれして、細かな網目につながる" loading="lazy"></div>
+<p class="cap">葉は、肉を失っても、主脈と側脈の網だけで形を保つ。</p>
+<p class="cr">Brocken Inaglory／<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>／<a href="https://commons.wikimedia.org/wiki/File:Vein_skeleton_of_a_leaf.JPG">Wikimedia Commons</a>（葉の骨格標本、2007年撮影）</p></div>
+</figure>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>章末例題と演習問題</h2>
+<p class="meta">問題の段階：<strong>A 確認</strong>（小テスト水準）／<strong>B 標準</strong>（定期試験水準）／<strong>C 発展</strong>（定期試験で満点を取る水準）。外部の問題は個人の学習用の転載で、各問題の下に出典を書いた。外部の公式解答も、本教材で全節点の釣合い式を立てて数値で解き直し、一致を確かめた（<code>draft/check_07.py</code>、<code>draft/ext07/verify_ext07.py</code>）。</p>
+
+<div class="ex"><span class="label">例題7〔A｜自作〕壁に取り付けた2本の棒</span>
+<p>図のように、鉛直な壁の点 P（高さ 0.8 m）と点 Q（高さ 0 m）に、棒 BP と棒 BQ がピンで取り付けられている。BQ は水平で長さ 0.6 m。点 B に鉛直下向きの力 500 N がかかる。BP、BQ の内力を求め、引張か圧縮かを答えよ。</p>
+<svg viewBox="0 0 360 290" width="360" role="img" aria-label="壁に取り付けた2本の棒。壁の点P（上）と点Q（下）から、点Bまで斜め棒BPと水平棒BQ。Bに下向き500 N">
+<defs><marker id="br-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="br-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="br-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="br-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="br-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="br-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<rect x="52.0" y="3.0" width="14" height="198.0" fill="#d9d2c2" stroke="#2a2723"/>
+<line x1="202.0" y1="190.0" x2="70.0" y2="14.0" stroke="#2a2723" stroke-width="4"/>
+<line x1="202.0" y1="190.0" x2="70.0" y2="190.0" stroke="#2a2723" stroke-width="4"/>
+<circle cx="202.0" cy="190.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="70.0" cy="14.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="70.0" cy="190.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<text x="216.0" y="182.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+<text x="46.0" y="18.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">P</text>
+<text x="46.0" y="194.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">Q</text>
+<line x1="202.0" y1="196.0" x2="202.0" y2="244.0" stroke="#2a2723" stroke-width="3.2" marker-end="url(#br-k)"/>
+<text x="212.0" y="248.0" fill="#2a2723" text-anchor="start" font-size="13">500 N</text>
+<text x="136.0" y="182.0" fill="#968d80" text-anchor="middle" font-size="11">0.6 m</text>
+<text x="40.0" y="102.0" fill="#968d80" text-anchor="end" font-size="11">0.8 m</text>
+</g></svg>
+<p><strong>解答</strong>：① B 以外の節点は壁なので、解くのは節点 B だけ（未知数2個）。BP は B から P へ向かう単位ベクトルが $(-0.6,\,0.8)$（長さ $\sqrt{0.6^2+0.8^2}=1.0$ m）、BQ は $(-1,\,0)$。引張を仮定する。<br>
+④⑤ $x$：$-0.6\,F_{BP}-F_{BQ}=0$、$y$：$0.8\,F_{BP}-500=0$。<br>
+$y$ より $F_{BP}=500/0.8=625$ N。$x$ より $F_{BQ}=-0.6\times625=-375$ N。<br>
+⑥ <strong>答</strong>：BP は 625 N（<strong>引張</strong>）、BQ は 375 N（<strong>圧縮</strong>）。<br>
+確かめ：$m=2$、$r=4$（P と Q のピンが各2）、$j=3$ で $m+r=6=2j$ ✓。B の釣合い：$(-0.6\times625+375,\ 0.8\times625-500)=(0,0)$ ✓。直感とも合う：吊られた B を斜めの棒が引き上げ、水平の棒が（壁側へ引かれる B を）押し返している。</p></div>
+
+<div class="ex"><span class="label">例題8〔B｜Mechanics Map 5.3 Q1・5.4 Q1〕橋のトラス：節点法と切断法を両方</span>
+<figure class="slide"><img src="img/ext07/mj_P1_prob.png" alt="橋のトラス。上弦A-B-D-F、下弦C-E。AはピンでFはローラー。BとDに下向きの力60 kNと80 kN。AからCへ20度の斜材" loading="lazy" style="width:480px;max-width:96%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 5.3）。</figcaption></figure>
+<p>図の橋のトラスは、A がピン、F がローラーで支えられ、B に 60 kN、D に 80 kN の鉛直下向きの力がかかる。A-B、B-D、D-F の間隔はそれぞれ 10 m。AC と BE、EF の傾きは水平から 20°。(1) 反力と全部材の力を<strong>節点法</strong>で求めよ。(2) 部材 BD、BE、CE の力を<strong>切断法</strong>で求め、(1) と比べよ。</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, 5.3 Method of Joints 例題1／5.4 Method of Sections 例題1（CC 表示・継承。<a href="https://www.mechanicsmap.org/websites/5_structures/5-3_method_of_joints/methodofjoints.html">5.3</a>、<a href="https://www.mechanicsmap.org/websites/5_structures/5-4_method_of_sections/methodofsections.html">5.4</a>）。公式解答と照合済み。公式の手書き解答は $\tan20°=0.364$ の丸めで下2桁が異なる（BD は 201.49、本教材は厳密値 201.48）。</p>
+<p><strong>解答</strong></p>
+<p>幾何：C は B の真下、E は D の真下で、A から $10\tan20°=3.640$ m 下。AC の単位ベクトル（A→C）は $(\cos20°,-\sin20°)=(0.9397,-0.3420)$。<br>
+<strong>反力</strong>（全体）：A まわり：$-60\times10-80\times20+R_F\times30=0\Rightarrow R_F=73.33$ kN。$y$：$R_{Ay}=140-73.33=66.67$ kN。$x$：$R_{Ax}=0$。<br>
+<strong>(1) 節点法</strong>（全部引張と仮定）。<strong>節点 A</strong>（AB は $(1,0)$、AC は $(0.9397,-0.3420)$、反力 $(0,66.67)$）：<br>
+$y$：$-0.3420\,F_{AC}+66.67=0\Rightarrow F_{AC}=194.92$ kN（引張）。$x$：$F_{AB}+0.9397\times194.92=0\Rightarrow F_{AB}=-183.17$ kN（圧縮）。<br>
+<strong>節点 C</strong>（CA は $(-0.9397,0.3420)$、CB は $(0,1)$、CE は $(1,0)$）：$x$：$-0.9397\times194.92+F_{CE}=0\Rightarrow F_{CE}=183.17$ kN（引張）。$y$：$0.3420\times194.92+F_{BC}=0\Rightarrow F_{BC}=-66.67$ kN（圧縮）。<br>
+<strong>節点 B</strong>（BA は $(-1,0)$、BC は $(0,-1)$、BD は $(1,0)$、BE は $(0.9397,-0.3420)$、荷重 $(0,-60)$）：$y$：$66.67-0.3420\,F_{BE}-60=0\Rightarrow F_{BE}=19.49$ kN（引張）。$x$：$183.17+F_{BD}+0.9397\times19.49=0\Rightarrow F_{BD}=-201.48$ kN（圧縮）。<br>
+<strong>節点 D</strong>（DB は $(-1,0)$、DE は $(0,-1)$、DF は $(1,0)$、荷重 $(0,-80)$）：D には斜材がなく、$y$：$-F_{DE}-80=0\Rightarrow F_{DE}=-80$ kN（圧縮）。<br>
+<strong>節点 F</strong>（FD は $(-1,0)$、FE は $(-0.9397,-0.3420)$、反力 $(0,73.33)$）：$y$：$-0.3420\,F_{EF}+73.33=0\Rightarrow F_{EF}=214.41$ kN（引張）。$x$：$-F_{DF}-0.9397\times214.41=0\Rightarrow F_{DF}=-201.48$ kN（圧縮）。<br>
+<strong>答（節点法）</strong>：AB 183.17 圧縮、AC 194.92 引張、BC 66.67 圧縮、BD 201.48 圧縮、BE 19.49 引張、CE 183.17 引張、DE 80.00 圧縮、DF 201.48 圧縮、EF 214.41 引張（kN）。</p>
+<p><strong>(2) 切断法</strong>：BD、BE、CE の3本を通る鉛直線（B と D の間）で切り、<strong>左の部分</strong>（A、B、C を含む。反力 $R_{Ay}$ は既知）を取る。引張を仮定。<br>
+<strong>B まわり</strong>のモーメント（BD、BE は B を通る）：$R_{Ay}$（A は B の左 10 m、上向き）は時計回りで $-10\times66.67$、CE（C は B の下 3.640 m、引張で右向き）は反時計回りで $+3.640\,F_{CE}$：
+$$-666.7+3.640\,F_{CE}=0\ \Rightarrow\ F_{CE}=183.17\ \text{kN（引張）}$$
+$y$ 方向：$66.67-60-0.3420\,F_{BE}=0\Rightarrow F_{BE}=19.49$ kN（引張）。$x$ 方向：$F_{BD}+F_{CE}+0.9397\,F_{BE}=0\Rightarrow F_{BD}=-183.17-18.32=-201.49$ kN（圧縮、厳密値は $-201.48$）。<br>
+<strong>答（切断法）</strong>：BD 201.48 kN（圧縮）、BE 19.49 kN（引張）、CE 183.17 kN（引張）。(1) と一致 ✓。<strong>連立なしで</strong>、3本とも直接求まった。</p></div>
+
+<div class="ex"><span class="label">例題9〔C｜Mechanics Map HW 5.8〕切断法と節点法の併用</span>
+<figure class="slide"><img src="img/ext07/hw58_fig.png" alt="左の壁から水平に伸びる片持ちのトラス。上弦A-C-E-G、下弦B-D、斜材。Gに下向き14 kN。水平3 mが3区画、Gは上弦、Fは2 m下、DとBはさらに1 m下" loading="lazy" style="width:500px;max-width:96%;height:auto;background:#fff"><figcaption>原図（Mechanics Map, Chapter 5 Homework 5.8）。</figcaption></figure>
+<p>図のトラスは、A をピン、B をローラー（壁に水平方向の力を出す）で支えられ、G に 14 kN の鉛直下向きの力がかかる。切断法と節点法を併用して、部材 CE、CF、CD の力を求めよ。（寸法：AC＝CE＝EG＝3 m。F は G の水平 3 m 左で 2 m 下、D・B は上弦から 3 m 下。）</p>
+<p class="cr">出典：Moore ほか, <i>Mechanics Map</i>, Chapter 5 Homework Problems, 問題 5.8（CC 表示・継承。<a href="https://www.mechanicsmap.org/homework_problems/Chapter5_Problems.pdf">PDF</a>）。公式の答え（CE=21 kN T、CF=8.41 kN T、CD=4.67 kN C）と照合済み。解答は本教材の自作。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>戦略</strong>：反力は不要な側を使う。CE、CF、DF の3本を通る線で切り、<strong>右の部分</strong>（E、F、G。荷重 14 kN だけを含む）を取る。引張仮定で、右の部分に働く切り口の力は左向き（CE）、C 側（左上）向き（CF）、D 側（左下）向き（DF）。</p>
+<p>② <strong>CE</strong>：CF と DF が通る点 F まわりのモーメント。CE は F より 2 m 上で左向き（反時計回り $+2F_{CE}$）、荷重（G は F の右 3 m、下向き）は時計回りで $-3\times14$：
+$$2\,F_{CE}-42=0\ \Rightarrow\ F_{CE}=21\ \text{kN（引張）}$$</p>
+<p>③ <strong>CF</strong>：CE（$y=0$）と DF（D(3,−3)、F(6,−2) を通る）の作用線の交点 Q(12, 0) まわりのモーメントを使うと、CE と DF が消える。荷重（G は Q の左 3 m、下向き）は反時計回りで $+3\times14=42$。CF（引張仮定で F から C へ向かう向き $(-3,2)/\sqrt{13}=(-0.832,0.555)$、作用点 F は Q より $(-6,-2)$）のモーメントは $x F_y-y F_x=(-6)(0.555)-(-2)(-0.832)=-4.992$ に $F_{CF}$ を掛けたもの：
+$$42-4.992\,F_{CF}=0\ \Rightarrow\ F_{CF}=8.41\ \text{kN（引張）}$$
+〔なぜ Q を選ぶか：未知力のうち CE と DF の作用線が交わる点だから（注3）。2本が平行でないので、この点が存在する〕</p>
+<p>④ <strong>CD</strong>：節点 C に移る。C には AC、CE、CD（鉛直）、CF が集まり、CE、CF は既知。C から A へ $(-1,0)$、E へ $(1,0)$、D へ $(0,-1)$、F へ $(0.832,-0.555)$。$y$：$-F_{CD}-0.555\times8.41=0\Rightarrow F_{CD}=-4.67$ kN。（$x$：$-F_{AC}+21+0.832\times8.41=0\Rightarrow F_{AC}=28.0$ kN。）</p>
+<p>⑥ <strong>答</strong>：CE＝21.0 kN（<strong>引張</strong>）、CF＝8.41 kN（<strong>引張</strong>）、CD＝4.67 kN（<strong>圧縮</strong>）。確かめ：全節点の連立方程式を数値で解いて、CE 21.000、CF 8.413、CD −4.667 ✓（B の反力は 42 kN）。</p></div>
+
+<h3>演習問題</h3>
+<div class="box"><span class="label">問1〔A｜自作〕零力部材と荷重の位置</span>
+例題3（A(0,0)、B(2,0)、C(4,0)、D(2,2)、荷重 $P$ を<strong>節点 B</strong>に鉛直下向きにかけた場合）で、5本の部材の内力を求めよ。零力部材はあるか。
+<details><summary>解答</summary><p>反力は対称で $R_{Ay}=R_C=P/2$、$R_{Ax}=0$。節点 A：$F_{AD}/\sqrt2+P/2=0\Rightarrow F_{AD}=-P/\sqrt2$（圧縮）、$F_{AB}=P/2$（引張）。B は荷重 $P$ を受け、AB と BC は一直線なので、$y$：$F_{BD}-P=0\Rightarrow F_{BD}=P$（<strong>引張</strong>）。節点 C は対称で $F_{CD}=-P/\sqrt2$（圧縮）、$F_{BC}=P/2$（引張）。<br>答：AB＝BC＝$P/2$（引張）、AD＝CD＝$P/\sqrt2$（圧縮）、BD＝$P$（引張）。零力部材は<strong>ない</strong>（例題3では荷重が D にあったので BD が零力だったが、荷重が B に移ると BD が荷重を D へ吊り上げる）。確かめ：節点 D の $y$：$-(F_{AD}+F_{CD})/\sqrt2-F_{BD}=P-P=0$ ✓。</p></details></div>
+
+<div class="box"><span class="label">問2〔B｜Mechanics Map HW 5.1〕ガントリー（節点法）</span>
+<figure class="slide"><img src="img/ext07/hw51_fig.png" alt="三角形のトラス。Aが左下でピン、Cが下の辺の途中でローラー、Bが上の頂点でCの真上、Dが右端。Dに下向き40 kN" loading="lazy" style="width:380px;max-width:90%;height:auto;background:#fff"><figcaption>原図（Mechanics Map HW 5.1）。</figcaption></figure>
+図のトラスの全部材の力を節点法で求めよ。A はピン、C はローラー、D に 40 kN の下向きの力。A から C は水平に 4 m、C から D は水平に 8 m、B は C の真上 4 m。
+<p class="cr">出典：Mechanics Map, Chapter 5 Homework Problems, 5.1（CC 表示・継承）。公式の答えは AB=113.14 kN（引張）、AC=80 kN（圧縮）、BC=120 kN（圧縮）、BD=89.44 kN（引張）、CD=80 kN（圧縮）で、本教材の数値計算と一致。解答の手順は自作。</p>
+<details><summary>解答</summary><p>全体：A まわり：$R_C\times4-40\times12=0\Rightarrow R_C=120$ kN（上）。$y$：$R_{Ay}=40-120=-80$ kN（<strong>下向き</strong>）。$x$：$R_{Ax}=0$。<br>
+節点 D（D から B へ $(-8,4)/\sqrt{80}=(-0.894,0.447)$、D から C へ $(-1,0)$、荷重 $(0,-40)$）：$y$：$0.447\,F_{BD}-40=0\Rightarrow F_{BD}=89.44$ kN（引張）。$x$：$-0.894\times89.44-F_{CD}=0\Rightarrow F_{CD}=-80$ kN（圧縮）。<br>
+節点 A（A から B へ $(1,1)/\sqrt2$、A から C へ $(1,0)$、反力 $(0,-80)$）：$y$：$F_{AB}/\sqrt2-80=0\Rightarrow F_{AB}=113.14$ kN（引張）。$x$：$113.14/\sqrt2+F_{AC}=0\Rightarrow F_{AC}=-80$ kN（圧縮）。<br>
+節点 C（C から A へ $(-1,0)$、C から B へ $(0,1)$、C から D へ $(1,0)$、反力 $(0,120)$）：$y$：$F_{BC}+120=0\Rightarrow F_{BC}=-120$ kN（圧縮）。$x$：$-F_{AC}+F_{CD}=80-80=0$ ✓。<br>
+A の鉛直反力が<strong>下向き</strong>になるのが要点（荷重が C から遠い右端 D にあり、てこのように A を引き下げる）。</p></details></div>
+
+<div class="box"><span class="label">問3〔B〜C｜Mechanics Map HW 5.2〕ケーブルで吊られたトラス（零力部材）</span>
+<figure class="slide"><img src="img/ext07/hw52_fig.png" alt="天井から2本の鉛直なケーブルで吊られた細長いトラス。上弦A-C-E、下弦B-D-F、鉛直材AB、CD、EF、斜材BC、CF。DとFに下向き120 lbと60 lb" loading="lazy" style="width:520px;max-width:96%;height:auto;background:#fff"><figcaption>原図（Mechanics Map HW 5.2）。</figcaption></figure>
+図のトラスは、A と E でケーブルに吊られ、D と F に照明機器の荷重（120 lb、60 lb）がかかる。節点法で全部材の力を求めよ。（A、C、E の水平間隔は 10 ft ずつ、上下の弦の間隔は 2 ft。部材：AB、EF、CD、AC、CE、BD、DF、BC、CF。ケーブルは鉛直。）
+<p class="cr">出典：Mechanics Map, Chapter 5 Homework Problems, 5.2（CC 表示・継承）。公式の答えと本教材の数値計算が一致。ケーブルは鉛直の力だけを出すので、水平方向の支持はないが、荷重が鉛直なので部材力は一意に決まる。</p>
+<details><summary>解答</summary><p>全体：A まわり：$T_E\times20-120\times10-60\times20=0\Rightarrow T_E=120$ lb、$T_A=180-120=60$ lb（ケーブルの力、上向き）。<br>
+節点 A（ケーブル 60 lb が上向き、AB は A から下向き $(0,-1)$、AC は水平 $(1,0)$）：$y$：$-F_{AB}+60=0\Rightarrow F_{AB}=60$（引張）。$x$：$F_{AC}=0$（T字の<strong>零力部材</strong>）。節点 E も同様に $F_{EF}=120$、$F_{CE}=0$。<br>
+節点 B（B から A へ $(0,1)$、D へ $(1,0)$、C へ $(10,2)/10.198=(0.981,0.196)$）：$y$：$60+0.196\,F_{BC}=0\Rightarrow F_{BC}=-305.9$（圧縮）。$x$：$F_{BD}+0.981\times(-305.9)=0\Rightarrow F_{BD}=300$（引張）。<br>
+節点 D（D から B へ $(-1,0)$、F へ $(1,0)$、C へ $(0,1)$、荷重 $(0,-120)$）：$y$：$F_{CD}-120=0\Rightarrow F_{CD}=120$（引張）。$x$：$-300+F_{DF}=0\Rightarrow F_{DF}=300$。<br>
+節点 F（F から D へ $(-1,0)$、E へ $(0,1)$、C へ $(-0.981,0.196)$、荷重 $(0,-60)$）：$x$：$-300-0.981F_{CF}=0\Rightarrow F_{CF}=-305.9$（圧縮）。$y$：$F_{EF}+0.196\times(-305.9)-60=0\Rightarrow F_{EF}=120$ ✓（E の結果と一致）。<br>
+答：AB 60（引張）、EF 120（引張）、CD 120（引張）、BD＝DF 300（引張）、BC＝CF 305.9（圧縮）、AC＝CE＝0（単位 lb）。</p></details></div>
+
+<div class="box"><span class="label">問4〔C｜Mechanics Map 5.4 Q4〕片持ちトラスを切って、節点で仕上げる</span>
+<figure class="slide"><img src="img/ext07/ms_P4_prob.png" alt="斜めに階段状に下る片持ち形のトラス。左上Aに下向き800 lb。5 ft間隔の格子上に節点A〜H。Gがローラー、Hがピン" loading="lazy" style="width:340px;max-width:80%;height:auto;background:#fff"><figcaption>原図（Mechanics Map 5.4）。</figcaption></figure>
+図のトラスで、A に 800 lb の鉛直下向きの力がかかる。G はローラー（鉛直反力）、H はピンで支える。切断法で BD、CD、CE を求め（反力は不要）、続けて節点 C で AC、BC を求めよ。（節点：A(0,0)、B(5,0)、C(5,−5)、D(10,−5)、E(10,−10)、F(15,−10)、G(10,−15)、H(15,−15) ft。）
+<p class="cr">出典：Mechanics Map, 5.4 Method of Sections 例題4（CC 表示・継承）。公式の答え（AC=1131.4 lb 圧縮、BC=800 lb 圧縮、CD=800 lb 引張、CE=2262.7 lb 圧縮、BD=1131.4 lb 引張）と一致。図の節点座標は本教材が図から読んだもので、全節点の連立で公式値が再現できることで読みの正しさを確認した。</p>
+<details><summary>解答</summary><p>BD、CD、CE を通る線で切り、荷重 800 lb を含む<strong>上の部分</strong>（A、B、C）を取る（反力は不要）。引張を仮定すると、BD は B から D 向き $(1,-1)/\sqrt2$、CD は C から D 向き $(1,0)$、CE は C から E 向き $(1,-1)/\sqrt2$ に、この部分を引く。<br>
+<strong>C まわり</strong>のモーメント（CD、CE は C を通って消える）：BD の作用点 B は C の真上 5 ft、すなわち C から見て $(0,5)$。力は $0.7071F_{BD}\,(1,-1)$。モーメントは $x F_y-y F_x=0-5\times0.7071F_{BD}=-3.536F_{BD}$。荷重（A は C から見て $(-5,5)$、力 $(0,-800)$）は $(-5)(-800)=+4000$。
+$$4000-3.536\,F_{BD}=0\ \Rightarrow\ F_{BD}=1131.4\ \text{lb（引張）}$$
+<strong>$y$ の釣合い</strong>：$-0.7071F_{BD}-0.7071F_{CE}-800=0\Rightarrow F_{CE}=-1131.4-1131.4=-2262.7$ lb（圧縮）。<strong>$x$ の釣合い</strong>：$0.7071F_{BD}+F_{CD}+0.7071F_{CE}=0\Rightarrow F_{CD}=-0.7071(1131.4-2262.7)=+800$ lb（引張）。<br>
+<strong>節点 C</strong>（C から A へ $(-0.7071,0.7071)$、B へ $(0,1)$、D へ $(1,0)$、E へ $(0.7071,-0.7071)$）。CE の力は $(-1600,\,+1600)$、CD は $(800,0)$。$x$：$-0.7071F_{AC}+800-1600=0\Rightarrow F_{AC}=-1131.4$ lb（圧縮）。$y$：$0.7071F_{AC}+F_{BC}+1600=0\Rightarrow F_{BC}=-800$ lb（圧縮）。<br>
+答：BD＝1131.4 lb（引張）、CD＝800 lb（引張）、CE＝2262.7 lb（圧縮）、AC＝1131.4 lb（圧縮）、BC＝800 lb（圧縮）。</p></details></div>
+
+<h2>まとめ・チェックリスト</h2>
+<div class="box"><ul>
+<li>□ トラスの仮定（剛体・軽い・荷重は節点・滑らかなピン）から、各部材が<strong>二力部材</strong>（力は棒に沿った1つの値）になることを、釣合いから導ける。</li>
+<li>□ <strong>引張を正、圧縮を負</strong>とし、節点の FBD では<strong>引張＝節点から部材のほうへ</strong>の矢印。答えには必ず「引張」か「圧縮」を書く。全部引張と仮定し、反力も機械的に（$+x$、$+y$）仮定する。</li>
+<li>□ 傾いた部材の力の成分を、<strong>座標</strong>（$\Delta x/L$、$\Delta y/L$）から求められる。</li>
+<li>□ $m+r=2j$ なら釣合いだけで解ける。三角形が基本形。</li>
+<li>□ <strong>節点法</strong>：節点ごとに釣合い式は2本。<strong>未知数2個以下</strong>の節点から解き進める。反力を先に求めてもよい。零力部材（T字、L字、荷重・反力なし）を見つけられる。</li>
+<li>□ <strong>切断法</strong>：求めたい棒を通るように切り、<strong>3本まで</strong>。既知の外力だけを含む側を取る（または先に反力を求める）。<strong>未知力の作用線の交点まわりのモーメント</strong>で、1つの式に1つの未知数。「切断法で」と指示があれば節点の釣合いは使わない。</li>
+<li>□ 2つの解法の使い分け：<strong>全部材 → 節点法／特定の1〜3本 → 切断法／反力 → 切断 → 節点の併用</strong>。</li>
+<li>□ アームのトラスで、上下の弦材が曲げモーメントを偶力 $M/h$ で担うことを説明できる。圧縮の棒は座屈に注意。</li>
+</ul></div>
+
+<div class="navi">
+<strong>次回（第8回・10/29）</strong>：<strong>中間試験</strong>。範囲は第1回〜第7回（力、モーメント、3次元、釣合い、重心、摩擦、トラス）。試験は講義資料の流儀（解答の手順、記号、符号の約束）で答える。復習には、この教材の「まとめ・チェックリスト」と章末問題を使う。なお、既存の中間まとめ・模擬試験（<a href="08_第8回_中間まとめ.html">中間まとめ</a>、<a href="08A_中間模擬試験_基礎セット.html">基礎セット</a>・<a href="08B_中間模擬試験_発展セット.html">発展セット</a>）は第1〜6回の範囲で、トラスは含まない。<br>
+<a href="index.html">← 目次へ</a>
+</div>
+
+<div class="box"><span class="label">講義資料との対応（どこで扱ったか）</span>
+<table class="tb">
+<tr><th>講義資料</th><th>本教材</th></tr>
+<tr><td>p.1 3・4 平面トラスの静解析（扉）</td><td>序</td></tr>
+<tr><td>p.2 ロボットアームのトラス化の例</td><td>序、4章</td></tr>
+<tr><td>p.3 今日のポイント</td><td>序</td></tr>
+<tr><td>p.4 トラスとは（定義、節点、仮定）</td><td>1.1</td></tr>
+<tr><td>p.5 トラス構造をもつ機械の例（クレーン）</td><td>写真の見開き（1.1）、1.1 の本文</td></tr>
+<tr><td>p.6 トラス構造とラーメン構造</td><td>1.1（注意）</td></tr>
+<tr><td>p.7 トラスの問題（内力・反力、2つの解法）</td><td>1.1、3.6</td></tr>
+<tr><td>p.8 3・4・1 節点法（特徴、未知数）</td><td>2.1、1.2（導出）</td></tr>
+<tr><td>p.9 解答の手順、符号の表</td><td>2.1、1.3</td></tr>
+<tr><td>p.10 問題の例 図3.20（教科書の解答）</td><td>2.2（「お勧めしない方法」の囲み）</td></tr>
+<tr><td>p.11–12 解答例（おすすめ）</td><td>2.2 例題2</td></tr>
+<tr><td>p.13 別解（反力を先に）</td><td>2.2 例題2（別解）</td></tr>
+<tr><td>p.14 3・4・2 切断法（動機）</td><td>3.1</td></tr>
+<tr><td>p.15 切断された部分も釣合う</td><td>3.2</td></tr>
+<tr><td>p.16 解答の手順（切断法）</td><td>3.3</td></tr>
+<tr><td>p.17–19 注1、注2、注3</td><td>3.3</td></tr>
+<tr><td>p.20–22 例 図3.21（教科書の解答・おすすめ）</td><td>3.4 例題4</td></tr>
+<tr><td>p.23–26 練習問題 図3.25（節点法・切断法）</td><td>3.5 例題5</td></tr>
+<tr><td>p.27–30 前半の目標・ポイントまとめ</td><td>まとめ・チェックリスト、次回の案内</td></tr>
+<tr><td>（資料にない：二力部材の導出、$m+r=2j$、零力部材、アームの数値例、外部問題）</td><td>1.2、1.5、2.3、4章、5章（本教材の追加）</td></tr>
+</table></div>
+
+<p class="meta">出典：講義資料「第7回」の内容と、本教材の追加（導出・例・図・計算）。図は、講義資料から切り出したもの（<code>img/slide07/</code>、個人の学習用の転載・再配布しない）と、数値から計算して描いたもの（<code>draft/figs_07.py</code>）。章末の外部問題の原図（<code>img/ext07/</code>）は個人の学習用に転載したもので、再配布しない。写真の出典は各写真の下に記した。解答の検算は Python（numpy）で行った（<code>draft/check_07.py</code>）。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a></nav>
+
+</body>
+</html>
