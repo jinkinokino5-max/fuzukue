@@ -668,6 +668,21 @@ $$dT+\mu\,dN=0\qquad(4.8)$$
 $$\int_{T_1}^{T_2}\frac{dT}{T}=-\mu\int_0^{\alpha}d\theta\ \Longrightarrow\ \ln\frac{T_2}{T_1}=-\mu\alpha$$
 $$T_2=T_1e^{-\mu\alpha}\qquad(4.9)$$</p></div>
 <p>(4.9) の読み方：$T_1$ を大きい張力（荷重を吊るす側）、$T_2$ を小さい張力（手で引く側）とすると、滑らずに保持できる<strong>最小の</strong>手の力は $T_2=T_1e^{-\mu\alpha}$。巻き角 $\alpha$ が増えるほど、<strong>指数関数的</strong>に小さい力で保持できる（図4.1）。</p>
+<div class="why"><span class="label">🙋 質問から追加：なぜ $T_1$ と $T_2$ が等しいと仮定しないのか（静止していても一致しないのか）</span>
+<p><strong>質問</strong>：一本のロープなら、静止しているとき両端の張力 $T_1$、$T_2$ は一致するのでは？</p>
+<p><strong>答え</strong>：「一本のロープだから張力が一致する」が成り立つのは、<strong>ロープの途中に、ロープに沿った向きの外力が働いていないとき</strong>だけである。巻き付けた部分には、円柱からの<strong>摩擦力</strong>（ロープに沿った向きの力）が働く。だから一致しない。</p>
+<p>① 一致する理由を確かめる：質量の無視できるロープの一部を切り出し、ロープに沿った方向の釣合いを書く。</p>
+<p>　(a) 途中に外力がない場合（空中に張った直線のロープ、<strong>摩擦のない</strong>滑車にかけたロープ）：左右の張力の差は $0$。よって $T_1=T_2$。これが「静止なら一致する」の正体である。</p>
+<p>　(b) 途中に摩擦力がある場合（本節）：微小部分 PQ の接線方向の釣合いは $dT$（張力の差）と摩擦力 $f$ の釣合いになり、$dT+f=0$（式 (4.8) で $f=\mu\,dN$ とした）。$f\neq0$ なら $dT\neq0$ で、張力は場所とともに変わる。<span class="note">← 理由：張力は「ロープの隣り合う部分が引き合う力」。その部分に別の力（摩擦）が加われば、両側の引き合いに差がなければ釣合わない。</span></p>
+<p>② 静止していても一致しない例（手で握ったロープ）：ロープの途中を握ると、握りの手前と先で張力は違ってよい。違いを埋めるのが、手とロープの間の摩擦力である。柱への巻き付けは、これを「柱が長い距離で握っている」状態にしたものである。</p>
+<p>③ 静止のとき、$T_1$、$T_2$ はどうなるか：摩擦力 $f$ は<strong>釣合いから決まる未知数</strong>（本回の主題。$f\le\mu N$ の範囲で任意に出る）なので、静止している間は $T_1$ と $T_2$ の<strong>差にも幅がある</strong>。(4.9) は、その幅の端、「滑り出す直前」だけの関係である。
+$$e^{-\mu\alpha}\,T_1\ \le\ T_2\ \le\ e^{\mu\alpha}\,T_1\qquad(\text{静止しているための条件})$$
+<span class="note">← $T_1$ 側へ滑り出す直前が左端（$T_2=e^{-\mu\alpha}T_1$）、$T_2$ 側へ滑り出す直前が右端（役割を入れ替えた同じ式）。</span></p>
+<p>④ 数値で確かめる（例題7と同じ $\mu=0.4$、1巻き $\alpha=2\pi$、$T_1=mg$）：$e^{-0.4\times2\pi}=0.0810$、$e^{0.4\times2\pi}=12.35$ なので、静止できる範囲は
+$$0.0810\,mg\ \le\ T_2\ \le\ 12.35\,mg$$
+つまり、$T_2=mg$（一致）も静止の1つの場合だが、$T_2=0.5\,mg$ でも $T_2=5\,mg$ でも滑らない。<strong>一致する</strong>のは、この範囲のうち摩擦力が $0$ になる特別な点にすぎない。</p>
+<p>⑤ 極限で確かめる：$\mu=0$ とすると $e^{\mp\mu\alpha}=1$ で、範囲は $T_2=T_1$ の1点になる。「摩擦がなければ一致」という①(a) に戻る ✓。</p>
+<p><strong>まとめ</strong>：$T_1=T_2$ を前提にしないのは、ロープに沿った摩擦力がある（$\mu\ne0$）からである。静止でも張力の差は摩擦力が受け持ち、(4.9) はその差が最大になる、滑り出す直前の値を表す。</p></div>
 <figure><svg viewBox="0 0 520 280" width="520" role="img" aria-label="ロープの巻き数と張力の比 T2/T1">
 <defs><marker id="rp-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="rp-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="rp-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="rp-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="rp-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="rp-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
 <g font-family="sans-serif" font-size="12" fill="#2a2723">
