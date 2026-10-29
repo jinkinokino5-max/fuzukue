@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8回 A問題集（第1〜7回）</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<header style="padding-top:48px">
+<p class="meta" style="letter-spacing:.3em;color:var(--shu);margin:0">第8回・中間試験の後ろに</p>
+<h1 style="font-family:var(--mincho);font-weight:700;font-size:clamp(26px,4.2vw,40px);letter-spacing:.08em;margin:4px 0 0;line-height:1.3">A 問題集　第1〜7回のぜんぶ</h1>
+</header>
+<p class="lead">各回の例題・章末問題・小テストのうち、段階 <strong>A（確認：小テスト水準）</strong>の印がついたものを、回の順に集めた（計 54 問）。「A｜…」「A/B」「A〜B」など A を含む印のものも入れてある。例題は解答が本文に出ているので、<strong>先に紙で解いてから</strong>読むこと。章末問題の解答は折りたたんである。</p>
+<div class="warn"><span class="label">この問題集について</span>本文は各回の教材からの<strong>自動抽出</strong>で、内容は元の教材と同じ（書き換えていない）。例題の中で「例題3 の結果」「図 2.x」のように前後を参照している箇所は、元の教材に戻って確認すること。第8回の模擬試験（基礎セット）の問題は重複するので入れていない。</div>
+<table>
+<tr><th>回</th><th>問数</th><th>元の教材</th></tr>
+<tr><td>第1回</td><td>12</td><td><a href="01_第1回_イントロダクションと力.html">01_第1回_イントロダクションと力</a></td></tr>
+<tr><td>第2回</td><td>8</td><td><a href="02_第2回_モーメント.html">02_第2回_モーメント</a></td></tr>
+<tr><td>第2回 小テスト</td><td>3</td><td><a href="02A_第2回_小テスト解説.html">02A_第2回_小テスト解説</a></td></tr>
+<tr><td>第3回</td><td>8</td><td><a href="03_第3回_3次元の力とモーメント.html">03_第3回_3次元の力とモーメント</a></td></tr>
+<tr><td>第3回 小テスト</td><td>3</td><td><a href="03A_第3回_小テスト解説.html">03A_第3回_小テスト解説</a></td></tr>
+<tr><td>第4回</td><td>6</td><td><a href="04_第4回_力とモーメントの釣合い.html">04_第4回_力とモーメントの釣合い</a></td></tr>
+<tr><td>第4回 小テスト</td><td>1</td><td><a href="04A_第4回_小テスト解説.html">04A_第4回_小テスト解説</a></td></tr>
+<tr><td>第5回</td><td>4</td><td><a href="05_第5回_重心.html">05_第5回_重心</a></td></tr>
+<tr><td>第5回 小テスト</td><td>1</td><td><a href="05A_第5回_小テスト解説.html">05A_第5回_小テスト解説</a></td></tr>
+<tr><td>第6回</td><td>5</td><td><a href="06_第6回_摩擦力.html">06_第6回_摩擦力</a></td></tr>
+<tr><td>第7回</td><td>3</td><td><a href="07_第7回_平面トラスの静解析.html">07_第7回_平面トラスの静解析</a></td></tr>
+</table>
+<h2><span class="no">1</span>第1回　イントロダクションと力<span class="meta" style="font-size:14px;margin-left:8px">12問 ｜ <a href="01_第1回_イントロダクションと力.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第1回　例題1〔A｜自作〕質量を重さに直す</span>
+<p>質量 500 kg の物体の重さを N で求め、3桁と4桁で書け。</p>
+<p><strong>解答</strong></p>
+<p>① (1.4) に入れる：$W=mg=500\times9.81=4905\ \mathrm{N}$。</p>
+<p>② 単位の確かめ：$\mathrm{kg\times m/s^2=N}$。</p>
+<p>③ 3桁：$4.91\times10^3\ \mathrm{N}=4.91\ \mathrm{kN}$。4桁：$4.905\times10^3\ \mathrm{N}$。</p></div>
+<div class="ex"><span class="label">第1回　例題2〔A｜自作〕角度と成分の行き来</span>
+<p>(1) $x$ 軸から 150° の向きで大きさ 10 N の力の成分を求めよ。(2) 成分が $(-3,\ -4)$ N の力の大きさと向き（$x$ 軸から反時計回りの角）を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (1) (2.3) に入れる：$\boldsymbol F=(10\cos150^\circ,\ 10\sin150^\circ)=(10\times(-0.8660),\ 10\times0.5000)=(-8.660,\ 5.000)\ \mathrm{N}$。</p>
+<p>② (1) の確かめ：150° は第2象限なので $(-,+)$。大きさ $\sqrt{8.660^2+5.000^2}=10.00$ で元に戻る。</p>
+<p>③ (2) 大きさ：$\sqrt{3^2+4^2}=5.00\ \mathrm{N}$。</p>
+<p>④ (2) 向き：$\tan^{-1}\{(-4)/(-3)\}=\tan^{-1}(1.333)=53.13^\circ$。しかし $F_x\lt0$ なので 180° を足して $\theta=233.1^\circ$（第3象限、左下）。<code>atan2(-4, -3)</code> $=-126.9^\circ$ も同じ向き（$-126.9^\circ+360^\circ=233.1^\circ$）。</p></div>
+<div class="ex"><span class="label">第1回　例題3〔A｜自作〕大きさ・単位ベクトル・方向角</span>
+<p>力 $\boldsymbol{F}=(30,\ 40)\ \mathrm{N}$ の大きさ、単位ベクトル、$x$ 軸・$y$ 軸とのなす角を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 大きさ：$F=\sqrt{30^2+40^2}=\sqrt{2500}=50.0\ \mathrm{N}$。</p>
+<p>② 単位ベクトル：$\boldsymbol{f}=(30/50,\ 40/50)=(0.600,\ 0.800)$。検算：$0.6^2+0.8^2=1$。</p>
+<p>③ $\cos\alpha=0.600$ より $\alpha=53.1^\circ$、$\cos\beta=0.800$ より $\beta=36.9^\circ$。確かめ：$\alpha+\beta=90^\circ$（2次元では $x$ 軸と $y$ 軸が直交しているので当然）。</p></div>
+<div class="ex"><span class="label">第1回　例題4〔A｜自作〕3次元の方向余弦</span>
+<p>$\boldsymbol{V}=(2,\ -3,\ 6)$ の単位ベクトルと、各軸とのなす角を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① $V=\sqrt{4+9+36}=\sqrt{49}=7$。</p>
+<p>② $\boldsymbol{v}=(2/7,\ -3/7,\ 6/7)=(0.2857,\ -0.4286,\ 0.8571)$。</p>
+<p>③ $\alpha=\cos^{-1}0.2857=73.4^\circ$、$\beta=\cos^{-1}(-0.4286)=115.4^\circ$、$\gamma=\cos^{-1}0.8571=31.0^\circ$。$\cos^{-1}$ は 0°〜180° を返すので、なす角では象限の心配はいらない。</p>
+<p>④ 検算：$(4+9+36)/49=1$。$y$ 成分が負なので、$y$ 軸とのなす角は 90° より大きい。</p></div>
+<div class="ex"><span class="label">第1回　例題5〔A｜例題2・3の準備〕2点から単位ベクトルを作る</span>
+<p>点 $\mathrm A(0,0)$、$\mathrm B(0,2)$、$\mathrm C(5,-1)$（単位 m）について、C から A へ向かう単位ベクトル $\boldsymbol u_{\mathrm{CA}}$ と、C から B へ向かう単位ベクトル $\boldsymbol u_{\mathrm{CB}}$ を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① C→A：終点−始点 $=(0-5,\ 0-(-1))=(-5,\ 1)$。長さ $\sqrt{25+1}=\sqrt{26}=5.099$。</p>
+<p>② $\boldsymbol u_{\mathrm{CA}}=(-5,\ 1)/5.099=(-0.9806,\ 0.1961)$。</p>
+<p>③ C→B：$(0-5,\ 2-(-1))=(-5,\ 3)$。長さ $\sqrt{25+9}=\sqrt{34}=5.831$。$\boldsymbol u_{\mathrm{CB}}=(-0.8575,\ 0.5145)$。</p>
+<p>④ 検算：$0.9806^2+0.1961^2=1.000$、$0.8575^2+0.5145^2=1.000$。どちらも左上向き（$(-,+)$）で、図2.4と合う。</p></div>
+<div class="ex"><span class="label">第1回　例題6〔A｜自作〕斜め方向の成分</span>
+<p>$\boldsymbol a=(3,\ 4)$ の、単位ベクトル $\boldsymbol u=(1,\ 1)/\sqrt2$ 方向の成分を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① $\boldsymbol u$ が単位ベクトルか確かめる：$(1/\sqrt2)^2+(1/\sqrt2)^2=1$。</p>
+<p>② (2.9)：$\boldsymbol a\cdot\boldsymbol u=3\times\dfrac{1}{\sqrt2}+4\times\dfrac{1}{\sqrt2}=\dfrac{7}{\sqrt2}=\dfrac{7}{1.414}=4.950$。</p>
+<p>③ 確かめ：$a=5$ なので、成分 4.950 は 5 より少し小さい。$\boldsymbol a$（$x$ 軸から 53.1°）と $\boldsymbol u$（45°）のなす角は 8.1° と小さく、$5\cos8.1^\circ=4.950$ と一致する。</p></div>
+<div class="ex"><span class="label">第1回　例題7〔A｜自作〕公式と消去法で解く</span>
+<p>$2x_1+x_2=5$、$x_1-x_2=1$ を解け。</p>
+<p><strong>解答</strong></p>
+<p>① 係数：$a_{11}=2,\ a_{12}=1,\ a_{21}=1,\ a_{22}=-1$、$b_1=5,\ b_2=1$。</p>
+<p>② $d=2\times(-1)-1\times1=-3$。</p>
+<p>③ (2.10)：$x_1=\{(-1)(5)-(1)(1)\}/(-3)=-6/(-3)=2$、$x_2=\{-(1)(5)+(2)(1)\}/(-3)=-3/(-3)=1$。</p>
+<p>④ 検算（元の式に代入）：$2\cdot2+1=5$、$2-1=1$。どちらも成り立つ。</p></div>
+<div class="ex"><span class="label">第1回　例題8〔A｜自作〕大きさは足し算にならない</span>
+<p>大きさ 100 N の力 $\boldsymbol{F}_1$（$x$ 軸方向）と、大きさ 100 N の力 $\boldsymbol{F}_2$（$x$ 軸から 60°）が1点に働く。合力の大きさと向きを求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 成分に直す（(2.3)）：$\boldsymbol{F}_1=(100,\ 0)$、$\boldsymbol{F}_2=(100\cos60^\circ,\ 100\sin60^\circ)=(50.0,\ 86.60)\ \mathrm{N}$。</p>
+<p>② 成分ごとに足す（(4.2)）：$\boldsymbol{R}=(150.0,\ 86.60)\ \mathrm{N}$。</p>
+<p>③ 大きさ：$R=\sqrt{150^2+86.60^2}=\sqrt{22500+7500}=\sqrt{30000}=173.2\ \mathrm{N}$。</p>
+<p>④ 向き：$R_x\gt0$ なので $\tan^{-1}(86.60/150.0)=30.0^\circ$（2力のちょうど真ん中。同じ大きさの2力なので平行四辺形がひし形になり、対角線が角を2等分するから）。</p>
+<p>⑤ $F_1+F_2=200\ \mathrm{N}$ だが $R=173\ \mathrm{N}$。大きさの和と合力の大きさは等しくない。</p></div>
+<div class="ex"><span class="label">第1回　例題15〔A｜自作〕3力の合成と象限</span>
+<p>1点に、$x$ 軸から 0° の向きに 200 N、120° の向きに 150 N、225° の向きに 100 N の3力が働く。合力の大きさと向きを求めよ。</p>
+<p class="cr">出典：本教材の自作。</p>
+<p><strong>解答</strong></p>
+<p>① 3力は1点に働くので、そのまま合成できる。</p>
+<p>② $x$ 右、$y$ 上。</p>
+<p>③ (2.3)：$\boldsymbol F_1=(200,\ 0)$、$\boldsymbol F_2=(150\cos120^\circ,\ 150\sin120^\circ)=(-75.00,\ 129.9)$、$\boldsymbol F_3=(100\cos225^\circ,\ 100\sin225^\circ)=(-70.71,\ -70.71)\ \mathrm N$。</p>
+<p>④ (4.2)：$R_x=200-75.00-70.71=54.29$、$R_y=0+129.9-70.71=59.19\ \mathrm N$。</p>
+<p>⑤ $R=\sqrt{54.29^2+59.19^2}=80.32\ \mathrm N$。$R_x\gt0$ なので向きは $\tan^{-1}(59.19/54.29)=47.47^\circ$。</p>
+<p>⑥ 確かめ：$R_x\gt0,\ R_y\gt0$ で第1象限、47.5° と合う。大きさの和 450 N よりずっと小さい（力どうしが打ち消し合っている）。</p></div>
+<div class="box"><span class="label">第1回　問1〔A｜自作〕単位と有効数字</span>(1) 質量 2.50 kg の物体の重さを N で求めよ。(2) 4905 N を有効数字3桁で、kN を使って書け。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (1) $W=mg=2.50\times9.81=24.525$。3桁で $24.5\ \mathrm N$。</p>
+<p>② (2) $4905\ \mathrm N=4.905\ \mathrm{kN}$、3桁に丸めて $4.91\ \mathrm{kN}$（$4.91\times10^3\ \mathrm N$）。</p></details></div>
+<div class="box"><span class="label">第1回　問2〔A｜自作〕内積の計算</span>$\boldsymbol{a}=(3,\ 4)$、$\boldsymbol{b}=(4,\ -3)$ とする。(1) $\boldsymbol{a}\cdot\boldsymbol{b}$ を求め、2つのベクトルの関係を述べよ。(2) $\boldsymbol a$ と $\boldsymbol c=(1,\ 0)$ のなす角を求めよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (1) (2.9)：$3\times4+4\times(-3)=0$。内積が 0 なので $\cos\theta=0$、2つは<strong>直交</strong>している。</p>
+<p>② (2) $\cos\theta=\boldsymbol a\cdot\boldsymbol c/(ac)=3/(5\times1)=0.600$、$\theta=53.1^\circ$（例題3の $\alpha$ と同じ）。</p></details></div>
+<div class="box"><span class="label">第1回　問3〔A｜自作〕ロープの強さ</span>例題11で、ロープと水平のなす角を 45° にすると、各ロープの張力はいくらになるか。30° のときと比べよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (6.2)：$T=W/(2\sin45^\circ)=4905/(2\times0.7071)=3468\ \mathrm{N}\approx3.47\ \mathrm{kN}$。</p>
+<p>② 30° のとき（4.91 kN）より小さい。ロープを立てるほど、各ロープの負担は減る（図6.3）。</p></details></div>
+
+<h2><span class="no">2</span>第2回　モーメント<span class="meta" style="font-size:14px;margin-left:8px">8問 ｜ <a href="02_第2回_モーメント.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第2回　例題1〔A｜教科書 図2.25〕天秤の左右の「回す働き」</span>
+<p>図2.25 で、左のおもりと右のおもりが支点のまわりに棒を回そうとする働き（力×距離）をそれぞれ求め、どちら向きに回そうとするかを答えよ。</p>
+<p><strong>解答</strong></p>
+<p>① 左：$2F\times\dfrac{L}{3}=\dfrac{2FL}{3}$。左側が下がる向き＝<strong>反時計回り</strong>。</p>
+<p>② 右：$F\times\dfrac{2L}{3}=\dfrac{2FL}{3}$。右側が下がる向き＝<strong>時計回り</strong>。</p>
+<p>③ 大きさが等しく向きが逆なので、回す働きは打ち消し合い、棒は回らない（観察どおり）。</p></div>
+<div class="ex"><span class="label">第2回　例題2〔A｜自作〕レンチでボルトを回す</span>
+<p>長さ 0.25 m のレンチの先端を、柄に直角に 200 N で押す。ボルトの中心まわりのモーメントの大きさを求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 力は柄に直角なので、作用線へ下ろした垂線は柄そのもの。腕 $L=0.25\ \mathrm m$。</p>
+<p>② (1.1)：$M=FL=200\times0.25=50.0\ \mathrm{N\cdot m}$。</p>
+<p>③ 単位の確かめ：$\mathrm N\times\mathrm m=\mathrm{N\cdot m}$。同じ 200 N でも、柄の中ほど（0.125 m）を押せば 25.0 N·m に半減する。長いレンチが効くのはこのため。</p></div>
+<div class="ex"><span class="label">第2回　例題3〔A｜自作〕棒に働く4つの力の合モーメント</span>
+<p>水平な棒の左端 O から 0.5 m の点に下向き 40 N、1.2 m の点に上向き 30 N、2.0 m の点（右端）に下向き 50 N と、右端に棒に沿って右向き 60 N が働く。O まわりの合モーメントを求めよ。</p>
+<figure><svg viewBox="0 0 580 200" width="580" role="img" aria-label="棒に働く4つの力">
+<defs><marker id="c15_bar3-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="c15_bar3-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="c15_bar3-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="c15_bar3-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="c15_bar3-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="c15_bar3-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<rect x="79.1" y="101.6" width="327.3" height="13.1" fill="#d9d1c0" stroke="#2a2723"/>
+<circle cx="79.1" cy="108.2" r="3.5" fill="#2a2723"/>
+<text x="69.3" y="111.5" fill="#2a2723" text-anchor="end" font-size="13">O</text>
+<line x1="160.9" y1="39.5" x2="160.9" y2="100.0" stroke="#a8322a" stroke-width="2.4" marker-end="url(#c15_bar3-r)"/>
+<text x="169.1" y="39.5" fill="#a8322a" text-anchor="start" font-size="12">F1 = 40 N</text>
+<line x1="275.5" y1="176.9" x2="275.5" y2="116.4" stroke="#a8322a" stroke-width="2.4" marker-end="url(#c15_bar3-r)"/>
+<text x="283.6" y="170.4" fill="#a8322a" text-anchor="start" font-size="12">F2 = 30 N</text>
+<line x1="406.4" y1="39.5" x2="406.4" y2="100.0" stroke="#a8322a" stroke-width="2.4" marker-end="url(#c15_bar3-r)"/>
+<text x="414.5" y="39.5" fill="#a8322a" text-anchor="start" font-size="12">F3 = 50 N</text>
+<line x1="411.3" y1="108.2" x2="480.0" y2="108.2" stroke="#2b3a67" stroke-width="2.4" marker-end="url(#c15_bar3-b)"/>
+<text x="445.6" y="91.8" fill="#2b3a67" text-anchor="middle" font-size="12">F4 = 60 N</text>
+<path d="M79.1,140.9 L160.9,140.9" fill="none" stroke="#968d80" stroke-width="0.8" opacity="1"/>
+<path d="M160.9,145.8 L160.9,136.0" fill="none" stroke="#968d80" stroke-width="0.8" opacity="1"/>
+<text x="156.0" y="136.0" fill="#968d80" text-anchor="end" font-size="10">0.5 m</text>
+<path d="M79.1,157.3 L275.5,157.3" fill="none" stroke="#968d80" stroke-width="0.8" opacity="1"/>
+<path d="M275.5,162.2 L275.5,152.4" fill="none" stroke="#968d80" stroke-width="0.8" opacity="1"/>
+<text x="270.5" y="152.4" fill="#968d80" text-anchor="end" font-size="10">1.2 m</text>
+<path d="M79.1,176.9 L406.4,176.9" fill="none" stroke="#968d80" stroke-width="0.8" opacity="1"/>
+<path d="M406.4,181.8 L406.4,172.0" fill="none" stroke="#968d80" stroke-width="0.8" opacity="1"/>
+<text x="401.5" y="172.0" fill="#968d80" text-anchor="end" font-size="10">2.0 m</text>
+<path d="M79.1,121.3 L79.1,181.8" fill="none" stroke="#968d80" stroke-width="0.8" opacity="1"/>
+</g></svg><figcaption>図1.3　棒に働く4つの力。</figcaption></figure>
+<p><strong>解答</strong></p>
+<p>① 鉛直な力の作用線は鉛直線なので、O からの垂線は水平距離。$F_1$：右側を下げる＝時計回り、$M_1=-40\times0.5=-20.0$。</p>
+<p>② $F_2$：右側を上げる＝反時計回り、$M_2=+30\times1.2=+36.0$。$F_3$：時計回り、$M_3=-50\times2.0=-100.0$。</p>
+<p>③ $F_4$：作用線（棒の中心線）が O を通るので腕 0、$M_4=0$。</p>
+<p>④ (1.3)：$M=-20.0+36.0-100.0+0=-84.0\ \mathrm{N\cdot m}$。答え：<strong>84.0 N·m（時計回り）</strong>。</p>
+<p>⑤ 確かめ：時計回りの合計 120.0、反時計回り 36.0 で、差 84.0 が時計回りに残る。いちばん大きい $F_4$（60 N）が 0 なのは、図2.27(c) と同じく作用線が O を通るから。</p></div>
+<div class="ex"><span class="label">第2回　例題4〔A｜自作〕外積の計算と符号</span>
+<p>$\boldsymbol r=(0.3,\ 0.4)\ \mathrm m$、$\boldsymbol F=(50,\ -20)\ \mathrm N$ について、$\boldsymbol r\times\boldsymbol F$ を求め、(2.4) で確かめよ。</p>
+<p><strong>解答</strong></p>
+<p>① (2.3)：$\boldsymbol r\times\boldsymbol F=0.3\times(-20)-0.4\times50=-6.0-20.0=-26.0\ \mathrm{N\cdot m}$。</p>
+<p>② 角で確かめる：$\boldsymbol r$ の角は $\tan^{-1}(0.4/0.3)=53.13^\circ$、$\boldsymbol F$ の角は $\tan^{-1}(-20/50)=-21.80^\circ$（第4象限）。$\boldsymbol r$ から $\boldsymbol F$ へは $-21.80^\circ-53.13^\circ=-74.93^\circ$、つまり時計回りに 74.93°。</p>
+<p>③ (2.4)：$r=0.5\ \mathrm m$、$F=\sqrt{50^2+20^2}=53.85\ \mathrm N$、$0.5\times53.85\times\sin(-74.93^\circ)=-26.0$。一致。負なのは $\boldsymbol F$ が $\boldsymbol r$ から見て時計回り側にあるため。</p></div>
+<div class="ex"><span class="label">第2回　例題12〔A｜自作〕斜めに押すスパナ</span>
+<p>長さ 0.40 m のスパナの先を、柄と 75° をなす向きに 25 N で押す。ボルトまわりのモーメントの大きさを求めよ。柄に直角に押すときと比べよ。</p>
+<p><strong>解答</strong></p>
+<p>① (3.1)：$M=FL\sin\theta=25\times0.40\times\sin75^\circ=25\times0.40\times0.9659=9.659\ \mathrm{N\cdot m}$。</p>
+<p>② 直角なら $25\times0.40=10.00$ N·m。75° でも約 3.4% しか減らない（図3.1：90° 付近の $\sin$ は平ら）。</p></div>
+<div class="box"><span class="label">第2回　問1〔A｜自作〕腕と符号</span>点 O から右へ水平に 0.35 m 離れた点に、鉛直下向きに 80 N が働く。O まわりのモーメントを符号つきで求めよ。同じ力を、同じ鉛直線上で O より 0.20 m 高い位置に移すとどうなるか。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① 作用線は鉛直線で、O からの垂線は水平の 0.35 m。O の右で下向き＝時計回り。$M=-80\times0.35=-28.0\ \mathrm{N\cdot m}$。</p>
+<p>② 成分の式でも：$\boldsymbol r=(0.35,\ 0)$、$\boldsymbol F=(0,\ -80)$、$M=(-80)(0.35)-0=-28.0$。</p>
+<p>③ 同じ鉛直線上に移すと $\boldsymbol r=(0.35,\ 0.20)$。$M=(-80)(0.35)-0\times0.20=-28.0$ で<strong>変わらない</strong>（同じ作用線。1.6 節）。</p></details></div>
+<div class="box"><span class="label">第2回　問2〔A｜自作〕外積で計算</span>基準点から着力点へのベクトルが $\boldsymbol r=(-0.2,\ 0.5)$ m、力が $\boldsymbol F=(40,\ -30)$ N のとき、モーメントを求め、向きを答えよ。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (3.4)：$M=F_yr_x-F_xr_y=(-30)(-0.2)-(40)(0.5)=6.0-20.0=-14.0\ \mathrm{N\cdot m}$。</p>
+<p>② 答え：14.0 N·m（時計回り）。確かめ：$F_y$（下向き）は基準点の<strong>左</strong>にあるので反時計回り（＋6.0）、$F_x$（右向き）は基準点より上にあるので時計回り（−20.0）。</p></details></div>
+<div class="box"><span class="label">第2回　問3〔A｜自作〕偶力</span>互いに 0.24 m 離れた平行な2本の作用線に沿って、大きさ 15 N の逆向きの力が働く。この偶力のモーメントの大きさはいくらか。基準点を変えると値は変わるか。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① (4.2)：$|M|=Fd=15\times0.24=3.60\ \mathrm{N\cdot m}$。</p>
+<p>② 偶力のモーメントは基準点を含まない (4.1) ので、どの点まわりでも 3.60 N·m（向きも同じ）。</p></details></div>
+
+<h2><span class="no">3</span>第2回 小テスト　小テスト解説<span class="meta" style="font-size:14px;margin-left:8px">3問 ｜ <a href="02A_第2回_小テスト解説.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第2回 小テスト　2A-1〔A〕</span>
+<p>A force of 20 N at 30 degree from the $x$-axis is acting at the point (5, −4) m. <u>Using Varignon's theorem</u>, determine the moment of the force about the origin.</p>
+<p class="note">（訳：$x$ 軸から 30° の向きの 20 N の力が点 (5, −4) m に働く。<u>バリニオンの定理を使って</u>、原点まわりのモーメントを求めよ。）解答欄：モーメントの大きさ（正の値）[N·m]、向き。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：力は1本、基準点は原点 O、着力点は Q(5, −4)。</p>
+<p>② <strong>座標軸</strong>：問題の $x$, $y$ 軸をそのまま使う。反時計回りを＋。</p>
+<p>③ <strong>成分で書く</strong>：力は $x$ 軸から 30° なので（第1回の成分分解）
+$$F_x=20\cos30^\circ=20\times0.8660=17.32\ \mathrm N,\qquad F_y=20\sin30^\circ=20\times0.5=10.00\ \mathrm N$$
+位置ベクトルは基準点 → 着力点：$\boldsymbol r=(5-0,\ -4-0)=(5,\ -4)$ m。</p>
+<p>④ <strong>バリニオンの定理で式を立てる</strong>：力 $\boldsymbol F$ のモーメントは、分力 $F_x$ と $F_y$ のモーメントの和に等しい（教材 3.3節）。<br>
+・$F_y$（上向き 10 N）：作用線は $x=5$ の鉛直線で、腕は $|r_x|=5$ m。O の右を上に押すので反時計回り：$+F_yr_x=+10.00\times5=+50.00$ N·m。<br>
+・$F_x$（右向き 17.32 N）：作用線は $y=-4$ の水平線で、腕は $|r_y|=4$ m。O の<strong>下</strong>を右に押すので反時計回り：$-F_xr_y=-17.32\times(-4)=+69.28$ N·m。</p>
+<p>⑤ <strong>解く</strong>：$M=50.00+69.28=119.28\ \mathrm{N\cdot m}$。成分の式 (3.4) $M=F_yr_x-F_xr_y=10\times5-17.32\times(-4)$ に一度に代入しても同じ値になる。</p>
+<p>⑥ <strong>確かめ</strong>：単位は N × m = N·m。符号は正なので反時計回り。どちらの分力も反時計回りに回すので、和が正になるのは図の感覚とも合う。</p>
+<p><strong>答え：大きさ 119.3 N·m（119.28）、向き：反時計回り</strong></p></div>
+<div class="ex"><span class="label">第2回 小テスト　2A-2〔A〕</span>
+<p>図のように、梁に垂直な複数の力が作用している。これらを点Aにおける単一の力とモーメントに置き換えなさい。</p>
+<figure class="slide"><img src="img/quiz02/q2.png" alt="長さ12 mの梁。左端Aに下向き600 N、Aから4 mに上向き100 N、8 mに上向き400 N、12 m（右端）に上向き200 N" loading="lazy" style="width:440px;max-width:95%;height:auto;background:#fff"><figcaption>2A-2 の図。出典：第2回小テスト（Moodle 課題 2A 問題2）</figcaption></figure>
+<p class="note">解答欄：力の大きさ（正の値）[N]、力の向き、モーメントの大きさ（正の値）[N·m]、モーメントの向き。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：梁全体に働く4本の力を、点 A に集める（教材 5.3節）。</p>
+<p>② <strong>座標軸</strong>：A を原点とし、梁に沿って右を $x$、上を $y$ とする。反時計回りを＋。</p>
+<p>③ <strong>成分で書く</strong>：すべて鉛直な力なので $F_x=0$。着力点は A から見て $\boldsymbol r=(x_i,\ 0)$。</p>
+<table class="tb"><tr><th>力</th><th>$x_i$ [m]</th><th>$F_{iy}$ [N]</th><th>$M_i=F_{iy}x_i$ [N·m]</th></tr>
+<tr><td>600 N（下）</td><td>0</td><td>−600</td><td>0</td></tr>
+<tr><td>100 N（上）</td><td>4</td><td>+100</td><td>+400</td></tr>
+<tr><td>400 N（上）</td><td>8</td><td>+400</td><td>+3200</td></tr>
+<tr><td>200 N（上）</td><td>12</td><td>+200</td><td>+2400</td></tr>
+<tr><td><strong>合計</strong></td><td></td><td><strong>+100</strong></td><td><strong>+6000</strong></td></tr></table>
+<p>④ <strong>式を立てる</strong>：合力は式 (5.2)、合モーメントは式 (5.3) を使う。$r_y=0$ なので (3.4) の $-F_xr_y$ の項は消え、$M_i=F_{iy}x_i$ だけが残る。
+$$F_y=\sum F_{iy}=-600+100+400+200,\qquad M_A=\sum F_{iy}x_i=(-600)(0)+100(4)+400(8)+200(12)$$</p>
+<p>⑤ <strong>解く</strong>：$F_y=+100$ N、$M_A=0+400+3200+2400=+6000$ N·m。</p>
+<p>⑥ <strong>確かめ</strong>：600 N は A を通るので腕 0 で、モーメントには効かない（作用線が基準点を通る）。上向きの3本はどれも A の右を上に押すので、すべて反時計回りになる。単位は N と N·m。</p>
+<p><strong>答え：力 100 N・上向き、モーメント 6000 N·m・反時計回り</strong></p></div>
+<div class="ex"><span class="label">第2回 小テスト　2B-1〔A〕</span>
+<p>図のように、$x$ 軸に垂直に3つの力が作用しているとき、これら3つの力と等価な作用を系に与える一つの力の大きさ、向き、および力の作用点の位置を求めなさい。</p>
+<figure class="slide"><img src="img/quiz02/q2b1.png" alt="x軸上の点Aに上向き20 N、Aから3 mの点Bに下向き20 N、Bから5 mの点Cに上向き80 N" loading="lazy" style="width:440px;max-width:95%;height:auto;background:#fff"><figcaption>2B-1 の図。出典：第2回小テスト（Moodle 課題 2B 問題1）</figcaption></figure>
+<p class="note">解答欄：力の大きさ（正の値）[N]、向き、作用点「点Aから右向きに □ m の点」。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：3本の力をいったん点 A に集め（教材 5.3節）、そのあと1本の力に戻す（教材 5.5節）。</p>
+<p>② <strong>座標軸</strong>：A を原点とし、右を $x$、上を $y$ とする。反時計回りを＋。着力点は A(0)、B(3)、C(3+5=8) m。</p>
+<p>③ <strong>成分で書く</strong>：すべて鉛直なので $F_x=0$。$F_{Ay}=+20$、$F_{By}=-20$、$F_{Cy}=+80$ N。</p>
+<p>④ <strong>式を立てる</strong>：
+$$F_y=20-20+80,\qquad M_A=\sum F_{iy}x_i=20(0)+(-20)(3)+80(8)$$
+1本の力 $F_y$ を A から右へ $d$ の位置に置いたとき、A まわりのモーメントが $M_A$ と等しくなればよい：$F_y\,d=M_A$。<br><span class="note">（なぜこの式か：「等価」とは、合力も、どの点まわりのモーメントも同じという意味。合力はもう一致しているので、A まわりのモーメントを合わせれば十分である（教材 式5.4 で、1点で合えばどの点でも合う）。）</span></p>
+<p>⑤ <strong>解く</strong>：$F_y=+80$ N。$M_A=0-60+640=+580$ N·m。$d=M_A/F_y=580/80=7.25$ m。</p>
+<p>⑥ <strong>確かめ（別の見方）</strong>：A の 20 N（上）と B の 20 N（下）は大きさが等しく向きが逆なので、<strong>偶力</strong>になる（教材 4.1節）。そのモーメントは $-20\times3=-60$ N·m（時計回り）。偶力は合力 0 なので、残るのは C の 80 N だけだ。80 N を左へ $s$ ずらすと、A まわりのモーメントは $80\times s$ だけ減る。$80s=60$ から $s=0.75$ m、位置は $8-0.75=7.25$ m で一致する。</p>
+<p><strong>答え：大きさ 80 N、上向き、作用点は点 A から右へ 7.25 m の点</strong></p></div>
+
+<h2><span class="no">4</span>第3回　3次元の力とモーメント<span class="meta" style="font-size:14px;margin-left:8px">8問 ｜ <a href="03_第3回_3次元の力とモーメント.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第3回　例題1〔A｜自作〕2点を結ぶ向きの力</span>
+<p>点 A$(2,\,0,\,0)$ m から点 B$(0,\,3,\,6)$ m の向きに、大きさ 300 N の力が働く。この力を成分で表せ。</p>
+<p><strong>解答</strong></p>
+<p>① $\overrightarrow{\mathrm{AB}}=$ 終点−始点 $=(0-2,\ 3-0,\ 6-0)=(-2,\ 3,\ 6)$ m。</p>
+<p>② 長さ (1.2)：$\sqrt{(-2)^2+3^2+6^2}=\sqrt{4+9+36}=\sqrt{49}=7$ m。単位ベクトル $\boldsymbol u=(-2,\ 3,\ 6)/7$。</p>
+<p>③ $\boldsymbol F=300\boldsymbol u=(-85.71,\ 128.6,\ 257.1)$ N。</p>
+<p>④ 確かめ：$\sqrt{85.71^2+128.6^2+257.1^2}=300.0$ N。各成分の符号は $\overrightarrow{\mathrm{AB}}$ と同じ（$x$ は負の向き、$y,z$ は正の向き）。</p></div>
+<div class="ex"><span class="label">第3回　例題2〔A｜自作〕2力の合成</span>
+<p>$\boldsymbol F_1=(10,\ -20,\ 15)$ N、$\boldsymbol F_2=(-4,\ 8,\ 10)$ N の合力とその大きさを求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① (1.4)：$\boldsymbol R=(10-4,\ -20+8,\ 15+10)=(6,\ -12,\ 25)$ N。</p>
+<p>② (1.2)：$R=\sqrt{36+144+625}=\sqrt{805}=28.37$ N。</p>
+<p>③ 確かめ：$F_1=\sqrt{725}=26.93$ N、$F_2=\sqrt{180}=13.42$ N で、$R=28.37\le F_1+F_2=40.34$ N（丸める前の値で足した。三角形の2辺の和は他の1辺より長い）を満たす。</p></div>
+<div class="ex"><span class="label">第3回　例題4〔A｜自作〕モーメントベクトルを読む</span>
+<p>$\boldsymbol M=(3,\ -4,\ 12)$ N·m が表す回転作用の大きさ・回転軸・向きを述べよ。</p>
+<p><strong>解答</strong></p>
+<p>① 大きさ：$|\boldsymbol M|=\sqrt{9+16+144}=\sqrt{169}=13$ N·m。</p>
+<p>② 回転軸：基準点を通り、単位ベクトル $\boldsymbol M/|\boldsymbol M|=(3,\ -4,\ 12)/13=(0.231,\ -0.308,\ 0.923)$ の向きの直線（ほぼ鉛直で、少し傾いている）。</p>
+<p>③ 向き：その単位ベクトルの先の側から見下ろして、反時計回り（右ねじがその向きへ進む回し方）。</p></div>
+<div class="ex"><span class="label">第3回　例題5〔A｜自作〕外積の計算と性質の確かめ</span>
+<p>$\boldsymbol a=(2,\ -1,\ 1)$、$\boldsymbol b=(1,\ 2,\ -1)$ のとき、$\boldsymbol a\times\boldsymbol b$ を求め、定理の1・2 を数値で確かめよ。</p>
+<p><strong>解答</strong></p>
+<p>① (3.1)：$x$ 成分 $a_yb_z-a_zb_y=(-1)(-1)-(1)(2)=1-2=-1$。$y$ 成分 $a_zb_x-a_xb_z=(1)(1)-(2)(-1)=1+2=3$。$z$ 成分 $a_xb_y-a_yb_x=(2)(2)-(-1)(1)=4+1=5$。$\boldsymbol a\times\boldsymbol b=(-1,\ 3,\ 5)$。</p>
+<p>② 垂直：$\boldsymbol a\cdot(\boldsymbol a\times\boldsymbol b)=-2-3+5=0$、$\boldsymbol b\cdot(\boldsymbol a\times\boldsymbol b)=-1+6-5=0$ ✓。</p>
+<p>③ 大きさ：$|\boldsymbol a\times\boldsymbol b|=\sqrt{1+9+25}=\sqrt{35}=5.916$。一方 $a=b=\sqrt6$、$\boldsymbol a\cdot\boldsymbol b=2-2-1=-1$ なので (3.3) の右辺 $=6\cdot6-(-1)^2=35$ ✓。</p>
+<p>④ なす角：$\cos\theta=-1/6$ より $\theta=99.59^\circ$、$ab\sin\theta=6\times0.9860=5.916$ ✓。</p></div>
+<div class="ex"><span class="label">第3回　例題7〔A｜自作〕水平な腕の先の重さ</span>
+<p>点 P（原点）から $x$ 軸に沿って水平に伸びる腕の先 $(0.5,\ 0,\ 0)$ m に、重さ 100 N（下向き）が働く。P まわりのモーメントベクトルを求め、向きの意味を説明せよ。</p>
+<p><strong>解答</strong></p>
+<p>① $\boldsymbol r=(0.5,\ 0,\ 0)$ m、$\boldsymbol F=(0,\ 0,\ -100)$ N。</p>
+<p>② (2.54)：$x$ 成分 $F_zr_y-F_yr_z=(-100)(0)-0=0$、$y$ 成分 $F_xr_z-F_zr_x=0-(-100)(0.5)=50$、$z$ 成分 $F_yr_x-F_xr_y=0$。$\boldsymbol M=(0,\ 50,\ 0)$ N·m。</p>
+<p>③ 向き：$+y$ 向き。$+y$ 軸の先から見ると、$z\to x$ の向き（右手系で $\boldsymbol k\times\boldsymbol i=\boldsymbol j$）が反時計回り。$z$ 軸（上）を $x$ 軸（腕の先）へ倒す向き、つまり<strong>腕の先が下がる向き</strong>で、直感どおり。</p>
+<p>④ 確かめ：大きさ $50=FL=100\times0.5$（腕は水平距離 0.5 m）。</p></div>
+<div class="box"><span class="label">第3回　問1〔A｜OpenStax UP1 10章 問83〕原点まわりのトルク</span>位置 $\boldsymbol r=(-2.0\,\boldsymbol i+4.0\,\boldsymbol j)$ m の点に加えた力 $(5.0\,\boldsymbol i-2.0\,\boldsymbol j+1.0\,\boldsymbol k)$ N の、原点まわりのトルクを求めよ。
+<p class="note">原文：What is the torque about the origin of the force (5.0 i − 2.0 j + 1.0 k) N if it is applied at the point whose position is r = (−2.0 i + 4.0 j) m?</p>
+<p class="cr">出典：OpenStax, <i>University Physics Volume 1</i>, Chapter 10 Problems, Problem 83（CC BY 4.0）<a href="https://openstax.org/books/university-physics-volume-1/pages/10-problems">https://openstax.org/books/university-physics-volume-1/pages/10-problems</a>。和訳は本教材。公式解答 $4.0\boldsymbol i+2.0\boldsymbol j-16.0\boldsymbol k$ N·m と照合済み。</p>
+<details><summary>解答</summary>
+<p>① $\boldsymbol r=(-2,\ 4,\ 0)$、$\boldsymbol F=(5,\ -2,\ 1)$。</p>
+<p>② (2.54)：$x$ $F_zr_y-F_yr_z=1\times4-0=4$、$y$ $F_xr_z-F_zr_x=0-1\times(-2)=2$、$z$ $F_yr_x-F_xr_y=(-2)(-2)-5\times4=4-20=-16$。</p>
+<p>③ $\boldsymbol M=(4.0,\ 2.0,\ -16.0)$ N·m。確かめ：$\boldsymbol M\cdot\boldsymbol r=-8+8+0=0$ ✓、$\boldsymbol M\cdot\boldsymbol F=20-4-16=0$ ✓。</p></details></div>
+<div class="box"><span class="label">第3回　問2〔A｜Engineering Statics 例題2.5.5〕指定した向きの力の成分</span>点 A に働く 5 kN の力 $\boldsymbol F$ が、A から B へ向かう線の向きであるとき、$\boldsymbol F$ の成分を求めよ。A$=(2,\ 3,\ -2.1)$ m、B$=(-2.5,\ 1.5,\ 2.2)$ m。
+<p class="note">原文：Determine the components of a 5 kN force F acting at point A, in the direction of a line from A to B.</p>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics</i>, §2.5, Example 2.5.5（CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/Chapter_02-unit-vectors.html">https://engineeringstatics.org/Chapter_02-unit-vectors.html</a>。和訳は本教材。公式解答 $(-3.51,\ -1.17,\ 3.36)$ kN と照合済み。</p>
+<details><summary>解答</summary>
+<p>① $\overrightarrow{\mathrm{AB}}=(-4.5,\ -1.5,\ 4.3)$、長さ $\sqrt{20.25+2.25+18.49}=\sqrt{40.99}=6.402$ m。</p>
+<p>② (1.3)：$\boldsymbol F=5\times(-4.5,\ -1.5,\ 4.3)/6.402=(-3.51,\ -1.17,\ 3.36)$ kN。</p>
+<p>③ 確かめ：$\sqrt{3.514^2+1.171^2+3.358^2}=5.00$ kN ✓。</p></details></div>
+<div class="box"><span class="label">第3回　問3〔A｜自作〕外積の順序</span>$\boldsymbol r=(0.2,\ 0,\ 0.1)$ m、$\boldsymbol F=(0,\ 40,\ 0)$ N のとき、$\boldsymbol r\times\boldsymbol F$ と $\boldsymbol F\times\boldsymbol r$ を求めよ。点まわりのモーメントはどちらか。
+<p class="cr">出典：本教材の自作。</p>
+<details><summary>解答</summary>
+<p>① $\boldsymbol r\times\boldsymbol F$：$x$ $F_zr_y-F_yr_z=0-40\times0.1=-4$、$y$ $F_xr_z-F_zr_x=0$、$z$ $F_yr_x-F_xr_y=40\times0.2=8$ → $(-4,\ 0,\ 8)$ N·m。</p>
+<p>② $\boldsymbol F\times\boldsymbol r=-\boldsymbol r\times\boldsymbol F=(4,\ 0,\ -8)$。</p>
+<p>③ モーメントは $\boldsymbol r\times\boldsymbol F$（$\boldsymbol r$ が先、4.4 節）＝$(-4,\ 0,\ 8)$ N·m。$z$ 成分 8 は「$+z$ 側から見て、$x$ 方向 0.2 m の点を $+y$ 向きに押す」反時計回りで、直感と合う。</p></details></div>
+
+<h2><span class="no">5</span>第3回 小テスト　小テスト解説<span class="meta" style="font-size:14px;margin-left:8px">3問 ｜ <a href="03A_第3回_小テスト解説.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第3回 小テスト　3A-1〔A〜B〕</span>
+<p>ある物体内の3点 A(4, 3, 2), B(−1, 2, 5), P(5, 7, 0) を考える（長さの単位はメートルとする）。点 P に力 $\boldsymbol F=\begin{bmatrix}20\\15\\25\end{bmatrix}$ N が作用しているとき、以下の問いに答えなさい。<br>
+(a) 力 $\boldsymbol F$ の大きさを求めなさい。<br>
+(b) 力 $\boldsymbol F$ による、原点 O まわりのモーメントベクトル $\boldsymbol M_O$ を求めなさい。<br>
+(c) 力 $\boldsymbol F$ による、点 A まわりのモーメントベクトル $\boldsymbol M_A$ を求めなさい。<br>
+(d) 力 $\boldsymbol F$ による、軸 AB まわりのモーメントの大きさを求めなさい。</p>
+<p class="note">解答欄：(a) $F$ [N]、(b)(c) $[\ \square\ \ \square\ \ \square\ ]^{\mathsf T}$ Nm、(d) 大きさ [Nm]（A から B へ右ねじが進むときのねじの回転方向を正として、符号つきで入力）。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：力は1本（着力点 P）。基準は (b) 点 O、(c) 点 A、(d) 軸 AB。</p>
+<p>② <strong>座標軸</strong>：問題の $x,y,z$（右手系）をそのまま使う。</p>
+<p>③ <strong>成分で書く</strong>：$\boldsymbol F=(20,\ 15,\ 25)$ N。位置ベクトルは「基準点 → 着力点」で、<br>
+・O まわり：$\boldsymbol r_{OP}=(5,\ 7,\ 0)$ m<br>
+・A まわり：$\boldsymbol r_{AP}=\mathrm P-\mathrm A=(5-4,\ 7-3,\ 0-2)=(1,\ 4,\ -2)$ m</p>
+
+<p><strong>(a) 大きさ</strong>：3次元の三平方の定理（教材 1.2節）で
+$$F=\sqrt{F_x^2+F_y^2+F_z^2}=\sqrt{20^2+15^2+25^2}=\sqrt{400+225+625}=\sqrt{1250}=25\sqrt2=35.36\ \mathrm N$$</p>
+
+<p><strong>(b) O まわり</strong>：④ 式 (2.54) $\boldsymbol M=\begin{bmatrix}F_zr_y-F_yr_z\\F_xr_z-F_zr_x\\F_yr_x-F_xr_y\end{bmatrix}$ に、$\boldsymbol r=(5,7,0)$、$\boldsymbol F=(20,15,25)$ を入れる。⑤ 成分ごとに1行ずつ：<br>
+・$x$ 成分：$F_zr_y-F_yr_z=25\times7-15\times0=175-0=175$<br>
+・$y$ 成分：$F_xr_z-F_zr_x=20\times0-25\times5=0-125=-125$<br>
+・$z$ 成分：$F_yr_x-F_xr_y=15\times5-20\times7=75-140=-65$
+$$\boldsymbol M_O=[\,175\ \ -125\ \ -65\,]^{\mathsf T}\ \mathrm{Nm}$$
+<span class="note">（覚え方：$x$ 成分は「$y$ と $z$ のたすき掛け」、$y$ 成分は「$z$ と $x$」、$z$ 成分は「$x$ と $y$」。$x\to y\to z\to x$ と巡回させると、前に来るほうの文字が $F$ 側につく。$z$ 成分は第2回の2次元の式 $F_yr_x-F_xr_y$ そのものである。）</span></p>
+
+<p><strong>(c) A まわり</strong>：④ 同じ式に $\boldsymbol r_{AP}=(1,4,-2)$ を入れる。⑤<br>
+・$x$：$F_zr_y-F_yr_z=25\times4-15\times(-2)=100+30=130$<br>
+・$y$：$F_xr_z-F_zr_x=20\times(-2)-25\times1=-40-25=-65$<br>
+・$z$：$F_yr_x-F_xr_y=15\times1-20\times4=15-80=-65$
+$$\boldsymbol M_A=[\,130\ \ -65\ \ -65\,]^{\mathsf T}\ \mathrm{Nm}$$
+⑥ <strong>確かめ（基準点を移す式 6.1）</strong>：$\boldsymbol M_A=\boldsymbol M_O+\overrightarrow{\mathrm{AO}}\times\boldsymbol F$ で、$\overrightarrow{\mathrm{AO}}=(-4,-3,-2)$。<br>
+$$\begin{aligned}\overrightarrow{\mathrm{AO}}\times\boldsymbol F&=\big(25(-3)-15(-2),\ 20(-2)-25(-4),\ 15(-4)-20(-3)\big)\\&=(-75+30,\ -40+100,\ -60+60)=(-45,\ 60,\ 0)\\ \boldsymbol M_O+(-45,\ 60,\ 0)&=(175-45,\ -125+60,\ -65+0)=(130,\ -65,\ -65)\end{aligned}$$
+で一致する。</p>
+
+<p><strong>(d) 軸 AB まわり</strong>：④ 軸上の点 A まわりの $\boldsymbol M_A$ を、軸の単位ベクトル $\boldsymbol u$ に射影する（式 2.60）。<br>
+<span class="note">（なぜ A を使うか：軸まわりのモーメントは、<strong>軸上の点</strong>まわりのモーメントから作る。軸上の点ならどれでも同じ値になる（教材 5.3節）。A は (c) で計算済みなので使い回せる。）</span><br>
+・軸の向き：問題が「A から B へ右ねじが進む向きを正」と指定しているので、$\overrightarrow{\mathrm{AB}}=\mathrm B-\mathrm A=(-1-4,\ 2-3,\ 5-2)=(-5,\ -1,\ 3)$ m。<br>
+・長さ：$|\overrightarrow{\mathrm{AB}}|=\sqrt{25+1+9}=\sqrt{35}=5.916$ m。<br>
+・単位ベクトル：$\boldsymbol u=\dfrac{1}{\sqrt{35}}(-5,\ -1,\ 3)$。</p>
+<p>⑤ 内積を計算する：
+$$\tau_{AB}=\boldsymbol u\cdot\boldsymbol M_A=\frac{(-5)(130)+(-1)(-65)+(3)(-65)}{\sqrt{35}}=\frac{-650+65-195}{\sqrt{35}}=\frac{-780}{5.916}=-131.8\ \mathrm{Nm}$$</p>
+<p>⑥ <strong>確かめ</strong>：(i) 軸上のもう一つの点 B を基準にして $\boldsymbol u\cdot(\boldsymbol r_{BP}\times\boldsymbol F)$ を計算しても −131.8 になる（教材 5.3節の主張どおり）。(ii) 三重積の行列式（教材 5.6節）$\tau=\dfrac{1}{|\overrightarrow{\mathrm{AB}}|}\begin{vmatrix}-5&-1&3\\1&4&-2\\20&15&25\end{vmatrix}=\dfrac{-780}{\sqrt{35}}$ でも一致（Python で検算）。(iii) 単位は m × N = Nm。$|\tau|=131.8\le|\boldsymbol M_A|=\sqrt{130^2+65^2+65^2}=159.2$ で、射影が元のベクトルより大きくならないことも合っている。</p>
+<p><strong>答え：(a) 35.36 N（$25\sqrt2$）　(b) $\boldsymbol M_O=[175\ \ -125\ \ -65]^{\mathsf T}$ Nm　(c) $\boldsymbol M_A=[130\ \ -65\ \ -65]^{\mathsf T}$ Nm　(d) −131.8 Nm（$-780/\sqrt{35}$）</strong></p></div>
+<div class="ex"><span class="label">第3回 小テスト　3A-2〔A〜B〕</span>
+<p>3A-1 と同じ系を考える。すなわち、ある物体内の3点 A(4, 3, 2), B(−1, 2, 5), P(5, 7, 0) の、点 P に力 $\boldsymbol F=\begin{bmatrix}20\\15\\25\end{bmatrix}$ N が作用している。この物体に、さらに純粋モーメント $\boldsymbol M=\begin{bmatrix}122\\165\\80\end{bmatrix}$ Nm を加えたとき、以下の問いに答えなさい。<br>
+(a) 原点 O まわりに作用するモーメントベクトル $\boldsymbol M_{O'}$ を求めなさい。<br>
+(b) $z$ 軸まわりに作用するモーメントベクトル $\boldsymbol M_z$ を求めなさい。<br>
+(c) 軸 AB まわりに作用するモーメントの大きさを求めなさい。</p>
+<p class="note">解答欄：(a)(b) $[\ \square\ \ \square\ \ \square\ ]^{\mathsf T}$ Nm、(c) 大きさ [Nm]（A から B へ右ねじが進む向きを正として符号つき）。問題文の「原点 O まわりの<u>に</u>作用する」は、「原点 O まわりに作用する」の誤植と思われる。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：物体に働くのは、P の力 $\boldsymbol F$ と純粋モーメント $\boldsymbol M$ の2つ。</p>
+<p>② <strong>座標軸</strong>：3A-1 と同じ。</p>
+<p>③ <strong>成分</strong>：3A-1 の結果 $\boldsymbol M_O=(175,-125,-65)$、$\boldsymbol M_A=(130,-65,-65)$ をそのまま使う。</p>
+<p>④ <strong>式を立てる</strong>：合モーメントの式 (2.59) $\boldsymbol M=\sum\boldsymbol r_i\times\boldsymbol F_i+\sum\boldsymbol M_j$。純粋モーメントは<strong>腕を掛けず、そのまま足す</strong>（3次元の偶力のモーメントは基準点によらない、教材 6.1節）。</p>
+<p><strong>(a)</strong> ⑤ 成分ごとに足す：
+$$\boldsymbol M_{O'}=\boldsymbol M_O+\boldsymbol M=(175+122,\ -125+165,\ -65+80)=[\,297\ \ 40\ \ 15\,]^{\mathsf T}\ \mathrm{Nm}$$</p>
+<p><strong>(b)</strong> $z$ 軸は原点 O を通り、単位ベクトルは $\boldsymbol k=(0,0,1)$。軸まわりのモーメントの大きさは $\tau_z=\boldsymbol k\cdot\boldsymbol M_{O'}=15$ Nm（$\boldsymbol M_{O'}$ の $z$ 成分そのもの。教材 2.3節「成分は各軸まわりのモーメント」）。これを<strong>ベクトル</strong>として書くと、軸の向き $\boldsymbol k$ を掛けて
+$$\boldsymbol M_z=\tau_z\,\boldsymbol k=[\,0\ \ 0\ \ 15\,]^{\mathsf T}\ \mathrm{Nm}$$</p>
+<p><strong>(c)</strong> 軸上の点 A まわりの合モーメントは $\boldsymbol M_{A'}=\boldsymbol M_A+\boldsymbol M=(130+122,\ -65+165,\ -65+80)=(252,\ 100,\ 15)$。これを $\boldsymbol u=(-5,-1,3)/\sqrt{35}$ に射影する：
+$$\tau_{AB}=\frac{(-5)(252)+(-1)(100)+(3)(15)}{\sqrt{35}}=\frac{-1260-100+45}{\sqrt{35}}=\frac{-1315}{5.916}=-222.3\ \mathrm{Nm}$$</p>
+<p>⑥ <strong>確かめ（分けて足す）</strong>：内積は足し算に分配できるので、$\tau_{AB}=\boldsymbol u\cdot\boldsymbol M_A+\boldsymbol u\cdot\boldsymbol M$。前半は 3A-1(d) の $-131.8$、後半は $\dfrac{(-5)(122)+(-1)(165)+(3)(80)}{\sqrt{35}}=\dfrac{-610-165+240}{\sqrt{35}}=\dfrac{-535}{\sqrt{35}}=-90.43$。和は $-131.84-90.43=-222.3$ で一致する。</p>
+<p><strong>答え：(a) $\boldsymbol M_{O'}=[297\ \ 40\ \ 15]^{\mathsf T}$ Nm　(b) $\boldsymbol M_z=[0\ \ 0\ \ 15]^{\mathsf T}$ Nm　(c) −222.3 Nm（$-1315/\sqrt{35}$）</strong></p></div>
+<div class="ex"><span class="label">第3回 小テスト　3B-1〔A〕</span>
+<p>Two forces $\boldsymbol F_1=20\boldsymbol i-10\boldsymbol j+60\boldsymbol k$ N and $\boldsymbol F_2=30\boldsymbol i+20\boldsymbol j-40\boldsymbol k$ N are acting at $(0,-1,1)$ and $(-1,-1,-1)$, respectively, and a pure moment of −80 Nm is acting in the $xy$-plane. Determine the resultant force-moment system at the origin. Coordinates are in meters.</p>
+<p class="note">（訳：2つの力 $\boldsymbol F_1$、$\boldsymbol F_2$ がそれぞれ点 $(0,-1,1)$、$(-1,-1,-1)$ に働き、さらに $xy$ 平面内で −80 Nm の純粋モーメントが働く。原点における合力と合モーメントを求めよ。座標の単位は m。）解答欄：合力・合モーメントとも $\square\,\boldsymbol i+\square\,\boldsymbol j+\square\,\boldsymbol k$。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：2本の力と1つの純粋モーメントを、原点 O に集める（式 2.58・2.59）。</p>
+<p>② <strong>座標軸</strong>：問題の $x,y,z$（右手系）。</p>
+<p>③ <strong>成分で書く</strong>：$\boldsymbol r_1=(0,-1,1)$、$\boldsymbol F_1=(20,-10,60)$；$\boldsymbol r_2=(-1,-1,-1)$、$\boldsymbol F_2=(30,20,-40)$。<br>
+純粋モーメントは「$xy$ 平面内で回す」もの。$xy$ 平面内の回転の軸は $z$ 軸なので、ベクトルは $z$ 方向：$\boldsymbol M_0=-80\boldsymbol k=(0,\ 0,\ -80)$ Nm（教材 2.2節：モーメントベクトルは回転面に垂直）。</p>
+<p>④ <strong>式を立てる</strong>：
+$$\boldsymbol F_R=\boldsymbol F_1+\boldsymbol F_2,\qquad \boldsymbol M_O=\boldsymbol r_1\times\boldsymbol F_1+\boldsymbol r_2\times\boldsymbol F_2+\boldsymbol M_0$$</p>
+<p>⑤ <strong>解く</strong>：<br>
+・合力：$\boldsymbol F_R=(20+30,\ -10+20,\ 60-40)=(50,\ 10,\ 20)$ N。<br>
+・$\boldsymbol r_1\times\boldsymbol F_1$（式 2.54）：<br>
+　$x$：$F_zr_y-F_yr_z=60(-1)-(-10)(1)=-60+10=-50$<br>
+　$y$：$F_xr_z-F_zr_x=20(1)-60(0)=20$<br>
+　$z$：$F_yr_x-F_xr_y=(-10)(0)-20(-1)=20$　→ $(-50,\ 20,\ 20)$<br>
+・$\boldsymbol r_2\times\boldsymbol F_2$：<br>
+　$x$：$(-40)(-1)-20(-1)=40+20=60$<br>
+　$y$：$30(-1)-(-40)(-1)=-30-40=-70$<br>
+　$z$：$20(-1)-30(-1)=-20+30=10$　→ $(60,\ -70,\ 10)$<br>
+・合計：
+$$\boldsymbol M_O=(-50+60+0,\ 20-70+0,\ 20+10-80)=(10,\ -50,\ -50)\ \mathrm{Nm}$$</p>
+<p>⑥ <strong>確かめ</strong>：外積は両方のベクトルに垂直になる（教材 3.3節）ので、$(\boldsymbol r_1\times\boldsymbol F_1)\cdot\boldsymbol F_1=(-50)(20)+(20)(-10)+(20)(60)=-1000-200+1200=0$、$(\boldsymbol r_2\times\boldsymbol F_2)\cdot\boldsymbol F_2=(60)(30)+(-70)(20)+(10)(-40)=1800-1400-400=0$ で、どちらも 0。計算ミスがあるとたいていここで 0 にならない。単位は N と Nm。</p>
+<p><strong>答え：合力 $50\boldsymbol i+10\boldsymbol j+20\boldsymbol k$ N、合モーメント $10\boldsymbol i-50\boldsymbol j-50\boldsymbol k$ Nm</strong></p></div>
+
+<h2><span class="no">6</span>第4回　力とモーメントの釣合い<span class="meta" style="font-size:14px;margin-left:8px">6問 ｜ <a href="04_第4回_力とモーメントの釣合い.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第4回　例題1〔A｜単純梁〕支点 A（回転支点）、B（移動支点）の反力</span>
+<p>長さ 4 m の梁を、左端 A（ピン）と右端 B（ローラー）で水平に支える。A から 1.5 m の点に 600 N の下向きの荷重がある。梁の重さは無視する。A・B の反力を、<strong>未知数が1つの式を選んで</strong>求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 梁にはたらく外力：荷重 600 N（下向き）、A の反力 $R_{Ax},R_{Ay}$、B の反力 $R_B$（上向き、ローラーなので鉛直のみ）。未知数は 3、式は 3 本。</p>
+<p>② 座標：$x$ を右、$y$ を上。反時計回りを＋。</p>
+<p>③④ A まわり：A の反力は腕 0 なので消える。$R_B\times4-600\times1.5=0$。<span class="note">← 600 N は A の右 1.5 m で下向き＝時計回り（−）、$R_B$ は右 4 m で上向き＝反時計回り（＋）。</span></p>
+<p>⑤ $R_B=900/4=225$ N。次に B まわり：$600\times(4-1.5)-R_{Ay}\times4=0$ より $R_{Ay}=1500/4=375$ N。$x$ 方向：$R_{Ax}=0$。</p>
+<p>⑥ 確かめ（使わなかった式で）：$\sum F_y=375+225-600=0$ ✓。単位は N。</p></div>
+<div class="ex"><span class="label">第4回　例題2〔A｜教科書 例題 3.1（p.28）〕2本のワイヤで支えた 10 kg の質点</span>
+<figure class="slide"><img src="img/slide04/ex31.jpg" alt="教科書 例題3.1。質点Pを2本のワイヤで支える。ワイヤ1は水平、ワイヤ2は水平から30°。質点の質量は10 kg。右は質点Pに作用する力F1、F2、W" loading="lazy" style="width:400px;max-width:92%;height:auto;background:#fff"><figcaption>例題3.1 の図。出典：講義資料 第4回 p.21（教科書 p.28）</figcaption></figure>
+<p>質量 10 kg の質点 P を2本のワイヤで吊る。ワイヤ1は水平、ワイヤ2は水平から 30° の向きで、壁につながっている。それぞれのワイヤに生じる張力の大きさを求めよ。重力加速度は $g=9.81\ \mathrm{m/s^2}$ とする。</p>
+<p><strong>解答</strong></p>
+<p>① 系：質点 P。外力は、ワイヤ1の張力 $F_1$（右向き）、ワイヤ2の張力 $F_2$（左上向き）、重力 $W=mg=10\times9.81=98.1$ N（下向き）。ワイヤは引くことしかできないので、張力は P を<strong>ワイヤの向きに引く</strong>（4.3 節）。3 力とも P を通るので、1.2 節の (3.6) が使える。</p>
+<p>② 座標：$x$ を右、$y$ を上。</p>
+<p>③ 成分：$\boldsymbol F_1=(F_1,\ 0)$、$\boldsymbol F_2=(-F_2\cos30°,\ F_2\sin30°)$、$\boldsymbol W=(0,\ -98.1)$。</p>
+<p>④ $\sum F_x=F_1-F_2\cos30°=0$、$\sum F_y=F_2\sin30°-98.1=0$。<span class="note">← 未知数 $F_1,F_2$ の2つ、式の数も2本。</span></p>
+<p>⑤ 第2式から $F_2=98.1/\sin30°=\mathbf{196.2}$ N。第1式から $F_1=F_2\cos30°=196.2\times0.8660=\mathbf{169.9}$ N。</p>
+<p>⑥ 確かめ：力の多角形（図1.2 右）は閉じる。3力の和 $F_1-F_2\cos30°=169.9-169.9=0$ ✓。$F_2$ のほうが重さ 98.1 N より大きい：ワイヤが浅い角度（水平に近い）で引くほど、重さを支えるのに大きな張力が要る（$F_2=W/\sin30°=2W$）。</p></div>
+<div class="ex"><span class="label">第4回　例題3〔A｜未知数を数える〕</span>
+<p>次の支持について、(1) 壁に埋めた鉄棒の先に荷重（固定端）、(2) 水平な棒を、左端のピンと、中央付近を上から吊るロープ1本で支える、の未知数の数と、静定かどうかを答えよ。</p>
+<p><strong>解答</strong>　(1) 固定端：未知数 3（$R_x,R_y,M$）、式 3。<strong>静定</strong>。(2) ピン 2＋ロープ 1＝3、式 3。<strong>静定</strong>（ロープは向きが既知で、引張りのみ）。</p></div>
+<div class="box"><span class="label">第4回　問1〔A｜Mechanics Map 3.6 問5〕いすの接触点の反力</span>
+<figure class="slide"><img src="img/ext04/q1_chair.png" alt="いすの側面図。前脚A、後脚B（背もたれの下端）。座面に180 lbの下向きの力（Aから12 inの位置）、背もたれの上端に15 lbの水平な力。座面の高さ18 in、背もたれの上端は座面の上18 in。AB間は18 in" loading="lazy" style="width:200px;max-width:50%;height:auto;background:#fff"></figure>
+<p>いすの側面図。座面に 180 lb の下向きの力（A から 12 in）、背もたれの上端に 15 lb の水平な力（右向き）が働く。A と B は 18 in 離れている。座面の高さは 18 in、背もたれの上端は座面の上 18 in。床と A の間は滑らかで、B の間は粗い。A、B の反力を求めよ。</p>
+<p class="cr">出典：Mechanics Map 3.6, 問5（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。公式解答（$N_A=30$、$N_B=150$、$F_B=15$ lb）と照合済み。</p>
+<details><summary>解答</summary>
+<p>① A（滑らか）は鉛直な力 $N_A$ のみ（未知数 1）。B（粗い）は $N_B$ と水平な摩擦力 $F_B$（未知数 2）。計 3、式 3。② $x$ を右、$y$ を上。</p>
+<p>③④ $\sum F_x$：$15+F_B=0$ より $F_B=-15$ lb（左向き 15 lb）。<strong>B まわり</strong>のモーメント（B の力が消える）：$-18N_A+180\times6-15\times36=0$。<span class="note">← 180 lb は B の左 6 in で下向き＝反時計回り（＋）、15 lb は B の上 36 in で右向き＝時計回り（−）、$N_A$ は B の左 18 in で上向き＝時計回り（−）。</span></p>
+<p>⑤ $N_A=(1080-540)/18=\mathbf{30}$ lb。$\sum F_y$：$N_A+N_B=180$ より $N_B=\mathbf{150}$ lb。⑥ A まわり：$18N_B-180\times12-15\times36=2700-2160-540=0$ ✓。<br>答：$N_A=30$ lb、$N_B=150$ lb、$F_B=15$ lb（左向き）。</p></details></div>
+<div class="box"><span class="label">第4回　問2〔A｜Engineering Statics §5.6〕未知数の勘定と静定・不静定</span>
+<figure class="slide"><img src="img/ext04/q2_supports.png" alt="L字の部材を3通りに支える。上：左端A（壁のローラー状の支え）と右下C（ピン）。中：左端A（ピン）と右下C（ピン）。下：左端Aと右下C（いずれもローラー）" loading="lazy" style="width:230px;max-width:60%;height:auto;background:#fff"></figure>
+<p>L字の部材を、図の 3 通りの支え（上・中・下）で支える。それぞれ、反力の未知数の数を数え、静定・不静定・不安定のいずれかを答えよ。</p>
+<p class="cr">出典：Baker &amp; Haynes, <i>Engineering Statics</i>, §5.6（図は同書。CC BY-NC-SA 4.0）<a href="https://engineeringstatics.org/">https://engineeringstatics.org/</a>。答えは同書の図中の判定と一致。</p>
+<details><summary>解答</summary>
+<p>上：$A_x$ ＋ $C_x,C_y$ ＝ <strong>未知数 3</strong>（式 3）：<strong>静定</strong>。中：$A_x,A_y$ ＋ $C_x,C_y$ ＝ <strong>未知数 4</strong>（式 3）：<strong>不静定</strong>（1 つ多い）。下：$A_x$ ＋ $C_y$ ＝ <strong>未知数 2</strong>（式 3）：<strong>不安定</strong>（式のほうが多く、一般には釣合わない：水平・鉛直の組合せで動く）。<br>原図の解答：<img src="img/ext04/q2_supports_ans.png" alt="3通りの支えそれぞれの自由物体図と判定。上は n=3 静定、中は n=4 不静定、下は n=2 不安定" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff;vertical-align:top"></p></details></div>
+<div class="box"><span class="label">第4回　問3〔A｜Mechanics Map 宿題 3.9〕飛び込み板</span>
+<figure class="slide"><img src="img/ext04/q3_board.png" alt="水平な板。左端Aはピン、Aから2 ftの位置Bは下から支える支柱。Bから6 ftの位置に150 lbの下向きの力" loading="lazy" style="width:380px;max-width:92%;height:auto;background:#fff"></figure>
+<p>水平な飛び込み板。左端 A はピン、A から 2 ft の B は下から支える支持（鉛直な力のみ）。B から 6 ft の板の上に、150 lb の下向きの力が働く。板の重さは無視する。A、B の反力を求めよ。</p>
+<p class="cr">出典：Mechanics Map, Homework 3.9（<a href="https://mechanicsmap.org/">https://mechanicsmap.org/</a>）。公式解答（答えのみ）$B_y=600$ lb、$A_y=-450$ lb と照合済み。</p>
+<details><summary>解答</summary>
+<p>A まわり：$2B_y-150\times8=0$（荷重は A から 8 ft）より $B_y=\mathbf{600}$ lb（上向き）。$\sum F_y$：$A_y+600-150=0$ より $A_y=\mathbf{-450}$ lb（<strong>下向き</strong> 450 lb）。<br>確かめ：B まわり：A の反力は B の左 2 ft で下向き 450 lb（腕 $(-2,\ 0)$、力 $(0,\ -450)$）で $(-2)(-450)=+900$、荷重は B の右 6 ft で下向き 150 lb で $6	imes(-150)=-900$、和は 0 ✓。<br>A が下向きに引かれる（反力が負）：板が B でてこのように持ち上がろうとするのを、A のピンが押さえている。答：$A_y=450$ lb 下向き、$B_y=600$ lb 上向き。</p></details></div>
+
+<h2><span class="no">7</span>第4回 小テスト　小テスト解説<span class="meta" style="font-size:14px;margin-left:8px">1問 ｜ <a href="04A_第4回_小テスト解説.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第4回 小テスト　4A-1〔A 確認〜B 標準〕</span>
+<p>図のように長さ 8 m のはりが支点 A および B の2点で水平に支持されている。点 B にはモーメント、点 C には力が図のように作用している。次の手順で、支点 A と B における支点反力をそれぞれ求めなさい。<br>
+(a) フリーボディダイヤグラムを描きなさい。　(b) 必要な釣合い式を記しなさい。　(c) 支点反力を求めなさい。</p>
+<figure class="slide"><img src="img/quiz04/q4a1.png" alt="水平なはり。左端Aはピン支持、Aから3 mの点Bはローラー支持で反時計回りの80 Nmが作用、Bから5 mの右端Cには水平から50°の向きで左下へ60 Nの力" loading="lazy" style="width:520px;max-width:95%;height:auto;background:#fff"><figcaption>4A-1 の図。出典：第4回小テスト（Moodle 課題 4A 問題1）</figcaption></figure>
+<p class="note">解答欄：支点 A の $x$・$y$ 成分 [N]、支点 B の $x$・$y$ 成分 [N]。(a)(b) は導出過程のレポートに書く。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>切り出す</strong>：はり全体を1つの物体として、支えを取り去って反力に置き換える。A は<strong>ピン</strong>（水平・鉛直の2成分 $A_x,A_y$）、B は<strong>ローラー</strong>（支持面に垂直な1成分 $B_y$ だけ。教材 3.2節）。つまり未知数は 3 つで、2次元の釣合い式 3 本と過不足なく合う（静定、3.3節）。</p>
+<figure><svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="4A-1 の自由物体図" style="width:640px;max-width:100%;height:auto;background:#fff">
+<defs><marker id="c41_q41a" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#a8322a"/></marker><marker id="c41_q41b" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#222"/></marker></defs>
+<line x1="60" y1="140" x2="620" y2="140" stroke="#222" stroke-width="6"/>
+<circle cx="60" cy="140" r="5" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="270" cy="140" r="4" fill="#222"/><circle cx="620" cy="140" r="4" fill="#222"/>
+<text x="42" y="168" font-size="18">A</text><text x="262" y="168" font-size="18">B</text><text x="628" y="168" font-size="18">C</text>
+<line x1="60" y1="140" x2="130" y2="140" stroke="#a8322a" stroke-width="3" marker-end="url(#c41_q41a)"/><text x="82" y="130" font-size="16" fill="#a8322a">A<tspan font-size="12" dy="3">x</tspan></text>
+<line x1="60" y1="140" x2="60" y2="60" stroke="#a8322a" stroke-width="3" marker-end="url(#c41_q41a)"/><text x="30" y="80" font-size="16" fill="#a8322a">A<tspan font-size="12" dy="3">y</tspan></text>
+<line x1="270" y1="140" x2="270" y2="60" stroke="#a8322a" stroke-width="3" marker-end="url(#c41_q41a)"/><text x="278" y="80" font-size="16" fill="#a8322a">B<tspan font-size="12" dy="3">y</tspan></text>
+<path d="M300,175 A38,38 0 0 0 300,105" fill="none" stroke="#222" stroke-width="3" marker-end="url(#c41_q41b)"/><text x="310" y="215" font-size="15">M = 80 Nm（反時計回り）</text>
+<line x1="540" y1="55" x2="618" y2="138" stroke="#222" stroke-width="3" marker-end="url(#c41_q41b)"/><text x="500" y="48" font-size="16">60 N（50°）</text>
+<text x="130" y="240" font-size="13" fill="#555">A–B 3 m</text><text x="420" y="200" font-size="13" fill="#555">B–C 5 m（A から C まで 8 m）</text>
+</svg><figcaption>(a) 自由物体図。赤は未知の反力（正の向きに仮定）。</figcaption></figure>
+<p>② <strong>座標軸</strong>：問題の図どおり、右向きを $x$、上向きを $y$、反時計回りを正とする。</p>
+<p>③ <strong>力を成分で書く</strong>：C の力は大きさ 60 N、水平から 50°、<strong>左下向き</strong>（図で矢印が C に向かって下りてくる）。
+$$C_x=-60\cos50^\circ=-60\times0.6428=-38.57\ \mathrm N,\qquad C_y=-60\sin50^\circ=-60\times0.7660=-45.96\ \mathrm N$$
+<span class="note">（向きの読み取り：Moodle 画面の正解 $A_x=+38.6$ N は、$A_x+C_x=0$ から $C_x&lt;0$（左向き）と合う。これで図の読みが裏づけられる。）</span></p>
+<p>④ <strong>釣合い式（(b)）</strong>：未知数 $A_x,A_y,B_y$ に対して
+$$\sum F_x=0:\ A_x+C_x=0\qquad\sum F_y=0:\ A_y+B_y+C_y=0\qquad\sum M_A=0:\ 3B_y+8C_y+80=0$$
+<span class="note">（なぜ A まわりか：A には未知の力 $A_x,A_y$ が2つともあり、A まわりのモーメントなら腕が 0 でどちらも消える。残る未知数は $B_y$ だけになり、1本で解ける。教材 1.4節。モーメントの項：$B_y$ は腕 3 m で反時計回りを正に $+3B_y$、$C_y$ は腕 8 m で $+8C_y$、B の偶力は反時計回りなので $+80$（偶力は腕を掛けず、そのまま足す）。）</span></p>
+<p>⑤ <strong>解く</strong>：
+$$B_y=\frac{-8C_y-80}{3}=\frac{8\times45.96-80}{3}=\frac{367.70-80}{3}=95.90\ \mathrm N$$
+$$A_x=-C_x=38.57\ \mathrm N,\qquad A_y=-B_y-C_y=-95.90+45.96=-49.94\ \mathrm N$$
+⑥ <strong>確かめ</strong>：B まわりでもモーメントを取ってみる（式を変えても同じ答えが出るはず）。$-3A_y+5C_y+80=-3(-49.94)+5(-45.96)+80=149.8-229.8+80=0$ ✓。符号：$A_y&lt;0$ は「A では下向きの力を壁が出している」。右端 C が下に押され、B を支点に A 側が持ち上がろうとするのを、壁が引き止める向きなので自然である。</p>
+<p><strong>答え：(c) 支点 A：$x$ 成分 38.6 N、$y$ 成分 −49.9 N　／　支点 B：$x$ 成分 0 N、$y$ 成分 95.9 N</strong>（B のローラーは水平方向に力を出せないので $B_x=0$）</p></div>
+
+<h2><span class="no">8</span>第5回　重心<span class="meta" style="font-size:14px;margin-left:8px">4問 ｜ <a href="05_第5回_重心.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第5回　例題1〔A｜3質点の重心〕</span>
+<p>質量 2 kg、3 kg、5 kg の3つの質点が、軽い板の上の座標 $(0,0)$、$(4,0)$、$(1,3)$（単位 m）に固定されている。重心の位置を求め、重心まわりの「質量×位置のずれ」の和が 0 になることを確かめよ。</p>
+<figure><svg viewBox="0 0 520 300" width="520" role="img" aria-label="3質点の重心">
+<defs><marker id="c42_m3-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="c42_m3-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="c42_m3-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="c42_m3-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="c42_m3-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="c42_m3-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="12" fill="#2a2723">
+<line x1="69.9" y1="10.0" x2="69.9" y2="270.0" stroke="#e2dccf"/>
+<line x1="126.4" y1="10.0" x2="126.4" y2="270.0" stroke="#e2dccf"/>
+<line x1="183.0" y1="10.0" x2="183.0" y2="270.0" stroke="#e2dccf"/>
+<line x1="239.5" y1="10.0" x2="239.5" y2="270.0" stroke="#e2dccf"/>
+<line x1="296.0" y1="10.0" x2="296.0" y2="270.0" stroke="#e2dccf"/>
+<line x1="36.0" y1="224.8" x2="352.5" y2="224.8" stroke="#e2dccf"/>
+<line x1="36.0" y1="168.3" x2="352.5" y2="168.3" stroke="#e2dccf"/>
+<line x1="36.0" y1="111.7" x2="352.5" y2="111.7" stroke="#e2dccf"/>
+<line x1="36.0" y1="55.2" x2="352.5" y2="55.2" stroke="#e2dccf"/>
+<line x1="32" y1="253.0" x2="366.5217391304348" y2="253.0" stroke="#2a2723" marker-end="url(#c42_m3-k)"/>
+<line x1="41.7" y1="274.0" x2="41.7" y2="-4" stroke="#2a2723" marker-end="url(#c42_m3-k)"/>
+<text x="370.5217391304348" y="257.0">x [m]</text>
+<text x="47.7" y="-4">y [m]</text>
+<line x1="69.9" y1="253.0" x2="69.9" y2="257.0" stroke="#2a2723"/>
+<text x="69.9" y="270.0" text-anchor="middle" font-size="11">0</text>
+<line x1="126.4" y1="253.0" x2="126.4" y2="257.0" stroke="#2a2723"/>
+<text x="126.4" y="270.0" text-anchor="middle" font-size="11">1</text>
+<line x1="183.0" y1="253.0" x2="183.0" y2="257.0" stroke="#2a2723"/>
+<text x="183.0" y="270.0" text-anchor="middle" font-size="11">2</text>
+<line x1="239.5" y1="253.0" x2="239.5" y2="257.0" stroke="#2a2723"/>
+<text x="239.5" y="270.0" text-anchor="middle" font-size="11">3</text>
+<line x1="296.0" y1="253.0" x2="296.0" y2="257.0" stroke="#2a2723"/>
+<text x="296.0" y="270.0" text-anchor="middle" font-size="11">4</text>
+<line x1="37.7" y1="224.8" x2="41.7" y2="224.8" stroke="#2a2723"/>
+<text x="34.7" y="228.8" text-anchor="end" font-size="11">0</text>
+<line x1="37.7" y1="168.3" x2="41.7" y2="168.3" stroke="#2a2723"/>
+<text x="34.7" y="172.3" text-anchor="end" font-size="11">1</text>
+<line x1="37.7" y1="111.7" x2="41.7" y2="111.7" stroke="#2a2723"/>
+<text x="34.7" y="115.7" text-anchor="end" font-size="11">2</text>
+<line x1="37.7" y1="55.2" x2="41.7" y2="55.2" stroke="#2a2723"/>
+<text x="34.7" y="59.2" text-anchor="end" font-size="11">3</text>
+<path d="M69.9,224.8 L296.0,224.8 L126.4,55.2 z" fill="#e9e3d3" stroke="#968d80" opacity="0.6"/>
+<circle cx="69.9" cy="224.8" r="8.242640687119286" fill="#2b3a67"/>
+<text x="77.8" y="213.5" fill="#2b3a67" text-anchor="start" font-size="12">m₁ = 2 kg</text>
+<circle cx="296.0" cy="224.8" r="9.196152422706632" fill="#4f7a4a"/>
+<text x="303.9" y="213.5" fill="#4f7a4a" text-anchor="start" font-size="12">m₂ = 3 kg</text>
+<circle cx="126.4" cy="55.2" r="10.70820393249937" fill="#a8322a"/>
+<text x="134.3" y="43.9" fill="#a8322a" text-anchor="start" font-size="12">m₃ = 5 kg</text>
+<circle cx="166.0" cy="140.0" r="4" fill="#2a2723"/>
+<circle cx="166.0" cy="140.0" r="10" fill="none" stroke="#2a2723" stroke-width="1.6"/>
+<text x="177.3" y="151.3" fill="#2a2723" text-anchor="start" font-size="13">G (1.7, 1.5)</text>
+</g></svg>
+<figcaption>図1.2　3つの質点（円の大きさは質量の平方根に比例）と重心 G。</figcaption></figure>
+<p><strong>解答</strong></p>
+<p>① 系：3つの質点。式 (1.7)′ を使う（$g$ は約分されるので質量のままでよい）。全質量 $M=2+3+5=10$ kg。</p>
+<p>② 座標は問題のとおり。</p>
+<p>③④ $x_G=\dfrac{2\times0+3\times4+5\times1}{10}$、$y_G=\dfrac{2\times0+3\times0+5\times3}{10}$。</p>
+<p>⑤ $x_G=\dfrac{0+12+5}{10}=\mathbf{1.7}$ m、$y_G=\dfrac{0+0+15}{10}=\mathbf{1.5}$ m。</p>
+<p>⑥ 確かめ：<br>
+・$x$ のずれ：$2(0-1.7)+3(4-1.7)+5(1-1.7)=-3.4+6.9-3.5=0$ ✓（(1.5) の導出②の「重心まわりの総和が 0」）。$y$ のずれも $2(-1.5)+3(-1.5)+5(1.5)=-7.5+7.5=0$ ✓。<br>
+・最も重い 5 kg の質点が重心に最も近い（距離 1.66 m。2 kg は 2.27 m、3 kg は 2.75 m）。重い質点ほど重心を引き寄せている。<strong>重心は、質点が作る図形の内側に入る</strong>（重みが正の平均なので、最小値と最大値の間に入る）。<br>
+<strong>答</strong>　重心 $(1.7,\ 1.5)$ m。</p></div>
+<div class="ex"><span class="label">第5回　例題3〔A｜三角形分布と台形分布〕</span>
+<p>(a) 長さ 5 m の梁 AB の左端 A はピン、右端 B はローラーで支えられている。A から 3 m の区間に、A で 0、そこから直線的に増えて 3 m の位置で 400 N/m になる三角形分布の荷重が下向きに働く（図5.1 左）。反力 $R_A$、$R_B$ を求めよ。<br>
+(b) 荷重が 200 N/m から 500 N/m まで直線的に増える台形分布（区間 3 m）の合力と作用点（200 N/m の端から）を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>(a) ① 系：梁 AB。荷重は、下の ③ の合力に置き換える。未知数は $R_A$（鉛直成分。水平成分は 0）、$R_B$ の2つ。<br>
+② 座標：A を原点、$x$ を右、$y$ を上。反時計回りを正。<br>
+③ 合力：$R=\tfrac12\times400\times3=600$ N（下向き）。作用点は A から $d=\tfrac23\times3=2$ m（表の「0 の端から $2L/3$」）。<br>
+④ A まわり（$R_A$ が消える）：$R_B\times5-600\times2=0$。力の釣合い（鉛直）：$R_A+R_B-600=0$。<br>
+⑤ $R_B=\dfrac{1200}{5}=\mathbf{240}$ N、$R_A=600-240=\mathbf{360}$ N。<br>
+⑥ 確かめ：B まわり：$R_A\times5-600\times(5-2)=1800-1800=0$ ✓。<br>
+<strong>答</strong>　$R_A=360$ N、$R_B=240$ N。</p>
+<p>(b) 分布を長方形（200 N/m、3 m）と三角形（200 N/m の上に 300 N/m が増える、3 m）に分ける。<br>
+・長方形：$R_1=200\times3=600$ N、作用点は端から $1.5$ m。<br>
+・三角形：$R_2=\tfrac12\times300\times3=450$ N、作用点は 0 の端（200 N/m 側）から $\tfrac23\times3=2$ m。<br>
+・合力：$R=600+450=\mathbf{1050}$ N。作用点（(2.7) の合成）：$d=\dfrac{600\times1.5+450\times2}{1050}=\dfrac{1800}{1050}=\mathbf{1.714}$ m。<br>
+確かめ：台形の面積 $\tfrac12(200+500)\times3=1050$ ✓。作用点は区間の中央 1.5 m より、荷重の大きい側（右）に寄っている ✓。</p></div>
+<div class="box"><span class="label">第5回　問1〔A｜自作〕一直線上の3つの質点の重心</span>
+<p>一直線（$x$ 軸）上に、質量 3 kg、5 kg、2 kg の質点が、それぞれ $x=0$、$2$、$5$ m の位置にある。重心の位置と、全体を支えるのに必要な力を求めよ。（$g=9.81\ \mathrm{m/s^2}$）</p>
+<details><summary>解答</summary><p>式 (1.5) より $x_G=\dfrac{3\times0+5\times2+2\times5}{3+5+2}=\dfrac{20}{10}=\mathbf{2.0}$ m。全質量 10 kg なので、支える力は $W=10\times9.81=\mathbf{98.1}$ N（上向き、$x=2.0$ m の点で）。確かめ：重心まわりのずれ $3(0-2)+5(2-2)+2(5-2)=-6+0+6=0$ ✓。</p></details></div>
+<div class="box"><span class="label">第5回　問2〔A｜自作〕直方体の転倒角</span>
+<p>幅 0.30 m、高さ 1.20 m の一様な直方体を、底面の端を支点にゆっくり傾ける。何度を超えると、手を離しても元に戻らず倒れるか。幅 0.60 m、高さ 0.60 m の立方体ではどうか。</p>
+<details><summary>解答</summary><p>式 (4.2) $\tan\theta_c=\dfrac bh$。直方体：$\tan\theta_c=\dfrac{0.30}{1.20}=0.25$ より $\theta_c=\mathbf{14.0°}$。立方体：$\tan\theta_c=1$ より $\theta_c=\mathbf{45°}$。背が高く幅が狭いほど倒れやすい。確かめ：$\theta_c$ のとき重心が支点の真上、つまり $\tfrac b2\cos\theta=\tfrac h2\sin\theta$ ✓。</p></details></div>
+
+<h2><span class="no">9</span>第5回 小テスト　小テスト解説<span class="meta" style="font-size:14px;margin-left:8px">1問 ｜ <a href="05A_第5回_小テスト解説.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第5回 小テスト　5A-1〔A 確認〕</span>
+<p>Locate the center of gravity (center of figure) of the plate.<br>
+（板の重心〔図心〕の位置を求めなさい。）</p>
+<figure class="slide"><img src="img/quiz05/q5a1.png" alt="F字形の板。縦の棒は幅4 m・高さ24 m。上端に長さ16 m・厚さ4 mの横棒、下から8 mのところに縦棒の右から8 m・厚さ4 mの横棒が付く" loading="lazy" style="width:460px;max-width:95%;height:auto;background:#fff"><figcaption>5A-1 の図。出典：第5回小テスト（Moodle 課題 5A 問題1）</figcaption></figure>
+<p class="note">解答欄：座標 $(x_G,\ y_G)$ [m]。</p>
+<p><strong>解答</strong></p>
+<p>① <strong>形を読む</strong>：図の右側の縦寸法は上から 4, 8, 4, 8 m（合計 24 m）。下の横寸法は「4 m（縦棒の幅）＋ 8 m」。したがって板は、縦棒（$x:0\sim4$）に、上の横棒（$y:20\sim24$、右端 $x=16$）と中の横棒（$y:8\sim12$、右端 $x=4+8=12$）が付いた形である。</p>
+<p>② <strong>座標軸</strong>：図のとおり、左下の角 O を原点、右向きを $x$、上向きを $y$ とする。</p>
+<p>③ <strong>3つの長方形に分ける</strong>（教材 2.4節）。重ならないように切るのがコツで、横棒は縦棒の右側 $x\ge4$ の部分だけを数える。</p>
+<figure><svg viewBox="0 0 420 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="5A-1 の3分割" style="width:420px;max-width:100%;height:auto;background:#fff">
+<defs><marker id="c46_q51a" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#222"/></marker></defs>
+<rect x="40" y="30" width="60" height="360" fill="#d8e4f0" stroke="#222" stroke-width="2"/>
+<rect x="100" y="30" width="180" height="60" fill="#f3d9d3" stroke="#222" stroke-width="2"/>
+<rect x="100" y="210" width="120" height="60" fill="#dde8d0" stroke="#222" stroke-width="2"/>
+<circle cx="70" cy="210" r="4" fill="#a8322a"/><circle cx="190" cy="60" r="4" fill="#a8322a"/><circle cx="160" cy="240" r="4" fill="#a8322a"/>
+<text x="46" y="204" font-size="14">①</text><text x="150" y="82" font-size="14">②</text><text x="120" y="262" font-size="14">③</text>
+<circle cx="119" cy="175" r="6" fill="none" stroke="#a8322a" stroke-width="2.5"/><text x="130" y="172" font-size="14" fill="#a8322a">G（空きの中）</text>
+<line x1="40" y1="390" x2="360" y2="390" stroke="#222" stroke-width="1.5" marker-end="url(#c46_q51a)"/><text x="364" y="394" font-size="15" font-style="italic">x</text>
+<line x1="40" y1="390" x2="40" y2="10" stroke="#222" stroke-width="1.5" marker-end="url(#c46_q51a)"/><text x="46" y="16" font-size="15" font-style="italic">y</text>
+<text x="22" y="406" font-size="14">O</text>
+</svg><figcaption>3分割。①縦棒（青）、②上の横棒の右側（赤）、③中の横棒の右側（緑）。赤い点が各部分の重心、赤い丸が全体の重心 G（1 m = 15 px の縮尺）。</figcaption></figure>
+<p>④ <strong>表にする</strong>（面積 $A_i$ と各部分の重心 $(x_i,y_i)$。長方形の重心は中心）：</p>
+<table class="tb"><tr><th>部分</th><th>範囲 [m]</th><th>面積 $A_i$ [m²]</th><th>$x_i$</th><th>$y_i$</th><th>$A_ix_i$</th><th>$A_iy_i$</th></tr>
+<tr><td>① 縦棒</td><td>$x:0\sim4,\ y:0\sim24$</td><td>$4\times24=96$</td><td>2</td><td>12</td><td>192</td><td>1152</td></tr>
+<tr><td>② 上の横棒</td><td>$x:4\sim16,\ y:20\sim24$</td><td>$12\times4=48$</td><td>10</td><td>22</td><td>480</td><td>1056</td></tr>
+<tr><td>③ 中の横棒</td><td>$x:4\sim12,\ y:8\sim12$</td><td>$8\times4=32$</td><td>8</td><td>10</td><td>256</td><td>320</td></tr>
+<tr><th colspan="2">合計</th><th>176</th><th></th><th></th><th>928</th><th>2528</th></tr></table>
+<p>⑤ <strong>割って重心</strong>（教材 2.4節の合成公式 $x_G=\sum A_ix_i/\sum A_i$）：
+$$x_G=\frac{928}{176}=\frac{58}{11}=5.273\ \mathrm m,\qquad y_G=\frac{2528}{176}=\frac{158}{11}=14.36\ \mathrm m$$
+⑥ <strong>確かめ</strong>：(i) <strong>欠損法</strong>（2.5節）：$16\times24$ の長方形（面積 384、重心 $(8,12)$）から、3つの空き〔$x:4\sim16,\ y:12\sim20$（12×8）、$x:4\sim16,\ y:0\sim8$（12×8）、$x:12\sim16,\ y:8\sim12$（4×4）〕を引く。面積 $384-96-96-16=176$ ✓。$x_G=\dfrac{8\cdot384-10\cdot96-10\cdot96-14\cdot16}{176}=\dfrac{928}{176}$ ✓（$y_G$ も一致、Python で確認）。 (ii) <strong>範囲と向き</strong>：$0&lt;x_G&lt;16$、$0&lt;y_G&lt;24$。縦棒だけなら $x=2$ だが、横棒が右へ張り出すぶん右にずれて 5.27。上に大きな横棒（②）があるので、$y_G$ は中央の 12 より上の 14.4 ✓。 (iii) <strong>重心は板の外</strong>：点 $(5.27,\ 14.4)$ は、縦棒（$x\le4$）の外で、上の横棒（$y\ge20$）と中の横棒（$y\le12$）の間の<strong>空き</strong>にある。重心は物体の外に出ることがある、という例になっている。</p>
+<p><strong>答え：重心 $(x_G,\ y_G)=(5.27,\ 14.4)$ m</strong>（$=(58/11,\ 158/11)$ m）</p></div>
+
+<h2><span class="no">10</span>第6回　摩擦力<span class="meta" style="font-size:14px;margin-left:8px">5問 ｜ <a href="06_第6回_摩擦力.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第6回　例題1〔A｜自作〕箱を押す：摩擦力はいくらか</span>
+<p>水平な床に、質量 10 kg の箱が置かれている。床との間の静止摩擦係数は $\mu_s=0.5$、動摩擦係数は $\mu_k=0.4$。$g=9.81\ \mathrm{m/s^2}$。水平な力 $F$ で押すとき、(a) $F=20$ N、(b) $F=49$ N、(c) $F=60$ N のとき、箱に働く摩擦力はそれぞれいくらか。</p>
+<p><strong>解答</strong></p>
+<p>① 系：箱。外力は重さ $mg$（下）、垂直抗力 $N$（上）、押す力 $F$（右）、摩擦力（左）。<br>
+② 座標：右を $x$、上を $y$。<br>
+③④ 鉛直の釣合い：$N-mg=0$ より $N=mg=10\times9.81=98.1$ N。<br>
+⑤ 最大静止摩擦力 $F_{s\,\max}=\mu_sN=0.5\times98.1=\mathbf{49.05}$ N。動摩擦力 $F_k=\mu_kN=0.4\times98.1=\mathbf{39.24}$ N。<br>
+(a) $F=20$ N $&lt;49.05$ N：動かない。水平の釣合いから $F_s=F=\mathbf{20}$ N（$\mu_sN=49.05$ ではない）。<br>
+(b) $F=49$ N $&lt;49.05$ N：まだ動かない。$F_s=\mathbf{49}$ N（上限のすぐ手前）。<br>
+(c) $F=60$ N $&gt;49.05$ N：動き出す。動いている間の摩擦力は $F_k=\mathbf{39.24}$ N（このとき釣合っていない。加速度は $a=\dfrac{60-39.24}{10}=2.08\ \mathrm{m/s^2}$。動力学の内容なので、結果だけ）。<br>
+⑥ 確かめ：(a)(b) は「静止」なので水平方向が釣合う ✓。動き出すと摩擦力が <strong>$49.05\to39.24$ N に下がる</strong>（$\mu_s&gt;\mu_k$）。図1.1 のグラフでその段差が見える。</p></div>
+<div class="ex"><span class="label">第6回　例題2〔A/B｜教科書 例題3・6〕斜面を傾けて滑り始める角から静止摩擦係数を求める</span>
+<p>斜面の上に物体Aを置き、斜面の傾斜角 $\theta$ を0から増やしていく。$\theta=\theta_0$ で物体が<strong>滑り始めた</strong>。物体と斜面の間の静止摩擦係数 $\mu_s$ を求めよ。</p>
+<p><strong>解答</strong></p>
+<p>① 系：物体A。外力は、重さ $mg$（鉛直下向き）、斜面からの垂直抗力 $N$、斜面に沿った摩擦力 $F_s$。滑りは斜面の下向きに起ころうとするので、摩擦力は<strong>斜面の上向き</strong>（運動しようとする向きの逆）。<br>
+② 座標：斜面に平行な向き（上り）を $x$、斜面に垂直な向きを $y$。<br>
+③ 重さの成分：斜面に沿って下向きに $mg\sin\theta$、斜面に垂直に（面を押す向きに）$mg\cos\theta$。<span class="note">← 角 $\theta$ の斜面では、重力と「斜面に垂直な線」のなす角が $\theta$ になる。</span><br>
+④ 釣合い式：
+$$x\text{ 方向}：F_s-mg\sin\theta=0,\qquad y\text{ 方向}：N-mg\cos\theta=0\qquad(2.1)\quad\text{（教科書 (3.65)）}$$
+⑤ 解く：$F_s=mg\sin\theta$、$N=mg\cos\theta$。$\theta$ が小さいうちは、これで $F_s$ が求まる（型 I）。$\theta=\theta_0$ で滑り始める＝<strong>動き出す直前</strong>なので $F_s=F_{s\,\max}=\mu_sN$（型 II）。2式を代入して
+$$\mu_s=\frac{F_{s\,\max}}{N}=\frac{mg\sin\theta_0}{mg\cos\theta_0}=\tan\theta_0\qquad(2.2)$$
+⑥ 確かめ：$mg$ が約分されて消えた。つまり<strong>滑り出す角は物体の質量によらない</strong>（軽い物体も重い物体も、同じ斜面で同じ角度で滑り始める）。$\mu_s=0.5$ なら $\theta_0=\arctan0.5=26.6°$。$\mu_s\to0$ で $\theta_0\to0$（氷のような面）、$\mu_s=1$ で $45°$ ✓。<br>
+<strong>答</strong>　$\mu_s=\tan\theta_0$。</p></div>
+<div class="box"><span class="label">第6回　問1〔A｜自作〕斜面の物体の摩擦力と静止摩擦係数</span>
+<p>質量 5 kg の物体を、板の上に置く。板を水平から少しずつ傾けていくと、傾斜が $35°$ になったとき、物体が滑り出した。(a) 静止摩擦係数 $\mu_s$ はいくらか。(b) 傾斜が $20°$ のとき、物体に働く摩擦力と垂直抗力はいくらか。（$g=9.81\ \mathrm{m/s^2}$）</p>
+<details><summary>解答</summary><p>(a) 式 (2.2)：$\mu_s=\tan35°=\mathbf{0.700}$。<br>
+(b) 滑らないので型 (I)：釣合い式 $F_s=mg\sin20°=5\times9.81\times0.3420=\mathbf{16.8}$ N（斜面に沿って上向き）、$N=mg\cos20°=49.05\times0.9397=\mathbf{46.1}$ N。確かめ：$F_s=16.8&lt;\mu_sN=0.700\times46.1=32.3$ N ✓（上限の内側）。<strong>$F_s=\mu_sN=32.3$ ではない</strong>。</p></details></div>
+<div class="box"><span class="label">第6回　問2〔A｜自作〕ロープの巻き付き</span>
+<p>質量 80 kg の荷物を、ボラード（円柱）に 1.5 回巻いたロープで吊って支える。ロープと円柱の摩擦係数は $0.3$。手で支える力の最小値はいくらか。（$g=9.81\ \mathrm{m/s^2}$）</p>
+<details><summary>解答</summary><p>巻き角 $\alpha=1.5\times2\pi=3\pi$ rad。荷物側の張力 $T_1=mg=80\times9.81=784.8$ N。式 (4.9)：$T_2=T_1e^{-\mu\alpha}=784.8\times e^{-0.3\times3\pi}=784.8\times e^{-2.827}=784.8\times0.0592=\mathbf{46.4}$ N。確かめ：荷物の約 6% の力で支えられる。巻き数を増やすほど指数関数的に小さくなる（図4.1）。</p></details></div>
+<div class="box"><span class="label">第6回　問3〔A/B｜自作〕引かれる箱の下の箱：Bを引く</span>
+<p>例題6と同じ物体（A：3 kg、B：2 kg、摩擦係数は A–B 間 0.3、B–床間 0.2、$g=9.8\ \mathrm{m/s^2}$）で、今度は<strong>下の B に</strong>水平力 $P$ を加え、増やしていく。B が動き出す直前の $P$ と、そのときの A–B 間の摩擦力を求めよ。</p>
+<details><summary>解答</summary><p>動き出す直前は、A も B も<strong>静止</strong>。A に水平方向の外力はないので、A–B 間の摩擦力は $F_A=\mathbf{0}$（A は摩擦なしで B の上に載っている）。B–床間：$N_B=(3+2)\times9.8=49.0$ N、$F_{B\,\max}=0.2\times49.0=9.8$ N。B の水平の釣合い：$P-F_B=0$ より、動き出す直前は $P=\mathbf{9.8}$ N（A–B 間の摩擦は 0）。例題6の「A を押す」場合（8.82 N）より大きいのは、A–B 間の摩擦が $P$ を受けもたないから。<br>
+（動き出したあとは、A は摩擦で B に引きずられる。そのとき A が滑らない最大の加速度は $\mu_{AB}g=2.94\ \mathrm{m/s^2}$。動力学の内容。）</p></details></div>
+
+<h2><span class="no">11</span>第7回　平面トラスの静解析<span class="meta" style="font-size:14px;margin-left:8px">3問 ｜ <a href="07_第7回_平面トラスの静解析.html">教材を開く</a></span></h2>
+<div class="ex"><span class="label">第7回　例題1〔A｜自作〕数えて確かめる</span>
+<p>次のトラスで $m$、$r$、$j$ を数え、静定かどうか判定せよ。(a) 図3.20（三角形、A がピン、C がローラー）。(b) 図3.21（5節点、7部材、C がピン、D がローラー）。</p>
+<p><strong>解答</strong>：(a) $j=3$（A、B、C）、$m=3$（AB、BC、AC）、$r=2+1=3$。$m+r=6=2j$ ✓ 静定。(b) $j=5$、$m=7$（AB、AE、BE、BC、EC、ED、CD）、$r=3$。$m+r=10=2j$ ✓ 静定。<br>
+確かめ：三角形を1つ足すと、節点が1つと部材が2つ増える（$j\to j+1$、$m\to m+2$）ので、$m+r=2j$ が保たれる。トラスが<strong>三角形の組合せ</strong>で作られる理由もここにある（三角形は変形しない最小の形）。</p></div>
+<div class="ex"><span class="label">第7回　例題7〔A｜自作〕壁に取り付けた2本の棒</span>
+<p>図のように、鉛直な壁の点 P（高さ 0.8 m）と点 Q（高さ 0 m）に、棒 BP と棒 BQ がピンで取り付けられている。BQ は水平で長さ 0.6 m。点 B に鉛直下向きの力 500 N がかかる。BP、BQ の内力を求め、引張か圧縮かを答えよ。</p>
+<svg viewBox="0 0 360 290" width="360" role="img" aria-label="壁に取り付けた2本の棒。壁の点P（上）と点Q（下）から、点Bまで斜め棒BPと水平棒BQ。Bに下向き500 N">
+<defs><marker id="c53_br-k" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2a2723"/></marker><marker id="c53_br-r" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a8322a"/></marker><marker id="c53_br-b" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#2b3a67"/></marker><marker id="c53_br-g" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#4f7a4a"/></marker><marker id="c53_br-o" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#a06a32"/></marker><marker id="c53_br-s" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="#968d80"/></marker></defs>
+<g font-family="sans-serif" font-size="13" fill="#2a2723">
+<rect x="52.0" y="3.0" width="14" height="198.0" fill="#d9d2c2" stroke="#2a2723"/>
+<line x1="202.0" y1="190.0" x2="70.0" y2="14.0" stroke="#2a2723" stroke-width="4"/>
+<line x1="202.0" y1="190.0" x2="70.0" y2="190.0" stroke="#2a2723" stroke-width="4"/>
+<circle cx="202.0" cy="190.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="70.0" cy="14.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<circle cx="70.0" cy="190.0" r="4.5" fill="#fff" stroke="#2a2723" stroke-width="1.8"/>
+<text x="216.0" y="182.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+<text x="46.0" y="18.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">P</text>
+<text x="46.0" y="194.0" fill="#2a2723" text-anchor="middle" font-size="13" font-weight="bold">Q</text>
+<line x1="202.0" y1="196.0" x2="202.0" y2="244.0" stroke="#2a2723" stroke-width="3.2" marker-end="url(#c53_br-k)"/>
+<text x="212.0" y="248.0" fill="#2a2723" text-anchor="start" font-size="13">500 N</text>
+<text x="136.0" y="182.0" fill="#968d80" text-anchor="middle" font-size="11">0.6 m</text>
+<text x="40.0" y="102.0" fill="#968d80" text-anchor="end" font-size="11">0.8 m</text>
+</g></svg>
+<p><strong>解答</strong>：① B 以外の節点は壁なので、解くのは節点 B だけ（未知数2個）。BP は B から P へ向かう単位ベクトルが $(-0.6,\,0.8)$（長さ $\sqrt{0.6^2+0.8^2}=1.0$ m）、BQ は $(-1,\,0)$。引張を仮定する。<br>
+④⑤ $x$：$-0.6\,F_{BP}-F_{BQ}=0$、$y$：$0.8\,F_{BP}-500=0$。<br>
+$y$ より $F_{BP}=500/0.8=625$ N。$x$ より $F_{BQ}=-0.6\times625=-375$ N。<br>
+⑥ <strong>答</strong>：BP は 625 N（<strong>引張</strong>）、BQ は 375 N（<strong>圧縮</strong>）。<br>
+確かめ：$m=2$、$r=4$（P と Q のピンが各2）、$j=3$ で $m+r=6=2j$ ✓。B の釣合い：$(-0.6\times625+375,\ 0.8\times625-500)=(0,0)$ ✓。直感とも合う：吊られた B を斜めの棒が引き上げ、水平の棒が（壁側へ引かれる B を）押し返している。</p></div>
+<div class="box"><span class="label">第7回　問1〔A｜自作〕零力部材と荷重の位置</span>
+例題3（A(0,0)、B(2,0)、C(4,0)、D(2,2)、荷重 $P$ を<strong>節点 B</strong>に鉛直下向きにかけた場合）で、5本の部材の内力を求めよ。零力部材はあるか。
+<details><summary>解答</summary><p>反力は対称で $R_{Ay}=R_C=P/2$、$R_{Ax}=0$。節点 A：$F_{AD}/\sqrt2+P/2=0\Rightarrow F_{AD}=-P/\sqrt2$（圧縮）、$F_{AB}=P/2$（引張）。B は荷重 $P$ を受け、AB と BC は一直線なので、$y$：$F_{BD}-P=0\Rightarrow F_{BD}=P$（<strong>引張</strong>）。節点 C は対称で $F_{CD}=-P/\sqrt2$（圧縮）、$F_{BC}=P/2$（引張）。<br>答：AB＝BC＝$P/2$（引張）、AD＝CD＝$P/\sqrt2$（圧縮）、BD＝$P$（引張）。零力部材は<strong>ない</strong>（例題3では荷重が D にあったので BD が零力だったが、荷重が B に移ると BD が荷重を D へ吊り上げる）。確かめ：節点 D の $y$：$-(F_{AD}+F_{CD})/\sqrt2-F_{BD}=P-P=0$ ✓。</p></details></div>
+
+<p class="meta">出典：各問の下（または元の教材）に記された出典のとおり。自作問題の解答は教員の公式解答とは未照合。</p>
+<div class="navi"><a href="index.html">← 目次へ</a>　｜　<a href="08_第8回_中間まとめ.html">中間まとめ</a>　｜　<a href="08A_中間模擬試験_基礎セット.html">模擬試験 基礎セット</a>　｜　<a href="08B_中間模擬試験_発展セット.html">模擬試験 発展セット</a>　｜　<strong>A 問題集</strong></div>
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a><a class="to" href="08B_中間模擬試験_発展セット.html"><small>PREV</small>← 模擬試験 発展セット</a></nav>
+</body>
+</html>
