@@ -180,6 +180,14 @@ $$E\to C:\ \tfrac1{\sqrt{10}}(-3,-1),\qquad E\to D:\ \tfrac1{\sqrt{10}}(-3,+1)$$
 <li><strong>D まわり</strong> → $F_{CE}$ だけが残る</li>
 <li>残る $F_{DE}$ は<strong>鉛直方向の力の釣合い</strong>で求める</li>
 </ul>
+<div class="why"><span class="label">🙋 質問から追加：D 点をモーメントの基準にとってもいいのか</span>
+<p><strong>結論：よい。</strong>釣合っている物体では、<strong>平面上のどの点を基準にしても</strong> $\sum M=0$ が成り立つ。基準点は物体の上にある必要も、部材の端である必要もない。</p>
+<p>① <strong>なぜ「どの点でも」か</strong>（第2回の基準点を移す式 $M_C=M_B+\boldsymbol r_{CB}\times\boldsymbol F$ を使う）：物体が釣合っていれば力の合計は $\sum\boldsymbol F=\boldsymbol 0$。点 B まわりの合計モーメントが 0 なら、別の点 C まわりは
+$$\sum M_C=\sum M_B+\boldsymbol r_{CB}\times\Big(\sum\boldsymbol F\Big)=0+\boldsymbol r_{CB}\times\boldsymbol 0=0$$
+つまり、1点で 0 なら全部の点で 0。だから「計算がいちばん楽になる点」を自由に選んでよい。</p>
+<p>② <strong>D が使える理由</strong>：D は切断面（$x=3$ m）の左にあり、いま切り出した<strong>右側の切片の外</strong>にある。それでもよい（①のとおり点は自由）。大事なのは、<strong>DF と DE の力の作用線がどちらも D を通る</strong>こと。作用線上の点まわりでは腕が 0 でモーメントが 0（第2回 3.5節）なので、この2本が式から消え、$F_{CE}$ だけが残る。</p>
+<p>③ <strong>⑤の計算との対応</strong>：⑤で「E は D から見て $(+2,\,-\tfrac23)$」と書いたのは、基準点を D に置いて、各力の作用点の位置ベクトルを D から測った、ということ。E まわりでも同じ要領で、消える部材が変わるだけで方法は同じ。</p>
+<p>④ <strong>点の選び方のコツ</strong>：未知の力の作用線が2本通る点（ここでは D と E）を選ぶ。ただし、切った3本の作用線が<strong>1点で交わる</strong>ときは、その点まわりでは3本とも消えてしまい、使えない。</p></div>
 <p>④ <strong>E まわりのモーメント</strong>（反時計回りを正）：DE と CE は E を通るので消える。$F_{DF}$（切断部で左向き、E より鉛直に $\tfrac23$ m 上）は E を中心に反時計回り、G の 2 kN（E より水平に 2 m 右）は時計回り、F の 3 kN は E の真上で腕が 0：
 $$\tfrac23F_{DF}-2\times2=0\ \Longrightarrow\ F_{DF}=6.00\ \mathrm{kN}\ (\text{引張})$$
 ⑤ <strong>D まわりのモーメント</strong>：DF と DE は D を通るので消える。$F_{CE}$ は E に作用し、力は $\tfrac1{\sqrt{10}}(-3,-1)\,F_{CE}$。E は D から見て $(+2,\,-\tfrac23)$ の位置（水平 2 m 右、鉛直 $\tfrac23$ m 下）。モーメント $=x F_y-yF_x$ より
