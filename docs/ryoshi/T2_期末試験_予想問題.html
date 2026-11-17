@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T2 期末試験 範囲まとめ＋予想問題</title>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags:'none' }, svg:{ fontCache:'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Cormorant+Garamond:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  /* 書籍風デザイン（2026-10-01 採用）。囲みの5色は残し、くすんだ和の色に淡くしている */
+  :root{ --paper:#f7f4ec; --ink:#2a2723; --sub:#6b645a; --accent:#2b3a67; --shu:#a8322a; --line:#ddd6c8;
+         --thm:#eceff4; --thmline:#4a5f8c; --def:#edf1e8; --defline:#6b8a5a; --ex:#f1edf2; --exline:#8a6d94;
+         --warn:#f8eee2; --warnline:#c08a52; --why:#f7f1dc; --whyline:#c9a43a; --box:#efebe2;
+         --mincho:"Shippori Mincho","Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;
+         --num:"Cormorant Garamond","Times New Roman",serif; }
+  h2 .no,h3 .no{ font-variant-numeric:lining-nums; font-feature-settings:"lnum" 1; }
+  *{ box-sizing:border-box; }
+  html{ overflow-x:clip; }
+  body{ font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; color:var(--ink); background:var(--paper);
+        line-height:1.95; margin:0 auto; padding:0 28px 60px; max-width:820px; font-size:15.5px; letter-spacing:.02em; }
+  p{ margin:10px 0; }
+  a{ color:var(--accent); }
+
+  /* 扉 */
+  .hero{ position:relative; left:50%; width:min(1180px,100vw); margin:0 0 8px calc(-1 * min(1180px,100vw) / 2); text-align:left; }
+  .hero img{ display:block; width:100%; height:auto; }
+  .hero .ttl{ position:absolute; left:5%; top:9%; color:var(--ink); }
+  .hero .vol{ font-family:var(--mincho); font-size:15px; letter-spacing:.4em; margin:0; color:var(--shu); }
+  .hero h1{ font-family:var(--mincho); font-weight:700; font-size:clamp(26px,4.2vw,46px); line-height:1.3; margin:4px 0 0; letter-spacing:.08em; }
+  .hero figcaption{ max-width:820px; margin:10px auto 0; padding:0 28px; }
+  .lead{ color:var(--sub); font-size:14.5px; margin:22px 0 14px; }
+
+  /* 見出し */
+  h2{ font-family:var(--mincho); font-weight:700; font-size:25px; letter-spacing:.06em; color:var(--ink);
+      border-top:1px solid var(--ink); padding-top:18px; margin:64px 0 18px; display:flex; align-items:baseline; gap:16px; }
+  h2 .no{ font-family:var(--num); font-weight:300; font-size:60px; line-height:.8; color:var(--shu); letter-spacing:0; }
+  h3{ font-family:var(--mincho); font-weight:700; font-size:18.5px; color:var(--accent); margin:36px 0 10px; letter-spacing:.04em; }
+  h3 .no{ font-family:var(--num); font-weight:500; font-size:22px; color:var(--sub); margin-right:12px; }
+  h4{ font-family:var(--mincho); font-size:16px; color:var(--accent); margin:18px 0 6px; }
+
+  /* 囲み：背景を淡く、左の細線とラベルで区別する */
+  .box,.thm,.def,.ex,.warn,.why{ border-left:3px solid; border-radius:2px; padding:12px 18px; margin:18px 0; }
+  .box{ background:var(--box); border-color:#b9b0a0; }
+  .thm{ background:var(--thm); border-color:var(--thmline); }
+  .def{ background:var(--def); border-color:var(--defline); }
+  .ex{ background:var(--ex); border-color:var(--exline); }
+  .warn{ background:var(--warn); border-color:var(--warnline); }
+  .why{ background:var(--why); border-color:var(--whyline); }
+  .label{ font-family:var(--mincho); font-weight:700; letter-spacing:.05em; display:block; margin-bottom:2px; }
+  .thm .label{ color:var(--thmline); } .def .label{ color:var(--defline); } .ex .label{ color:var(--exline); }
+  .warn .label{ color:#a06a32; } .why .label{ color:#9a7a1a; } .box .label{ color:var(--sub); }
+  .proof{ margin:12px 0 12px 4px; padding-left:16px; border-left:1px dashed #b9b0a0; }
+  .qed{ text-align:right; color:var(--sub); }
+  ul,ol{ margin:8px 0; padding-left:24px; } li{ margin:4px 0; }
+  .meta{ font-size:13px; color:var(--sub); } .star{ color:var(--shu); font-weight:bold; } .key{ font-weight:bold; color:var(--accent); }
+  hr{ border:none; border-top:1px solid var(--line); margin:28px 0; }
+  details{ margin:10px 0; } summary{ cursor:pointer; color:var(--accent); font-weight:bold; }
+  .navi{ font-size:13.5px; color:var(--sub); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:10px 2px; margin:14px 0; }
+  table.tb{ border-collapse:collapse; margin:14px 0; font-size:14.5px; width:100%; background:rgba(255,255,255,.45); }
+  table.tb th,table.tb td{ border-bottom:1px solid var(--line); padding:6px 10px; text-align:center; }
+  table.tb th{ font-family:var(--mincho); border-bottom:1px solid var(--ink); background:none; }
+  figure{ margin:18px auto; text-align:center; } figure svg{ max-width:100%; height:auto; }
+  figcaption{ font-size:13px; color:var(--sub); margin-top:6px; }
+  .step{ font-weight:bold; color:var(--accent); }
+  .note{ color:var(--sub); font-size:13.5px; }
+  .mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  .exp{ font-size:12.5px; color:var(--sub); border:1px solid var(--line); padding:6px 12px; margin:8px 0 0; }
+
+  /* 見開き：左＝現実（A）、右＝見立て（B）。写真は切らずに見せる */
+  .spread{ position:relative; left:50%; width:min(1100px,100vw); margin:48px 0 48px calc(-1 * min(1100px,100vw) / 2);
+           padding:22px 28px 18px; display:grid; grid-template-columns:1fr 1fr; gap:28px; text-align:left;
+           border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:#f1ede3; }
+  .spread .side{ min-width:0; }
+  .spread .side.b{ border-left:1px solid var(--line); padding-left:28px; }
+  .kick{ font-size:11px; letter-spacing:.25em; font-weight:bold; margin:0 0 10px; }
+  .side.a .kick{ color:var(--accent); } .side.b .kick{ color:var(--shu); }
+  .spread .ph{ height:380px; display:flex; gap:6px; justify-content:center; align-items:center; background:#e6e1d5; }
+  .spread .ph img{ display:block; max-width:100%; max-height:100%; min-width:0; object-fit:contain; }
+  .spread .ph.pair img{ max-width:calc(50% - 3px); }
+  .cap{ font-family:var(--mincho); font-size:16px; line-height:1.9; margin:12px 0 4px; color:var(--ink); }
+  .cr{ font-size:11px; color:#968d80; margin:0; line-height:1.6; } .cr a{ color:#968d80; }
+
+  @media (max-width:720px){
+    body{ padding:0 16px 40px; font-size:15px; }
+    .hero .ttl{ position:static; padding:14px 16px 0; }
+    .hero figcaption{ padding:0 16px; }
+    h2 .no{ font-size:46px; }
+    .spread{ grid-template-columns:1fr; padding:18px 16px 14px; gap:22px; }
+    .spread .side.b{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:18px; }
+    .spread .ph{ height:auto; max-height:460px; } .spread .ph img{ max-height:460px; }
+  }
+  @media print{ body{ background:#fff; font-size:11pt; } details{ display:block; } summary{ display:none; }
+    .spread,.hero{ left:auto; width:auto; margin:16px 0; break-inside:avoid; } .hero .ttl{ position:static; } }
+
+  /* 教材⇄コラムの切替ボタン（画面右下に常に表示） */
+  .switch{ position:fixed; right:14px; bottom:14px; z-index:50; display:flex; font-family:"Shippori Mincho","Yu Mincho",serif; font-size:13px; letter-spacing:.05em; box-shadow:0 3px 14px rgba(0,0,0,.18); }
+  .switch a{ display:block; padding:9px 14px; text-decoration:none; color:#f7f4ec; background:#2a2723; line-height:1.3; }
+  .switch a.to{ background:#a8322a; } .switch a:hover{ opacity:.88; }
+  .switch small{ display:block; font-size:10px; opacity:.75; letter-spacing:.15em; }
+  @media (max-width:720px){ .switch{ right:8px; bottom:8px; font-size:12px; } .switch a{ padding:7px 11px; } }
+  @media print{ .switch{ display:none; } }
+</style>
+</head>
+<body>
+<div class="navi">
+<strong>T2｜期末試験（11/20 3限）の範囲まとめ＋予想問題</strong>（後半：10/30・11/6・11/13 の講義）<br>
+<a href="index.html">← 目次へ</a>　｜　<a href="M2_後半まとめ_第7〜12回.html">後半まとめ（図解）</a>　｜　<a href="T1_中間試験_予想問題.html">T1 中間試験</a>
+</div>
+<p class="lead">2026-11-17 作成。試験まで3日なので、<strong>点になる部分だけ</strong>を一本道に並べ、そのあとに問題を載せた。図つきの解説は <a href="M2_後半まとめ_第7〜12回.html">後半まとめ（図解）</a> にある。このページは「解いて確かめる」ためのもの。</p>
+
+<div class="warn"><span class="label">注意：このページについて</span>①試験範囲は、日程の区切りからの<strong>推定</strong>（後半＝10/30〜11/13 のノート）。前半（第1〜6回）が出るかは未確認で、先生の指示を最優先にすること。②予想問題はすべて<strong>自作</strong>で、出題を保証しない。型は教科書（Griffiths、猪木・川合など）の典型に倣った。③講義ノートに載っていない内容（問B3 の電界放出など）は、同じ道具の応用として加えた。④数値は draft/check_T2.py で検算した。</div>
+
+<h2><span class="no">1</span>まず整理：全部は要らない</h2>
+
+<h3><span class="no">1.1</span>優先度（推定）</h3>
+<table class="tb">
+<tr><th>優先度</th><th>内容</th><th>ノートの日</th></tr>
+<tr><td>★★★<br>必須</td><td style="text-align:left">
+定常状態：$\hat H\phi=E\phi$、$f(t)=Ce^{-iEt/\hbar}$／箱の中の粒子：$E=\frac{\hbar^2\pi^2}{2m}\sum(n_i/L_i)^2$、縮退の数え方／トンネル効果の透過率の式と、$d,E$ に対する増減／極座標 $x=r\sin\theta\cos\phi$ ほか、$dV=r^2\sin\theta\,dr\,d\theta\,d\phi$／水素：$E_n=-13.6/n^2$ eV、量子数の範囲 $(n,l,m)$ と縮退度 $n^2$</td><td>10/30・11/6・11/13</td></tr>
+<tr><td>★★<br>標準</td><td style="text-align:left">
+変数分離の手順（箱・水素）／境界条件からの導出／ガモフの透過因子／$\Phi=Ce^{im\phi}$ と周期性から $m$／$R_{10}$ の規格化・最頻値・期待値</td><td>全日</td></tr>
+<tr><td>★<br>余裕があれば</td><td style="text-align:left">
+極座標への変換の計算／ルジャンドルの陪微分方程式から $l$／一般の $R_{nl}$（ラゲール多項式）／α崩壊の数値</td><td>11/6・11/13</td></tr>
+</table>
+<p class="note">長い導出（極座標の変換、ルジャンドル、ラゲール）は講義でも結果だけだった。試験に出るなら「結果を使う問題」と推定される。</p>
+
+<h3><span class="no">1.2</span>後半の「一本道」（論理の幹）</h3>
+<ol>
+<li><strong>3次元でも形は同じ</strong>：$\left(-\frac{\hbar^2}{2m}\nabla^2+V\right)\psi=i\hbar\partial_t\psi$。（10/30）</li>
+<li><strong>$V$ が時間によらなければ、時間と空間が分かれる</strong>：$\psi=f(t)\phi(\mathbf r)$ → $\hat H\phi=E\phi$、$f=e^{-iEt/\hbar}$。（10/30）</li>
+<li><strong>箱では各方向が独立</strong>：$\psi=XYZ$、境界条件 $\phi=0$ で $k=n\pi/L$。$E$ がとびとび、立方体なら縮退。（10/30）</li>
+<li><strong>壁が有限なら、壁の中にも波がしみ込む</strong>：領域ごとに $e^{\pm ikx}$、$e^{\pm\alpha x}$。境界で $\phi$ と $\phi'$ が連続。→ $T=|F/A|^2$。（11/6）</li>
+<li><strong>厚い壁では $T\approx\frac{16E(V_0-E)}{V_0^2}e^{-2\alpha d}$</strong>。一般の壁は $T=\exp[-\frac2\hbar\int\sqrt{2m(V-E)}dx]$（ガモフ）。（11/6）</li>
+<li><strong>球対称なら極座標</strong>：$\nabla^2$ が $r$ の部分と角度部分 $\Lambda/r^2$ に分かれる。（11/13）</li>
+<li><strong>水素は $\psi=R(r)Y(\theta,\phi)$</strong>：$\Phi$ の周期性から $m$、$\Theta$ の解の存在から $l$、$R$ から $n$。$E_n=-13.6/n^2$。（11/13）</li>
+</ol>
+
+<h3><span class="no">1.3</span>混同しやすい対</h3>
+<table class="tb">
+<tr><th>これと</th><th>これは別もの</th><th>違い</th></tr>
+<tr><td>$R(r)$</td><td>$r^2|R|^2$</td><td>$R$ は波動関数の動径部分（原点で最大）。$r^2|R|^2dr$ が「半径 $r$ の球殻に見つかる確率」（$r=a_0$ で最大）。球殻の体積 $\propto r^2$ が掛かる。</td></tr>
+<tr><td>最頻値 $r=a_0$</td><td>平均 $\langle r\rangle=1.5a_0$</td><td>最頻は山の頂上、平均は右のすそを含む重心。</td></tr>
+<tr><td>$l$（方位量子数）</td><td>$m$（磁気量子数）</td><td>$l\le n-1$、$|m|\le l$。$l$ は $\theta$ 方向、$m$ は $\phi$ 方向の式から出る。</td></tr>
+<tr><td>透過率 $T$</td><td>振幅比 $F/A$</td><td>$T=|F/A|^2$。2乗を忘れない。</td></tr>
+<tr><td>箱の縮退</td><td>水素の縮退</td><td>箱は立方体の対称性で $(n_x,n_y,n_z)$ を入れ替えても $E$ が同じ。水素は $E_n$ が $l,m$ によらないので $n^2$ 重。</td></tr>
+<tr><td>$\alpha$（壁の中の減衰）</td><td>$k$（壁の外の波数）</td><td>$k=\sqrt{2mE}/\hbar$、$\alpha=\sqrt{2m(V_0-E)}/\hbar$。$\alpha$ には $V_0-E$。</td></tr>
+</table>
+
+<h2><span class="no">2</span>公式表</h2>
+<table class="tb">
+<tr><th>話題</th><th>公式</th></tr>
+<tr><td>定常状態</td><td>$\hat H\phi=E\phi$、$\Psi=\phi(\mathbf r)e^{-iEt/\hbar}$、$|\Psi|^2$ は時間によらない</td></tr>
+<tr><td>箱</td><td>$\psi=\sqrt{\frac{8}{abc}}\sin\frac{n_x\pi x}{a}\sin\frac{n_y\pi y}{b}\sin\frac{n_z\pi z}{c}$、$E=\frac{\hbar^2\pi^2}{2m}\left[\frac{n_x^2}{a^2}+\frac{n_y^2}{b^2}+\frac{n_z^2}{c^2}\right]$。電子、1 nm の立方体：$E=0.376\,(n_x^2+n_y^2+n_z^2)$ eV</td></tr>
+<tr><td>トンネル</td><td>$k=\sqrt{2mE}/\hbar$、$\alpha=\sqrt{2m(V_0-E)}/\hbar$。$T=\left[1+\frac{V_0^2}{4E(V_0-E)}\sinh^2\alpha d\right]^{-1}$。電子で $\alpha d\approx0.725$（$V_0-E=2$ eV、$d=1$ Å）</td></tr>
+<tr><td>ガモフ</td><td>$T=\exp\left[-\frac2\hbar\int_a^b\sqrt{2m(V(x)-E)}\,dx\right]$</td></tr>
+<tr><td>極座標</td><td>$x=r\sin\theta\cos\phi,\ y=r\sin\theta\sin\phi,\ z=r\cos\theta$、$dV=r^2\sin\theta\,dr\,d\theta\,d\phi$、$\nabla^2=\partial_r^2+\frac2r\partial_r+\frac1{r^2}\Lambda$</td></tr>
+<tr><td>角度部分</td><td>$\Phi=Ce^{im\phi}$（$m\in\mathbb Z$）、$\lambda=l(l+1)$、$Y_0^0=\frac1{\sqrt{4\pi}}$、$Y_1^0=\sqrt{\frac3{4\pi}}\cos\theta$、$Y_1^{\pm1}=\mp\sqrt{\frac3{8\pi}}\sin\theta e^{\pm i\phi}$</td></tr>
+<tr><td>水素</td><td>$E_n=-\frac{13.6\text{ eV}}{n^2}$、$R_{10}=2a_0^{-3/2}e^{-r/a_0}$、$\int_0^\infty x^ne^{-ax}dx=\frac{n!}{a^{n+1}}$、$a_0=0.0529$ nm</td></tr>
+<tr><td>量子数</td><td>$n\ge1$、$0\le l\le n-1$、$-l\le m\le l$。縮退度 $\sum_{l=0}^{n-1}(2l+1)=n^2$</td></tr>
+<tr><td>光子</td><td>$\lambda=\dfrac{1240\text{ eV nm}}{\Delta E}$</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2><span class="no">3</span>予想問題 A（確認：小テスト水準）</h2>
+<p class="meta">すべて自作。数値は検算済み。まず手で解き、そのあと解答を開くこと。有効数字は問題文の数字に合わせる。</p>
+
+<div class="box"><span class="label">問A1【箱のエネルギー】</span>1辺 $0.50\ \mathrm{nm}$ の立方体の箱に閉じ込められた電子について、基底状態と第1励起状態のエネルギー（eV）、および両者の間の遷移で出る光子の波長を求めよ。
+<details><summary>解答</summary><p>① 公式：$E=0.376\,(n_x^2+n_y^2+n_z^2)/L^2\ \mathrm{eV}$（$L$ は nm）。$L=0.50$ なので $E=1.50\,(n_x^2+n_y^2+n_z^2)\ \mathrm{eV}$。</p>
+<p>② 基底状態 $(1,1,1)$：$E=1.50\times3=4.51\ \mathrm{eV}$。第1励起状態 $(2,1,1)$ ほか：$E=1.50\times6=9.02\ \mathrm{eV}$（3重に縮退）。</p>
+<p>③ 差 $\Delta E=4.51\ \mathrm{eV}$。波長 $\lambda=\dfrac{1240}{4.51}\approx2.7\times10^2\ \mathrm{nm}$（紫外線）。</p></details></div>
+
+<div class="box"><span class="label">問A2【縮退】</span>立方体の箱で、$(n_x,n_y,n_z)=(2,2,1)$ と同じエネルギーをもつ状態をすべて挙げ、縮退度を答えよ。
+<details><summary>解答</summary><p>$E\propto n_x^2+n_y^2+n_z^2=4+4+1=9$。和が 9 になる正の整数の組は、$\{2,2,1\}$ の並べ替えだけ（$9=9+0+0$ は $n\ge1$ に反する）。よって $(2,2,1),(2,1,2),(1,2,2)$ の<strong>3重縮退</strong>。</p></details></div>
+
+<div class="box"><span class="label">問A3【透過率の数値】</span>$V_0=4.0\ \mathrm{eV}$、幅 $d=0.20\ \mathrm{nm}$ の矩形障壁に、$E=1.0\ \mathrm{eV}$ の電子が入射する。透過率 $T$ を求めよ。
+<details><summary>解答</summary><p>① $\alpha=\dfrac{\sqrt{2m(V_0-E)}}{\hbar}=\dfrac{\sqrt{2\times9.109\times10^{-31}\times3.0\times1.602\times10^{-19}}}{1.055\times10^{-34}}=8.87\times10^{9}\ \mathrm{m^{-1}}$。</p>
+<p>② $\alpha d=1.77$、$\sinh(1.77)=2.86$、$\sinh^2=8.20$。係数 $\dfrac{V_0^2}{4E(V_0-E)}=\dfrac{16}{12}=\dfrac43$。</p>
+<p>③ $T=\dfrac{1}{1+\frac43\times8.20}=\dfrac1{11.9}\approx0.084$（約8%）。</p></details></div>
+
+<div class="box"><span class="label">問A4【座標変換】</span>(1) デカルト座標で $(x,y,z)=(1,1,\sqrt2)$ の点を極座標 $(r,\theta,\phi)$ で表せ。(2) 極座標 $(2,\,90°,\,180°)$ の点をデカルト座標で表せ。
+<details><summary>解答</summary><p>(1) $r=\sqrt{1+1+2}=2$。$\cos\theta=z/r=\dfrac{\sqrt2}{2}$ より $\theta=45°$。$\tan\phi=y/x=1$ より $\phi=45°$。</p>
+<p>(2) $x=2\sin90°\cos180°=-2$、$y=2\sin90°\sin180°=0$、$z=2\cos90°=0$。$(−2,0,0)$。</p></details></div>
+
+<div class="box"><span class="label">問A5【水素の発光】</span>水素原子が (1) $n=2\to1$、(2) $n=3\to2$ に遷移するときに出る光子のエネルギー（eV）と波長を求め、可視光かどうかを答えよ。ただし $E_n=-13.6/n^2\ \mathrm{eV}$。
+<details><summary>解答</summary><p>(1) $\Delta E=13.6\left(1-\dfrac14\right)=10.2\ \mathrm{eV}$、$\lambda=\dfrac{1240}{10.2}=122\ \mathrm{nm}$。紫外線（可視光ではない）。</p>
+<p>(2) $\Delta E=13.6\left(\dfrac14-\dfrac19\right)=1.89\ \mathrm{eV}$、$\lambda=\dfrac{1240}{1.89}=656\ \mathrm{nm}$。赤色の可視光。</p></details></div>
+
+<div class="box"><span class="label">問A6【量子数】</span>(1) $n=4$ で許される $l$ をすべて挙げ、状態の総数を求めよ。(2) 次の $(n,l,m)$ のうち、許されないものを選び、理由を述べよ：$(2,1,-1)$、$(3,3,0)$、$(3,2,2)$、$(1,0,1)$。
+<details><summary>解答</summary><p>(1) $l=0,1,2,3$。状態数は $1+3+5+7=16=4^2$。</p>
+<p>(2) $(3,3,0)$：$l\le n-1=2$ に反する。$(1,0,1)$：$|m|\le l=0$ に反する。$(2,1,-1)$ と $(3,2,2)$ は許される。</p></details></div>
+
+<div class="box"><span class="label">問A7【球面調和関数の規格化】</span>$Y_0^0=\dfrac1{\sqrt{4\pi}}$ と $Y_1^0=\sqrt{\dfrac3{4\pi}}\cos\theta$ が、$\displaystyle\int_0^{2\pi}\!\!\int_0^\pi|Y|^2\sin\theta\,d\theta\,d\phi=1$ を満たすことを示せ。
+<details><summary>解答</summary><p>① $Y_0^0$：$\dfrac1{4\pi}\cdot2\pi\cdot\int_0^\pi\sin\theta\,d\theta=\dfrac{1}{4\pi}\cdot2\pi\cdot2=1$。</p>
+<p>② $Y_1^0$：$\dfrac3{4\pi}\cdot2\pi\cdot\int_0^\pi\cos^2\theta\sin\theta\,d\theta$。$u=\cos\theta$ とおくと $\int_{-1}^{1}u^2du=\dfrac23$。よって $\dfrac3{4\pi}\cdot2\pi\cdot\dfrac23=1$。∎</p></details></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">4</span>予想問題 B（標準：定期試験水準）</h2>
+<p class="meta">すべて自作（型は教科書の典型問題による）。導出を含む。先に自分で書いてから解答を見ること。</p>
+
+<div class="box"><span class="label">問B1【3次元の箱の導出】</span>辺 $a,b,c$ の箱（中は $V=0$、外は $V=\infty$）の中の粒子について、変数分離によって定常状態の波動関数とエネルギーを導け。$a=b=c=1.0\ \mathrm{nm}$ の電子の基底状態と第1励起状態のエネルギーも求めよ。
+<details><summary>解答</summary>
+<p>① 箱の中の式：$-\dfrac{\hbar^2}{2m}\nabla^2\psi=E\psi$。$\psi=X(x)Y(y)Z(z)$ を代入。</p>
+<p>② 両辺に $-\dfrac{2m}{\hbar^2}\dfrac1{XYZ}$ を掛ける：$\dfrac{X''}{X}+\dfrac{Y''}{Y}+\dfrac{Z''}{Z}=-\dfrac{2mE}{\hbar^2}$。左の各項は別々の変数だけの関数で、和が定数なので、各項が定数。$\dfrac{X''}{X}=-k_x^2$（$k_x=\sqrt{2mE_x}/\hbar$）とおく。</p>
+<p>③ $X''=-k_x^2X$ の一般解は $X=A\cos k_xx+B\sin k_xx$。壁で波動関数が連続かつ箱の外で 0 なので $X(0)=X(a)=0$。$X(0)=0$ から $A=0$。$X(a)=0$ から $B\sin k_xa=0$。$B=0$ は自明な解（粒子がいない）なので、$k_xa=n_x\pi$（$n_x=1,2,\dots$）。</p>
+<p>④ 規格化：$\int_0^a|X|^2dx=B^2\cdot\dfrac a2=1$（$\sin^2=\frac{1-\cos2\alpha}2$）より $B=\sqrt{2/a}$。$Y,Z$ も同様。</p>
+<p>⑤ 結果：$\psi=\sqrt{\dfrac8{abc}}\sin\dfrac{n_x\pi x}a\sin\dfrac{n_y\pi y}b\sin\dfrac{n_z\pi z}c$、$E=\dfrac{\hbar^2\pi^2}{2m}\left[\dfrac{n_x^2}{a^2}+\dfrac{n_y^2}{b^2}+\dfrac{n_z^2}{c^2}\right]$。</p>
+<p>⑥ $a=b=c=1.0$ nm：$E=0.376\,(n_x^2+n_y^2+n_z^2)\ \mathrm{eV}$。基底 $(1,1,1)$：$1.13\ \mathrm{eV}$。第1励起 $(2,1,1)$ ほか：$2.26\ \mathrm{eV}$（3重縮退）。</p>
+<p>⑦ 確かめ：$n_x$ が増すと節が増え、エネルギーは $n_x^2$ に比例して増える。$\hbar\to0$ で $E\to0$（古典的には任意のエネルギー）。</p></details></div>
+
+<div class="box"><span class="label">問B2【トンネル：厚い壁の近似】</span>矩形障壁（高さ $V_0$、幅 $d$、$0&lt;E&lt;V_0$）への入射を考える。(1) 領域Ⅰ（$x&lt;0$）、Ⅱ（$0\le x\le d$）、Ⅲ（$x&gt;d$）の波動関数の形と、境界条件の4本の式を書け。(2) 透過率 $T=\left[1+\frac{V_0^2}{4E(V_0-E)}\sinh^2\alpha d\right]^{-1}$ から、$\alpha d\gg1$ で $T\approx\frac{16E(V_0-E)}{V_0^2}e^{-2\alpha d}$ を示せ。(3) 電子、$V_0=3.0$ eV、$E=1.0$ eV、$d=0.50$ nm のとき、近似式と厳密な式の値を比べよ。(4) $d$ を2倍にすると $T$ はおよそ何倍になるか。
+<details><summary>解答</summary>
+<p>(1) Ⅰ：$Ae^{ikx}+Be^{-ikx}$（入射＋反射）、Ⅱ：$Ce^{\alpha x}+De^{-\alpha x}$、Ⅲ：$Fe^{ikx}$（透過のみ）。$k=\sqrt{2mE}/\hbar$、$\alpha=\sqrt{2m(V_0-E)}/\hbar$。波動関数とその1階微分が連続：<br>$x=0$：$A+B=C+D$、$ik(A-B)=\alpha(C-D)$。<br>$x=d$：$Ce^{\alpha d}+De^{-\alpha d}=Fe^{ikd}$、$\alpha(Ce^{\alpha d}-De^{-\alpha d})=ikFe^{ikd}$。</p>
+<p>(2) $\alpha d\gg1$ なら $\sinh\alpha d=\dfrac{e^{\alpha d}-e^{-\alpha d}}2\approx\dfrac{e^{\alpha d}}2$。$\sinh^2\approx\dfrac{e^{2\alpha d}}4$ で、$\dfrac{V_0^2}{4E(V_0-E)}\cdot\dfrac{e^{2\alpha d}}4$ は 1 より十分大きい。$\dfrac1{1+X}\approx\dfrac1X$ を使うと $T\approx\dfrac{16E(V_0-E)}{V_0^2}e^{-2\alpha d}$。∎</p>
+<p>(3) $\alpha=\dfrac{\sqrt{2m\cdot2.0\text{ eV}}}{\hbar}=7.245\times10^{9}\ \mathrm{m^{-1}}$、$\alpha d=3.62$。厳密：$T=\left[1+\frac98\sinh^2(3.62)\right]^{-1}=2.53\times10^{-3}$。近似：$\dfrac{16\cdot1\cdot2}{9}e^{-7.245}=3.56\times7.13\times10^{-4}=2.54\times10^{-3}$。比は 1.001 で、よく一致する。</p>
+<p>(4) $T\propto e^{-2\alpha d}$ なので、$d\to2d$ で $e^{-2\alpha d}\approx7\times10^{-4}$ 倍。厚さを2倍にしただけで、透過率は<strong>3桁以上</strong>小さくなる（指数的）。</p></details></div>
+
+<div class="box"><span class="label">問B3【ガモフの透過因子：電界放出】</span>金属中の電子（エネルギー $E$）が、真空への障壁 $V(x)=E+\varphi-eFx$（$0\le x\le x_b$、$x_b=\varphi/eF$）を抜ける。ガモフの透過因子から $T$ を求め、$\varphi=4.5\ \mathrm{eV}$、$F=3.0\ \mathrm{V/nm}$ と $5.0\ \mathrm{V/nm}$ で数値を比べよ。
+<details><summary>解答</summary>
+<p>① $V-E=\varphi-eFx$。$u=\varphi-eFx$ とおくと $dx=-du/eF$、$x:0\to x_b$ で $u:\varphi\to0$。</p>
+<p>② $\displaystyle\int_0^{x_b}\sqrt{2m(\varphi-eFx)}\,dx=\frac{\sqrt{2m}}{eF}\int_0^{\varphi}\sqrt u\,du=\frac{\sqrt{2m}}{eF}\cdot\frac23\varphi^{3/2}$。</p>
+<p>③ よって $T=\exp\left[-\dfrac2\hbar\cdot\dfrac{2\sqrt{2m}\,\varphi^{3/2}}{3eF}\right]=\exp\left[-\dfrac{4\sqrt{2m}\,\varphi^{3/2}}{3\hbar eF}\right]$（$\varphi$ はジュール単位）。</p>
+<p>④ 数値：$F=3.0$ V/nm で指数 $=21.7$、$T=3.6\times10^{-10}$（$x_b=1.5$ nm）。$F=5.0$ V/nm で指数 $=13.0$、$T=2.2\times10^{-6}$（$x_b=0.9$ nm）。</p>
+<p>⑤ 電場を $5/3$ 倍（約1.7倍）にしただけで、透過率は約 $6\times10^{3}$ 倍。電場が強いと障壁が薄くなるので、指数の中で効く。</p></details></div>
+
+<div class="box"><span class="label">問B4【角度部分の方位・磁気量子数】</span>(1) $\Phi''+m^2\Phi=0$ の解を求め、$\Phi(\phi+2\pi)=\Phi(\phi)$ から $m$ が整数であることを示せ。(2) $\int_0^{2\pi}|\Phi|^2d\phi=1$ から規格化定数を求めよ。(3) $\Phi_m$ と $\Phi_{m'}$（$m\ne m'$）が直交することを示せ。
+<details><summary>解答</summary>
+<p>(1) 解は $\Phi=Ce^{im\phi}$（$\Phi''=-m^2\Phi$ を満たす）。周期性より $e^{im(\phi+2\pi)}=e^{im\phi}$。つまり $e^{2\pi im}=1$ で、$\cos2\pi m=1$ かつ $\sin2\pi m=0$ なので $m=0,\pm1,\pm2,\dots$（磁気量子数）。</p>
+<p>(2) $|\Phi|^2=|C|^2$、$\int_0^{2\pi}|C|^2d\phi=2\pi|C|^2=1$ より $C=\dfrac1{\sqrt{2\pi}}$。</p>
+<p>(3) $\displaystyle\int_0^{2\pi}\Phi_m^*\Phi_{m'}d\phi=\dfrac1{2\pi}\int_0^{2\pi}e^{i(m'-m)\phi}d\phi=\dfrac1{2\pi}\cdot\dfrac{e^{2\pi i(m'-m)}-1}{i(m'-m)}=0$（$m'-m$ は 0 でない整数なので $e^{2\pi i(m'-m)}=1$）。∎</p></details></div>
+
+<div class="box"><span class="label">問B5【水素の基底状態】</span>$R_{10}(r)=2a_0^{-3/2}e^{-r/a_0}$ について、(1) $\int_0^\infty|R|^2r^2dr=1$ を確かめよ。(2) 動径方向の確率密度が最大になる $r$ を求めよ。(3) $\langle r\rangle$ を求めよ。(4) $\langle1/r\rangle$ を求め、ポテンシャルエネルギーの期待値 $\langle V\rangle$ と運動エネルギーの期待値 $\langle T\rangle$ を eV で求めよ（$E_1=-13.6$ eV）。
+<details><summary>解答</summary>
+<p>(1) $\displaystyle\int_0^\infty\dfrac4{a_0^3}r^2e^{-2r/a_0}dr=\dfrac4{a_0^3}\cdot\dfrac{2!}{(2/a_0)^3}=\dfrac4{a_0^3}\cdot\dfrac{2a_0^3}{8}=1$。（$\int x^ne^{-ax}dx=n!/a^{n+1}$ を使った。）</p>
+<p>(2) $P(r)=r^2|R|^2=\dfrac4{a_0^3}r^2e^{-2r/a_0}$。$\dfrac{dP}{dr}\propto\left(2r-\dfrac{2r^2}{a_0}\right)e^{-2r/a_0}=2r\left(1-\dfrac r{a_0}\right)e^{-2r/a_0}=0$ より $r=a_0$（$r=0$ は最小）。</p>
+<p>(3) $\langle r\rangle=\dfrac4{a_0^3}\int_0^\infty r^3e^{-2r/a_0}dr=\dfrac4{a_0^3}\cdot\dfrac{3!}{(2/a_0)^4}=\dfrac4{a_0^3}\cdot\dfrac{6a_0^4}{16}=\dfrac32a_0$。</p>
+<p>(4) $\langle1/r\rangle=\dfrac4{a_0^3}\int_0^\infty re^{-2r/a_0}dr=\dfrac4{a_0^3}\cdot\dfrac{1}{(2/a_0)^2}=\dfrac1{a_0}$。$\langle V\rangle=-\dfrac{e^2}{4\pi\varepsilon_0}\langle1/r\rangle=-\dfrac{e^2}{4\pi\varepsilon_0a_0}=-27.2\ \mathrm{eV}$。$E=\langle T\rangle+\langle V\rangle$ より $\langle T\rangle=-13.6-(-27.2)=+13.6\ \mathrm{eV}$。</p>
+<p>(5) 確かめ：運動エネルギーは正で、$\langle V\rangle=2E_1$、$\langle T\rangle=-E_1$。（$1/r$ のポテンシャルでのビリアル定理 $2\langle T\rangle=-\langle V\rangle$ と一致する。）</p></details></div>
+
+<div class="box"><span class="label">問B6【p軌道の確率】</span>$Y_1^0=\sqrt{\dfrac3{4\pi}}\cos\theta$ の状態で、電子が $z$ 軸から $30°$ 以内の円錐（$0\le\theta\le30°$）に見つかる確率を求めよ。上半球全体（$0\le\theta\le90°$）ではどうか。
+<details><summary>解答</summary>
+<p>① 確率 $=\displaystyle\int_0^{2\pi}\!\!\int_0^{\theta_0}\dfrac3{4\pi}\cos^2\theta\sin\theta\,d\theta\,d\phi=\dfrac3{4\pi}\cdot2\pi\cdot\int_0^{\theta_0}\cos^2\theta\sin\theta\,d\theta$。</p>
+<p>② $u=\cos\theta$ とおくと $\displaystyle\int_{\cos\theta_0}^{1}u^2du=\dfrac{1-\cos^3\theta_0}{3}$。よって確率 $=\dfrac{1-\cos^3\theta_0}{2}$。</p>
+<p>③ $\theta_0=30°$：$\cos30°=0.866$、$\cos^3=0.650$、確率 $=0.175$（約17.5%）。$\theta_0=90°$：$\cos90°=0$ なので確率 $=\dfrac12$。上下の葉に半分ずつ。確かめ：$\theta_0=180°$ で $\dfrac{1-(-1)}2=1$。</p></details></div>
+
+<div class="box"><span class="label">問B7【直方体の箱の縮退】</span>辺が $a=b=L$、$c=2L$ の直方体の箱の中の粒子で、エネルギーが低い方から5つの準位（量子数と縮退度）を求めよ。$E_0=\dfrac{\hbar^2\pi^2}{2mL^2}$ を単位とせよ。
+<details><summary>解答</summary>
+<p>① $E=E_0\left(n_x^2+n_y^2+\dfrac{n_z^2}4\right)$。</p>
+<p>② 数え上げ（$n_i\ge1$）：<br>$(1,1,1)$：$1+1+\frac14=2.25$（縮退なし）<br>$(1,1,2)$：$1+1+1=3.00$（縮退なし）<br>$(1,1,3)$：$1+1+\frac94=4.25$（縮退なし）<br>$(2,1,1),(1,2,1)$：$4+1+\frac14=5.25$（2重）<br>$(1,1,4),(1,2,2),(2,1,2)$：$1+1+4=1+4+1=6.00$（3重）</p>
+<p>③ $x,y$ 方向の入れ替えだけが対称なので、基本の縮退は2重まで。$(1,1,4)$ と $(1,2,2),(2,1,2)$ が一致するのは、辺の比がたまたま整数比だから（偶然の縮退）。立方体では3方向の入れ替えで縮退するが、$c\ne a$ ではそれが解ける。</p></details></div>
+
+<!-- ============================================================ -->
+<h2><span class="no">5</span>試験までの進め方（3日）</h2>
+<div class="box"><span class="label">基本方針</span>時間がないので、★★★ を確実に取ることだけを考える。<strong>各日、最後に問題を解き、自分の言葉で1行書く</strong>。書けなかった所が、残りの時間で見直す場所である。</div>
+<table class="tb">
+<tr><th>日</th><th>やること</th></tr>
+<tr><td>11/17（今日）</td><td>1.2 の一本道を通読。<a href="M2_後半まとめ_第7〜12回.html">後半まとめ</a> の図を眺める。問A1・A2・B1（箱と縮退）</td></tr>
+<tr><td>11/18</td><td>問A3・B2・B3（トンネル）。「$d$ が大きいと $T$ は小さい、$E$ が大きいと $T$ は大きい」を理由つきで言えるように</td></tr>
+<tr><td>11/19</td><td>問A4〜A7・B4〜B7（極座標・水素・量子数）。解けなかった問題だけやり直し、公式表（2章）を見ずに書けるか確認</td></tr>
+</table>
+<p class="note">試験当日の朝は、2章の公式表と、1.3 の混同しやすい対だけを見る。範囲が違っていたら、先生の指示に合わせて入れ替える。</p>
+
+<div class="navi">
+<a href="index.html">← 目次へ</a>　｜　<a href="M2_後半まとめ_第7〜12回.html">後半まとめ（図解）へ</a>　｜　<a href="T1_中間試験_予想問題.html">T1 中間試験へ</a>
+</div>
+
+<p class="meta">出典：講義ノート（量子力学後半、2026/10/30・11/6・11/13）の内容を、試験対策向けに整理したもの。予想問題は自作で、型は教科書（Griffiths、猪木・川合など）の典型に倣った。問B3 の電界放出はノートにない応用（同じガモフの式を使う）。出題を保証するものではない。</p>
+
+<nav class="switch"><a href="index.html"><small>INDEX</small>目次</a></nav>
+
+</body>
+</html>
